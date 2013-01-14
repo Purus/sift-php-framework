@@ -1,0 +1,19 @@
+<?php
+/*
+ * This file is part of the Sift PHP framework.
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+/**
+ * sfICalendarRenderer is an interface for calendar renderers
+ *
+ * @package Sift
+ * @subpackage calendar
+ */
+interface sfICalendarRenderer {
+  
+  public function render(sfCalendar $calendar, $options = array());
+  
+}
