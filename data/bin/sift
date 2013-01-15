@@ -17,10 +17,9 @@ if(!isset($sf_sift_lib_dir))
   else
   {
     // PEAR
-    $sf_sift_lib_dir  = '@PEAR-DIR@/symfony';
-    $sf_sift_data_dir = '@DATA-DIR@/symfony';
-
-    if (!is_dir($sf_sift_lib_dir))
+    $sf_sift_lib_dir  = '@PEAR-DIR@/Sift';
+    $sf_sift_data_dir = '@DATA-DIR@/Sift';
+    if(!is_dir($sf_sift_lib_dir))
     {
       throw new Exception('Unable to find Sift PHP framework library.');
     }

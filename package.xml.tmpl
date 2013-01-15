@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<package packagerversion="1.8.0" version="2.0" xmlns="http://pear.php.net/dtd/package-2.0" xmlns:tasks="http://pear.php.net/dtd/tasks-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://pear.php.net/dtd/tasks-1.0
+    http://pear.php.net/dtd/tasks-1.0.xsd
+    http://pear.php.net/dtd/package-2.0
+    http://pear.php.net/dtd/package-2.0.xsd">
+ <name>Sift</name>
+ <uri>bitbucket.org/mishal/sift-php-framework</uri>
+ <summary>Sift PHP framework</summary>
+ <description>Sift PHP framework is a complete framework designed to optimize the development of web applications.</description>
+ <lead>
+  <name>Michal Moravec</name>
+  <user>michi</user>
+  <email>michi.m@gmail.com</email>
+  <active>yes</active>
+ </lead>
+ <date>##CURRENT_DATE##</date>
+ <version>
+   <release>##SIFT_VERSION##</release>
+   <api>1.0.0</api>
+ </version>
+ <stability>
+  <release>##STABILITY##</release>
+  <api>##STABILITY##</api>
+ </stability>
+ <license uri="http://opensource.org/licenses/MIT">MIT license</license>
+ <notes>-</notes>
+ <contents>
+  <dir name="/">
+    ##CLASS_FILES##
+   <file role="script" baseinstalldir="/" install-as="sift" name="data/bin/sift">
+    <tasks:replace type="pear-config" from="@DATA-DIR@" to="data_dir" />
+    <tasks:replace type="pear-config" from="@PEAR-DIR@" to="php_dir" />
+   </file>
+   <file role="script" baseinstalldir="/" name="data/bin/sift.bat" />
+   <file role="doc" baseinstalldir="Sift" name="README.md" />
+   <file role="doc" baseinstalldir="Sift" name="COPYRIGHT" />
+   <file role="doc" baseinstalldir="Sift" name="LICENSE" />
+  </dir>
+ </contents>
+ <dependencies>
+  <required>
+   <php>
+    <min>5.2.3</min>
+   </php>
+   <pearinstaller>
+    <min>1.4.1</min>
+   </pearinstaller>
+  </required>
+ </dependencies>
+ <phprelease>
+   <installconditions>
+     <os>
+       <name>windows</name>
+     </os>
+   </installconditions>
+   <filelist>
+     <install as="sift.bat" name="data/bin/sift.bat" />
+   </filelist>
+ </phprelease>
+ <phprelease>
+  <filelist>
+   <ignore name="data/bin/sift.bat" />
+  </filelist>
+ </phprelease>
+ <changelog>
+ </changelog>
+</package>
