@@ -74,7 +74,7 @@ $h->register_glob($h->base_dir . '/functional/*/*Test.php');
 echo "Running all tests\n";
 
 $ret = true;
-// $ret = $h->run();
+$ret = $h->run();
 
 if(!$ret)
 {
