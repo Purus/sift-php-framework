@@ -1,0 +1,64 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+	<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=windows-1250">
+	<TITLE></TITLE>
+	<META NAME="GENERATOR" CONTENT="OpenOffice.org 3.3  (Win32)">
+	<META NAME="AUTHOR" CONTENT="Michal Moravec">
+	<META NAME="CREATED" CONTENT="20110329;12321109">
+	<META NAME="CHANGEDBY" CONTENT="Michal Moravec">
+	<META NAME="CHANGED" CONTENT="20110329;12345417">
+	<STYLE TYPE="text/css">
+	<!--
+		@page { size: 21cm 29.7cm; margin: 2cm }
+		P { margin-bottom: 0.21cm }
+		H2 { margin-bottom: 0.21cm; page-break-after: avoid }
+		H2.western { font-family: "Arial", sans-serif; font-size: 14pt; font-style: italic; font-weight: bold }
+		H2.cjk { font-family: "Arial Unicode MS"; font-size: 14pt; font-style: italic; font-weight: bold }
+		H2.ctl { font-family: "Mangal"; font-size: 14pt; font-style: italic; font-weight: bold }
+	-->
+	</STYLE>
+</HEAD>
+<BODY LANG="cs-CZ" LINK="#000080" VLINK="#800000" DIR="LTR">
+<P STYLE="margin-bottom: 0cm">Test Open Office</P>
+<P STYLE="margin-bottom: 0cm"><BR>
+</P>
+<P STYLE="margin-bottom: 0cm"><BR>
+</P>
+<TABLE WIDTH=100% BORDER=1 BORDERCOLOR="#000000" CELLPADDING=4 CELLSPACING=0>
+	<COL WIDTH=128*>
+	<COL WIDTH=128*>
+	<TR VALIGN=TOP>
+		<TD WIDTH=50%>
+			<P>Řádek 1</P>
+		</TD>
+		<TD WIDTH=50%>
+			<P>Sloupec 2, řádek 1</P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=50%>
+			<P>Řádek 2</P>
+		</TD>
+		<TD WIDTH=50%>
+			<P>Sloupec 2, řádek 2</P>
+		</TD>
+	</TR>
+</TABLE>
+<OL>
+	<P STYLE="margin-bottom: 0cm"></P>
+</OL>
+<H2 CLASS="western">Tohle je seznam</H2>
+<P><BR><BR>
+</P>
+<OL>
+	<LI><P STYLE="margin-bottom: 0cm">Ponožky</P>
+	<LI><P STYLE="margin-bottom: 0cm">tričko</P>
+	<LI><P STYLE="margin-bottom: 0cm">kalhoty</P>
+</OL>
+<P STYLE="margin-bottom: 0cm"><BR>
+</P>
+<P STYLE="margin-bottom: 0cm"><BR>
+</P>
+</BODY>
+</HTML>

@@ -1,0 +1,5 @@
+generator:
+  class:              sfCrudGenerator
+  param:
+    model_class:      FakeClass
+    theme:            default

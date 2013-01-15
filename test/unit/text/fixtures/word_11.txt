@@ -1,0 +1,107 @@
+<html>
+
+<head>
+<meta http-equiv=Content-Type content="text/html; charset=windows-1252">
+<meta name=Generator content="Microsoft Word 11 (filtered)">
+<title>Sikaiana Dictionary Example</title>
+<style>
+<!--
+ /* Style Definitions */
+ p.MsoNormal, li.MsoNormal, div.MsoNormal
+	{margin:0in;
+	margin-bottom:.0001pt;
+	font-size:12.0pt;
+	font-family:"Times New Roman";}
+p
+	{margin-right:0in;
+	margin-left:0in;
+	font-size:12.0pt;
+	font-family:"Times New Roman";}
+@page Section1
+	{size:8.5in 11.0in;
+	margin:1.0in 2.0in 1.0in 2.0in;}
+div.Section1
+	{page:Section1;}
+-->
+</style>
+
+</head>
+
+<body lang=EN-US>
+
+<div class=Section1>
+
+<p style='margin-top:3.0pt;margin-right:0in;margin-bottom:0in;margin-left:.2in;
+margin-bottom:.0001pt;text-indent:-.2in'><a name=a.1></a><b>a</b><b><sup><span
+style='font-size:10.0pt'>1</span></sup></b> (&lt; PPN *'a) <i>[personal pronoun
+and proper name marker] </i>a marker appearing optionally: (1) before sentence
+initial pronouns and personal names, and (2) after transitive verbs; and occurring
+obligatorily after the prepositions <i>i</i> and <i>ki</i>. <i>A Sina ni
+tautali i a Puna</i>, 'Sina followed Puna'. </p>
+
+<p style='margin-top:3.0pt;margin-right:0in;margin-bottom:0in;margin-left:.2in;
+margin-bottom:.0001pt;text-indent:-.2in'><a name=a.2></a><b>a</b><b><sup><span
+style='font-size:10.0pt'>2</span></sup></b> <i>[preposition, marking 'a' class
+alienable possession] </i>of, belonging to. <i>te kapu a Sina</i>, 'the cup of
+Sina'; <i>te tama a Puna</i>, 'the (genetic) child of Puna'. See also: <i>o</i><i><sup><span
+style='font-size:10.0pt'>2</span></sup></i><i><span style='font-size:10.0pt'>.</span></i></p>
+
+<p style='margin-top:3.0pt;margin-right:0in;margin-bottom:0in;margin-left:.2in;
+margin-bottom:.0001pt;text-indent:-.2in'><a name=a.laa></a><b>a laa</b> <i>[nq,
+preceding noun, plural] </i>other, some other. <i>I te puina, maatou ni nnoho i
+Muli Akau ia, a laa tama ni nnoho i Hale</i>, 'during the <i>puina,</i> we
+stayed at the outer islands, the other people stayed on the main island'. See
+also: <i>laa</i><i><sup><span style='font-size:10.0pt'>5</span></sup></i><i><span
+style='font-size:10.0pt'>.</span></i></p>
+
+<p style='margin-top:3.0pt;margin-right:0in;margin-bottom:0in;margin-left:.2in;
+margin-bottom:.0001pt;text-indent:-.2in'><a name=aa></a><b>aa</b> <i>[interrogative
+pronoun] </i>what?. <i>aa</i> replaces nouns and verbs in interrogative
+statements. <i>Te aa ku tele?</i>, 'what is running?'; <i>te vaka ku aa?</i>,
+'what is the ship doing?' or, 'what is happening about the ship?'; <i>ee aa?</i>,
+'what is going on?' or, 'what are you up to?'; <i>a koe ku aa?</i>, 'how are
+you feeling?' or, 'what are you doing at this specific moment?'; <i>koe e noho
+ki aa?</i>, 'you are staying for what purpose?'. </p>
+
+<p style='margin-top:3.0pt;margin-right:0in;margin-bottom:0in;margin-left:.2in;
+margin-bottom:.0001pt;text-indent:-.2in'><a name=aa.ko></a><b>aa ko</b> <i>[exclamation,
+short for </i>heaa ko<i>] </i>what else?, how else?, what is your explanation?.
+Appears most frequently after an explanation of a situation and the speaker
+wants the listener to admit the explanation is obvious or forward an
+alternative explanation.</p>
+
+<p style='margin-top:3.0pt;margin-right:0in;margin-bottom:0in;margin-left:.2in;
+margin-bottom:.0001pt;text-indent:-.2in'><a name=aha></a><b>aha</b> <i>[na] </i>the
+shell tool used for measuring the spaces between mesh in nets (<i>seu manu,
+kupena</i>). See also: <i>atumata, kalemata, tia</i><i><sup><span
+style='font-size:10.0pt'>1</span></sup></i><i><span style='font-size:10.0pt'>.</span></i></p>
+
+<p style='margin-top:3.0pt;margin-right:0in;margin-bottom:0in;margin-left:.2in;
+margin-bottom:.0001pt;text-indent:-.2in'><a name=ahaa></a><b>ahaa</b> (&lt; PPN
+*afaa) <i>[n] </i>a cyclone, a tidal wave. </p>
+
+<p style='margin-top:3.0pt;margin-right:0in;margin-bottom:0in;margin-left:.2in;
+margin-bottom:.0001pt;text-indent:-.2in'><a name=aaha></a><b>aaha</b> 1. <i>[vt]
+</i>to open up, to push apart, as in pushing apart branches in order to look
+through. 2. <i>[vt] </i>to open up a new settlement or start a new garden. 3. <i>[vt]
+</i>to start, to begin a new project or way of life. <i>Tapa mai a koe ko hano
+i mua ki aaha te ala o te taina</i>, 'you called upon me to go first (to
+school) to open the way for my brother (MS)'. Passive: <i>ahania.</i></p>
+
+<p style='margin-top:3.0pt;margin-right:0in;margin-bottom:0in;margin-left:.2in;
+margin-bottom:.0001pt;text-indent:-.2in'><a name=ahali></a><b>ahali</b> <i>[nf]
+</i>a fish species, surgeon fish species. </p>
+
+<p style='margin-top:3.0pt;margin-right:0in;margin-bottom:0in;margin-left:.2in;
+margin-bottom:.0001pt;text-indent:-.2in'><a name=ahana></a><b>ahana</b> <i>[np]
+</i>the path in front of the lineage houses (<i>hale henua</i>). Traditionally,
+no house building or living was allowed in these paths. (PCR) </p>
+
+<p class=MsoNormal style='margin-top:3.0pt;margin-right:0in;margin-bottom:0in;
+margin-left:.2in;margin-bottom:.0001pt;text-indent:-.2in'>&nbsp;</p>
+
+</div>
+
+</body>
+
+</html>

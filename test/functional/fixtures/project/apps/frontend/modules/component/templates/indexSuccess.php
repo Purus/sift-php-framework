@@ -1,0 +1,1 @@
+<?php include_component_slot('sidebar'); ?>

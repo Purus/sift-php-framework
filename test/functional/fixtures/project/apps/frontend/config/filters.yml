@@ -1,0 +1,14 @@
+rendering: ~
+i18n: ~
+web_debug: ~
+security:  ~
+
+# generally, you will want to insert your own filters here
+myFilter:
+  class: myFilter
+
+cache:     ~
+common:    ~
+flash:     ~
+execution: ~
+asset_packager: ~

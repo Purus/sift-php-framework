@@ -1,0 +1,14 @@
+all:
+  components:
+    sidebar: [component, sidebar]
+    
+disabledSuccess:  
+  components:
+    sidebar: []
+ 
+multiSuccess:  
+  components:
+    sidebar: 
+      - [component, sidebar]
+      - [component, sidebar2]
+  

@@ -1,0 +1,5 @@
+all:
+  default:
+    class:          sfPDODatabase
+    param:
+      dsn:          sqlite:%SF_DATA_DIR%/database.sqlite
