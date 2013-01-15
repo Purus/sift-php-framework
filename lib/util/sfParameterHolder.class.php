@@ -64,7 +64,7 @@ class sfParameterHolder implements Serializable {
    * Retrieve a parameter with an optionally specified namespace.
    *
    * An isolated namespace may be identified by providing a value for the third
-   * argument.  If not specified, the default namespace 'symfony/default' is
+   * argument.  If not specified, the default namespace 'sift/default' is
    * used.
    *
    * @param string A parameter name.

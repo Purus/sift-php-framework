@@ -11,8 +11,6 @@
  *
  * @package    Sift
  * @subpackage action
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @author     Sean Kerr <sean@code-box.org>
  */
 abstract class sfAction extends sfComponent
 {
@@ -383,7 +381,7 @@ abstract class sfAction extends sfComponent
   /**
    * Sets an alternate template for this sfAction.
    *
-   * See 'Naming Conventions' in the 'Symfony View' documentation.
+   * See 'Naming Conventions' in the 'Sift View' documentation.
    *
    * @param string Template name
    */
@@ -394,7 +392,7 @@ abstract class sfAction extends sfComponent
       $this->getContext()->getLogger()->info('{sfAction} change template to "'.$name.'"');
     }
 
-    $this->getResponse()->setParameter($this->getModuleName().'_'.$this->getActionName().'_template', $name, 'symfony/action/view');
+    $this->getResponse()->setParameter($this->getModuleName().'_'.$this->getActionName().'_template', $name, 'sift/action/view');
   }
 
   /**
@@ -403,13 +401,13 @@ abstract class sfAction extends sfComponent
    * WARNING: It only returns the template you set with the setTemplate() method,
    *          and does not return the template that you configured in your view.yml.
    *
-   * See 'Naming Conventions' in the 'Symfony View' documentation.
+   * See 'Naming Conventions' in the 'Sift View' documentation.
    *
    * @return string Template name. Returns null if no template has been set within the action
    */
   public function getTemplate()
   {
-    return $this->getResponse()->getParameter($this->getModuleName().'_'.$this->getActionName().'_template', null, 'symfony/action/view');
+    return $this->getResponse()->getParameter($this->getModuleName().'_'.$this->getActionName().'_template', null, 'sift/action/view');
   }
 
   /**
@@ -428,7 +426,7 @@ abstract class sfAction extends sfComponent
       $this->getContext()->getLogger()->info('{sfAction} change layout to "'.$name.'"');
     }
 
-    $this->getResponse()->setParameter($this->getModuleName().'_'.$this->getActionName().'_layout', $name, 'symfony/action/view');
+    $this->getResponse()->setParameter($this->getModuleName().'_'.$this->getActionName().'_layout', $name, 'sift/action/view');
   }
 
   /**
@@ -441,7 +439,7 @@ abstract class sfAction extends sfComponent
    */
   public function getLayout()
   {
-    return $this->getResponse()->getParameter($this->getModuleName().'_'.$this->getActionName().'_layout', null, 'symfony/action/view');
+    return $this->getResponse()->getParameter($this->getModuleName().'_'.$this->getActionName().'_layout', null, 'sift/action/view');
   }
 
   /**

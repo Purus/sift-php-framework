@@ -11,8 +11,6 @@
  *
  * @package    Sift
  * @subpackage controller
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @author     Sean Kerr <sean@code-box.org>
  */
 abstract class sfWebController extends sfController
 {
@@ -23,11 +21,11 @@ abstract class sfWebController extends sfController
    * @param boolean Whether to generate an absolute URL
    * @param string Alternative protocol for absolute URLs (like "webcal")
    *
-   * @return string A URL to a symfony resource
+   * @return string A URL to a Sift resource
    */
   public function genUrl($parameters = array(), $absolute = false, $protocol = null)
   {
-    // absolute URL or symfony URL?
+    // absolute URL or Sift URL?
     if (!is_array($parameters) && preg_match('#^[a-z]+\://#', $parameters))
     {
       return $parameters;

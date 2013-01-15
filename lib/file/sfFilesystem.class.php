@@ -578,7 +578,7 @@ class sfFilesystem
       // we try the last
       if(is_null($mimeTypes))
       {
-        $mimeTypes = array_flip(unserialize(file_get_contents(sfConfig::get('sf_symfony_data_dir').'/data/mime_types.dat')));
+        $mimeTypes = array_flip(unserialize(file_get_contents(sfConfig::get('sf_sift_data_dir').'/data/mime_types.dat')));
       }
 
       $extension = self::getFileExtension($file);

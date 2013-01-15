@@ -111,7 +111,7 @@ class sfConfigCache {
    *
    * The recompilation only occurs in a non debug environment.
    *
-   * If the configuration file path is relative, symfony will look in directories 
+   * If the configuration file path is relative, Sift will look in directories 
    * defined in the sfLoader::getConfigPaths() method.
    *
    * @param string A filesystem path to a configuration file

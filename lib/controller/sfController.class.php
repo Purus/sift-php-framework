@@ -11,8 +11,6 @@
  *
  * @package    Sift
  * @subpackage controller
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @author     Sean Kerr <sean@code-box.org>
  */
 abstract class sfController
 {
@@ -397,7 +395,7 @@ abstract class sfController
     else
     {
       // view class (as configured in module.yml or defined in action)
-      $viewName = $this->getContext()->getRequest()->getAttribute($moduleName.'_'.$actionName.'_view_name', sfConfig::get('mod_'.strtolower($moduleName).'_view_class'), 'symfony/action/view');
+      $viewName = $this->getContext()->getRequest()->getAttribute($moduleName.'_'.$actionName.'_view_name', sfConfig::get('mod_'.strtolower($moduleName).'_view_class'), 'sift/action/view');
       $class    = sfCore::getClassPath($viewName.'View') ? $viewName.'View' : 'sfPHPView';
     }
 
@@ -482,7 +480,7 @@ abstract class sfController
     // set viewName if needed
     if($viewName)
     {
-      $this->getContext()->getRequest()->setAttribute($module.'_'.$action.'_view_name', $viewName, 'symfony/action/view');
+      $this->getContext()->getRequest()->setAttribute($module.'_'.$action.'_view_name', $viewName, 'sift/action/view');
     }
 
     try
@@ -498,7 +496,7 @@ abstract class sfController
       // remove viewName
       if ($viewName)
       {
-        $this->getContext()->getRequest()->getAttributeHolder()->remove($module.'_'.$action.'_view_name', 'symfony/action/view');
+        $this->getContext()->getRequest()->getAttributeHolder()->remove($module.'_'.$action.'_view_name', 'sift/action/view');
       }
 
       throw $e;
@@ -532,7 +530,7 @@ abstract class sfController
     // remove viewName
     if($viewName)
     {
-      $this->getContext()->getRequest()->getAttributeHolder()->remove($module.'_'.$action.'_view_name', 'symfony/action/view');
+      $this->getContext()->getRequest()->getAttributeHolder()->remove($module.'_'.$action.'_view_name', 'sift/action/view');
     }
 
     return $presentation;

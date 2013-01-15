@@ -14,7 +14,7 @@
  * image (approx 2:1 ratio) image urls.
  * Rss only takes the image, but expects additionally the size of that image.
  *
- * @package    symfony
+ * @package    Sift
  * @subpackage feed
  * @author     Fabian Lange <fabian.lange@web.de>
  */

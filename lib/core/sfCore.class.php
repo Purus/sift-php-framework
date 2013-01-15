@@ -57,13 +57,13 @@ class sfCore
     // content filters
     $filters           = array();
 
-  static public function bootstrap($sf_symfony_lib_dir, $sf_symfony_data_dir)
+  static public function bootstrap($sf_sift_lib_dir, $sf_sift_data_dir)
   {
-    require_once($sf_symfony_lib_dir.'/util/sfToolkit.class.php');
-    require_once($sf_symfony_lib_dir.'/config/sfConfig.class.php');
-    require_once($sf_symfony_lib_dir.'/dimension/sfDimensions.class.php');
+    require_once($sf_sift_lib_dir.'/util/sfToolkit.class.php');
+    require_once($sf_sift_lib_dir.'/config/sfConfig.class.php');
+    require_once($sf_sift_lib_dir.'/core/sfDimensions.class.php');
 
-    sfCore::initConfiguration($sf_symfony_lib_dir, $sf_symfony_data_dir);
+    sfCore::initConfiguration($sf_sift_lib_dir, $sf_sift_data_dir);
 
     sfCore::initIncludePath();
 
@@ -73,9 +73,9 @@ class sfCore
     {
       sfCore::checkLock();
     }
-    if (sfConfig::get('sf_check_symfony_version'))
+    if (sfConfig::get('sf_check_sift_version'))
     {
-      sfCore::checkSymfonyVersion();
+      sfCore::checkSiftVersion();
     }
   }
 
@@ -84,12 +84,12 @@ class sfCore
     $files    = array(
       // custom error
       sprintf(sfConfig::get('sf_web_dir').'/errors/%s.php', $error),  
-      // symfony data dir
-      sprintf(sfConfig::get('sf_symfony_data_dir').'/web/errors/%s.php', $error),
+      // sift data dir
+      sprintf(sfConfig::get('sf_sift_data_dir').'/web/errors/%s.php', $error),
       // custom 500 error
       sfConfig::get('sf_web_dir').'/errors/error500.php',
       // built in error
-      sfConfig::get('sf_symfony_data_dir').'/web/errors/error500.php'
+      sfConfig::get('sf_sift_data_dir').'/web/errors/error500.php'
     );
         
     foreach($files as $file)
@@ -117,11 +117,11 @@ class sfCore
     }
     else
     {
-      require(sfConfig::get('sf_symfony_lib_dir').'/symfony.php');
+      require(sfConfig::get('sf_sift_lib_dir').'/sift.php');
     }
   }
 
-  static public function initConfiguration($sf_symfony_lib_dir, $sf_symfony_data_dir, $test = false)
+  static public function initConfiguration($sf_sift_lib_dir, $sf_sift_data_dir, $test = false)
   {
     // start timer
     if (SF_DEBUG)
@@ -135,13 +135,13 @@ class sfCore
       'sf_app'              => SF_APP,
       'sf_environment'      => SF_ENVIRONMENT,
       'sf_debug'            => SF_DEBUG,
-      'sf_symfony_lib_dir'  => $sf_symfony_lib_dir,
-      'sf_symfony_data_dir' => $sf_symfony_data_dir,
+      'sf_sift_lib_dir'  => $sf_sift_lib_dir,
+      'sf_sift_data_dir' => $sf_sift_data_dir,
       'sf_test'             => $test,
     ));
 
     // directory layout
-    require($sf_symfony_data_dir.'/config/constants.php');
+    require($sf_sift_data_dir.'/config/constants.php');
   }
 
   static public function initIncludePath()
@@ -150,7 +150,7 @@ class sfCore
       sfConfig::get('sf_lib_dir').PATH_SEPARATOR.
       sfConfig::get('sf_root_dir').PATH_SEPARATOR.
       sfConfig::get('sf_app_lib_dir').PATH_SEPARATOR.
-      sfConfig::get('sf_symfony_lib_dir').DIRECTORY_SEPARATOR.'vendor'.PATH_SEPARATOR.
+      sfConfig::get('sf_sift_lib_dir').DIRECTORY_SEPARATOR.'vendor'.PATH_SEPARATOR.
       get_include_path()
     );
   }
@@ -166,17 +166,17 @@ class sfCore
     {
       // application is not available
       $file = sfConfig::get('sf_web_dir').'/errors/unavailable.php';
-      include(is_readable($file) ? $file : sfConfig::get('sf_symfony_data_dir').'/web/errors/unavailable.php');
+      include(is_readable($file) ? $file : sfConfig::get('sf_sift_data_dir').'/web/errors/unavailable.php');
 
       die(1);
     }
   }
 
-  static public function checkSymfonyVersion()
+  static public function checkSiftVersion()
   {
-    // recent symfony update?
+    // recent Sift update?
     $last_version    = @file_get_contents(sfConfig::get('sf_config_cache_dir').'/VERSION');
-    $current_version = trim(file_get_contents(sfConfig::get('sf_symfony_lib_dir').'/VERSION'));
+    $current_version = trim(file_get_contents(sfConfig::get('sf_sift_lib_dir').'/VERSION'));
     if ($last_version != $current_version)
     {
       // clear cache
@@ -271,7 +271,7 @@ class sfCore
         $trace = debug_backtrace();
         if (count($trace) < 1 || ($trace[1]['function'] != 'class_exists' && $trace[1]['function'] != 'is_a'))
         {
-          $error = sprintf('Autoloading of class "%s" failed. Try to clear the symfony cache and refresh.', $class);
+          $error = sprintf('Autoloading of class "%s" failed. Try to clear the Sift cache and refresh.', $class);
           $e = new sfAutoloadException($error);
 
           $e->printStackTrace();
@@ -516,7 +516,7 @@ class sfCore
    */
   public static function compareVersion($version)
   {
-    $current_version = trim(file_get_contents(sfConfig::get('sf_symfony_lib_dir').'/VERSION'));
+    $current_version = trim(file_get_contents(sfConfig::get('sf_sift_lib_dir').'/VERSION'));
     return version_compare($version, $current_version);
   }
 

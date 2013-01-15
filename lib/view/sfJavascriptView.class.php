@@ -25,7 +25,7 @@ class sfJavascriptView extends sfPHPView
     // set content type
     $response->setContentType('application/x-javascript; charset=' . sfConfig::get('sf_charset'));
     // disable layout
-    $response->setParameter($this->moduleName.'_'.$this->actionName.'_layout', false, 'symfony/action/view');
+    $response->setParameter($this->moduleName.'_'.$this->actionName.'_layout', false, 'sift/action/view');
 
     $this->setTemplate($this->actionName.$this->viewName.$this->getExtension());
 

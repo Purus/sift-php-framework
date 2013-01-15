@@ -322,16 +322,16 @@ abstract class sfComponent {
    */
   public function setFlash($name, $value, $persist = true)
   {
-    $this->getUser()->setAttribute($name, $value, 'symfony/flash');
+    $this->getUser()->setAttribute($name, $value, 'sift/flash');
 
     if($persist)
     {
       // clear removal flag
-      $this->getUser()->getAttributeHolder()->remove($name, 'symfony/flash/remove');
+      $this->getUser()->getAttributeHolder()->remove($name, 'sift/flash/remove');
     }
     else
     {
-      $this->getUser()->setAttribute($name, true, 'symfony/flash/remove');
+      $this->getUser()->setAttribute($name, true, 'sift/flash/remove');
     }
   }
 
@@ -344,7 +344,7 @@ abstract class sfComponent {
    */
   public function getFlash($name)
   {
-    return $this->getUser()->getAttribute($name, null, 'symfony/flash');
+    return $this->getUser()->getAttribute($name, null, 'sift/flash');
   }
 
   /**
@@ -356,7 +356,7 @@ abstract class sfComponent {
    */
   public function hasFlash($name)
   {
-    return $this->getUser()->hasAttribute($name, 'symfony/flash');
+    return $this->getUser()->hasAttribute($name, 'sift/flash');
   }
 
   /**

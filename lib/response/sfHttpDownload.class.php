@@ -907,7 +907,7 @@ class sfHttpDownload extends sfConfigurable {
   }
 
   /**
-   * Logs message using symfony logger 
+   * Logs message using Sift logger 
    *
    * @param string $message string Message to log
    */

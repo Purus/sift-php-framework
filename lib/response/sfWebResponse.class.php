@@ -197,11 +197,11 @@ class sfWebResponse extends sfResponse
 
     if (!$replace)
     {
-      $current = $this->getParameter($name, '', 'symfony/response/http/headers');
+      $current = $this->getParameter($name, '', 'sift/response/http/headers');
       $value = ($current ? $current.', ' : '').$value;
     }
 
-    $this->setParameter($name, $value, 'symfony/response/http/headers');
+    $this->setParameter($name, $value, 'sift/response/http/headers');
   }
 
   /**
@@ -211,7 +211,7 @@ class sfWebResponse extends sfResponse
    */
   public function getHttpHeader($name, $default = null)
   {
-    return $this->getParameter($this->normalizeHeaderName($name), $default, 'symfony/response/http/headers');
+    return $this->getParameter($this->normalizeHeaderName($name), $default, 'sift/response/http/headers');
   }
 
   /**
@@ -221,7 +221,7 @@ class sfWebResponse extends sfResponse
    */
   public function hasHttpHeader($name)
   {
-    return $this->hasParameter($this->normalizeHeaderName($name), 'symfony/response/http/headers');
+    return $this->hasParameter($this->normalizeHeaderName($name), 'sift/response/http/headers');
   }
 
   /**
@@ -238,7 +238,7 @@ class sfWebResponse extends sfResponse
       $value .= '; charset='.sfConfig::get('sf_charset');
     }
 
-    $this->setParameter('Content-Type', $value, 'symfony/response/http/headers');
+    $this->setParameter('Content-Type', $value, 'sift/response/http/headers');
   }
 
   /**
@@ -267,7 +267,7 @@ class sfWebResponse extends sfResponse
     }
 
     // headers
-    foreach ($this->getParameterHolder()->getAll('symfony/response/http/headers') as $name => $value)
+    foreach ($this->getParameterHolder()->getAll('sift/response/http/headers') as $name => $value)
     {
       header($name.': '.$value);
 
@@ -593,7 +593,7 @@ class sfWebResponse extends sfResponse
    */
   public function getHttpHeaders()
   {
-    return $this->getParameterHolder()->getAll('symfony/response/http/headers');
+    return $this->getParameterHolder()->getAll('sift/response/http/headers');
   }
 
   /**
@@ -601,7 +601,7 @@ class sfWebResponse extends sfResponse
    */
   public function clearHttpHeaders()
   {
-    $this->getParameterHolder()->removeNamespace('symfony/response/http/headers');
+    $this->getParameterHolder()->removeNamespace('sift/response/http/headers');
   }
 
   /**

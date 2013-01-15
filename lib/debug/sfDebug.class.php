@@ -7,7 +7,7 @@
  */
 
 /**
- * sfDebug provides some method to help debugging a symfony application.
+ * sfDebug provides some method to help debugging a Sift application.
  *
  * @package    Sift
  * @subpackage debug

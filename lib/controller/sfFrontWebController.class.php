@@ -13,8 +13,6 @@
  *
  * @package    Sift
  * @subpackage controller
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @author     Sean Kerr <sean@code-box.org>
  */
 class sfFrontWebController extends sfWebController
 {
@@ -61,7 +59,7 @@ class sfFrontWebController extends sfWebController
 
       try
       {
-        // wrap non symfony exceptions
+        // wrap non Sift exceptions
         $sfException = new sfException($e->getMessage().' in '.$e->getFile().' line '.$e->getLine());
         $sfException->printStackTrace($e);
       }

@@ -234,7 +234,7 @@ class sfRouting
   * - :string: :string denotes a named paramater (available later as $request->getParameter('string'))
   * - *: * match an indefinite number of parameters in a route
   *
-  * Here is a very common rule in a symfony project:
+  * Here is a very common rule in a Sift project:
   *
   * <code>
   * $r->connect('/:module/:action/*');

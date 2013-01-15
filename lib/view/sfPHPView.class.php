@@ -43,7 +43,7 @@ class sfPHPView extends sfView
     if(sfConfig::get('sf_use_flash'))
     {
       $sf_flash = new sfParameterHolder();
-      $sf_flash->add($context->getUser()->getAttributeHolder()->getAll('symfony/flash'));
+      $sf_flash->add($context->getUser()->getAttributeHolder()->getAll('sift/flash'));
       $shortcuts['sf_flash'] = $sf_flash;
     }
 
@@ -228,8 +228,8 @@ class sfPHPView extends sfView
     $response = $context->getResponse();
     if (sfConfig::get('sf_cache'))
     {
-      $key   = $response->getParameterHolder()->remove('current_key', 'symfony/cache/current');
-      $cache = $response->getParameter($key, null, 'symfony/cache');
+      $key   = $response->getParameterHolder()->remove('current_key', 'sift/cache/current');
+      $cache = $response->getParameter($key, null, 'sift/cache');
       if ($cache !== null)
       {
         $cache  = unserialize($cache);
@@ -240,7 +240,7 @@ class sfPHPView extends sfView
     }
 
     // decorator
-    $layout = $response->getParameter($this->moduleName.'_'.$this->actionName.'_layout', null, 'symfony/action/view');
+    $layout = $response->getParameter($this->moduleName.'_'.$this->actionName.'_layout', null, 'sift/action/view');
     if (false === $layout)
     {
       $this->setDecorator(false);
@@ -279,7 +279,7 @@ class sfPHPView extends sfView
           'view_name' => $this->viewName,
           'response'  => $context->getResponse(),
         );
-        $response->setParameter($key, serialize($cache), 'symfony/cache');
+        $response->setParameter($key, serialize($cache), 'sift/cache');
 
         if (sfConfig::get('sf_web_debug'))
         {

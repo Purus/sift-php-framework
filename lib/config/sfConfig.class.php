@@ -7,7 +7,7 @@
  */
 
 /**
- * sfConfig stores all configuration information for a symfony application.
+ * sfConfig stores all configuration information for a Sift application.
  *
  * @package    Sift
  * @subpackage config

@@ -7,9 +7,10 @@
  */
 
 /**
+ * Console controller
+ * 
  * @package    Sift
  * @subpackage controller
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com> 
  */
 class sfConsoleController extends sfController
 {
@@ -36,7 +37,7 @@ class sfConsoleController extends sfController
     }
     catch (Exception $e)
     {
-      // wrap non symfony exceptions
+      // wrap non Sift exceptions
       $sfException = new sfException();
       $sfException->printStackTrace($e);
     }

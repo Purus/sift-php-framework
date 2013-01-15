@@ -85,8 +85,8 @@ class sfCompileConfigHandler extends sfYamlConfigHandler
                       "// date: %s\n%s\n",
                       date('Y/m/d H:i:s'), $data);
 
-    // save current symfony release
-    file_put_contents(sfConfig::get('sf_config_cache_dir').'/VERSION', file_get_contents(sfConfig::get('sf_symfony_lib_dir').'/VERSION'));
+    // save current sift release
+    file_put_contents(sfConfig::get('sf_config_cache_dir').'/VERSION', file_get_contents(sfConfig::get('sf_sift_lib_dir').'/VERSION'));
 
     return $retval;
   }

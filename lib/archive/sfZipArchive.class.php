@@ -14,11 +14,11 @@
  *  - resolve the problem of adding so many files to the archive
  *  due file descriptor limit. the sfZipArchive::addFile() handles this.
  *
- * @package    symfony
+ * @package    Sift
  * @subpackage archive
  * @author     Farzad Ghanei
  * @author     Mishal.cz <mishal@mishal.cz>
- * @see http://www.php.net/manual/en/function.ziparchive-addfile.php#88266
+ * @link       http://www.php.net/manual/en/function.ziparchive-addfile.php#88266
  */
 class sfZipArchive extends ZipArchive {
 
