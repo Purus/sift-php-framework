@@ -1,0 +1,20 @@
+msgid ""
+msgstr ""
+"PO-Revision-Date: 2011-04-06 08:45:04\n"
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"Last-Translator: Michal Moravec - Mishal.cz <mishal@mishal.cz>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid "[0]No results found.|[1]One result found.|[2,3,4]%number% results found.|(1,+Inf]%number% results found."
+msgstr "[0]Nebyly nalezeny žádné záznamy.|[1]Byl nalezen jeden záznam.|[2,3,4]Byly nalezeny %number% záznamy.|(1,+Inf]Bylo nalezeno %number% záznamů."
+
+msgid "Displaying results %start% to %end%."
+msgstr "Zobrazuji záznamy od %start% do %end%."
+
+msgid "page"
+msgstr "strana"
+

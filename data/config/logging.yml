@@ -1,0 +1,31 @@
+default:
+  enabled: true
+  level:   debug
+  rotate:  false
+  period:  7
+  history: 10
+  purge:   true
+  loggers:
+    sf_web_debug:
+      class: sfWebDebugLogger
+      param:
+        condition: %SF_WEB_DEBUG%
+    sf_file_logger:
+      class: sfFileLogger
+      param:
+        file: %SF_LOG_DIR%/%SF_APP%_%SF_ENVIRONMENT%.log
+#
+#prod:
+#  enabled: true
+#  level:   err
+#  rotate:  false
+#  period:  7
+#  history: 10
+#  purge:   true
+#  loggers:
+#    sf_file_logger:
+#      class: sfFileLogger
+#      param:
+#        file: %SF_LOG_DIR%/%SF_APP%_%SF_ENVIRONMENT%.log
+##    sf_email_logger:
+##      class: sfEmailLogger

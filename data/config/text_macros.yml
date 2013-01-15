@@ -1,0 +1,3 @@
+# Text macros configuration
+# tag, callable
+# [tag] -> className::getHtml($attributes, $content)

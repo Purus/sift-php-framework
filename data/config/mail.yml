@@ -1,0 +1,73 @@
+# --------------------------------------------------
+# Mailer configuration
+# --------------------------------------------------
+
+dev:
+  deliver:    true
+
+prod:
+  cache:
+    enabled:   false
+
+all:
+
+  # deliver the mail?
+  deliver:  true
+  # mail charset
+  charset: utf-8
+  # maximum line length
+  line_length: 80
+  # mail encoding
+  # available types: base64, 8-bit, 7-bit, quoted-printable
+  encoding: 8-bit
+
+  # log settings
+  log:
+    enabled: true
+
+  # Antiflood feature
+  anti_flood:
+    enabled: true
+    # limit 100 emails
+    limit: 100
+    # sleep 10 seconds after sending 100 emails
+    sleep: 10
+
+  # Throttler feature
+  
+  cache:
+    enabled:     false
+    param:
+      dir:      %SF_ROOT_CACHE_DIR%
+
+  # what transport to use?
+  # valid options are:
+  # - load_balanced
+  # - failover
+  # - or specify the transport from "transports" setting
+  # default is
+  transport_type: default
+
+  # mailer transports
+  transports:
+    default: # specify as transport_type
+      type:       smtp
+      # Sending via Google gmail.com
+      hostname: smtp.gmail.com
+      encryption: ssl
+      port: 465
+      username: michi.m@gmail.com
+      password: ivanka
+      #hostname:   localhost
+      #port:       25
+      #username:   ''
+      #password:   ''
+
+  # mailer plugins to register
+  plugins:
+    - sfMailerHtml2TextPlugin
+
+  spool: 
+    enabled: false
+    #class:  XYZ
+    #arguments: []

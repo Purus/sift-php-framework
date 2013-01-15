@@ -1,0 +1,56 @@
+msgid ""
+msgstr ""
+"PO-Revision-Date: 2010-05-25 10:09+0100\n"
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"Last-Translator: Michal Moravec - Mishal.cz <mishal@mishal.cz>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid "less than a minute"
+msgstr "méně než minutou"
+
+msgid "1 minute"
+msgstr "1 minutou"
+
+msgid "less than 5 seconds"
+msgstr "méně než 5 sekundami"
+
+msgid "less than 10 seconds"
+msgstr "méně než 10 sekundami"
+
+msgid "less than 20 seconds"
+msgstr "méně než 20 sekundami"
+
+msgid "half a minute"
+msgstr "půl minutou"
+
+msgid "%minutes% minutes"
+msgstr "%minutes% minutami"
+
+msgid "about 1 hour"
+msgstr "asi 1 hodinou"
+
+msgid "about %hours% hours"
+msgstr "asi %hours% hodinami"
+
+msgid "1 day"
+msgstr "1 dnem"
+
+msgid "%days% days"
+msgstr "%days% dny"
+
+msgid "about 1 month"
+msgstr "asi 1 měsícem"
+
+msgid "%months% months"
+msgstr "%months% měsíci"
+
+msgid "about 1 year"
+msgstr "asi 1 rokem"
+
+msgid "over %years% years"
+msgstr "více jak %years% roky"
+

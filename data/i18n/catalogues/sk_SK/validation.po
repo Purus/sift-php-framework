@@ -1,0 +1,8 @@
+msgid ""
+msgstr ""
+"PO-Revision-Date: 2011-04-08 08:52:49\n"
+"Content-Type: text/plain; charset=utf-8\n"
+
+msgid "There are errors in the form. Correct them and submit the form again:"
+msgstr "Došlo k chybe pri vypĺňaní dotazníka. Opravte ich prosím a odošlite dotazník znovu:"
+

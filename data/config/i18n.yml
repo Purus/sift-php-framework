@@ -1,0 +1,16 @@
+default:
+  default_culture:     cs_CZ
+  enabled:
+    cultures:          [cs_CZ]
+  source:              gettext
+  debug:               false
+  cache:               true
+  untranslated_prefix: "[T]"
+  untranslated_suffix: "[/T]"
+  # enable editing of translations in debug toolbar?
+  learning_mode:       false
+  # what language is used as source language
+  source_culture:      en_GB
+  
+test:
+  learning_mode: false

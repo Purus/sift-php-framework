@@ -1,0 +1,33 @@
+cli:
+  controller:
+    class: sfConsoleController
+  request:
+    class: sfConsoleRequest
+  response:
+    class: sfConsoleResponse
+  storage:
+    class: sfSessionTestStorage
+
+default:
+  controller:
+    class: sfFrontWebController
+
+  request:
+    class: sfWebRequest
+
+  response:
+    class: sfWebResponse
+
+  user:
+    class: myUser
+
+  storage:
+    class: sfSessionStorage
+    param:
+      session_name: sessionID
+
+  view_cache:
+    class: sfFileCache
+    param:
+      automaticCleaningFactor: 0
+      cacheDir: %SF_TEMPLATE_CACHE_DIR%

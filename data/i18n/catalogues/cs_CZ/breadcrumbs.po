@@ -1,0 +1,17 @@
+msgid ""
+msgstr ""
+"PO-Revision-Date: 2010-05-26 20:54+0100\n"
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"Last-Translator: Michal Moravec - Mishal.cz <mishal@mishal.cz>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid "You are here:"
+msgstr "Nacházíte se zde:"
+
+msgid "Home"
+msgstr "Úvod"
+

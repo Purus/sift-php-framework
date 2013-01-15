@@ -1,0 +1,2003 @@
+msgid ""
+msgstr ""
+"PO-Revision-Date: 2012-11-26 10:59+0100\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"Last-Translator: Michal Moravec - Mishal.cz <mishal@mishal.cz>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.5.4\n"
+
+msgid "Ogg Video"
+msgstr "Video Ogg"
+
+msgid "Ogg Vorbis audio"
+msgstr "Zvuk Ogg Vorbis"
+
+msgid "Ogg FLAC audio"
+msgstr "Zvuk Ogg FLAC"
+
+msgid "Ogg Speex audio"
+msgstr "Zvuk Ogg Speex"
+
+msgid "Speex audio"
+msgstr "Zvuk Speex"
+
+msgid "Ogg Theora video"
+msgstr "Video Ogg Theora"
+
+msgid "OGM video"
+msgstr "Video OGM"
+
+msgid "OLE2 compound document storage"
+msgstr "Úložiště složeného dokumentu OLE2"
+
+msgid "Windows Installer package"
+msgstr "Balíček Windows Installer"
+
+msgid "GNU Oleo spreadsheet"
+msgstr "Sešit GNU Oleo"
+
+msgid "PAK archive"
+msgstr "Archiv PAK"
+
+msgid "Palm OS database"
+msgstr "Databáze Palm OS"
+
+msgid "Parchive archive"
+msgstr "Archiv Parchive"
+
+msgid "PEF executable"
+msgstr "Spustitelný soubor PEF"
+
+msgid "Perl script"
+msgstr "Skript v Perlu"
+
+msgid "PHP script"
+msgstr "Skript PHP"
+
+msgid "PKCS#7 certificate bundle"
+msgstr "Svazek certifikátů PKCS#7"
+
+msgid "PKCS#12 certificate bundle"
+msgstr "Svazek certifikátů PKCS#12"
+
+msgid "PlanPerfect spreadsheet"
+msgstr "Sešit PlanPerfect"
+
+msgid "Pocket Word document"
+msgstr "Dokument Pocket Word"
+
+msgid "profiler results"
+msgstr "Výsledky profiler"
+
+msgid "Pathetic Writer document"
+msgstr "Dokument Pathetic Writer"
+
+msgid "Python bytecode"
+msgstr "Bajtový kód Python"
+
+msgid "QtiPlot document"
+msgstr "_Metadata Dokumentu..."
+
+msgid "Quattro Pro spreadsheet"
+msgstr "Sešit Quattro Pro"
+
+msgid "QuickTime metalink playlist"
+msgstr "Seznam skladeb metalink QuickTime"
+
+msgid "Quicken document"
+msgstr "Dokument Quicken"
+
+msgid "RAR archive"
+msgstr "Archiv RAR"
+
+msgid "DAR archive"
+msgstr "Archiv DAR"
+
+msgid "Alzip archive"
+msgstr "Archiv Alzip"
+
+msgid "rejected patch"
+msgstr "Odmítnutá záplata"
+
+msgid "RPM package"
+msgstr "Balíček RPM"
+
+msgid "Ruby script"
+msgstr "Skript v Ruby"
+
+msgid "Markaby script"
+msgstr "Skript Markaby"
+
+msgid "SC/Xspread spreadsheet"
+msgstr "Sešit SC/Xspread"
+
+msgid "shell archive"
+msgstr "Archiv shellu"
+
+msgid "libtool shared library"
+msgstr "Sdílená knihovna libtool"
+
+msgid "shared library"
+msgstr "Sdílená knihovna"
+
+msgid "shell script"
+msgstr "Skript shellu"
+
+msgid "Shockwave Flash file"
+msgstr "Soubor Shockwave Flash"
+
+msgid "Shorten audio"
+msgstr "Zvuk Shorten"
+
+msgid "Siag spreadsheet"
+msgstr "Sešit Siag"
+
+msgid "Skencil document"
+msgstr "Dokument Skencil"
+
+msgid "Stampede package"
+msgstr "Balíček Stampede"
+
+msgid "Sega Master System/Game Gear ROM"
+msgstr "ROM pro Sega Master System/Game Gear"
+
+msgid "Super NES ROM"
+msgstr "ROM pro Super Nintendo"
+
+msgid "StuffIt archive"
+msgstr "Archiv StuffIt"
+
+msgid "SubRip subtitles"
+msgstr "Titulky SubRip"
+
+msgid "WebVTT subtitles"
+msgstr "Titulky WebVTT"
+
+msgid "SAMI subtitles"
+msgstr "Titulky SAMI"
+
+msgid "MicroDVD subtitles"
+msgstr "Titulky MicroDVD"
+
+msgid "MPSub subtitles"
+msgstr "Titulky MPSub"
+
+msgid "SSA subtitles"
+msgstr "Titulky SSA"
+
+msgid "SubViewer subtitles"
+msgstr "Titulky SubViewer"
+
+msgid "iMelody ringtone"
+msgstr "Vyzváněcí melodie iMelody"
+
+msgid "SMAF audio"
+msgstr "Zvuk SMAF"
+
+msgid "MRML playlist"
+msgstr "Seznam skladeb MRML"
+
+msgid "XMF audio"
+msgstr "Zvuk XMF"
+
+msgid "SV4 CPIO archive"
+msgstr "Archiv SV4 CPIO"
+
+msgid "SV4 CPIO archive (with CRC)"
+msgstr "Archiv SV4 CPIO (s CRC)"
+
+msgid "Tar archive"
+msgstr "Archiv tar"
+
+msgid "Tar archive (compressed)"
+msgstr "Archiv tar (komprimovaný)"
+
+msgid "generic font file"
+msgstr "Obecný soubor písma"
+
+msgid "packed font file"
+msgstr "Komprimovaný soubor písma"
+
+msgid "TGIF document"
+msgstr "Dokument TGIF"
+
+msgid "theme"
+msgstr "Motiv"
+
+msgid "ToutDoux document"
+msgstr "Dokument ToutDoux"
+
+msgid "backup file"
+msgstr "Záložní soubor"
+
+msgid "Troff document"
+msgstr "Dokument troff"
+
+msgid "Troff document (with manpage macros)"
+msgstr "Dokument troff (s makry pro manuálové stránky)"
+
+msgid "manual page (compressed)"
+msgstr "Manuálová stránka (komprimovaná)"
+
+msgid "Tar archive (LZO-compressed)"
+msgstr "Archiv tar (komprimovaný pomocí LZO)"
+
+msgid "XZ archive"
+msgstr "Archiv XZ"
+
+msgid "Tar archive (XZ-compressed)"
+msgstr "Archiv tar (komprimovaný pomocí XZ)"
+
+msgid "PDF document (XZ-compressed)"
+msgstr "Dokument PDF (komprimovaný pomocí XZ)"
+
+msgid "Ustar archive"
+msgstr "Archiv ustar"
+
+msgid "WAIS source code"
+msgstr "Zdrojový kód WAIS"
+
+msgid "WordPerfect/Drawperfect image"
+msgstr "Obrázek WordPerfect/Drawperfect"
+
+msgid "DER/PEM/Netscape-encoded X.509 certificate"
+msgstr "Certifikát X.509 kódovaný jako DER/PEM/Netscape"
+
+msgid "empty document"
+msgstr "Prázdný dokument"
+
+msgid "Zoo archive"
+msgstr "Archiv zoo"
+
+msgid "XHTML page"
+msgstr "Stránka XHTML"
+
+msgid "Zip archive"
+msgstr "Archiv ZIP"
+
+msgid "Windows Imaging Format Disk Image"
+msgstr "Windows Imaging Format Disk Image"
+
+msgid "Dolby Digital audio"
+msgstr "Zvuk Dolby Digital"
+
+msgid "DTS audio"
+msgstr "Audio stopa"
+
+msgid "DTSHD audio"
+msgstr "Audio stopa"
+
+msgid "AMR audio"
+msgstr "Zvuk AMR"
+
+msgid "AMR-WB audio"
+msgstr "Zvuk AMR-WB"
+
+msgid "ULAW (Sun) audio"
+msgstr "Zvuk ULAW (Sun)"
+
+msgid "Commodore 64 audio"
+msgstr "Zvuk Commodore 64"
+
+msgid "PCM audio"
+msgstr "Zvuk PCM"
+
+msgid "AIFC audio"
+msgstr "Zvuk AIFC"
+
+msgid "AIFF/Amiga/Mac audio"
+msgstr "Zvuk AIFF/Amiga/Mac"
+
+msgid "AIFF audio"
+msgstr "Zvuk AIFF"
+
+msgid "Monkey's audio"
+msgstr "Zvuk Monkey's"
+
+msgid "Impulse Tracker audio"
+msgstr "Zvuk Impulse Tracker"
+
+msgid "FLAC audio"
+msgstr "Zvuk FLAC"
+
+msgid "WavPack audio"
+msgstr "Zvuk WavPack"
+
+msgid "WavPack audio correction file"
+msgstr "Opravný zvukový soubor WavPack"
+
+msgid "MIDI audio"
+msgstr "Zvuk MIDI"
+
+msgid "compressed Tracker audio"
+msgstr "Komprimovaný zvuk Tracker"
+
+msgid "MPEG-4 audio"
+msgstr "Zvuk MPEG-4"
+
+msgid "MPEG-4 video"
+msgstr "Video MPEG-4"
+
+msgid "MPEG-4 audio book"
+msgstr "Zvuková kniha MPEG-4"
+
+msgid "3GPP multimedia file"
+msgstr "Soubor multimédií 3GPP"
+
+msgid "3GPP2 multimedia file"
+msgstr "Soubor multimédií 3GPP2"
+
+msgid "Amiga SoundTracker audio"
+msgstr "Zvuk Amiga SoundTracker"
+
+msgid "MP2 audio"
+msgstr "Zvuk MP2"
+
+msgid "MP3 audio"
+msgstr "Zvuk MP3"
+
+msgid "MP3 audio (streamed)"
+msgstr "Zvuk MP3 (proud)"
+
+msgid "HTTP Live Streaming playlist"
+msgstr "Seznam skladeb HTTP Live Streaming"
+
+msgid "Microsoft ASX playlist"
+msgstr "Seznam skladeb Microsoft ASX"
+
+msgid "PSF audio"
+msgstr "Zvuk PSF"
+
+msgid "MiniPSF audio"
+msgstr "Zvuk MiniPSF"
+
+msgid "PSFlib audio library"
+msgstr "Zvuková knihovna PSFlib"
+
+msgid "Windows Media audio"
+msgstr "Zvuk Windows Media"
+
+msgid "Musepack audio"
+msgstr "Zvuk Musepack"
+
+msgid "RealAudio document"
+msgstr "Dokument RealAudio"
+
+msgid "RealMedia Metafile"
+msgstr "RealMedia Metafile"
+
+msgid "RealVideo document"
+msgstr "Dokument RealVideo"
+
+msgid "RealMedia document"
+msgstr "Dokument RealMedia"
+
+msgid "RealPix document"
+msgstr "Dokument RealPix"
+
+msgid "RealText document"
+msgstr "Dokument RealText"
+
+msgid "RIFF audio"
+msgstr "Zvuk RIFF"
+
+msgid "Scream Tracker 3 audio"
+msgstr "Skladba Scream Tracker 3"
+
+msgid "MP3 ShoutCast playlist"
+msgstr "Seznam skladeb MP3 ShoutCast"
+
+msgid "Scream Tracker audio"
+msgstr "Skladba Scream Tracker"
+
+msgid "VOC audio"
+msgstr "Zvuk VOC"
+
+msgid "WAV audio"
+msgstr "Zvuk WAV"
+
+msgid "Scream Tracker instrument"
+msgstr "Nástroj pro Scream Tracker"
+
+msgid "FastTracker II audio"
+msgstr "Zvuk FastTracker II"
+
+msgid "TrueAudio audio"
+msgstr "Zvuk TrueAudio"
+
+msgid "Windows BMP image"
+msgstr "Obrázek Windows BMP"
+
+msgid "WBMP image"
+msgstr "Obrázek WBMP"
+
+msgid "Computer Graphics Metafile"
+msgstr "Computer Graphics Metafile"
+
+msgid "CCITT G3 fax"
+msgstr "Fax CCITT G3"
+
+msgid "G3 fax image"
+msgstr "Obrázek fax G3"
+
+msgid "GIF image"
+msgstr "Obrázek GIF"
+
+msgid "IEF image"
+msgstr "Obrázek IEF"
+
+msgid "JPEG image"
+msgstr "Obrázek JPEG"
+
+msgid "JPEG-2000 image"
+msgstr "Obrázek JPEG-2000"
+
+msgid "OpenRaster archiving image"
+msgstr "Archivační obraz OpenRaster"
+
+msgid "DirectDraw surface"
+msgstr "Plocha DirectDraw"
+
+msgid "X11 cursor"
+msgstr "Kurzor X11"
+
+msgid "EXR image"
+msgstr "Obrázek EXR"
+
+msgid "Macintosh Quickdraw/PICT drawing"
+msgstr "Kresba Macintosh Quickdraw/PICT"
+
+msgid "UFRaw ID image"
+msgstr "Obrázek ID UFRaw"
+
+msgid "digital raw image"
+msgstr "Digitální surový obrázek"
+
+msgid "Adobe DNG negative"
+msgstr "Adobe Digital Negative (DNG)"
+
+msgid "Canon CRW raw image"
+msgstr "Surový obrázek Canon CRW"
+
+msgid "Canon CR2 raw image"
+msgstr "Surový obrázek Canon CR2"
+
+msgid "Fuji RAF raw image"
+msgstr "Surový obrázek Fuji RAF"
+
+msgid "Kodak DCR raw image"
+msgstr "Surový obrázek Kodak DCR"
+
+msgid "Kodak K25 raw image"
+msgstr "Surový obrázek Kodak K25"
+
+msgid "Kodak KDC raw image"
+msgstr "Surový obrázek Kodak KDC"
+
+msgid "Minolta MRW raw image"
+msgstr "Surový obrázek Minolta MRW"
+
+msgid "Nikon NEF raw image"
+msgstr "Surový obrázek Nikon NEF"
+
+msgid "Olympus ORF raw image"
+msgstr "Surový obrázek Olympus ORF"
+
+msgid "Panasonic raw image"
+msgstr "Surový obrázek Panasonic"
+
+msgid "Panasonic raw2 image"
+msgstr "Surový obrázek Panasonic raw2"
+
+msgid "Pentax PEF raw image"
+msgstr "Surový obrázek Pentax PEF"
+
+msgid "Sigma X3F raw image"
+msgstr "Surový obrázek Sigma X3F"
+
+msgid "Sony SRF raw image"
+msgstr "Surový obrázek Sony SRF"
+
+msgid "Sony SR2 raw image"
+msgstr "Surový obrázek Sony SR2"
+
+msgid "Sony ARW raw image"
+msgstr "Surový obrázek Sony ARW"
+
+msgid "PNG image"
+msgstr "Obrázek PNG"
+
+msgid "Apple optimised PNG image"
+msgstr "Nemohu uložit PNG obrázek."
+
+msgid "Run Length Encoded bitmap image"
+msgstr "Obrázek bitové mapy Run Length Encoded"
+
+msgid "SVG image"
+msgstr "Obrázek SVG"
+
+msgid "compressed SVG image"
+msgstr "Komprimovaný obrázek SVG"
+
+msgid "TIFF image"
+msgstr "Obrázek TIFF"
+
+msgid "AutoCAD image"
+msgstr "Obrázek AutoCAD"
+
+msgid "DXF vector image"
+msgstr "Vektorový obrázek DXF"
+
+msgid "Microsoft Document Imaging format"
+msgstr "Formát Microsoft Document Imaging"
+
+msgid "3D Studio image"
+msgstr "Obrázek 3D Studio"
+
+msgid "Applix Graphics image"
+msgstr "Obrázek Applix Graphics"
+
+msgid "EPS image (bzip-compressed)"
+msgstr "Obrázek EPS (komprimovaný pomocí bzip)"
+
+msgid "CMU raster image"
+msgstr "Rastrový obrázek CMU"
+
+msgid "compressed GIMP image"
+msgstr "Komprimovaný obrázek GIMP"
+
+msgid "DICOM image"
+msgstr "Obrázek DICOM"
+
+msgid "DocBook document"
+msgstr "Dokument DocBook"
+
+msgid "DIB image"
+msgstr "Obrázek DIB"
+
+msgid "DjVu image"
+msgstr "Obrázek DjVu"
+
+msgid "DPX image"
+msgstr "Obrázek DPX"
+
+msgid "EPS image"
+msgstr "Obrázek EPS"
+
+msgid "FITS document"
+msgstr "Dokument FITS"
+
+msgid "FPX image"
+msgstr "Obrázek FPX"
+
+msgid "EPS image (gzip-compressed)"
+msgstr "Obrázek EPS (komprimovaný pomocí gzip)"
+
+msgid "Microsoft icon"
+msgstr "Ikona Microsoft"
+
+msgid "MacOS X icon"
+msgstr "Ikona MacOS X"
+
+msgid "IFF image"
+msgstr "Obrázek IFF"
+
+msgid "ILBM image"
+msgstr "Obrázek ILMB"
+
+msgid "JNG image"
+msgstr "Obrázek JNG"
+
+msgid "LightWave object"
+msgstr "Objekt LightWave"
+
+msgid "LightWave scene"
+msgstr "Scéna LightWave"
+
+msgid "MacPaint Bitmap image"
+msgstr "Obrázek MacPaint Bitmap"
+
+msgid "Office drawing"
+msgstr "Kresba Office"
+
+msgid "NIFF image"
+msgstr "Obrázek NIFF"
+
+msgid "PCX image"
+msgstr "Obrázek PCX"
+
+msgid "PCD image"
+msgstr "Obrázek PCD"
+
+msgid "PNM image"
+msgstr "Obrázek PNM"
+
+msgid "PBM image"
+msgstr "Obrázek PBM"
+
+msgid "PGM image"
+msgstr "Obrázek PGM"
+
+msgid "PPM image"
+msgstr "Obrázek PPM"
+
+msgid "Photoshop image"
+msgstr "Obrázek Photoshop"
+
+msgid "RGB image"
+msgstr "Obrázek RGB"
+
+msgid "SGI image"
+msgstr "Obrázek SGI"
+
+msgid "Sun raster image"
+msgstr "Rastrový obrázek Sun"
+
+msgid "TGA image"
+msgstr "Obrázek TGA"
+
+msgid "Windows cursor"
+msgstr "Kurzor Windows"
+
+msgid "Windows animated cursor"
+msgstr "Animovaný kurzor Windows"
+
+msgid "EMF image"
+msgstr "Obrázek EMF"
+
+msgid "WMF image"
+msgstr "Obrázek WMF"
+
+msgid "XBM image"
+msgstr "Obrázek XBM"
+
+msgid "GIMP image"
+msgstr "Obrázek GIMP"
+
+msgid "XFig image"
+msgstr "Obrázek XFig"
+
+msgid "XPM image"
+msgstr "Obrázek XPM"
+
+msgid "X window image"
+msgstr "Obrázek X window"
+
+msgid "block device"
+msgstr "Blokové zařízení"
+
+msgid "character device"
+msgstr "Znakové zařízení"
+
+msgid "folder"
+msgstr "složka"
+
+msgid "pipe"
+msgstr "Roura"
+
+msgid "mount point"
+msgstr "Místo připojení"
+
+msgid "socket"
+msgstr "Socket"
+
+msgid "symbolic link"
+msgstr "Symbolický odkaz"
+
+msgid "mail delivery report"
+msgstr "Zpráva o doručení pošty"
+
+msgid "mail disposition report"
+msgstr "Zpráva o předání pošty"
+
+msgid "reference to remote file"
+msgstr "Odkaz na vzdálený soubor"
+
+msgid "Usenet news message"
+msgstr "Příspěvek do diskusních skupin Usenet"
+
+msgid "partial email message"
+msgstr "Částečná e-mailová zpráva"
+
+msgid "email message"
+msgstr "E-mailová zpráva"
+
+msgid "GNU mail message"
+msgstr "Zpráva GNU mail"
+
+msgid "VRML document"
+msgstr "Dokument VRML"
+
+msgid "message in several formats"
+msgstr "Zpráva v několika formátech"
+
+msgid "Macintosh AppleDouble-encoded file"
+msgstr "Soubor kódovaný pomocí Macintosh AppleDouble"
+
+msgid "message digest"
+msgstr "Přehled zpráv"
+
+msgid "encrypted message"
+msgstr "Zašifrovaná zpráva"
+
+msgid "compound documents"
+msgstr "Složené dokumenty"
+
+msgid "compound document"
+msgstr "Složený dokument"
+
+msgid "mail system report"
+msgstr "Zpráva poštovního systému"
+
+msgid "signed message"
+msgstr "Podepsaná zpráva"
+
+msgid "stream of data (server push)"
+msgstr "Proud dat (posílaný serverem)"
+
+msgid "VCS/ICS calendar"
+msgstr "Kalendář VCS/ICS"
+
+msgid "CSS stylesheet"
+msgstr "Styl CSS"
+
+msgid "electronic business card"
+msgstr "Elektronická navštívenka"
+
+msgid "txt2tags document"
+msgstr "Dokument txt2tags"
+
+msgid "Verilog source code"
+msgstr "Zdrojový kód Verilog"
+
+msgid "SystemVerilog header"
+msgstr "Záhlaví SystemVerilog"
+
+msgid "SystemVerilog source code"
+msgstr "Zdrojový kód SystemVerilog"
+
+msgid "VHDL source code"
+msgstr "Zdrojový kód VHDL"
+
+msgid "enriched text document"
+msgstr "Rozšířený textový dokument"
+
+msgid "help page"
+msgstr "Stránka nápovědy"
+
+msgid "plain text document"
+msgstr "Prostý textový dokument"
+
+msgid "RDF file"
+msgstr "Soubor RDF"
+
+msgid "email headers"
+msgstr "Záhlaví e-mailu"
+
+msgid "rich text document"
+msgstr "Textový dokument RTF"
+
+msgid "RSS summary"
+msgstr "Souhrn RSS"
+
+msgid "Atom syndication feed"
+msgstr "Kanál Atom"
+
+msgid "OPML syndication feed"
+msgstr "Kanál OPML"
+
+msgid "SGML document"
+msgstr "Dokument SGML"
+
+msgid "spreadsheet interchange document"
+msgstr "Sešitový přenosový dokument"
+
+msgid "TSV document"
+msgstr "Dokument TSV"
+
+msgid "Graphviz DOT graph"
+msgstr "Graf Graphviz DOT"
+
+msgid "JAD document"
+msgstr "Dokument JAD"
+
+msgid "WML document"
+msgstr "Dokument WML"
+
+msgid "WMLScript program"
+msgstr "Program WMLScript"
+
+msgid "ACE archive"
+msgstr "Archiv ACE"
+
+msgid "Ada source code"
+msgstr "Zdrojový kód v Adě"
+
+msgid "author list"
+msgstr "Seznam autorů"
+
+msgid "BibTeX document"
+msgstr "Dokument BibTeX"
+
+msgid "C++ header"
+msgstr "Záhlaví v C++"
+
+msgid "C++ source code"
+msgstr "Zdrojový kód v C++"
+
+msgid "ChangeLog document"
+msgstr "Dokument ChangeLog"
+
+msgid "C header"
+msgstr "Záhlaví v C"
+
+msgid "CMake source code"
+msgstr "Zdrojový kód CMake"
+
+msgid "CSV document"
+msgstr "Dokument CSV"
+
+msgid "license terms"
+msgstr "Licenční podmínky"
+
+msgid "author credits"
+msgstr "Autorské zásluhy"
+
+msgid "C source code"
+msgstr "Zdrojový kód v C"
+
+msgid "C# source code"
+msgstr "Zdrojový kód v C#"
+
+msgid "Vala source code"
+msgstr "Zdrojový kód Vala"
+
+msgid "OOC source code"
+msgstr "Zdrojový kód OOC"
+
+msgid "DCL script"
+msgstr "Skript DCL"
+
+msgid "DSSSL document"
+msgstr "Dokument DSSSL"
+
+msgid "D source code"
+msgstr "Zdrojový kód v D"
+
+msgid "DTD file"
+msgstr "Soubor DTD"
+
+msgid "Eiffel source code"
+msgstr "Zdrojový kód Eiffel"
+
+msgid "Emacs Lisp source code"
+msgstr "Zdrojový kód Emacs Lisp"
+
+msgid "Erlang source code"
+msgstr "Zdrojový kód Erlang"
+
+msgid "Fortran source code"
+msgstr "Zdrojový kód Fortran"
+
+msgid "translation file"
+msgstr "Soubor překladu"
+
+msgid "translation template"
+msgstr "Šablona překladu"
+
+msgid "HTML document"
+msgstr "Dokument HTML"
+
+msgid "Web application cache manifest"
+msgstr "Manifest mezipaměti webové aplikace"
+
+msgid "Google Video Pointer"
+msgstr "Google Video Pointer"
+
+msgid "Haskell source code"
+msgstr "Zdrojový kód Haskell"
+
+msgid "IDL document"
+msgstr "Dokument IDL"
+
+msgid "installation instructions"
+msgstr "Návod k instalaci"
+
+msgid "Java source code"
+msgstr "Zdrojový kód v Javě"
+
+msgid "LDIF address book"
+msgstr "Adresář LDIF"
+
+msgid "Lilypond music sheet"
+msgstr "Notový papír Lilypond"
+
+msgid "LHS source code"
+msgstr "Zdrojový kód v LHS"
+
+msgid "application log"
+msgstr "Záznam aplikace"
+
+msgid "Makefile"
+msgstr "Makefile"
+
+msgid "Markdown document"
+msgstr "Dokument Markdown"
+
+msgid "Qt MOC file"
+msgstr "Soubor Qt MOC"
+
+msgid "Windows Registry extract"
+msgstr "Část registrů Windows"
+
+msgid "Managed Object Format"
+msgstr "Managed Object Format"
+
+msgid "Mup publication"
+msgstr "Publikace Mup"
+
+msgid "Objective-C source code"
+msgstr "Zdrojový kód v Objective-C"
+
+msgid "OCaml source code"
+msgstr "Zdrojový kód OCaml"
+
+msgid "MATLAB script/function"
+msgstr "Skript/funkce MATLAB"
+
+msgid "Pascal source code"
+msgstr "Zdrojový kód v Pascalu"
+
+msgid "differences between files"
+msgstr "Rozdíly mezi soubory"
+
+msgid "Go source code"
+msgstr "Zdrojový kód Go"
+
+msgid "Python script"
+msgstr "Skript v Pythonu"
+
+msgid "Lua script"
+msgstr "Skript Lua"
+
+msgid "README document"
+msgstr "Dokument README"
+
+msgid "NFO document"
+msgstr "Dokument NFO"
+
+msgid "RPM spec file"
+msgstr "Soubor spec RPM"
+
+msgid "Scala source code"
+msgstr "Zdrojový kód Scala"
+
+msgid "Scheme source code"
+msgstr "Zdrojový kód Scheme"
+
+msgid "Setext document"
+msgstr "Dokument Setext"
+
+msgid "SQL code"
+msgstr "Kód SQL"
+
+msgid "Tcl script"
+msgstr "Skript v Tcl"
+
+msgid "TeX document"
+msgstr "Dokument TeX"
+
+msgid "TeXInfo document"
+msgstr "Dokument TeXInfo"
+
+msgid "Troff ME input document"
+msgstr "Vstupní dokument Troff ME"
+
+msgid "Troff MM input document"
+msgstr "Vstupní dokument Troff MM"
+
+msgid "Troff MS input document"
+msgstr "Vstupní dokument Troff MS"
+
+msgid "X-Motif UIL table"
+msgstr "Tabulka X-Motif UIL"
+
+msgid "resource location"
+msgstr "Umístění zdroje"
+
+msgid "XMI file"
+msgstr "Soubor XMI"
+
+msgid "XSL FO file"
+msgstr "Soubor XSL FO"
+
+msgid "iptables configuration file"
+msgstr "Soubor nastavení iptables"
+
+msgid "XSLT stylesheet"
+msgstr "Styl XSLT"
+
+msgid "XMCD CD database"
+msgstr "Databáze XMCD CD"
+
+msgid "XML document"
+msgstr "Dokument XML"
+
+msgid "XML entities document"
+msgstr "Dokument entit XML"
+
+msgid "DV video"
+msgstr "Video DV"
+
+msgid "ISI video"
+msgstr "Video ISI"
+
+msgid "MPEG-2 transport stream"
+msgstr "Přenosový proud MPEG-2"
+
+msgid "MPEG video"
+msgstr "Video MPEG"
+
+msgid "MPEG video (streamed)"
+msgstr "Video MPEG (proud)"
+
+msgid "QuickTime video"
+msgstr "Video QuickTime"
+
+msgid "QuickTime image"
+msgstr "Obrázek QuickTime"
+
+msgid "Vivo video"
+msgstr "Video Vivo"
+
+msgid "Wavelet video"
+msgstr "Video Wavelet"
+
+msgid "ANIM animation"
+msgstr "Animace ANIM"
+
+msgid "FLIC animation"
+msgstr "Animace FLIC"
+
+msgid "Haansoft Hangul document"
+msgstr "Dokument Haansoft Hangul"
+
+msgid "Haansoft Hangul document template"
+msgstr "Šablona dokumentu Haansoft Hangul"
+
+msgid "MNG animation"
+msgstr "Animace MNG"
+
+msgid "ASF video"
+msgstr "Video ASF"
+
+msgid "Windows Media Station file"
+msgstr "Soubor Windows Media Station"
+
+msgid "Windows Media video"
+msgstr "Video Windows Media"
+
+msgid "AVI video"
+msgstr "Video AVI"
+
+msgid "NullSoft video"
+msgstr "Video NullSoft"
+
+msgid "SDP multicast stream file"
+msgstr "Soubor vícesměrového vysílání proudu SDP"
+
+msgid "SGI video"
+msgstr "Video SGI"
+
+msgid "eMusic download package"
+msgstr "Balíček stahování eMusic"
+
+msgid "KML geographic data"
+msgstr "Geografická data KML"
+
+msgid "KML geographic compressed data"
+msgstr "Komprimovaná geografická data KML"
+
+msgid "Citrix ICA settings file"
+msgstr "Soubor nastavení Citrix ICA"
+
+msgid "XUL interface document"
+msgstr "Dokument rozhraní XUL"
+
+msgid "XPInstall installer module"
+msgstr "Modul instalátoru XPInstall"
+
+msgid "Word 2007 document"
+msgstr "Dokument Word 2007"
+
+msgid "Word 2007 document template"
+msgstr "Šablona dokumentu Word 2007"
+
+msgid "PowerPoint 2007 presentation"
+msgstr "Prezentace PowerPoint 2007"
+
+msgid "PowerPoint 2007 slide"
+msgstr "Snímek PowerPoint 2007"
+
+msgid "PowerPoint 2007 show"
+msgstr "Prezentace PowerPoint 2007"
+
+msgid "PowerPoint 2007 presentation template"
+msgstr "Šablona prezentace PowerPoint 2007"
+
+msgid "Excel 2007 spreadsheet"
+msgstr "Sešit Excel 2007"
+
+msgid "Excel 2007 spreadsheet template"
+msgstr "Šablona sešitu Excel 2007"
+
+msgid "T602 document"
+msgstr "Dokument T602"
+
+msgid "Cisco VPN Settings"
+msgstr "Nastavení Cisco VPN"
+
+msgid "ICC profile"
+msgstr "Profil ICC"
+
+msgid "IT 8.7 color calibration file"
+msgstr "Soubor kalibrace barev IT 8.7"
+
+msgid "CCMX color correction file"
+msgstr "Opravný zvukový soubor WavPack"
+
+msgid "digital photos"
+msgstr "Digitální fotografie"
+
+msgid "Video CD"
+msgstr "Video CD"
+
+msgid "Super Video CD"
+msgstr "Super Video CD"
+
+msgid "video DVD"
+msgstr "DVD-Video"
+
+msgid "audio CD"
+msgstr "Zvukové CD"
+
+msgid "blank CD disc"
+msgstr "Prázdný disk CD"
+
+msgid "blank DVD disc"
+msgstr "Prázdný disk DVD"
+
+msgid "blank Blu-ray disc"
+msgstr "Prázdný disk Blu-ray"
+
+msgid "blank HD DVD disc"
+msgstr "Prázdný disk HD DVD"
+
+msgid "audio DVD"
+msgstr "Zvukové DVD"
+
+msgid "Blu-ray video disc"
+msgstr "Videodisk Blu-ray"
+
+msgid "HD DVD video disc"
+msgstr "Videodisk HD DVD"
+
+msgid "e-book reader"
+msgstr "Čtečka elektronických knih"
+
+msgid "Picture CD"
+msgstr "Picture CD"
+
+msgid "portable audio player"
+msgstr "Přenosný zvukový přehrávač"
+
+msgid "software"
+msgstr "Software"
+
+msgid "UNIX software"
+msgstr "Software UNIX"
+
+msgid "Windows software"
+msgstr "Software Windows"
+
+msgid "ATK inset"
+msgstr "Vložka ATK"
+
+msgid "electronic book document"
+msgstr "Dokument elektronické knihy"
+
+msgid "Adobe Illustrator document"
+msgstr "Dokument Adobe Illustrator"
+
+msgid "Macintosh BinHex-encoded file"
+msgstr "Soubor kódovaný pomocí Macintosh BinHex"
+
+msgid "Mathematica Notebook"
+msgstr "Sešit Mathematica"
+
+msgid "MathML document"
+msgstr "Dokument MathML"
+
+msgid "mailbox file"
+msgstr "Soubor mailbox"
+
+msgid "Metalink file"
+msgstr "Soubor metalink"
+
+msgid "unknown"
+msgstr "neznámý"
+
+msgid "ODA document"
+msgstr "Dokument ODA"
+
+msgid "WWF document"
+msgstr "Dokument WWF"
+
+msgid "PDF document"
+msgstr "Dokument PDF"
+
+msgid "XSPF playlist"
+msgstr "Seznam skladeb XSPF"
+
+msgid "Microsoft Windows theme pack"
+msgstr "Balík motivů Microsoft Windows"
+
+msgid "AmazonMP3 download file"
+msgstr "Chyba při načítání souboru."
+
+msgid "GSM 06.10 audio"
+msgstr "Zvuk GSM 06.10"
+
+msgid "iRiver Playlist"
+msgstr "Seznam skladeb iRiver"
+
+msgid "PGP/MIME-encrypted message header"
+msgstr "Záhlaví zprávy zašifrované pomocí PGP/MIME"
+
+msgid "PGP keys"
+msgstr "Klíče PGP"
+
+msgid "detached OpenPGP signature"
+msgstr "Oddělený podpis OpenPGP"
+
+msgid "PKCS#7 Message or Certificate"
+msgstr "Svazek certifikátů PKCS#12"
+
+msgid "detached S/MIME signature"
+msgstr "Oddělený podpis S/MIME"
+
+msgid "PKCS#8 private key"
+msgstr "Soukromý klíč PKCS#8"
+
+msgid "PKCS#10 certification request"
+msgstr "Požadavek na certifikát PKCS#10"
+
+msgid "X.509 certificate"
+msgstr "Certifikát X.509"
+
+msgid "Certificate revocation list"
+msgstr "Seznam odvolaných certifikátů"
+
+msgid "PkiPath certification path"
+msgstr "Cesta k certifikátu PkiPath"
+
+msgid "PS document"
+msgstr "Dokument PS"
+
+msgid "Plucker document"
+msgstr "Dokument Plucker"
+
+msgid "RELAX NG XML schema"
+msgstr "Schéma RELAX NG XML"
+
+msgid "RTF document"
+msgstr "Dokument RTF"
+
+msgid "Sieve mail filter script"
+msgstr "Skript poštovního filtru Sieve"
+
+msgid "SMIL document"
+msgstr "Dokument SMIL"
+
+msgid "WPL playlist"
+msgstr "Seznam skladeb WPL"
+
+msgid "SQLite2 database"
+msgstr "Databáze SQLite2"
+
+msgid "SQLite3 database"
+msgstr "Databáze SQLite3"
+
+msgid "GEDCOM family history"
+msgstr "Rodokmen GEDCOM"
+
+msgid "Flash video"
+msgstr "Video Flash"
+
+msgid "JavaFX video"
+msgstr "Video JavaFX"
+
+msgid "SGF record"
+msgstr "Záznam SGF"
+
+msgid "XLIFF translation file"
+msgstr "Soubor překladu XLIFF"
+
+msgid "YAML document"
+msgstr "Dokument YAML"
+
+msgid "Corel Draw drawing"
+msgstr "Kresba Corel Draw"
+
+msgid "HPGL file"
+msgstr "Soubor HPGL"
+
+msgid "PCL file"
+msgstr "Soubor PCL"
+
+msgid "Lotus 1-2-3 spreadsheet"
+msgstr "Sešit Lotus 1-2-3"
+
+msgid "Lotus Word Pro"
+msgstr "Proxy h&eslo:"
+
+msgid "JET database"
+msgstr "Databáze JET"
+
+msgid "Microsoft Cabinet archive"
+msgstr "Archiv Microsoft Cabinet"
+
+msgid "Excel spreadsheet"
+msgstr "Sešit Excel"
+
+msgid "Excel add-in"
+msgstr "Doplněk aplikace Excel"
+
+msgid "Excel 2007 binary spreadsheet"
+msgstr "Binární formát sešitu Excel 2007"
+
+msgid "Excel macro-enabled spreadsheet"
+msgstr "Sešit Excel s podporou maker"
+
+msgid "Excel macro-enabled spreadsheet template"
+msgstr "Šablona sešitu Excel s podporou maker"
+
+msgid "PowerPoint presentation"
+msgstr "Prezentace PowerPoint"
+
+msgid "PowerPoint add-in"
+msgstr "Doplněk PowerPoint"
+
+msgid "PowerPoint macro-enabled presentation"
+msgstr "Prezentace PowerPoint s podporou maker"
+
+msgid "PowerPoint macro-enabled slide"
+msgstr "Snímek PowerPoint s podporou maker"
+
+msgid "PowerPoint macro-enabled presentation template"
+msgstr "Šablona prezentace PowerPoint s podporou maker"
+
+msgid "Word macro-enabled document"
+msgstr "Dokument Word s podporou maker"
+
+msgid "Word macro-enabled document template"
+msgstr "Šablona dokumentu Word s podporou maker"
+
+msgid "XPS document"
+msgstr "Dokument XPS"
+
+msgid "Microsoft Works document"
+msgstr "Dokument Microsoft Works"
+
+msgid "Microsoft Visio document"
+msgstr "Dokument Microsoft Works"
+
+msgid "Word document"
+msgstr "Dokument Word"
+
+msgid "Word template"
+msgstr "Šablona Word"
+
+msgid "GML document"
+msgstr "_Metadata Dokumentu..."
+
+msgid "GNUnet search file"
+msgstr "Vyhledávací soubor GNUnet"
+
+msgid "TNEF message"
+msgstr "Zpráva TNEF"
+
+msgid "StarCalc spreadsheet"
+msgstr "Sešit StarCalc"
+
+msgid "StarChart chart"
+msgstr "Graf StarChart"
+
+msgid "StarDraw drawing"
+msgstr "Kresba StarDraw"
+
+msgid "StarImpress presentation"
+msgstr "Prezentace StarImpress"
+
+msgid "StarMail email"
+msgstr "E-mail StarMail"
+
+msgid "StarMath formula"
+msgstr "Vzorec StarMath"
+
+msgid "StarWriter document"
+msgstr "Dokument StarWriter"
+
+msgid "OpenOffice Calc spreadsheet"
+msgstr "Sešit OpenOffice Calc"
+
+msgid "OpenOffice Calc template"
+msgstr "Šablona OpenOffice Calc"
+
+msgid "OpenOffice Draw drawing"
+msgstr "Kresba OpenOffice Draw"
+
+msgid "OpenOffice Draw template"
+msgstr "Šablona OpenOffice Draw"
+
+msgid "OpenOffice Impress presentation"
+msgstr "Prezentace OpenOffice Impress"
+
+msgid "OpenOffice Impress template"
+msgstr "Šablona OpenOffice Impress"
+
+msgid "OpenOffice Math formula"
+msgstr "Vzorec OpenOffice Math"
+
+msgid "OpenOffice Writer document"
+msgstr "Dokument OpenOffice Writer"
+
+msgid "OpenOffice Writer global document"
+msgstr "Globální dokument OpenOffice Writer"
+
+msgid "OpenOffice Writer template"
+msgstr "Šablona OpenOffice Writer"
+
+msgid "ODT document"
+msgstr "Dokument ODT"
+
+msgid "ODT document (Flat XML)"
+msgstr "Dokument ODT (Flat XML)"
+
+msgid "ODT template"
+msgstr "Šablona ODT"
+
+msgid "OTH template"
+msgstr "Šablona OTH"
+
+msgid "ODM document"
+msgstr "Dokument ODM"
+
+msgid "ODG drawing"
+msgstr "Kresba ODG"
+
+msgid "ODG drawing (Flat XML)"
+msgstr "Kresba ODG (Flat XML)"
+
+msgid "ODG template"
+msgstr "Šablona ODG"
+
+msgid "ODP presentation"
+msgstr "Prezentace ODP"
+
+msgid "ODP presentation (Flat XML)"
+msgstr "Prezentace ODP (Flat XML)"
+
+msgid "ODP template"
+msgstr "Šablona ODP"
+
+msgid "ODS spreadsheet"
+msgstr "Sešit ODS"
+
+msgid "ODS spreadsheet (Flat XML)"
+msgstr "Sešit ODS (Flat XML)"
+
+msgid "ODS template"
+msgstr "Šablona ODS"
+
+msgid "ODC chart"
+msgstr "Graf ODC"
+
+msgid "ODC template"
+msgstr "Šablona ODC"
+
+msgid "ODF formula"
+msgstr "Vzorec ODF"
+
+msgid "ODF template"
+msgstr "Šablona ODF"
+
+msgid "ODB database"
+msgstr "Databáze ODB"
+
+msgid "ODI image"
+msgstr "Obrázek ODI"
+
+msgid "OpenOffice.org extension"
+msgstr "Rozšíření OpenOffice.org"
+
+msgid "Android package"
+msgstr "Balíčky systému Android"
+
+msgid "SIS package"
+msgstr "Balíček SIS"
+
+msgid "SISX package"
+msgstr "Balíček SISX"
+
+msgid "Network Packet Capture"
+msgstr "Network Packet Capture"
+
+msgid "WordPerfect document"
+msgstr "Dokument WordPerfect"
+
+msgid "SPSS Portable Data File"
+msgstr "Soubor přenositelných dat SPSS"
+
+msgid "SPSS Data File"
+msgstr "Datový soubor SPSS"
+
+msgid "XBEL bookmarks"
+msgstr "Záložky XBEL"
+
+msgid "7-zip archive"
+msgstr "Archiv 7-zip"
+
+msgid "AbiWord document"
+msgstr "Dokument AbiWord"
+
+msgid "CD image cuesheet"
+msgstr "Rozvržení stop obrazu CD"
+
+msgid "Lotus AmiPro document"
+msgstr "Dokument Lotus AmiPro"
+
+msgid "AportisDoc document"
+msgstr "Dokument AportisDoc"
+
+msgid "Applix Spreadsheets spreadsheet"
+msgstr "Sešit Applix Spreadsheets"
+
+msgid "Applix Words document"
+msgstr "Dokument Applix Words"
+
+msgid "ARC archive"
+msgstr "Archiv ARC"
+
+msgid "AR archive"
+msgstr "Archiv AR"
+
+msgid "ARJ archive"
+msgstr "Archiv ARJ"
+
+msgid "ASP page"
+msgstr "Stránka ASP"
+
+msgid "AWK script"
+msgstr "Skript AWK"
+
+msgid "BCPIO document"
+msgstr "Dokument BCPIO"
+
+msgid "BitTorrent seed file"
+msgstr "Soubor BitTorrent"
+
+msgid "Blender scene"
+msgstr "Scéna Blender"
+
+msgid "TeX DVI document (bzip-compressed)"
+msgstr "Dokument TeX DVI (komprimovaný pomocí bzip)"
+
+msgid "Bzip archive"
+msgstr "Archiv bzip"
+
+msgid "Tar archive (bzip-compressed)"
+msgstr "Archiv tar (komprimovaný pomocí bzip)"
+
+msgid "PDF document (bzip-compressed)"
+msgstr "Dokument PDF (komprimovaný pomocí bzip)"
+
+msgid "PostScript document (bzip-compressed)"
+msgstr "Dokument PostScript (komprimovaný pomocí bzip)"
+
+msgid "comic book archive"
+msgstr "Archiv knihy komiksů"
+
+msgid "Lrzip archive"
+msgstr "Archiv Lrzip"
+
+msgid "Tar archive (lrzip-compressed)"
+msgstr "Archiv tar (komprimovaný pomocí lrzip)"
+
+msgid "Apple disk image"
+msgstr "Obraz disku Apple"
+
+msgid "raw CD image"
+msgstr "Surový obraz CD"
+
+msgid "CD Table Of Contents"
+msgstr "Obsah CD"
+
+msgid "PGN chess game notation"
+msgstr "Šachová notace PGN"
+
+msgid "CHM document"
+msgstr "Dokument CHM"
+
+msgid "Java byte code"
+msgstr "Bajtový kód Java"
+
+msgid "UNIX-compressed file"
+msgstr "Soubor komprimovaný v Unixu"
+
+msgid "Tar archive (gzip-compressed)"
+msgstr "Archiv tar (komprimovaný pomocí gzip)"
+
+msgid "program crash data"
+msgstr "Data o pádu programu"
+
+msgid "CPIO archive"
+msgstr "Archiv CPIO"
+
+msgid "CPIO archive (gzip-compressed)"
+msgstr "Archiv CPIO (komprimovaný pomocí gzip)"
+
+msgid "C shell script"
+msgstr "Skript shellu C"
+
+msgid "Xbase document"
+msgstr "Dokument Xbase"
+
+msgid "ECMAScript program"
+msgstr "Program ECMAScript"
+
+msgid "Dreamcast ROM"
+msgstr "ROM pro Dreamcast"
+
+msgid "Nintendo DS ROM"
+msgstr "ROM pro Nintendo DS"
+
+msgid "Debian package"
+msgstr "Balíček Debianu"
+
+msgid "Qt Designer file"
+msgstr "Soubor Qt Designer"
+
+msgid "Qt Markup Language file"
+msgstr "Soubor Qt Markup Language"
+
+msgid "desktop configuration file"
+msgstr "Soubor nastavení pracovní plochy"
+
+msgid "FictionBook document"
+msgstr "Dokument FictionBook"
+
+msgid "Dia diagram"
+msgstr "Diagram Dia"
+
+msgid "Dia shape"
+msgstr "Tvary Dia"
+
+msgid "TeX DVI document"
+msgstr "Dokument TeX DVI"
+
+msgid "Enlightenment theme"
+msgstr "Motiv Enlightenment"
+
+msgid "Egon Animator animation"
+msgstr "Animace Egon Animator"
+
+msgid "executable"
+msgstr "Spustitelný soubor"
+
+msgid "FLTK Fluid file"
+msgstr "Soubor FLTK Fluid"
+
+msgid "Postscript type-1 font"
+msgstr "Písmo Postscript type-1"
+
+msgid "Adobe font metrics"
+msgstr "Metrika písma Adobe"
+
+msgid "BDF font"
+msgstr "Písmo BDF"
+
+msgid "DOS font"
+msgstr "Písmo pro DOS"
+
+msgid "Adobe FrameMaker font"
+msgstr "Písmo Adobe FrameMaker"
+
+msgid "LIBGRX font"
+msgstr "Písmo LIBGRX"
+
+msgid "Linux PSF console font"
+msgstr "Písmo PSF pro konzolu Linuxu"
+
+msgid "Linux PSF console font (gzip-compressed)"
+msgstr "Písmo PSF pro konzolu Linuxu (komprimované pomocí gzip)"
+
+msgid "PCF font"
+msgstr "Písmo PCF"
+
+msgid "OpenType font"
+msgstr "Písmo OpenType"
+
+msgid "Speedo font"
+msgstr "Písmo Speedo"
+
+msgid "SunOS News font"
+msgstr "Písmo SunOS News"
+
+msgid "TeX font"
+msgstr "Písmo TeX"
+
+msgid "TeX font metrics"
+msgstr "Metrika písma TeX"
+
+msgid "TrueType font"
+msgstr "Písmo TrueType"
+
+msgid "TrueType XML font"
+msgstr "Písmo TrueType XML"
+
+msgid "V font"
+msgstr "Písmo V"
+
+msgid "Adobe FrameMaker document"
+msgstr "Dokument Adobe FrameMaker"
+
+msgid "Game Boy ROM"
+msgstr "ROM pro Game Boy"
+
+msgid "Game Boy Advance ROM"
+msgstr "ROM pro Game Boy Advance"
+
+msgid "GDBM database"
+msgstr "Databáze GDBM"
+
+msgid "Genesis ROM"
+msgstr "ROM pro Genesis"
+
+msgid "translated messages (machine-readable)"
+msgstr "Přeložené zprávy (strojově čitelné)"
+
+msgid "GTK+ Builder"
+msgstr "&Tvůrce dotazů"
+
+msgid "Glade project"
+msgstr "Projekt Glade"
+
+msgid "GMC link"
+msgstr "Odkaz GMC"
+
+msgid "GnuCash financial data"
+msgstr "Finanční data GnuCash"
+
+msgid "Gnumeric spreadsheet"
+msgstr "Sešit Gnumeric"
+
+msgid "Gnuplot document"
+msgstr "Dokument Gnuplot"
+
+msgid "Graphite scientific graph"
+msgstr "Vědecký graf Graphite"
+
+msgid "GTKtalog catalog"
+msgstr "Katalog GTKtalog"
+
+msgid "TeX DVI document (gzip-compressed)"
+msgstr "Dokument TeX DVI (komprimovaný pomocí gzip)"
+
+msgid "Gzip archive"
+msgstr "Archiv gzip"
+
+msgid "PDF document (gzip-compressed)"
+msgstr "Dokument PDF (komprimovaný pomocí gzip)"
+
+msgid "PostScript document (gzip-compressed)"
+msgstr "Dokument PostScript (komprimovaný pomocí gzip)"
+
+msgid "HDF document"
+msgstr "Dokument HDF"
+
+msgid "iPod firmware"
+msgstr "Firmware iPod"
+
+msgid "Java archive"
+msgstr "Archiv Java"
+
+msgid "Java class"
+msgstr "Třída Java"
+
+msgid "JNLP file"
+msgstr "Soubor JNLP"
+
+msgid "Java keystore"
+msgstr "Java keystore"
+
+msgid "Java JCE keystore"
+msgstr "Java JCE keystore"
+
+msgid "Pack200 Java archive"
+msgstr "Archiv Java Pack200"
+
+msgid "JavaScript program"
+msgstr "Program v JavaScriptu"
+
+msgid "JBuilder project"
+msgstr "Projekt JBuilder"
+
+msgid "Karbon14 drawing"
+msgstr "Kresba Karbon14"
+
+msgid "KChart chart"
+msgstr "Graf Chart"
+
+msgid "Kexi settings for database server connection"
+msgstr "Nastavení Kexi ke spojení s databázovým serverem"
+
+msgid "shortcut to Kexi project on database server"
+msgstr "Zástupce projektu Kexi na databázovém serveru"
+
+msgid "Kexi database file-based project"
+msgstr "Projekt založený na souboru databáze Kexi"
+
+msgid "KFormula formula"
+msgstr "Vzorec KFormula"
+
+msgid "KIllustrator drawing"
+msgstr "Kresba KIllustrator"
+
+msgid "Kivio flowchart"
+msgstr "Vývojový diagram Kivio"
+
+msgid "Kontour drawing"
+msgstr "Kresba Kontour"
+
+msgid "KPovModeler scene"
+msgstr "Scéna KPovModeler"
+
+msgid "KPresenter presentation"
+msgstr "Prezentace KPresenter"
+
+msgid "Krita document"
+msgstr "Dokument Krita"
+
+msgid "KSpread spreadsheet"
+msgstr "Sešit KSpread"
+
+msgid "KSpread spreadsheet (encrypted)"
+msgstr "Sešit KSpread (šifrovaný)"
+
+msgid "KSysV init package"
+msgstr "Balíček init KSysV"
+
+msgid "Kugar document"
+msgstr "Dokument Kugar"
+
+msgid "KWord document"
+msgstr "Dokument KWord"
+
+msgid "KWord document (encrypted)"
+msgstr "Dokument KWord (šifrovaný)"
+
+msgid "LHA archive"
+msgstr "Archiv LHA"
+
+msgid "LHZ archive"
+msgstr "Archiv LHZ"
+
+msgid "message catalog"
+msgstr "Katalog zpráv"
+
+msgid "LyX document"
+msgstr "Dokument LyX"
+
+msgid "Lzip archive"
+msgstr "Archiv Lzip"
+
+msgid "LZMA archive"
+msgstr "Archiv LZMA"
+
+msgid "Tar archive (LZMA-compressed)"
+msgstr "Archiv tar (komprimovaný pomocí LZMA)"
+
+msgid "LZO archive"
+msgstr "Archiv LZO"
+
+msgid "MagicPoint presentation"
+msgstr "Prezentace MagicPoint"
+
+msgid "Macintosh MacBinary file"
+msgstr "Soubor MacBinary pro Macintosh "
+
+msgid "Matroska stream"
+msgstr "Proud Matroska"
+
+msgid "Matroska video"
+msgstr "Video Matroska"
+
+msgid "Matroska audio"
+msgstr "Zvuk Matroska"
+
+msgid "WebM video"
+msgstr "Video WebM"
+
+msgid "WebM audio"
+msgstr "Zvuk WebM"
+
+msgid "MXF video"
+msgstr "Video MXF"
+
+msgid "OCL file"
+msgstr "Soubor OCL"
+
+msgid "COBOL source file"
+msgstr "Zdrojový soubor COBOL"
+
+msgid "Mobipocket e-book"
+msgstr "Elektronická kniha Mobipocket"
+
+msgid "Adobe FrameMaker MIF document"
+msgstr "Dokument Adobe FrameMaker MIF"
+
+msgid "Mozilla bookmarks"
+msgstr "Záložky Mozilla"
+
+msgid "DOS/Windows executable"
+msgstr "Spustitelný soubor pro DOS/Windows"
+
+msgid "Internet shortcut"
+msgstr "Odkaz do Internetu"
+
+msgid "WRI document"
+msgstr "Dokument WRI"
+
+msgid "MSX ROM"
+msgstr "ROM pro MSX"
+
+msgid "M4 macro"
+msgstr "Makro M4"
+
+msgid "Nintendo64 ROM"
+msgstr "ROM pro Nintendo64"
+
+msgid "Nautilus link"
+msgstr "Odkaz Nautilus"
+
+msgid "NES ROM"
+msgstr "ROM pro NES"
+
+msgid "Unidata NetCDF document"
+msgstr "Dokument Unidata NetCDF"
+
+msgid "NewzBin usenet index"
+msgstr "Index NewzBin diskuzních skupin Usenet"
+
+msgid "object code"
+msgstr "Objektový kód"
+
+msgid "Annodex exchange format"
+msgstr "Výměnný formát Annodex"
+
+msgid "Annodex Video"
+msgstr "Annodex Video"
+
+msgid "Annodex Audio"
+msgstr "Annodex Audio"
+
+msgid "Ogg multimedia file"
+msgstr "Soubor multimédií Ogg"
+
+msgid "Ogg Audio"
+msgstr "Zvuk Ogg"

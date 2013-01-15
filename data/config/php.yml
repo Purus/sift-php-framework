@@ -1,0 +1,11 @@
+set:
+  date.timezone:               "Europe/Prague"
+  magic_quotes_runtime:        false
+  log_errors:                  true
+  arg_separator.output:        |
+    &amp;
+
+warn:
+  magic_quotes_gpc:            false
+  register_globals:            false
+  session.auto_start:          false

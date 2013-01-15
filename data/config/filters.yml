@@ -1,0 +1,52 @@
+# rendering filter must be the first registered filter
+rendering:
+  class: sfRenderingFilter
+  param:
+    type: rendering
+
+i18n:
+  class: sfI18nFilter
+  param:
+    # add stylesheet for other languages?
+    add_stylesheet: false
+    condition: %SF_I18N%
+
+web_debug:
+  class: sfWebDebugFilter
+  param:
+    condition: %SF_WEB_DEBUG%
+
+# security filter must have a type of security
+security:
+  class: sfBasicSecurityFilter
+  param:
+    type:      security
+    condition: %SF_USE_SECURITY%
+
+# generally, you will want to insert your own filters here
+
+cache:
+  class: sfCacheFilter
+  param:
+    condition: %SF_CACHE%
+
+common:
+  class: sfCommonFilter
+  param:
+    javascript_config: false
+
+flash:
+  class: sfFlashFilter
+  param:
+    condition: %SF_USE_FLASH%
+
+# execution filter must be the last registered filter
+execution:
+  class: sfExecutionFilter
+  param:
+    type: execution
+
+asset_packager:
+  class: sfAssetPackagerFilter
+  param:
+    condition: %SF_PACKAGE_ASSETS%
