@@ -1,0 +1,27 @@
+# Copyrights
+
+## Sift PHP framework
+
+Sift is a fork of symfony 1.0 framework with backports from version 1.4.
+symfony is licensed under MIT license. [] 
+
+Symfony 1.x is originally based on Mojavi3 by Sean Kerr <sean@code-box.org>
+
+## Internalization component
+
+Sift I18n component is based on i18n classes from Prado framework which is license
+under modified BSD license. [http://www.pradosoft.com/license/]
+ 
+## International Components for Unicode
+
+Sift uses CLDR database from CLDR - Unicode Common Locale Data Repository [http://cldr.unicode.org/]
+which is licensed under MIT license. See [http://www.unicode.org/copyright.html].
+
+## Mime detection component
+
+Sift uses mime database data from "Shared mime info" project, [http://freedesktop.org/wiki/Software/shared-mime-info]
+which is license under GPLv2.
+
+## Hypnenation component
+
+Sift uses hyphenation patterns from hyph-utf8 for TeX. [http://tug.org/tex-hyphen/#introduction]
