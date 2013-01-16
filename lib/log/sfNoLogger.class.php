@@ -13,7 +13,7 @@
  * @subpackage log
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  */
-class sfNoLogger
+class sfNoLogger implements sfILogger
 {
   /**
    * Initializes the logger.
@@ -31,7 +31,7 @@ class sfNoLogger
    * @param string Message priority
    * @param string Message priority name
    */
-  public function log($message, $priority, $priorityName, $appName = 'Sift')
+  public function log($message, $priority = SF_LOG_INFO)
   {
   }
 

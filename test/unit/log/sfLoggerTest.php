@@ -5,11 +5,11 @@ require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
 $t = new lime_test(136, new lime_output_color());
 
-class myLogger
+class myLogger implements sfILogger
 {
   public $log = '';
 
-  public function log($message, $priority)
+  public function log($message, $priority = SF_LOG_INFO)
   {
     $this->log .= $message;
   }

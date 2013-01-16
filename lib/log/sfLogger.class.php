@@ -6,14 +6,14 @@
  * file that was distributed with this source code.
  */
 
-define('SF_LOG_EMERG',   0); // System is unusable
-define('SF_LOG_ALERT',   1); // Immediate action required
-define('SF_LOG_CRIT',    2); // Critical conditions
-define('SF_LOG_ERR',     3); // Error conditions
+define('SF_LOG_EMERG', 0); // System is unusable
+define('SF_LOG_ALERT', 1); // Immediate action required
+define('SF_LOG_CRIT', 2); // Critical conditions
+define('SF_LOG_ERR', 3); // Error conditions
 define('SF_LOG_WARNING', 4); // Warning conditions
-define('SF_LOG_NOTICE',  5); // Normal but significant
-define('SF_LOG_INFO',    6); // Informational
-define('SF_LOG_DEBUG',   7); // Debug-level messages
+define('SF_LOG_NOTICE', 5); // Normal but significant
+define('SF_LOG_INFO', 6); // Informational
+define('SF_LOG_DEBUG', 7); // Debug-level messages
 
 /**
  * sfLogger manages all logging in Sift projects.
@@ -35,38 +35,67 @@ define('SF_LOG_DEBUG',   7); // Debug-level messages
  * @subpackage log
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  */
-class sfLogger
-{
-  protected
-    $loggers = array(),
-    $level   = SF_LOG_EMERG,
-    $levels  = array(
-      SF_LOG_EMERG   => 'emerg',
-      SF_LOG_ALERT   => 'alert',
-      SF_LOG_CRIT    => 'crit',
-      SF_LOG_ERR     => 'err',
-      SF_LOG_WARNING => 'warning',
-      SF_LOG_NOTICE  => 'notice',
-      SF_LOG_INFO    => 'info',
-      SF_LOG_DEBUG   => 'debug',
-    );
+class sfLogger extends sfConfigurable implements sfILogger {
 
-  protected static
-    $logger = null;
+  /**
+   * Array of loggers
+   * 
+   * @var array 
+   */
+  protected $loggers = array();
+  
+  /**
+   * Default level
+   * 
+   */
+  protected $level = SF_LOG_EMERG;
+  
+  /**
+   * Log level map
+   * 
+   * @var array 
+   */
+  protected $levels = array(
+    SF_LOG_EMERG => 'emerg',
+    SF_LOG_ALERT => 'alert',
+    SF_LOG_CRIT => 'crit',
+    SF_LOG_ERR => 'err',
+    SF_LOG_WARNING => 'warning',
+    SF_LOG_NOTICE => 'notice',
+    SF_LOG_INFO => 'info',
+    SF_LOG_DEBUG => 'debug',
+  );
+  
+  /**
+   * Instance holder
+   * 
+   * @var sfLogger 
+   */
+  protected static $logger = null;
+
+  /**
+   * Constructs the object
+   * 
+   * @param array $options
+   */
+  public function __construct($options = array())
+  {
+    parent::__construct($options);
+    $this->initialize($options);
+  }
 
   /**
    * Returns the sfLogger instance.
    *
-   * @return  object the sfLogger instance
+   * @return sfLogger sfLogger instance
    */
   public static function getInstance()
   {
-    if (!sfLogger::$logger)
+    if(!sfLogger::$logger)
     {
       // the class exists
       $class = __CLASS__;
       sfLogger::$logger = new $class();
-      sfLogger::$logger->initialize();
     }
 
     return sfLogger::$logger;
@@ -74,8 +103,10 @@ class sfLogger
 
   /**
    * Initializes the logger.
+   * 
+   * @param array $options
    */
-  public function initialize()
+  public function initialize($options = array())
   {
     $this->loggers = array();
   }
@@ -115,7 +146,7 @@ class sfLogger
    *
    * @param object The Logger object
    */
-  public function registerLogger($logger)
+  public function registerLogger(sfILogger $logger)
   {
     $this->loggers[] = $logger;
   }
@@ -128,12 +159,12 @@ class sfLogger
    */
   public function log($message, $priority = SF_LOG_INFO)
   {
-    if ($this->getLogLevel() < $priority)
+    if($this->getLogLevel() < $priority)
     {
       return;
     }
 
-    foreach ($this->loggers as $logger)
+    foreach($this->loggers as $logger)
     {
       $logger->log((string) $message, $priority, $this->levels[$priority]);
     }
@@ -220,20 +251,39 @@ class sfLogger
   }
 
   /**
+   * Returns the priority name given a priority class constant
+   *
+   * @param  integer $priority A priority class constant
+   *
+   * @return string  The priority name
+   *
+   * @throws sfException if the priority level does not exist
+   */
+  public function getPriorityName($priority)
+  {
+    if (!isset($this->levels[$priority]))
+    {
+      throw new sfException(sprintf('The priority level "%s" does not exist.', $priority));
+    }
+
+    return $this->levels[$priority];
+  }
+  
+  /**
    * Executes the shutdown procedure.
    *
    * Cleans up the current logger instance.
    */
   public function shutdown()
   {
-    foreach ($this->loggers as $logger)
+    foreach($this->loggers as $logger)
     {
-      if (method_exists($logger, 'shutdown'))
+      if(method_exists($logger, 'shutdown'))
       {
         $logger->shutdown();
       }
     }
-
     $this->loggers = array();
   }
+
 }
