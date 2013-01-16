@@ -86,9 +86,14 @@ class sfI18n {
   public function __($string, $args = array(), $catalogue = 'messages', $culture = null)
   {
     list($source, $catalogue) = $this->prepareSources($catalogue);
+
+    $translated = false;
     
-    $source['source']->setCulture($culture ? $culture : $this->getCulture());    
-    $translated = $source['formatter']->formatExists($string, $args, $catalogue);
+    if($source)
+    {
+      $source['source']->setCulture($culture ? $culture : $this->getCulture());    
+      $translated = $source['formatter']->formatExists($string, $args, $catalogue);
+    }
 
     if(!$translated)
     {
@@ -105,7 +110,7 @@ class sfI18n {
         
         try 
         {
-          $translated = $source['formatter']->formatExists($string, $args, $catalogue);
+          $translated = $_source['formatter']->formatExists($string, $args, $catalogue);
         }
         catch(sfException $e)
         {
@@ -150,29 +155,30 @@ class sfI18n {
     else
     {
       $moduleName = $this->context->getModuleName();
+      $directory = sfLoader::getI18NDir($moduleName);      
       // current module is taken
-      $hash = sprintf('%s_%s_%s', $moduleName, $catalogue, $this->getCulture());            
+      $hash = sprintf('%s_%s_%s', $moduleName, $catalogue, $this->getCulture());        
+    }
+
+    // nothing found, unknown directory
+    if(!$directory)
+    {      
+      return false;
     }
     
     if(!isset($this->sources[$hash]))
     {
-      if(!$directory)
-      {
-        $directory = sfLoader::getI18NDir($moduleName);
-      }
-      
-      $type  = sfConfig::get('sf_i18n_source');
-      
+      $type = sfConfig::get('sf_i18n_source'); 
       $source = $this->createMessageSource($type, $directory);
       
-//      $cache = new sfI18nMessageCache(array(
-//        'cache_dir' => sfConfig::get('sf_cache_dir') . '/i18n/' . dechex(crc32($hash))
-//      ));
-//
-//      $source->setCache($cache);
+      $cache = new sfFileCache(array(
+        'cache_dir' => sfConfig::get('sf_cache_dir') . '/i18n/' . dechex(crc32($hash))
+      ));
       
+      $source->setCache($cache);
+
       $this->sources[$hash] = array(
-        'source' => $source,
+        'source'    => &$source,
         'formatter' => $this->createMessageFormatter($source)          
       );
     }

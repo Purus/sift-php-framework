@@ -117,7 +117,7 @@ abstract class sfI18nMessageSource implements sfII18nMessageSource {
     throw new sfException(sprintf('Unable to find source type "%s".', $type));
   }
   
-/**
+  /**
    * Loads a particular message catalogue. Use read() to
    * to get the array of messages. The catalogue loading sequence
    * is as follows:
@@ -140,22 +140,20 @@ abstract class sfI18nMessageSource implements sfII18nMessageSource {
 
     $this->messages = array();
 
-    foreach ($variants as $variant)
+    foreach($variants as $variant)
     {
       $source = $this->getSource($variant);
-
-      if ($this->isValidSource($source) == false)
+      // skip invalid sources
+      if(!$this->isValidSource($source))
       {
         continue;
       }
 
       $loadData = true;
-
-      if ($this->cache)
+      if($this->cache && $this->cache->has($variant, $this->culture))
       {
-        $data = $this->cache->get($variant, $this->culture, $this->getLastModified($source));
-
-        if (is_array($data))
+        $data = unserialize($this->cache->get($variant, $this->culture));
+        if(is_array($data))
         {
           $this->messages[$variant] = $data;
           $loadData = false;
@@ -167,15 +165,14 @@ abstract class sfI18nMessageSource implements sfII18nMessageSource {
       if ($loadData)
       {
         $data = &$this->loadData($source);
-        if (is_array($data))
+        if(is_array($data))
         {
           $this->messages[$variant] = $data;
-          if ($this->cache)
+          if($this->cache)
           {
-            $this->cache->save($data, $variant, $this->culture);
+            $this->cache->set($variant, $this->culture, serialize($data));
           }
         }
-
         unset($data);
       }
     }
@@ -209,7 +206,7 @@ abstract class sfI18nMessageSource implements sfII18nMessageSource {
    *
    * @param sfMessageCache the cache handler.
    */
-  public function setCache(sfI18nMessageCache $cache)
+  public function setCache(sfCache $cache)
   {
     $this->cache = $cache;
   }
