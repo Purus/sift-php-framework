@@ -116,14 +116,14 @@ abstract class sfComponent {
    * Displays a message as a short message in the sfWebDebug toolbar.
    *
    * @param string The message text
-   *
-   * @see sfWebDebug
+   * @param string The priority of the message
+   *               (available priorities: emerg, alert, crit, err, warning, notice, info, debug)
    */
-  public function debugMessage($message)
+  public function debugMessage($message, $priority = 'info')
   {
     if(sfConfig::get('sf_web_debug'))
     {
-      sfWebDebug::getInstance()->logShortMessage($message);
+      return $this->logMessage($message, $priority);
     }
   }
 
