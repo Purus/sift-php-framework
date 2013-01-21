@@ -28,15 +28,20 @@ class sfCrypt {
   
   /**
    * Constructs a with the given mode, algorithm, key as a parameter.
-   *
-   * @param string mode
-   * @param string algorithm
-   * @param string key
-   * @return void
-   *
+   * 
+   * <code>
+   *  $sfCrypt = new sfCrypt(); 
+   *  $encrypted_text = $sfCrypt->encrypt('something_secret'); 
+   *  $plain_text = $sfCrypt->decrypt($encrypted_text); 
+   * </code>
+   * 
+   * @param string $key Path to the key file
+   * @param string $mode Crypt mode
+   * @param string $algorithm
+   * @throws sfInitializationException
+   * @throws InvalidArgumentException
+   * @throws UnexpectedValueException
    * @link http://www.php.net/mcrypt
-   *
-   * @example $sfCrypt = new sfCrypt(); $encrypted_text = $sfCrypt->encrypt('something_secret'); $plain_text = $sfCrypt->decrypt($encrypted_text)   
    */
   public function __construct($key = null, $mode = 'ecb', 
           $algorithm = 'tripledes')
@@ -93,6 +98,7 @@ class sfCrypt {
   /**
    * Returns the global sfCrypt instance.
    * 
+   * @return sfCrypt
    */
   public static function getInstance()
   {
@@ -102,13 +108,14 @@ class sfCrypt {
     }
     return self::$instance;
   }  
-  
+    
   /**
-   * Loads the main cryptographic key from the ullVault.key file located
-   * in the app's config dir. Base64-decodes this key and checks for validity
-   * (decoded size = self::$keySize).
+   *  Loads the main cryptographic key from the crypt.key
    * 
-   * @throws Exception If there are problems during the key loading process
+   * @param string $file Path to the file (crypt.key)
+   * 
+   * @return string The decoded key string
+   * @throws sfFileException If there are problems during the key loading process
    */
   protected function loadKeyFromFile($file)
   {
@@ -124,7 +131,7 @@ class sfCrypt {
     $decodedKey = base64_decode($key);
     if($decodedKey === false)
     {
-      throw new Exception('Invalid key for cryptography defined. Generate a new one with "php symfony security-generate-key"');
+      throw new sfFileException('Invalid key for cryptography defined. Generate new one!');
     }
 
     return $decodedKey;
