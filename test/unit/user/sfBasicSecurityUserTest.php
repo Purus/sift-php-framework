@@ -20,11 +20,11 @@ $t->is($user->isTimedOut(), true, '->initialize() times out the user if no reque
 $user = new sfBasicSecurityUser();
 $user->initialize($context);
 
-// ->listCredentials()
-$t->diag('->listCredentials()');
+// ->getCredentials()
+$t->diag('->getCredentials()');
 $user->clearCredentials();
 $user->addCredential('user');
-$t->is($user->listCredentials(), array('user'), '->listCredentials() returns user credentials as an array');
+$t->is($user->getCredentials(), array('user'), '->getCredentials() returns user credentials as an array');
 
 // ->setAuthenticated() ->isAuthenticated()
 $t->diag('->setAuthenticated() ->isAuthenticated()');
