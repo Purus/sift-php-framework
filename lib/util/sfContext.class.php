@@ -68,6 +68,8 @@ class sfContext
 
     // register our shutdown function
     register_shutdown_function(array($this, 'shutdown'));
+
+    sfCore::dispatchEvent('context.load_factories', array('context' => &$this));
   }
 
   /**
@@ -87,6 +89,11 @@ class sfContext
     return self::$instance;
   }
 
+  /**
+   * Checks if there is an instance of sfContext already initialized
+   * 
+   * @return boolean
+   */
   public static function hasInstance()
   {
     return isset(self::$instance);
@@ -142,15 +149,15 @@ class sfContext
     return $this->mailer;
   }
 
-   /**
-    * Retrieve the logger.
-    *
-    * @return sfLogger The current sfLogger implementation instance.
-    */
-   public function getLogger()
-   {
-     return $this->logger;
-   }
+  /**
+   * Retrieve the logger.
+   *
+   * @return sfLogger The current sfLogger implementation instance.
+   */
+  public function getLogger()
+  {
+    return $this->logger;
+  }
 
   /**
    * Retrieve a database connection from the database manager.
