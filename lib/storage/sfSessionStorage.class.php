@@ -9,10 +9,15 @@
 /**
  * sfSessionStorage allows you to store persistent symfony data in the user session.
  *
- * <b>Optional parameters:</b>
+ * Available parameters:
  *
- * # <b>auto_start</b>   - [Yes]     - Should session_start() automatically be called?
- * # <b>session_name</b> - [symfony] - The name of the session.
+ * * auto_start   - [true]     - Should session_start() automatically be called?
+ * * session_name - [sessionID] - The name of the session.
+ * * session_cookie_lifetime - Lifetime of the session cookie, defined in seconds. Default value is taken from session_get_cookie_params();
+ * * session_cookie_path - Path on the domain where the cookie will work. Use a single slash ('/') for all paths on the domain. Default value is taken from session_get_cookie_params();
+ * * session_cookie_domain - Cookie domain, for example 'www.example.com'. To make cookies visible on all subdomains then the domain must be prefixed with a dot like '.example.com'. Default value is taken from session_get_cookie_params();
+ * * session_cookie_secure - If true cookie will only be sent over secure connections. Default value is taken from session_get_cookie_params();
+ * * session_cookie_httponly - If set to true then PHP will attempt to send the httponly flag when setting the session cookie. Default value is taken from session_get_cookie_params();
  *
  * @package    Sift
  * @subpackage storage
@@ -37,7 +42,7 @@ class sfSessionStorage extends sfStorage
     parent::initialize($context, $parameters);
 
     // set session name
-    $sessionName = $this->getParameterHolder()->get('session_name', 'symfony');
+    $sessionName = $this->getParameterHolder()->get('session_name', 'sessionID');
 
     session_name($sessionName);
 
