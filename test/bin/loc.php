@@ -3,6 +3,8 @@
 $root_dir = realpath(dirname(__FILE__).'/../..');
 require_once($root_dir.'/lib/vendor/lime/lime.php');
 require_once($root_dir.'/lib/util/sfFinder.class.php');
+require_once($root_dir.'/lib/util/sfGlobToRegex.class.php');
+require_once($root_dir.'/lib/util/sfNumberCompare.class.php');
 
 $version = file_get_contents($root_dir.'/lib/VERSION');
 

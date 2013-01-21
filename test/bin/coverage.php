@@ -1,7 +1,9 @@
 <?php
 
 require_once(dirname(__FILE__).'/../../lib/vendor/lime/lime.php');
-require_once(dirname(__FILE__).'/../../lib/vendor/pake/pakeFinder.class.php');
+require_once($root_dir.'/lib/util/sfFinder.class.php');
+require_once($root_dir.'/lib/util/sfGlobToRegex.class.php');
+require_once($root_dir.'/lib/util/sfNumberCompare.class.php');
 
 $h = new lime_harness(new lime_output_color());
 $h->base_dir = realpath(dirname(__FILE__).'/..');

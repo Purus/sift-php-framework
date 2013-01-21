@@ -1,6 +1,8 @@
 <?php
 
-require_once(dirname(__FILE__).'/../../lib/vendor/pake/pakeFinder.class.php');
+require_once(dirname(__FILE__).'/../../lib/util/sfFinder.class.php');
+require_once(dirname(__FILE__).'/../../lib/util/sfGlobToRegex.class.php');
+require_once(dirname(__FILE__).'/../../lib/util/sfNumberCompare.class.php');
 require_once(dirname(__FILE__).'/../../lib/util/sfToolkit.class.php');
 
 class testAutoloader
@@ -16,7 +18,7 @@ class testAutoloader
     }
     else
     {
-      $files = pakeFinder::type('file')->name('*.php')->ignore_version_control()->in(realpath(dirname(__FILE__).'/../../lib'));
+      $files = sfFinder::type('file')->name('*.php')->ignore_version_control()->in(realpath(dirname(__FILE__).'/../../lib'));
       self::$class_paths = array();
       foreach ($files as $file)
       {
