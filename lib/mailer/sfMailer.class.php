@@ -43,7 +43,7 @@ class sfMailer extends Swift_Mailer {
   {
     if(!self::$instance)
     {
-      self::$instance = new self();
+      self::$instance = new myMailer();
     }
     return self::$instance;
   }
