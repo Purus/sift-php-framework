@@ -44,8 +44,9 @@ class sfPDODatabase extends sfDatabase {
     {
       $pdo_username = $this->getParameter('username');
       $pdo_password = $this->getParameter('password');
-
-      $this->connection = new PDO($dsn, $pdo_username, $pdo_password);
+      // driver specific options
+      $options      = $this->getParameter('options', array());
+      $this->connection = new sfPDO($dsn, $pdo_username, $pdo_password, $options);
     }
     catch(PDOException $e)
     {
