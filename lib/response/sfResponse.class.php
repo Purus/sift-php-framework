@@ -106,14 +106,18 @@ abstract class sfResponse {
    */
   public function sendContent()
   {
+    $content = $this->getContent();
+    $content = sfCore::filterByEventListeners($content, 'response.filter_content', array(
+      'response' => &$this
+    ));
+    
     if(sfConfig::get('sf_logging_enabled'))
     {
       $this->getContext()->getLogger()->info('{sfResponse} send content (' . strlen($this->content) . ' o)');
     }
-
-    echo $this->content;
+    echo $content;
   }
-
+  
   /**
    * Retrieves the parameters from the current response.
    *
