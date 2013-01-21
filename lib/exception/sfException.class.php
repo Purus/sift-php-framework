@@ -201,13 +201,24 @@ class sfException extends Exception {
       header('Content-Type: application/json');
     }
     
+    ob_start();
     include(sfConfig::get('sf_sift_data_dir') . '/data/exception.' . $ext);
+    $content = ob_get_clean();
+
+    $content = sfCore::filterByEventListeners($content, 
+                'application.render_exception', array(             
+                    'content' => $content,
+                    'exception' => &$exception 
+    ));
+    
+    echo $content;
 
     // if test, do not exit
     if(!sfConfig::get('sf_test'))
     {
       exit(1);
     }
+    
   }
 
   /**
@@ -231,7 +242,7 @@ class sfException extends Exception {
     $traces = array();
     if($format == 'html')
     {
-      $lineFormat = 'at <strong>%s%s%s</strong>(%s)<br />in <em>%s</em> line %s <a href="#" onclick="toggle(\'%s\'); return false;">...</a><br /><ul id="%s" style="display: %s">%s</ul>';
+      $lineFormat = 'at <strong>%s%s%s</strong>(%s)<br />in <em>%s</em> line %s <a href="#" onclick="toggle(\'%s\'); return false;">...</a><br /><ul class="trace" id="%s" style="display: %s">%s</ul>';
     }
     else
     {
