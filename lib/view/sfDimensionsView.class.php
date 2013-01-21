@@ -12,13 +12,11 @@
  * @package    Sift
  * @subpackage view
  * @author     Dustin Whittle <dustin.whittle@symfony-project.com>
- * */
+ */
 class sfDimensionsView extends sfPHPView {
 
   /**
    * Configures the view and injects new template paths
-   *
-   * @todo make this work with partials (currently not an issue as this is handled by sfLoader::getTemplatePath())
    *
    */
   public function configure()
@@ -29,18 +27,18 @@ class sfDimensionsView extends sfPHPView {
 
     foreach($sf_dimension_dirs as $dir)
     {
-      if(is_readable($this->getDirectory() . '/' . $dir . '/' . $this->getTemplate()))
+      if(is_readable($this->getDirectory() . DS . $dir . DS . $this->getTemplate()))
       {
-        $this->setDirectory($this->getDirectory() . '/' . $dir);
+        $this->setDirectory($this->getDirectory() . DS . $dir);
         break;
       }
     }
 
     foreach($sf_dimension_dirs as $dir)
     {
-      if(is_readable($this->getDecoratorDirectory() . '/' . $dir . '/' . $this->getDecoratorTemplate()))
+      if(is_readable($this->getDecoratorDirectory() . DS . $dir . DS . $this->getDecoratorTemplate()))
       {
-        $this->setDecoratorDirectory($this->getDecoratorDirectory() . '/' . $dir);
+        $this->setDecoratorDirectory($this->getDecoratorDirectory() . DS . $dir);
         break;
       }
     }

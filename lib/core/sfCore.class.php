@@ -21,6 +21,9 @@ if(!function_exists('http_build_url'))
 	define('HTTP_URL_STRIP_ALL', 1024);			// Strip anything but scheme and host
 }
 
+// shortcut
+define('DS', DIRECTORY_SEPARATOR);
+
 /**
  * Core class
  *
@@ -57,42 +60,47 @@ class sfCore
     // content filters
     $filters           = array();
 
-  static public function bootstrap($sf_sift_lib_dir, $sf_sift_data_dir)
-  {
-    require_once $sf_sift_lib_dir . '/autoload/sfCoreAutoload.class.php';
-    sfCoreAutoload::register();
-    
+  /**
+   * Bootstraps the framework
+   * 
+   * @param string $sf_sift_lib_dir
+   * @param string $sf_sift_data_dir
+   */
+  public static function bootstrap($sf_sift_lib_dir, $sf_sift_data_dir)
+  {   
+    require_once $sf_sift_lib_dir.'/autoload/sfCoreAutoload.class.php';
     require_once($sf_sift_lib_dir.'/util/sfToolkit.class.php');
     require_once($sf_sift_lib_dir.'/config/sfConfig.class.php');
     require_once($sf_sift_lib_dir.'/core/sfDimensions.class.php');
 
-    sfCore::initConfiguration($sf_sift_lib_dir, $sf_sift_data_dir);
-
+    sfCore::init($sf_sift_lib_dir, $sf_sift_data_dir);    
     sfCore::initIncludePath();
-
     sfCore::callBootstrap();
 
-    if (sfConfig::get('sf_check_lock'))
+    if(sfConfig::get('sf_check_lock'))
     {
       sfCore::checkLock();
     }
-    if (sfConfig::get('sf_check_sift_version'))
+    
+    if(sfConfig::get('sf_check_sift_version'))
     {
       sfCore::checkSiftVersion();
     }
   }
 
-  static public function displayErrorPage($exception, $error = 'error500')
+  /**
+   * Displays error page 
+   * 
+   * @param sfException $exception
+   * @param string $error
+   */
+  public static function displayErrorPage($exception, $error = 'error500')
   {
-    $files    = array(
-      // custom error
-      sprintf(sfConfig::get('sf_web_dir').'/errors/%s.php', $error),  
-      // sift data dir
-      sprintf(sfConfig::get('sf_sift_data_dir').'/web/errors/%s.php', $error),
-      // custom 500 error
+    $files = array(
+      sprintf(sfConfig::get('sf_app_config_dir').'/%s.php', $error),  
+      sprintf(sfConfig::get('sf_config_dir').'/%s.php', $error),
       sfConfig::get('sf_web_dir').'/errors/error500.php',
-      // built in error
-      sfConfig::get('sf_sift_data_dir').'/web/errors/error500.php'
+      sfConfig::get('sf_sift_data_dir').'/errors/error500.php'
     );
         
     foreach($files as $file)
@@ -110,10 +118,10 @@ class sfCore
     }   
   }
 
-  static public function callBootstrap()
+  public static function callBootstrap()
   {    
     $bootstrap = sfConfig::get('sf_config_cache_dir').'/config_bootstrap_compile.yml.php';
-    if (is_readable($bootstrap))
+    if(is_readable($bootstrap))
     {
       sfConfig::set('sf_in_bootstrap', true);
       require($bootstrap);
@@ -124,10 +132,10 @@ class sfCore
     }
   }
 
-  static public function initConfiguration($sf_sift_lib_dir, $sf_sift_data_dir, $test = false)
+  static public function init($sf_sift_lib_dir, $sf_sift_data_dir, $test = false)
   {
     // start timer
-    if (SF_DEBUG)
+    if(SF_DEBUG)
     {
       sfConfig::set('sf_timer_start', microtime(true));
     }
@@ -138,15 +146,108 @@ class sfCore
       'sf_app'              => SF_APP,
       'sf_environment'      => SF_ENVIRONMENT,
       'sf_debug'            => SF_DEBUG,
-      'sf_sift_lib_dir'  => $sf_sift_lib_dir,
-      'sf_sift_data_dir' => $sf_sift_data_dir,
+      'sf_sift_lib_dir'     => $sf_sift_lib_dir,
+      'sf_sift_data_dir'    => $sf_sift_data_dir,
       'sf_test'             => $test,
     ));
 
-    // directory layout
-    require($sf_sift_data_dir.'/config/constants.php');
+    $dimensionFile = sprintf('%s/config/dimension.php', sfConfig::get('sf_root_dir'), SF_APP);
+    
+    if(is_readable($dimensionFile))
+    {
+      include $dimensionFile;
+    }    
+    
+    self::initConfiguration();
   }
 
+  public static function initConfiguration()
+  {
+    $sf_root_dir    = sfConfig::get('sf_root_dir');
+    $sf_app         = sfConfig::get('sf_app');
+    $sf_environment = sfConfig::get('sf_environment');
+
+    sfConfig::add(array(
+      // dimensions
+      // the current dimension as an array
+      'sf_dimension'        => $sf_dimension = sfDimensions::getDimension(),
+      // stores the dimension directories that sift will search through
+      'sf_dimension_dirs'   => $sf_dimension = sfDimensions::getDimensionDirs(),
+      // root directory names
+      'sf_bin_dir_name'     => $sf_bin_dir_name     = 'batch',
+      'sf_cache_dir_name'   => $sf_cache_dir_name   = 'cache',
+      'sf_log_dir_name'     => $sf_log_dir_name     = 'log',
+      'sf_lib_dir_name'     => $sf_lib_dir_name     = 'lib',
+      'sf_web_dir_name'     => defined('SF_WEB_DIR_NAME') ? $sf_web_dir_name = SF_WEB_DIR_NAME : $sf_web_dir_name = 'web',
+      'sf_upload_dir_name'  => defined('SF_UPLOAD_DIR_NAME') ? $sf_upload_dir_name  = SF_UPLOAD_DIR_NAME : $sf_upload_dir_name = 'files',
+      'sf_data_dir_name'    => $sf_data_dir_name    = 'data',
+      'sf_config_dir_name'  => $sf_config_dir_name  = 'config',
+      'sf_apps_dir_name'    => $sf_apps_dir_name    = 'apps',
+      'sf_test_dir_name'    => $sf_test_dir_name    = 'test',
+      'sf_doc_dir_name'     => $sf_doc_dir_name     = 'doc',
+      'sf_plugins_dir_name' => $sf_plugins_dir_name = 'plugins',
+
+      'sf_apps_dir'         => $sf_apps_dir = $sf_root_dir.DS.$sf_apps_dir_name,
+
+      // global directory structure
+      'sf_app_dir'        => $sf_app_dir = $sf_apps_dir.DS.$sf_app,
+      'sf_lib_dir'        => $sf_lib_dir = $sf_root_dir.DS.$sf_lib_dir_name,
+      'sf_bin_dir'        => $sf_root_dir.DS.$sf_bin_dir_name,
+      'sf_web_dir'        => $sf_root_dir.DS.$sf_web_dir_name,
+      'sf_upload_dir'     => $sf_root_dir.DS.$sf_web_dir_name.DS.$sf_upload_dir_name,
+      // this is usually project/cache, but with dimensions this is changed to project/cache/dimension
+      //'sf_root_cache_dir' => $sf_root_cache_dir = $sf_root_dir.DS.$sf_cache_dir_name.(sfDimensions::getDimensionString() ? DS . sfDimensions::getDimensionString() : ''),
+      'sf_root_cache_dir' => $sf_root_cache_dir = $sf_root_dir.DS.$sf_cache_dir_name,
+      'sf_base_cache_dir' => $sf_base_cache_dir = $sf_root_cache_dir.DS.$sf_app,
+      'sf_cache_dir'      => $sf_cache_dir      = $sf_base_cache_dir.DS.$sf_environment.(sfDimensions::getDimensionString() ? DS . sfDimensions::getDimensionString() : ''),
+      'sf_log_dir'        => $sf_root_dir.DS.$sf_log_dir_name,
+      'sf_data_dir'       => $sf_root_dir.DS.$sf_data_dir_name,
+      'sf_config_dir'     => $sf_root_dir.DS.$sf_config_dir_name,
+      'sf_test_dir'       => $sf_root_dir.DS.$sf_test_dir_name,
+      'sf_doc_dir'        => $sf_root_dir.DS.'data'.DS.$sf_doc_dir_name,
+      'sf_plugins_dir'    => $sf_root_dir.DS.$sf_plugins_dir_name,
+
+      // lib directory names
+      'sf_model_dir_name'      => $sf_model_dir_name = 'model',
+
+      // lib directory structure
+      'sf_model_lib_dir'  => $sf_lib_dir.DS.$sf_model_dir_name,
+
+      // directory structure
+      'sf_template_cache_dir' => $sf_cache_dir.DS.'template',
+      'sf_i18n_cache_dir'     => $sf_cache_dir.DS.'i18n',
+      'sf_config_cache_dir'   => $sf_cache_dir.DS.$sf_config_dir_name,
+      'sf_test_cache_dir'     => $sf_cache_dir.DS.'test',
+      'sf_module_cache_dir'   => $sf_cache_dir.DS.'modules',
+
+      // SF_APP_DIR sub-directories names
+      'sf_app_i18n_dir_name'     => $sf_app_i18n_dir_name     = 'i18n',
+      'sf_app_config_dir_name'   => $sf_app_config_dir_name   = 'config',
+      'sf_app_lib_dir_name'      => $sf_app_lib_dir_name      = 'lib',
+      'sf_app_module_dir_name'   => $sf_app_module_dir_name   = 'modules',
+      'sf_app_template_dir_name' => $sf_app_template_dir_name = 'templates',
+
+      // SF_APP_DIR directory structure
+      'sf_app_config_dir'   => $sf_app_dir.DS.$sf_app_config_dir_name,
+      'sf_app_lib_dir'      => $sf_app_dir.DS.$sf_app_lib_dir_name,
+      'sf_app_module_dir'   => $sf_app_dir.DS.$sf_app_module_dir_name,
+      'sf_app_template_dir' => $sf_app_dir.DS.$sf_app_template_dir_name,
+      'sf_app_i18n_dir'     => $sf_app_dir.DS.$sf_app_i18n_dir_name,
+
+      // SF_APP_MODULE_DIR sub-directories names
+      'sf_app_module_action_dir_name'   => 'actions',
+      'sf_app_module_template_dir_name' => 'templates',
+      'sf_app_module_lib_dir_name'      => 'lib',
+      'sf_app_module_view_dir_name'     => 'views',
+      'sf_app_module_validate_dir_name' => 'validate',
+      'sf_app_module_config_dir_name'   => 'config',
+      'sf_app_module_i18n_dir_name'     => 'i18n',
+      // image font directory
+      'sf_image_font_dir'                => $sf_root_dir.DS.$sf_data_dir_name.DS.'fonts',
+    ));
+
+  }
+  
   static public function initIncludePath()
   {
     set_include_path(
@@ -158,14 +259,21 @@ class sfCore
     );
   }
 
-  // check to see if we're not in a cache cleaning process
-  static public function checkLock()
+  /**
+   * Checks if is the application locked. If yes, tries to display error message in the following order:
+   * 
+   *  * sfConfig::get('sf_app_config_dir').'/unavailable.php',
+   *  * sfConfig::get('sf_config_dir').'/unavailable.php',
+   *  * sfConfig::get('sf_web_dir').'/errors/unavailable.php',
+   *  * sfConfig::get('sf_sift_data_dir').'/errors/unavailable.php',
+   * 
+   * @return void
+   */
+  public static function checkLock()
   {
-    if(
-      sfToolkit::hasLockFile(sfConfig::get('sf_data_dir').DIRECTORY_SEPARATOR.SF_APP.'_'.SF_ENVIRONMENT.'-cli.lck', 5)
+    if(sfToolkit::hasLockFile(sfConfig::get('sf_data_dir').DIRECTORY_SEPARATOR.SF_APP.'_'.SF_ENVIRONMENT.'-cli.lck', 5)
       ||
-      sfToolkit::hasLockFile(sfConfig::get('sf_data_dir').DIRECTORY_SEPARATOR.SF_APP.'_'.SF_ENVIRONMENT.'.lck')
-    )
+      sfToolkit::hasLockFile(sfConfig::get('sf_data_dir').DIRECTORY_SEPARATOR.SF_APP.'_'.SF_ENVIRONMENT.'.lck'))
     {
       // application is not available - we'll find the most specific unavailable page...
       $files = array(
@@ -190,11 +298,15 @@ class sfCore
     }
   }
 
-  static public function checkSiftVersion()
+  /**
+   * Checks if Sift has been currently updated. If yes, clears the cache directory.
+   * 
+   */
+  public static function checkSiftVersion()
   {
     // recent Sift update?
     $last_version    = @file_get_contents(sfConfig::get('sf_config_cache_dir').'/VERSION');
-    $current_version = trim(file_get_contents(sfConfig::get('sf_sift_lib_dir').'/VERSION'));
+    $current_version = sfCore::getVersion();
     if ($last_version != $current_version)
     {
       // clear cache
@@ -238,14 +350,16 @@ class sfCore
       self::$classes = include($file);
     }
 
+    $class = strtolower($class);
+    
     // class already exists
-    if (class_exists($class, false))
+    if(class_exists($class, false))
     {
       return true;
     }
 
     // we have a class path, let's include it
-    if (isset(self::$classes[$class]))
+    if(isset(self::$classes[$class]))
     {
       require(self::$classes[$class]);
 
@@ -264,7 +378,11 @@ class sfCore
     return false;
   }
 
-  static public function initAutoload()
+  /**
+   * Inits autoloading of the classes
+   * 
+   */
+  public static function initAutoload()
   {
     if (function_exists('spl_autoload_register'))
     {
@@ -289,14 +407,11 @@ class sfCore
         $trace = debug_backtrace();
         if (count($trace) < 1 || ($trace[1]['function'] != 'class_exists' && $trace[1]['function'] != 'is_a'))
         {
-          $error = sprintf('Autoloading of class "%s" failed. Try to clear the Sift cache and refresh.', $class);
-          $e = new sfAutoloadException($error);
-
+          $e = new sfAutoloadException(sprintf('Autoloading of class "%s" failed. Try to clear cache and refresh.', $class));
           $e->printStackTrace();
         }
       }
     }
-
     self::addAutoloadCallable(array('sfCore', 'splAutoload'));
   }
 
@@ -317,44 +432,6 @@ class sfCore
     }
 
     return false;
-  }
-
-  static public function initSimpleAutoload($dirs)
-  {
-    require_once(dirname(__FILE__).'/sfFinder.class.php');
-    self::$classes = array();
-    $finder = sfFinder::type('file')->ignore_version_control()->name('*.php');
-    foreach ((array) $dirs as $dir)
-    {
-      $files = $finder->in(glob($dir));
-      if (is_array($files))
-      {
-        foreach ($files as $file)
-        {
-          preg_match_all('~^\s*(?:abstract\s+|final\s+)?(?:class|interface)\s+(\w+)~mi', file_get_contents($file), $classes);
-          foreach ($classes[1] as $class)
-          {
-            self::$classes[$class] = $file;
-          }
-        }
-      }
-    }
-
-    if (function_exists('spl_autoload_register'))
-    {
-      ini_set('unserialize_callback_func', 'spl_autoload_call');
-
-      spl_autoload_register(array('sfCore', 'splSimpleAutoload'));
-    }
-    elseif (!function_exists('__autoload'))
-    {
-      ini_set('unserialize_callback_func', '__autoload');
-
-      function __autoload($class)
-      {
-        return sfCore::splSimpleAutoload($class);
-      }
-    }
   }
 
   /**

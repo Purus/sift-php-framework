@@ -22,9 +22,9 @@ class sfDimensionsConfigHandler extends sfYamlConfigHandler
    *
    * @return string Data to be written to a cache file.
    *
-   * @throws <b>sfConfigurationException</b> If a requested configuration file does not exist or is not readable.
-   * @throws <b>sfParseException</b> If a requested configuration file is improperly formatted.
-   * @throws <b>sfInitializationException</b> If a view.yml key check fails.
+   * @throws sfConfigurationException If a requested configuration file does not exist or is not readable.
+   * @throws sfParseException If a requested configuration file is improperly formatted.
+   * @throws sfInitializationException If a view.yml key check fails.
    */
   public function execute($configFiles)
   {
@@ -41,8 +41,9 @@ class sfDimensionsConfigHandler extends sfYamlConfigHandler
 
     $default_dimension_dirs = array();
 
-    $sfDimensionsConfig = "
-class sfDimensionsConfig
+    $sfDimensionsConfig = sprintf("
+
+%s sfDimensionsConfig
 {
   protected static \$instance = null;
 
@@ -70,7 +71,7 @@ class sfDimensionsConfig
     return self::\$default_dimension;
   }
 }
-";
+", 'class'); // prevent sfCoreAutoload::make() to spot this definition
 
     unset($myConfig['default']);
 
