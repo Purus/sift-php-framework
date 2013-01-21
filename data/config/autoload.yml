@@ -1,12 +1,5 @@
 autoload:
 
-  # core
-  sift:
-    name:           sift
-    path:           %SF_SIFT_LIB_DIR%
-    recursive:      true
-    exclude:        [vendor, extensions]
-
   # plugins
   plugins_lib:
     name:           plugins lib
