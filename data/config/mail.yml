@@ -3,7 +3,7 @@
 # --------------------------------------------------
 
 dev:
-  deliver:    true
+  deliver:    false
 
 prod:
   cache:
@@ -51,13 +51,13 @@ all:
   # mailer transports
   transports:
     default: # specify as transport_type
-      type:       smtp
+      type: mail
       # Sending via Google gmail.com
-      hostname: smtp.gmail.com
-      encryption: ssl
-      port: 465
-      username: michi.m@gmail.com
-      password: ivanka
+      #hostname: smtp.gmail.com
+      #encryption: ssl
+      #port: 465
+      #username: username
+      #password: password
       #hostname:   localhost
       #port:       25
       #username:   ''

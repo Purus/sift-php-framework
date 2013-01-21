@@ -13,43 +13,7 @@
  * @subpackage mailer
  * @author     Mishal.cz <mishal@mishal.cz>
  */
-class sfMailerLogger implements Swift_Events_SendListener {
-
-  /**
-   * Log messages
-   *
-   * @var array
-   */
-  protected $messages   = array();
-
-  /**
-   * Clears all the messages.
-   *
-   */
-  public function clear()
-  {
-    $this->messages = array();
-  }
-
-  /**
-   * Gets all logged messages.
-   *
-   * @return array An array of message instances
-   */
-  public function getMessages()
-  {
-    return $this->messages;
-  }
-
-  /**
-   * Returns the number of logged messages.
-   *
-   * @return int The number if logged messages
-   */
-  public function countMessages()
-  {
-    return count($this->messages);
-  }
+class sfMailerLogger extends Swift_Plugins_MessageLogger {
 
   /**
    * Invoked immediately before the Message is sent.
@@ -58,8 +22,10 @@ class sfMailerLogger implements Swift_Events_SendListener {
    */
   public function beforeSendPerformed(Swift_Events_SendEvent $evt)
   {
-    $this->messages[] = $message = clone $evt->getMessage();
+    parent::beforeSendPerformed($evt);
 
+    $message = clone $evt->getMessage();
+    
     $to = null === $message->getTo() ? '' : implode(', ', array_keys($message->getTo()));
 
     $this->log(sprintf('Sending email "%s" to "%s"', $message->getSubject(), $to));
@@ -75,7 +41,7 @@ class sfMailerLogger implements Swift_Events_SendListener {
     if(!sfConfig::get('sf_logging_enabled'))
     {
       return;
-    }    
+    }
     sfContext::getInstance()->getLogger()->info(sprintf('{sfMailer} %s', $entry));
   }
 
@@ -86,6 +52,8 @@ class sfMailerLogger implements Swift_Events_SendListener {
    */
   public function sendPerformed(Swift_Events_SendEvent $evt)
   {
+    parent::sendPerformed($evt);
+    
     $result = $evt->getResult();
 
     switch($result)

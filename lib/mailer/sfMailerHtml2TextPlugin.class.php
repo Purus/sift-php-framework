@@ -27,7 +27,13 @@ class sfMailerHtml2TextPlugin implements Swift_Events_SendListener
     $mail = $evt->getMessage();    
     if($mail instanceof sfMailerMessage && !$mail->getPlainTextBody())
     {      
-      $body = $mail->getHtmlBody();      
+      $body = $mail->getHtmlBody();  
+      
+      if(!$body)
+      {
+        return;
+      }
+      
       try 
       {
         $mail->setPlainTextBody(sfHtml2Text::convert($body));

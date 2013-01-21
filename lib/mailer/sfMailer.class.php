@@ -27,11 +27,16 @@ class sfMailer extends Swift_Mailer {
   protected static $instance;
   
   protected
-    $mailer, 
-    $config = array(),
-    $spool  = null,
-    $force = false,
+    $config            = array(),          
+    $spool             = null,
+    $logger            = null,
+    $strategy          = 'realtime',
+    $address           = '',
     $realtimeTransport = null,
+    $force             = false,
+    $redirectingPlugin = null;
+  
+  protected
     $addToQueue = false;
   
   public static function getInstance()
@@ -173,10 +178,9 @@ class sfMailer extends Swift_Mailer {
 
     $log = $this->getConfig('log');
     if($log['enabled'])
-    {
-      $logger = new sfMailerLogger();
-      // logger plugin
-      $this->realtimeTransport->registerPlugin($logger);      
+    {      
+      $this->logger = new sfMailerLogger();
+      $this->realtimeTransport->registerPlugin($this->logger);      
     }
 
     // preferences for all messages!
@@ -195,8 +199,15 @@ class sfMailer extends Swift_Mailer {
       }
     }
     
+    // FIXME: this has been removed from Swift mailer
+    // https://github.com/swiftmailer/swiftmailer/commit/d4e5e63f077d74080919521f786138a3b27d556e#lib/classes/Swift/Plugins
+    if(!$this->getConfig('deliver'))
+    {
+      $this->getTransport()->registerPlugin(new sfMailerBlackholePlugin());
+    }
+    
     sfCore::getEventDispatcher()->notify(new sfEvent('mailer.configure', array(
-        'mailer' => &$this, 'config' => $this->config)));
+        'mailer' => &$this, 'config' => $this->config)));    
   }
 
   /**
@@ -265,13 +276,13 @@ class sfMailer extends Swift_Mailer {
     // deliver is disabled!
     if(!$this->getConfig('deliver'))
     {
-      return true;
+      // return true;
     }
     
     if(!$this->addToQueue)
     {
       $this->sendNextImmediately();
-    }    
+    }
     
     if($this->force)
     {
@@ -447,6 +458,26 @@ class sfMailer extends Swift_Mailer {
   public function setRealtimeTransport(Swift_Transport $transport)
   {
     $this->realtimeTransport = $transport;
+  }
+  
+  /**
+   * Gets the logger instance.
+   *
+   * @return sfMailerLoggerPlugin The logger instance.
+   */
+  public function getLogger()
+  {
+    return $this->logger;
+  }
+
+  /**
+   * Sets the logger instance.
+   *
+   * @param sfMailerLoggerPlugin $logger The logger instance.
+   */
+  public function setLogger($logger)
+  {
+    $this->logger = $logger;
   }
   
   /**
