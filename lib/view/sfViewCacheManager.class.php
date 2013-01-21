@@ -24,6 +24,7 @@ class sfViewCacheManager {
   $cacheConfig = array(),
   $context = null,
   $controller = null,
+  $request = null,
   $loaded = array();
 
   /**
@@ -37,6 +38,7 @@ class sfViewCacheManager {
   {
     $this->context = $context;
     $this->controller = $context->getController();
+    $this->request = $context->getRequest();
 
     // empty configuration
     $this->cacheConfig = array();
@@ -73,6 +75,17 @@ class sfViewCacheManager {
     return $this->cache;
   }
 
+  public function getCurrentCacheKey()
+  {
+    $uri = sfRouting::getInstance()->getCurrentInternalUri();
+    if($getParameters = $this->request->getGetParameters())
+    {
+      $uri .= false === strpos($uri, '?') ? '?' : '&';
+      $uri .= http_build_query($getParameters, null, '&');
+    }    
+    return $uri;
+  }
+  
   /**
    * Generates namespaces for the cache manager
    *
@@ -473,7 +486,7 @@ class sfViewCacheManager {
    *
    * @return string Last modified datetime for the current namespace
    */
-  public function lastModified($internalUri)
+  public function getLastModified($internalUri)
   {
     if(!$this->isCacheable($internalUri))
     {

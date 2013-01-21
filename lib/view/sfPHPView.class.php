@@ -281,9 +281,12 @@ class sfPHPView extends sfView
         );
         $response->setParameter($key, serialize($cache), 'sift/cache');
 
-        if (sfConfig::get('sf_web_debug'))
+        if(sfConfig::get('sf_web_debug'))
         {
-          $retval = sfWebDebug::getInstance()->decorateContentWithDebug($key, $retval, true);
+          $retval = sfCore::filterByEventListeners($retval, 'view.cache.filter_content', array(
+            'uri' => $key,
+            'new' => true  
+          ));          
         }
       }
     }
