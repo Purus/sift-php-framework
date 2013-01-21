@@ -369,6 +369,7 @@ function _get_cache($cacheManager, $moduleName, $actionName = null, $vars = arra
   {
     return null;
   }
+  
   $uri    = _get_cache_uri($moduleName, $actionName, $vars);
   $data   = @unserialize($cacheManager->get($uri));
   $retval = null;
@@ -394,11 +395,13 @@ function _get_cache($cacheManager, $moduleName, $actionName = null, $vars = arra
     $retval = $data['data'];
   }
 
-  if (sfConfig::get('sf_web_debug'))
+  if(sfConfig::get('sf_web_debug'))
   {
-    $retval = sfWebDebug::getInstance()->decorateContentWithDebug($uri, $retval, false);
+    $retval = sfCore::filterByEventListeners($retval, 'view.cache.filter_content', array(
+      'uri' => $uri,
+      'new' => false  
+    ));
   }
-
   return $retval;
 }
 
@@ -427,9 +430,11 @@ function _set_cache($cacheManager, $uri, $retval, $js = array(), $css = array(),
 
   if($saved && sfConfig::get('sf_web_debug'))
   {
-    $retval = sfWebDebug::getInstance()->decorateContentWithDebug($uri, $retval, true);
+    $retval = sfCore::filterByEventListeners($retval, 'view.cache.filter_content', array(
+      'uri' => $uri,
+      'new' => true  
+    ));    
   }
-
   return $retval;
 }
 

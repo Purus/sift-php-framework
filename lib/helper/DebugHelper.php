@@ -6,12 +6,17 @@
  * file that was distributed with this source code.
  */
  
- 
-function debug_message($message)
+/**
+ * 
+ * @param string $message
+ * @param string $priority
+ * @return void
+ */ 
+function debug_message($message, $priority = 'info')
 {
   if(sfConfig::get('sf_web_debug'))
   {
-    sfWebDebug::getInstance()->logShortMessage($message);
+    return log_message($message, $priority);    
   }
 }
 
