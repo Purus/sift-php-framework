@@ -84,7 +84,7 @@ abstract class sfConfigurable implements sfIConfigurable {
       $parent = $parent->getParentClass();      
     } while(false !== $parent); 
 
-    return array_merge($defaults, $this->defaultOptions);
+    return array_unique(array_merge($defaults, $this->defaultOptions));
   }
 
   /**
@@ -111,7 +111,7 @@ abstract class sfConfigurable implements sfIConfigurable {
       $parent = $parent->getParentClass();      
     } while(false !== $parent); 
 
-    return array_merge($required, $this->requiredOptions);
+    return array_unique(array_merge($required, $this->requiredOptions));
   }
   
   /**
