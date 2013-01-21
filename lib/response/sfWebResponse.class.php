@@ -174,6 +174,26 @@ class sfWebResponse extends sfResponse
   }
 
   /**
+   * Status text fot the current web response.
+   * 
+   * @return string
+   */
+  public function getStatusText()
+  {
+    return $this->statusTexts[$this->statusCode];
+  }
+  
+  /**
+   * Array of HTTP status texts
+   * 
+   * @return array
+   */
+  public function getStatusTexts()
+  {
+    return $this->statusTexts;
+  }
+  
+  /**
    * Sets a HTTP header.
    *
    * @param string HTTP header name
