@@ -19,8 +19,7 @@
 class sfConfigCache {
 
   protected $handlers = array();
-  protected static
-  $instance = null;
+  protected static $instance = null;
 
   /**
    * Retrieves the singleton instance of this class.
@@ -146,7 +145,7 @@ class sfConfigCache {
 
     if(!sfToolkit::isPathAbsolute($configPath))
     {
-      $files = sfLoader::getConfigPaths($configPath);
+      $files = sfLoader::getConfigPaths($configPath);      
     }
     else
     {
