@@ -59,6 +59,9 @@ class sfCore
 
   static public function bootstrap($sf_sift_lib_dir, $sf_sift_data_dir)
   {
+    require_once $sf_sift_lib_dir . '/autoload/sfCoreAutoload.class.php';
+    sfCoreAutoload::register();
+    
     require_once($sf_sift_lib_dir.'/util/sfToolkit.class.php');
     require_once($sf_sift_lib_dir.'/config/sfConfig.class.php');
     require_once($sf_sift_lib_dir.'/core/sfDimensions.class.php');
@@ -158,17 +161,32 @@ class sfCore
   // check to see if we're not in a cache cleaning process
   static public function checkLock()
   {
-    if (
-      sfToolkit::hasLockFile(SF_ROOT_DIR.DIRECTORY_SEPARATOR.SF_APP.'_'.SF_ENVIRONMENT.'-cli.lck', 5)
+    if(
+      sfToolkit::hasLockFile(sfConfig::get('sf_data_dir').DIRECTORY_SEPARATOR.SF_APP.'_'.SF_ENVIRONMENT.'-cli.lck', 5)
       ||
-      sfToolkit::hasLockFile(SF_ROOT_DIR.DIRECTORY_SEPARATOR.SF_APP.'_'.SF_ENVIRONMENT.'.lck')
+      sfToolkit::hasLockFile(sfConfig::get('sf_data_dir').DIRECTORY_SEPARATOR.SF_APP.'_'.SF_ENVIRONMENT.'.lck')
     )
     {
-      // application is not available
-      $file = sfConfig::get('sf_web_dir').'/errors/unavailable.php';
-      include(is_readable($file) ? $file : sfConfig::get('sf_sift_data_dir').'/web/errors/unavailable.php');
-
-      die(1);
+      // application is not available - we'll find the most specific unavailable page...
+      $files = array(
+        sfConfig::get('sf_app_config_dir').'/unavailable.php',
+        sfConfig::get('sf_config_dir').'/unavailable.php',
+        sfConfig::get('sf_web_dir').'/errors/unavailable.php',
+        sfConfig::get('sf_sift_data_dir').'/errors/unavailable.php',
+      );
+      
+      foreach($files as $file)
+      {
+        if(is_readable($file))
+        {
+          header("HTTP/1.1 503 Service Temporarily Unavailable");
+          header("Status: 503 Service Temporarily Unavailable");
+          include $file;
+          break;
+        }
+      }
+      
+      die(1);      
     }
   }
 
@@ -515,9 +533,8 @@ class sfCore
    *
    */
   public static function compareVersion($version)
-  {
-    $current_version = trim(file_get_contents(sfConfig::get('sf_sift_lib_dir').'/VERSION'));
-    return version_compare($version, $current_version);
+  {    
+    return version_compare($version, self::getVersion());
   }
 
   /**
@@ -528,6 +545,16 @@ class sfCore
   public static function getCoreHelpers()
   {
     return array('Helper', 'Url', 'Asset', 'Tag', 'Escaping');
+  }
+  
+  /**
+   * Returns current Sift version
+   * 
+   * @return string
+   */
+  public static function getVersion()
+  {
+    return trim(file_get_contents(sfConfig::get('sf_sift_lib_dir').'/VERSION'));
   }
 
 }
