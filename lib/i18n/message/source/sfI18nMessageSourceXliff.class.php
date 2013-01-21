@@ -53,8 +53,7 @@ class sfI18nMessageSourceXliff extends sfI18nMessageSource {
    * @return array of messages.
    */
   protected function &loadData($filename)
-  {
-    echo 'loading dfata: ' . $filename . "\n\n";
+  {   
     libxml_use_internal_errors(true);
     if(!$xml = simplexml_load_file($filename))
     {
@@ -62,8 +61,8 @@ class sfI18nMessageSourceXliff extends sfI18nMessageSource {
 
       return $error;
     }
+    
     libxml_use_internal_errors(false);
-
     $translationUnit = $xml->xpath('//trans-unit');
 
     $translations = array();
@@ -76,10 +75,6 @@ class sfI18nMessageSourceXliff extends sfI18nMessageSource {
       $translations[$source][] = (string) $unit->note;
     }
 
-    echo 'PREKLADy' . "\n";
-    var_dump($translations);
-    echo '------------------------------------PREKLADy' . "\n";
-    
     return $translations;
   }
 
