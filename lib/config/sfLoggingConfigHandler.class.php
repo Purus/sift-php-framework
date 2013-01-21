@@ -13,8 +13,8 @@
  * @subpackage config
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  */
-class sfLoggingConfigHandler extends sfDefineEnvironmentConfigHandler
-{
+class sfLoggingConfigHandler extends sfDefineEnvironmentConfigHandler {
+
   protected
     $enabled = true,
     $loggers = array();
@@ -30,7 +30,7 @@ class sfLoggingConfigHandler extends sfDefineEnvironmentConfigHandler
   {
     $data = parent::execute($configFiles);
 
-    if ($this->enabled)
+    if($this->enabled)
     {
       $data .= "\n\$logger = sfLogger::getInstance();\n";
 
@@ -38,33 +38,32 @@ class sfLoggingConfigHandler extends sfDefineEnvironmentConfigHandler
       $data .= "\$logger->setLogLevel(constant('SF_LOG_'.strtoupper(sfConfig::get('sf_logging_level'))));\n";
 
       // register loggers defined in the logging.yml configuration file
-      foreach ($this->loggers as $name => $keys)
+      foreach($this->loggers as $name => $keys)
       {
-        if (isset($keys['enabled']) && !$keys['enabled'])
+        if(isset($keys['enabled']) && !$keys['enabled'])
         {
           continue;
         }
 
-        if (!isset($keys['class']))
+        if(!isset($keys['class']))
         {
           // missing class key
           throw new sfParseException(sprintf('Configuration file "%s" specifies filter "%s" with missing class key', $configFiles[0], $name));
         }
 
         $condition = true;
-        if (isset($keys['param']['condition']))
+        if(isset($keys['param']['condition']))
         {
           $condition = $this->replaceConstants($keys['param']['condition']);
           unset($keys['param']['condition']);
         }
 
-        if ($condition)
+        if($condition)
         {
           // parse parameters
-          $parameters = isset($keys['param']) ? var_export($keys['param'], true) : '';
-
-          // create logger instance
-          $data .= sprintf("\n\$log = new %s();\n\$log->initialize(%s);\n\$logger->registerLogger(\$log);\n", $keys['class'], $parameters);
+          $parameters = isset($keys['param']) ? $this->varExport($keys['param']) : '';
+          // register logger
+          $data .= sprintf("\$logger->registerLogger(new %s(%s));\n", $keys['class'], $parameters);
         }
       }
     }
@@ -74,11 +73,11 @@ class sfLoggingConfigHandler extends sfDefineEnvironmentConfigHandler
 
   protected function getValues($prefix, $category, $keys)
   {
-    if ('enabled' == $category)
+    if('enabled' == $category)
     {
       $this->enabled = $this->replaceConstants($keys);
     }
-    else if ('loggers' == $category)
+    else if('loggers' == $category)
     {
       $this->loggers = $this->replaceConstants($keys);
 
@@ -87,4 +86,5 @@ class sfLoggingConfigHandler extends sfDefineEnvironmentConfigHandler
 
     return parent::getValues($prefix, $category, $keys);
   }
+
 }

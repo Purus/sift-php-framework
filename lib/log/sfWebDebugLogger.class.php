@@ -11,13 +11,27 @@
  *
  * @package    Sift
  * @subpackage log
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  */
-class sfWebDebugLogger
-{
-  protected
-    $webDebug = null;
+class sfWebDebugLogger extends sfVarLogger {
 
+  /**
+   * Web debug holder
+   * 
+   * @var sfWebDebug 
+   */
+  protected $webDebug = null;
+
+  /**
+   * Array of default options
+   * 
+   * @var array 
+   */
+  protected $defaultOptions = array(
+    'web_debug_class'   => 'sfWebDebug',
+    'web_debug_options' => array(        
+    )
+  );
+  
   /**
    * Initializes the web debug logger.
    *
@@ -25,71 +39,69 @@ class sfWebDebugLogger
    */
   public function initialize($options = array())
   {
-    if (!sfConfig::get('sf_web_debug'))
+    if(!sfConfig::get('sf_web_debug'))
     {
       return;
     }
-
-    $this->webDebug = sfWebDebug::getInstance();
+    
+    sfCore::getEventDispatcher()->connect('context.load_factories', array($this, 'listenForLoadFactories'));
+    sfCore::getEventDispatcher()->connect('web_debug.filter_content', array($this, 'filterResponseContent'));
+    sfCore::getEventDispatcher()->connect('application.render_exception', array($this, 'filterExceptionContent'));
+    
   }
 
   /**
-   * Logs a message.
-   *
-   * @param string Message
-   * @param string Message priority
-   * @param string Message priority name
+   * Listens for "context.load_factories" event.
+   * 
+   * @param sfEvent $event
    */
-  public function log($message, $priority, $priorityName)
-  {
-    if (!sfConfig::get('sf_web_debug'))
-    {
-      return;
-    }
-
-    // if we have xdebug, add some stack information
-    $debug_stack = array();
-
-    // disable xdebug when an HTTP debug session exists (crashes Apache, see #2438)
-    if (function_exists('xdebug_get_function_stack') && !isset($_GET['XDEBUG_SESSION_START']) && !isset($_COOKIE['XDEBUG_SESSION']))
-    {
-      foreach (xdebug_get_function_stack() as $i => $stack)
-      {
-        if (
-          (isset($stack['function']) && !in_array($stack['function'], array('emerg', 'alert', 'crit', 'err', 'warning', 'notice', 'info', 'debug', 'log')))
-          || !isset($stack['function'])
-        )
-        {
-          $tmp = '';
-          if (isset($stack['function']))
-          {
-            $tmp .= 'in "'.$stack['function'].'" ';
-          }
-          $tmp .= 'from "'.$stack['file'].'" line '.$stack['line'];
-          $debug_stack[] = $tmp;
-        }
-      }
-    }
-
-    // get log type in {}
-    $type = 'sfOther';
-    if (preg_match('/^\s*{([^}]+)}\s*(.+?)$/', $message, $matches))
-    {
-      $type    = $matches[1];
-      $message = $matches[2];
-    }
-
-    // build the object containing the complete log information.
-    $logEntry = array(
-      'priority'       => $priority,
-      'priorityString' => $priorityName,
-      'time'           => time(),
-      'message'        => $message,
-      'type'           => $type,
-      'debugStack'     => $debug_stack,
-    );
-
-    // send the log object.
-    $this->webDebug->log($logEntry);
+  public function listenForLoadFactories(sfEvent $event)
+  {    
+    $debugClass   = $this->getOption('web_debug_class', 'sfWebDebug');
+    $debugOptions = array_merge(array(      
+      'request_parameters' => $event['context']->getRequest()->getParameterHolder()->getAll(),
+    ), (array)$this->getOption('web_debug_options', array()));
+    $this->webDebug = new $debugClass($this, $debugOptions);
   }
+
+  /**
+   * Listens to the web_debug.filter_content event.
+   *
+   * @param  sfEvent $event   The sfEvent instance
+   * @param  string  $content The response content
+   *
+   * @return string  The filtered response content
+   */
+  public function filterResponseContent(sfEvent $event, $content)
+  {
+    if(!sfConfig::get('sf_web_debug'))
+    {
+      return $content;
+    }
+    return str_ireplace('</body>', $this->webDebug->getHtml() . '</body>', $content);  
+  }
+  
+ /**
+   * Listens to the application.render_exception event.
+   *
+   * @param  sfEvent $event   The sfEvent instance
+   * @param  string  $content The response content
+   *
+   * @return string  The filtered response content
+   */
+  public function filterExceptionContent(sfEvent $event, $content)
+  {
+    if(!sfConfig::get('sf_web_debug'))
+    {
+      return $content;
+    }
+    
+    if(!$this->webDebug)
+    {
+      return $content;
+    }
+    
+    return str_ireplace('</body>', $this->webDebug->getHtml() . '</body>', $content);  
+  }  
+  
 }
