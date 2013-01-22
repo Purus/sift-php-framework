@@ -60,7 +60,15 @@ all:
   plugins:
     - sfMailerHtml2TextPlugin
 
-  spool: 
-    enabled: false
+  spool:
+    
+    # enable/disable the spool
+    #enabled: false    
+    # File spool
+    #class: Swift_FileSpool
+    #arguments: %SF_DATA_DIR%/email/spool    
+    
+    # Custom spool
     #class:  XYZ
     #arguments: []
+    
