@@ -5,7 +5,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
- 
+
 /**
  * AssetHelper.
  *
@@ -39,8 +39,8 @@
 function auto_discovery_link_tag($type = 'rss', $url, $tag_options = array())
 {
   $params = array(
-    'rel' => isset($tag_options['rel']) ? $tag_options['rel'] : 'alternate',
-    'href' => url_for($url, true)
+      'rel' => isset($tag_options['rel']) ? $tag_options['rel'] : 'alternate',
+      'href' => url_for($url, true)
   );
 
   if(isset($tag_options['type']))
@@ -119,17 +119,17 @@ function javascript_include_tag()
   $sourceOptions = (func_num_args() > 1 && is_array($sources[func_num_args() - 1])) ? array_pop($sources) : array();
 
   $html = '';
-  foreach ($sources as $source)
+  foreach($sources as $source)
   {
     $absolute = false;
-    if (isset($sourceOptions['absolute']))
+    if(isset($sourceOptions['absolute']))
     {
       unset($sourceOptions['absolute']);
       $absolute = true;
     }
 
     $condition = null;
-    if (isset($sourceOptions['ie_condition']))
+    if(isset($sourceOptions['ie_condition']))
     {
       $condition = $sourceOptions['ie_condition'];
       unset($sourceOptions['ie_condition']);
@@ -142,12 +142,12 @@ function javascript_include_tag()
       unset($sourceOptions['raw']);
     }
     elseif(isset($sourceOptions['generated']))
-    {      
+    {
       $source = _dynamic_path($source, $absolute);
       $raw = true;
-      unset($sourceOptions['generated']);      
-    }  
-    
+      unset($sourceOptions['generated']);
+    }
+
     if(!$raw)
     {
       $source = javascript_path($source, $absolute);
@@ -156,12 +156,12 @@ function javascript_include_tag()
     $options = array_merge(array('type' => 'text/javascript', 'src' => $source), $sourceOptions);
     $tag = content_tag('script', '', $options);
 
-    if (!is_null($condition))
+    if(!is_null($condition))
     {
       $tag = ie_conditional_comment($condition, $tag);
     }
 
-    $html .= $tag."\n";
+    $html .= $tag . "\n";
   }
 
   return $html;
@@ -225,12 +225,12 @@ function stylesheet_tag()
   foreach($sources as $source)
   {
     $absolute = false;
-    if (isset($sourceOptions['absolute']))
+    if(isset($sourceOptions['absolute']))
     {
       unset($sourceOptions['absolute']);
       $absolute = true;
     }
-    
+
     $raw = false;
     if(isset($sourceOptions['raw']))
     {
@@ -240,26 +240,24 @@ function stylesheet_tag()
     elseif(isset($sourceOptions['generated']))
     {
       $raw = true;
-      unset($sourceOptions['generated']); 
-      
-      
-    }  
-    
+      unset($sourceOptions['generated']);
+    }
+
     $condition = null;
     if(isset($sourceOptions['ie_condition']))
     {
       $condition = $sourceOptions['ie_condition'];
       unset($sourceOptions['ie_condition']);
-    }    
-    
+    }
+
     if(!$raw)
     {
       // less support    
-      if(isset($sourceOptions['less']) 
-          || preg_match('/\.less$/i', $source))
-      {        
+      if(isset($sourceOptions['less'])
+              || preg_match('/\.less$/i', $source))
+      {
         $source = sfLessCompiler::getInstance()->compileStylesheetIfNeeded(
-          stylesheet_path($source)                
+                stylesheet_path($source)
         );
         unset($sourceOptions['less']);
       }
@@ -268,21 +266,21 @@ function stylesheet_tag()
         $source = stylesheet_path($source, $absolute);
       }
     }
-    
+
     $options = array_merge(array(
-              'rel' => 'stylesheet', 
-              'type' => 'text/css', 
-              'media' => 'screen,projection,tv', 
-              'href' => $source), $sourceOptions);
-    
+        'rel' => 'stylesheet',
+        'type' => 'text/css',
+        'media' => 'screen,projection,tv',
+        'href' => $source), $sourceOptions);
+
     $tag = tag('link', $options);
-    
+
     if(!is_null($condition))
     {
       $tag = ie_conditional_comment($condition, $tag);
     }
-    
-    $html .=  $tag . "\n";
+
+    $html .= $tag . "\n";
   }
 
   return $html;
@@ -299,12 +297,11 @@ function use_stylesheet($css, $position = '', $options = array())
   {
     $css = array($css);
   }
-  
+
   foreach($css as $stylesheet)
   {
     sfContext::getInstance()->getResponse()->addStylesheet($stylesheet, $position, $options);
   }
-  
 }
 
 /**
@@ -318,7 +315,7 @@ function use_javascript($js, $position = '', $options = array())
   {
     $js = array($js => array());
   }
-  
+
   foreach($js as $javascript => $options)
   {
     sfContext::getInstance()->getResponse()->addJavascript($javascript, $position, $options);
@@ -430,7 +427,7 @@ function image_tag($source, $options = array())
       if(sfConfig::get('sf_debug'))
       {
         throw new InvalidArgumentException(sprintf('Size option "%s" is not valid', $options['size']));
-      }     
+      }
     }
     list($options['width'], $options['height']) = explode('x', $options['size'], 2);
     unset($options['size']);
@@ -471,15 +468,15 @@ function _compute_public_path($source, $dir, $ext, $absolute = false)
   }
 
   $baseDomain = sfConfig::get('sf_base_domain');
-  $host       = $request->getHost();
+  $host = $request->getHost();
   if($baseDomain && $baseDomain != $host)
   {
     $absolute = true;
     $host = $baseDomain;
   }
-  
+
   if($absolute)
-  {    
+  {
     $source = 'http' . ($request->isSecure() ? 's' : '') . '://' . $host . $source;
   }
 
@@ -583,13 +580,13 @@ function get_javascripts()
       foreach($files as $file)
       {
         $tag = javascript_include_tag($file, $options);
-        
+
         if(isset($already_seen[$tag]))
         {
           continue;
         }
-        
-        $html .= $tag;        
+
+        $html .= $tag;
         $already_seen[$tag] = true;
       }
     }
@@ -636,13 +633,13 @@ function get_stylesheets()
       foreach($files as $file)
       {
         $tag = stylesheet_tag($file, $options);
-        
+
         if(isset($already_seen[$tag]))
         {
           continue;
         }
-        
-        $already_seen[$tag] = true;        
+
+        $already_seen[$tag] = true;
         $html .= $tag;
       }
     }
@@ -730,7 +727,7 @@ function get_canonical_url($raw = true, $autoset = false)
       $route = sfContext::getInstance()->getRequest()->getUri();
     }
     else
-    {      
+    {
       $route = sfRouting::getInstance()->getCurrentInternalUri(true);
     }
 
@@ -739,10 +736,9 @@ function get_canonical_url($raw = true, $autoset = false)
     {
       return '';
     }
-    
+
     // generate url from current route!
     $url = url_for($route, true);
-    
   }
   if(!$raw)
   {
@@ -782,25 +778,25 @@ function get_javascript_configuration($options = array(), $app = null)
 {
   $response = sfContext::getInstance()->getResponse();
   $response->setParameter('javascript_configuration_included', true, 'sift/view/asset');
-  
+
   if(is_null($app))
   {
     $app = sfConfig::get('sf_app');
   }
-    
+
   // default configuration
   $default = array(
-    'culture'             => sfContext::getInstance()->getUser()->getCulture(),
-    'debug'               => sfConfig::get('sf_debug'),     
-    'cookie_domain'       => '.' . sfContext::getInstance()->getRequest()->getBaseDomain(), // cross domain cookie
-    'cookie_path:'        => sfConfig::get('sf_relative_url_root') ? sfConfig::get('sf_relative_url_root') : '/',
-    'homepage_url'        => url_for('@homepage'),
-    'url_suffix'          => sfConfig::get('sf_suffix'),
-    'ajax_timeout'        => sfConfig::get('sf_ajax_timeout')  
+      'culture' => sfContext::getInstance()->getUser()->getCulture(),
+      'debug' => sfConfig::get('sf_debug'),
+      'cookie_domain' => '.' . sfContext::getInstance()->getRequest()->getBaseDomain(), // cross domain cookie
+      'cookie_path:' => sfConfig::get('sf_relative_url_root') ? sfConfig::get('sf_relative_url_root') : '/',
+      'homepage_url' => url_for('@homepage'),
+      'url_suffix' => sfConfig::get('sf_suffix'),
+      'ajax_timeout' => sfConfig::get('sf_ajax_timeout')
   );
 
   use_jquery();
-  use_javascript('core/core.js');
+  use_package('core');
 
   $config = array_merge($default, $options);
 
@@ -820,63 +816,98 @@ function get_javascript_configuration($options = array(), $app = null)
  */
 function use_jquery($position = 'first')
 {
-  return use_javascript(sfJQuery::getSrc(), $position);
+  return use_package('jquery', $position);
 }
 
 /**
  * Use Jquery UI
- *
+ * 
+ * @param string $position 
  */
-function use_jquery_ui()
+function use_jquery_ui($position = '')
 {
-  use_jquery_plugin('ui');
+  use_package('ui', $position);
 }
 
 /**
- * For future use!
- *  
+ * Use asset package
+ * 
  */
 function use_package()
 {
-  // we need jquery
-  use_jquery();
   foreach(func_get_args() as $name)
   {
-    use_jquery_plugin_javascript($name);
-    use_jquery_plugin_stylesheet($name);
+    foreach(sfAssetPackage::getJavascripts($name) as $javascript)
+    {
+      use_javascript($javascript);
+    }
+
+    foreach(sfAssetPackage::getStylesheets($name) as $stylesheet)
+    {
+      use_stylesheet($stylesheet);
+    }
   }
 }
 
 /**
- * Use jquery plugin
- *
+ * Use package stylesheets
+ * 
+ * @param string $name Package name (should be configured in asset_packages.yml)
+ * @param string $position Position
  */
-function use_jquery_plugin()
+function use_package_stylesheet($name, $position = '')
 {
-  // we need jquery
-  use_jquery();
-  foreach(func_get_args() as $name)
-  {
-    use_jquery_plugin_javascript($name);
-    use_jquery_plugin_stylesheet($name);
-  }
-}
-
-function use_jquery_plugin_stylesheet($name, $position = '')
-{
-  $stylesheets = sfJQuery::getPluginStylesheets($name);
-  foreach($stylesheets as $stylesheet)
+  foreach(sfAssetPackage::getStylesheets($name) as $stylesheet)
   {
     use_stylesheet($stylesheet, $position);
   }
 }
 
+/**
+ * User jquery plugin. 
+ * 
+ * Accepts variable number of arguments as plugin names
+ * 
+ * @param $name Plugin name 
+ */
+function use_jquery_plugin()
+{
+  use_jquery();
+
+  foreach(func_get_args() as $name)
+  {
+    use_package_javascript($name);
+    use_package_stylesheet($name);
+  }
+}
+
+/**
+ * Use jquery plugin stylesheets
+ * 
+ * @param string $name Plugin name (should be configured in asset_packages.yml)
+ * @param string $position Position
+ */
+function use_jquery_plugin_stylesheet($name, $position = '')
+{
+  foreach(sfAssetPackage::getStylesheets($name) as $stylesheet)
+  {
+    use_stylesheet($stylesheet, $position);
+  }
+}
+
+/**
+ * Use jquery plugin javascripts
+ * 
+ * @param string $name Plugin name
+ * @param string $position Position
+ */
 function use_jquery_plugin_javascript($name, $position = '')
 {
-  $javascripts   = sfJQuery::getPluginSrc($name);
-  foreach($javascripts as $filename)
+  use_jquery();
+
+  foreach(sfAssetPackage::getJavascripts($name) as $javascript)
   {
-    use_javascript($filename, $position);
+    use_javascript($javascript, $position);
   }
 }
 
@@ -891,30 +922,45 @@ function include_jquery($position = 'first')
   return use_jquery($position);
 }
 
+/**
+ * Use fancybox stylesheet(s)
+ * 
+ * @param string $position
+ */
 function use_fancybox_stylesheet($position = '')
 {
-  return use_jquery_plugin_stylesheet('fancybox', $position);
-}
-
-function use_jquery_easing()
-{
-  return use_jquery_plugin('easing');
-}
-
-function use_jquery_mousewheel()
-{
-  return use_jquery_plugin('mousewheel');
-}
-
-function use_jquery_validation()
-{
-  return use_jquery_plugin('validation');
+  use_jquery_plugin_stylesheet('fancybox', $position);
 }
 
 /**
- * Includes fancybox javaccript to response
+ * Use easing stylesheet(s)
+ * 
+ */
+function use_jquery_easing()
+{
+  use_jquery_plugin('easing');
+}
+
+/**
+ * Use jquery mousewheel package
+ * 
+ */
+function use_jquery_mousewheel()
+{
+  use_jquery_plugin('mousewheel');
+}
+
+/**
+ * Use jquery validation plugin
+ */
+function use_jquery_validation()
+{
+  use_jquery_plugin('validation');
+}
+
+/**
+ * Includes fancybox javascript to response
  *
- * @return <type> string
  */
 function use_fancybox_javascript($options = array())
 {
@@ -931,7 +977,9 @@ function use_fancybox_javascript($options = array())
   {
     use_jquery_mousewheel();
   }
+  
 }
+
 /**
  * Returns a <script> include tag for the given internal URI.
  *
@@ -977,6 +1025,13 @@ function use_dynamic_stylesheet($css, $position = '', $options = array())
   return use_stylesheet(_dynamic_path($css), $position, $options);
 }
 
+/**
+ * Returns url for the internal $uri
+ * 
+ * @param string $uri Internal uri
+ * @param boolean $absolute Absolute url?
+ * @return string
+ */
 function _dynamic_path($uri, $absolute = false)
 {
   return url_for($uri, $absolute);
