@@ -1,10 +1,13 @@
+# You can find more information about this file on:
+# https://bitbucket.org/mishal/sift-php-framework/wiki/Settings
+
 default:
   
   .actions:
-
+    
     default_module:         default   # Default module and action to be called when
     default_action:         index     # A routing rule doesn't set it
-
+    
     error_404_module:       default   # To be called when a 404 error is raised
     error_404_action:       error404  # Or when the requested URL doesn't match any route
 
@@ -29,12 +32,12 @@ default:
     use_security:           true        # Enable security features (login and credentials). Set to off for public applications.
     use_flash:              true        # Enable flash parameter feature. Set to off if you never use the set_flash() method in actions.
     i18n:                   true        # Enable interface translation. Set to off if your application should not be translated.
-    check_sift_version:  false       # Enable check of sift version for every request. Set to on to have sift clear the cache automatically when the framework is upgraded. Set to off if you always clear the cache after an upgrade.
+    check_sift_version:     false       # Enable check of sift version for every request. Set to on to have sift clear the cache automatically when the framework is upgraded. Set to off if you always clear the cache after an upgrade.
     use_process_cache:      true        # Enable sift optimizations based on PHP accelerators. Set to off for tests or when you have enabled a PHP accelerator in your server but don't want sift to use it internally.
-    check_lock:             false       # Enable the application lock system triggered by the clear-cache and disable tasks. Set to on to have all requests to disabled applications redirected to the $sf_sift_data_dir/web/arrors/unavailable.php page.
+    check_lock:             true        # Enable the application lock system triggered by the clear-cache and disable tasks. Set to on to have all requests to disabled applications redirected to the $sf_sift_data_dir/web/arrors/unavailable.php page.
 
     # Output escaping settings
-    escaping_strategy:      false          # Determines how variables are made available to templates. Accepted values: bc, both, on, off. The value off deactivates escaping completely and gives a slight boost.
+    escaping_strategy:      false          # Determines how variables are made available to templates. Accepted values: bc, both, true, false. The value false deactivates escaping completely and gives a slight boost.
     escaping_method:        ESC_ENTITIES   # Function or helper used for escaping. Accepted values: ESC_RAW, ESC_ENTITIES, ESC_JS, ESC_JS_NO_ENTITIES.
 
     # Routing settings
@@ -42,14 +45,16 @@ default:
     no_script_name:         false       # Enable the front controller name in generated URLs
 
     # validator settings
-#    validator_email_check_mx: true
-#    validator_email_strict_pattern: true
     
+    #validator_email_check_mx: true
+    #validator_email_strict_pattern: true
+    
+    # DEPRECATED
     # Validation settings, used for error generation by the Validation helper
-#    validation_error_prefix:    ' &darr;&nbsp;'
-#    validation_error_suffix:    ' &nbsp;&darr;'
-#    validation_error_class:     form_error
-#    validation_error_id_prefix: error_for_
+    #validation_error_prefix:    ' &darr;&nbsp;'
+    #validation_error_suffix:    ' &nbsp;&darr;'
+    #validation_error_class:     form_error
+    #validation_error_id_prefix: error_for_
 
     # Cache settings
     cache:                  false       # Enable the template cache
@@ -57,14 +62,17 @@ default:
 
     # Logging and debugging settings
     web_debug:              false       # Enable the web debug toolbar
-    error_reporting:        <?php echo (E_PARSE | E_COMPILE_ERROR | E_ERROR | E_CORE_ERROR | E_USER_ERROR)."\n" ?> # Determines which events are logged. The default value is E_PARSE | E_COMPILE_ERROR | E_ERROR | E_CORE_ERROR | E_USER_ERROR = 341
+    
+    # Determines which events are logged. The default value is E_PARSE | E_COMPILE_ERROR | E_ERROR | E_CORE_ERROR | E_USER_ERROR = 341    
+    error_reporting:        <?php echo (E_PARSE | E_COMPILE_ERROR | E_ERROR | E_CORE_ERROR | E_USER_ERROR)."\n" ?>
 
-    # Assets paths
-    rich_text_js_dir:       js/tiny_mce
-    admin_web_dir:          /admin
-    web_debug_web_dir:      /sf/sf_web_debug
-    calendar_web_dir:       /sf/calendar
-
+    # sift web directory
+    sift_web_dir:           /sf
+    # Administration web directory (with assets)
+    admin_web_dir:          /sf/admin
+    # Rich calendar web directory
+    calendar_web_dir:       /sf/js/calendar
+    
     # Helpers included in all templates by default
     standard_helpers:       [Partial, Cache, Form, I18N]
 
@@ -89,14 +97,15 @@ default:
     # timezone setting
     default_timezone:       "Europe/Prague"    
 
-    ajax_timeout:           8000 # ajax timeout in miliseconds
+    # ajax timeout in miliseconds
+    ajax_timeout:           8000 
     
     # this is used by _compute_public_path
     # for generating absolute urls for subdomains
     # leave empty to be disabled    
     #base_domain: domain.cz
     
-    # cryptography 
+    # cryptography
     crypt_key: %SF_CONFIG_DIR%/crypt.key
     crypt_mode: ecb
     crypt_algorithm: tripledes
@@ -105,11 +114,8 @@ default:
 #      default_adapter: GD # GD or ImageMagick
 #      default_image:
 #        mime_type: image/png
-#        filename: Untitled.png
+#        filename: untitled.png
 #        width: 100
 #        height: 100
 #        color: '#FFFFFF'
 #      font_dir: %SF_IMAGE_FONT_DIR%
-#      mime_type:
-#        auto_detect: false
-#        library: gd_mime_type #  gd_mime_type (GD), Fileinfo (PECL), MIME_Type (PEAR)
