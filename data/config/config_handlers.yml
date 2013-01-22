@@ -1,3 +1,6 @@
+# You can find more information about this file on: 
+# https://bitbucket.org/mishal/sift-php-framework/wiki/ConfigHandlers
+
 config/autoload.yml:
   class:    sfAutoloadConfigHandler
 
@@ -20,8 +23,8 @@ config/app.yml:
 config/sanitize.yml:
   class:    sfSanitizeConfigHandler
 
-config/jquery.yml:
-  class:    sfJQueryConfigHandler
+config/asset_packages.yml:
+  class:    sfAssetPackagesConfigHandler
 
 config/factories.yml:
   class:    sfFactoryConfigHandler
@@ -50,9 +53,6 @@ config/i18n.yml:
 
 config/mail.yml:
   class:  sfMailConfigHandler
-
-config/dimensions.yml:
-  class:  sfDimensionsConfigHandler
 
 config/*/modules.yml:
   class: sfModulesConfigHandler
