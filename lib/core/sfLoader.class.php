@@ -325,19 +325,27 @@ class sfLoader {
         $sf_root_dir . DS . $globalConfigPath, // project
         $sf_root_dir . DS . $configPath, // project
         $sf_app_dir . DS . $globalConfigPath, // application
-            // disable generated module
-            // sfConfig::get('sf_cache_dir').DS.$configPath,                                 // generated modules
+        // disable generated module
+        // generated modules
+        // sfConfig::get('sf_cache_dir').DS.$configPath,
     ));
 
     if($pluginDirs = glob($sf_plugins_dir . DS . '*' . DS . $configPath))
     {
-      $files = array_merge($files, $pluginDirs);                                     // plugins
+      // plugins
+      $files = array_merge($files, $pluginDirs);
     }
 
-    $files[] = $sf_app_dir . DS . $configPath;                          // module
+    // module
+    $files[] = $sf_app_dir . DS . $configPath;
 
     // If the configuration file can be overridden with a dimension, inject the appropriate path
-    $applicationConfigurationFiles = array('app.yml', 'factories.yml', 'filters.yml', 'i18n.yml', 'logging.yml', 'settings.yml', 'databases.yml', 'routing.yml');
+    $applicationConfigurationFiles = array(
+        'app.yml', 'factories.yml', 'filters.yml', 'i18n.yml', 
+        'logging.yml', 'settings.yml', 'databases.yml', 'routing.yml',
+        'asset_packages.yml'        
+    );
+    
     $moduleConfigurationFiles = array('cache.yml', 'module.yml', 'security.yml', 'view.yml');
 
     $configurationFiles = array_merge($applicationConfigurationFiles, $moduleConfigurationFiles);

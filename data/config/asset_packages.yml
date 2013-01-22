@@ -1,0 +1,108 @@
+# You can find more information about this file on:
+# https://bitbucket.org/mishal/sift-php-framework/wiki/AssetPackages
+
+dev:  
+ # packages map
+  packages:    
+    validation:      
+      javascripts:
+        - %SF_SIFT_WEB_DIR%/js/validate/jquery.validate.js
+        - %SF_SIFT_WEB_DIR%/js/validate/additional-methods.min.js     
+        - %SF_SIFT_WEB_DIR%/js/validate/jquery.validate.custom_callback.js
+        - %SF_SIFT_WEB_DIR%/js/validate/localization/messages_%SF_CULTURE{0,2}%.js  
+
+default:
+  
+  # if enabled only configured packages gets included
+  strict_mode: true
+  
+  # packages map
+  packages:
+
+    # core library
+    core:
+      javascripts:
+        - %SF_SIFT_WEB_DIR%/js/core/core.js
+        - %SF_SIFT_WEB_DIR%/js/core/i18n/%SF_CULTURE{0,2}%.js
+        - app.js        
+      require:
+        - jquery
+
+    # jquery package
+    jquery:      
+      javascripts: 
+        - //ajax.googleapis.com/ajax/libs/jquery/1.8.1/jquery.min.js
+       
+    google_analytics_tracker:
+      javascripts:
+        - %SF_SIFT_WEB_DIR%/js/ga/ga.js
+   
+    google_analytics_setup:
+      javascripts:
+        - %SF_SIFT_WEB_DIR%/js/ga/ga-setup.js
+    
+    # Json support
+    # http://www.json.org/js.html
+    json:
+      javascripts:
+        - %SF_SIFT_WEB_DIR%/js/json/json.js
+    
+    # https://github.com/adamayres/jqueryplugins/wiki/Ajax-Cache-Response-jQuery-Plugin
+    cache_response:
+      javascripts:
+        - %SF_SIFT_WEB_DIR%/js/cache_response/jquery.ajax-cache-response.min.js
+      require:
+        - jquery
+
+    # jquery ui
+    ui:
+      javascripts:
+        - //ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js
+      stylesheets: []
+      require:
+        - jquery
+    
+    modernizr:
+      javascripts:        
+        - %SF_SIFT_WEB_DIR%/js/modernizr/modernizr.custom.96327.js 
+        - %SF_SIFT_WEB_DIR%/js/modernizr/font_smoothing.js   
+        
+    validation:
+      javascripts:
+        - %SF_SIFT_WEB_DIR%/js/validate/jquery.validate.min.js
+        - %SF_SIFT_WEB_DIR%/js/validate/additional-methods.min.js        
+        - %SF_SIFT_WEB_DIR%/js/validate/jquery.validate.custom_callback.min.js
+        - %SF_SIFT_WEB_DIR%/js/validate/localization/messages_%SF_CULTURE{0,2}%.js
+      require:
+        - jquery     
+
+    # Easing
+    easing:
+      javascripts:
+        - %SF_SIFT_WEB_DIR%/js/easing/jquery.easing.1.3.js
+      require:
+        - jquery        
+
+    # Mouse wheel support
+    # https://github.com/brandonaaron/jquery-mousewheel
+    mousewheel:
+      javascripts:
+        - %SF_JAVASCRIPT_PATH%/js/mouse_wheel/jquery.mousewheel.js
+      require:
+        - jquery
+
+   # fancybox
+    fancybox:
+      javascripts:
+        - %SF_JAVASCRIPT_PATH%/jquery/fancybox/jquery.fancybox-1.3.4.js
+      stylesheets:
+        - %SF_JAVASCRIPT_PATH%/jquery/fancybox/jquery.fancybox-1.3.4.css
+      require:
+        - jquery        
+        
+    # hover intent
+    hover_intent:
+      javascripts:
+        - %SF_SIFT_WEB_DIR%/js/hover_intent/jquery.hoverIntent.minified.js
+      require:
+        - jquery        
