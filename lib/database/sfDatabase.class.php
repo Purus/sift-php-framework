@@ -22,6 +22,17 @@ abstract class sfDatabase {
           $parameterHolder = null,
           $resource = null;
 
+  
+  /**
+   * 
+   * @param array $parameters
+   */
+  public function __construct($parameters = array())
+  {
+    $this->initialize($parameters);    
+  }
+
+  
   /**
    * Connects to the database.
    *

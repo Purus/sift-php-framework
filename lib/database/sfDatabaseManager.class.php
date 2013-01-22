@@ -48,7 +48,8 @@ class sfDatabaseManager {
   public function initialize()
   {
     // load database configuration
-    require(sfConfigCache::getInstance()->checkConfig(sfConfig::get('sf_app_config_dir_name') . '/databases.yml'));
+    $this->databases = require(sfConfigCache::getInstance()->checkConfig(
+                        sfConfig::get('sf_app_config_dir_name') . '/databases.yml'));
   }
 
   /**
