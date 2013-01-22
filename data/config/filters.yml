@@ -1,4 +1,6 @@
-# rendering filter must be the first registered filter
+# You can find more information about this file on:
+# https://bitbucket.org/mishal/sift-php-framework/wiki/Filters
+
 rendering:
   class: sfRenderingFilter
   param:
@@ -40,7 +42,6 @@ flash:
   param:
     condition: %SF_USE_FLASH%
 
-# execution filter must be the last registered filter
 execution:
   class: sfExecutionFilter
   param:

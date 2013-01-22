@@ -1,6 +1,9 @@
+# You can find more information about this file on:
+# https://bitbucket.org/mishal/sift-php-framework/wiki/Sanitize
+
 # HTML Purifier configuration
 all:
-  HTML.Doctype: 'XHTML 1.0 Transitional'
+  #HTML.Doctype: 'XHTML 1.0 Transitional'
   HTML.TidyLevel: heavy
   Cache.SerializerPath: %SF_ROOT_CACHE_DIR%
   Core.Encoding: %SF_CHARSET%
@@ -27,7 +30,7 @@ rich:
 
 # clean settings for M$ WORD
 word:
-  HTML.Doctype: 'XHTML 1.0 Transitional'
+  #HTML.Doctype: 'XHTML 1.0 Transitional'
   HTML.Trusted: false
   AutoFormat.RemoveEmpty.RemoveNbsp: true
   AutoFormat.RemoveSpansWithoutAttributes: true

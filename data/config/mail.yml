@@ -1,16 +1,11 @@
-# --------------------------------------------------
-# Mailer configuration
-# --------------------------------------------------
-
+# You can find more information about this file on:
+# https://bitbucket.org/mishal/sift-php-framework/wiki/Mail
 dev:
   deliver:    false
-
 prod:
   cache:
     enabled:   false
-
 all:
-
   # deliver the mail?
   deliver:  true
   # mail charset
@@ -33,13 +28,11 @@ all:
     # sleep 10 seconds after sending 100 emails
     sleep: 10
 
-  # Throttler feature
-  
+  # Throttler feature  
   cache:
     enabled:     false
     param:
       dir:      %SF_ROOT_CACHE_DIR%
-
   # what transport to use?
   # valid options are:
   # - load_balanced

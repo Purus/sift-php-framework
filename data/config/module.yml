@@ -1,3 +1,5 @@
+# You can find more information about this file on:
+# https://bitbucket.org/mishal/sift-php-framework/wiki/Module
 default:
   enabled:          true
   view_class:       sfPHP
