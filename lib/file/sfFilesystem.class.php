@@ -21,6 +21,32 @@ class sfFilesystem
   const DS = DIRECTORY_SEPARATOR;
   
   /**
+   * Logger instance
+   * 
+   * @var sfLogger 
+   */
+  protected $logger = null;
+  
+  /**
+   * Formatter instance
+   * 
+   * @var sfCliFormatter 
+   */
+  protected $formatter = null;
+  
+  /**
+   * 
+   * Constructor
+   * 
+   * @param sfLogger $logger
+   */
+  public function __construct(sfLogger $logger = null, sfCliFormatter $formatter = null)
+  {
+    $this->logger = $logger;
+    $this->formatter = $formatter;
+  }
+  
+  /**
    * Copies a file.
    *
    * This method only copies the file if the origin file is newer than the target file.
@@ -278,7 +304,7 @@ class sfFilesystem
       }
       else
       {
-        throw new sfException(sprintf('Unable to guess "%s" file type.', $file));
+        throw new sfException(sprintf('Unable to guess "%s" file type.', $originDir . '/' . $file));
       }
     }
   }
@@ -414,9 +440,10 @@ class sfFilesystem
    */
   protected function logSection($section, $message)
   {
-    if(sfConfig::get('sf_logging_enabled'))
+    if($this->logger)
     {
-      sfContext::getInstance()->getLogger()->info(sprintf('{sfFilesystem} %s - %s', $section, $message));
+      $message = $this->formatter ? $this->formatter->formatSection($section, $message) : $section.' '.$message; 
+      $this->logger->log($message);
     }
   }
 
@@ -452,7 +479,7 @@ class sfFilesystem
   /**
    * Returns temporary directory
    * 
-   * @return <type> string
+   * @return string
    */
   public static function getTmpDir()
   {
@@ -548,66 +575,7 @@ class sfFilesystem
    */
   public static function getMimeType($file)
   {
-    static $mimeTypes = null;
-
-    if(class_exists('finfo'))
-    {
-      $finfo = new finfo(FILEINFO_MIME);
-      $fres = $finfo->file($file);
-      if(is_string($fres) && !empty($fres))
-      {
-        $ftype = $fres;
-      }
-    }
-    else // fallback
-    {
-      if(!ini_get('safe_mode') && DIRECTORY_SEPARATOR != '\\')
-      {
-        $ftype = trim(@exec('file -bi '.escapeshellarg($file)));
-      }      
-      elseif(function_exists('mime_content_type'))
-      {
-        // return isset($mimeTypes[$mimeType]) ? $mimeTypes[$mimeType] : 'bin';
-        $ftype = mime_content_type($file);
-      }
-    }
-
-    // fallback if nothing found
-    if(!$ftype)
-    {
-      // we try the last
-      if(is_null($mimeTypes))
-      {
-        $mimeTypes = array_flip(unserialize(file_get_contents(sfConfig::get('sf_sift_data_dir').'/data/mime_types.dat')));
-      }
-
-      $extension = self::getFileExtension($file);
-
-      if(isset($mimeTypes[$extension]))
-      {
-        $ftype = $mimeTypes[$extension];
-      }
-      else
-      {
-        $ftype = 'application/octet-stream';
-      }
-    }
-    
-    // image/jpeg; charset=binary
-    $ftype = explode(';', $ftype);    
-    return self::fixMimeType(strtolower($ftype[0]));
+    return sfMimeType::getTypeFromFile($file);
   }
-
-  public static function fixMimeType($mime)
-  {
-    // IE8 mime wrong types!
-    switch($mime)
-    {
-      case 'image/pjpeg':
-        $mime = 'image/jpeg';
-      break;
-    }
-    return $mime;
-  }
-
+  
 }
