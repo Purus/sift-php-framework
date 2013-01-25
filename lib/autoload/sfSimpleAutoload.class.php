@@ -5,32 +5,31 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
- 
+
 /**
  * sfSimpleAutoload class.
  *
  * @package    Sift
  * @subpackage autoload
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * */
-class sfSimpleAutoload
-{
-  static protected
-    $registered = false,
-    $instance   = null;
+ */
+class sfSimpleAutoload {
 
+  static protected
+          $registered = false,
+          $instance = null;
   protected
-    $cacheFile    = null,
-    $cacheLoaded  = false,
-    $cacheChanged = false,
-    $dirs         = array(),
-    $files        = array(),
-    $classes      = array(),
-    $overriden    = array();
+          $cacheFile = null,
+          $cacheLoaded = false,
+          $cacheChanged = false,
+          $dirs = array(),
+          $files = array(),
+          $classes = array(),
+          $overriden = array();
 
   protected function __construct($cacheFile = null)
   {
-    if (null !== $cacheFile)
+    if(null !== $cacheFile)
     {
       $this->cacheFile = $cacheFile;
     }
@@ -47,7 +46,7 @@ class sfSimpleAutoload
    */
   static public function getInstance($cacheFile = null)
   {
-    if (!isset(self::$instance))
+    if(!isset(self::$instance))
     {
       self::$instance = new sfSimpleAutoload($cacheFile);
     }
@@ -62,18 +61,18 @@ class sfSimpleAutoload
    */
   static public function register()
   {
-    if (self::$registered)
+    if(self::$registered)
     {
       return;
     }
 
     ini_set('unserialize_callback_func', 'spl_autoload_call');
-    if (false === spl_autoload_register(array(self::getInstance(), 'autoload')))
+    if(false === spl_autoload_register(array(self::getInstance(), 'autoload')))
     {
       throw new sfException(sprintf('Unable to register %s::autoload as an autoloading method.', get_class(self::getInstance())));
     }
 
-    if (self::getInstance()->cacheFile)
+    if(self::getInstance()->cacheFile)
     {
       register_shutdown_function(array(self::getInstance(), 'saveCache'));
     }
@@ -104,23 +103,23 @@ class sfSimpleAutoload
     $class = strtolower($class);
 
     // class already exists
-    if (class_exists($class, false) || interface_exists($class, false))
+    if(class_exists($class, false) || interface_exists($class, false))
     {
       return true;
     }
 
     // we have a class path, let's include it
-    if (isset($this->classes[$class]))
+    if(isset($this->classes[$class]))
     {
       try
       {
         require $this->classes[$class];
       }
-      catch (sfException $e)
+      catch(sfException $e)
       {
         $e->printStackTrace();
       }
-      catch (Exception $e)
+      catch(Exception $e)
       {
         sfException::createFromException($e)->printStackTrace();
       }
@@ -136,7 +135,7 @@ class sfSimpleAutoload
    */
   public function loadCache()
   {
-    if (!$this->cacheFile || !is_readable($this->cacheFile))
+    if(!$this->cacheFile || !is_readable($this->cacheFile))
     {
       return;
     }
@@ -152,9 +151,9 @@ class sfSimpleAutoload
    */
   public function saveCache()
   {
-    if ($this->cacheChanged)
-    {
-      if (is_writable(dirname($this->cacheFile)))
+    if($this->cacheChanged)
+    {    
+      if(is_writable(dirname($this->cacheFile)))
       {
         file_put_contents($this->cacheFile, serialize(array($this->classes, $this->dirs, $this->files)));
       }
@@ -171,17 +170,17 @@ class sfSimpleAutoload
     $this->classes = array();
     $this->cacheLoaded = false;
 
-    foreach ($this->dirs as $dir)
+    foreach($this->dirs as $dir)
     {
       $this->addDirectory($dir);
     }
 
-    foreach ($this->files as $file)
+    foreach($this->files as $file)
     {
       $this->addFile($file);
     }
 
-    foreach ($this->overriden as $class => $path)
+    foreach($this->overriden as $class => $path)
     {
       $this->classes[$class] = $path;
     }
@@ -206,18 +205,18 @@ class sfSimpleAutoload
    */
   public function addDirectory($dir, $ext = '.php')
   {
-    $finder = sfFinder::type('file')->follow_link()->name('*'.$ext);
+    $finder = sfFinder::type('file')->follow_link()->name('*' . $ext);
 
-    if ($dirs = glob($dir))
+    if($dirs = glob($dir))
     {
-      foreach ($dirs as $dir)
+      foreach($dirs as $dir)
       {
-        if (false !== $key = array_search($dir, $this->dirs))
+        if(false !== $key = array_search($dir, $this->dirs))
         {
           unset($this->dirs[$key]);
           $this->dirs[] = $dir;
 
-          if ($this->cacheLoaded)
+          if($this->cacheLoaded)
           {
             continue;
           }
@@ -241,7 +240,7 @@ class sfSimpleAutoload
    */
   public function addFiles(array $files, $register = true)
   {
-    foreach ($files as $file)
+    foreach($files as $file)
     {
       $this->addFile($file, $register);
     }
@@ -255,33 +254,33 @@ class sfSimpleAutoload
    */
   public function addFile($file, $register = true)
   {
-    if (!is_file($file))
+    if(!is_file($file))
     {
       return;
     }
 
-    if (in_array($file, $this->files))
+    if(in_array($file, $this->files))
     {
-      if ($this->cacheLoaded)
+      if($this->cacheLoaded)
       {
         return;
       }
     }
     else
     {
-      if ($register)
+      if($register)
       {
         $this->files[] = $file;
       }
     }
 
-    if ($register)
+    if($register)
     {
       $this->cacheChanged = true;
     }
 
     preg_match_all('~^\s*(?:abstract\s+|final\s+)?(?:class|interface)\s+(\w+)~mi', file_get_contents($file), $classes);
-    foreach ($classes[1] as $class)
+    foreach($classes[1] as $class)
     {
       $this->classes[strtolower($class)] = $file;
     }
@@ -326,9 +325,10 @@ class sfSimpleAutoload
   public function loadConfiguration(array $files)
   {
     $config = new sfAutoloadConfigHandler();
-    foreach ($config->evaluate($files) as $class => $file)
+    foreach($config->evaluate($files) as $class => $file)
     {
       $this->setClassPath($class, $file);
     }
   }
+
 }
