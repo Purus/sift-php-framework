@@ -50,8 +50,8 @@ class sfI18n {
     // FIXME: load fallback sources as last instance translators
     // for: core sift, forms, this should be passed as options
     
-//    $this->appendMessageSource($this->createMessageSource(sfConfig::get('sf_i18n_source'), 
-//                                sfConfig::get('sf_app_i18n_dir')));
+    $this->appendMessageSource($this->createMessageSource(sfConfig::get('sf_i18n_source'), 
+                               sfConfig::get('sf_app_i18n_dir')));
   }
   
   /**
@@ -85,6 +85,11 @@ class sfI18n {
    */  
   public function __($string, $args = array(), $catalogue = 'messages', $culture = null)
   {
+    if(sfConfig::get('sf_debug'))
+    {
+      $timer = sfTimerManager::getTimer('Translation');
+    }
+    
     list($source, $catalogue) = $this->prepareSources($catalogue);
 
     $translated = false;
@@ -128,6 +133,11 @@ class sfI18n {
       }
     }
     
+    if(sfConfig::get('sf_debug'))
+    {
+      $timer->addTime();
+    }
+    
     return $translated ? $translated : strtr($string, (array)$args);
   }
   
@@ -143,19 +153,19 @@ class sfI18n {
       $catalogue = basename($catalogue);
       $hash      = sprintf('%s_%s_%s', $directory, $catalogue, $this->getCulture());
     }
-    // we have module/catalogue pair
-    // @link http://www.switchplane.com/awesome/preg-match-regular-expression-tester/?pattern=%2F%28[a-z]%2B%29\%2F%28[a-z]%2B%29%2B%2Fi&subject=myEshop%2Fmessages%0D%0A
+    // we have module/catalogue pair    
     elseif(strpos($catalogue, '/') !== false 
-        && preg_match('/([a-z]+)\/([a-z]+)+/i', $catalogue, $matches))
+        && preg_match('/^([a-zA-Z]+)\/([a-zA-Z]+)$/i', $catalogue, $matches))
     {
       $moduleName = $matches[1];
       $catalogue  = $matches[2];      
+      $directory  = sfLoader::getI18NDir($moduleName);
       $hash       = sprintf('%s_%s_%s', $moduleName, $catalogue, $this->getCulture());
     }
     else
     {
       $moduleName = $this->context->getModuleName();
-      $directory = sfLoader::getI18NDir($moduleName);      
+      $directory = sfLoader::getI18NDir($moduleName);
       // current module is taken
       $hash = sprintf('%s_%s_%s', $moduleName, $catalogue, $this->getCulture());        
     }
@@ -284,15 +294,11 @@ class sfI18n {
    */
   public function appendMessageSource(sfII18nMessageSource $source)
   {    
-//    if(!$source->getCache() && $this->cache)
-//    {
-//      $source->setCache($this->cache);
-//    }
-    
     $this->sources[] = array(
       'source' => $source,
       'formatter' => $this->createMessageFormatter($source)        
     );
+    
     return $this;
   }
 
@@ -335,11 +341,6 @@ class sfI18n {
    */
   public function prependMessageSource(sfII18nMessageSource $source)
   {
-//    if(!$source->getCache() && $this->cache)
-//    {
-//      $source->setCache($this->cache);
-//    }
-//    
     $this->sources = array_reverse($this->sources, true);
     $this->sources[] = array(
       'source' => $source,

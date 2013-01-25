@@ -39,7 +39,7 @@
  *
  *   //set the culture and cache, store the cache in the /tmp directory.
  *   $source->setCulture('en_AU')l
- *   $source->setCache(new sfMessageCache('/tmp'));
+ *   $source->setCache(new sfFileCache(array('cache_dir' => '/tmp'));
  *
  *   $formatter = new sfMessageFormat($source);
  * </code>
@@ -70,9 +70,16 @@ abstract class sfI18nMessageSource implements sfII18nMessageSource {
 
   /**
    * The translation cache.
-   * @var sfMessageCache
+   * 
+   * @var sfCache
    */
   protected $cache;
+  
+  /**
+   * Array of untranslated strings
+   * 
+   * @var array 
+   */
   protected $untranslated = array();
 
   /**
