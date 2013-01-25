@@ -579,9 +579,9 @@ class sfCore
    */
   public static function enableModules($app = SF_APP)
   {
-    try {
-      // automatically enable administration modules from plugins
-      sfConfigCache::getInstance()->import(sprintf('config/%s/modules.yml', $app));
+    try 
+    {    
+      sfConfigCache::getInstance()->import(sprintf('config/%s/modules.yml', $app), true, true);
     }
     catch(sfConfigurationException $e)
     {
