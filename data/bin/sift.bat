@@ -19,10 +19,10 @@ goto init
 
 if "%PHP_COMMAND%" == "" goto no_phpcommand
 
-IF EXIST ".\sift" (  
-  %PHP_COMMAND% -d html_errors=off -d open_basedir= -q ".\sift" %1 %2 %3 %4 %5 %6 %7 %8 %9
-) ELSE (
-  %PHP_COMMAND% -d html_errors=off -d open_basedir= -q "%SCRIPT_DIR%\sift" %1 %2 %3 %4 %5 %6 %7 %8 %9
+if "%SCRIPT_DIR%" == "" (
+  %PHP_COMMAND% "sift" %*
+) else (
+  %PHP_COMMAND% "%SCRIPT_DIR%\sift" %*
 )
 goto cleanup
 

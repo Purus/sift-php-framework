@@ -1,5 +1,11 @@
 #!/usr/bin/env php
 <?php
+/*
+ * This file is part of the Sift PHP framework.
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 
 // project exists?
 if(file_exists('config/config.php'))
@@ -26,4 +32,4 @@ if(!isset($sf_sift_lib_dir))
   }
 }
 
-include($sf_sift_data_dir.'/bin/sift_cli.php');
+include($sf_sift_data_dir.'/bin/sift.php');
