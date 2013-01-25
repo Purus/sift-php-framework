@@ -1,0 +1,59 @@
+# You can find more information about this file on:
+# https://bitbucket.org/mishal/sift-php-framework/wiki/Settings
+
+prod:
+  .settings:
+    no_script_name:         ##NO_SCRIPT_NAME##
+
+dev:
+  .settings:
+    error_reporting:        <?php echo (E_ALL | E_STRICT)."\n" ?>
+    web_debug:              true
+    cache:                  false
+    no_script_name:         false
+    etag:                   false
+
+test:
+  .settings:
+    error_reporting:        <?php echo ((E_ALL | E_STRICT) ^ E_NOTICE)."\n" ?>
+    cache:                  false
+    web_debug:              false
+    no_script_name:         false
+    etag:                   false
+
+all:
+  
+  .settings:
+
+    # Helpers included in all templates by default
+    standard_helpers: [Partial, Cache, Form, I18N]
+    
+    # Ajax timeout in miliseconds
+    ajax_timeout: 1800
+    
+    # URL suffix
+    # Default suffix for generated URLs. If set to a single dot (.), 
+    # no suffix is added. Possible values: /, .html, .php, and so on.
+    suffix: .
+    
+    # Base domain
+    # this is used by _compute_public_path
+    # for generating absolute urls for subdomains
+    # leave empty to be disabled    
+    #base_domain: domain.cz
+    
+    # We use HTML5
+    html5: true
+    
+    # Form security secret (CSRF protection)
+    csrf_secret: ##CSRF_SECRET##
+
+    # Output escaping settings
+    escaping_strategy: ##ESCAPING_STRATEGY##
+    escaping_method: ESC_ENTITIES
+
+    # Enable the database manager
+    use_database: ##USE_DATABASE##
+
+    # Timezone
+    default_timezone: "Europe/Prague"

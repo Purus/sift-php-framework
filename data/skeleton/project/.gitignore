@@ -1,0 +1,11 @@
+/nbproject/
+/log/
+/cache/
+/web/files/*/
+/web/cache/*/
+/plugins/.channels/
+/plugins/.registry/
+/plugins/.depdb
+/plugins/.depdblock
+/plugins/.filemap
+/plugins/.lock

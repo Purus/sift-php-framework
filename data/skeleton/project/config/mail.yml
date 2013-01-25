@@ -1,0 +1,25 @@
+# You can find more information about this file on:
+# https://bitbucket.org/mishal/sift-php-framework/wiki/Mail
+dev:
+  deliver: false
+all:
+  # What transport to use?
+  # valid options are:
+  # - load_balanced
+  # - failover
+  # - or specify the transport from "transports" setting  
+  transport_type: default
+  # mailer transports
+  transports:
+    default:
+      type: mail
+      # sending via SMTP 
+      #type: stmp
+      #hostname:   localhost
+      #port:       25
+      #username:   ''
+      #password:   ''
+  spool: 
+    enabled: false
+    class: Swift_FileSpool
+    arguments: %SF_DATA_DIR%/email/spool

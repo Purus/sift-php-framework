@@ -1,0 +1,23 @@
+# You can find more information about this file on:
+# https://bitbucket.org/mishal/sift-php-framework/wiki/AssetPackages
+
+# Additional constants:
+#
+# %SF_CULTURE% : current user culture
+# %SF_CULTURE{0,2}% : substring of current user culture (only to first characters)
+# %SF_JAVASCRIPT_PATH% : web path to javascript directory (default to /js)
+
+all:
+
+  # if enabled only configured packages gets included
+  strict_mode: true  
+  
+#  packages:    
+#
+#    mypackage_name:      
+#      javascripts:
+#        - script.js
+#      stylesheets:
+#        - stylesheet.less
+#        - another_style.css
+        

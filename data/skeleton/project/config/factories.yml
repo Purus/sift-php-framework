@@ -1,0 +1,38 @@
+# You can find more information about this file on:
+# https://bitbucket.org/mishal/sift-php-framework/wiki/Factories
+
+all:
+#  controller:
+#    class: sfFrontWebController
+#
+#  request:
+#    class: sfWebRequest
+#
+#  response:
+#    class: sfWebResponse
+#
+#  user:
+#    class: myUser
+#
+  storage:
+    class: sfSessionStorage
+    param:
+      session_name: sessionID
+
+#  view_cache:
+#    class: sfFileCache
+#    param:
+#      automatic_cleaning_factor: 0
+#      cache_dir: %SF_TEMPLATE_CACHE_DIR%
+
+cli:
+  controller:
+    class: sfConsoleController
+  request:
+    class: sfConsoleRequest
+  response:
+    class: sfConsoleResponse
+    
+test:
+  storage:
+    class: sfSessionTestStorage

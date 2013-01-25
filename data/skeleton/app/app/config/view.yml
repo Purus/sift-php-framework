@@ -1,0 +1,32 @@
+# You can find more information about this file on:
+# https://bitbucket.org/mishal/sift-php-framework/wiki/View
+
+default:
+  http_metas:
+    content-type: text/html
+
+  metas:
+    #description:  Meta description
+    #keywords:     Meta keywords
+    robots:       index, follow
+    # responsive design
+    viewport:     width=device-width, initial-scale=1.0
+    # Google site verification
+    #google-site-verification:
+    
+  stylesheets:
+    - //netdna.bootstrapcdn.com/twitter-bootstrap/2.2.1/css/bootstrap-combined.min.css: { media: "screen,projection,tv" }
+    # - print.css:  { media: "print" }
+    # add IE specific hacks
+    #- ie_hacks.css: { ie_condition: lte IE 7 }
+    
+  javascripts:
+    - //code.jquery.com/jquery.min.js
+    - //netdna.bootstrapcdn.com/twitter-bootstrap/2.2.1/js/bootstrap.min.js
+
+  has_layout:     true
+  layout:         layout
+
+  # components
+  components:
+    sidebar: []

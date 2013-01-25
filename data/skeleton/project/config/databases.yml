@@ -1,0 +1,8 @@
+# You can find more information about this file on:
+# https://bitbucket.org/mishal/sift-php-framework/wiki/Database
+
+#all:
+#  default:
+#    class:          sfPDODatabase
+#    param:
+#      dsn:          mysql://root@localhost/dbname

@@ -1,0 +1,17 @@
+# You can find more information about this file on:
+# https://bitbucket.org/mishal/sift-php-framework/wiki/App 
+
+all:
+
+  title: 
+    name: ##APPLICATION_NAME##
+    mode: append
+    separator: ' ~ '
+    max_length: 80
+    auto_trim: false
+
+# google_analytics
+#  google_analytics:
+#    ua: UA-XYZ
+#    options:
+#      allow_anchor: true

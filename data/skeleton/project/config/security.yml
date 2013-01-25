@@ -1,0 +1,4 @@
+# You can find more information about this file on:
+# https://bitbucket.org/mishal/sift-php-framework/wiki/Security
+default:
+  is_secure: ##IS_SECURE##

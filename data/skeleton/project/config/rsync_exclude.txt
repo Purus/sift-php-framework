@@ -1,0 +1,21 @@
+# Project files
+/cache/*
+/log/*
+/web/*_dev.php
+/web/cache/minify/*
+/web/cache/images/*
+/web/cache/css/*
+/web/cache/preview/*
+
+# Netbeans project
+nbproject
+
+# SCM files
+.arch-params
+.bzr
+_darcs
+.git
+.hg
+.monotone
+.svn
+CVS

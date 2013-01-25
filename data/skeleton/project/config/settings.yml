@@ -1,0 +1,10 @@
+# You can find more information about this file on:
+# https://bitbucket.org/mishal/sift-php-framework/wiki/Settings
+
+# Project wide settings
+all:
+  .settings:
+    # Crypthography
+    crypt_key: %SF_CONFIG_DIR%/crypt.key
+    crypt_mode: ecb
+    crypt_algorithm: tripledes

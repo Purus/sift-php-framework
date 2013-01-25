@@ -1,0 +1,25 @@
+# You can find more information about this file on:
+# https://bitbucket.org/mishal/sift-php-framework/wiki/Logging
+
+prod:
+  enabled: true
+  level:   err
+  rotate:  true
+  purge:   off
+
+#all:
+#  enabled: true
+#  level:   debug
+#  rotate:  off
+#  period:  7
+#  history: 10
+#  purge:   true
+#  loggers:
+#    sf_web_debug:
+#      class: sfWebDebugLogger
+#      param:
+#        condition: %SF_WEB_DEBUG%
+#    sf_file_debug:
+#      class: sfFileLogger
+#      param:
+#        file: %SF_LOG_DIR%/%SF_APP%_%SF_ENVIRONMENT%.log
