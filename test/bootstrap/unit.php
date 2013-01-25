@@ -1,5 +1,7 @@
 <?php
  
+define('DS', DIRECTORY_SEPARATOR);
+
 $_test_dir = realpath(dirname(__FILE__).'/..');
 require_once($_test_dir.'/../lib/vendor/lime/lime.php');
 require_once($_test_dir.'/../lib/config/sfConfig.class.php');
