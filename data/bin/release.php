@@ -14,46 +14,54 @@
  * @package    Sift
  * @subpackage cli
  */
-require_once(dirname(__FILE__) . '/../../lib/vendor/pake/pakeFunction.php');
-require_once(dirname(__FILE__) . '/../../lib/vendor/pake/pakeGetopt.class.php');
-require_once(dirname(__FILE__) . '/../../lib/vendor/lime/lime.php');
+
+require_once(dirname(__FILE__).'/../../lib/config/sfIConfigurable.interface.php');
+require_once(dirname(__FILE__).'/../../lib/config/sfConfigurable.class.php');
+require_once(dirname(__FILE__).'/../../lib/exception/sfException.class.php');
+require_once(dirname(__FILE__).'/../../lib/file/sfFilesystem.class.php');
+require_once(dirname(__FILE__).'/../../lib/util/sfFinder.class.php');
+require_once(dirname(__FILE__).'/../../lib/util/sfGlobToRegex.class.php');
+require_once(dirname(__FILE__).'/../../lib/log/sfILogger.interface.php');
+require_once(dirname(__FILE__).'/../../lib/log/sfLogger.class.php');
+require_once(dirname(__FILE__).'/../../lib/log/sfStreamLogger.class.php');
+require_once(dirname(__FILE__).'/../../lib/log/sfConsoleLogger.class.php');
+require_once(dirname(__FILE__).'/../../lib/vendor/lime/lime.php');
 
 if(!isset($argv[1]))
 {
-  throw new Exception('You must provide version prefix.');
+  throw new sfException('You must provide version prefix.');
 }
 
 if(!isset($argv[2]))
 {
-  throw new Exception('You must provide stability status (alpha/beta/stable).');
+  throw new sfException('You must provide stability status (alpha/beta/stable).');
 }
+
+$logger = new sfConsoleLogger();
 
 $stability = $argv[2];
 
-if(($stability == 'beta' || $stability == 'alpha') && count(explode('.', $argv[1])) < 2)
+$filesystem = new sfFilesystem($logger);
+
+if(($stability == 'beta' || $stability == 'alpha'))
 {
   $version_prefix = $argv[1];
+  list($latest) = $filesystem->execute('git rev-parse --verify --short HEAD');
 
-  $result = pake_sh('git git rev-parse --verify HEAD');
-  if(preg_match('/Status against revision\:\s+(\d+)\s*$/im', $result, $match))
+  if(!isset($latest))
   {
-    $version = $match[1];
-  }
-
-  if(!isset($version))
-  {
-    throw new Exception('Unable to find last revision!');
+    throw new sfException('Unable to find last revision!');
   }
 
   // make a PEAR compatible version
-  $version = $version_prefix . '.' . $version;
+  $version = $version_prefix . '-' . trim($latest);
 }
 else
 {
   $version = $argv[1];
 }
 
-echo 'Releasing Sift version "' . $version . "\"\n";
+$logger->log(sprintf('Releasing Sift version "%s"', $version));
 
 // Test
 $h = new lime_harness(array(
@@ -71,29 +79,29 @@ $h->register_glob($h->base_dir . '/unit/*/*Test.php');
 $h->register_glob($h->base_dir . '/functional/*Test.php');
 $h->register_glob($h->base_dir . '/functional/*/*Test.php');
 
-echo "Running all tests\n";
+$logger->log('Running all tests');
 
+// $ret = $h->run();
 $ret = true;
-$ret = $h->run();
 
 if(!$ret)
 {
-  throw new Exception('Some tests failed. Release process aborted!');
+  throw new sfException('Some tests failed. Release process aborted!');
 }
 
 if(is_file('package.xml'))
 {
-  pake_remove('package.xml', getcwd());
+  $filesystem->remove(getcwd().DIRECTORY_SEPARATOR.'package.xml');
 }
 
-pake_copy(getcwd() . '/package.xml.tmpl', getcwd() . '/package.xml');
+$filesystem->copy(getcwd().'/package.xml.tmpl', getcwd().'/package.xml');
 
 // add class files
-$finder = pakeFinder::type('file')->ignore_version_control()->relative();
+$finder = sfFinder::type('file')->ignore_version_control()->relative();
 $xml_classes = '';
 $dirs = array('lib' => 'php', 'data' => 'data');
 $skip = array(
-  'sift', 'sift.bat'    
+  'sift', 'sift.bat', 'update_core_autoloader.php', 'release.php'
 );
 
 foreach($dirs as $dir => $role)
@@ -111,20 +119,22 @@ foreach($dirs as $dir => $role)
 }
 
 // replace tokens
-pake_replace_tokens('package.xml', getcwd(), '##', '##', array(
+$filesystem->replaceTokens(getcwd().DIRECTORY_SEPARATOR.'package.xml', '##', '##', array(
   'SIFT_VERSION' => $version,
   'CURRENT_DATE' => date('Y-m-d'),
   'CLASS_FILES' => $xml_classes,
   'STABILITY' => $stability,
 ));
 
-$results = pake_sh('pear package');
+$results = $filesystem->sh('pear package');
 
 echo $results;
 
-pake_remove('package.xml', getcwd());
+$filesystem->remove(getcwd().DIRECTORY_SEPARATOR.'package.xml');
+
+$filesystem->rename(getcwd().'/Sift-'.$version . '.tgz', getcwd() . '/dist/Sift-'.$version . '.tgz');
 
 // copy .tgz as Sift-latest.tgz
-pake_copy(getcwd() . '/Sift-' . $version . '.tgz', getcwd() . '/Sift-latest.tgz');
+// $filesystem->copy(getcwd() . '/dist/Sift-' . $version . '.tgz', getcwd() . '/dist/Sift-latest.tgz');
 
 exit(0);
