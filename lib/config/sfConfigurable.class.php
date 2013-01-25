@@ -191,7 +191,7 @@ abstract class sfConfigurable implements sfIConfigurable {
       }
       else
       {
-        throw new InvalidArgumentException('Options must be an array or a object with ->toArray() method');
+        throw new InvalidArgumentException(sprintf('Options for "%s" must be an array or a object with ->toArray() method', get_class($this)));
       }
     }
     
