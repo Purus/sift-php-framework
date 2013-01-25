@@ -236,6 +236,10 @@ abstract class sfController
         $filterChain = new sfFilterChain();
         $this->loadFilters($filterChain, $actionInstance);
 
+        sfCore::getEventDispatcher()->notify(
+                new sfEvent('controller.change_action', 
+                        array('module' => $moduleName, 'action' => $actionName, 'controller' => &$this))); 
+        
         if($moduleName == sfConfig::get('sf_error_404_module') && $actionName == sfConfig::get('sf_error_404_action'))
         {
           sfCore::getEventDispatcher()->notify(
