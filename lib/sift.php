@@ -136,11 +136,9 @@ try
   }
   else
   {
-
     /**
      * Translate function
      *
-     * @staticvar sfI18n $i18n
      * @param string $text
      * @param array $args
      * @param string $catalogue
@@ -160,7 +158,7 @@ try
           $args[$key] = $value->__toString();
         }
       }
-      return strtr($text, $args);
+      return strtr($string, $args);
     }
 
   }
@@ -189,6 +187,7 @@ try
     $configCache->import($core_classes, false);
   }
 
+  
   $configCache->import($sf_app_config_dir_name . '/php.yml', false);
   $configCache->import($sf_app_config_dir_name . '/routing.yml', false);
 
@@ -201,7 +200,9 @@ try
 
   // import text macros configuration
   include(sfConfigCache::getInstance()->checkConfig('config/text_macros.yml'));
-
+  
+  include(sfConfigCache::getInstance()->checkConfig('config/asset_packages.yml'));
+  
   // force setting default timezone if not set
   if(function_exists('date_default_timezone_set'))
   {
