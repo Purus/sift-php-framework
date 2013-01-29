@@ -322,7 +322,7 @@ abstract class sfComponent {
    */
   public function setFlash($name, $value, $persist = true)
   {
-    $this->getUser()->setAttribute($name, $value, 'sift/flash');
+    $this->getUser()->setAttribute($name, $value, sfUser::FLASH_NAMESPACE);
 
     if($persist)
     {
@@ -344,7 +344,7 @@ abstract class sfComponent {
    */
   public function getFlash($name)
   {
-    return $this->getUser()->getAttribute($name, null, 'sift/flash');
+    return $this->getUser()->getAttribute($name, null, sfUser::FLASH_NAMESPACE);
   }
 
   /**
@@ -356,7 +356,7 @@ abstract class sfComponent {
    */
   public function hasFlash($name)
   {
-    return $this->getUser()->hasAttribute($name, 'sift/flash');
+    return $this->getUser()->hasAttribute($name, sfUser::FLASH_NAMESPACE);
   }
 
   /**

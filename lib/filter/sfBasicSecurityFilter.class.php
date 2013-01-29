@@ -89,7 +89,7 @@ class sfBasicSecurityFilter extends sfSecurityFilter
       {
         // set flash error, so the user knows whats going on
         $user->setAttribute('error', __('You have to be logged in to access this page.', array(),                 
-                sfConfig::get('sf_sift_data_dir') . '/i18n/catalogues/action'), 'sift/flash');
+                sfConfig::get('sf_sift_data_dir') . '/i18n/catalogues/action'), sfUser::FLASH_NAMESPACE);
       }
       
       // the user is not authenticated

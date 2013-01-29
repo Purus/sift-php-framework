@@ -20,11 +20,19 @@
 class sfUser {
 
   /**
-   * The namespace under which attributes will be stored.
+   * Attributes namespace
    */
   const ATTRIBUTE_NAMESPACE = 'sift/user/sfUser/attributes';
 
+  /**
+   * Culture namespace
+   */
   const CULTURE_NAMESPACE = 'sift/user/sfUser/culture';
+  
+  /**
+   * Flash messages namespace
+   */
+  const FLASH_NAMESPACE  = 'sift/flash';
 
   protected
   $parameterHolder = null,

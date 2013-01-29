@@ -29,7 +29,7 @@ class sfFlashFilter extends sfFilter
     if ($this->isFirstCall())
     {
       // flag current flash to be removed after the execution filter
-      $names = $userAttributeHolder->getNames('sift/flash');
+      $names = $userAttributeHolder->getNames(sfUser::FLASH_NAMESPACE);
       if ($names)
       {
         if (sfConfig::get('sf_logging_enabled'))
@@ -56,7 +56,7 @@ class sfFlashFilter extends sfFilter
       }
       foreach ($names as $name)
       {
-        $userAttributeHolder->remove($name, 'sift/flash');
+        $userAttributeHolder->remove($name, sfUser::FLASH_NAMESPACE);
         $userAttributeHolder->remove($name, 'sift/flash/remove');
       }
     }
