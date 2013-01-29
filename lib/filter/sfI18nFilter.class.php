@@ -34,7 +34,7 @@ class sfI18nFilter extends sfFilter {
 
       $culture_dimension   = isset($dimension['culture']) ? $dimension['culture']
                                 : isset($routing_defaults['sf_culture']) ?
-                                $routing_defaults['sf_culture'] : Config::get('sf_i18n_default_culture');
+                                $routing_defaults['sf_culture'] : sfConfig::get('sf_i18n_default_culture');
 
       // enabled cultures
       $cultures  = sfConfig::get('sf_i18n_enabled_cultures', array());
@@ -52,7 +52,7 @@ class sfI18nFilter extends sfFilter {
       {
         if($this->getContext()->getUser()->getCulture() != $found)
         {
-          $this->getContext()->getUser()->setCulture($found);
+          //$this->getContext()->getUser()->setCulture($found);
           $this->log(sprintf('Applying detected requested lang to session: %s', $found));
         }
         

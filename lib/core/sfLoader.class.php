@@ -298,54 +298,45 @@ class sfLoader {
   public static function getConfigPaths($configPath)
   {
     // fix for windows paths
-    $configPath = str_replace('/', DS, $configPath);
+    $configPath = str_replace('/', DIRECTORY_SEPARATOR, $configPath);
 
     $sf_sift_data_dir = sfConfig::get('sf_sift_data_dir');
     $sf_root_dir = sfConfig::get('sf_root_dir');
     $sf_app_dir = sfConfig::get('sf_app_dir');
     $sf_plugins_dir = sfConfig::get('sf_plugins_dir');
 
-    $configName = basename($configPath);
-    $globalConfigPath = basename(dirname($configPath)) . DS . $configName;
+    $configName       = basename($configPath);
+    $globalConfigPath = basename(dirname($configPath)).DIRECTORY_SEPARATOR.$configName;
 
     $files = array(
-        // sift
-        $sf_sift_data_dir . DS . $globalConfigPath,
-         // core modules
-        $sf_sift_data_dir . DS . $configPath,
+      $sf_sift_data_dir.DIRECTORY_SEPARATOR.$globalConfigPath,                    // sift
+      $sf_sift_data_dir.DIRECTORY_SEPARATOR.$configPath,                          // core modules
     );
 
-    if($pluginDirs = glob($sf_plugins_dir . DS . '*' . DS . $globalConfigPath))
+    if($pluginDirs = glob($sf_plugins_dir.DIRECTORY_SEPARATOR.'*'.DIRECTORY_SEPARATOR.$globalConfigPath))
     {
-      // plugins
-      $files = array_merge($files, $pluginDirs);
+      $files = array_merge($files, $pluginDirs);                                     // plugins
     }
 
     $files = array_merge($files, array(
-        $sf_root_dir . DS . $globalConfigPath, // project
-        $sf_root_dir . DS . $configPath, // project
-        $sf_app_dir . DS . $globalConfigPath, // application
-        // disable generated module
-        // generated modules
-        // sfConfig::get('sf_cache_dir').DS.$configPath,
+      $sf_root_dir.DIRECTORY_SEPARATOR.$globalConfigPath,                            // project
+      $sf_root_dir.DIRECTORY_SEPARATOR.$configPath,                                  // project
+      $sf_app_dir.DIRECTORY_SEPARATOR.$globalConfigPath,                             // application
+      // disable generated module
+      // sfConfig::get('sf_cache_dir').DIRECTORY_SEPARATOR.$configPath,                                 // generated modules
     ));
 
-    if($pluginDirs = glob($sf_plugins_dir . DS . '*' . DS . $configPath))
+    if($pluginDirs = glob($sf_plugins_dir.DIRECTORY_SEPARATOR.'*'.DIRECTORY_SEPARATOR.$configPath))
     {
-      // plugins
-      $files = array_merge($files, $pluginDirs);
+      $files = array_merge($files, $pluginDirs);                                     // plugins
     }
 
-    // module
-    $files[] = $sf_app_dir . DS . $configPath;
+    $files[] = $sf_app_dir.DIRECTORY_SEPARATOR.$configPath;                          // module
 
-    // If the configuration file can be overridden with a dimension, inject the appropriate path
-    $applicationConfigurationFiles = array(
-        'app.yml', 'factories.yml', 'filters.yml', 'i18n.yml', 
-        'logging.yml', 'settings.yml', 'databases.yml', 'routing.yml',
-        'asset_packages.yml'        
-    );
-    
+    /**
+     * If the configuration file can be overridden with a dimension, inject the appropriate path
+     */
+    $applicationConfigurationFiles = array('app.yml', 'factories.yml', 'filters.yml', 'i18n.yml', 'logging.yml', 'settings.yml', 'databases.yml', 'routing.yml');
     $moduleConfigurationFiles = array('cache.yml', 'module.yml', 'security.yml', 'view.yml');
 
     $configurationFiles = array_merge($applicationConfigurationFiles, $moduleConfigurationFiles);
@@ -358,20 +349,20 @@ class sfLoader {
       {
         $sf_dimension_dirs = array_reverse($sf_dimension_dirs);     // reverse dimensions for proper cascading
 
-        $applicationDimensionDirectory = $sf_app_dir . DS . dirname($globalConfigPath) . DS . '%s' . DS . $configName;
-        $moduleDimensionDirectory = $sf_app_dir . DS . dirname($configPath) . DS . '%s' . DS . $configName;
+        $applicationDimensionDirectory = $sf_app_dir.DIRECTORY_SEPARATOR.dirname($globalConfigPath).DIRECTORY_SEPARATOR.'%s'.DIRECTORY_SEPARATOR.$configName;
+        $moduleDimensionDirectory = $sf_app_dir.DIRECTORY_SEPARATOR.dirname($configPath).DIRECTORY_SEPARATOR.'%s'.DIRECTORY_SEPARATOR.$configName;
 
         foreach($sf_dimension_dirs as $dimension)
         {
-          if(in_array($configName, $configurationFiles))       // application
+          if(in_array($configName, $configurationFiles))							// application
           {
-            foreach($sf_dimension_dirs as $dimension)
-            {
+            foreach ($sf_dimension_dirs as $dimension)
+            {             
               $files[] = sprintf($applicationDimensionDirectory, $dimension);
             }
           }
 
-          if(in_array($configName, $moduleConfigurationFiles) || strpos($configPath, 'validate'))      // module
+          if(in_array($configName, $moduleConfigurationFiles) || strpos($configPath, 'validate'))	     // module
           {
             foreach($sf_dimension_dirs as $dimension)
             {
@@ -379,6 +370,7 @@ class sfLoader {
             }
           }
         }
+
       }
     }
 

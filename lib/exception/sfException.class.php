@@ -157,7 +157,7 @@ class sfException extends Exception {
     // send an error 500 if not in debug mode
     if(!sfConfig::get('sf_debug'))
     {
-      error_log($exception->getMessage());
+      // error_log($exception->getMessage());
       sfCore::displayErrorPage($exception);
       return;
     }
@@ -192,6 +192,16 @@ class sfException extends Exception {
       {
         $format = 'ajax';
       }
+      
+      if(is_object($response = sfContext::getInstance()->getResponse()))
+      {
+        if ($response->getStatusCode() < 300)
+        {
+          // status code has already been sent, but is included here for the purpose of testing
+          $response->setStatusCode(500);
+        } 
+      }
+      
     }
 
     $ext = ($format == 'html' ? 'php' : 'txt');

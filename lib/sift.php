@@ -59,6 +59,8 @@ else
   require_once($sf_sift_lib_dir . '/config/sfConfigCache.class.php');
 }
 
+return;
+
 // autoloading
 sfCore::initAutoload();
 

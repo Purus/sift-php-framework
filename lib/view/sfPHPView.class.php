@@ -37,6 +37,7 @@ class sfPHPView extends sfView
       'sf_params'  => $context->getRequest()->getParameterHolder(),
       'sf_request' => $context->getRequest(),
       'sf_user'    => $context->getUser(),
+      'sf_response' => $context->getResponse(),
       'sf_view'    => &$this,
     );
 
@@ -127,6 +128,10 @@ class sfPHPView extends sfView
       }
 
     }
+    else
+    {
+     // $sf_data = sfOutputEscaper::escape(ESC_RAW, $this->attributeHolder->getAll());
+    }  
 
     // render
     ob_start();

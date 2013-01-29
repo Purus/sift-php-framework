@@ -7,12 +7,18 @@ if (!include(dirname(__FILE__).'/../bootstrap/functional.php'))
 }
 
 $b = new sfTestBrowser();
-$b->initialize();
 
 $b->
-  get('/autoload/myAutoload')->
-  isStatusCode(200)->
-  isRequestParameter('module', 'autoload')->
-  isRequestParameter('action', 'myAutoload')->
+  get('/autoload/myAutoload')->  
+
+  with('request')->begin()->
+    isParameter('module', 'autoload')->
+    isParameter('action', 'myAutoload')->
+  end()
+        
+  ->with('response')->begin()->
+    isStatusCode(200)
+  ->end()->
+        
   checkResponseElement('body div', 'foo')
 ;

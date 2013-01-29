@@ -2,6 +2,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 require_once($_test_dir.'/unit/sfContextMock.class.php');
+require_once($_test_dir.'/unit/sfCoreMock.class.php');
 
 $context = new sfContext();
 

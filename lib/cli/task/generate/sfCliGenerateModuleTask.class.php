@@ -149,7 +149,7 @@ EOF;
     $this->getFilesystem()->mirror($skeletonDir.'/module', $moduleDir, $finder);
 
     // create basic test
-    $this->getFilesystem()->copy($skeletonDir.'/test/actionsTest.php', sfConfig::get('sf_test_dir').'/functional/'.$app.'/'.$module.'ActionsTest.php');
+    $this->getFilesystem()->copy($skeletonDir.'/test/actionsTest.php', $this->environment->get('sf_test_dir').'/functional/'.$app.'/'.$module.'ActionsTest.php');
 
     // customize test file
     $this->getFilesystem()->replaceTokens($this->environment->get('sf_test_dir').'/functional/'.$app.DIRECTORY_SEPARATOR.$module.'ActionsTest.php', '##', '##', $constants);
@@ -177,8 +177,7 @@ EOF;
       file_put_contents($moduleDir . '/config/module.yml', join("\n", $moduleYaml));
     }
     
-    $this->logSection($this->getFullName(), 'Done.');
-    
+    $this->logSection($this->getFullName(), 'Done.');    
   }
   
 }

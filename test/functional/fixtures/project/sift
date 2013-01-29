@@ -1,0 +1,6 @@
+#!/usr/bin/env php
+<?php
+
+chdir(dirname(__FILE__));
+include('config/config.php');
+include($sf_sift_data_dir.'/bin/sift.php');

@@ -29,7 +29,7 @@ class sfCliRootCommandApplication extends sfCliCommandApplication
   {
     $this->setName('Sift');
     $this->setScriptName('./sift');  
-    $this->setVersion(file_get_contents($this->environment->get('sf_sift_lib_dir'). DIRECTORY_SEPARATOR . 'VERSION'));
+    $this->setVersion(sfCore::getVersion());
     $this->loadTasks();
   }
 

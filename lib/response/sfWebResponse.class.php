@@ -261,6 +261,11 @@ class sfWebResponse extends sfResponse
     $this->setParameter('Content-Type', $value, 'sift/response/http/headers');
   }
 
+  public function getCharset()
+  {
+    return sfConfig::get('sf_charset');
+  }
+  
   /**
    * Gets response content type.
    *
@@ -394,7 +399,7 @@ class sfWebResponse extends sfResponse
    *
    * @return string Formated date
    */
-  public function getDate($timestamp, $type = 'rfc1123')
+  public static function getDate($timestamp, $type = 'rfc1123')
   {
     $type = strtolower($type);
 
@@ -412,9 +417,7 @@ class sfWebResponse extends sfResponse
     }
     else
     {
-      $error = 'The second getDate() method parameter must be one of: rfc1123, rfc1036 or asctime';
-
-      throw new sfParameterException($error);
+      throw new sfParameterException('The second getDate() method parameter must be one of: rfc1123, rfc1036 or asctime');
     }
   }
 

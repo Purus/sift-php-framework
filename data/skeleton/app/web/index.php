@@ -1,17 +1,25 @@
 <?php
+/** 
+ * 
+ * This is an entry point for application #APP_NAME##
+ * in ##ENVIRONMENT## environment.
+ * 
+ * Debugging features: ##IS_DEBUG_ON##
+ *
+ */
 
 ##IP_CHECK##
 
-define('SF_ROOT_DIR',    realpath(dirname(__FILE__).'/..'));
-define('SF_APP',         '##APP_NAME##');
-define('SF_ENVIRONMENT', '##ENVIRONMENT##');
-define('SF_DEBUG',       '##IS_DEBUG##');
+// root directory
+define('SF_ROOT_DIR', realpath(dirname(__FILE__).'/..'));
 
-// define to match hosting directory layout
-// define('SF_WEB_DIR_NAME', 'web');
-// define('SF_UPLOAD_DIR_NAME', 'files');
+// load lib and dir settings
+require_once(SF_ROOT_DIR.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'config.php');
+require_once $sf_sift_lib_dir.'/autoload/sfCoreAutoload.class.php';    
+sfCoreAutoload::register();
 
-require_once(SF_ROOT_DIR.DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.SF_APP.
-            DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'config.php');
+sfCore::bootstrap($sf_sift_lib_dir, $sf_sift_data_dir);
 
-sfContext::getInstance()->getController()->dispatch();
+sfContext::createInstance(
+  sfCore::getApplication('##APP_NAME##', '##ENVIRONMENT##', ##IS_DEBUG##)
+)->dispatch();

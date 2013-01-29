@@ -13,67 +13,120 @@
  * @subpackage core
  * @author     Dustin Whittle <dustin.whittle@symfony-project.com>
  */
-class sfDimensions
-{
-  protected static $dimension = array(); // stores the current dimension
-  protected static $dimensionDirectories = array(); // stores all the possible directories in order based on current dimension
+class sfDimensions {
 
   /**
-   * Sets the current dimensions
-   *
-   * @param array $dimension
-   * @return boolean true
+   * Stores the current dimensions
+   * 
+   * @var array 
    */
-  public static function setDimension($dimension)
-  {
-    self::$dimension = $dimension;
+  protected $currentDimension = array();
+  
+  /**
+   * All available dimensions
+   * 
+   * @var array 
+   */
+  protected $availableDimensions = array();
+  
+  /**
+   * Stores all the possible directories in order based on current dimension
+   * 
+   * @var array
+   */
+  protected $currentDimensionDirectories = array();
 
-    return true;
+  /**
+   * Constructs the dimension
+   * 
+   * @param array $availableDimensions
+   * @param array $defaultDimension
+   */
+  public function __construct(array $availableDimensions, $defaultDimension = null)
+  {
+    $this->availableDimensions = $availableDimensions;
+    
+    if(null === $defaultDimension)
+    {
+      $defaultDimension = array();
+
+      foreach($availableDimensions as $dimension)
+      {
+        $dimension = (array)$dimension;
+        $defaultDimension[] = array_shift($dimension);
+      }
+    }
+    
+    $this->currentDimension = $defaultDimension;
   }
 
   /**
-   * Gets the current dimensions
+   * Sets the current dimension
+   * 
+   * @param array $dimension Current dimension
+   * @return sfDimensions
+   */
+  public function setCurrentDimension($dimension)
+  {
+    // reset
+    $this->currentDimensionDirectories = array();    
+    $this->currentDimension = $dimension;    
+    return $this;
+  }
+
+  /**
+   * Gets the current dimension
    *
    * @return array Current dimension
    */
-  public static function getDimension()
+  public function getCurrentDimension()
   {
-    return self::$dimension;
+    return $this->currentDimension;
   }
 
+  /**
+   * Returns an array of available dimensions
+   * 
+   * @return array
+   */
+  public function getAvailableDimensions()
+  {
+    return $this->availableDimensions;
+  }
+  
   /**
    * Gets all available dimension directories based on the current dimension
    *
    * @return array all available dimension directories in lookup order
    */
-  public static function getDimensionDirs()
+  public function getDimensionDirs()
   {
-    if(empty(self::$dimensionDirectories) && !empty(self::$dimension))
+    if(empty($this->currentDimensionDirectories) && !empty($this->currentDimension))
     {
       $dimensions = array();
-      $key = array_keys(self::$dimension);
+      $key = array_keys($this->currentDimension);
 
-      $c = count(self::$dimension);
+      $c = count($this->currentDimension);
       for($i = 0; $i < $c; $i++)
       {
-        $tmp = self::$dimension;
+        $tmp = $this->currentDimension;
         for($j = $i; $j > 0; $j--)
         {
           array_pop($tmp);
         }
-        $val = self::toString($tmp);
+        $val = $this->toString($tmp);
 
         $dimensions['combinations'][] = $val;
-        $dimensions['roots'][] = self::$dimension[$key[$i]];
+        $dimensions['roots'][] = $this->currentDimension[$key[$i]];
       }
 
       array_pop($dimensions['combinations']);
       $dimensions = array_merge($dimensions['combinations'], array_reverse($dimensions['roots']));
 
-      self::$dimensionDirectories = array_unique(self::flatten($dimensions));
+      $this->currentDimensionDirectories = array_unique($this->flatten($dimensions));
     }
 
-    return self::$dimensionDirectories;
+    return $this->currentDimensionDirectories;
   }
 
   /**
@@ -81,9 +134,9 @@ class sfDimensions
    *
    * @return string the current dimension as a string
    */
-  public static function getDimensionString()
+  public function getDimensionString()
   {
-    return self::toString(self::getDimension());
+    return $this->toString($this->getCurrentDimension());
   }
 
   /**
@@ -92,14 +145,14 @@ class sfDimensions
    * @param array an array to be flattened
    * @return string a flat string of the array input
    */
-  public static function flatten($array)
+  public function flatten($array)
   {
     for($x = 0; $x < sizeof($array); $x++)
     {
       $element = $array[$x];
       if(is_array($element))
       {
-        $results = self::flatten($element);
+        $results = $this->flatten($element);
         for($y = 0; $y < sizeof($results); $y++)
         {
           $flat_array[] = $results[$y];
@@ -120,16 +173,17 @@ class sfDimensions
    * @param boolean Separate by underscore
    * @return string
    */
-  public static function toString($array, $underscore = true)
+  public function toString($array, $underscore = true)
   {
     $i = 0;
     $return = false;
-    foreach ($array as $index => $val)
+    foreach($array as $index => $val)
     {
       $divider = (isset($underscore) && $i > 0) ? '_' : '';
-      $return .= $divider.$val;
+      $return .= $divider . $val;
       $i++;
     }
     return $return;
   }
+
 }

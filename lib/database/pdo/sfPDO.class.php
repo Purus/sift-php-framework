@@ -152,7 +152,7 @@ class sfPDO extends PDO {
    */
   public function getLogger()
   {
-    return sfContext::getInstance()->getLogger();
+    return sfLogger::getInstance();
   }
   
 }

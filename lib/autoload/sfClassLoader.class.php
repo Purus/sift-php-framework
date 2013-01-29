@@ -182,6 +182,10 @@ class sfClassLoader {
     {
       return $this->classMap[$class];
     }
+    elseif(isset($this->classMap[strtolower($class)]))
+    {
+      return $this->classMap[strtolower($class)];
+    }
 
     if(false !== $pos = strrpos($class, '\\'))
     {
@@ -194,6 +198,16 @@ class sfClassLoader {
       // PEAR-like class name
       $classPath = null;
       $className = $class;
+    }
+    
+    // see if the file exists in the current module lib directory
+    // must be in a module context
+    if(class_exists('sfContext', false) && 
+        sfContext::hasInstance() && 
+        ($module = sfContext::getInstance()->getModuleName()) && 
+        isset($this->classMap[$module.'/'.strtolower($class)]))
+    {
+      return $this->classMap[$module.'/'.strtolower($class)];
     }
 
     $classPath .= str_replace('_', DIRECTORY_SEPARATOR, $className) . '.php';

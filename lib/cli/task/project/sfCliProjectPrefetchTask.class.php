@@ -20,7 +20,7 @@ class sfCliProjectPrefetchTask extends sfCliBaseTask {
   protected function configure()
   {
     $this->addArguments(array(
-        new sfCliCommandArgument('application', sfCliCommandArgument::OPTIONAL | sfCliCommandArgument::IS_ARRAY, 'The application name'),
+        new sfCliCommandArgument('app', sfCliCommandArgument::OPTIONAL | sfCliCommandArgument::IS_ARRAY, 'The application name'),
     ));
 
     $this->addOptions(array(
@@ -46,7 +46,7 @@ EOF;
    */
   protected function execute($arguments = array(), $options = array())
   {
-    $applications = $arguments['application'];
+    $applications = $arguments['app'];
 
     if(count($applications))
     {
@@ -82,6 +82,9 @@ EOF;
 
     $remoteAddress = $options['remote-addr'];
 
+    $sf_sift_lib_dir = $this->environment->get('sf_sift_lib_dir');
+    $sf_sift_data_dir = $this->environment->get('sf_sift_data_dir');
+    
     foreach($options['hostname'] as $hostname)
     {
       $testFile = tempnam(sys_get_temp_dir(), 'prefetch');
@@ -89,21 +92,23 @@ EOF;
 <?php
 // This is a separated process to prefetch the application
 
-define('SF_ROOT_DIR',    '$rootDir');
-define('SF_APP',         '$application');
-define('SF_ENVIRONMENT', 'prod');
-define('SF_DEBUG',       false);
+define('SF_ROOT_DIR', '$rootDir');
+require_once(SF_ROOT_DIR.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'config.php');
+require_once \$sf_sift_lib_dir.'/autoload/sfCoreAutoload.class.php';    
+sfCoreAutoload::register();
 
-\$app_config = SF_ROOT_DIR.DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.SF_APP.
-               DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'config.php';
+sfCore::bootstrap(\$sf_sift_lib_dir, \$sf_sift_data_dir);
 
 // hackish way of doing things :)
 \$_SERVER['SERVER_NAME'] = '$hostname';
-
-require_once(\$app_config);
   
+sfContext::createInstance(
+  sfCore::getApplication('$application', 'prod', false)
+);
+
 \$uris = array('/');
-\$browser = new sfBrowser('$hostname', '$remoteAddress');
+\$browser = new sfPrefetchBrowser('$hostname', '$remoteAddress');
+  
 foreach(\$uris as \$uri)
 {
   \$browser->get(\$uri);
@@ -124,6 +129,7 @@ EOF
       }
       else
       {
+        var_dump($result);
         $this->logSection($this->getFullName(), 'Error prefetching app.', null, 'ERROR');
       }
     }

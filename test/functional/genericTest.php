@@ -7,159 +7,207 @@ if (!include(dirname(__FILE__).'/../bootstrap/functional.php'))
 }
 
 $b = new sfTestBrowser();
-$b->initialize();
 
 // default main page
 $b->
   get('/')->
-  isStatusCode(200)->
-  isRequestParameter('module', 'default')->
-  isRequestParameter('action', 'index')->
-  checkResponseElement('body', '/congratulations/i')->
-  responseContains('<!--[if lte IE 10]><link rel="stylesheet" type="text/css" media="screen,projection,tv" href="/css/ie8.css" /><![endif]-->');
+  with('response')->begin()
+  ->isStatusCode(200)
+  ->checkElement('body', '/congratulations/i')
+  ->contains('<!--[if lte IE 10]><link rel="stylesheet" type="text/css" media="screen,projection,tv" href="/css/ie8.css" /><![endif]-->')
+  ->end()
+    ->with('request')->begin()
+    ->isParameter('module', 'default')
+    ->isParameter('action', 'index')
+  ->end();
 
 // default 404
 $b->
   get('/nonexistant')->
-  isStatusCode(404)->
-  isForwardedTo('default', 'error404')->
-  checkResponseElement('body', '!/congratulations/i');
+  with('request')->begin()
+    ->isForwardedTo('default', 'error404')        
+  ->end()      
+  ->with('response')->begin()
+    ->isStatusCode(404)    
+    ->checkElement('body', '!/congratulations/i')
+  ->end();
 
 // unexistant action
 $b->
-  get('/default/nonexistantaction')->
-  isStatusCode(404)->
-  isForwardedTo('default', 'error404');
+  get('/default/nonexistantaction')
+  ->with('request')->begin()
+    ->isForwardedTo('default', 'error404')
+  ->end()      
+  ->with('response')->begin()      
+  ->isStatusCode(404)
+  ->end();
+
 
 // available
-sfConfig::set('sf_available', false);
-$b->
-  get('/')->
-  isStatusCode(200)->
-  isForwardedTo('default', 'unavailable')->
-  checkResponseElement('body', '/unavailable/i')->
-  checkResponseElement('body', '!/congratulations/i');
-
-sfConfig::set('sf_available', true);
+//sfConfig::set('sf_available', false);
+//
+//$b->
+//  get('/')
+//  ->with('request')->begin()
+//    ->isForwardedTo('default', 'unavailable')
+//  ->end()        
+//  ->with('response')->begin()      
+//    ->isStatusCode(200)
+//    ->checkElement('body', '/unavailable/i')
+//    ->checkElement('body', '!/congratulations/i')        
+//  ->end();
+//
+//sfConfig::set('sf_available', true);
 
 // module.yml: enabled
 $b->
-  get('/configModuleDisabled')->
-  isStatusCode(200)->
-  isForwardedTo('default', 'disabled')->
-  checkResponseElement('body', '/module is unavailable/i')->
-  checkResponseElement('body', '!/congratulations/i');
+  get('/configModuleDisabled')
+  ->with('request')->begin()
+    ->isForwardedTo('default', 'disabled')
+  ->end()         
+  ->with('response')->begin()    
+    ->isStatusCode(200)->        
+    checkElement('body', '/module is unavailable/i')->
+    checkElement('body', '!/congratulations/i')
+    ->end();
 
 // view.yml: has_layout
 $b->
-  get('/configViewHasLayout/withoutLayout')->
-  isStatusCode(200)->
-  checkResponseElement('body', '/no layout/i')->
-  checkResponseElement('head title', false);
+  get('/configViewHasLayout/withoutLayout')
+    ->with('response')->begin()        
+    ->isStatusCode(200)
+    ->checkElement('body', '/no layout/i')
+    ->checkElement('head title', false)
+  ->end();
 
 // security.yml: is_secure
 $b->
-  get('/configSecurityIsSecure')->
-  isStatusCode(200)->
-  isForwardedTo('default', 'login')->
-  checkResponseElement('body', '/Login Required/i')->
-  // check that there is no double output caused by the forwarding in a filter
-  checkResponseElement('body', 1);
+  get('/configSecurityIsSecure')
+  ->with('request')->begin()
+    ->isForwardedTo('default', 'login')
+  ->end()      
+  ->with('response')->begin()         
+    ->isStatusCode(200)
+    ->checkElement('body', '/Login Required/i')
+    // check that there is no double output caused by the forwarding in a filter
+    ->checkElement('body', 1)  
+  ->end();
 
 // security.yml: case sensitivity
 $b->
-  get('/configSecurityIsSecureAction/index')->
-  isStatusCode(200)->
-  isForwardedTo('default', 'login')->
-  checkResponseElement('body', '/Login Required/i')
-;
+  get('/configSecurityIsSecureAction/index')
+  ->with('request')->begin()        
+  ->isForwardedTo('default', 'login')
+  ->end()        
+  ->with('response')->begin()
+  ->isStatusCode(200)
+  ->checkElement('body', '/Login Required/i')
+  ->end();
+
 
 $b->
-  get('/configSecurityIsSecureAction/Index')->
-  isStatusCode(200)->
-  isForwardedTo('default', 'login')->
-  checkResponseElement('body', '/Login Required/i')
-;
+  get('/configSecurityIsSecureAction/Index')
+  ->with('request')->begin()
+  ->isForwardedTo('default', 'login')
+  ->end()
+  ->with('response')->begin()
+  ->isStatusCode(200)
+  ->checkElement('body', '/Login Required/i')
+  ->end();
 
 // settings.yml: max_forwards
 $b->
   get('/configSettingsMaxForwards/selfForward')->
-  isStatusCode(200)->
-  checkResponseElement('body', '/Too many forwards have been detected for this request/i')
-;
+    with('response')->begin()
+    ->isStatusCode(500)
+    ->throwsException(null, '/Too many forwards have been detected for this request/i')
+  ->end();
 
 // filters.yml: add a filter
 $b->
-  get('/configFiltersSimpleFilter')->
-  isStatusCode(200)->
-  checkResponseElement('body', '/in a filter/i')->
-  checkResponseElement('body', '!/congratulation/i')
-;
+  get('/configFiltersSimpleFilter')
+  ->with('response')->begin()
+    ->isStatusCode(200)
+    ->checkElement('body', '/in a filter/i')
+    ->checkElement('body', '!/congratulation/i')
+  ->end();
 
 // css and js inclusions
 $b->
-  get('/assetInclusion/index')->
-  isStatusCode(200)->
-  checkResponseElement('head link[rel="stylesheet"]', false)->
-  checkResponseElement('head script[type="text/javascript"]', false)
-;
+  get('/assetInclusion/index')
+  ->with('response')->begin()
+    ->isStatusCode(200)
+    ->checkElement('head link[rel="stylesheet"]', false)
+    ->checkElement('head script[type="text/javascript"]', false)
+  ->end();
+
 
 // libraries autoloading
 $b->
-  get('/autoload/index')->
-  isStatusCode(200)->
-  checkResponseElement('#lib1', 'pong')->
-  checkResponseElement('#lib2', 'pong')->
-  checkResponseElement('#lib3', 'pong')->
-  checkResponseElement('#lib4', 'nopong')
-;
+  get('/autoload/index')
+  ->with('response')->begin()        
+    ->isStatusCode(200)
+    ->checkElement('#lib1', 'pong')
+    ->checkElement('#lib2', 'pong')
+    ->checkElement('#lib3', 'pong')
+    ->checkElement('#lib4', 'nopong')
+  ->end();
 
 // libraries autoloading in a plugin
 $b->
   get('/autoloadPlugin/index')->
-  isStatusCode(200)->
-  checkResponseElement('#lib1', 'pong')->
-  checkResponseElement('#lib2', 'pong')->
-  checkResponseElement('#lib3', 'pong')
-;
+  with('response')->begin()
+  ->isStatusCode(200)
+  ->checkElement('#lib1', 'pong')
+  ->checkElement('#lib2', 'pong')
+  ->checkElement('#lib3', 'pong')
+  ->end();
+
 
 // renderText
 $b->
-  get('/renderText')->
-  isStatusCode(200)->
-  responseContains('foo')
-;
+  get('/renderText')
+  ->with('response')->begin()
+    ->isStatusCode(200)
+    ->contains('foo')
+  ->end();
 
 // view.yml when changing template
 $b->
-  get('/view')->
-  isStatusCode(200)->
-  isResponseHeader('Content-Type', 'text/html; charset=utf-8')->
-  checkResponseElement('head title', 'foo title')
-;
+  get('/view')
+  ->with('response')->begin()
+  ->isStatusCode(200)
+  ->isResponseHeader('Content-Type', 'text/html; charset=utf-8')
+  ->checkElement('head title', 'foo title')
+  ->end();
 
 // view.yml with other than default content-type
 $b->
-  get('/view/plain')->
-  isStatusCode(200)->
-  isResponseHeader('Content-Type', 'text/plain; charset=utf-8')->
-  responseContains('<head>')->
-  responseContains('plaintext')
-;
+  get('/view/plain')
+  ->with('response')->begin()        
+    ->isStatusCode(200)
+    ->isHeader('Content-Type', 'text/plain; charset=utf-8')
+    ->contains('<head>')
+    ->contains('plaintext')
+  ->end();
+
 
 // view.yml with other than default content-type and no layout
 $b->
-  get('/view/image')->
-  isStatusCode(200)->
-  isResponseHeader('Content-Type', 'image/jpg')->
-  responseContains('image')
-;
+  get('/view/image')
+    ->with('response')->begin()         
+    ->isStatusCode(200)
+    ->isHeader('Content-Type', 'image/jpg')
+    ->responseContains('image')
+    ->end();
 
 // getPresentationFor()
 $b->
-  get('/presentation')->
-  isStatusCode(200)->
-  checkResponseElement('#foo1', 'foo')->
-  checkResponseElement('#foo2', 'foo')->
-  checkResponseElement('#foo3', 'foo')
-;
+  get('/presentation')
+    ->with('response')->begin()          
+    ->isStatusCode(200)
+    ->checkElement('#foo1', 'foo')
+    ->checkElement('#foo2', 'foo')
+    ->checkElement('#foo3', 'foo')
+  ->end();
+

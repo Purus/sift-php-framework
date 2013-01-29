@@ -44,13 +44,14 @@ abstract class sfCliBaseTask extends sfCliCommandApplicationTask
 
     $requiresApplication = $commandManager->getArgumentSet()->hasArgument('application') 
                             || $commandManager->getOptionSet()->hasOption('application');
-    if (null === $this->application || ($requiresApplication && !$this->application instanceof sfApplication))
+    
+    // task requires application to be run
+    if($requiresApplication && null === $this->application)
     {
-
       $application = $commandManager->getArgumentSet()->hasArgument('application') ? 
                      $commandManager->getArgumentValue('application') : 
                      ($commandManager->getOptionSet()->hasOption('application') ? $commandManager->getOptionValue('application') : null);
-      
+
       // environment
       $env = $commandManager->getOptionSet()->hasOption('env') ? $commandManager->getOptionValue('env') : 'cli';
 
@@ -62,14 +63,18 @@ abstract class sfCliBaseTask extends sfCliCommandApplicationTask
         {
           $commandManager->setOption($commandManager->getOptionSet()->getOption('application'), $application);
         }
+        
       }
-
+      
       $this->application = $this->getApplication($application, $env);
+      
+      // add application specific setting to the environment
+      $this->environment->add($this->application->getOptions());
     }
 
     if (null !== $this->commandApplication && !$this->commandApplication->withTrace())
     {
-      sfConfig::set('sf_logging_enabled', false);
+      $this->environment->set('sf_logging_enabled', false);
     }
 
     $ret = $this->execute($commandManager->getArgumentValues(), $commandManager->getOptionValues());
@@ -89,7 +94,7 @@ abstract class sfCliBaseTask extends sfCliCommandApplicationTask
     if (!isset($this->filesystem))
     {
       if (null === $this->commandApplication || $this->commandApplication->isVerbose())
-      {
+      {        
         $this->filesystem = new sfFilesystem($this->logger, $this->formatter);
       }
       else
@@ -204,42 +209,13 @@ abstract class sfCliBaseTask extends sfCliCommandApplicationTask
    * @param string  $application The application name
    * @param string  $env         The environment name
    *
-   * @return sfProjectConfiguration A sfProjectConfiguration instance
+   * @return sfApplication A sfApplication instance
    */
   protected function getApplication($application, $env)
   {
-    if(null !== $application)
-    {
-      $this->checkAppExists($application);
-      
-      $applicationClass = sprintf('my%sApplication', sfInflector::camelize($application));
-
-      require_once $this->environment->get('sf_apps_dir').'/'.$application. sprintf('/lib/%s.class.php', $applicationClass);
-      
-      $application = $this->commandApplication
-                    ->getProject()->getApplication($application, $env, true, null, $this->dispatcher);
-    }
-    else
-    {
-      if(file_exists($this->environment->get('sf_lib_dir').'/myProject.class.php'))
-      {
-        require_once $this->environment->get('sf_lib_dir').'/myProject.class.php';
-        $application = new myProject(array(), $this->dispatcher);
-      }
-      else
-      {
-        $application = new myProject($this->environment->get('sf_root_dir'), $this->dispatcher);
-      }
-
-      if(null !== $env)
-      {
-        $this->environment->set('sf_environment', $env);
-      }
-
-      $this->initializeAutoload($application);
-    }
-
-    return $application;
+    $this->checkAppExists($application);
+    $this->application = $this->commandApplication->getProject()->getApplication($application, $env, true);
+    return $this->application;
   }
 
   /**
@@ -292,64 +268,32 @@ abstract class sfCliBaseTask extends sfCliCommandApplicationTask
    * Reloads all autoloaders.
    *
    * This method should be called whenever a task generates new classes that
-   * are to be loaded by the symfony autoloader. It clears the autoloader
+   * are to be loaded by the autoloader. It clears the autoloader
    * cache for all applications and environments and the current execution.
    *
    * @see initializeAutoload()
    */
   protected function reloadAutoload()
   {
-    $this->initializeAutoload($this->application, true);
+    $this->initializeAutoload($this->application ? 
+                              $this->application : $this->commandApplication->getProject(), true);
   }
 
   /**
    * Initializes autoloaders.
    *
-   * @param sfProjectConfiguration $configuration The current project or application configuration
-   * @param boolean                $reload        If true, all autoloaders will be reloaded
+   * @param sfApplication|sfProject $application The current project or application
+   * @param boolean                 $reload      If true, all autoloaders will be reloaded
    */
   protected function initializeAutoload($application, $reload = false)
   {
     // sfAutoload
-    if ($reload)
+    if($reload)
     {
-      $this->logSection('autoload', 'Resetting application autoloaders');
-
-      $finder = sfFinder::type('file')->name('*autoload.yml.php');
-      $this->getFilesystem()->remove($finder->in($this->environment->get('sf_cache_dir')));
-      sfAutoload::getInstance()->reloadClasses(true);
+      $this->logSection('autoload', 'Resetting CLI autoloader');
     }
 
-    // sfSimpleAutoload
-    if (!$application instanceof sfApplication)
-    {
-      // plugins
-      if ($reload)
-      {
-        foreach($application->getPlugins() as $plugin)
-        {
-          $plugin->initializeAutoload();
-        }
-      }
-
-      // project
-      $autoload = sfSimpleAutoload::getInstance($this->environment->get('sf_root_cache_dir').'/cli_project_autoload.cache');
-      
-      $autoload->loadConfiguration(sfFinder::type('file')->name('autoload.yml')->in(array(
-        $this->environment->get('sf_sift_data_dir').'/config',
-        $this->environment->get('sf_config_dir'),
-      )));
-      
-      $autoload->register();
-      
-      if ($reload)
-      {
-        $this->logSection('autoload', 'Resetting CLI autoloader');
-        $autoload->reload();
-      }
-            
-    }
-    
+    $application->initializeAutoload($reload);
   }
 
   /**
@@ -421,21 +365,6 @@ abstract class sfCliBaseTask extends sfCliCommandApplicationTask
     $this->commandApplication->registerTasks($tasks);
   }
 
-  /**
-   * @see sfCliCommandApplicationTask
-   */
-  protected function createTask($name)
-  {
-    $task = parent::createTask($name);
-
-    if ($task instanceof sfCliBaseTask)
-    {
-      $task->setConfiguration($this->configuration);
-    }
-
-    return $task;
-  }
-  
   /**
    * Returns path to php executable.
    * 

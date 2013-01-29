@@ -22,7 +22,7 @@ if(!function_exists('http_build_url'))
 }
 
 // shortcut
-define('DS', DIRECTORY_SEPARATOR);
+if(!defined('DS')) define('DS', DIRECTORY_SEPARATOR);
 
 /**
  * Core class
@@ -33,6 +33,11 @@ define('DS', DIRECTORY_SEPARATOR);
  */
 class sfCore
 {
+  /**
+   * Framework version
+   */
+  const VERSION = '1.0.0';
+  
   /**
    * Shorthand for carrige return.
    */
@@ -52,40 +57,133 @@ class sfCore
    * Shorthand for path separator.
    */
   const PS = PATH_SEPARATOR;
+  
+  /**
+   *
+   * @var boolean
+   */
+  protected static $bootstrapped = false;
+  
+  /**
+   * Project instance holder
+   * 
+   * @var sfProject 
+   */
+  static protected $project = null;
+  
+  /**
+   * Returns an instance of given application
+   * 
+   * @param string $application Application name
+   * @param string $environment Environment
+   * @param boolean $debug Turn on debug feature?
+   * @return sfApplication
+   * @throws RuntimeException If Sift has not been boostrapped yet
+   */
+  public static function getApplication($application, $environment, $debug = false)
+  {    
+    return self::getProject()->getApplication($application, $environment, $debug);
+  }
+  
+  /**
+   * Returns project instance
+   * 
+   * @return sfProject
+   * @throws RuntimeException
+   */
+  public static function getProject()
+  {
+    if(!self::hasProject())
+    {
+      throw new RuntimeException('Sift it not bootstrapped to an existing project');
+    }
+    return self::$project;
+  }
+  
+  /**
+   * Is Sift bounded to an existing project?
+   * 
+   * @return boolean
+   */
+  public static function hasProject()
+  {
+    return isset(self::$project);    
+  }
+  
+  /**
+   * Binds a project
+   * 
+   * @param sfProject $project
+   * @return boolean
+   */
+  public static function bindProject(sfProject $project)
+  {
+    self::$project = $project;
+    return true;
+  }
 
-  static protected
-    $autoloadCallables = array(),
-    $classes           = array(),
-    $dispatcher        = null,
-    // content filters
-    $filters           = array();
-
+  /**
+   * Setups (X)html generation for sfHtml and sfWidget classes
+   * based on sf_html5 setting
+   * 
+   * @see sfProject
+   */
+  public static function initHtmlTagConfiguration()
+  {
+    return self::getProject()->initHtmlTagConfiguration();
+  }  
+  
+  /**
+   * Returns event dispatcher
+   *
+   * @return sfEventDispatcher
+   */
+  public static function getEventDispatcher()
+  {
+    return self::getProject()->getActiveApplication()->getEventDispatcher();
+  }
+  
   /**
    * Bootstraps the framework
    * 
    * @param string $sf_sift_lib_dir
    * @param string $sf_sift_data_dir
+   * @param boolean $test Should be bootstrapped in test mode?
    */
-  public static function bootstrap($sf_sift_lib_dir, $sf_sift_data_dir)
-  {   
-    require_once $sf_sift_lib_dir.'/autoload/sfCoreAutoload.class.php';
-    require_once($sf_sift_lib_dir.'/util/sfToolkit.class.php');
-    require_once($sf_sift_lib_dir.'/config/sfConfig.class.php');
-    require_once($sf_sift_lib_dir.'/core/sfDimensions.class.php');
-
-    sfCore::init($sf_sift_lib_dir, $sf_sift_data_dir);    
-    sfCore::initIncludePath();
-    sfCore::callBootstrap();
-
-    if(sfConfig::get('sf_check_lock'))
+  public static function bootstrap($sf_sift_lib_dir, $sf_sift_data_dir, $test = false)
+  {
+    if(self::$bootstrapped)
     {
-      sfCore::checkLock();
+      return;
     }
     
-    if(sfConfig::get('sf_check_sift_version'))
+    if(!defined('SF_ROOT_DIR'))
     {
-      sfCore::checkSiftVersion();
+      throw new sfException('Root directory is not defined. Define SF_ROOT_DIR constant.');
     }
+    
+    $config = array(        
+      'sf_root_dir'       => SF_ROOT_DIR,
+      'sf_sift_lib_dir'   => $sf_sift_lib_dir,
+      'sf_sift_data_dir'  => $sf_sift_data_dir,
+      'sf_test'           => $test,
+    );
+
+    $projectFile = SF_ROOT_DIR . '/lib/myProject.class.php';
+    
+    if(is_readable($projectFile))
+    {
+      require_once $projectFile;
+      $class = 'myProject';
+    }
+    else
+    {
+      $class = 'sfGenericProject';
+    }
+    
+    self::bindProject(new $class($config));
+    
+    self::$bootstrapped = true;
   }
 
   /**
@@ -94,360 +192,12 @@ class sfCore
    * @param sfException $exception
    * @param string $error
    */
-  public static function displayErrorPage($exception, $error = 'error500')
+  public static function displayErrorPage(sfException $exception, $error = 'error500')
   {
-    $files = array(
-      sprintf(sfConfig::get('sf_app_config_dir').'/%s.php', $error),  
-      sprintf(sfConfig::get('sf_config_dir').'/%s.php', $error),
-      sfConfig::get('sf_web_dir').'/errors/error500.php',
-      sfConfig::get('sf_sift_data_dir').'/errors/error500.php'
-    );
-        
-    foreach($files as $file)
-    {
-      $file = str_replace('/', DIRECTORY_SEPARATOR, $file);
-      if(is_readable($file))
-      {
-        include $file;
-        break;
-      }
-    }
-    if(!sfConfig::get('sf_test'))
-    {
-      exit(1);
-    }   
+    return self::getProject()->getActiveApplication()->displayErrorPage($exception, $error);
   }
 
-  public static function callBootstrap()
-  {    
-    $bootstrap = sfConfig::get('sf_config_cache_dir').'/config_bootstrap_compile.yml.php';
-    if(is_readable($bootstrap))
-    {
-      sfConfig::set('sf_in_bootstrap', true);
-      require($bootstrap);
-    }
-    else
-    {
-      require(sfConfig::get('sf_sift_lib_dir').'/sift.php');
-    }
-  }
 
-  static public function init($sf_sift_lib_dir, $sf_sift_data_dir, $test = false)
-  {
-    // start timer
-    if(SF_DEBUG)
-    {
-      sfConfig::set('sf_timer_start', microtime(true));
-    }
-
-    // main configuration
-    sfConfig::add(array(
-      'sf_root_dir'         => SF_ROOT_DIR,
-      'sf_app'              => SF_APP,
-      'sf_environment'      => SF_ENVIRONMENT,
-      'sf_debug'            => SF_DEBUG,
-      'sf_sift_lib_dir'     => $sf_sift_lib_dir,
-      'sf_sift_data_dir'    => $sf_sift_data_dir,
-      'sf_test'             => $test,
-    ));
-
-    $dimensionFile = sprintf('%s/config/dimension.php', sfConfig::get('sf_root_dir'), SF_APP);
-    
-    if(is_readable($dimensionFile))
-    {
-      include $dimensionFile;
-    }    
-    
-    self::initConfiguration();
-  }
-
-  public static function initConfiguration()
-  {
-    $sf_root_dir    = sfConfig::get('sf_root_dir');
-    $sf_app         = sfConfig::get('sf_app');
-    $sf_environment = sfConfig::get('sf_environment');
-
-    sfConfig::add(array(
-      // dimensions
-      // the current dimension as an array
-      'sf_dimension'        => $sf_dimension = sfDimensions::getDimension(),
-      // stores the dimension directories that sift will search through
-      'sf_dimension_dirs'   => $sf_dimension = sfDimensions::getDimensionDirs(),
-      // root directory names
-      'sf_bin_dir_name'     => $sf_bin_dir_name     = 'batch',
-      'sf_cache_dir_name'   => $sf_cache_dir_name   = 'cache',
-      'sf_log_dir_name'     => $sf_log_dir_name     = 'log',
-      'sf_lib_dir_name'     => $sf_lib_dir_name     = 'lib',
-      'sf_web_dir_name'     => defined('SF_WEB_DIR_NAME') ? $sf_web_dir_name = SF_WEB_DIR_NAME : $sf_web_dir_name = 'web',
-      'sf_upload_dir_name'  => defined('SF_UPLOAD_DIR_NAME') ? $sf_upload_dir_name  = SF_UPLOAD_DIR_NAME : $sf_upload_dir_name = 'files',
-      'sf_data_dir_name'    => $sf_data_dir_name    = 'data',
-      'sf_config_dir_name'  => $sf_config_dir_name  = 'config',
-      'sf_apps_dir_name'    => $sf_apps_dir_name    = 'apps',
-      'sf_test_dir_name'    => $sf_test_dir_name    = 'test',
-      'sf_doc_dir_name'     => $sf_doc_dir_name     = 'doc',
-      'sf_plugins_dir_name' => $sf_plugins_dir_name = 'plugins',
-
-      'sf_apps_dir'         => $sf_apps_dir = $sf_root_dir.DS.$sf_apps_dir_name,
-
-      // global directory structure
-      'sf_app_dir'        => $sf_app_dir = $sf_apps_dir.DS.$sf_app,
-      'sf_lib_dir'        => $sf_lib_dir = $sf_root_dir.DS.$sf_lib_dir_name,
-      'sf_bin_dir'        => $sf_root_dir.DS.$sf_bin_dir_name,
-      'sf_web_dir'        => $sf_root_dir.DS.$sf_web_dir_name,
-      'sf_upload_dir'     => $sf_root_dir.DS.$sf_web_dir_name.DS.$sf_upload_dir_name,
-      // this is usually project/cache, but with dimensions this is changed to project/cache/dimension
-      //'sf_root_cache_dir' => $sf_root_cache_dir = $sf_root_dir.DS.$sf_cache_dir_name.(sfDimensions::getDimensionString() ? DS . sfDimensions::getDimensionString() : ''),
-      'sf_root_cache_dir' => $sf_root_cache_dir = $sf_root_dir.DS.$sf_cache_dir_name,
-      'sf_base_cache_dir' => $sf_base_cache_dir = $sf_root_cache_dir.DS.$sf_app,
-      'sf_cache_dir'      => $sf_cache_dir      = $sf_base_cache_dir.DS.$sf_environment.(sfDimensions::getDimensionString() ? DS . sfDimensions::getDimensionString() : ''),
-      'sf_log_dir'        => $sf_root_dir.DS.$sf_log_dir_name,
-      'sf_data_dir'       => $sf_root_dir.DS.$sf_data_dir_name,
-      'sf_config_dir'     => $sf_root_dir.DS.$sf_config_dir_name,
-      'sf_test_dir'       => $sf_root_dir.DS.$sf_test_dir_name,
-      'sf_doc_dir'        => $sf_root_dir.DS.'data'.DS.$sf_doc_dir_name,
-      'sf_plugins_dir'    => $sf_root_dir.DS.$sf_plugins_dir_name,
-
-      // lib directory names
-      'sf_model_dir_name'      => $sf_model_dir_name = 'model',
-
-      // lib directory structure
-      'sf_model_lib_dir'  => $sf_lib_dir.DS.$sf_model_dir_name,
-
-      // directory structure
-      'sf_template_cache_dir' => $sf_cache_dir.DS.'template',
-      'sf_i18n_cache_dir'     => $sf_cache_dir.DS.'i18n',
-      'sf_config_cache_dir'   => $sf_cache_dir.DS.$sf_config_dir_name,
-      'sf_test_cache_dir'     => $sf_cache_dir.DS.'test',
-      'sf_module_cache_dir'   => $sf_cache_dir.DS.'modules',
-
-      // SF_APP_DIR sub-directories names
-      'sf_app_i18n_dir_name'     => $sf_app_i18n_dir_name     = 'i18n',
-      'sf_app_config_dir_name'   => $sf_app_config_dir_name   = 'config',
-      'sf_app_lib_dir_name'      => $sf_app_lib_dir_name      = 'lib',
-      'sf_app_module_dir_name'   => $sf_app_module_dir_name   = 'modules',
-      'sf_app_template_dir_name' => $sf_app_template_dir_name = 'templates',
-
-      // SF_APP_DIR directory structure
-      'sf_app_config_dir'   => $sf_app_dir.DS.$sf_app_config_dir_name,
-      'sf_app_lib_dir'      => $sf_app_dir.DS.$sf_app_lib_dir_name,
-      'sf_app_module_dir'   => $sf_app_dir.DS.$sf_app_module_dir_name,
-      'sf_app_template_dir' => $sf_app_dir.DS.$sf_app_template_dir_name,
-      'sf_app_i18n_dir'     => $sf_app_dir.DS.$sf_app_i18n_dir_name,
-
-      // SF_APP_MODULE_DIR sub-directories names
-      'sf_app_module_action_dir_name'   => 'actions',
-      'sf_app_module_template_dir_name' => 'templates',
-      'sf_app_module_lib_dir_name'      => 'lib',
-      'sf_app_module_view_dir_name'     => 'views',
-      'sf_app_module_validate_dir_name' => 'validate',
-      'sf_app_module_config_dir_name'   => 'config',
-      'sf_app_module_i18n_dir_name'     => 'i18n',
-      // image font directory
-      'sf_image_font_dir'                => $sf_root_dir.DS.$sf_data_dir_name.DS.'fonts',
-    ));
-
-  }
-  
-  static public function initIncludePath()
-  {
-    set_include_path(
-      sfConfig::get('sf_lib_dir').PATH_SEPARATOR.
-      sfConfig::get('sf_root_dir').PATH_SEPARATOR.
-      sfConfig::get('sf_app_lib_dir').PATH_SEPARATOR.
-      sfConfig::get('sf_sift_lib_dir').DIRECTORY_SEPARATOR.'vendor'.PATH_SEPARATOR.
-      get_include_path()
-    );
-  }
-
-  /**
-   * Checks if is the application locked. If yes, tries to display error message in the following order:
-   * 
-   *  * sfConfig::get('sf_app_config_dir').'/unavailable.php',
-   *  * sfConfig::get('sf_config_dir').'/unavailable.php',
-   *  * sfConfig::get('sf_web_dir').'/errors/unavailable.php',
-   *  * sfConfig::get('sf_sift_data_dir').'/errors/unavailable.php',
-   * 
-   * @return void
-   */
-  public static function checkLock()
-  {
-    if(sfToolkit::hasLockFile(sfConfig::get('sf_data_dir').DIRECTORY_SEPARATOR.SF_APP.'_'.SF_ENVIRONMENT.'-cli.lck', 5)
-      ||
-      sfToolkit::hasLockFile(sfConfig::get('sf_data_dir').DIRECTORY_SEPARATOR.SF_APP.'_'.SF_ENVIRONMENT.'.lck'))
-    {
-      // application is not available - we'll find the most specific unavailable page...
-      $files = array(
-        sfConfig::get('sf_app_config_dir').'/unavailable.php',
-        sfConfig::get('sf_config_dir').'/unavailable.php',
-        sfConfig::get('sf_web_dir').'/errors/unavailable.php',
-        sfConfig::get('sf_sift_data_dir').'/errors/unavailable.php',
-      );
-      
-      foreach($files as $file)
-      {
-        if(is_readable($file))
-        {
-          header("HTTP/1.1 503 Service Temporarily Unavailable");
-          header("Status: 503 Service Temporarily Unavailable");
-          include $file;
-          break;
-        }
-      }
-      
-      die(1);      
-    }
-  }
-
-  /**
-   * Checks if Sift has been currently updated. If yes, clears the cache directory.
-   * 
-   */
-  public static function checkSiftVersion()
-  {
-    // recent Sift update?
-    $last_version    = @file_get_contents(sfConfig::get('sf_config_cache_dir').'/VERSION');
-    $current_version = sfCore::getVersion();
-    if ($last_version != $current_version)
-    {
-      // clear cache
-      sfToolkit::clearDirectory(sfConfig::get('sf_config_cache_dir'));
-    }
-  }
-
-  static public function getClassPath($class)
-  {
-    return isset(self::$classes[$class]) ? self::$classes[$class] : null;
-  }
-
-  static public function addAutoloadCallable($callable)
-  {
-    self::$autoloadCallables[] = $callable;
-
-    if (function_exists('spl_autoload_register'))
-    {
-      spl_autoload_register($callable);
-    }
-  }
-
-  static public function getAutoloadCallables()
-  {
-    return self::$autoloadCallables;
-  }
-
-  /**
-   * Handles autoloading of classes that have been specified in autoload.yml.
-   *
-   * @param  string  A class name.
-   *
-   * @return boolean Returns true if the class has been loaded
-   */
-  static public function splAutoload($class)
-  {
-    // load the list of autoload classes
-    if (!self::$classes)
-    {
-      $file = sfConfigCache::getInstance()->checkConfig(sfConfig::get('sf_app_config_dir_name').'/autoload.yml');
-      self::$classes = include($file);
-    }
-
-    $class = strtolower($class);
-    
-    // class already exists
-    if(class_exists($class, false))
-    {
-      return true;
-    }
-
-    // we have a class path, let's include it
-    if(isset(self::$classes[$class]))
-    {
-      require(self::$classes[$class]);
-
-      return true;
-    }
-
-    // see if the file exists in the current module lib directory
-    // must be in a module context
-    if (sfContext::hasInstance() && ($module = sfContext::getInstance()->getModuleName()) && isset(self::$classes[$module.'/'.$class]))
-    {
-      require(self::$classes[$module.'/'.$class]);
-
-      return true;
-    }
-
-    return false;
-  }
-
-  /**
-   * Inits autoloading of the classes
-   * 
-   */
-  public static function initAutoload()
-  {
-    if (function_exists('spl_autoload_register'))
-    {
-      ini_set('unserialize_callback_func', 'spl_autoload_call');
-    }
-    else if (!function_exists('__autoload'))
-    {
-      ini_set('unserialize_callback_func', '__autoload');
-
-      function __autoload($class)
-      {
-        foreach (sfCore::getAutoloadCallables() as $callable)
-        {
-          if (call_user_func($callable, $class))
-          {
-            return true;
-          }
-        }
-
-        // unspecified class
-        // do not print an error if the autoload came from class_exists
-        $trace = debug_backtrace();
-        if (count($trace) < 1 || ($trace[1]['function'] != 'class_exists' && $trace[1]['function'] != 'is_a'))
-        {
-          $e = new sfAutoloadException(sprintf('Autoloading of class "%s" failed. Try to clear cache and refresh.', $class));
-          $e->printStackTrace();
-        }
-      }
-    }
-    self::addAutoloadCallable(array('sfCore', 'splAutoload'));
-  }
-
-  static public function splSimpleAutoload($class)
-  {
-    // class already exists
-    if (class_exists($class, false))
-    {
-      return true;
-    }
-
-    // we have a class path, let's include it
-    if (isset(self::$classes[$class]))
-    {
-      require(self::$classes[$class]);
-
-      return true;
-    }
-
-    return false;
-  }
-
-  /**
-   * Setups (X)html generation for sfHtml and sfWidget classes
-   * based on sf_html5 setting
-   * 
-   */
-  public static function initHtmlTagConfiguration()
-  {
-    if(sfConfig::get('sf_html5'))
-    {
-      sfHtml::setXhtml(false);
-      sfWidget::setXhtml(false);
-    }    
-  }
-  
   /**
    * Add a filter call back. Tell sfCore that a filter is to be run on a filter
    * at a certain point.
@@ -458,17 +208,7 @@ class sfCore
    */
   public static function addFilter($tag, $function, $priority = 10)
   {
-    if(!isset(self::$filters[$tag]))
-    {
-      self::$filters[$tag] = array();
-    }
-
-    if(!isset(self::$filters[$tag][$priority]))
-    {
-      self::$filters[$tag][$priority] = array();
-    }
-
-    self::$filters[$tag][$priority][serialize($function)] = $function;
+    return self::getProject()->getActiveApplication()->addFilter($tag, $function, $priority);
   }
 
   /**
@@ -481,12 +221,7 @@ class sfCore
    */
   public static function removeFilter($tag, $function, $priority = 10)
   {
-    if(isset(self::$filters[$tag][$priority][serialize($function)]))
-    {
-      unset(self::$filters[$tag][$priority][serialize($function)]);
-      return true;
-    }
-    return false;
+    return self::getProject()->getActiveApplication()->removeFilter($tag, $function, $priority);
   }
 
   /**
@@ -497,63 +232,7 @@ class sfCore
    */
   public static function applyFilters($tag, $data, $optionalArgs = null)
   {
-    if(!isset(self::$filters[$tag]))
-    {
-      return $data;
-    }
-
-    $args = func_get_args();
-    // remove first parameter
-    array_shift($args);
-    
-    // sort by priority
-    krsort(self::$filters[$tag]);
-
-    foreach(self::$filters[$tag] as $priority => $phooks)
-    {
-      foreach($phooks as $hook)
-      {
-        // is the method available?
-        if(!is_callable($hook))
-        {
-          throw new Exception(sprintf('{sfCore} "%s" is not callable.', var_export($hook, true)));
-        }
-        // call the method
-        $args[1] = call_user_func_array($hook, $args);
-      }
-    }
-    return $args[1];
-  }
-
-  /**
-   * Bootstrap plugin configurations
-   *
-   * @return unknown_type
-   */
-  public static function loadPluginConfig()
-  {
-    // load plugin configurations !
-    if($pluginConfigs = glob(sfConfig::get('sf_plugins_dir').'/*/config/config.php'))
-    {
-      foreach($pluginConfigs as $config)
-      {
-        include $config;
-      }
-    }
-  }
-
-  /**
-   * Returns event dispatcher
-   *
-   * @return sfEventDispatcher
-   */
-  public static function getEventDispatcher()
-  {
-    if(!self::$dispatcher)
-    {
-      self::$dispatcher = new sfEventDispatcher();
-    }
-    return self::$dispatcher;
+    return self::getProject()->getActiveApplication()->applyFilters($tag, $data, $optionalArgs);
   }
 
   /**
@@ -565,27 +244,9 @@ class sfCore
    * @param string $eventName
    * @param array $params Params for the event
    */
-  public static function filterByEventListeners(&$value, $eventName,
-          $params = array())
+  public static function filterByEventListeners(&$value, $eventName, $params = array())
   {
-    $event = new sfEvent($eventName, $params);
-    self::getEventDispatcher()->filter($event, $value);
-    return $event->getReturnValue();
-  }
-
-  /**
-   * Enables modules given by configuration ('config/SF_APP/modules.yml')
-   * 
-   */
-  public static function enableModules($app = SF_APP)
-  {
-    try 
-    {    
-      sfConfigCache::getInstance()->import(sprintf('config/%s/modules.yml', $app), true, true);
-    }
-    catch(sfConfigurationException $e)
-    {
-    }
+    return self::getProject()->getActiveApplication()->filterByEventListeners($value, $eventName, $params);
   }
 
   /**
@@ -596,7 +257,7 @@ class sfCore
    */
   public static function dispatchEvent($name, $data = array())
   {
-    return self::getEventDispatcher()->notify(new sfEvent($name, $data));
+    return self::getProject()->getActiveApplication()->dispatchEvent($name, $data);
   }
 
   /**
@@ -607,7 +268,6 @@ class sfCore
    * @return boolean           -1 if the $version is older,
    *                           0 if they are the same,
    *                           and +1 if $version is newer.
-   *
    */
   public static function compareVersion($version)
   {    
@@ -621,7 +281,7 @@ class sfCore
    */
   public static function getCoreHelpers()
   {
-    return array('Helper', 'Url', 'Asset', 'Tag', 'Escaping');
+    return self::getProject()->getActiveApplication()->getCoreHelpers();
   }
   
   /**
@@ -631,8 +291,8 @@ class sfCore
    */
   public static function getVersion()
   {
-    return trim(file_get_contents(sfConfig::get('sf_sift_lib_dir').'/VERSION'));
+    return self::VERSION;
   }
-
+  
 }
 

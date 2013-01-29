@@ -7,20 +7,25 @@ if (!include(dirname(__FILE__).'/../bootstrap/functional.php'))
 }
 
 $b = new sfTestBrowser();
-$b->initialize();
 
 $b->
-  post('/fillInFilter/forward', array('name' => 'fabien'))->
-  isStatusCode(200)->
-  isRequestParameter('module', 'fillInFilter')->
-  isRequestParameter('action', 'forward')->
-  checkResponseElement('body div', 'foo')
-;
+  post('/fillInFilter/forward', array('name' => 'fabien'))
+  ->with('request')->begin()
+      ->isParameter('module', 'fillInFilter')
+      ->isParameter('action', 'forward')
+  ->end()
+  ->with('response')->begin()
+    ->isStatusCode(200)
+    ->checkElement('body div', 'foo')
+  ->end();
 
 $b->
-  post('/fillInFilter/update', array('first_name' => 'fabien'))->
-  isStatusCode(200)->
-  isRequestParameter('module', 'fillInFilter')->
-  isRequestParameter('action', 'update')->
-  checkResponseElement('input[name="first_name"][value="fabien"]')
-;
+  post('/fillInFilter/update', array('first_name' => 'fabien'))
+  ->with('response')->begin()
+    ->isStatusCode(200)
+    ->checkElement('input[name="first_name"][value="fabien"]')
+  ->end()
+  ->with('request')->begin()
+    ->isParameter('module', 'fillInFilter')
+    ->isParameter('action', 'update')
+  ->end();

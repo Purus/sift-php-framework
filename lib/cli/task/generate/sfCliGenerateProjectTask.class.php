@@ -94,16 +94,19 @@ EOF;
     }  
     
     $this->tokens = array(
-      'SF_SIFT_LIB_DIR'   => sfConfig::get('sf_sift_lib_dir'),  
-      'SF_SIFT_DATA_DIR'  => sfConfig::get('sf_sift_data_dir'),  
+      'SF_SIFT_LIB_DIR'   => $this->environment->get('sf_sift_lib_dir'),  
+      'SF_SIFT_DATA_DIR'  => $this->environment->get('sf_sift_data_dir'),  
       'PROJECT_NAME'      => $this->arguments['name'],
       'AUTHOR_NAME'       => $this->arguments['author'],
-      'PROJECT_DIR'       => sfConfig::get('sf_sift_root_dir'),
+      'PROJECT_DIR'       => $this->environment->get('sf_root_dir'),
       'IS_SECURE'         => isset($options['secured']) ? 'true' : 'false'
     );
 
     $this->replaceTokens();
 
+    // project is generated, we have to bind to project
+    $this->commandApplication->bindToProject();
+    
     try 
     {
       // generate new crypt key for the project

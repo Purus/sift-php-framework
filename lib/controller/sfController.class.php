@@ -164,7 +164,7 @@ abstract class sfController
     $app     = sfConfig::get('sf_app');
     $env     = sfConfig::get('sf_environment');
 
-    if (!sfConfig::get('sf_available') || sfToolkit::hasLockFile($rootDir.'/'.$app.'_'.$env.'.lck'))
+    if (!sfConfig::get('sf_available') || sfToolkit::hasLockFile(sfConfig::get('sf_data_dir').'/'.$app.'_'.$env.'.lck'))
     {
       // application is unavailable
       $moduleName = sfConfig::get('sf_unavailable_module');
@@ -247,7 +247,7 @@ abstract class sfController
                         'controller'  => $this,
                         'module'      => $moduleName,
                         'action'      => $actionName)));
-
+          
           $this->getContext()->getResponse()->setStatusCode(404);
           $this->getContext()->getResponse()->setHttpHeader('Status', '404 Not Found');
 
@@ -400,7 +400,8 @@ abstract class sfController
     {
       // view class (as configured in module.yml or defined in action)
       $viewName = $this->getContext()->getRequest()->getAttribute($moduleName.'_'.$actionName.'_view_name', sfConfig::get('mod_'.strtolower($moduleName).'_view_class'), 'sift/action/view');
-      $class    = sfCore::getClassPath($viewName.'View') ? $viewName.'View' : 'sfPHPView';
+      // $class    = sfCore::getClassPath($viewName.'View') ? $viewName.'View' : 'sfPHPView';
+      $class    = sprintf('%sView', $viewName);
     }
 
     return new $class();
@@ -421,7 +422,7 @@ abstract class sfController
     }
 
     // set max forwards
-    $this->maxForwards = sfConfig::get('sf_max_forwards');
+    $this->maxForwards = sfConfig::get('sf_max_forwards', 5);
   }
 
   /**
@@ -489,7 +490,7 @@ abstract class sfController
 
     try
     {
-      // forward to the mail action
+      // forward to the action
       $this->forward($module, $action);
     }
     catch (Exception $e)
@@ -509,7 +510,7 @@ abstract class sfController
     // grab the action entry from this forward
     $actionEntry = $actionStack->getEntry($index);
 
-    // get raw email content
+    // get raw content
     $presentation =& $actionEntry->getPresentation();
 
     // put render mode back
@@ -536,7 +537,7 @@ abstract class sfController
     {
       $this->getContext()->getRequest()->getAttributeHolder()->remove($module.'_'.$action.'_view_name', 'sift/action/view');
     }
-
+    
     return $presentation;
   }
 

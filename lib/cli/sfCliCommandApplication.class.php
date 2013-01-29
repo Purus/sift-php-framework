@@ -59,18 +59,35 @@ abstract class sfCliCommandApplication {
 
     $this->commandManager = new sfCliCommandManager($argumentSet, $optionSet);
 
-    // load project    
-    if(file_exists($this->environment->get('sf_lib_dir').'/myProject.class.php'))
-    {
-      require_once $this->environment->get('sf_lib_dir').'/myProject.class.php';
-      $this->project = new myProject($this->environment->getAll(), $this->dispatcher);
-    }
+    $this->bindToProject();
     
     $this->configure();
 
     $this->registerTasks();
   }
 
+  /**
+   * Binds to an existing project.
+   * 
+   */
+  public function bindToProject()
+  {
+    // load project    
+    if(file_exists($this->environment->get('sf_root_dir').'/lib/myProject.class.php'))
+    {
+      require_once $this->environment->get('sf_root_dir').'/lib/myProject.class.php';      
+      $this->project = new myProject($this->environment->getAll(), $this->dispatcher);
+      $this->environment->add($this->project->getOptions());
+    }
+    else
+    {
+      $this->project = new sfGenericProject($this->environment->getAll(), $this->dispatcher);
+      $this->environment->add($this->project->getOptions());
+    }
+    
+    sfCore::bindProject($this->project); 
+  }
+  
   /**
    * Configures the current command application.
    */

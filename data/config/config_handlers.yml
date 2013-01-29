@@ -1,9 +1,6 @@
 # You can find more information about this file on: 
 # https://bitbucket.org/mishal/sift-php-framework/wiki/ConfigHandlers
 
-config/autoload.yml:
-  class:    sfAutoloadConfigHandler
-
 config/php.yml:
   class:    sfPhpConfigHandler
 
@@ -53,6 +50,9 @@ config/i18n.yml:
 
 config/mail.yml:
   class:  sfMailConfigHandler
+
+config/dimensions.yml:
+  class:  sfDimensionsConfigHandler
 
 config/*/modules.yml:
   class: sfModulesConfigHandler

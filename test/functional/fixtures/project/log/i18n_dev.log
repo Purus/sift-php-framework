@@ -1,0 +1,1083 @@
+Jan 28 16:02:34 Sift [info] {sfContext} initialization
+Jan 28 16:02:34 Sift [info] {sfController} initialization
+Jan 28 16:02:34 Sift [info] {sfRouting} match route [default] "/:sf_culture/:module/:action/*"
+Jan 28 16:02:34 Sift [info] {sfRequest} request parameters array (  'sf_culture' => 'fr',  'module' => 'default',  'action' => 'index',)
+Jan 28 16:02:34 Sift [info] {sfController} dispatch request
+Jan 28 16:02:34 Sift [info] {sfController} action "default/index" does not exist
+Jan 28 16:02:34 Sift [err] {sfConfigurationException} Invalid configuration settings: [sf_error_404_module] "default", [sf_error_404_action] "error404"
+Jan 28 16:02:50 Sift [info] {sfContext} initialization
+Jan 28 16:02:50 Sift [info] {sfController} initialization
+Jan 28 16:02:50 Sift [info] {sfRouting} match route [default] "/:sf_culture/:module/:action/*"
+Jan 28 16:02:50 Sift [info] {sfRequest} request parameters array (  'sf_culture' => 'fr',  'module' => 'i18n',  'action' => 'index',)
+Jan 28 16:02:50 Sift [info] {sfController} dispatch request
+Jan 28 16:02:50 Sift [info] {sfFilter} executing filter "sfRenderingFilter"
+Jan 28 16:02:50 Sift [info] {sfFilter} executing filter "sfI18nFilter"
+Jan 28 16:02:50 Sift [info] {sfFilter} executing filter "sfWebDebugFilter"
+Jan 28 16:02:50 Sift [info] {sfFilter} executing filter "sfCommonFilter"
+Jan 28 16:02:50 Sift [info] {sfFilter} executing filter "sfFlashFilter"
+Jan 28 16:02:50 Sift [info] {sfFilter} executing filter "sfExecutionFilter"
+Jan 28 16:02:50 Sift [info] {sfAction} call "i18nActions->executeIndex()"
+Jan 28 16:02:50 Sift [info] {sfView} initialize view for "i18n/index"
+Jan 28 16:02:50 Sift [info] {sfView} render "D:/data/git/sift.git/test/functional/fixtures/project\apps\i18n\modules\i18n\templates/indexSuccess.php"
+Jan 28 16:02:50 Sift [info] {sfView} decorate content with "D:/data/git/sift.git/test/functional/fixtures/project\apps\i18n\templates/layout.php"
+Jan 28 16:02:50 Sift [info] {sfView} render "D:/data/git/sift.git/test/functional/fixtures/project\apps\i18n\templates/layout.php"
+Jan 28 16:02:50 Sift [info] {sfFilter} render to client
+Jan 28 16:02:50 Sift [info] {sfResponse} send status "HTTP/1.0 200 OK"
+Jan 28 16:02:50 Sift [info] {sfResponse} send header "Content-Type": "text/html; charset=utf-8"
+Jan 28 16:02:50 Sift [info] {sfResponse} send content (38105 o)
+Jan 28 16:02:50 Sift [info] {sfTimerManager} Configuration 72.24 ms (14)
+Jan 28 16:02:50 Sift [info] {sfTimerManager} Action "i18n/index" 21.69 ms (1)
+Jan 28 16:02:50 Sift [info] {sfTimerManager} Translation 30.63 ms (9)
+Jan 28 16:02:50 Sift [info] {sfTimerManager} View "Success" for "i18n/index" 39.58 ms (1)
+Jan 28 16:02:50 Sift [info] {sfTimerManager} {sfView} render "indexSuccess.php" 29.56 ms (2)
+Jan 28 16:02:50 Sift [info] {sfTimerManager} {sfView} render "layout.php" 0.97 ms (2)
+Jan 28 16:12:22 Sift [info] {sfContext} initialization
+Jan 28 16:12:22 Sift [info] {sfController} initialization
+Jan 28 16:12:22 Sift [info] {sfRouting} match route [default] "/:sf_culture/:module/:action/*"
+Jan 28 16:12:22 Sift [info] {sfRequest} request parameters array (  'sf_culture' => 'fr',  'module' => 'i18n',  'action' => 'index',)
+Jan 28 16:12:23 Sift [info] {sfController} dispatch request
+Jan 28 16:12:23 Sift [info] {sfFilter} executing filter "sfRenderingFilter"
+Jan 28 16:12:23 Sift [info] {sfFilter} executing filter "sfI18nFilter"
+Jan 28 16:12:23 Sift [info] {sfFilter} executing filter "sfWebDebugFilter"
+Jan 28 16:12:23 Sift [info] {sfFilter} executing filter "sfCommonFilter"
+Jan 28 16:12:23 Sift [info] {sfFilter} executing filter "sfFlashFilter"
+Jan 28 16:12:23 Sift [info] {sfFilter} executing filter "sfExecutionFilter"
+Jan 28 16:12:23 Sift [info] {sfAction} call "i18nActions->executeIndex()"
+Jan 28 16:12:23 Sift [info] {sfView} initialize view for "i18n/index"
+Jan 28 16:12:23 Sift [info] {sfView} render "D:/data/git/sift.git/test/functional/fixtures/project\apps\i18n\modules\i18n\templates/indexSuccess.php"
+Jan 28 16:12:23 Sift [info] {sfView} decorate content with "D:/data/git/sift.git/test/functional/fixtures/project\apps\i18n\templates/layout.php"
+Jan 28 16:12:23 Sift [info] {sfView} render "D:/data/git/sift.git/test/functional/fixtures/project\apps\i18n\templates/layout.php"
+Jan 28 16:12:23 Sift [info] {sfFilter} render to client
+Jan 28 16:12:23 Sift [info] {sfResponse} send status "HTTP/1.0 200 OK"
+Jan 28 16:12:23 Sift [info] {sfResponse} send header "Content-Type": "text/html; charset=utf-8"
+Jan 28 16:12:23 Sift [info] {sfResponse} send content (38076 o)
+Jan 28 16:12:23 Sift [info] {sfTimerManager} Configuration 16.03 ms (13)
+Jan 28 16:12:23 Sift [info] {sfTimerManager} Action "i18n/index" 8.90 ms (1)
+Jan 28 16:12:23 Sift [info] {sfTimerManager} Translation 11.70 ms (9)
+Jan 28 16:12:23 Sift [info] {sfTimerManager} View "Success" for "i18n/index" 29.60 ms (1)
+Jan 28 16:12:23 Sift [info] {sfTimerManager} {sfView} render "indexSuccess.php" 34.23 ms (2)
+Jan 28 16:12:23 Sift [info] {sfTimerManager} {sfView} render "layout.php" 1.01 ms (2)
+Jan 28 16:12:55 Sift [info] {sfContext} initialization
+Jan 28 16:12:55 Sift [info] {sfController} initialization
+Jan 28 16:12:55 Sift [info] {sfRouting} match route [default] "/:sf_culture/:module/:action/*"
+Jan 28 16:12:55 Sift [info] {sfRequest} request parameters array (  'sf_culture' => 'fr',  'module' => 'i18n',  'action' => 'index',)
+Jan 28 16:12:55 Sift [info] {sfController} dispatch request
+Jan 28 16:12:55 Sift [info] {sfFilter} executing filter "sfRenderingFilter"
+Jan 28 16:12:55 Sift [info] {sfFilter} executing filter "sfI18nFilter"
+Jan 28 16:12:55 Sift [info] {sfFilter} executing filter "sfWebDebugFilter"
+Jan 28 16:12:55 Sift [info] {sfFilter} executing filter "sfCommonFilter"
+Jan 28 16:12:55 Sift [info] {sfFilter} executing filter "sfFlashFilter"
+Jan 28 16:12:55 Sift [info] {sfFilter} executing filter "sfExecutionFilter"
+Jan 28 16:12:55 Sift [info] {sfAction} call "i18nActions->executeIndex()"
+Jan 28 16:12:55 Sift [info] {sfView} initialize view for "i18n/index"
+Jan 28 16:12:55 Sift [info] {sfView} render "D:/data/git/sift.git/test/functional/fixtures/project\apps\i18n\modules\i18n\templates/indexSuccess.php"
+Jan 28 16:12:55 Sift [info] {sfView} decorate content with "D:/data/git/sift.git/test/functional/fixtures/project\apps\i18n\templates/layout.php"
+Jan 28 16:12:55 Sift [info] {sfView} render "D:/data/git/sift.git/test/functional/fixtures/project\apps\i18n\templates/layout.php"
+Jan 28 16:12:55 Sift [info] {sfFilter} render to client
+Jan 28 16:12:55 Sift [info] {sfResponse} send status "HTTP/1.0 200 OK"
+Jan 28 16:12:55 Sift [info] {sfResponse} send header "Content-Type": "text/html; charset=utf-8"
+Jan 28 16:12:55 Sift [info] {sfResponse} send content (38077 o)
+Jan 28 16:12:55 Sift [info] {sfTimerManager} Configuration 15.11 ms (13)
+Jan 28 16:12:55 Sift [info] {sfTimerManager} Action "i18n/index" 7.87 ms (1)
+Jan 28 16:12:55 Sift [info] {sfTimerManager} Translation 11.02 ms (9)
+Jan 28 16:12:55 Sift [info] {sfTimerManager} View "Success" for "i18n/index" 22.84 ms (1)
+Jan 28 16:12:55 Sift [info] {sfTimerManager} {sfView} render "indexSuccess.php" 24.70 ms (2)
+Jan 28 16:12:55 Sift [info] {sfTimerManager} {sfView} render "layout.php" 1.12 ms (2)
+Jan 28 16:14:56 Sift [info] {sfContext} initialization
+Jan 28 16:14:56 Sift [info] {sfController} initialization
+Jan 28 16:14:56 Sift [info] {sfRouting} match route [homepage] "/"
+Jan 28 16:14:56 Sift [info] {sfRequest} request parameters array (  'module' => 'i18n',  'action' => 'index',)
+Jan 28 16:14:56 Sift [info] {sfController} dispatch request
+Jan 28 16:14:56 Sift [info] {sfFilter} executing filter "sfRenderingFilter"
+Jan 28 16:14:56 Sift [info] {sfFilter} executing filter "sfI18nFilter"
+Jan 28 16:14:56 Sift [info] {sfFilter} executing filter "sfWebDebugFilter"
+Jan 28 16:14:56 Sift [info] {sfFilter} executing filter "sfCommonFilter"
+Jan 28 16:14:56 Sift [info] {sfFilter} executing filter "sfFlashFilter"
+Jan 28 16:14:56 Sift [info] {sfFilter} executing filter "sfExecutionFilter"
+Jan 28 16:14:56 Sift [info] {sfAction} call "i18nActions->executeIndex()"
+Jan 28 16:14:56 Sift [info] {sfView} initialize view for "i18n/index"
+Jan 28 16:14:56 Sift [info] {sfView} render "D:/data/git/sift.git/test/functional/fixtures/project\apps\i18n\modules\i18n\templates/indexSuccess.php"
+Jan 28 16:14:56 Sift [info] {sfView} decorate content with "D:/data/git/sift.git/test/functional/fixtures/project\apps\i18n\templates/layout.php"
+Jan 28 16:14:56 Sift [info] {sfView} render "D:/data/git/sift.git/test/functional/fixtures/project\apps\i18n\templates/layout.php"
+Jan 28 16:14:56 Sift [info] {sfFilter} render to client
+Jan 28 16:14:56 Sift [info] {sfResponse} send status "HTTP/1.0 200 OK"
+Jan 28 16:14:56 Sift [info] {sfResponse} send header "Content-Type": "text/html; charset=utf-8"
+Jan 28 16:14:56 Sift [info] {sfResponse} send content (37912 o)
+Jan 28 16:14:56 Sift [info] {sfTimerManager} Configuration 15.76 ms (13)
+Jan 28 16:14:56 Sift [info] {sfTimerManager} Action "i18n/index" 8.18 ms (1)
+Jan 28 16:14:56 Sift [info] {sfTimerManager} Translation 11.05 ms (9)
+Jan 28 16:14:56 Sift [info] {sfTimerManager} View "Success" for "i18n/index" 24.52 ms (1)
+Jan 28 16:14:56 Sift [info] {sfTimerManager} {sfView} render "indexSuccess.php" 28.70 ms (2)
+Jan 28 16:14:56 Sift [info] {sfTimerManager} {sfView} render "layout.php" 1.12 ms (2)
+Jan 28 16:14:58 Sift [info] {sfContext} initialization
+Jan 28 16:14:58 Sift [info] {sfController} initialization
+Jan 28 16:14:58 Sift [info] {sfRouting} match route [homepage] "/"
+Jan 28 16:14:58 Sift [info] {sfRequest} request parameters array (  'module' => 'i18n',  'action' => 'index',)
+Jan 28 16:14:58 Sift [info] {sfController} dispatch request
+Jan 28 16:14:58 Sift [info] {sfFilter} executing filter "sfRenderingFilter"
+Jan 28 16:14:58 Sift [info] {sfFilter} executing filter "sfI18nFilter"
+Jan 28 16:14:58 Sift [info] {sfFilter} executing filter "sfWebDebugFilter"
+Jan 28 16:14:58 Sift [info] {sfFilter} executing filter "sfCommonFilter"
+Jan 28 16:14:58 Sift [info] {sfFilter} executing filter "sfFlashFilter"
+Jan 28 16:14:58 Sift [info] {sfFilter} executing filter "sfExecutionFilter"
+Jan 28 16:14:58 Sift [info] {sfAction} call "i18nActions->executeIndex()"
+Jan 28 16:14:58 Sift [info] {sfView} initialize view for "i18n/index"
+Jan 28 16:14:58 Sift [info] {sfView} render "D:/data/git/sift.git/test/functional/fixtures/project\apps\i18n\modules\i18n\templates/indexSuccess.php"
+Jan 28 16:14:58 Sift [info] {sfView} decorate content with "D:/data/git/sift.git/test/functional/fixtures/project\apps\i18n\templates/layout.php"
+Jan 28 16:14:58 Sift [info] {sfView} render "D:/data/git/sift.git/test/functional/fixtures/project\apps\i18n\templates/layout.php"
+Jan 28 16:14:58 Sift [info] {sfFilter} render to client
+Jan 28 16:14:58 Sift [info] {sfResponse} send status "HTTP/1.0 200 OK"
+Jan 28 16:14:58 Sift [info] {sfResponse} send header "Content-Type": "text/html; charset=utf-8"
+Jan 28 16:14:58 Sift [info] {sfResponse} send content (37944 o)
+Jan 28 16:14:58 Sift [info] {sfTimerManager} Configuration 16.60 ms (13)
+Jan 28 16:14:58 Sift [info] {sfTimerManager} Action "i18n/index" 7.78 ms (1)
+Jan 28 16:14:58 Sift [info] {sfTimerManager} Translation 10.82 ms (9)
+Jan 28 16:14:58 Sift [info] {sfTimerManager} View "Success" for "i18n/index" 23.13 ms (1)
+Jan 28 16:14:58 Sift [info] {sfTimerManager} {sfView} render "indexSuccess.php" 26.21 ms (2)
+Jan 28 16:14:58 Sift [info] {sfTimerManager} {sfView} render "layout.php" 1.00 ms (2)
+Jan 28 16:15:02 Sift [info] {sfContext} initialization
+Jan 28 16:15:02 Sift [info] {sfController} initialization
+Jan 28 16:15:02 Sift [info] {sfRouting} match route [default] "/:sf_culture/:module/:action/*"
+Jan 28 16:15:02 Sift [info] {sfRequest} request parameters array (  'sf_culture' => 'fr',  'module' => 'i18n',  'action' => 'index',)
+Jan 28 16:15:02 Sift [info] {sfController} dispatch request
+Jan 28 16:15:02 Sift [info] {sfFilter} executing filter "sfRenderingFilter"
+Jan 28 16:15:02 Sift [info] {sfFilter} executing filter "sfI18nFilter"
+Jan 28 16:15:02 Sift [info] {sfFilter} executing filter "sfWebDebugFilter"
+Jan 28 16:15:02 Sift [info] {sfFilter} executing filter "sfCommonFilter"
+Jan 28 16:15:02 Sift [info] {sfFilter} executing filter "sfFlashFilter"
+Jan 28 16:15:02 Sift [info] {sfFilter} executing filter "sfExecutionFilter"
+Jan 28 16:15:02 Sift [info] {sfAction} call "i18nActions->executeIndex()"
+Jan 28 16:15:02 Sift [info] {sfView} initialize view for "i18n/index"
+Jan 28 16:15:02 Sift [info] {sfView} render "D:/data/git/sift.git/test/functional/fixtures/project\apps\i18n\modules\i18n\templates/indexSuccess.php"
+Jan 28 16:15:02 Sift [info] {sfView} decorate content with "D:/data/git/sift.git/test/functional/fixtures/project\apps\i18n\templates/layout.php"
+Jan 28 16:15:02 Sift [info] {sfView} render "D:/data/git/sift.git/test/functional/fixtures/project\apps\i18n\templates/layout.php"
+Jan 28 16:15:02 Sift [info] {sfFilter} render to client
+Jan 28 16:15:02 Sift [info] {sfResponse} send status "HTTP/1.0 200 OK"
+Jan 28 16:15:02 Sift [info] {sfResponse} send header "Content-Type": "text/html; charset=utf-8"
+Jan 28 16:15:02 Sift [info] {sfResponse} send content (38047 o)
+Jan 28 16:15:02 Sift [info] {sfTimerManager} Configuration 18.47 ms (13)
+Jan 28 16:15:02 Sift [info] {sfTimerManager} Action "i18n/index" 12.53 ms (1)
+Jan 28 16:15:02 Sift [info] {sfTimerManager} Translation 15.63 ms (9)
+Jan 28 16:15:02 Sift [info] {sfTimerManager} View "Success" for "i18n/index" 23.80 ms (1)
+Jan 28 16:15:02 Sift [info] {sfTimerManager} {sfView} render "indexSuccess.php" 25.59 ms (2)
+Jan 28 16:15:02 Sift [info] {sfTimerManager} {sfView} render "layout.php" 1.14 ms (2)
+Jan 28 16:15:06 Sift [info] {sfContext} initialization
+Jan 28 16:15:06 Sift [info] {sfController} initialization
+Jan 28 16:15:06 Sift [info] {sfRouting} match route [homepage] "/"
+Jan 28 16:15:06 Sift [info] {sfRequest} request parameters array (  'module' => 'i18n',  'action' => 'index',)
+Jan 28 16:15:06 Sift [info] {sfController} dispatch request
+Jan 28 16:15:06 Sift [info] {sfFilter} executing filter "sfRenderingFilter"
+Jan 28 16:15:06 Sift [info] {sfFilter} executing filter "sfI18nFilter"
+Jan 28 16:15:06 Sift [info] {sfFilter} executing filter "sfWebDebugFilter"
+Jan 28 16:15:06 Sift [info] {sfFilter} executing filter "sfCommonFilter"
+Jan 28 16:15:06 Sift [info] {sfFilter} executing filter "sfFlashFilter"
+Jan 28 16:15:06 Sift [info] {sfFilter} executing filter "sfExecutionFilter"
+Jan 28 16:15:06 Sift [info] {sfAction} call "i18nActions->executeIndex()"
+Jan 28 16:15:06 Sift [info] {sfView} initialize view for "i18n/index"
+Jan 28 16:15:06 Sift [info] {sfView} render "D:/data/git/sift.git/test/functional/fixtures/project\apps\i18n\modules\i18n\templates/indexSuccess.php"
+Jan 28 16:15:06 Sift [info] {sfView} decorate content with "D:/data/git/sift.git/test/functional/fixtures/project\apps\i18n\templates/layout.php"
+Jan 28 16:15:06 Sift [info] {sfView} render "D:/data/git/sift.git/test/functional/fixtures/project\apps\i18n\templates/layout.php"
+Jan 28 16:15:06 Sift [info] {sfFilter} render to client
+Jan 28 16:15:06 Sift [info] {sfResponse} send status "HTTP/1.0 200 OK"
+Jan 28 16:15:06 Sift [info] {sfResponse} send header "Content-Type": "text/html; charset=utf-8"
+Jan 28 16:15:06 Sift [info] {sfResponse} send content (37911 o)
+Jan 28 16:15:06 Sift [info] {sfTimerManager} Configuration 13.25 ms (13)
+Jan 28 16:15:06 Sift [info] {sfTimerManager} Action "i18n/index" 7.53 ms (1)
+Jan 28 16:15:06 Sift [info] {sfTimerManager} Translation 10.65 ms (9)
+Jan 28 16:15:06 Sift [info] {sfTimerManager} View "Success" for "i18n/index" 23.96 ms (1)
+Jan 28 16:15:06 Sift [info] {sfTimerManager} {sfView} render "indexSuccess.php" 25.08 ms (2)
+Jan 28 16:15:06 Sift [info] {sfTimerManager} {sfView} render "layout.php" 1.15 ms (2)
+Jan 28 16:16:07 Sift [info] {sfContext} initialization
+Jan 28 16:16:08 Sift [info] {sfController} initialization
+Jan 28 16:16:08 Sift [info] {sfRouting} match route [homepage] "/"
+Jan 28 16:16:08 Sift [info] {sfRequest} request parameters array (  'module' => 'i18n',  'action' => 'index',)
+Jan 28 16:16:08 Sift [info] {sfController} dispatch request
+Jan 28 16:16:08 Sift [info] {sfFilter} executing filter "sfRenderingFilter"
+Jan 28 16:16:08 Sift [info] {sfFilter} executing filter "sfI18nFilter"
+Jan 28 16:16:08 Sift [info] {sfFilter} executing filter "sfWebDebugFilter"
+Jan 28 16:16:08 Sift [info] {sfFilter} executing filter "sfCommonFilter"
+Jan 28 16:16:08 Sift [info] {sfFilter} executing filter "sfFlashFilter"
+Jan 28 16:16:08 Sift [info] {sfFilter} executing filter "sfExecutionFilter"
+Jan 28 16:16:08 Sift [info] {sfAction} call "i18nActions->executeIndex()"
+Jan 28 16:16:08 Sift [info] {sfView} initialize view for "i18n/index"
+Jan 28 16:16:08 Sift [info] {sfView} render "D:/data/git/sift.git/test/functional/fixtures/project\apps\i18n\modules\i18n\templates/indexSuccess.php"
+Jan 28 16:16:08 Sift [info] {sfView} decorate content with "D:/data/git/sift.git/test/functional/fixtures/project\apps\i18n\templates/layout.php"
+Jan 28 16:16:08 Sift [info] {sfView} render "D:/data/git/sift.git/test/functional/fixtures/project\apps\i18n\templates/layout.php"
+Jan 28 16:16:08 Sift [info] {sfFilter} render to client
+Jan 28 16:16:08 Sift [info] {sfResponse} send status "HTTP/1.0 200 OK"
+Jan 28 16:16:08 Sift [info] {sfResponse} send header "Content-Type": "text/html; charset=utf-8"
+Jan 28 16:16:08 Sift [info] {sfResponse} send content (37946 o)
+Jan 28 16:16:08 Sift [info] {sfTimerManager} Configuration 15.47 ms (13)
+Jan 28 16:16:08 Sift [info] {sfTimerManager} Action "i18n/index" 16.25 ms (1)
+Jan 28 16:16:08 Sift [info] {sfTimerManager} Translation 19.12 ms (9)
+Jan 28 16:16:08 Sift [info] {sfTimerManager} View "Success" for "i18n/index" 23.89 ms (1)
+Jan 28 16:16:08 Sift [info] {sfTimerManager} {sfView} render "indexSuccess.php" 25.28 ms (2)
+Jan 28 16:16:08 Sift [info] {sfTimerManager} {sfView} render "layout.php" 0.99 ms (2)
+Jan 28 16:18:21 Sift [info] {sfContext} initialization
+Jan 28 16:18:21 Sift [info] {sfController} initialization
+Jan 28 16:18:21 Sift [info] {sfRouting} match route [homepage] "/"
+Jan 28 16:18:21 Sift [info] {sfRequest} request parameters array (  'module' => 'i18n',  'action' => 'index',)
+Jan 28 16:18:21 Sift [info] {sfController} dispatch request
+Jan 28 16:18:21 Sift [info] {sfFilter} executing filter "sfRenderingFilter"
+Jan 28 16:18:21 Sift [info] {sfFilter} executing filter "sfI18nFilter"
+Jan 28 16:18:21 Sift [info] {sfFilter} executing filter "sfWebDebugFilter"
+Jan 28 16:18:21 Sift [info] {sfFilter} executing filter "sfCommonFilter"
+Jan 28 16:18:21 Sift [info] {sfFilter} executing filter "sfFlashFilter"
+Jan 28 16:18:21 Sift [info] {sfFilter} executing filter "sfExecutionFilter"
+Jan 28 16:18:21 Sift [info] {sfAction} call "i18nActions->executeIndex()"
+Jan 28 16:18:21 Sift [info] {sfView} initialize view for "i18n/index"
+Jan 28 16:18:21 Sift [info] {sfView} render "D:/data/git/sift.git/test/functional/fixtures/project\apps\i18n\modules\i18n\templates/indexSuccess.php"
+Jan 28 16:18:21 Sift [info] {sfView} decorate content with "D:/data/git/sift.git/test/functional/fixtures/project\apps\i18n\templates/layout.php"
+Jan 28 16:18:21 Sift [info] {sfView} render "D:/data/git/sift.git/test/functional/fixtures/project\apps\i18n\templates/layout.php"
+Jan 28 16:18:21 Sift [info] {sfFilter} render to client
+Jan 28 16:18:21 Sift [info] {sfResponse} send status "HTTP/1.0 200 OK"
+Jan 28 16:18:21 Sift [info] {sfResponse} send header "Content-Type": "text/html; charset=utf-8"
+Jan 28 16:18:21 Sift [info] {sfResponse} send content (37944 o)
+Jan 28 16:18:21 Sift [info] {sfTimerManager} Configuration 14.81 ms (13)
+Jan 28 16:18:21 Sift [info] {sfTimerManager} Action "i18n/index" 8.39 ms (1)
+Jan 28 16:18:21 Sift [info] {sfTimerManager} Translation 11.19 ms (9)
+Jan 28 16:18:21 Sift [info] {sfTimerManager} View "Success" for "i18n/index" 23.87 ms (1)
+Jan 28 16:18:21 Sift [info] {sfTimerManager} {sfView} render "indexSuccess.php" 27.34 ms (2)
+Jan 28 16:18:21 Sift [info] {sfTimerManager} {sfView} render "layout.php" 0.99 ms (2)
+Jan 28 16:18:39 Sift [info] {sfContext} initialization
+Jan 28 16:18:39 Sift [info] {sfController} initialization
+Jan 28 16:18:39 Sift [info] {sfRouting} match route [homepage] "/"
+Jan 28 16:18:39 Sift [info] {sfRequest} request parameters array (  'module' => 'i18n',  'action' => 'index',)
+Jan 28 16:18:39 Sift [info] {sfController} dispatch request
+Jan 28 16:18:39 Sift [info] {sfFilter} executing filter "sfRenderingFilter"
+Jan 28 16:18:39 Sift [info] {sfFilter} executing filter "sfI18nFilter"
+Jan 28 16:18:39 Sift [info] {sfFilter} executing filter "sfWebDebugFilter"
+Jan 28 16:18:39 Sift [info] {sfFilter} executing filter "sfCommonFilter"
+Jan 28 16:18:39 Sift [info] {sfFilter} executing filter "sfFlashFilter"
+Jan 28 16:18:39 Sift [info] {sfFilter} executing filter "sfExecutionFilter"
+Jan 28 16:18:39 Sift [info] {sfAction} call "i18nActions->executeIndex()"
+Jan 28 16:18:39 Sift [info] {sfView} initialize view for "i18n/index"
+Jan 28 16:18:39 Sift [info] {sfView} render "D:/data/git/sift.git/test/functional/fixtures/project\apps\i18n\modules\i18n\templates/indexSuccess.php"
+Jan 28 16:18:39 Sift [info] {sfView} decorate content with "D:/data/git/sift.git/test/functional/fixtures/project\apps\i18n\templates/layout.php"
+Jan 28 16:18:39 Sift [info] {sfView} render "D:/data/git/sift.git/test/functional/fixtures/project\apps\i18n\templates/layout.php"
+Jan 28 16:18:39 Sift [info] {sfFilter} render to client
+Jan 28 16:18:39 Sift [info] {sfResponse} send status "HTTP/1.0 200 OK"
+Jan 28 16:18:39 Sift [info] {sfResponse} send header "Content-Type": "text/html; charset=utf-8"
+Jan 28 16:18:39 Sift [info] {sfResponse} send content (37943 o)
+Jan 28 16:18:39 Sift [info] {sfTimerManager} Configuration 11.34 ms (13)
+Jan 28 16:18:39 Sift [info] {sfTimerManager} Action "i18n/index" 8.43 ms (1)
+Jan 28 16:18:39 Sift [info] {sfTimerManager} Translation 11.29 ms (9)
+Jan 28 16:18:39 Sift [info] {sfTimerManager} View "Success" for "i18n/index" 23.14 ms (1)
+Jan 28 16:18:39 Sift [info] {sfTimerManager} {sfView} render "indexSuccess.php" 26.57 ms (2)
+Jan 28 16:18:39 Sift [info] {sfTimerManager} {sfView} render "layout.php" 1.00 ms (2)
+Jan 28 16:31:23 Sift [info] {sfContext} initialization
+Jan 28 16:31:23 Sift [info] {sfController} initialization
+Jan 28 16:31:23 Sift [info] {sfRouting} match route [homepage] "/"
+Jan 28 16:31:23 Sift [info] {sfRequest} request parameters array (  'module' => 'i18n',  'action' => 'index',)
+Jan 28 16:31:23 Sift [info] {sfController} dispatch request
+Jan 28 16:31:23 Sift [info] {sfFilter} executing filter "sfRenderingFilter"
+Jan 28 16:31:23 Sift [info] {sfFilter} executing filter "sfI18nFilter"
+Jan 28 16:31:23 Sift [info] {sfFilter} executing filter "sfWebDebugFilter"
+Jan 28 16:31:23 Sift [info] {sfFilter} executing filter "sfCommonFilter"
+Jan 28 16:31:23 Sift [info] {sfFilter} executing filter "sfFlashFilter"
+Jan 28 16:31:23 Sift [info] {sfFilter} executing filter "sfExecutionFilter"
+Jan 28 16:31:23 Sift [info] {sfAction} call "i18nActions->executeIndex()"
+Jan 28 16:31:23 Sift [info] {sfView} initialize view for "i18n/index"
+Jan 28 16:31:23 Sift [info] {sfView} render "D:/data/git/sift.git/test/functional/fixtures/project\apps\i18n\modules\i18n\templates/indexSuccess.php"
+Jan 28 16:31:23 Sift [info] {sfView} decorate content with "D:/data/git/sift.git/test/functional/fixtures/project\apps\i18n\templates/layout.php"
+Jan 28 16:31:23 Sift [info] {sfView} render "D:/data/git/sift.git/test/functional/fixtures/project\apps\i18n\templates/layout.php"
+Jan 28 16:31:23 Sift [info] {sfFilter} render to client
+Jan 28 16:31:23 Sift [info] {sfResponse} send status "HTTP/1.0 200 OK"
+Jan 28 16:31:23 Sift [info] {sfResponse} send header "Content-Type": "text/html; charset=utf-8"
+Jan 28 16:31:23 Sift [info] {sfResponse} send content (37943 o)
+Jan 28 16:31:23 Sift [info] {sfTimerManager} Configuration 13.78 ms (13)
+Jan 28 16:31:23 Sift [info] {sfTimerManager} Action "i18n/index" 7.48 ms (1)
+Jan 28 16:31:23 Sift [info] {sfTimerManager} Translation 10.63 ms (9)
+Jan 28 16:31:23 Sift [info] {sfTimerManager} View "Success" for "i18n/index" 30.95 ms (1)
+Jan 28 16:31:23 Sift [info] {sfTimerManager} {sfView} render "indexSuccess.php" 40.91 ms (2)
+Jan 28 16:31:23 Sift [info] {sfTimerManager} {sfView} render "layout.php" 1.20 ms (2)
+Jan 28 16:31:25 Sift [info] {sfContext} initialization
+Jan 28 16:31:25 Sift [info] {sfController} initialization
+Jan 28 16:31:25 Sift [info] {sfRouting} match route [homepage] "/"
+Jan 28 16:31:25 Sift [info] {sfRequest} request parameters array (  'module' => 'i18n',  'action' => 'index',)
+Jan 28 16:31:25 Sift [info] {sfController} dispatch request
+Jan 28 16:31:25 Sift [info] {sfFilter} executing filter "sfRenderingFilter"
+Jan 28 16:31:25 Sift [info] {sfFilter} executing filter "sfI18nFilter"
+Jan 28 16:31:25 Sift [info] {sfFilter} executing filter "sfWebDebugFilter"
+Jan 28 16:31:25 Sift [info] {sfFilter} executing filter "sfCommonFilter"
+Jan 28 16:31:25 Sift [info] {sfFilter} executing filter "sfFlashFilter"
+Jan 28 16:31:25 Sift [info] {sfFilter} executing filter "sfExecutionFilter"
+Jan 28 16:31:25 Sift [info] {sfAction} call "i18nActions->executeIndex()"
+Jan 28 16:31:25 Sift [info] {sfView} initialize view for "i18n/index"
+Jan 28 16:31:25 Sift [info] {sfView} render "D:/data/git/sift.git/test/functional/fixtures/project\apps\i18n\modules\i18n\templates/indexSuccess.php"
+Jan 28 16:31:25 Sift [info] {sfView} decorate content with "D:/data/git/sift.git/test/functional/fixtures/project\apps\i18n\templates/layout.php"
+Jan 28 16:31:25 Sift [info] {sfView} render "D:/data/git/sift.git/test/functional/fixtures/project\apps\i18n\templates/layout.php"
+Jan 28 16:31:25 Sift [info] {sfFilter} render to client
+Jan 28 16:31:25 Sift [info] {sfResponse} send status "HTTP/1.0 200 OK"
+Jan 28 16:31:25 Sift [info] {sfResponse} send header "Content-Type": "text/html; charset=utf-8"
+Jan 28 16:31:25 Sift [info] {sfResponse} send content (37943 o)
+Jan 28 16:31:25 Sift [info] {sfTimerManager} Configuration 13.62 ms (13)
+Jan 28 16:31:25 Sift [info] {sfTimerManager} Action "i18n/index" 8.04 ms (1)
+Jan 28 16:31:25 Sift [info] {sfTimerManager} Translation 12.01 ms (9)
+Jan 28 16:31:25 Sift [info] {sfTimerManager} View "Success" for "i18n/index" 28.19 ms (1)
+Jan 28 16:31:25 Sift [info] {sfTimerManager} {sfView} render "indexSuccess.php" 31.37 ms (2)
+Jan 28 16:31:25 Sift [info] {sfTimerManager} {sfView} render "layout.php" 1.30 ms (2)
+Jan 28 16:31:39 Sift [info] {sfContext} initialization
+Jan 28 16:31:39 Sift [info] {sfController} initialization
+Jan 28 16:31:39 Sift [info] {sfRouting} match route [homepage] "/"
+Jan 28 16:31:39 Sift [info] {sfRequest} request parameters array (  'module' => 'i18n',  'action' => 'index',)
+Jan 28 16:31:39 Sift [info] {sfController} dispatch request
+Jan 28 16:31:39 Sift [info] {sfFilter} executing filter "sfRenderingFilter"
+Jan 28 16:31:39 Sift [info] {sfFilter} executing filter "sfI18nFilter"
+Jan 28 16:31:39 Sift [info] {sfFilter} executing filter "sfWebDebugFilter"
+Jan 28 16:31:39 Sift [info] {sfFilter} executing filter "sfCommonFilter"
+Jan 28 16:31:39 Sift [info] {sfFilter} executing filter "sfFlashFilter"
+Jan 28 16:31:39 Sift [info] {sfFilter} executing filter "sfExecutionFilter"
+Jan 28 16:31:39 Sift [info] {sfAction} call "i18nActions->executeIndex()"
+Jan 28 16:31:39 Sift [info] {sfView} initialize view for "i18n/index"
+Jan 28 16:31:39 Sift [info] {sfView} render "D:/data/git/sift.git/test/functional/fixtures/project\apps\i18n\modules\i18n\templates/indexSuccess.php"
+Jan 28 16:31:39 Sift [info] {sfView} decorate content with "D:/data/git/sift.git/test/functional/fixtures/project\apps\i18n\templates/layout.php"
+Jan 28 16:31:39 Sift [info] {sfView} render "D:/data/git/sift.git/test/functional/fixtures/project\apps\i18n\templates/layout.php"
+Jan 28 16:31:39 Sift [info] {sfFilter} render to client
+Jan 28 16:31:39 Sift [info] {sfResponse} send status "HTTP/1.0 200 OK"
+Jan 28 16:31:39 Sift [info] {sfResponse} send header "Content-Type": "text/html; charset=utf-8"
+Jan 28 16:31:39 Sift [info] {sfResponse} send content (37941 o)
+Jan 28 16:31:39 Sift [info] {sfTimerManager} Configuration 11.05 ms (13)
+Jan 28 16:31:39 Sift [info] {sfTimerManager} Action "i18n/index" 7.77 ms (1)
+Jan 28 16:31:39 Sift [info] {sfTimerManager} Translation 10.65 ms (9)
+Jan 28 16:31:39 Sift [info] {sfTimerManager} View "Success" for "i18n/index" 23.23 ms (1)
+Jan 28 16:31:39 Sift [info] {sfTimerManager} {sfView} render "indexSuccess.php" 26.01 ms (2)
+Jan 28 16:31:39 Sift [info] {sfTimerManager} {sfView} render "layout.php" 1.26 ms (2)
+Jan 28 16:32:09 Sift [info] {sfContext} initialization
+Jan 28 16:32:09 Sift [info] {sfController} initialization
+Jan 28 16:32:09 Sift [info] {sfRouting} match route [homepage] "/"
+Jan 28 16:32:09 Sift [info] {sfRequest} request parameters array (  'module' => 'i18n',  'action' => 'index',)
+Jan 28 16:32:09 Sift [info] {sfController} dispatch request
+Jan 28 16:32:09 Sift [info] {sfFilter} executing filter "sfRenderingFilter"
+Jan 28 16:32:09 Sift [info] {sfFilter} executing filter "sfI18nFilter"
+Jan 28 16:32:09 Sift [info] {sfFilter} executing filter "sfWebDebugFilter"
+Jan 28 16:32:09 Sift [info] {sfFilter} executing filter "sfCommonFilter"
+Jan 28 16:32:09 Sift [info] {sfFilter} executing filter "sfFlashFilter"
+Jan 28 16:32:09 Sift [info] {sfFilter} executing filter "sfExecutionFilter"
+Jan 28 16:32:09 Sift [info] {sfAction} call "i18nActions->executeIndex()"
+Jan 28 16:32:09 Sift [info] {sfView} initialize view for "i18n/index"
+Jan 28 16:32:09 Sift [info] {sfView} render "D:/data/git/sift.git/test/functional/fixtures/project\apps\i18n\modules\i18n\templates/indexSuccess.php"
+Jan 28 16:32:09 Sift [info] {sfView} decorate content with "D:/data/git/sift.git/test/functional/fixtures/project\apps\i18n\templates/layout.php"
+Jan 28 16:32:09 Sift [info] {sfView} render "D:/data/git/sift.git/test/functional/fixtures/project\apps\i18n\templates/layout.php"
+Jan 28 16:32:09 Sift [info] {sfFilter} render to client
+Jan 28 16:32:09 Sift [info] {sfResponse} send status "HTTP/1.0 200 OK"
+Jan 28 16:32:09 Sift [info] {sfResponse} send header "Content-Type": "text/html; charset=utf-8"
+Jan 28 16:32:09 Sift [info] {sfResponse} send content (37943 o)
+Jan 28 16:32:09 Sift [info] {sfTimerManager} Configuration 10.92 ms (13)
+Jan 28 16:32:09 Sift [info] {sfTimerManager} Action "i18n/index" 7.54 ms (1)
+Jan 28 16:32:09 Sift [info] {sfTimerManager} Translation 10.24 ms (9)
+Jan 28 16:32:09 Sift [info] {sfTimerManager} View "Success" for "i18n/index" 26.85 ms (1)
+Jan 28 16:32:09 Sift [info] {sfTimerManager} {sfView} render "indexSuccess.php" 33.02 ms (2)
+Jan 28 16:32:09 Sift [info] {sfTimerManager} {sfView} render "layout.php" 0.99 ms (2)
+Jan 28 16:50:24 Sift [info] {sfContext} initialization
+Jan 28 16:50:24 Sift [info] {sfController} initialization
+Jan 28 16:50:24 Sift [info] {sfRouting} match route [homepage] "/"
+Jan 28 16:50:24 Sift [info] {sfRequest} request parameters array (  'module' => 'i18n',  'action' => 'index',)
+Jan 28 16:50:24 Sift [info] {sfController} dispatch request
+Jan 28 16:50:24 Sift [info] {sfFilter} executing filter "sfRenderingFilter"
+Jan 28 16:50:24 Sift [info] {sfFilter} executing filter "sfI18nFilter"
+Jan 28 16:50:24 Sift [info] {sfFilter} executing filter "sfWebDebugFilter"
+Jan 28 16:50:24 Sift [info] {sfFilter} executing filter "sfCommonFilter"
+Jan 28 16:50:24 Sift [info] {sfFilter} executing filter "sfFlashFilter"
+Jan 28 16:50:24 Sift [info] {sfFilter} executing filter "sfExecutionFilter"
+Jan 28 16:50:24 Sift [info] {sfAction} call "i18nActions->executeIndex()"
+Jan 28 16:50:24 Sift [info] {sfView} initialize view for "i18n/index"
+Jan 28 16:50:24 Sift [info] {sfView} render "D:/data/git/sift.git/test/functional/fixtures/project\apps\i18n\modules\i18n\templates/indexSuccess.php"
+Jan 28 16:50:24 Sift [info] {sfView} decorate content with "D:/data/git/sift.git/test/functional/fixtures/project\apps\i18n\templates/layout.php"
+Jan 28 16:50:24 Sift [info] {sfView} render "D:/data/git/sift.git/test/functional/fixtures/project\apps\i18n\templates/layout.php"
+Jan 28 16:50:24 Sift [info] {sfFilter} render to client
+Jan 28 16:50:24 Sift [info] {sfResponse} send status "HTTP/1.0 200 OK"
+Jan 28 16:50:24 Sift [info] {sfResponse} send header "Content-Type": "text/html; charset=utf-8"
+Jan 28 16:50:24 Sift [info] {sfResponse} send content (37616 o)
+Jan 28 16:50:24 Sift [info] {sfTimerManager} Configuration 141.73 ms (13)
+Jan 28 16:50:24 Sift [info] {sfTimerManager} Action "i18n/index" 8.83 ms (1)
+Jan 28 16:50:24 Sift [info] {sfTimerManager} Translation 10.21 ms (9)
+Jan 28 16:50:24 Sift [info] {sfTimerManager} View "Success" for "i18n/index" 31.83 ms (1)
+Jan 28 16:50:24 Sift [info] {sfTimerManager} {sfView} render "indexSuccess.php" 27.75 ms (2)
+Jan 28 16:50:24 Sift [info] {sfTimerManager} {sfView} render "layout.php" 1.21 ms (2)
+Jan 28 16:50:33 Sift [info] {sfContext} initialization
+Jan 28 16:50:33 Sift [info] {sfController} initialization
+Jan 28 16:50:33 Sift [info] {sfRouting} match route [default] "/:sf_culture/:module/:action/*"
+Jan 28 16:50:33 Sift [info] {sfRequest} request parameters array (  'sf_culture' => 'fr',  'module' => 'i18n',  'action' => 'index',)
+Jan 28 16:50:33 Sift [info] {sfController} dispatch request
+Jan 28 16:50:33 Sift [info] {sfFilter} executing filter "sfRenderingFilter"
+Jan 28 16:50:33 Sift [info] {sfFilter} executing filter "sfI18nFilter"
+Jan 28 16:50:33 Sift [info] {sfFilter} executing filter "sfWebDebugFilter"
+Jan 28 16:50:33 Sift [info] {sfFilter} executing filter "sfCommonFilter"
+Jan 28 16:50:33 Sift [info] {sfFilter} executing filter "sfFlashFilter"
+Jan 28 16:50:33 Sift [info] {sfFilter} executing filter "sfExecutionFilter"
+Jan 28 16:50:33 Sift [info] {sfAction} call "i18nActions->executeIndex()"
+Jan 28 16:50:33 Sift [info] {sfView} initialize view for "i18n/index"
+Jan 28 16:50:33 Sift [info] {sfView} render "D:/data/git/sift.git/test/functional/fixtures/project\apps\i18n\modules\i18n\templates/indexSuccess.php"
+Jan 28 16:50:33 Sift [info] {sfView} decorate content with "D:/data/git/sift.git/test/functional/fixtures/project\apps\i18n\templates/layout.php"
+Jan 28 16:50:33 Sift [info] {sfView} render "D:/data/git/sift.git/test/functional/fixtures/project\apps\i18n\templates/layout.php"
+Jan 28 16:50:33 Sift [info] {sfFilter} render to client
+Jan 28 16:50:33 Sift [info] {sfResponse} send status "HTTP/1.0 200 OK"
+Jan 28 16:50:33 Sift [info] {sfResponse} send header "Content-Type": "text/html; charset=utf-8"
+Jan 28 16:50:33 Sift [info] {sfResponse} send content (38050 o)
+Jan 28 16:50:33 Sift [info] {sfTimerManager} Configuration 15.14 ms (13)
+Jan 28 16:50:33 Sift [info] {sfTimerManager} Action "i18n/index" 43.06 ms (1)
+Jan 28 16:50:33 Sift [info] {sfTimerManager} Translation 54.46 ms (9)
+Jan 28 16:50:33 Sift [info] {sfTimerManager} View "Success" for "i18n/index" 35.04 ms (1)
+Jan 28 16:50:33 Sift [info] {sfTimerManager} {sfView} render "indexSuccess.php" 27.79 ms (2)
+Jan 28 16:50:33 Sift [info] {sfTimerManager} {sfView} render "layout.php" 1.15 ms (2)
+Jan 28 16:57:18 Sift [info] {sfContext} initialization
+Jan 28 16:57:18 Sift [info] {sfController} initialization
+Jan 28 16:57:18 Sift [info] {sfRouting} match route [default] "/:sf_culture/:module/:action/*"
+Jan 28 16:57:18 Sift [info] {sfRequest} request parameters array (  'sf_culture' => 'fr',  'module' => 'i18n',  'action' => 'index',)
+Jan 28 16:57:18 Sift [info] {sfController} dispatch request
+Jan 28 16:57:18 Sift [info] {sfFilter} executing filter "sfRenderingFilter"
+Jan 28 16:57:18 Sift [info] {sfFilter} executing filter "sfI18nFilter"
+Jan 28 16:57:18 Sift [info] {sfFilter} executing filter "sfWebDebugFilter"
+Jan 28 16:57:18 Sift [info] {sfFilter} executing filter "sfCommonFilter"
+Jan 28 16:57:18 Sift [info] {sfFilter} executing filter "sfFlashFilter"
+Jan 28 16:57:18 Sift [info] {sfFilter} executing filter "sfExecutionFilter"
+Jan 28 16:57:18 Sift [info] {sfAction} call "i18nActions->executeIndex()"
+Jan 28 16:57:18 Sift [info] {sfView} initialize view for "i18n/index"
+Jan 28 16:57:18 Sift [info] {sfView} render "D:/data/git/sift.git/test/functional/fixtures/project\apps\i18n\modules\i18n\templates/indexSuccess.php"
+Jan 28 16:57:18 Sift [info] {sfView} decorate content with "D:/data/git/sift.git/test/functional/fixtures/project\apps\i18n\templates/layout.php"
+Jan 28 16:57:18 Sift [info] {sfView} render "D:/data/git/sift.git/test/functional/fixtures/project\apps\i18n\templates/layout.php"
+Jan 28 16:57:18 Sift [info] {sfFilter} render to client
+Jan 28 16:57:18 Sift [info] {sfResponse} send status "HTTP/1.0 200 OK"
+Jan 28 16:57:18 Sift [info] {sfResponse} send header "Content-Type": "text/html; charset=utf-8"
+Jan 28 16:57:18 Sift [info] {sfResponse} send content (38081 o)
+Jan 28 16:57:18 Sift [info] {sfTimerManager} Configuration 109.63 ms (13)
+Jan 28 16:57:18 Sift [info] {sfTimerManager} Action "i18n/index" 22.96 ms (1)
+Jan 28 16:57:18 Sift [info] {sfTimerManager} Translation 232.87 ms (9)
+Jan 28 16:57:18 Sift [info] {sfTimerManager} View "Success" for "i18n/index" 242.04 ms (1)
+Jan 28 16:57:18 Sift [info] {sfTimerManager} {sfView} render "indexSuccess.php" 29.53 ms (2)
+Jan 28 16:57:18 Sift [info] {sfTimerManager} {sfView} render "layout.php" 1.00 ms (2)
+Jan 28 16:57:20 Sift [info] {sfContext} initialization
+Jan 28 16:57:20 Sift [info] {sfController} initialization
+Jan 28 16:57:20 Sift [info] {sfRouting} match route [default] "/:sf_culture/:module/:action/*"
+Jan 28 16:57:20 Sift [info] {sfRequest} request parameters array (  'sf_culture' => 'fr',  'module' => 'i18n',  'action' => 'index',)
+Jan 28 16:57:20 Sift [info] {sfController} dispatch request
+Jan 28 16:57:20 Sift [info] {sfFilter} executing filter "sfRenderingFilter"
+Jan 28 16:57:20 Sift [info] {sfFilter} executing filter "sfI18nFilter"
+Jan 28 16:57:20 Sift [info] {sfFilter} executing filter "sfWebDebugFilter"
+Jan 28 16:57:20 Sift [info] {sfFilter} executing filter "sfCommonFilter"
+Jan 28 16:57:20 Sift [info] {sfFilter} executing filter "sfFlashFilter"
+Jan 28 16:57:20 Sift [info] {sfFilter} executing filter "sfExecutionFilter"
+Jan 28 16:57:20 Sift [info] {sfAction} call "i18nActions->executeIndex()"
+Jan 28 16:57:20 Sift [info] {sfView} initialize view for "i18n/index"
+Jan 28 16:57:20 Sift [info] {sfView} render "D:/data/git/sift.git/test/functional/fixtures/project\apps\i18n\modules\i18n\templates/indexSuccess.php"
+Jan 28 16:57:20 Sift [info] {sfView} decorate content with "D:/data/git/sift.git/test/functional/fixtures/project\apps\i18n\templates/layout.php"
+Jan 28 16:57:20 Sift [info] {sfView} render "D:/data/git/sift.git/test/functional/fixtures/project\apps\i18n\templates/layout.php"
+Jan 28 16:57:20 Sift [info] {sfFilter} render to client
+Jan 28 16:57:20 Sift [info] {sfResponse} send status "HTTP/1.0 200 OK"
+Jan 28 16:57:20 Sift [info] {sfResponse} send header "Content-Type": "text/html; charset=utf-8"
+Jan 28 16:57:20 Sift [info] {sfResponse} send content (38077 o)
+Jan 28 16:57:20 Sift [info] {sfTimerManager} Configuration 15.23 ms (13)
+Jan 28 16:57:20 Sift [info] {sfTimerManager} Action "i18n/index" 9.75 ms (1)
+Jan 28 16:57:20 Sift [info] {sfTimerManager} Translation 12.58 ms (9)
+Jan 28 16:57:20 Sift [info] {sfTimerManager} View "Success" for "i18n/index" 21.83 ms (1)
+Jan 28 16:57:20 Sift [info] {sfTimerManager} {sfView} render "indexSuccess.php" 24.30 ms (2)
+Jan 28 16:57:20 Sift [info] {sfTimerManager} {sfView} render "layout.php" 0.97 ms (2)
+Jan 28 17:08:13 Sift [info] {sfContext} initialization
+Jan 28 17:08:13 Sift [info] {sfController} initialization
+Jan 28 17:08:13 Sift [info] {sfRouting} match route [default] "/:sf_culture/:module/:action/*"
+Jan 28 17:08:13 Sift [info] {sfRequest} request parameters array (  'sf_culture' => 'fr',  'module' => 'i18n',  'action' => 'index',)
+Jan 28 17:08:13 Sift [info] {sfController} dispatch request
+Jan 28 17:08:14 Sift [info] {sfFilter} executing filter "sfRenderingFilter"
+Jan 28 17:08:14 Sift [info] {sfFilter} executing filter "sfI18nFilter"
+Jan 28 17:08:14 Sift [info] {sfFilter} executing filter "sfWebDebugFilter"
+Jan 28 17:08:14 Sift [info] {sfFilter} executing filter "sfCommonFilter"
+Jan 28 17:08:14 Sift [info] {sfFilter} executing filter "sfFlashFilter"
+Jan 28 17:08:14 Sift [info] {sfFilter} executing filter "sfExecutionFilter"
+Jan 28 17:08:14 Sift [info] {sfAction} call "i18nActions->executeIndex()"
+Jan 28 17:08:14 Sift [info] {sfView} initialize view for "i18n/index"
+Jan 28 17:08:14 Sift [info] {sfView} render "D:/data/git/sift.git/test/functional/fixtures/project\apps\i18n\modules\i18n\templates/indexSuccess.php"
+Jan 28 17:08:14 Sift [info] {sfView} decorate content with "D:/data/git/sift.git/test/functional/fixtures/project\apps\i18n\templates/layout.php"
+Jan 28 17:08:14 Sift [info] {sfView} render "D:/data/git/sift.git/test/functional/fixtures/project\apps\i18n\templates/layout.php"
+Jan 28 17:08:14 Sift [info] {sfFilter} render to client
+Jan 28 17:08:14 Sift [info] {sfResponse} send status "HTTP/1.0 200 OK"
+Jan 28 17:08:14 Sift [info] {sfResponse} send header "Content-Type": "text/html; charset=utf-8"
+Jan 28 17:08:14 Sift [info] {sfResponse} send content (38081 o)
+Jan 28 17:08:14 Sift [info] {sfTimerManager} Configuration 150.14 ms (13)
+Jan 28 17:08:14 Sift [info] {sfTimerManager} Action "i18n/index" 48.83 ms (1)
+Jan 28 17:08:14 Sift [info] {sfTimerManager} Translation 66.86 ms (9)
+Jan 28 17:08:14 Sift [info] {sfTimerManager} View "Success" for "i18n/index" 60.65 ms (1)
+Jan 28 17:08:14 Sift [info] {sfTimerManager} {sfView} render "indexSuccess.php" 39.91 ms (2)
+Jan 28 17:08:14 Sift [info] {sfTimerManager} {sfView} render "layout.php" 1.13 ms (2)
+Jan 28 17:09:16 Sift [info] {sfContext} initialization
+Jan 28 17:09:16 Sift [info] {sfController} initialization
+Jan 28 17:09:16 Sift [info] {sfRouting} match route [default] "/:sf_culture/:module/:action/*"
+Jan 28 17:09:16 Sift [info] {sfRequest} request parameters array (  'sf_culture' => 'fr',  'module' => 'i18n',  'action' => 'index',)
+Jan 28 17:09:16 Sift [info] {sfController} dispatch request
+Jan 28 17:09:16 Sift [info] {sfFilter} executing filter "sfRenderingFilter"
+Jan 28 17:09:16 Sift [info] {sfFilter} executing filter "sfI18nFilter"
+Jan 28 17:09:16 Sift [info] {sfFilter} executing filter "sfWebDebugFilter"
+Jan 28 17:09:16 Sift [info] {sfFilter} executing filter "sfCommonFilter"
+Jan 28 17:09:16 Sift [info] {sfFilter} executing filter "sfFlashFilter"
+Jan 28 17:09:16 Sift [info] {sfFilter} executing filter "sfExecutionFilter"
+Jan 28 17:09:16 Sift [info] {sfAction} call "i18nActions->executeIndex()"
+Jan 28 17:09:16 Sift [info] {sfView} initialize view for "i18n/index"
+Jan 28 17:09:16 Sift [info] {sfView} render "D:/data/git/sift.git/test/functional/fixtures/project\apps\i18n\modules\i18n\templates/indexSuccess.php"
+Jan 28 17:09:16 Sift [info] {sfView} decorate content with "D:/data/git/sift.git/test/functional/fixtures/project\apps\i18n\templates/layout.php"
+Jan 28 17:09:16 Sift [info] {sfView} render "D:/data/git/sift.git/test/functional/fixtures/project\apps\i18n\templates/layout.php"
+Jan 28 17:09:16 Sift [info] {sfFilter} render to client
+Jan 28 17:09:16 Sift [info] {sfResponse} send status "HTTP/1.0 200 OK"
+Jan 28 17:09:16 Sift [info] {sfResponse} send header "Content-Type": "text/html; charset=utf-8"
+Jan 28 17:09:16 Sift [info] {sfResponse} send content (38076 o)
+Jan 28 17:09:16 Sift [info] {sfTimerManager} Configuration 15.34 ms (13)
+Jan 28 17:09:16 Sift [info] {sfTimerManager} Action "i18n/index" 8.96 ms (1)
+Jan 28 17:09:16 Sift [info] {sfTimerManager} Translation 12.35 ms (9)
+Jan 28 17:09:16 Sift [info] {sfTimerManager} View "Success" for "i18n/index" 23.91 ms (1)
+Jan 28 17:09:16 Sift [info] {sfTimerManager} {sfView} render "indexSuccess.php" 24.46 ms (2)
+Jan 28 17:09:16 Sift [info] {sfTimerManager} {sfView} render "layout.php" 0.98 ms (2)
+Jan 28 17:09:17 Sift [info] {sfContext} initialization
+Jan 28 17:09:17 Sift [info] {sfController} initialization
+Jan 28 17:09:17 Sift [info] {sfRouting} match route [default] "/:sf_culture/:module/:action/*"
+Jan 28 17:09:17 Sift [info] {sfRequest} request parameters array (  'sf_culture' => 'fr',  'module' => 'i18n',  'action' => 'index',)
+Jan 28 17:09:17 Sift [info] {sfController} dispatch request
+Jan 28 17:09:17 Sift [info] {sfFilter} executing filter "sfRenderingFilter"
+Jan 28 17:09:17 Sift [info] {sfFilter} executing filter "sfI18nFilter"
+Jan 28 17:09:17 Sift [info] {sfFilter} executing filter "sfWebDebugFilter"
+Jan 28 17:09:17 Sift [info] {sfFilter} executing filter "sfCommonFilter"
+Jan 28 17:09:17 Sift [info] {sfFilter} executing filter "sfFlashFilter"
+Jan 28 17:09:17 Sift [info] {sfFilter} executing filter "sfExecutionFilter"
+Jan 28 17:09:17 Sift [info] {sfAction} call "i18nActions->executeIndex()"
+Jan 28 17:09:17 Sift [info] {sfView} initialize view for "i18n/index"
+Jan 28 17:09:17 Sift [info] {sfView} render "D:/data/git/sift.git/test/functional/fixtures/project\apps\i18n\modules\i18n\templates/indexSuccess.php"
+Jan 28 17:09:17 Sift [info] {sfView} decorate content with "D:/data/git/sift.git/test/functional/fixtures/project\apps\i18n\templates/layout.php"
+Jan 28 17:09:17 Sift [info] {sfView} render "D:/data/git/sift.git/test/functional/fixtures/project\apps\i18n\templates/layout.php"
+Jan 28 17:09:17 Sift [info] {sfFilter} render to client
+Jan 28 17:09:17 Sift [info] {sfResponse} send status "HTTP/1.0 200 OK"
+Jan 28 17:09:17 Sift [info] {sfResponse} send header "Content-Type": "text/html; charset=utf-8"
+Jan 28 17:09:17 Sift [info] {sfResponse} send content (38077 o)
+Jan 28 17:09:17 Sift [info] {sfTimerManager} Configuration 14.92 ms (13)
+Jan 28 17:09:17 Sift [info] {sfTimerManager} Action "i18n/index" 9.34 ms (1)
+Jan 28 17:09:17 Sift [info] {sfTimerManager} Translation 12.18 ms (9)
+Jan 28 17:09:17 Sift [info] {sfTimerManager} View "Success" for "i18n/index" 21.91 ms (1)
+Jan 28 17:09:17 Sift [info] {sfTimerManager} {sfView} render "indexSuccess.php" 25.04 ms (2)
+Jan 28 17:09:17 Sift [info] {sfTimerManager} {sfView} render "layout.php" 1.01 ms (2)
+Jan 28 17:09:18 Sift [info] {sfContext} initialization
+Jan 28 17:09:18 Sift [info] {sfController} initialization
+Jan 28 17:09:18 Sift [info] {sfRouting} match route [default] "/:sf_culture/:module/:action/*"
+Jan 28 17:09:18 Sift [info] {sfRequest} request parameters array (  'sf_culture' => 'fr',  'module' => 'i18n',  'action' => 'index',)
+Jan 28 17:09:18 Sift [info] {sfController} dispatch request
+Jan 28 17:09:18 Sift [info] {sfFilter} executing filter "sfRenderingFilter"
+Jan 28 17:09:18 Sift [info] {sfFilter} executing filter "sfI18nFilter"
+Jan 28 17:09:18 Sift [info] {sfFilter} executing filter "sfWebDebugFilter"
+Jan 28 17:09:18 Sift [info] {sfFilter} executing filter "sfCommonFilter"
+Jan 28 17:09:18 Sift [info] {sfFilter} executing filter "sfFlashFilter"
+Jan 28 17:09:18 Sift [info] {sfFilter} executing filter "sfExecutionFilter"
+Jan 28 17:09:18 Sift [info] {sfAction} call "i18nActions->executeIndex()"
+Jan 28 17:09:18 Sift [info] {sfView} initialize view for "i18n/index"
+Jan 28 17:09:18 Sift [info] {sfView} render "D:/data/git/sift.git/test/functional/fixtures/project\apps\i18n\modules\i18n\templates/indexSuccess.php"
+Jan 28 17:09:18 Sift [info] {sfView} decorate content with "D:/data/git/sift.git/test/functional/fixtures/project\apps\i18n\templates/layout.php"
+Jan 28 17:09:18 Sift [info] {sfView} render "D:/data/git/sift.git/test/functional/fixtures/project\apps\i18n\templates/layout.php"
+Jan 28 17:09:18 Sift [info] {sfFilter} render to client
+Jan 28 17:09:18 Sift [info] {sfResponse} send status "HTTP/1.0 200 OK"
+Jan 28 17:09:18 Sift [info] {sfResponse} send header "Content-Type": "text/html; charset=utf-8"
+Jan 28 17:09:18 Sift [info] {sfResponse} send content (38077 o)
+Jan 28 17:09:18 Sift [info] {sfTimerManager} Configuration 15.52 ms (13)
+Jan 28 17:09:18 Sift [info] {sfTimerManager} Action "i18n/index" 8.56 ms (1)
+Jan 28 17:09:18 Sift [info] {sfTimerManager} Translation 11.42 ms (9)
+Jan 28 17:09:18 Sift [info] {sfTimerManager} View "Success" for "i18n/index" 22.31 ms (1)
+Jan 28 17:09:18 Sift [info] {sfTimerManager} {sfView} render "indexSuccess.php" 25.42 ms (2)
+Jan 28 17:09:18 Sift [info] {sfTimerManager} {sfView} render "layout.php" 0.98 ms (2)
+Jan 28 17:09:19 Sift [info] {sfContext} initialization
+Jan 28 17:09:19 Sift [info] {sfController} initialization
+Jan 28 17:09:19 Sift [info] {sfRouting} match route [default] "/:sf_culture/:module/:action/*"
+Jan 28 17:09:19 Sift [info] {sfRequest} request parameters array (  'sf_culture' => 'fr',  'module' => 'i18n',  'action' => 'index',)
+Jan 28 17:09:19 Sift [info] {sfController} dispatch request
+Jan 28 17:09:19 Sift [info] {sfFilter} executing filter "sfRenderingFilter"
+Jan 28 17:09:19 Sift [info] {sfFilter} executing filter "sfI18nFilter"
+Jan 28 17:09:19 Sift [info] {sfFilter} executing filter "sfWebDebugFilter"
+Jan 28 17:09:19 Sift [info] {sfFilter} executing filter "sfCommonFilter"
+Jan 28 17:09:19 Sift [info] {sfFilter} executing filter "sfFlashFilter"
+Jan 28 17:09:19 Sift [info] {sfFilter} executing filter "sfExecutionFilter"
+Jan 28 17:09:19 Sift [info] {sfAction} call "i18nActions->executeIndex()"
+Jan 28 17:09:19 Sift [info] {sfView} initialize view for "i18n/index"
+Jan 28 17:09:19 Sift [info] {sfView} render "D:/data/git/sift.git/test/functional/fixtures/project\apps\i18n\modules\i18n\templates/indexSuccess.php"
+Jan 28 17:09:19 Sift [info] {sfView} decorate content with "D:/data/git/sift.git/test/functional/fixtures/project\apps\i18n\templates/layout.php"
+Jan 28 17:09:19 Sift [info] {sfView} render "D:/data/git/sift.git/test/functional/fixtures/project\apps\i18n\templates/layout.php"
+Jan 28 17:09:19 Sift [info] {sfFilter} render to client
+Jan 28 17:09:19 Sift [info] {sfResponse} send status "HTTP/1.0 200 OK"
+Jan 28 17:09:19 Sift [info] {sfResponse} send header "Content-Type": "text/html; charset=utf-8"
+Jan 28 17:09:19 Sift [info] {sfResponse} send content (38077 o)
+Jan 28 17:09:19 Sift [info] {sfTimerManager} Configuration 14.77 ms (13)
+Jan 28 17:09:19 Sift [info] {sfTimerManager} Action "i18n/index" 8.46 ms (1)
+Jan 28 17:09:19 Sift [info] {sfTimerManager} Translation 11.40 ms (9)
+Jan 28 17:09:19 Sift [info] {sfTimerManager} View "Success" for "i18n/index" 22.38 ms (1)
+Jan 28 17:09:19 Sift [info] {sfTimerManager} {sfView} render "indexSuccess.php" 25.04 ms (2)
+Jan 28 17:09:19 Sift [info] {sfTimerManager} {sfView} render "layout.php" 0.98 ms (2)
+Jan 28 17:09:20 Sift [info] {sfContext} initialization
+Jan 28 17:09:21 Sift [info] {sfController} initialization
+Jan 28 17:09:21 Sift [info] {sfRouting} match route [default] "/:sf_culture/:module/:action/*"
+Jan 28 17:09:21 Sift [info] {sfRequest} request parameters array (  'sf_culture' => 'fr',  'module' => 'i18n',  'action' => 'index',)
+Jan 28 17:09:21 Sift [info] {sfController} dispatch request
+Jan 28 17:09:21 Sift [info] {sfFilter} executing filter "sfRenderingFilter"
+Jan 28 17:09:21 Sift [info] {sfFilter} executing filter "sfI18nFilter"
+Jan 28 17:09:21 Sift [info] {sfFilter} executing filter "sfWebDebugFilter"
+Jan 28 17:09:21 Sift [info] {sfFilter} executing filter "sfCommonFilter"
+Jan 28 17:09:21 Sift [info] {sfFilter} executing filter "sfFlashFilter"
+Jan 28 17:09:21 Sift [info] {sfFilter} executing filter "sfExecutionFilter"
+Jan 28 17:09:21 Sift [info] {sfAction} call "i18nActions->executeIndex()"
+Jan 28 17:09:21 Sift [info] {sfView} initialize view for "i18n/index"
+Jan 28 17:09:21 Sift [info] {sfView} render "D:/data/git/sift.git/test/functional/fixtures/project\apps\i18n\modules\i18n\templates/indexSuccess.php"
+Jan 28 17:09:21 Sift [info] {sfView} decorate content with "D:/data/git/sift.git/test/functional/fixtures/project\apps\i18n\templates/layout.php"
+Jan 28 17:09:21 Sift [info] {sfView} render "D:/data/git/sift.git/test/functional/fixtures/project\apps\i18n\templates/layout.php"
+Jan 28 17:09:21 Sift [info] {sfFilter} render to client
+Jan 28 17:09:21 Sift [info] {sfResponse} send status "HTTP/1.0 200 OK"
+Jan 28 17:09:21 Sift [info] {sfResponse} send header "Content-Type": "text/html; charset=utf-8"
+Jan 28 17:09:21 Sift [info] {sfResponse} send content (38077 o)
+Jan 28 17:09:21 Sift [info] {sfTimerManager} Configuration 15.43 ms (13)
+Jan 28 17:09:21 Sift [info] {sfTimerManager} Action "i18n/index" 8.72 ms (1)
+Jan 28 17:09:21 Sift [info] {sfTimerManager} Translation 11.65 ms (9)
+Jan 28 17:09:21 Sift [info] {sfTimerManager} View "Success" for "i18n/index" 23.49 ms (1)
+Jan 28 17:09:21 Sift [info] {sfTimerManager} {sfView} render "indexSuccess.php" 27.12 ms (2)
+Jan 28 17:09:21 Sift [info] {sfTimerManager} {sfView} render "layout.php" 1.09 ms (2)
+Jan 28 17:22:30 Sift [info] {sfContext} initialization
+Jan 28 17:22:30 Sift [info] {sfController} initialization
+Jan 28 17:22:30 Sift [info] {sfRouting} match route [default] "/:sf_culture/:module/:action/*"
+Jan 28 17:22:30 Sift [info] {sfRequest} request parameters array (  'sf_culture' => 'fr',  'module' => 'i18n',  'action' => 'index',)
+Jan 28 17:22:30 Sift [info] {sfController} dispatch request
+Jan 28 17:22:30 Sift [info] {sfFilter} executing filter "sfRenderingFilter"
+Jan 28 17:22:30 Sift [info] {sfFilter} executing filter "sfI18nFilter"
+Jan 28 17:22:30 Sift [info] {sfFilter} executing filter "sfWebDebugFilter"
+Jan 28 17:22:30 Sift [info] {sfFilter} executing filter "sfCommonFilter"
+Jan 28 17:22:30 Sift [info] {sfFilter} executing filter "sfFlashFilter"
+Jan 28 17:22:30 Sift [info] {sfFilter} executing filter "sfExecutionFilter"
+Jan 28 17:22:30 Sift [info] {sfAction} call "i18nActions->executeIndex()"
+Jan 28 17:22:30 Sift [info] {sfView} initialize view for "i18n/index"
+Jan 28 17:22:30 Sift [info] {sfView} render "D:/data/git/sift.git/test/functional/fixtures/project\apps\i18n\modules\i18n\templates/indexSuccess.php"
+Jan 28 17:22:30 Sift [info] {sfView} decorate content with "D:/data/git/sift.git/test/functional/fixtures/project\apps\i18n\templates/layout.php"
+Jan 28 17:22:30 Sift [info] {sfView} render "D:/data/git/sift.git/test/functional/fixtures/project\apps\i18n\templates/layout.php"
+Jan 28 17:22:30 Sift [info] {sfFilter} render to client
+Jan 28 17:22:30 Sift [info] {sfResponse} send status "HTTP/1.0 200 OK"
+Jan 28 17:22:30 Sift [info] {sfResponse} send header "Content-Type": "text/html; charset=utf-8"
+Jan 28 17:22:30 Sift [info] {sfResponse} send content (38077 o)
+Jan 28 17:22:30 Sift [info] {sfTimerManager} Configuration 15.79 ms (13)
+Jan 28 17:22:30 Sift [info] {sfTimerManager} Action "i18n/index" 9.67 ms (1)
+Jan 28 17:22:30 Sift [info] {sfTimerManager} Translation 12.49 ms (9)
+Jan 28 17:22:30 Sift [info] {sfTimerManager} View "Success" for "i18n/index" 24.06 ms (1)
+Jan 28 17:22:30 Sift [info] {sfTimerManager} {sfView} render "indexSuccess.php" 26.68 ms (2)
+Jan 28 17:22:30 Sift [info] {sfTimerManager} {sfView} render "layout.php" 1.25 ms (2)
+Jan 28 17:22:31 Sift [info] {sfContext} initialization
+Jan 28 17:22:31 Sift [info] {sfController} initialization
+Jan 28 17:22:31 Sift [info] {sfRouting} match route [default] "/:sf_culture/:module/:action/*"
+Jan 28 17:22:31 Sift [info] {sfRequest} request parameters array (  'sf_culture' => 'fr',  'module' => 'i18n',  'action' => 'index',)
+Jan 28 17:22:31 Sift [info] {sfController} dispatch request
+Jan 28 17:22:31 Sift [info] {sfFilter} executing filter "sfRenderingFilter"
+Jan 28 17:22:31 Sift [info] {sfFilter} executing filter "sfI18nFilter"
+Jan 28 17:22:31 Sift [info] {sfFilter} executing filter "sfWebDebugFilter"
+Jan 28 17:22:31 Sift [info] {sfFilter} executing filter "sfCommonFilter"
+Jan 28 17:22:31 Sift [info] {sfFilter} executing filter "sfFlashFilter"
+Jan 28 17:22:31 Sift [info] {sfFilter} executing filter "sfExecutionFilter"
+Jan 28 17:22:31 Sift [info] {sfAction} call "i18nActions->executeIndex()"
+Jan 28 17:22:31 Sift [info] {sfView} initialize view for "i18n/index"
+Jan 28 17:22:31 Sift [info] {sfView} render "D:/data/git/sift.git/test/functional/fixtures/project\apps\i18n\modules\i18n\templates/indexSuccess.php"
+Jan 28 17:22:31 Sift [info] {sfView} decorate content with "D:/data/git/sift.git/test/functional/fixtures/project\apps\i18n\templates/layout.php"
+Jan 28 17:22:31 Sift [info] {sfView} render "D:/data/git/sift.git/test/functional/fixtures/project\apps\i18n\templates/layout.php"
+Jan 28 17:22:31 Sift [info] {sfFilter} render to client
+Jan 28 17:22:31 Sift [info] {sfResponse} send status "HTTP/1.0 200 OK"
+Jan 28 17:22:31 Sift [info] {sfResponse} send header "Content-Type": "text/html; charset=utf-8"
+Jan 28 17:22:31 Sift [info] {sfResponse} send content (38077 o)
+Jan 28 17:22:31 Sift [info] {sfTimerManager} Configuration 15.45 ms (13)
+Jan 28 17:22:31 Sift [info] {sfTimerManager} Action "i18n/index" 9.36 ms (1)
+Jan 28 17:22:31 Sift [info] {sfTimerManager} Translation 11.50 ms (9)
+Jan 28 17:22:31 Sift [info] {sfTimerManager} View "Success" for "i18n/index" 22.93 ms (1)
+Jan 28 17:22:31 Sift [info] {sfTimerManager} {sfView} render "indexSuccess.php" 26.29 ms (2)
+Jan 28 17:22:31 Sift [info] {sfTimerManager} {sfView} render "layout.php" 0.98 ms (2)
+Jan 28 17:29:44 Sift [info] {sfContext} initialization
+Jan 28 17:29:44 Sift [info] {sfController} initialization
+Jan 28 17:29:44 Sift [info] {sfRouting} match route [default] "/:sf_culture/:module/:action/*"
+Jan 28 17:29:44 Sift [info] {sfRequest} request parameters array (  'sf_culture' => 'fr',  'module' => 'i18n',  'action' => 'index',)
+Jan 28 17:29:44 Sift [info] {sfFilter} executing filter "sfRenderingFilter"
+Jan 28 17:29:44 Sift [info] {sfFilter} executing filter "sfI18nFilter"
+Jan 28 17:29:44 Sift [info] {sfFilter} executing filter "sfWebDebugFilter"
+Jan 28 17:29:44 Sift [info] {sfFilter} executing filter "sfCommonFilter"
+Jan 28 17:29:44 Sift [info] {sfFilter} executing filter "sfFlashFilter"
+Jan 28 17:29:44 Sift [info] {sfFilter} executing filter "sfExecutionFilter"
+Jan 28 17:29:44 Sift [info] {sfAction} call "i18nActions->executeIndex()"
+Jan 28 17:29:44 Sift [info] {sfView} initialize view for "i18n/index"
+Jan 28 17:29:44 Sift [info] {sfView} render "D:/data/git/sift.git/test/functional/fixtures/project\apps\i18n\modules\i18n\templates/indexSuccess.php"
+Jan 28 17:29:44 Sift [info] {sfView} decorate content with "D:/data/git/sift.git/test/functional/fixtures/project\apps\i18n\templates/layout.php"
+Jan 28 17:29:44 Sift [info] {sfView} render "D:/data/git/sift.git/test/functional/fixtures/project\apps\i18n\templates/layout.php"
+Jan 28 17:29:44 Sift [info] {sfFilter} render to client
+Jan 28 17:29:44 Sift [info] {sfResponse} send status "HTTP/1.0 200 OK"
+Jan 28 17:29:44 Sift [info] {sfResponse} send header "Content-Type": "text/html; charset=utf-8"
+Jan 28 17:29:44 Sift [info] {sfResponse} send content (37812 o)
+Jan 28 17:29:44 Sift [info] {sfTimerManager} Configuration 18.10 ms (13)
+Jan 28 17:29:44 Sift [info] {sfTimerManager} Action "i18n/index" 8.96 ms (1)
+Jan 28 17:29:44 Sift [info] {sfTimerManager} Translation 12.89 ms (9)
+Jan 28 17:29:44 Sift [info] {sfTimerManager} View "Success" for "i18n/index" 29.69 ms (1)
+Jan 28 17:29:44 Sift [info] {sfTimerManager} {sfView} render "indexSuccess.php" 30.62 ms (2)
+Jan 28 17:29:44 Sift [info] {sfTimerManager} {sfView} render "layout.php" 1.09 ms (2)
+Jan 28 17:29:48 Sift [info] {sfContext} initialization
+Jan 28 17:29:48 Sift [info] {sfController} initialization
+Jan 28 17:29:48 Sift [info] {sfRouting} match route [default] "/:sf_culture/:module/:action/*"
+Jan 28 17:29:48 Sift [info] {sfRequest} request parameters array (  'sf_culture' => 'fr',  'module' => 'i18n',  'action' => 'index',)
+Jan 28 17:29:48 Sift [info] {sfFilter} executing filter "sfRenderingFilter"
+Jan 28 17:29:48 Sift [info] {sfFilter} executing filter "sfI18nFilter"
+Jan 28 17:29:48 Sift [info] {sfFilter} executing filter "sfWebDebugFilter"
+Jan 28 17:29:48 Sift [info] {sfFilter} executing filter "sfCommonFilter"
+Jan 28 17:29:48 Sift [info] {sfFilter} executing filter "sfFlashFilter"
+Jan 28 17:29:48 Sift [info] {sfFilter} executing filter "sfExecutionFilter"
+Jan 28 17:29:48 Sift [info] {sfAction} call "i18nActions->executeIndex()"
+Jan 28 17:29:48 Sift [info] {sfView} initialize view for "i18n/index"
+Jan 28 17:29:48 Sift [info] {sfView} render "D:/data/git/sift.git/test/functional/fixtures/project\apps\i18n\modules\i18n\templates/indexSuccess.php"
+Jan 28 17:29:48 Sift [info] {sfView} decorate content with "D:/data/git/sift.git/test/functional/fixtures/project\apps\i18n\templates/layout.php"
+Jan 28 17:29:48 Sift [info] {sfView} render "D:/data/git/sift.git/test/functional/fixtures/project\apps\i18n\templates/layout.php"
+Jan 28 17:29:48 Sift [info] {sfFilter} render to client
+Jan 28 17:29:48 Sift [info] {sfResponse} send status "HTTP/1.0 200 OK"
+Jan 28 17:29:48 Sift [info] {sfResponse} send header "Content-Type": "text/html; charset=utf-8"
+Jan 28 17:29:48 Sift [info] {sfResponse} send content (37815 o)
+Jan 28 17:29:48 Sift [info] {sfTimerManager} Configuration 158.47 ms (13)
+Jan 28 17:29:48 Sift [info] {sfTimerManager} Action "i18n/index" 61.70 ms (1)
+Jan 28 17:29:48 Sift [info] {sfTimerManager} Translation 75.26 ms (9)
+Jan 28 17:29:48 Sift [info] {sfTimerManager} View "Success" for "i18n/index" 53.42 ms (1)
+Jan 28 17:29:48 Sift [info] {sfTimerManager} {sfView} render "indexSuccess.php" 38.60 ms (2)
+Jan 28 17:29:48 Sift [info] {sfTimerManager} {sfView} render "layout.php" 1.45 ms (2)
+Jan 28 17:29:49 Sift [info] {sfContext} initialization
+Jan 28 17:29:49 Sift [info] {sfController} initialization
+Jan 28 17:29:49 Sift [info] {sfRouting} match route [default] "/:sf_culture/:module/:action/*"
+Jan 28 17:29:49 Sift [info] {sfRequest} request parameters array (  'sf_culture' => 'fr',  'module' => 'i18n',  'action' => 'index',)
+Jan 28 17:29:49 Sift [info] {sfFilter} executing filter "sfRenderingFilter"
+Jan 28 17:29:49 Sift [info] {sfFilter} executing filter "sfI18nFilter"
+Jan 28 17:29:49 Sift [info] {sfFilter} executing filter "sfWebDebugFilter"
+Jan 28 17:29:49 Sift [info] {sfFilter} executing filter "sfCommonFilter"
+Jan 28 17:29:49 Sift [info] {sfFilter} executing filter "sfFlashFilter"
+Jan 28 17:29:49 Sift [info] {sfFilter} executing filter "sfExecutionFilter"
+Jan 28 17:29:49 Sift [info] {sfAction} call "i18nActions->executeIndex()"
+Jan 28 17:29:49 Sift [info] {sfView} initialize view for "i18n/index"
+Jan 28 17:29:49 Sift [info] {sfView} render "D:/data/git/sift.git/test/functional/fixtures/project\apps\i18n\modules\i18n\templates/indexSuccess.php"
+Jan 28 17:29:49 Sift [info] {sfView} decorate content with "D:/data/git/sift.git/test/functional/fixtures/project\apps\i18n\templates/layout.php"
+Jan 28 17:29:49 Sift [info] {sfView} render "D:/data/git/sift.git/test/functional/fixtures/project\apps\i18n\templates/layout.php"
+Jan 28 17:29:50 Sift [info] {sfFilter} render to client
+Jan 28 17:29:50 Sift [info] {sfResponse} send status "HTTP/1.0 200 OK"
+Jan 28 17:29:50 Sift [info] {sfResponse} send header "Content-Type": "text/html; charset=utf-8"
+Jan 28 17:29:50 Sift [info] {sfResponse} send content (37813 o)
+Jan 28 17:29:50 Sift [info] {sfTimerManager} Configuration 22.78 ms (13)
+Jan 28 17:29:50 Sift [info] {sfTimerManager} Action "i18n/index" 11.37 ms (1)
+Jan 28 17:29:50 Sift [info] {sfTimerManager} Translation 14.38 ms (9)
+Jan 28 17:29:50 Sift [info] {sfTimerManager} View "Success" for "i18n/index" 25.57 ms (1)
+Jan 28 17:29:50 Sift [info] {sfTimerManager} {sfView} render "indexSuccess.php" 25.77 ms (2)
+Jan 28 17:29:50 Sift [info] {sfTimerManager} {sfView} render "layout.php" 1.09 ms (2)
+Jan 28 17:48:00 Sift [info] {sfContext} initialization
+Jan 28 17:48:00 Sift [info] {sfController} initialization
+Jan 28 17:48:00 Sift [info] {sfRouting} match route [default] "/:sf_culture/:module/:action/*"
+Jan 28 17:48:00 Sift [info] {sfRequest} request parameters array (  'sf_culture' => 'fr',  'module' => 'i18n',  'action' => 'index',)
+Jan 28 17:48:00 Sift [info] {sfFilter} executing filter "sfRenderingFilter"
+Jan 28 17:48:00 Sift [info] {sfFilter} executing filter "sfI18nFilter"
+Jan 28 17:48:00 Sift [info] {sfFilter} executing filter "sfWebDebugFilter"
+Jan 28 17:48:00 Sift [info] {sfFilter} executing filter "sfCommonFilter"
+Jan 28 17:48:00 Sift [info] {sfFilter} executing filter "sfFlashFilter"
+Jan 28 17:48:00 Sift [info] {sfFilter} executing filter "sfExecutionFilter"
+Jan 28 17:48:00 Sift [info] {sfAction} call "i18nActions->executeIndex()"
+Jan 28 17:48:00 Sift [info] {sfView} initialize view for "i18n/index"
+Jan 28 17:48:00 Sift [info] {sfView} render "D:/data/git/sift.git/test/functional/fixtures/project\apps\i18n\modules\i18n\templates/indexSuccess.php"
+Jan 28 17:48:00 Sift [info] {sfView} decorate content with "D:/data/git/sift.git/test/functional/fixtures/project\apps\i18n\templates/layout.php"
+Jan 28 17:48:00 Sift [info] {sfView} render "D:/data/git/sift.git/test/functional/fixtures/project\apps\i18n\templates/layout.php"
+Jan 28 17:48:00 Sift [info] {sfFilter} render to client
+Jan 28 17:48:00 Sift [info] {sfResponse} send status "HTTP/1.0 200 OK"
+Jan 28 17:48:00 Sift [info] {sfResponse} send header "Content-Type": "text/html; charset=utf-8"
+Jan 28 17:48:00 Sift [info] {sfResponse} send content (37815 o)
+Jan 28 17:48:00 Sift [info] {sfTimerManager} Configuration 107.76 ms (13)
+Jan 28 17:48:00 Sift [info] {sfTimerManager} Action "i18n/index" 22.98 ms (1)
+Jan 28 17:48:00 Sift [info] {sfTimerManager} Translation 31.91 ms (9)
+Jan 28 17:48:00 Sift [info] {sfTimerManager} View "Success" for "i18n/index" 38.74 ms (1)
+Jan 28 17:48:00 Sift [info] {sfTimerManager} {sfView} render "indexSuccess.php" 27.94 ms (2)
+Jan 28 17:48:00 Sift [info] {sfTimerManager} {sfView} render "layout.php" 1.14 ms (2)
+Jan 28 17:48:01 Sift [info] {sfContext} initialization
+Jan 28 17:48:01 Sift [info] {sfController} initialization
+Jan 28 17:48:01 Sift [info] {sfRouting} match route [default] "/:sf_culture/:module/:action/*"
+Jan 28 17:48:01 Sift [info] {sfRequest} request parameters array (  'sf_culture' => 'fr',  'module' => 'i18n',  'action' => 'index',)
+Jan 28 17:48:01 Sift [info] {sfFilter} executing filter "sfRenderingFilter"
+Jan 28 17:48:01 Sift [info] {sfFilter} executing filter "sfI18nFilter"
+Jan 28 17:48:01 Sift [info] {sfFilter} executing filter "sfWebDebugFilter"
+Jan 28 17:48:01 Sift [info] {sfFilter} executing filter "sfCommonFilter"
+Jan 28 17:48:01 Sift [info] {sfFilter} executing filter "sfFlashFilter"
+Jan 28 17:48:01 Sift [info] {sfFilter} executing filter "sfExecutionFilter"
+Jan 28 17:48:01 Sift [info] {sfAction} call "i18nActions->executeIndex()"
+Jan 28 17:48:01 Sift [info] {sfView} initialize view for "i18n/index"
+Jan 28 17:48:01 Sift [info] {sfView} render "D:/data/git/sift.git/test/functional/fixtures/project\apps\i18n\modules\i18n\templates/indexSuccess.php"
+Jan 28 17:48:01 Sift [info] {sfView} decorate content with "D:/data/git/sift.git/test/functional/fixtures/project\apps\i18n\templates/layout.php"
+Jan 28 17:48:01 Sift [info] {sfView} render "D:/data/git/sift.git/test/functional/fixtures/project\apps\i18n\templates/layout.php"
+Jan 28 17:48:01 Sift [info] {sfFilter} render to client
+Jan 28 17:48:01 Sift [info] {sfResponse} send status "HTTP/1.0 200 OK"
+Jan 28 17:48:01 Sift [info] {sfResponse} send header "Content-Type": "text/html; charset=utf-8"
+Jan 28 17:48:01 Sift [info] {sfResponse} send content (37811 o)
+Jan 28 17:48:01 Sift [info] {sfTimerManager} Configuration 17.66 ms (13)
+Jan 28 17:48:01 Sift [info] {sfTimerManager} Action "i18n/index" 10.76 ms (1)
+Jan 28 17:48:01 Sift [info] {sfTimerManager} Translation 14.21 ms (9)
+Jan 28 17:48:01 Sift [info] {sfTimerManager} View "Success" for "i18n/index" 26.57 ms (1)
+Jan 28 17:48:01 Sift [info] {sfTimerManager} {sfView} render "indexSuccess.php" 28.64 ms (2)
+Jan 28 17:48:01 Sift [info] {sfTimerManager} {sfView} render "layout.php" 1.47 ms (2)
+Jan 28 17:48:22 Sift [info] {sfContext} initialization
+Jan 28 17:48:22 Sift [info] {sfController} initialization
+Jan 28 17:48:22 Sift [info] {sfRouting} match route [default] "/:sf_culture/:module/:action/*"
+Jan 28 17:48:22 Sift [info] {sfRequest} request parameters array (  'sf_culture' => 'fr',  'module' => 'i18n',  'action' => 'index',)
+Jan 28 17:48:22 Sift [info] {sfFilter} executing filter "sfRenderingFilter"
+Jan 28 17:48:22 Sift [info] {sfFilter} executing filter "sfI18nFilter"
+Jan 28 17:48:22 Sift [info] {sfFilter} executing filter "sfWebDebugFilter"
+Jan 28 17:48:22 Sift [info] {sfFilter} executing filter "sfCommonFilter"
+Jan 28 17:48:22 Sift [info] {sfFilter} executing filter "sfFlashFilter"
+Jan 28 17:48:22 Sift [info] {sfFilter} executing filter "sfExecutionFilter"
+Jan 28 17:48:22 Sift [info] {sfAction} call "i18nActions->executeIndex()"
+Jan 28 17:48:22 Sift [info] {sfView} initialize view for "i18n/index"
+Jan 28 17:48:22 Sift [info] {sfView} render "D:/data/git/sift.git/test/functional/fixtures/project\apps\i18n\modules\i18n\templates/indexSuccess.php"
+Jan 28 17:48:22 Sift [info] {sfView} decorate content with "D:/data/git/sift.git/test/functional/fixtures/project\apps\i18n\templates/layout.php"
+Jan 28 17:48:22 Sift [info] {sfView} render "D:/data/git/sift.git/test/functional/fixtures/project\apps\i18n\templates/layout.php"
+Jan 28 17:48:22 Sift [info] {sfFilter} render to client
+Jan 28 17:48:22 Sift [info] {sfResponse} send status "HTTP/1.0 200 OK"
+Jan 28 17:48:22 Sift [info] {sfResponse} send header "Content-Type": "text/html; charset=utf-8"
+Jan 28 17:48:22 Sift [info] {sfResponse} send content (37811 o)
+Jan 28 17:48:22 Sift [info] {sfTimerManager} Configuration 15.18 ms (13)
+Jan 28 17:48:22 Sift [info] {sfTimerManager} Action "i18n/index" 8.94 ms (1)
+Jan 28 17:48:22 Sift [info] {sfTimerManager} Translation 12.13 ms (9)
+Jan 28 17:48:22 Sift [info] {sfTimerManager} View "Success" for "i18n/index" 23.51 ms (1)
+Jan 28 17:48:22 Sift [info] {sfTimerManager} {sfView} render "indexSuccess.php" 24.69 ms (2)
+Jan 28 17:48:22 Sift [info] {sfTimerManager} {sfView} render "layout.php" 0.97 ms (2)
+Jan 28 17:48:26 Sift [info] {sfContext} initialization
+Jan 28 17:48:26 Sift [info] {sfController} initialization
+Jan 28 17:48:26 Sift [info] {sfRouting} match route [default] "/:sf_culture/:module/:action/*"
+Jan 28 17:48:26 Sift [info] {sfRequest} request parameters array (  'sf_culture' => 'fr',  'module' => 'i18n',  'action' => 'index',)
+Jan 28 17:48:26 Sift [info] {sfFilter} executing filter "sfRenderingFilter"
+Jan 28 17:48:26 Sift [info] {sfFilter} executing filter "sfI18nFilter"
+Jan 28 17:48:26 Sift [info] {sfFilter} executing filter "sfWebDebugFilter"
+Jan 28 17:48:26 Sift [info] {sfFilter} executing filter "sfCommonFilter"
+Jan 28 17:48:26 Sift [info] {sfFilter} executing filter "sfFlashFilter"
+Jan 28 17:48:26 Sift [info] {sfFilter} executing filter "sfExecutionFilter"
+Jan 28 17:48:26 Sift [info] {sfAction} call "i18nActions->executeIndex()"
+Jan 28 17:48:26 Sift [info] {sfView} initialize view for "i18n/index"
+Jan 28 17:48:26 Sift [info] {sfView} render "D:/data/git/sift.git/test/functional/fixtures/project\apps\i18n\modules\i18n\templates/indexSuccess.php"
+Jan 28 17:48:26 Sift [info] {sfView} decorate content with "D:/data/git/sift.git/test/functional/fixtures/project\apps\i18n\templates/layout.php"
+Jan 28 17:48:26 Sift [info] {sfView} render "D:/data/git/sift.git/test/functional/fixtures/project\apps\i18n\templates/layout.php"
+Jan 28 17:48:26 Sift [info] {sfFilter} render to client
+Jan 28 17:48:26 Sift [info] {sfResponse} send status "HTTP/1.0 200 OK"
+Jan 28 17:48:26 Sift [info] {sfResponse} send header "Content-Type": "text/html; charset=utf-8"
+Jan 28 17:48:26 Sift [info] {sfResponse} send content (37814 o)
+Jan 28 17:48:26 Sift [info] {sfTimerManager} Configuration 15.12 ms (13)
+Jan 28 17:48:26 Sift [info] {sfTimerManager} Action "i18n/index" 11.66 ms (1)
+Jan 28 17:48:26 Sift [info] {sfTimerManager} Translation 14.62 ms (9)
+Jan 28 17:48:26 Sift [info] {sfTimerManager} View "Success" for "i18n/index" 22.31 ms (1)
+Jan 28 17:48:26 Sift [info] {sfTimerManager} {sfView} render "indexSuccess.php" 25.47 ms (2)
+Jan 28 17:48:26 Sift [info] {sfTimerManager} {sfView} render "layout.php" 0.97 ms (2)
+Jan 28 17:48:48 Sift [info] {sfContext} initialization
+Jan 28 17:48:48 Sift [info] {sfController} initialization
+Jan 28 17:48:48 Sift [info] {sfRouting} match route [default] "/:sf_culture/:module/:action/*"
+Jan 28 17:48:48 Sift [info] {sfRequest} request parameters array (  'sf_culture' => 'fr',  'module' => 'i18n',  'action' => 'index',)
+Jan 28 17:48:49 Sift [info] {sfFilter} executing filter "sfRenderingFilter"
+Jan 28 17:48:49 Sift [info] {sfFilter} executing filter "sfI18nFilter"
+Jan 28 17:48:49 Sift [info] {sfFilter} executing filter "sfWebDebugFilter"
+Jan 28 17:48:49 Sift [info] {sfFilter} executing filter "sfCommonFilter"
+Jan 28 17:48:49 Sift [info] {sfFilter} executing filter "sfFlashFilter"
+Jan 28 17:48:49 Sift [info] {sfFilter} executing filter "sfExecutionFilter"
+Jan 28 17:48:49 Sift [info] {sfAction} call "i18nActions->executeIndex()"
+Jan 28 17:48:49 Sift [info] {sfView} initialize view for "i18n/index"
+Jan 28 17:48:49 Sift [info] {sfView} render "D:/data/git/sift.git/test/functional/fixtures/project\apps\i18n\modules\i18n\templates/indexSuccess.php"
+Jan 28 17:48:49 Sift [info] {sfView} decorate content with "D:/data/git/sift.git/test/functional/fixtures/project\apps\i18n\templates/layout.php"
+Jan 28 17:48:49 Sift [info] {sfView} render "D:/data/git/sift.git/test/functional/fixtures/project\apps\i18n\templates/layout.php"
+Jan 28 17:48:49 Sift [info] {sfFilter} render to client
+Jan 28 17:48:49 Sift [info] {sfResponse} send status "HTTP/1.0 200 OK"
+Jan 28 17:48:49 Sift [info] {sfResponse} send header "Content-Type": "text/html; charset=utf-8"
+Jan 28 17:48:49 Sift [info] {sfResponse} send content (37815 o)
+Jan 28 17:48:49 Sift [info] {sfTimerManager} Configuration 121.61 ms (13)
+Jan 28 17:48:49 Sift [info] {sfTimerManager} Action "i18n/index" 45.96 ms (1)
+Jan 28 17:48:49 Sift [info] {sfTimerManager} Translation 55.53 ms (9)
+Jan 28 17:48:49 Sift [info] {sfTimerManager} View "Success" for "i18n/index" 42.75 ms (1)
+Jan 28 17:48:49 Sift [info] {sfTimerManager} {sfView} render "indexSuccess.php" 29.04 ms (2)
+Jan 28 17:48:49 Sift [info] {sfTimerManager} {sfView} render "layout.php" 0.97 ms (2)
+Jan 28 17:48:58 Sift [info] {sfContext} initialization
+Jan 28 17:48:58 Sift [info] {sfController} initialization
+Jan 28 17:48:58 Sift [info] {sfRouting} match route [default] "/:sf_culture/:module/:action/*"
+Jan 28 17:48:58 Sift [info] {sfRequest} request parameters array (  'sf_culture' => 'fr',  'module' => 'i18n',  'action' => 'index',)
+Jan 28 17:48:58 Sift [info] {sfFilter} executing filter "sfRenderingFilter"
+Jan 28 17:48:58 Sift [info] {sfFilter} executing filter "sfI18nFilter"
+Jan 28 17:48:58 Sift [info] {sfFilter} executing filter "sfWebDebugFilter"
+Jan 28 17:48:58 Sift [info] {sfFilter} executing filter "sfCommonFilter"
+Jan 28 17:48:58 Sift [info] {sfFilter} executing filter "sfFlashFilter"
+Jan 28 17:48:58 Sift [info] {sfFilter} executing filter "sfExecutionFilter"
+Jan 28 17:48:58 Sift [info] {sfAction} call "i18nActions->executeIndex()"
+Jan 28 17:48:58 Sift [info] {sfView} initialize view for "i18n/index"
+Jan 28 17:48:58 Sift [info] {sfView} render "D:/data/git/sift.git/test/functional/fixtures/project\apps\i18n\modules\i18n\templates/indexSuccess.php"
+Jan 28 17:48:58 Sift [info] {sfView} decorate content with "D:/data/git/sift.git/test/functional/fixtures/project\apps\i18n\templates/layout.php"
+Jan 28 17:48:58 Sift [info] {sfView} render "D:/data/git/sift.git/test/functional/fixtures/project\apps\i18n\templates/layout.php"
+Jan 28 17:48:58 Sift [info] {sfFilter} render to client
+Jan 28 17:48:58 Sift [info] {sfResponse} send status "HTTP/1.0 200 OK"
+Jan 28 17:48:58 Sift [info] {sfResponse} send header "Content-Type": "text/html; charset=utf-8"
+Jan 28 17:48:58 Sift [info] {sfResponse} send content (37812 o)
+Jan 28 17:48:58 Sift [info] {sfTimerManager} Configuration 15.45 ms (13)
+Jan 28 17:48:58 Sift [info] {sfTimerManager} Action "i18n/index" 8.91 ms (1)
+Jan 28 17:48:58 Sift [info] {sfTimerManager} Translation 13.01 ms (9)
+Jan 28 17:48:58 Sift [info] {sfTimerManager} View "Success" for "i18n/index" 23.22 ms (1)
+Jan 28 17:48:58 Sift [info] {sfTimerManager} {sfView} render "indexSuccess.php" 25.36 ms (2)
+Jan 28 17:48:58 Sift [info] {sfTimerManager} {sfView} render "layout.php" 1.26 ms (2)
+Jan 28 17:49:33 Sift [info] {sfContext} initialization
+Jan 28 17:49:33 Sift [info] {sfController} initialization
+Jan 28 17:49:33 Sift [info] {sfRouting} match route [default] "/:sf_culture/:module/:action/*"
+Jan 28 17:49:33 Sift [info] {sfRequest} request parameters array (  'sf_culture' => 'fr',  'module' => 'i18n',  'action' => 'index',)
+Jan 28 17:49:33 Sift [info] {sfFilter} executing filter "sfRenderingFilter"
+Jan 28 17:49:33 Sift [info] {sfFilter} executing filter "sfI18nFilter"
+Jan 28 17:49:33 Sift [info] {sfFilter} executing filter "sfWebDebugFilter"
+Jan 28 17:49:33 Sift [info] {sfFilter} executing filter "sfCommonFilter"
+Jan 28 17:49:33 Sift [info] {sfFilter} executing filter "sfFlashFilter"
+Jan 28 17:49:33 Sift [info] {sfFilter} executing filter "sfExecutionFilter"
+Jan 28 17:49:33 Sift [info] {sfAction} call "i18nActions->executeIndex()"
+Jan 28 17:49:33 Sift [info] {sfView} initialize view for "i18n/index"
+Jan 28 17:49:33 Sift [info] {sfView} render "D:/data/git/sift.git/test/functional/fixtures/project\apps\i18n\modules\i18n\templates/indexSuccess.php"
+Jan 28 17:49:33 Sift [info] {sfView} decorate content with "D:/data/git/sift.git/test/functional/fixtures/project\apps\i18n\templates/layout.php"
+Jan 28 17:49:33 Sift [info] {sfView} render "D:/data/git/sift.git/test/functional/fixtures/project\apps\i18n\templates/layout.php"
+Jan 28 17:49:33 Sift [info] {sfFilter} render to client
+Jan 28 17:49:33 Sift [info] {sfResponse} send status "HTTP/1.0 200 OK"
+Jan 28 17:49:33 Sift [info] {sfResponse} send header "Content-Type": "text/html; charset=utf-8"
+Jan 28 17:49:33 Sift [info] {sfResponse} send content (37812 o)
+Jan 28 17:49:33 Sift [info] {sfTimerManager} Configuration 15.55 ms (13)
+Jan 28 17:49:33 Sift [info] {sfTimerManager} Action "i18n/index" 8.96 ms (1)
+Jan 28 17:49:33 Sift [info] {sfTimerManager} Translation 11.85 ms (9)
+Jan 28 17:49:33 Sift [info] {sfTimerManager} View "Success" for "i18n/index" 22.03 ms (1)
+Jan 28 17:49:33 Sift [info] {sfTimerManager} {sfView} render "indexSuccess.php" 25.36 ms (2)
+Jan 28 17:49:33 Sift [info] {sfTimerManager} {sfView} render "layout.php" 0.97 ms (2)
+Jan 28 17:49:34 Sift [info] {sfContext} initialization
+Jan 28 17:49:34 Sift [info] {sfController} initialization
+Jan 28 17:49:34 Sift [info] {sfRouting} match route [default] "/:sf_culture/:module/:action/*"
+Jan 28 17:49:34 Sift [info] {sfRequest} request parameters array (  'sf_culture' => 'fr',  'module' => 'i18n',  'action' => 'index',)
+Jan 28 17:49:34 Sift [info] {sfFilter} executing filter "sfRenderingFilter"
+Jan 28 17:49:34 Sift [info] {sfFilter} executing filter "sfI18nFilter"
+Jan 28 17:49:34 Sift [info] {sfFilter} executing filter "sfWebDebugFilter"
+Jan 28 17:49:34 Sift [info] {sfFilter} executing filter "sfCommonFilter"
+Jan 28 17:49:34 Sift [info] {sfFilter} executing filter "sfFlashFilter"
+Jan 28 17:49:34 Sift [info] {sfFilter} executing filter "sfExecutionFilter"
+Jan 28 17:49:34 Sift [info] {sfAction} call "i18nActions->executeIndex()"
+Jan 28 17:49:34 Sift [info] {sfView} initialize view for "i18n/index"
+Jan 28 17:49:34 Sift [info] {sfView} render "D:/data/git/sift.git/test/functional/fixtures/project\apps\i18n\modules\i18n\templates/indexSuccess.php"
+Jan 28 17:49:34 Sift [info] {sfView} decorate content with "D:/data/git/sift.git/test/functional/fixtures/project\apps\i18n\templates/layout.php"
+Jan 28 17:49:34 Sift [info] {sfView} render "D:/data/git/sift.git/test/functional/fixtures/project\apps\i18n\templates/layout.php"
+Jan 28 17:49:34 Sift [info] {sfFilter} render to client
+Jan 28 17:49:34 Sift [info] {sfResponse} send status "HTTP/1.0 200 OK"
+Jan 28 17:49:34 Sift [info] {sfResponse} send header "Content-Type": "text/html; charset=utf-8"
+Jan 28 17:49:34 Sift [info] {sfResponse} send content (37812 o)
+Jan 28 17:49:34 Sift [info] {sfTimerManager} Configuration 14.81 ms (13)
+Jan 28 17:49:34 Sift [info] {sfTimerManager} Action "i18n/index" 8.35 ms (1)
+Jan 28 17:49:34 Sift [info] {sfTimerManager} Translation 12.32 ms (9)
+Jan 28 17:49:34 Sift [info] {sfTimerManager} View "Success" for "i18n/index" 23.75 ms (1)
+Jan 28 17:49:34 Sift [info] {sfTimerManager} {sfView} render "indexSuccess.php" 25.35 ms (2)
+Jan 28 17:49:34 Sift [info] {sfTimerManager} {sfView} render "layout.php" 0.99 ms (2)
+Jan 28 17:49:36 Sift [info] {sfContext} initialization
+Jan 28 17:49:36 Sift [info] {sfController} initialization
+Jan 28 17:49:36 Sift [info] {sfRouting} match route [default] "/:sf_culture/:module/:action/*"
+Jan 28 17:49:36 Sift [info] {sfRequest} request parameters array (  'sf_culture' => 'fr',  'module' => 'i18n',  'action' => 'index',)
+Jan 28 17:49:36 Sift [info] {sfFilter} executing filter "sfRenderingFilter"
+Jan 28 17:49:36 Sift [info] {sfFilter} executing filter "sfI18nFilter"
+Jan 28 17:49:36 Sift [info] {sfFilter} executing filter "sfWebDebugFilter"
+Jan 28 17:49:36 Sift [info] {sfFilter} executing filter "sfCommonFilter"
+Jan 28 17:49:36 Sift [info] {sfFilter} executing filter "sfFlashFilter"
+Jan 28 17:49:36 Sift [info] {sfFilter} executing filter "sfExecutionFilter"
+Jan 28 17:49:36 Sift [info] {sfAction} call "i18nActions->executeIndex()"
+Jan 28 17:49:36 Sift [info] {sfView} initialize view for "i18n/index"
+Jan 28 17:49:36 Sift [info] {sfView} render "D:/data/git/sift.git/test/functional/fixtures/project\apps\i18n\modules\i18n\templates/indexSuccess.php"
+Jan 28 17:49:36 Sift [info] {sfView} decorate content with "D:/data/git/sift.git/test/functional/fixtures/project\apps\i18n\templates/layout.php"
+Jan 28 17:49:36 Sift [info] {sfView} render "D:/data/git/sift.git/test/functional/fixtures/project\apps\i18n\templates/layout.php"
+Jan 28 17:49:36 Sift [info] {sfFilter} render to client
+Jan 28 17:49:36 Sift [info] {sfResponse} send status "HTTP/1.0 200 OK"
+Jan 28 17:49:36 Sift [info] {sfResponse} send header "Content-Type": "text/html; charset=utf-8"
+Jan 28 17:49:36 Sift [info] {sfResponse} send content (37813 o)
+Jan 28 17:49:36 Sift [info] {sfTimerManager} Configuration 15.39 ms (13)
+Jan 28 17:49:36 Sift [info] {sfTimerManager} Action "i18n/index" 10.07 ms (1)
+Jan 28 17:49:36 Sift [info] {sfTimerManager} Translation 13.00 ms (9)
+Jan 28 17:49:36 Sift [info] {sfTimerManager} View "Success" for "i18n/index" 22.18 ms (1)
+Jan 28 17:49:36 Sift [info] {sfTimerManager} {sfView} render "indexSuccess.php" 25.72 ms (2)
+Jan 28 17:49:36 Sift [info] {sfTimerManager} {sfView} render "layout.php" 0.97 ms (2)
+Jan 28 17:50:22 Sift [info] {sfContext} initialization
+Jan 28 17:50:22 Sift [info] {sfController} initialization
+Jan 28 17:50:22 Sift [info] {sfRouting} match route [default] "/:sf_culture/:module/:action/*"
+Jan 28 17:50:22 Sift [info] {sfRequest} request parameters array (  'sf_culture' => 'fr',  'module' => 'i18n',  'action' => 'index',)
+Jan 28 17:50:22 Sift [info] {sfFilter} executing filter "sfRenderingFilter"
+Jan 28 17:50:22 Sift [info] {sfFilter} executing filter "sfI18nFilter"
+Jan 28 17:50:22 Sift [info] {sfFilter} executing filter "sfWebDebugFilter"
+Jan 28 17:50:22 Sift [info] {sfFilter} executing filter "sfCommonFilter"
+Jan 28 17:50:22 Sift [info] {sfFilter} executing filter "sfFlashFilter"
+Jan 28 17:50:22 Sift [info] {sfFilter} executing filter "sfExecutionFilter"
+Jan 28 17:50:22 Sift [info] {sfAction} call "i18nActions->executeIndex()"
+Jan 28 17:50:22 Sift [info] {sfView} initialize view for "i18n/index"
+Jan 28 17:50:22 Sift [info] {sfView} render "D:/data/git/sift.git/test/functional/fixtures/project\apps\i18n\modules\i18n\templates/indexSuccess.php"
+Jan 28 17:50:22 Sift [info] {sfView} decorate content with "D:/data/git/sift.git/test/functional/fixtures/project\apps\i18n\templates/layout.php"
+Jan 28 17:50:22 Sift [info] {sfView} render "D:/data/git/sift.git/test/functional/fixtures/project\apps\i18n\templates/layout.php"
+Jan 28 17:50:22 Sift [info] {sfFilter} render to client
+Jan 28 17:50:22 Sift [info] {sfResponse} send status "HTTP/1.0 200 OK"
+Jan 28 17:50:22 Sift [info] {sfResponse} send header "Content-Type": "text/html; charset=utf-8"
+Jan 28 17:50:22 Sift [info] {sfResponse} send content (37812 o)
+Jan 28 17:50:22 Sift [info] {sfTimerManager} Configuration 14.91 ms (13)
+Jan 28 17:50:22 Sift [info] {sfTimerManager} Action "i18n/index" 9.71 ms (1)
+Jan 28 17:50:22 Sift [info] {sfTimerManager} Translation 12.52 ms (9)
+Jan 28 17:50:22 Sift [info] {sfTimerManager} View "Success" for "i18n/index" 22.57 ms (1)
+Jan 28 17:50:22 Sift [info] {sfTimerManager} {sfView} render "indexSuccess.php" 25.24 ms (2)
+Jan 28 17:50:22 Sift [info] {sfTimerManager} {sfView} render "layout.php" 0.98 ms (2)
+Jan 28 17:51:37 Sift [info] {sfContext} initialization
+Jan 28 17:51:37 Sift [info] {sfController} initialization
+Jan 28 17:51:37 Sift [info] {sfRouting} match route [homepage] "/"
+Jan 28 17:51:37 Sift [info] {sfRequest} request parameters array (  'module' => 'i18n',  'action' => 'index',)
+Jan 28 17:51:37 Sift [info] {sfFilter} executing filter "sfRenderingFilter"
+Jan 28 17:51:37 Sift [info] {sfFilter} executing filter "sfI18nFilter"
+Jan 28 17:51:37 Sift [info] {sfFilter} executing filter "sfWebDebugFilter"
+Jan 28 17:51:37 Sift [info] {sfFilter} executing filter "sfCommonFilter"
+Jan 28 17:51:37 Sift [info] {sfFilter} executing filter "sfFlashFilter"
+Jan 28 17:51:37 Sift [info] {sfFilter} executing filter "sfExecutionFilter"
+Jan 28 17:51:37 Sift [info] {sfAction} call "i18nActions->executeIndex()"
+Jan 28 17:51:37 Sift [info] {sfView} initialize view for "i18n/index"
+Jan 28 17:51:37 Sift [info] {sfView} render "D:/data/git/sift.git/test/functional/fixtures/project\apps\i18n\modules\i18n\templates/indexSuccess.php"
+Jan 28 17:51:37 Sift [info] {sfView} decorate content with "D:/data/git/sift.git/test/functional/fixtures/project\apps\i18n\templates/layout.php"
+Jan 28 17:51:37 Sift [info] {sfView} render "D:/data/git/sift.git/test/functional/fixtures/project\apps\i18n\templates/layout.php"
+Jan 28 17:51:37 Sift [info] {sfFilter} render to client
+Jan 28 17:51:37 Sift [info] {sfResponse} send status "HTTP/1.0 200 OK"
+Jan 28 17:51:37 Sift [info] {sfResponse} send header "Content-Type": "text/html; charset=utf-8"
+Jan 28 17:51:37 Sift [info] {sfResponse} send content (37647 o)
+Jan 28 17:51:37 Sift [info] {sfTimerManager} Configuration 16.12 ms (13)
+Jan 28 17:51:37 Sift [info] {sfTimerManager} Action "i18n/index" 9.99 ms (1)
+Jan 28 17:51:37 Sift [info] {sfTimerManager} Translation 13.65 ms (9)
+Jan 28 17:51:37 Sift [info] {sfTimerManager} View "Success" for "i18n/index" 25.37 ms (1)
+Jan 28 17:51:37 Sift [info] {sfTimerManager} {sfView} render "indexSuccess.php" 27.63 ms (2)
+Jan 28 17:51:37 Sift [info] {sfTimerManager} {sfView} render "layout.php" 0.98 ms (2)
+Jan 28 17:51:38 Sift [info] {sfContext} initialization
+Jan 28 17:51:38 Sift [info] {sfController} initialization
+Jan 28 17:51:38 Sift [info] {sfRouting} match route [homepage] "/"
+Jan 28 17:51:38 Sift [info] {sfRequest} request parameters array (  'module' => 'i18n',  'action' => 'index',)
+Jan 28 17:51:38 Sift [info] {sfFilter} executing filter "sfRenderingFilter"
+Jan 28 17:51:38 Sift [info] {sfFilter} executing filter "sfI18nFilter"
+Jan 28 17:51:38 Sift [info] {sfFilter} executing filter "sfWebDebugFilter"
+Jan 28 17:51:38 Sift [info] {sfFilter} executing filter "sfCommonFilter"
+Jan 28 17:51:38 Sift [info] {sfFilter} executing filter "sfFlashFilter"
+Jan 28 17:51:38 Sift [info] {sfFilter} executing filter "sfExecutionFilter"
+Jan 28 17:51:38 Sift [info] {sfAction} call "i18nActions->executeIndex()"
+Jan 28 17:51:38 Sift [info] {sfView} initialize view for "i18n/index"
+Jan 28 17:51:38 Sift [info] {sfView} render "D:/data/git/sift.git/test/functional/fixtures/project\apps\i18n\modules\i18n\templates/indexSuccess.php"
+Jan 28 17:51:38 Sift [info] {sfView} decorate content with "D:/data/git/sift.git/test/functional/fixtures/project\apps\i18n\templates/layout.php"
+Jan 28 17:51:38 Sift [info] {sfView} render "D:/data/git/sift.git/test/functional/fixtures/project\apps\i18n\templates/layout.php"
+Jan 28 17:51:38 Sift [info] {sfFilter} render to client
+Jan 28 17:51:38 Sift [info] {sfResponse} send status "HTTP/1.0 200 OK"
+Jan 28 17:51:38 Sift [info] {sfResponse} send header "Content-Type": "text/html; charset=utf-8"
+Jan 28 17:51:38 Sift [info] {sfResponse} send content (37679 o)
+Jan 28 17:51:38 Sift [info] {sfTimerManager} Configuration 15.52 ms (13)
+Jan 28 17:51:38 Sift [info] {sfTimerManager} Action "i18n/index" 8.54 ms (1)
+Jan 28 17:51:38 Sift [info] {sfTimerManager} Translation 11.43 ms (9)
+Jan 28 17:51:38 Sift [info] {sfTimerManager} View "Success" for "i18n/index" 22.44 ms (1)
+Jan 28 17:51:38 Sift [info] {sfTimerManager} {sfView} render "indexSuccess.php" 25.33 ms (2)
+Jan 28 17:51:38 Sift [info] {sfTimerManager} {sfView} render "layout.php" 0.98 ms (2)
+Jan 28 17:52:11 Sift [info] {sfContext} initialization
+Jan 28 17:52:11 Sift [info] {sfController} initialization
+Jan 28 17:52:11 Sift [info] {sfRouting} match route [homepage] "/"
+Jan 28 17:52:11 Sift [info] {sfRequest} request parameters array (  'module' => 'i18n',  'action' => 'index',)
+Jan 28 17:52:11 Sift [info] {sfFilter} executing filter "sfRenderingFilter"
+Jan 28 17:52:11 Sift [info] {sfFilter} executing filter "sfI18nFilter"
+Jan 28 17:52:11 Sift [info] {sfFilter} executing filter "sfWebDebugFilter"
+Jan 28 17:52:11 Sift [info] {sfFilter} executing filter "sfCommonFilter"
+Jan 28 17:52:11 Sift [info] {sfFilter} executing filter "sfFlashFilter"
+Jan 28 17:52:11 Sift [info] {sfFilter} executing filter "sfExecutionFilter"
+Jan 28 17:52:11 Sift [info] {sfAction} call "i18nActions->executeIndex()"
+Jan 28 17:52:11 Sift [info] {sfView} initialize view for "i18n/index"
+Jan 28 17:52:11 Sift [info] {sfView} render "D:/data/git/sift.git/test/functional/fixtures/project\apps\i18n\modules\i18n\templates/indexSuccess.php"
+Jan 28 17:52:11 Sift [info] {sfView} decorate content with "D:/data/git/sift.git/test/functional/fixtures/project\apps\i18n\templates/layout.php"
+Jan 28 17:52:11 Sift [info] {sfView} render "D:/data/git/sift.git/test/functional/fixtures/project\apps\i18n\templates/layout.php"
+Jan 28 17:52:11 Sift [info] {sfFilter} render to client
+Jan 28 17:52:11 Sift [info] {sfResponse} send status "HTTP/1.0 200 OK"
+Jan 28 17:52:11 Sift [info] {sfResponse} send header "Content-Type": "text/html; charset=utf-8"
+Jan 28 17:52:11 Sift [info] {sfResponse} send content (37679 o)
+Jan 28 17:52:11 Sift [info] {sfTimerManager} Configuration 13.93 ms (13)
+Jan 28 17:52:11 Sift [info] {sfTimerManager} Action "i18n/index" 8.16 ms (1)
+Jan 28 17:52:11 Sift [info] {sfTimerManager} Translation 11.06 ms (9)
+Jan 28 17:52:11 Sift [info] {sfTimerManager} View "Success" for "i18n/index" 22.88 ms (1)
+Jan 28 17:52:11 Sift [info] {sfTimerManager} {sfView} render "indexSuccess.php" 25.33 ms (2)
+Jan 28 17:52:11 Sift [info] {sfTimerManager} {sfView} render "layout.php" 1.07 ms (2)

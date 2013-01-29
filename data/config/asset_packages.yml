@@ -23,8 +23,7 @@ default:
     core:
       javascripts:
         - %SF_SIFT_WEB_DIR%/js/core/core.js
-        - %SF_SIFT_WEB_DIR%/js/core/i18n/%SF_CULTURE{0,2}%.js
-        - app.js        
+        - %SF_SIFT_WEB_DIR%/js/core/i18n/%SF_CULTURE{0,2}%.js 
       require:
         - jquery
 

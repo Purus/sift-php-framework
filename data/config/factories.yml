@@ -2,16 +2,21 @@
 # https://bitbucket.org/mishal/sift-php-framework/wiki/Factories
 
 cli:
-  controller:
-    class: sfConsoleController
-  request:
-    class: sfConsoleRequest
-  response:
-    class: sfConsoleResponse
+#  controller:
+#    class: sfConsoleController
+#  request:
+#    class: sfConsoleRequest
+#  response:
+#    class: sfConsoleResponse
+  storage:
+    class: sfSessionTestStorage
+
+test:
   storage:
     class: sfSessionTestStorage
 
 default:
+  
   controller:
     class: sfFrontWebController
 

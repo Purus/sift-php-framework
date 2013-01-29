@@ -11,7 +11,6 @@
  *
  * @package    Sift
  * @subpackage event
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  */
 class sfEventDispatcher {
 
@@ -83,20 +82,10 @@ class sfEventDispatcher {
    */
   public function notify($event)
   {
-    if(sfConfig::get('sf_logging_enabled'))
-    {
-      sfContext::getInstance()->getLogger()->info(sprintf('{sfEventDispatcher} Notifing listeners of event "%s"', $event->getName()));
-    }
-
     foreach($this->getListeners($event->getName()) as $priority => $listeners)
     {
       foreach($listeners as $listener)
       {
-        if(sfConfig::get('sf_logging_enabled'))
-        {
-          $class = is_object($listener[0]) ? get_class() : $listener[0];
-          sfContext::getInstance()->getLogger()->info(sprintf('{sfEventDispatcher} Notifing listener "%s" of event "%s" ', sprintf('%s:%s', $class, $listener[1]), $event->getName()));
-        }        
         call_user_func($listener, $event);        
       }
     }

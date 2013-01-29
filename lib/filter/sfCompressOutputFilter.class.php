@@ -40,7 +40,9 @@ class sfCompressOutputFilter extends sfFilter
 
     // execute this filter only once, before rendering to client
     // and only for html content
-    if($this->isFirstCall() && SF_ENVIRONMENT != 'dev' && SF_ENVIRONMENT != 'staging' &&
+    if($this->isFirstCall() && 
+      sfConfig::get('sf_environment') != 'dev' && 
+      sfConfig::get('sf_environment') != 'staging' &&
       preg_match('|text/html|', $this->getContext()->getResponse()->getContentType()))
     {
       $content = $this->getContext()->getResponse()->getContent();
@@ -58,7 +60,7 @@ class sfCompressOutputFilter extends sfFilter
       }
 
       // disable compression if in debug mode!
-      if($this->getParameter('compress', true)/* && !sfConfig::get('sf_web_debug')*/)
+      if($this->getParameter('compress', true) && !sfConfig::get('sf_web_debug'))
       {
         $content = $this->compress($content);
       }

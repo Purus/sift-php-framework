@@ -105,11 +105,10 @@ class sfPDOStatement extends PDOStatement {
         }
       }
       
-      $params = self::fixParams($this->params);
-      
       $query = array();
+      
       // interpolate parameters
-      foreach((array)$params as $param)
+      foreach((array)self::fixParams($this->params) as $param)
       {
         $param = htmlspecialchars($param, ENT_QUOTES, sfConfig::get('sf_charset'));
         $query[] = var_export(is_scalar($param) ? $param : (string) $param, true);

@@ -1,6 +1,7 @@
 <?php
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
+require_once($_test_dir.'/unit/sfCoreMock.class.php');
 
 sfLoader::loadHelpers(array('Helper', 'Asset', 'Url', 'Tag'));
 

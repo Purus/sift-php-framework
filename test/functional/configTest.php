@@ -7,7 +7,7 @@ if (!include(dirname(__FILE__).'/../bootstrap/functional.php'))
 }
 
 $b = new sfTestBrowser();
-$b->initialize();
+
 $b->get('/');
 
 $t = $b->test();
@@ -15,7 +15,7 @@ $t = $b->test();
 // simple configuration files
 $t->diag('sfLoader::getConfigDirs()');
 $t->is(get_config_dirs('config/filters.yml'), array(
-  'SYMFONY/config/filters.yml',
+  'SIFT/config/filters.yml',
   'PROJECT/plugins/sfConfigPlugin/config/filters.yml',
   'PROJECT/config/filters.yml',
   'PROJECT/apps/frontend/config/filters.yml',
@@ -24,7 +24,7 @@ $t->is(get_config_dirs('config/filters.yml'), array(
 
 // configuration files for modules
 $t->is(get_config_dirs('modules/sfConfigPlugin/config/view.yml'), array(
-  'SYMFONY/config/view.yml',
+  'SIFT/config/view.yml',
   'PROJECT/plugins/sfConfigPlugin/config/view.yml',
   'PROJECT/config/view.yml',
   'PROJECT/apps/frontend/config/view.yml',
@@ -56,7 +56,7 @@ function strip_paths($f)
 {
   $f = str_replace(
     array(sfConfig::get('sf_sift_data_dir'), sfConfig::get('sf_root_dir'), DIRECTORY_SEPARATOR),
-    array('SYMFONY', 'PROJECT', '/'),
+    array('SIFT', 'PROJECT', '/'),
     $f);
 
   return $f;

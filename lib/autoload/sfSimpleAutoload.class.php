@@ -108,26 +108,38 @@ class sfSimpleAutoload {
       return true;
     }
 
+    $found = false;
+    
     // we have a class path, let's include it
     if(isset($this->classes[$class]))
     {
-      try
-      {
-        require $this->classes[$class];
-      }
-      catch(sfException $e)
-      {
-        $e->printStackTrace();
-      }
-      catch(Exception $e)
-      {
-        sfException::createFromException($e)->printStackTrace();
-      }
-
-      return true;
+      $found = $this->classes[$class];
+    }
+    elseif(class_exists('sfContext', false) && sfContext::hasInstance() && 
+        ($module = sfContext::getInstance()->getModuleName()) && 
+        isset($this->classes[strtolower($module.'/'.$class)]))
+    {
+      $found = $this->classes[strtolower($module.'/'.$class)];      
     }
 
-    return false;
+    if(!$found)
+    {
+      return false;
+    }
+    
+    try
+    {
+      require_once $found;
+      return true;
+    }
+    catch(sfException $e)
+    {
+      $e->printStackTrace();
+    }
+    catch(Exception $e)
+    {
+      sfException::createFromException($e)->printStackTrace();
+    }
   }
 
   /**
@@ -148,10 +160,12 @@ class sfSimpleAutoload {
 
   /**
    * Saves the cache.
+   *  
+   * @param boolean $force Force the write? If false it will be only written if something has changed
    */
-  public function saveCache()
+  public function saveCache($force = false)
   {
-    if($this->cacheChanged)
+    if($this->cacheChanged || $force)
     {    
       if(is_writable(dirname($this->cacheFile)))
       {

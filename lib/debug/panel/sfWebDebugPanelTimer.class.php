@@ -26,7 +26,7 @@ class sfWebDebugPanelTimer extends sfWebDebugPanel {
 
   public function getTitle()
   {
-    return ($this->getTotalTime() . ' ms');
+    return sprintf('%.0f ms', $this->getTotalTime());
   }
 
   public function getIcon()
@@ -43,32 +43,40 @@ class sfWebDebugPanelTimer extends sfWebDebugPanel {
     if(sfTimerManager::getTimers())
     {
       $totalTime = $this->getTotalTime();
-      $panel = '<table class="sf-web-debug-logs" style="width: 30%">
+      
+      $panel = sprintf('<h3>Total time: %.0f ms</h3>', $totalTime);
+      
+      $panel .= '<table class="sf-web-debug-logs" style="width: 30%">
                 <tr>
                 <th>type</th>
                 <th>calls</th>
                 <th>time (ms)</th>
                 <th>time (%)</th>
                 </tr>';
-
+      
       foreach(sfTimerManager::getTimers() as $name => $timer)
       {
         $panel .= sprintf(
                 '<tr><td class="sf-web-debug-log-type">%s</td>
           <td class="sf-web-debug-log-number" style="text-align: right">%d</td>
           <td style="text-align: right">%.2f</td>
-          <td style="text-align: right">%d</td>
-          </tr>', $name, $timer->getCalls(), $timer->getElapsedTime() * 1000, $totalTime ? ($timer->getElapsedTime() * 1000 * 100 / $totalTime) : 'n/a');
+          <td style="text-align: right">%s</td>
+          </tr>', $name, $timer->getCalls(), $timer->getElapsedTime() * 1000, $totalTime ? round($timer->getElapsedTime() * 1000 / $totalTime * 100, 1) : 'n/a');
       }
+      
       $panel .= '</table>';
-
       return $panel;
     }
   }
 
   protected function getTotalTime()
   {
-    return sprintf('%.0f', (microtime(true) - sfConfig::get('sf_timer_start')) * 1000);
+    $totalTime = 0;
+    foreach(sfTimerManager::getTimers() as $timer)
+    {
+      $totalTime += $timer->getElapsedTime() * 1000;
+    }
+    return $totalTime;
   }
 
 }

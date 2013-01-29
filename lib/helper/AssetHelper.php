@@ -816,7 +816,8 @@ function get_javascript_configuration($options = array(), $app = null)
  */
 function use_jquery($position = 'first')
 {
-  return use_package('jquery', $position);
+  use_package_javascript('jquery', $position);
+  use_package_stylesheet('jquery', $position);    
 }
 
 /**
@@ -826,7 +827,8 @@ function use_jquery($position = 'first')
  */
 function use_jquery_ui($position = '')
 {
-  use_package('ui', $position);
+  use_package_javascript('ui', $position);
+  use_package_stylesheet('ui', $position);  
 }
 
 /**
@@ -860,6 +862,20 @@ function use_package_stylesheet($name, $position = '')
   foreach(sfAssetPackage::getStylesheets($name) as $stylesheet)
   {
     use_stylesheet($stylesheet, $position);
+  }
+}
+
+/**
+ * Use package stylesheets
+ * 
+ * @param string $name Package name (should be configured in asset_packages.yml)
+ * @param string $position Position
+ */
+function use_package_javascript($name, $position = '')
+{
+  foreach(sfAssetPackage::getJavascripts($name) as $js)
+  {
+    use_javascript($js, $position);
   }
 }
 

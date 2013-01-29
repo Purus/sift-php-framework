@@ -20,11 +20,8 @@ abstract class sfPlugin extends sfConfigurable {
     $name          = null;
 
   /**
-   * Constructor.
    * 
-   * @param sfProjectConfiguration $configuration The project configuration
-   * @param string                 $rootDir       The plugin root directory
-   * @param string                 $name          The plugin name
+   * @param array $options
    */
   public function __construct($options = array())
   {

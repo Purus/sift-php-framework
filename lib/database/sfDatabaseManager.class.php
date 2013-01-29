@@ -12,8 +12,6 @@
  *
  * @package    Sift
  * @subpackage database
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @author     Sean Kerr <sean@code-box.org>
  */
 class sfDatabaseManager {
 
@@ -50,6 +48,7 @@ class sfDatabaseManager {
     // load database configuration
     $this->databases = require(sfConfigCache::getInstance()->checkConfig(
                         sfConfig::get('sf_app_config_dir_name') . '/databases.yml'));
+    return true;
   }
 
   /**

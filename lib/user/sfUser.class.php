@@ -353,7 +353,6 @@ class sfUser {
     // write culture to the storage
     $storage->write(self::CULTURE_NAMESPACE, $this->culture);
 
-    session_write_close();
   }
 
   /**

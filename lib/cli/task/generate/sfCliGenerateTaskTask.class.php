@@ -25,7 +25,7 @@ class sfGenerateTaskTask extends sfCliGeneratorBaseTask
 
     $this->addOptions(array(
       new sfCliCommandOption('dir', null, sfCliCommandOption::PARAMETER_REQUIRED, 'The directory to create the task in', 'lib/cli/task'),
-      new sfCliCommandOption('use-database', null, sfCliCommandOption::PARAMETER_REQUIRED, 'Whether the task needs model initialization to access database', sfConfig::get('sf_orm')),
+      new sfCliCommandOption('use-database', null, sfCliCommandOption::PARAMETER_REQUIRED, 'Whether the task needs model initialization to access database'),
       new sfCliCommandOption('brief-description', null, sfCliCommandOption::PARAMETER_REQUIRED, 'A brief task description (appears in task list)'),
     ));
 

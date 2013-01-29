@@ -13,7 +13,7 @@ class browserActions extends sfActions
 
     return $this->renderText('text');
   }
-
+  
   public function executeResponseHeader()
   {
     $response = $this->getResponse();
@@ -24,4 +24,32 @@ class browserActions extends sfActions
 
     return $this->renderText('ok');
   }
+
+  public function executeTemplateCustom()
+  {
+    if($this->getRequestParameter('custom'))
+    {
+      $this->setTemplate('templateCustomCustom');
+    }
+  }
+
+  public function executeRedirect1()
+  {
+    $this->redirect('browser/redirectTarget1');
+  }
+
+  public function executeRedirectTarget1()
+  {
+  }
+
+  public function executeRedirect2()
+  {
+    $this->redirect('browser/redirectTarget2');
+  }
+
+  public function executeRedirectTarget2()
+  {
+    return $this->renderText('ok');
+  }
+  
 }

@@ -4,7 +4,7 @@
 all:
 
   title: 
-    name: ##APPLICATION_NAME##
+    name: ##APP_NAME##
     mode: append
     separator: ' ~ '
     max_length: 80

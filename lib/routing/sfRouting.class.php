@@ -22,7 +22,7 @@
 class sfRouting
 {
   protected static
-    $instance           = null;
+    $instances         = array();
 
   protected
     $current_route_name = '',
@@ -33,14 +33,26 @@ class sfRouting
    *
    * @return  sfRouting The sfRouting implementation instance
    */
-  public static function getInstance()
+  public static function getInstance($name = null)
   {
-    if (!isset(self::$instance))
+    if(null == $name)
     {
-      self::$instance = new sfRouting();
+      if(sfCore::hasProject() && sfCore::getProject()->hasActive())
+      {
+        $name = sfCore::getProject()->getActiveApplication()->getName();
+      }
+      else
+      {
+        $name = 'default';
+      }
+    }
+    
+    if (!isset(self::$instances[$name]))
+    {
+      self::$instances[$name] = new sfRouting();
     }
 
-    return self::$instance;
+    return self::$instances[$name];
   }
 
   /**

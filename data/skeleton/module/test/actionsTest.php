@@ -2,7 +2,7 @@
 
 include(dirname(__FILE__).'/../../bootstrap/functional.php');
 
-$browser = new sfTestFunctional(new sfBrowser());
+$browser = new sfTestFunctional();
 
 $browser->
   get('/##MODULE_NAME##/index')->
@@ -15,5 +15,4 @@ $browser->
   with('response')->begin()->
     isStatusCode(200)->
     checkElement('body', '!/##MODULE_NAME## created/')->
-  end()
-;
+  end();

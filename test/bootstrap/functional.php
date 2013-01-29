@@ -7,15 +7,23 @@ if (!extension_loaded('SQLite'))
 }
 
 define('SF_ROOT_DIR',    realpath(dirname(__FILE__).sprintf('/../%s/fixtures/project', isset($type) ? $type : 'functional')));
+
 define('SF_APP',         $app);
 define('SF_ENVIRONMENT', 'test');
 define('SF_DEBUG',       isset($debug) ? $debug : true);
 
-// initialize symfony
-require_once(SF_ROOT_DIR.DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.SF_APP.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'config.php');
+$sf_sift_lib_dir = dirname(__FILE__) . '/../../lib';
+$sf_sift_data_dir = dirname(__FILE__) . '/../../data';
 
-// remove all cache
-sfToolkit::clearDirectory(sfConfig::get('sf_cache_dir'));
+require_once $sf_sift_lib_dir . '/autoload/sfCoreAutoload.class.php';
+sfCoreAutoload::register();
+
+sfCore::bootstrap($sf_sift_lib_dir, $sf_sift_data_dir);
+
+sfContext::createInstance(
+  sfCore::getApplication(SF_APP, SF_ENVIRONMENT, SF_DEBUG),
+  'test'      // name of the context instance
+);
 
 if (isset($fixtures))
 {

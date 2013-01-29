@@ -281,5 +281,20 @@ abstract class sfConfigurable implements sfIConfigurable {
   {
     return $this->options;
   }
+  
+  /**
+   * Adds options. Overrides options already set with the same name.
+   * 
+   * @param array $options
+   * @return sfConfigurable
+   */
+  public function addOptions($options)
+  {
+    foreach($options as $o => $v)
+    {
+      $this->options[$o] = $v;
+    }
+    return $this;
+  }
 
 }

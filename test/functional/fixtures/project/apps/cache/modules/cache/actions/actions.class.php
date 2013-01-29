@@ -1,5 +1,13 @@
 <?php
 
+/**
+ * cache actions.
+ *
+ * @package    project
+ * @subpackage cache
+ * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
+ * @version    SVN: $Id: actions.class.php 31928 2011-01-29 16:02:51Z Kris.Wallsmith $
+ */
 class cacheActions extends sfActions
 {
   public function executeIndex()
@@ -10,6 +18,11 @@ class cacheActions extends sfActions
   {
   }
 
+  public function executeList()
+  {
+    $this->page = $this->getRequestParameter('page', 1);
+  }
+
   public function executeForward()
   {
     $this->forward('cache', 'page');
@@ -17,9 +30,22 @@ class cacheActions extends sfActions
 
   public function executeMulti()
   {
+    $this->getResponse()->setTitle('Param: '.$this->getRequestParameter('param'));
   }
 
   public function executeMultiBis()
+  {
+  }
+
+  public function executePartial()
+  {
+  }
+
+  public function executeAnotherPartial()
+  {
+  }
+
+  public function executeComponent()
   {
   }
 
@@ -66,7 +92,13 @@ class cacheActions extends sfActions
   protected function prepareImage()
   {
     $this->getResponse()->setContentType('image/png');
-    $this->image = file_get_contents(sfConfig::get('sf_sift_data_dir').'/web/sf/sf_web_debug/images/close.png');
+    $this->image = file_get_contents(dirname(__FILE__).'/../data/ok48.png');
     $this->setTemplate('image');
+  }
+
+  public function executeLastModifiedResponse()
+  {
+    $this->getResponse()->setHttpHeader('Last-Modified', $this->getResponse()->getDate(sfConfig::get('LAST_MODIFIED')));
+    $this->setTemplate('action');
   }
 }

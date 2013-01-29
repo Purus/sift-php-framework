@@ -25,48 +25,30 @@ class sfFrontWebController extends sfWebController
   {
     try
     {
-      if(sfConfig::get('sf_logging_enabled'))
-      {
-        $this->getContext()->getLogger()->info('{sfController} dispatch request');
-      }
-
       // reinitialize filters (needed for unit and functional tests)
       sfFilter::$filterCalled = array();
 
       // determine our module and action
-      $request    = $this->getContext()->getRequest();
+      $request    = $this->context->getRequest();
       $moduleName = $request->getParameter('module');
       $actionName = $request->getParameter('action');
+
+      if (empty($moduleName) || empty($actionName))
+      {
+        throw new sfError404Exception(sprintf('Empty module and/or action after parsing the URL "%s" (%s/%s).', $request->getPathInfo(), $moduleName, $actionName));
+      }
 
       // make the first request
       $this->forward($moduleName, $actionName);
     }
     catch (sfException $e)
     {
-      if (sfConfig::get('sf_test'))
-      {
-        throw $e;
-      }
-
       $e->printStackTrace();
     }
-    catch (Exception $e)
-    {
-      if (sfConfig::get('sf_test'))
-      {
-        throw $e;
-      }
-
-      try
-      {
-        // wrap non Sift exceptions
-        $sfException = new sfException($e->getMessage().' in '.$e->getFile().' line '.$e->getLine());
-        $sfException->printStackTrace($e);
-      }
-      catch (Exception $e)
-      {
-        @header('HTTP/1.0 500 Internal Server Error');
-      }
-    }
+    // FIXME: better stacktrace for wrapper exception since it does not link to proper line of file
+//    catch (Exception $e)
+//    {
+//      sfException::createFromException($e)->printStackTrace();
+//    }
   }
 }

@@ -99,7 +99,6 @@ EOF;
     file_put_contents($this->environment->get('sf_config_dir').'/config.php', $content);
   }
 
-
   protected function clearAllCache()
   {
     $task = new sfCliCacheClearTask($this->environment, 
@@ -108,7 +107,6 @@ EOF;
                                     $this->logger);
     
     $task->setCommandApplication($this->commandApplication);
-    $task->setConfiguration($this->configuration);
     $task->run();    
   }
   

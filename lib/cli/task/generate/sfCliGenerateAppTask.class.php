@@ -109,6 +109,10 @@ EOF;
     $finder = sfFinder::type('any')->discard('.*');
     $this->getFilesystem()->mirror($skeletonDir.'/app', $appDir, $finder);
 
+    $this->replaceTokens(array(
+        $appDir        
+    ), array('APP_NAME' => $app));
+    
     // Create $app.php or index.php if it is our first app
     $indexName = 'index';
     $firstApp = !file_exists($this->environment->get('sf_web_dir').'/index.php');
@@ -155,8 +159,11 @@ EOF;
                        '}'.PHP_EOL,
     ));
 
-    // $this->getFilesystem()->rename($appDir.'/config/ApplicationConfiguration.class.php', $appDir.'/config/'.$app.'Configuration.class.php');
-    // $this->getFilesystem()->replaceTokens($appDir.'/config/'.$app.'Configuration.class.php', '##', '##', array('APP_NAME' => $app));
+    $className = sprintf('my%sApplication', sfInflector::camelize($app));
+    
+    $this->getFilesystem()->rename($appDir.'/lib/application.class.php', $appDir.'/lib/'.$className.'.class.php');
+    $this->getFilesystem()->replaceTokens($appDir.'/lib/'.$className.'.class.php', '##', '##', 
+            array('CLASS_NAME' => $className, 'PROJECT_NAME' => $this->getProjectProperty('name')));
 
     // security
     $finder = sfFinder::type('file')->name('security.yml');    
@@ -165,7 +172,7 @@ EOF;
     ));
     
     // Create test dir
-    $this->getFilesystem()->mkdirs(sfConfig::get('sf_test_dir').'/functional/'.$app);
+    $this->getFilesystem()->mkdirs($this->environment->get('sf_test_dir').'/functional/'.$app);
     
     $this->logSection($this->getFullName(), 'Done.');    
 

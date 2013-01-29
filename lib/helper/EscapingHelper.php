@@ -44,6 +44,21 @@ function esc_entities($value)
 define('ESC_ENTITIES', 'esc_entities');
 
 /**
+ * Runs the PHP function htmlspecialchars on the value passed.
+ *
+ * @param string $value the value to escape
+ * @return string the escaped value
+ */
+function esc_specialchars($value)
+{
+  // Numbers and boolean values get turned into strings which can cause problems
+  // with type comparisons (e.g. === or is_int() etc).
+  return is_string($value) ? htmlspecialchars($value, ENT_QUOTES, sfConfig::get('sf_charset')) : $value;
+}
+
+define('ESC_SPECIALCHARS', 'esc_specialchars');
+
+/**
  * An identity function that merely returns that which it is given, the purpose
  * being to be able to specify that the value is not to be escaped in any way.
  *
@@ -85,7 +100,9 @@ define('ESC_JS', 'esc_js');
  */
 function esc_js_no_entities($value)
 {
-  return addcslashes($value, "\0..\37\\'\"\177..\377\/");
+  return str_replace(array("\\"  , "\n"  , "\r" , "\""  , "'"  ),
+                     array("\\\\", "\\n" , "\\r", "\\\"", "\\'"),
+                     $value);
 }
 
-define('ESC_JS_NO_ENTITIES', 'esc_js_no_entities');
+define('ESC_JS_NO_ENTITIES', 'esc_js_no_entities'); 

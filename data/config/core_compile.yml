@@ -16,10 +16,10 @@
 - %SF_SIFT_LIB_DIR%/storage/sfStorage.class.php
 - %SF_SIFT_LIB_DIR%/user/sfUser.class.php
 - %SF_SIFT_LIB_DIR%/user/sfBasicSecurityUser.class.php
-- %SF_SIFT_LIB_DIR%/util/sfContext.class.php
+#- %SF_SIFT_LIB_DIR%/util/sfContext.class.php
 - %SF_SIFT_LIB_DIR%/view/sfView.class.php
 - %SF_SIFT_LIB_DIR%/event/sfEvent.class.php
-- %SF_SIFT_LIB_DIR%/event/sfEventDispatcher.class.php
+#- %SF_SIFT_LIB_DIR%/event/sfEventDispatcher.class.php
 - %SF_SIFT_LIB_DIR%/controller/sfWebController.class.php
 - %SF_SIFT_LIB_DIR%/controller/sfFrontWebController.class.php
 - %SF_SIFT_LIB_DIR%/request/sfWebRequest.class.php

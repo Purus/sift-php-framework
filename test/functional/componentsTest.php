@@ -1,8 +1,5 @@
 <?php
 
-require_once(dirname(__FILE__).'/../../lib/util/sfToolkit.class.php');
-sfToolkit::clearDirectory(dirname(__FILE__).'/fixtures/project/cache');
-
 $app = 'frontend';
 $debug = false;
 if (!include(dirname(__FILE__).'/../bootstrap/functional.php'))
@@ -11,22 +8,29 @@ if (!include(dirname(__FILE__).'/../bootstrap/functional.php'))
 }
 
 $b = new sfTestBrowser();
-$b->initialize();
 
 // default main page (without cache)
 $b->
-  get('/component/index')->
-  isStatusCode(200)->
-  checkResponseElement('body', '/The truth is that Jesus is Lord/i')
-;
+  get('/component/index')
+    ->with('response')      
+    ->begin()
+    ->isStatusCode(200)->
+    checkElement('body', '/The truth is that Jesus is Lord/i')
+    ->end();        
 
 $b->
-  get('/component/disabled')->
-  isStatusCode(200)->
-  checkResponseElement('body', '/^\s+$/i');
+  get('/component/disabled')
+  ->with('response')      
+  ->begin()
+  ->isStatusCode(200)->        
+  checkElement('body', '/^\s+$/i')
+  ->end();
 
 $b->
-  get('/component/multi')->
-  isStatusCode(200)->
-  checkResponseElement('body', '/The truth is that Jesus is Lord The truth is that Jesus is the only Savior/i');
+  get('/component/multi')
+  ->with('response')      
+  ->begin()
+  ->isStatusCode(200)->        
+  checkResponseElement('body', '/The truth is that Jesus is Lord The truth is that Jesus is the only Savior/i')
+  ->end();
 

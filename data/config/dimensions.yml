@@ -1,0 +1,9 @@
+# You can find more information about this file on:
+# https://bitbucket.org/mishal/sift-php-framework/wiki/Dimensions
+
+# Dimensions can be anything: culture, brand, age, host, etc..
+# The format is: <dimension_name>: [<possible_values_comma_separated>]
+
+#dimensions:
+#	culture: 		  [en, fr, it, de]
+#	theme: 			  [classic, corporate]

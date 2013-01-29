@@ -18,41 +18,17 @@
  */
 abstract class sfRequest {
 
-  /**
-   * Process validation and execution for only GET requests.
-   *
-   */
-  const GET = 2;
+  const GET    = 'GET';
+  const POST   = 'POST';
+  const PUT    = 'PUT';
+  const DELETE = 'DELETE';
+  const HEAD   = 'HEAD';
 
   /**
    * Skip validation and execution for any request method.
    *
    */
   const NONE = 1;
-
-  /**
-   * Process validation and execution for only POST requests.
-   *
-   */
-  const POST = 4;
-
-  /**
-   * Process validation and execution for only PUT requests.
-   *
-   */
-  const PUT = 5;
-
-  /**
-   * Process validation and execution for only DELETE requests.
-   *
-   */
-  const DELETE = 6;
-
-  /**
-   * Process validation and execution for only HEAD requests.
-   *
-   */
-  const HEAD = 7;
 
   protected
     $errors = array(),
@@ -132,6 +108,8 @@ abstract class sfRequest {
    * @return int One of the following constants:
    *             - sfRequest::GET
    *             - sfRequest::POST
+   *             - sfRequest::PUT
+   *             - sfRequest::HEAD
    */
   public function getMethod()
   {
@@ -284,7 +262,7 @@ abstract class sfRequest {
    *
    * @return void
    *
-   * @throws <b>sfException</b> - If the specified request method is invalid
+   * @throws sfException - If the specified request method is invalid
    */
   public function setMethod($methodCode)
   {

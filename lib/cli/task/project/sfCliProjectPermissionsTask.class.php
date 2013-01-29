@@ -56,7 +56,7 @@ EOF;
       $this->chmod($uploadDir, 0777);
     }  
     
-    $this->chmod($this->environment->get('sf_cache_dir'), 0777);
+
     $this->chmod($this->environment->get('sf_log_dir'), 0777);
     $this->chmod($this->environment->get('sf_root_dir').'/sift', 0777);
 

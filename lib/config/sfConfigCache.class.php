@@ -13,27 +13,52 @@
  *
  * @package    Sift
  * @subpackage config
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @author     Sean Kerr <sean@code-box.org>
  */
-class sfConfigCache {
+class sfConfigCache extends sfConfigurable {
 
   protected $handlers = array();
+  
+  protected static $instances = array();
+  
   protected static $instance = null;
-
+  
   /**
    * Retrieves the singleton instance of this class.
    *
    * @return sfConfigCache A sfConfigCache instance
    */
-  public static function getInstance()
+  public static function getInstance($application = null)
   {
-    if(!self::$instance)
+    $options = array();
+    
+    if(!$application)
     {
-      self::$instance = new sfConfigCache();
+      if(sfCore::hasProject() && sfCore::getProject()->hasActive())
+      {
+        $application = sfCore::getProject()->getActiveApplication()->getName();
+      }
+      else
+      {
+        $application = 'default';
+      }      
+    }
+    elseif($application instanceof sfApplication)
+    {
+      $options = $application->getOptions();
+      $application = $application->getName();      
+    }
+    elseif($application instanceof sfProject)
+    {      
+      $options = $application->getOptions();
+      $application = '_project';
     }
 
-    return self::$instance;
+    if(!isset(self::$instances[$application]))
+    {
+      self::$instances[$application] = new sfConfigCache($options);
+    }
+    
+    return self::$instances[$application];
   }
 
   /**
@@ -262,13 +287,13 @@ class sfConfigCache {
     // manually create our config_handlers.yml handler
     $this->handlers['config_handlers.yml'] = new sfRootConfigHandler();
     $this->handlers['config_handlers.yml']->initialize();
-
+    
     // application configuration handlers
-    require_once($this->checkConfig(sfConfig::get('sf_app_config_dir_name') . '/config_handlers.yml'));
-
+    require_once($this->checkConfig($this->getOption('sf_app_config_dir_name') . '/config_handlers.yml'));
+    
     // module level configuration handlers
     // make sure our modules directory exists
-    if(is_readable($sf_app_module_dir = sfConfig::get('sf_app_module_dir')))
+    if(is_readable($sf_app_module_dir = $this->getOption('sf_app_module_dir')))
     {
       // ignore names
       $ignore = array('.', '..', 'CVS', '.svn', '.git');
@@ -281,7 +306,7 @@ class sfConfigCache {
       {
         if(!in_array($directory, $ignore))
         {
-          $configPath = $sf_app_module_dir . '/' . $directory . '/' . sfConfig::get('sf_app_module_config_dir_name') . '/config_handlers.yml';
+          $configPath = $sf_app_module_dir . '/' . $directory . '/' . $this->getOption('sf_app_module_config_dir_name') . '/config_handlers.yml';
 
           if(is_readable($configPath))
           {
@@ -292,7 +317,7 @@ class sfConfigCache {
 
             // replace module dir path with a special keyword that
             // checkConfig knows how to use
-            $configPath = sfConfig::get('sf_app_module_dir_name') . '/' . $directory . '/' . sfConfig::get('sf_app_module_config_dir_name') . '/config_handlers.yml';
+            $configPath = $this->getOption('sf_app_module_dir_name') . '/' . $directory . '/' . $this->getOption('sf_app_module_config_dir_name') . '/config_handlers.yml';
 
             require_once($this->checkConfig($configPath));
           }
@@ -301,11 +326,6 @@ class sfConfigCache {
 
       // close file pointer
       closedir($fp);
-    }
-    else
-    {
-      // module directory doesn't exist or isn't readable
-      throw new sfConfigurationException(sprintf('Module directory "%s" does not exist or is not readable', sfConfig::get('sf_app_module_dir')));
     }
   }
 

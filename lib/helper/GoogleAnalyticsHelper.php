@@ -132,16 +132,18 @@ function google_analytics_base_configuration($options = array())
   }
   
   // add tracking of links to the response
-  // FIXME: this should be configured in packages
+  use_package('google_analytics_tracker');
   
-  $sift_web_dir = sfConfig::get('sf_sift_web_dir', '/sf');
+  $setupScripts = sfAssetPackage::getJavascripts('google_analytics_setup');
   
-  use_jquery();
-  use_javascript($sift_web_dir.'/js/core/core.js');
-  use_javascript($sift_web_dir.'/js/core/ga.js');
-
-  return javascript_tag(join("\n", $js)) .  
-         javascript_include_tag($sift_web_dir.'/js/core/ga-setup.js');
+  $return = javascript_tag(join("\n", $js));
+  
+  foreach($setupScripts as $script)
+  {
+    $return .= javascript_include_tag($script);
+  }        
+  
+  return $return;
 }
 
 function google_analytics_include_remote_javascript($src = null)

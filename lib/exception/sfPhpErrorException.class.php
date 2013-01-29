@@ -61,7 +61,7 @@ class sfPhpErrorException extends sfException {
       case E_USER_DEPRECATED:
       case E_NOTICE:
       case E_USER_NOTICE:
-        if($sf_debug)
+        if($sf_debug && sfContext::hasInstance())
         {
           sfContext::getInstance()->getLogger()->warning(sprintf('{sfPhpErrorException} %s, file: "%s", line: %s', $string, $file, $line));
         }

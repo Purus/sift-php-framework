@@ -1365,7 +1365,7 @@ class sfForm implements ArrayAccess, Iterator, Countable
   {
     sfLoader::loadHelpers('Url', 'Asset');
 
-    $opt = sfConvert::toArray($opt);
+    $opt = sfInputFilters::toArray($opt);
 
     $defaults = array(
       'class' => isset($opt['class']) ? $opt['class'] : '',

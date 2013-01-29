@@ -14,11 +14,13 @@
  *
  * @package    Sift
  * @subpackage util
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @author     Sean Kerr <sean@code-box.org>
  */
 class sfContext
 {
+  protected
+    $dispatcher        = null,
+    $application       = null;
+          
   protected
     $actionStack       = null,
     $controller        = null,
@@ -33,20 +35,43 @@ class sfContext
     $mailer            = null;
 
   protected static
-    $instance          = null;
-
+    $instances = array(),
+    $current   = null;
+  
   /**
-   * Removes current sfContext instance
+   * Creates a new context instance.
    *
-   * This method only exists for testing purpose. Don't use it in your application code.
+   * @param  sfApplication $application  An sfApplication instance
+   * @param  string        $name         A name for this context (application name by default)
+   * @param  string        $class        The context class to use (sfContext by default)
+   *
+   * @return sfContext An sfContext instance
    */
-  public static function removeInstance()
+  static public function createInstance(sfApplication $application, $name = null, $class = __CLASS__)
   {
-    self::$instance = null;
-  }
+    if(null === $name)
+    {
+      $name = $application->getName();
+    }
 
-  protected function initialize()
+    self::$current = $name;
+    self::$instances[$name] = new $class();
+
+    if (!self::$instances[$name] instanceof sfContext)
+    {
+      throw new sfFactoryException(sprintf('Class "%s" is not of the type sfContext.', $class));
+    }
+
+    self::$instances[$name]->initialize($application);
+    
+    return self::$instances[$name];
+  }
+  
+  protected function initialize($application)
   {
+    $this->application = $application;
+    $this->dispatcher  = $application->getEventDispatcher();
+    
     $this->logger = sfLogger::getInstance();
     if (sfConfig::get('sf_logging_enabled'))
     {
@@ -73,32 +98,110 @@ class sfContext
   }
 
   /**
-   * Retrieve the singleton instance of this class.
-   *
-   * @return sfContext A sfContext implementation instance.
+   * 
+   * @return sfApplication
    */
-  public static function getInstance()
+  public function getApplication()
   {
-    if (!isset(self::$instance))
+    return $this->application;
+  }
+  
+  /**
+   * Retrieves the singleton instance of this class.
+   *
+   * @param  string    $name   The name of the sfContext to retrieve.
+   *
+   * @return sfContext An sfContext implementation instance.
+   */
+  static public function getInstance($name = null)
+  {
+    if (null === $name)
     {
-      $class = __CLASS__;
-      self::$instance = new $class();
-      self::$instance->initialize();
+      $name = self::$current;
+    }
+    
+    if(!isset(self::$instances[$name]))
+    {
+      throw new sfException(sprintf('The "%s" context does not exist.', $name));
     }
 
-    return self::$instance;
+    return self::$instances[$name];
   }
-
+  
   /**
-   * Checks if there is an instance of sfContext already initialized
-   * 
-   * @return boolean
+   * Checks to see if there has been a context created
+   *
+   * @param  string $name  The name of the sfContext to check for
+   *
+   * @return bool true is instanced, otherwise false
    */
-  public static function hasInstance()
-  {
-    return isset(self::$instance);
-  }
 
+  public static function hasInstance($name = null)
+  {
+    if (null === $name)
+    {
+      $name = self::$current;
+    }
+
+    return isset(self::$instances[$name]);
+  } 
+  
+  /**
+   * Loads the symfony factories.
+   */
+  public function loadFactories()
+  {
+    if (sfConfig::get('sf_use_database'))
+    {
+      // setup our database connections
+      $this->factories['databaseManager'] = new sfDatabaseManager($this->application, 
+              array('auto_shutdown' => false));
+    }
+
+    // create a new action stack
+    $this->factories['actionStack'] = new sfActionStack();
+
+    if (sfConfig::get('sf_debug') && sfConfig::get('sf_logging_enabled'))
+    {
+      $timer = sfTimerManager::getTimer('Factories');
+    }
+
+    // include the factories configuration
+    require(sfConfigCache::getInstance()->checkConfig('config/factories.yml'));
+      
+    $this->dispatcher->notify(new sfEvent('context.load_factories'));
+
+    if (sfConfig::get('sf_debug') && sfConfig::get('sf_logging_enabled'))
+    {
+      $timer->addTime();
+    }
+  }
+  
+  /**
+   * Dispatches the current request.
+   */
+  public function dispatch()
+  {
+    $this->getController()->dispatch();
+  }
+  
+  /**
+   * Sets the current context to something else
+   *
+   * @param string $name  The name of the context to switch to
+   *
+   */
+  public static function switchTo($name)
+  {
+    if(!isset(self::$instances[$name]))
+    {
+      $current = sfContext::getInstance()->getApplication();      
+      sfContext::createInstance(sfCore::getProject()->getApplication($name, 
+        $current->getEnvironment(), $current->isDebug()));
+    }
+    self::$current = $name;
+  }
+  
   /**
    * Retrieve the action name for this context.
    *

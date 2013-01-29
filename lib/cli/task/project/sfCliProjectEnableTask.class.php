@@ -69,7 +69,6 @@ EOF;
         
         $clearCache = new sfCliCacheClearTask($this->environment, $this->dispatcher, $this->formatter, $this->logger);
         $clearCache->setCommandApplication($this->commandApplication);
-        $clearCache->setConfiguration($this->configuration);
         $clearCache->run(array(), array('--app='.$app, '--env='.$env));        
       }
     }
