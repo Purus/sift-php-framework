@@ -533,6 +533,22 @@ abstract class sfApplication extends sfProject {
   }
   
   /**
+   * Checks if Sift has been currently updated. If yes, clears the cache directory.
+   * 
+   */
+  public function checkSiftVersion()
+  {
+    // recent Sift update?
+    $last_version    = @file_get_contents(sfConfig::get('sf_config_cache_dir').'/VERSION');
+    $current_version = sfCore::getVersion();
+    if($last_version != $current_version)
+    {
+      // clear cache
+      sfToolkit::clearDirectory(sfConfig::get('sf_cache_dir'));
+    }
+  }
+  
+  /**
    * Active the application
    * 
    */

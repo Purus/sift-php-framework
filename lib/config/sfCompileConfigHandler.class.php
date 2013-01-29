@@ -86,7 +86,7 @@ class sfCompileConfigHandler extends sfYamlConfigHandler
                       date('Y/m/d H:i:s'), $data);
 
     // save current sift release
-    file_put_contents(sfConfig::get('sf_config_cache_dir').'/VERSION', file_get_contents(sfConfig::get('sf_sift_lib_dir').'/VERSION'));
+    file_put_contents(sfConfig::get('sf_config_cache_dir').'/VERSION', sfCore::getVersion());
 
     return $retval;
   }
