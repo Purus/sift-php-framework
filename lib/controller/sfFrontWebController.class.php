@@ -46,9 +46,9 @@ class sfFrontWebController extends sfWebController
       $e->printStackTrace();
     }
     // FIXME: better stacktrace for wrapper exception since it does not link to proper line of file
-//    catch (Exception $e)
-//    {
-//      sfException::createFromException($e)->printStackTrace();
-//    }
+    catch (Exception $e)
+    {
+      sfException::createFromException($e)->printStackTrace();
+    }
   }
 }
