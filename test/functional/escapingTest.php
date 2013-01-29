@@ -27,6 +27,7 @@ $b->get('/escaping/on')
   ->end()
 ;
 
+
 $b->get('/escaping/off')
 
   ->with('request')->begin()
@@ -36,6 +37,22 @@ $b->get('/escaping/off')
 
   ->with('response')->begin()
     ->isStatusCode(200)
+    ->matches('#<h1>Lorem <strong>ipsum</strong> dolor sit amet.</h1>#')
+    ->matches('#<h2>Lorem <strong>ipsum</strong> dolor sit amet.</h2>#')
+  ->end()
+;
+
+$b->get('/escaping/component')
+
+  ->with('request')->begin()
+    ->isParameter('module', 'escaping')
+    ->isParameter('action', 'component')
+  ->end()
+
+  ->with('response')->begin()
+    ->isStatusCode(200)
+    ->matches('#<h1>Jesus is Lord!</h1>#')
+    ->checkElement('span.truth', 1)
     ->matches('#<h1>Lorem <strong>ipsum</strong> dolor sit amet.</h1>#')
     ->matches('#<h2>Lorem <strong>ipsum</strong> dolor sit amet.</h2>#')
   ->end()

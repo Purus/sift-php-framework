@@ -38,13 +38,13 @@ class sfPHPView extends sfView
       'sf_request' => $context->getRequest(),
       'sf_user'    => $context->getUser(),
       'sf_response' => $context->getResponse(),
-      'sf_view'    => &$this,
+      'sf_view'    => $this,
     );
 
     if(sfConfig::get('sf_use_flash'))
     {
       $sf_flash = new sfParameterHolder();
-      $sf_flash->add($context->getUser()->getAttributeHolder()->getAll('sift/flash'));
+      $sf_flash->add($context->getUser()->getAttributeHolder()->getAll(sfUser::FLASH_NAMESPACE));
       $shortcuts['sf_flash'] = $sf_flash;
     }
 
@@ -74,7 +74,7 @@ class sfPHPView extends sfView
   /**
    * Renders the presentation.
    *
-   * @param string Filename
+   * @param  string $_sfFile  Filename
    *
    * @return string File content
    */
@@ -82,71 +82,75 @@ class sfPHPView extends sfView
   {
     if(sfConfig::get('sf_debug'))
     {
-      $timer = sfTimerManager::getTimer('{sfView} render "'.basename($_sfFile).'"');
+      $timer = sfTimerManager::getTimer('View');
     }
-
+    
     if(sfConfig::get('sf_logging_enabled'))
     {
-      $this->getContext()->getLogger()->info('{sfView} render "'.$_sfFile.'"');
+      sfLogger::getInstance()->log(sprintf('{sfView} Render "%s"', $_sfFile));
     }
 
     $this->loadHelpers();
 
-    $_escaping = $this->getEscaping();
-
-    if ($_escaping === false || $_escaping === 'bc')
-    {
-      $vars = $this->attributeHolder->getAll();
-      extract($vars);
-    }
-
-    if(sfConfig::get('sf_debug'))
-    {
-      $timer->addTime();
-    }
-
-    if ($_escaping !== false)
-    {
-      if(sfConfig::get('sf_debug'))
-      {
-        $timer2 = sfTimerManager::getTimer('{sfView} escaping using "'. $this->getEscapingMethod() .'"');
-      }
-
-      $sf_data = sfOutputEscaper::escape($this->getEscapingMethod(), $this->attributeHolder->getAll());
-
-      if ($_escaping === 'both')
-      {
-        foreach ($sf_data as $_key => $_value)
-        {
-          ${$_key} = $_value;
-        }
-      }
-
-      if(sfConfig::get('sf_debug'))
-      {
-        $timer2->addTime();
-      }
-
-    }
-    else
-    {
-     // $sf_data = sfOutputEscaper::escape(ESC_RAW, $this->attributeHolder->getAll());
-    }  
+    // EXTR_REFS can't be used (see #3595 and #3151)
+    $vars = $this->getVariables();
+    extract($vars);
 
     // render
     ob_start();
     ob_implicit_flush(0);
-    require($_sfFile);
-    $content = ob_get_clean();
+
+    try
+    {
+      require($_sfFile);
+    }
+    catch (Exception $e)
+    {
+      // need to end output buffering before throwing the exception #7596
+      ob_end_clean();
+      throw $e;
+    }
 
     if(sfConfig::get('sf_debug'))
     {
       $timer->addTime();
     }
-
-    return $content;
+    
+    return ob_get_clean();
   }
+  
+  /**
+   * Returns an array of variable to be accessible to template
+   * 
+   * @return array
+   */
+  protected function getVariables()
+  {
+    $attributes = array();
 
+    // filter by event system
+    $parameters = sfCore::filterByEventListeners($this->attributeHolder->getAll(), 
+            'view.template.variables', array(
+            'view' => $this
+    ));
+
+    if($this->getEscaping())
+    {
+      $attributes['sf_data'] = sfOutputEscaper::escape($this->getEscapingMethod(), $parameters);      
+      foreach($attributes['sf_data'] as $key => $value)
+      {
+        $attributes[$key] = $value;
+      }     
+    }
+    else
+    {
+      $attributes = $parameters;
+      $attributes['sf_data'] = sfOutputEscaper::escape(ESC_RAW, $parameters);      
+    }
+
+    return $attributes;      
+  }
+  
   /**
    * Retrieves the template engine associated with this view.
    *

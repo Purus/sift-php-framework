@@ -224,6 +224,8 @@ function get_component($moduleName, $componentName, $vars = array(), $viewName =
     $view     = new $viewName;
     
     $view->initialize($context, $moduleName, $actionName, '');
+    
+    $view->setPartialVars(true === sfConfig::get('sf_escaping_strategy') ? sfOutputEscaper::unescape($vars) : $vars); 
 
     $retval = $view->render($componentInstance->getVarHolder()->getAll());
 
@@ -341,7 +343,8 @@ function get_partial($templateName, $vars = array(), $viewName = null)
   $view = new $viewName;    
   
   $view->initialize($context, $moduleName, $actionName, '');
-  $retval = $view->render($vars);
+  $view->setPartialVars(true === sfConfig::get('sf_escaping_strategy') ? sfOutputEscaper::unescape($vars) : $vars);  
+  $retval = $view->render();
 
   if ($cacheManager && (!sfConfig::get('sf_lazy_cache_key') || $cacheManager->isCacheable($moduleName, $actionName)))
   {

@@ -15,6 +15,9 @@
  */
 class sfPartialView extends sfPHPView
 {
+  protected
+    $partialVars = array();
+  
   /**
    * Executes any presentation logic for this view.
    */
@@ -40,6 +43,15 @@ class sfPartialView extends sfPHPView
     }
   }
 
+  /**
+   * @param array $partialVars
+   */
+  public function setPartialVars(array $partialVars)
+  {
+    $this->partialVars = $partialVars;
+    $this->attributeHolder->add($partialVars);
+  }
+  
   /**
    * Renders the presentation.
    *
