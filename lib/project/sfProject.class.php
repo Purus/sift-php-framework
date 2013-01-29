@@ -144,7 +144,11 @@ abstract class sfProject extends sfConfigurable {
     $this->setup();
   }
   
-  
+  /**
+   * Initializes the autoloading feature
+   * 
+   * @param boolean $reload Force the reload?
+   */
   public function initializeAutoload($reload = false)
   {
     if($this instanceof sfApplication)
@@ -179,81 +183,37 @@ abstract class sfProject extends sfConfigurable {
     
     $autoload = sfSimpleAutoload::getInstance($cacheFile);    
     
-    if(is_readable($cacheFile))
+    if(!is_readable($cacheFile))
     {
-      $autoload->register();
-      return;
-    }
-    
-    // Sift
-    $files = array(
-      $this->getOption('sf_sift_data_dir') . '/config/autoload.yml'
-    );    
-    
-    // project
-    if(is_readable(
-      $file = sprintf('%s/%s/autoload.yml', $this->getOption('sf_root_dir'), $this->getOption('sf_config_dir_name'))))
-    {
-      $files[] = $file;
-    }
-    
-    // plugins
-    if($pluginDirs = glob($this->getOption('sf_plugins_dir').DS.'*'.DS.$this->getOption('sf_config_dir_name') 
-            .'/autoload.yml'))
-    {
-      $files = array_merge($files, $pluginDirs);                                    
-    }    
-    
-    $autoload->loadConfiguration($files);
-    
-    $autoload->saveCache(true);
-    $autoload->register();
-  }
-  
-  /**
-   * Initializes autoloading features
-   * 
-   * 
-   */
-  public function initializeAutoloadOLd()
-  {
-    // application configrations
-    if($this instanceof sfApplication)
-    {
-      $autoload = new sfClassLoader();
-      $autoload->addClassMap(include $this->configCache->checkConfig($this->getOption('sf_config_dir_name').'/autoload.yml'));
-    }
-    else
-    {
-      $cacheFile = $this->getOption('sf_root_cache_dir').'/project_autoload.cache';    
-      $autoload = sfSimpleAutoload::getInstance($cacheFile);
-    
-      // sift configuration file
+      // Sift
       $files = array(
         $this->getOption('sf_sift_data_dir') . '/config/autoload.yml'
-      );
+      );    
 
+      // project
       if(is_readable(
         $file = sprintf('%s/%s/autoload.yml', $this->getOption('sf_root_dir'), $this->getOption('sf_config_dir_name'))))
       {
         $files[] = $file;
       }
-      
-      $autoload->loadConfiguration($files);
-      if(!is_readable($cacheFile))
+
+      // plugins
+      if($pluginDirs = glob($this->getOption('sf_plugins_dir').DS.'*'.DS.$this->getOption('sf_config_dir_name') 
+              .'/autoload.yml'))
       {
-        $autoload->saveCache(true);
-      }
-      
+        $files = array_merge($files, $pluginDirs);                                    
+      }    
+
+      $autoload->loadConfiguration($files);
+      $autoload->saveCache(true);
     }
     
-    // register autoloader
     $autoload->register();
     
     // switch the order of autoloaders, lets core be after the simple autoload
     sfCoreAutoload::unregister();
     // register again as second autoloader
-    sfCoreAutoload::register();
+    sfCoreAutoload::register();    
   }
   
   /**
