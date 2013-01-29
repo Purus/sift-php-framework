@@ -123,7 +123,7 @@ abstract class sfProject extends sfConfigurable {
     $this->addOptions(array(    
       'sf_web_dir' => $sf_root_dir . DS . $this->getOption('sf_web_dir_name'),
       'sf_upload_dir' => $sf_root_dir . DS . $this->getOption('sf_web_dir_name') . DS . $this->getOption('sf_upload_dir_name'),
-      'sf_root_cache_dir' => $sf_root_cache_dir = ($this->getOption('sf_root_dir') . DS . $this->getOption('sf_cache_dir_name')),
+      'sf_root_cache_dir' => $this->getOption('sf_root_dir') . DS . $this->getOption('sf_cache_dir_name'),
       'sf_log_dir' => $sf_root_dir . DS . $this->getOption('sf_log_dir_name'),
       'sf_data_dir' => $sf_root_dir . DS . $this->getOption('sf_data_dir_name'),
       'sf_config_dir' => $sf_root_dir . DS . $this->getOption('sf_config_dir_name'),
@@ -144,6 +144,15 @@ abstract class sfProject extends sfConfigurable {
     $this->setup();
   }
   
+  /**
+   * Setups the current project
+   *
+   * Override this method if you want to customize your project.
+   */
+  public function setup()
+  {
+  }
+    
   /**
    * Initializes the autoloading feature
    * 
@@ -213,7 +222,7 @@ abstract class sfProject extends sfConfigurable {
     // switch the order of autoloaders, lets core be after the simple autoload
     sfCoreAutoload::unregister();
     // register again as second autoloader
-    sfCoreAutoload::register();    
+    sfCoreAutoload::register(); 
   }
   
   /**
@@ -227,6 +236,7 @@ abstract class sfProject extends sfConfigurable {
   }
   
   /**
+   * Returns the dispatcher instance
    * 
    * @return sfEventDispatcher
    */
@@ -236,14 +246,10 @@ abstract class sfProject extends sfConfigurable {
   }
   
   /**
-   * Setups the current project
-   *
-   * Override this method if you want to customize your project.
+   * Return an array of core helpers
+   * 
+   * @return array
    */
-  public function setup()
-  {
-  }
-  
   public function getCoreHelpers()
   {
     return array('Helper', 'Url', 'Asset', 'Tag', 'Escaping');  
@@ -405,137 +411,25 @@ abstract class sfProject extends sfConfigurable {
   }  
   
   /**
-   * Gets the configuration file paths for a given relative configuration path.
+   * Calls methods defined via sfEventDispatcher.
    *
-   * @param string The configuration path
+   * @param string $method The method name
+   * @param array  $arguments The method arguments
    *
-   * @return array An array of paths
+   * @return mixed The returned value of the called method
    */
-  public function getConfigPaths($configPath)
+  public function __call($method, $arguments)
   {
-    // fix for windows paths
-    $configPath = str_replace('/', DS, $configPath);
-
-    $sf_sift_data_dir = $this->getOption('sf_sift_data_dir');
-    $sf_root_dir = $this->getOption('sf_root_dir');
-    $sf_app_dir = $this->getOption('sf_app_dir');
-    $sf_plugins_dir = $this->getOption('sf_plugins_dir');
-
-    $configName = basename($configPath);
-    $globalConfigPath = basename(dirname($configPath)) . DS . $configName;
-
-    $files = array(
-        // sift
-        $sf_sift_data_dir . DS . $globalConfigPath,
-         // core modules
-        $sf_sift_data_dir . DS . $configPath,
-    );
-
-    if($pluginDirs = glob($sf_plugins_dir . DS . '*' . DS . $globalConfigPath))
-    {
-      // plugins
-      $files = array_merge($files, $pluginDirs);
-    }
-
-    $files = array_merge($files, array(
-        $sf_root_dir . DS . $globalConfigPath, // project
-        $sf_root_dir . DS . $configPath, // project
-       
-        // disable generated module
-        // generated modules
-        // sfConfig::get('sf_cache_dir').DS.$configPath,
-    ));
-
-    if($sf_app_dir)
-    {
-      $files[] =  $sf_app_dir . DS . $globalConfigPath; // application
-    }
+    $event = $this->dispatcher->notifyUntil(new sfEvent('configuration.method_not_found',             
+            array('subject' => $this, 'method' => $method, 'arguments' => $arguments)));
     
-    if($pluginDirs = glob($sf_plugins_dir . DS . '*' . DS . $configPath))
+    if (!$event->isProcessed())
     {
-      // plugins
-      $files = array_merge($files, $pluginDirs);
+      throw new sfException(sprintf('Call to undefined method %s::%s.', get_class($this), $method));
     }
 
-    // module
-    $files[] = $sf_app_dir . DS . $configPath;
-
-    // If the configuration file can be overridden with a dimension, inject the appropriate path
-    $applicationConfigurationFiles = array(
-        'app.yml', 'factories.yml', 'filters.yml', 'i18n.yml', 
-        'logging.yml', 'settings.yml', 'databases.yml', 'routing.yml',
-        'asset_packages.yml'        
-    );
-    
-    $moduleConfigurationFiles = array('cache.yml', 'module.yml', 'security.yml', 'view.yml');
-
-    $configurationFiles = array_merge($applicationConfigurationFiles, $moduleConfigurationFiles);
-
-    if((in_array($configName, $configurationFiles) || (strpos($configPath, 'validate'))))
-    {
-      $sf_dimension_dirs = $this->getOption('sf_dimension_dirs');
-
-      if(is_array($sf_dimension_dirs) && !empty($sf_dimension_dirs))
-      {
-        $sf_dimension_dirs = array_reverse($sf_dimension_dirs);     // reverse dimensions for proper cascading
-
-        $applicationDimensionDirectory = $sf_app_dir . DS . dirname($globalConfigPath) . DS . '%s' . DS . $configName;
-        $moduleDimensionDirectory = $sf_app_dir . DS . dirname($configPath) . DS . '%s' . DS . $configName;
-
-        foreach($sf_dimension_dirs as $dimension)
-        {
-          if(in_array($configName, $configurationFiles))       // application
-          {
-            foreach($sf_dimension_dirs as $dimension)
-            {
-              $files[] = sprintf($applicationDimensionDirectory, $dimension);
-            }
-          }
-
-          if(in_array($configName, $moduleConfigurationFiles) || strpos($configPath, 'validate'))      // module
-          {
-            foreach($sf_dimension_dirs as $dimension)
-            {
-              $files[] = sprintf($moduleDimensionDirectory, $dimension);
-            }
-          }
-        }
-      }
-    }
-
-    $configs = array();
-    foreach(array_unique($files) as $file)
-    {
-      if(is_readable($file))
-      {
-        $configs[] = $file;
-      }
-    }
-
-    return $configs;
+    return $event->getReturnValue();
   }
-  
-  
-//  /**
-//   * Calls methods defined via sfEventDispatcher.
-//   *
-//   * @param string $method The method name
-//   * @param array  $arguments The method arguments
-//   *
-//   * @return mixed The returned value of the called method
-//   */
-//  public function __call($method, $arguments)
-//  {
-//    $event = $this->dispatcher->notifyUntil(new sfEvent('configuration.method_not_found',             
-//            array('subject' => $this, 'method' => $method, 'arguments' => $arguments)));
-//    
-//    if (!$event->isProcessed())
-//    {
-//      throw new sfException(sprintf('Call to undefined method %s::%s.', get_class($this), $method));
-//    }
-//
-//    return $event->getReturnValue();
-//  }  
   
 }
 
