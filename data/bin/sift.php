@@ -16,24 +16,17 @@ sfCoreAutoload::register();
 
 try
 { 
-//  define('SF_ROOT_DIR', getcwd());
-//  
-  sfCore::getVersion();
-  
-  sfConfig::add(array(
+  $environment = new sfCliTaskEnvironment(array(
+    'sf_sift_version'  => sfCore::getVersion(),  
+    'sf_sift_name'     => 'Sift',
     'sf_root_dir'      => getcwd(),
     'sf_sift_lib_dir'  => $sf_sift_lib_dir,
     'sf_sift_data_dir' => $sf_sift_data_dir,  
-    'script_name' => sprintf('./%s', $_SERVER['PHP_SELF'])
+    'script_name'      => sprintf('./%s', $_SERVER['PHP_SELF'])
   ));
   
-//
-//  sfCore::bootstrap($sf_sift_lib_dir, $sf_sift_data_dir);
-
-  $environment = new sfCliTaskEnvironment(sfConfig::getAll());
-  $application = new sfCliRootCommandApplication($environment);  
-  $statusCode = $application->run();
-  
+  $application = new sfCliRootCommandApplication($environment);
+  $statusCode = $application->run();  
 }
 catch(Exception $e)
 {

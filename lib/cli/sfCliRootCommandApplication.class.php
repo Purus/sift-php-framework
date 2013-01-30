@@ -20,6 +20,9 @@ class sfCliRootCommandApplication extends sfCliCommandApplication
           sfEventDispatcher $dispatcher = null, sfCliFormatter $formatter = null, sfConsoleLogger $logger = null)
   {
     parent::__construct($env, $dispatcher, $formatter, $logger);
+    
+    
+    
   }
   
   /**
@@ -27,9 +30,9 @@ class sfCliRootCommandApplication extends sfCliCommandApplication
    */
   public function configure()
   {
-    $this->setName('Sift');
-    $this->setScriptName('./sift');  
-    $this->setVersion(sfCore::getVersion());
+    $this->setName($this->environment->get('sf_sift_name', 'Sift'));
+    $this->setScriptName($this->environment->get('script_name', './sift'));  
+    $this->setVersion($this->environment->get('sf_sift_version', 'UNKNOWN'));
     $this->loadTasks();
   }
 
