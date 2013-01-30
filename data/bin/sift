@@ -15,7 +15,7 @@ if(file_exists('config/config.php'))
 
 if(!isset($sf_sift_lib_dir))
 {
-  if(is_readable(dirname(__FILE__).'/../../lib/VERSION'))
+  if(is_readable(dirname(__FILE__).'/../../lib/core/sfCore.class.php'))
   {
     $sf_sift_lib_dir  = realpath(dirname(__FILE__).'/../../lib');
     $sf_sift_data_dir = realpath(dirname(__FILE__).'/..');
