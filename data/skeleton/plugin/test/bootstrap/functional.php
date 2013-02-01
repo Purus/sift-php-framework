@@ -6,14 +6,14 @@ if(!isset($app))
 }
 
 // load settings from project config.php
-include dirname(__FILE__) . '/../../../config/config.php';
+include dirname(__FILE__) . '/../../../../config/config.php';
 
 define('SF_ROOT_DIR', dirname(__FILE__) . '/../fixtures/project/');
 
 require_once $sf_sift_lib_dir . '/autoload/sfCoreAutoload.class.php';
 sfCoreAutoload::register();
 
-sfCore::bootstrap($sf_sift_lib_dir, $sf_sift_data_dir);
+sfCore::bootstrap($sf_sift_lib_dir, $sf_sift_data_dir, true);
 
 function ##PLUGIN_NAME##_cleanup()
 {

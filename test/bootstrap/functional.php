@@ -18,7 +18,7 @@ $sf_sift_data_dir = dirname(__FILE__) . '/../../data';
 require_once $sf_sift_lib_dir . '/autoload/sfCoreAutoload.class.php';
 sfCoreAutoload::register();
 
-sfCore::bootstrap($sf_sift_lib_dir, $sf_sift_data_dir);
+sfCore::bootstrap($sf_sift_lib_dir, $sf_sift_data_dir, true);
 
 sfContext::createInstance(
   sfCore::getApplication(SF_APP, SF_ENVIRONMENT, SF_DEBUG),

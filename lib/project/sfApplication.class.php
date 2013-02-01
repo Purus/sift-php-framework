@@ -261,8 +261,8 @@ abstract class sfApplication extends sfProject {
     // required core classes for the framework   
     if(!$sf_debug && !sfConfig::get('sf_test'))
     {
-      // $core_classes = $sf_app_config_dir_name . '/core_compile.yml';
-      // $this->configCache->import($core_classes, false);
+      $core_classes = $sf_app_config_dir_name . '/core_compile.yml';
+      $this->configCache->import($core_classes, false);
     }
 
     $this->configCache->import($sf_app_config_dir_name . '/php.yml', false);
@@ -315,11 +315,7 @@ abstract class sfApplication extends sfProject {
     {
       sfConfig::set('sf_in_bootstrap', true);
       require($bootstrap);
-    }
-    else
-    {
-      // require($this->getOption('sf_sift_lib_dir').'/sift.php');
-    }
+    }   
   }
   
   /**

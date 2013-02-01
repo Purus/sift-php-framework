@@ -26,7 +26,7 @@ class sfCliGeneratePluginTask extends sfCliGeneratorBaseTask {
 
     $this->addOptions(array(
         new sfCliCommandOption('module', null, sfCliCommandOption::PARAMETER_REQUIRED | sfCliCommandOption::IS_ARRAY, 'Add a module'),
-        new sfCliCommandOption('test-application', null, sfCliCommandOption::PARAMETER_REQUIRED, 'A name for the initial test application', 'frontend'),
+        new sfCliCommandOption('test-application', null, sfCliCommandOption::PARAMETER_REQUIRED, 'A name for the initial test application', 'front'),
         new sfCliCommandOption('skip-test-dir', null, sfCliCommandOption::PARAMETER_NONE, 'Skip generation of the plugin test directory'),
     ));
 
@@ -66,7 +66,7 @@ EOF;
   }
 
   /**
-   * @see sfTask
+   * @see sfCliTask
    */
   protected function execute($arguments = array(), $options = array())
   {
@@ -91,8 +91,6 @@ EOF;
       throw new sfException(sprintf('Plugin "%s" already exists', $plugin));
     }
 
-    echo "check prosel";
-    
     if(is_readable($this->environment->get('sf_data_dir') . '/skeleton/plugin'))
     {
       $skeletonDir = $this->environment->get('sf_data_dir') . '/skeleton/plugin';
@@ -137,19 +135,28 @@ EOF;
     {
       // test project and app
       $finder = sfFinder::type('any')->discard('.sf');
-      $this->getFilesystem()->mirror($this->environment->get('sf_sift_lib_dir') . '/task/generator/skeleton/project', $testProject, $finder);
-      $this->getFilesystem()->mirror($this->environment->get('sf_sift_lib_dir') . '/task/generator/skeleton/app/app', $testApp, $finder);
+      $this->getFilesystem()->mirror($this->environment->get('sf_sift_data_dir') . '/skeleton/project', $testProject, $finder);
+      $this->getFilesystem()->mirror($this->environment->get('sf_sift_data_dir') . '/skeleton/app/app', $testApp, $finder);
 
-      // ProjectConfiguration
-      // $this->getFilesystem()->copy($skeletonDir . '/project/ProjectConfiguration.class.php', $testProject . '/config/ProjectConfiguration.class.php', array('override' => true));
-      // $this->getFileSystem()->replaceTokens($testProject . '/config/ProjectConfiguration.class.php', '##', '##', $constants);
+      // project sift lib 
+      $this->getFilesystem()->remove($testProject.'/config/config.php');
+      
+      file_put_contents($testProject.'/config/config.php', '<?php
 
-      // ApplicationConfiguration
-      // $this->getFilesystem()->rename($testApp . '/config/ApplicationConfiguration.class.php', $testApp . '/config/' . $options['test-application'] . 'Configuration.class.php');
-      // $this->getFilesystem()->replaceTokens($testApp . '/config/' . $options['test-application'] . 'Configuration.class.php', '##', '##', $constants);
+// empty for purpose of functional test, $sf_lib_dir and $sf_data_dir are defined in functional bootstrap
 
-      // settings.yml
-      // $this->getFilesystem()->replaceTokens($testApp . '/config/settings.yml', '##', '##', array('NO_SCRIPT_NAME' => 'false', 'CSRF_SECRET' => $plugin, 'ESCAPING_STRATEGY' => 'on'));
+    ');
+      
+      // FIXME: do more cleanup!
+      sfToolkit::clearDirectory($testProject . '/' . $this->environment->get('sf_plugins_dir_name'));
+      $this->getFilesystem()->remove($testProject . '/' . $this->environment->get('sf_plugins_dir_name'));
+      
+      // application
+      $className = sprintf('my%sApplication', sfInflector::camelize($options['test-application']));
+
+      $this->getFilesystem()->rename($testApp.'/lib/application.class.php', $testApp.'/lib/'.$className.'.class.php');
+      $this->getFilesystem()->replaceTokens($testApp.'/lib/'.$className.'.class.php', '##', '##', 
+              array('CLASS_NAME' => $className, 'PROJECT_NAME' => $plugin));      
     }
 
     // modules
