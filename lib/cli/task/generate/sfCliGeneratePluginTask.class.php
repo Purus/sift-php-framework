@@ -117,10 +117,13 @@ EOF;
     
     $this->getFilesystem()->mirror($skeletonDir, $pluginDir, $finder);
 
-    // PluginConfiguration
+    // Plugin class
     $this->getFilesystem()->rename($pluginDir . '/lib/Plugin.class.php', 
                                    $pluginDir . '/lib/' . $plugin . '.class.php');
-
+    // Plugin installer
+    $this->getFilesystem()->rename($pluginDir . '/lib/install/Install.class.php', 
+                                   $pluginDir . '/lib/install/' . $plugin . 'Installer.class.php');
+    
     // tokens
     $finder = sfFinder::type('file')->name('*.php', '*.yml', 'package.xml.tmpl');
     $this->getFilesystem()->replaceTokens($finder->in($pluginDir), '##', '##', $constants);
