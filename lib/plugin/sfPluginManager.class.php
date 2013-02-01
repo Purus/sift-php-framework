@@ -15,6 +15,11 @@
  */
 class sfPluginManager extends sfPearPluginManager {
 
+  /**
+   * Array of required options
+   * 
+   * @var array 
+   */
   protected $requiredOptions = array(
       'web_dir', 
       'sift_version', 
@@ -26,19 +31,16 @@ class sfPluginManager extends sfPearPluginManager {
    */
   public function configure()
   {
-    // register symfony channel
-    $channel = $this->environment->getRegistry()->getChannel($this->getOption('sift_pear_channel'));
-    
-    //if(!$channel)
-    //{
-      $this->environment->addChannel($this->getOption('sift_pear_channel'), true);
-    //}
-    
+    // register channel
+    $this->environment->addChannel($this->getOption('sift_pear_channel'), true);    
     $this->registerSift();
-    // register callbacks to manage web content
     
-    // $this->dispatcher->connect('plugin.post_install', array($this, 'listenToPluginPostInstall'));
-    // $this->dispatcher->connect('plugin.post_uninstall', array($this, 'listenToPluginPostUninstall'));
+    // register callbacks
+    $this->dispatcher->connect('plugin.pre_uninstall', array($this, 'listenToPluginPreUninstall'));
+    $this->dispatcher->connect('plugin.post_uninstall', array($this, 'listenToPluginPostUninstall'));
+    
+    $this->dispatcher->connect('plugin.pre_install', array($this, 'listenToPluginPreInstall'));
+    $this->dispatcher->connect('plugin.post_install', array($this, 'listenToPluginPostInstall'));    
   }
 
   /**
@@ -84,6 +86,15 @@ class sfPluginManager extends sfPearPluginManager {
   }
 
   /**
+   * Listens to the plugin.pre_install event.
+   *
+   * @param sfEvent $event An sfEvent instance
+   */
+  public function listenToPluginPreInstall($event)
+  {    
+  }
+  
+  /**
    * Listens to the plugin.post_install event.
    *
    * @param sfEvent $event An sfEvent instance
@@ -93,6 +104,16 @@ class sfPluginManager extends sfPearPluginManager {
     $this->installWebContent($event['plugin'], isset($event['plugin_dir']) ? $event['plugin_dir'] : $this->environment->getOption('plugin_dir'));
   }
 
+  /* 
+   * Listens to the plugin.pre_uninstall event.
+   *
+   * @param sfEvent $event An sfEvent instance
+   */
+  public function listenToPluginPreUninstall($event)
+  {
+    
+  }
+  
   /**
    * Listens to the plugin.post_uninstall event.
    *
@@ -110,7 +131,7 @@ class sfPluginManager extends sfPearPluginManager {
   {
     $sift = new PEAR_PackageFile_v2_rw();
     $sift->setPackage('Sift');
-    $sift->setChannel($this->getOption('sift_pear_channel'));
+    $sift->setChannel($this->getOption('sift_pear_channel', 'pear.lab'));
     $sift->setConfig($this->environment->getConfig());
     $sift->setPackageType('php');
     $sift->setAPIVersion(preg_replace('/\d+(\-\w+)?$/', '0', $this->getOption('sift_version')));
@@ -154,4 +175,9 @@ class sfPluginManager extends sfPearPluginManager {
     return true;
   }
 
+  protected function findDatabaseMigrations()
+  {
+    
+  }
+  
 }

@@ -35,6 +35,7 @@ abstract class sfCliPluginBaseTask extends sfCliBaseTask
       
       $this->pluginManager = new sfPluginManager($this->dispatcher, $environment, $this->logger, array(
           'web_dir' => $this->environment->get('sf_web_dir'),
+          'sift_version' => $this->environment->get('sf_sift_version'),
           'sift_pear_channel' => $this->environment->get('sift_pear_channel', 'pear.lab')
       ));      
       

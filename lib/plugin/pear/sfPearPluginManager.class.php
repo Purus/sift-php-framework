@@ -20,10 +20,6 @@ class sfPearPluginManager extends sfConfigurable {
     $logger      = null,
     $installing = array();
 
-  protected $defaultOptions = array(
-    'sift_version' => '1.0.0'
-  );
-  
   /**
    * Constructs a new sfPluginManager.
    *
@@ -196,8 +192,7 @@ class sfPearPluginManager extends sfConfigurable {
       $existing = $this->environment->getRegistry()->packageInfo($plugin, 'version', $channel);
       if(version_compare($existing, $version) === 0)
       {
-        $this->logger->log('Plugin is already installed');
-        // $this->dispatcher->notify(new sfEvent($this, 'application.log', array('Plugin is already installed')));
+        $this->logger->log('Plugin is already installed');        
         return true;
       }
 
@@ -274,8 +269,8 @@ class sfPearPluginManager extends sfConfigurable {
 
     if(is_array($info))
     {
-      // $this->dispatcher->notify(new sfEvent($this, 'application.log', array(sprintf('Installation successful for plugin "%s"', $plugin))));
-
+      $this->logger->log(sprintf('Installation successful for plugin "%s"', $plugin));
+      
       $this->dispatcher->notify(new sfEvent('plugin.post_install', array(
           'channel' => $channel, 
           'manager' => $this,
@@ -309,8 +304,7 @@ class sfPearPluginManager extends sfConfigurable {
     $existing = $this->environment->getRegistry()->packageInfo($plugin, 'version', $channel);
     if(null === $existing)
     {
-      //$this->dispatcher->notify(new sfEvent($this, 'application.log', array(sprintf('Plugin "%s" is not installed', $plugin))));
-
+      $this->logger->log(sprintf('Plugin "%s" is not installed', $plugin));
       return false;
     }
 
@@ -332,12 +326,12 @@ class sfPearPluginManager extends sfConfigurable {
 
     if($ret)
     {
-      //$this->dispatcher->notify(new sfEvent($this, 'application.log', array(sprintf('Uninstallation successful for plugin "%s"', $plugin))));
-
       $this->dispatcher->notify(new sfEvent('plugin.post_uninstall', array(
           'channel' => $channel, 
           'manager' => $this,
           'plugin' => $plugin)));
+      
+      $this->logger->log(sprintf('Uninstallation successful for plugin "%s"', $plugin));      
     }
     else
     {
