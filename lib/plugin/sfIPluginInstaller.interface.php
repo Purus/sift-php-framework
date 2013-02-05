@@ -14,7 +14,7 @@
  */
 interface sfIPluginInstaller {
   
-  public function __construct(sfProject $project, $options = array());
+  public function __construct(sfCliBaseTask $project, $options = array());
   public function install();
   public function uninstall();
   

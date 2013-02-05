@@ -25,7 +25,9 @@ abstract class sfCliTask {
     $options             = array(),
     $dispatcher          = null,
     $formatter           = null,
-    $logger              = null,
+    $logger              = null;
+  
+  public
     $environment         = null;
 
   /**

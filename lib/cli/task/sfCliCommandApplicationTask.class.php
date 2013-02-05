@@ -58,7 +58,7 @@ abstract class sfCliCommandApplicationTask extends sfCliTask
    *
    * @throws LogicException If the current task has no command application
    */
-  protected function createTask($name)
+  public function createTask($name)
   {
     if (null === $this->commandApplication)
     {
@@ -86,7 +86,7 @@ abstract class sfCliCommandApplicationTask extends sfCliTask
    *
    * @see createTask()
    */
-  protected function runTask($name, $arguments = array(), $options = array())
+  public function runTask($name, $arguments = array(), $options = array())
   {
     return $this->createTask($name)->run($arguments, $options);
   }

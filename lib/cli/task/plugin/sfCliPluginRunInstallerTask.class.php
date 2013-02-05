@@ -66,6 +66,9 @@ EOF;
     unset($options['install']);
     unset($options['uninstall']);
 
+    // force
+    $this->reloadAutoload();
+    
     $installer = $this->getInstaller($plugin, $options);
 
     if($install)
@@ -81,6 +84,9 @@ EOF;
       $result = $installer->uninstall();
     }
 
+    // after uninstalling, cleanup autoloading cache
+    $this->reloadAutoload();
+    
     $this->logSection($this->getFullName(), 'Done.');
   }
 
@@ -115,16 +121,17 @@ EOF;
         throw new sfException(sprintf('Installer file does not contain plugin installer class "%s"', $installerClass));
       }
 
-      $installer = new $installerClass($this->commandApplication->getProject(), $options);
+      $installer = new $installerClass($this, $options);
 
       if(!$installer instanceof sfIPluginInstaller)
       {
         throw new LogicException(sprintf('Plugin installer class "%s" is invalid. It should implement sfIPluginInstaller interface.', get_class($installer)));
       }
+      
     }
     else
     {
-      $installer = new sfPluginInstaller($this->commandApplication->getProject(), $options);
+      $installer = new sfPluginInstaller($this, $options);
     }
 
     return $installer;

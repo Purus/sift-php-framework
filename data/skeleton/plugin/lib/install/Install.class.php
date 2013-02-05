@@ -9,18 +9,4 @@
  */
 class ##PLUGIN_NAME##Installer extends sfPluginInstaller
 {
-  /**
-   * @see sfPluginInstaller
-   */
-  public function doInstall()
-  {    
-  }
-  
-  /**
-   * @see sfPluginInstaller
-   */
-  public function doUninstall()
-  {    
-  }
-  
 }

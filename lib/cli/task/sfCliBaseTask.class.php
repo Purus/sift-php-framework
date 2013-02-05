@@ -125,7 +125,7 @@ abstract class sfCliBaseTask extends sfCliCommandApplicationTask
     return $this->databases[$name];
   } 
 
-  protected function setupDatabases()
+  public function setupDatabases()
   {
     if(!isset($this->databases))
     {
