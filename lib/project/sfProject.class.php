@@ -15,6 +15,11 @@
 abstract class sfProject extends sfConfigurable {
 
   /**
+   * 
+   */
+  protected $plugins = array();
+  
+  /**
    * Default options
    * 
    * @var array
@@ -142,6 +147,7 @@ abstract class sfProject extends sfConfigurable {
     }
     
     $this->setup();
+
   }
   
   /**
@@ -211,7 +217,7 @@ abstract class sfProject extends sfConfigurable {
               .'/autoload.yml'))
       {
         $files = array_merge($files, $pluginDirs);                                    
-      }    
+      }
 
       $autoload->loadConfiguration($files);
       $autoload->saveCache(true);
@@ -223,6 +229,19 @@ abstract class sfProject extends sfConfigurable {
     sfCoreAutoload::unregister();
     // register again as second autoloader
     sfCoreAutoload::register(); 
+  }
+  
+  public function setupPlugins()
+  {
+    foreach(glob($this->getOption('sf_plugins_dir').DS.'*') as $plugin)
+    {
+      $pluginName = basename($plugin);
+      if(strpos($pluginName, 'Plugin') === false)
+      {
+        continue;
+      }
+      $this->plugins[$pluginName] = $this->getPlugin($pluginName);
+    }
   }
   
   /**
@@ -317,6 +336,15 @@ abstract class sfProject extends sfConfigurable {
   }
   
   /**
+   * 
+   * @return array
+   */
+  public function getPlugins()
+  {
+    return $this->plugins;
+  }
+  
+  /**
    * Returns the plugin instance
    * 
    * @param string $plugin
@@ -325,32 +353,37 @@ abstract class sfProject extends sfConfigurable {
    */
   public function getPlugin($plugin)
   {
-    if(!is_dir($this->getOption('sf_plugins_dir') . '/' . $plugin))
+    if(!isset($this->plugins[$plugin]))
     {
-      throw new RuntimeException(sprintf('The plugin "%s" does not exists', $plugin));
+      if(!is_dir($this->getOption('sf_plugins_dir') . '/' . $plugin))
+      {
+        throw new RuntimeException(sprintf('The plugin "%s" does not exists', $plugin));
+      }
+
+      $pluginFile = $this->getOption('sf_plugins_dir') . '/' . $plugin . '/lib/' . $plugin . '.class.php';
+
+      if(is_readable($pluginFile))
+      {
+        require_once $pluginFile;
+      }
+      else
+      {
+        $plugin = 'sfGenericPlugin';
+      }
+
+      if(!class_exists($plugin))
+      {
+        throw new RuntimeException(sprintf('The plugin "%s" does not exists', $plugin));
+      }
+
+      // plugin
+      $this->plugin[$plugin] = new $plugin(array(
+        'root_dir' => $this->getOption('sf_plugins_dir') . '/' . $plugin        
+      ));
+      
     }
     
-    $pluginFile = $this->getOption('sf_plugins_dir') . '/' . $plugin . '/lib/' . $plugin . '.class.php';
-    
-    if(is_readable($pluginFile))
-    {
-      require_once $pluginFile;
-    }
-    else
-    {
-      $plugin = 'sfGenericPlugin';
-    }
-    
-    if(!class_exists($plugin))
-    {
-      throw new RuntimeException(sprintf('The plugin "%s" does not exists', $plugin));
-    }
-    
-    // plugin
-    return new $plugin(array(
-      'root_dir' => $this->getOption('sf_plugins_dir') . '/' . $plugin        
-    ));
-    
+    return $this->plugin[$plugin];
   }
 
   /**

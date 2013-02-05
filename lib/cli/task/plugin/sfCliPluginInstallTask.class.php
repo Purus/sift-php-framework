@@ -27,7 +27,7 @@ class sfCliPluginInstallTask extends sfCliPluginBaseTask {
         new sfCliCommandOption('stability', 's', sfCliCommandOption::PARAMETER_REQUIRED, 'The preferred stability (stable, beta, alpha)', null),
         new sfCliCommandOption('release', 'r', sfCliCommandOption::PARAMETER_REQUIRED, 'The preferred version', null),
         new sfCliCommandOption('channel', 'c', sfCliCommandOption::PARAMETER_REQUIRED, 'The PEAR channel name', null),
-        new sfCliCommandOption('install_deps', 'd', sfCliCommandOption::PARAMETER_NONE, 'Whether to force installation of required dependencies', null),
+        new sfCliCommandOption('install-deps', 'd', sfCliCommandOption::PARAMETER_NONE, 'Whether to force installation of required dependencies', null),
         new sfCliCommandOption('force-license', null, sfCliCommandOption::PARAMETER_NONE, 'Whether to force installation even if the license is not MIT like'),
     ));
 

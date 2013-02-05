@@ -24,7 +24,7 @@ abstract class sfCliCommandApplicationTask extends sfCliTask
    */
   public function setCommandApplication(sfCliCommandApplication $commandApplication = null)
   {
-    $this->commandApplication = $commandApplication;
+    $this->commandApplication = $commandApplication;    
   }
 
   /**

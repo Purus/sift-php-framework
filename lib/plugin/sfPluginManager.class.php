@@ -1,8 +1,7 @@
 <?php
 /*
- * This file is part of the symfony package.
- * (c) Fabien Potencier <fabien.potencier@symfony-project.com>
- * 
+ * This file is part of the Sift PHP framework.
+ *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
@@ -17,30 +16,30 @@ class sfPluginManager extends sfPearPluginManager {
 
   /**
    * Array of required options
-   * 
-   * @var array 
+   *
+   * @var array
    */
   protected $requiredOptions = array(
-      'web_dir', 
-      'sift_version', 
+      'web_dir',
+      'sift_version',
       'sift_pear_channel'
   );
-  
+
   /**
    * Configures this plugin manager.
    */
   public function configure()
   {
     // register channel
-    $this->environment->addChannel($this->getOption('sift_pear_channel'), true);    
+    $this->environment->addChannel($this->getOption('sift_pear_channel'), true);
     $this->registerSift();
-    
+
     // register callbacks
     $this->dispatcher->connect('plugin.pre_uninstall', array($this, 'listenToPluginPreUninstall'));
-    $this->dispatcher->connect('plugin.post_uninstall', array($this, 'listenToPluginPostUninstall'));
-    
+    $this->dispatcher->connect('plugin.post_uninstall.success', array($this, 'listenToPluginPostUninstall'));
+
     $this->dispatcher->connect('plugin.pre_install', array($this, 'listenToPluginPreInstall'));
-    $this->dispatcher->connect('plugin.post_install', array($this, 'listenToPluginPostInstall'));    
+    $this->dispatcher->connect('plugin.post_install.success', array($this, 'listenToPluginPostInstall'));
   }
 
   /**
@@ -53,9 +52,10 @@ class sfPluginManager extends sfPearPluginManager {
     $webDir = $sourceDirectory . DIRECTORY_SEPARATOR . $plugin . DIRECTORY_SEPARATOR . 'web';
     if(is_dir($webDir))
     {
-      // $this->dispatcher->notify(new sfEvent($this, 'application.log', array('Installing web data for plugin')));
-
+      $this->logger->log('Installing web data for plugin');
       $filesystem = new sfFilesystem();
+      
+      // FIXME! this is more complicated, not simple symlink
       $filesystem->relativeSymlink($webDir, $this->environment->getOption('web_dir') . DIRECTORY_SEPARATOR . $plugin, true);
     }
   }
@@ -70,7 +70,8 @@ class sfPluginManager extends sfPearPluginManager {
     $targetDir = $this->environment->getOption('web_dir') . DIRECTORY_SEPARATOR . $plugin;
     if(is_dir($targetDir))
     {
-      // $this->dispatcher->notify(new sfEvent($this, 'application.log', array('Uninstalling web data for plugin')));
+      $this->logger->log('Uninstalling web data for plugin');
+      
       $filesystem = new sfFilesystem();
 
       if(is_link($targetDir))
@@ -91,9 +92,13 @@ class sfPluginManager extends sfPearPluginManager {
    * @param sfEvent $event An sfEvent instance
    */
   public function listenToPluginPreInstall($event)
-  {    
+  {
+    $plugin = $event['plugin'];
+    
+    $this->logger->log('Executing pre install tasks');
+    
   }
-  
+
   /**
    * Listens to the plugin.post_install event.
    *
@@ -101,19 +106,57 @@ class sfPluginManager extends sfPearPluginManager {
    */
   public function listenToPluginPostInstall($event)
   {
-    $this->installWebContent($event['plugin'], isset($event['plugin_dir']) ? $event['plugin_dir'] : $this->environment->getOption('plugin_dir'));
+    $this->logger->log('Executing post install tasks');
+    
+    $plugin = $event['plugin'];
+    
+    // check custom installers    
+    $install = sfFinder::type('file')->name('installer.php')
+              ->in($this->environment->getOption('plugin_dir').'/'.$plugin.'/data/install');
+    
+    foreach($install as $installer)
+    {
+      try
+      {
+        include $installer;
+      } 
+      catch(Exception $e)
+      {
+        $this->logger->log($e->getMessage());
+      }      
+    }
+    
+    // install web content
+    $this->installWebContent($event['plugin'], 
+            isset($event['plugin_dir']) ? 
+            $event['plugin_dir'] : $this->environment->getOption('plugin_dir'));    
   }
 
-  /* 
+  /*
    * Listens to the plugin.pre_uninstall event.
    *
    * @param sfEvent $event An sfEvent instance
    */
   public function listenToPluginPreUninstall($event)
   {
+    $this->logger->log('Executing pre uninstall tasks');
     
+    $plugin  = $event['plugin'];
+    
+    // plugin version which will be uninstalled
+    $version = $event['version'];
+    // check plugin migration for downgrades
+    
+    $migrations = $this->getDatabaseMigrations($plugin, $version);
+    
+    if(!$migrations)
+    {
+    }
+    
+    // remove web content from plugin, before unstall, 
+    // because we know what does belong to the plugin    
   }
-  
+
   /**
    * Listens to the plugin.post_uninstall event.
    *
@@ -121,7 +164,10 @@ class sfPluginManager extends sfPearPluginManager {
    */
   public function listenToPluginPostUninstall($event)
   {
+    $this->logger->log('Executing post uninstall tasks');
+
     $this->uninstallWebContent($event['plugin']);
+    
   }
 
   /**
@@ -149,7 +195,7 @@ class sfPluginManager extends sfPearPluginManager {
     $sift->setPearinstallerDep('1.4.3');
     $sift->setPhpDep('5.2.4');
 
-    $this->environment->getRegistry()->deletePackage('sift', 
+    $this->environment->getRegistry()->deletePackage('sift',
             $this->environment->getOption('sift_pear_channel', 'pear.lab'));
     if(!$this->environment->getRegistry()->addPackage2($sift))
     {
@@ -175,9 +221,4 @@ class sfPluginManager extends sfPearPluginManager {
     return true;
   }
 
-  protected function findDatabaseMigrations()
-  {
-    
-  }
-  
 }

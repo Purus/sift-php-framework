@@ -28,16 +28,47 @@ abstract class sfPlugin extends sfConfigurable {
     parent::__construct($options);
     
     $this->setup();
-    $this->configure($options);
+    
+    if(PHP_SAPI == 'cli')
+    {
+      $this->setupCli();
+    }
+        
+    $this->configure();
+    
+    $this->initializeAutoload();
+    $this->initialize();
   }
 
   public function setup()
+  {
+  }
+
+  public function setupCli()
+  {    
+  }
+
+  public function configure()
   {    
   }
   
-  public function configure($options = array())
+  public function initialize()
   {    
+  }  
+  
+  /**
+   * Initializes manual autoloading for the plugin.
+   * 
+   * This method is called when a plugin is initialized in a project.
+   * Otherwise, autoload is handled in {@link sfApplication} 
+   * using {@link sfAutoload}.
+   * 
+   * @see sfSimpleAutoload
+   */
+  public function initializeAutoload()
+  {
   }
+  
   
   public function getRootDir()
   {

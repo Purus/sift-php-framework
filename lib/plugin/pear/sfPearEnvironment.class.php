@@ -51,7 +51,6 @@ class sfPearEnvironment extends sfConfigurable {
   public function __construct(sfEventDispatcher $dispatcher, $options)
   {
     parent::__construct($options);
-    
     $this->initialize($dispatcher, $options);
   }
 

@@ -20,7 +20,7 @@ abstract class sfCliBaseTask extends sfCliCommandApplicationTask
     $databases     = null;
 
   /**
-   * @see sfTask
+   * @see sfCliTask
    */
   protected function doRun(sfCliCommandManager $commandManager, $options)
   {
@@ -41,7 +41,7 @@ abstract class sfCliBaseTask extends sfCliCommandApplicationTask
     }
 
     $this->checkProjectExists();
-
+    
     $requiresApplication = $commandManager->getArgumentSet()->hasArgument('application') 
                             || $commandManager->getOptionSet()->hasOption('application');
     
@@ -113,14 +113,9 @@ abstract class sfCliBaseTask extends sfCliCommandApplicationTask
    * @return sfDatabase
    * @throws sfException
    */
-  protected function getDatabase($name)
+  protected function getDatabase($name = 'default')
   {
-    if(!isset($this->databases))
-    {
-      $configHandler = new sfDatabaseConfigHandler();   
-      // FIXME: databases should be configured in the application!
-      $this->databases = $configHandler->evaluate(array($this->environment->get('sf_root_dir').'/config/databases.yml'));
-    }
+    $this->setupDatabases();
     
     if(!isset($this->databases[$name]))
     {
@@ -130,6 +125,29 @@ abstract class sfCliBaseTask extends sfCliCommandApplicationTask
     return $this->databases[$name];
   } 
 
+  protected function setupDatabases()
+  {
+    if(!isset($this->databases))
+    {
+      $configHandler = new sfDatabaseConfigHandler();
+
+      $files = array();
+      
+      if($appConfigDir = $this->environment->get('sf_app_config_dir'))
+      {
+        if($file = is_readable($appConfigDir . '/' . $this->environment->get('sf_app_config_dir_name') . 'databases.yml'))
+        {
+          $files[] = $file;
+        }
+      }
+      
+      $files[] = $this->environment->get('sf_root_dir') . '/'. 
+                $this->environment->get('sf_config_dir_name') . '/databases.yml';
+      
+      $this->databases = $configHandler->evaluate($files);
+    }    
+  }
+  
   /**
    * Checks if the current directory is a Sift project directory.
    *

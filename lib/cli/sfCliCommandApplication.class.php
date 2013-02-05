@@ -15,7 +15,7 @@
 abstract class sfCliCommandApplication {
 
   protected
-    $project = null, 
+    $project = null,
     $commandManager = null,
     $trace = false,
     $verbose = true,
@@ -60,7 +60,7 @@ abstract class sfCliCommandApplication {
     $this->commandManager = new sfCliCommandManager($argumentSet, $optionSet);
 
     $this->bindToProject();
-    
+
     $this->configure();
 
     $this->registerTasks();
@@ -68,26 +68,38 @@ abstract class sfCliCommandApplication {
 
   /**
    * Binds to an existing project.
-   * 
+   *
    */
   public function bindToProject()
   {
-    // load project    
+    // load project
     if(file_exists($this->environment->get('sf_root_dir').'/lib/myProject.class.php'))
     {
-      require_once $this->environment->get('sf_root_dir').'/lib/myProject.class.php';      
-      $this->project = new myProject($this->environment->getAll(), $this->dispatcher);
-      $this->environment->add($this->project->getOptions());
+      require_once $this->environment->get('sf_root_dir').'/lib/myProject.class.php';
+      $projectClass = 'myProject';
     }
     else
     {
-      $this->project = new sfGenericProject($this->environment->getAll(), $this->dispatcher);
-      $this->environment->add($this->project->getOptions());
+      $projectClass = 'sfGenericProject';
     }
-    
-    sfCore::bindProject($this->project); 
+
+    $this->project = new $projectClass($this->environment->getAll(), $this->dispatcher);
+    $this->environment->add($this->project->getOptions());
+
+    // bind project
+    sfCore::bindProject($this->project);
+
+    // initialize project autoload
+    $this->project->initializeAutoload();
+    $this->project->setupPlugins();
+
+    foreach($this->project->getPlugins() as $plugin)
+    {
+      $plugin->initializeAutoload();
+    }
+
   }
-  
+
   /**
    * Configures the current command application.
    */
@@ -95,14 +107,14 @@ abstract class sfCliCommandApplication {
 
   /**
    * Returns an instance to current project
-   * 
+   *
    * @return sfProject
    */
   public function getProject()
   {
     return $this->project;
   }
-  
+
   /**
    * Returns the formatter instance.
    *
@@ -697,12 +709,12 @@ abstract class sfCliCommandApplication {
    */
   protected function guessBestFormatter($stream)
   {
-    return $this->isStreamSupportsColors($stream) ? new sfAnsiColorFormatter() : new sfCliFormatter();
+    return $this->isStreamSupportsColors($stream) ? new sfCliAnsiColorFormatter() : new sfCliFormatter();
   }
 
   /**
    * Returns associated environment
-   * 
+   *
    * @return sfCliTaskEnvironment
    */
   public function getEnvironment()
@@ -712,7 +724,7 @@ abstract class sfCliCommandApplication {
 
   /**
    * Set environment
-   * 
+   *
    * @param sfCliTaskEnvironment $environment
    */
   public function setEnvironment(sfCliTaskEnvironment $environment)
@@ -722,9 +734,9 @@ abstract class sfCliCommandApplication {
 
   /**
    * Returns environment variable
-   * 
+   *
    * This is a shortcut for $this->getEnvironment()->get($variableName,$default);
-   * 
+   *
    * @param string $variableName Name of the variable
    * @param string $default Default value
    * @return mixed
@@ -733,12 +745,12 @@ abstract class sfCliCommandApplication {
   {
     return $this->environment->get($variableName, $default);
   }
-  
+
   /**
    * Sets environment variable
-   * 
-   * This is a shortcut for $this->getEnvironment()->set($variableName,$value); 
-   * 
+   *
+   * This is a shortcut for $this->getEnvironment()->set($variableName,$value);
+   *
    * @param string $variableName Name of the variable
    * @param mixed $value Value of the variable
    * @return void
