@@ -33,14 +33,19 @@ class sfConfigCache extends sfConfigurable {
     
     if(!$application)
     {
-      if(sfCore::hasProject() && sfCore::getProject()->hasActive())
+      if(sfCore::hasProject())
       {
-        $application = sfCore::getProject()->getActiveApplication()->getName();
+        if(sfCore::getProject()->hasActive())
+        {
+          $options = sfCore::getProject()->getActiveApplication()->getOptions();
+          $application = sfCore::getProject()->getActiveApplication()->getName();
+        }
+        else
+        {
+          $application = 'default';
+          $options = sfCore::getProject()->getOptions();
+        }   
       }
-      else
-      {
-        $application = 'default';
-      }      
     }
     elseif($application instanceof sfApplication)
     {
