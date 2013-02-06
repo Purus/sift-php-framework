@@ -33,7 +33,7 @@ class sfPhpErrorException extends sfException {
 
   /**
    * Callback used as error handler
-   * 
+   *
    * set_error_handler(array('sfPhpErrorException',
    *                                        'handleErrorCallback'), E_ALL);
    *
@@ -52,20 +52,22 @@ class sfPhpErrorException extends sfException {
     {
       return;
     }
-    
-    $sf_debug = sfConfig::get('sf_debug');
-    
+
     switch($code)
     {
       case E_DEPRECATED:
       case E_USER_DEPRECATED:
       case E_NOTICE:
       case E_USER_NOTICE:
-        if($sf_debug && sfContext::hasInstance())
-        {
-          sfContext::getInstance()->getLogger()->warning(sprintf('{sfPhpErrorException} %s, file: "%s", line: %s', $string, $file, $line));
-        }
-        return;
+      case E_STRICT:  
+
+      if(sfConfig::get('sf_logging_enabled'))
+      {
+        sfLogger::getInstance()->warning(sprintf('{sfPhpErrorException} %s, file: "%s", line: %s', $string, $file, $line));
+      }
+
+      return;
+
       break;
     }
 
@@ -77,11 +79,9 @@ class sfPhpErrorException extends sfException {
   }
 
   /**
-   * Handles php errors E_ERROR and E_PARSE
-   * (this method is set as shutdown function in sift.php bootstrap file)
+   * Handles php errors E_ERROR and E_PARSE. Tthis method is set as shutdown function.
    *
-   * @since 1.1.42
-   * @see http://insomanic.me.uk/post/229851073/php-trick-catching-fatal-errors-e-error-with-a
+   * @link http://insomanic.me.uk/post/229851073/php-trick-catching-fatal-errors-e-error-with-a
    */
   public static function fatalErrorShutdownHandler()
   {
