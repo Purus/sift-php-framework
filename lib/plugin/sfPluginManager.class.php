@@ -43,60 +43,13 @@ class sfPluginManager extends sfPearPluginManager {
   }
 
   /**
-   * Installs web content for a plugin.
-   *
-   * @param string $plugin The plugin name
-   */
-  public function installWebContent($plugin, $sourceDirectory)
-  {
-    $webDir = $sourceDirectory . DIRECTORY_SEPARATOR . $plugin . DIRECTORY_SEPARATOR . 'web';
-    if(is_dir($webDir))
-    {
-      $this->logger->log('Installing web data for plugin');
-      $filesystem = new sfFilesystem();
-      
-      // FIXME! this is more complicated, not simple symlink
-      $filesystem->relativeSymlink($webDir, $this->environment->getOption('web_dir') . DIRECTORY_SEPARATOR . $plugin, true);
-    }
-  }
-
-  /**
-   * Unnstalls web content for a plugin.
-   *
-   * @param string $plugin The plugin name
-   */
-  public function uninstallWebContent($plugin)
-  {
-    $targetDir = $this->environment->getOption('web_dir') . DIRECTORY_SEPARATOR . $plugin;
-    if(is_dir($targetDir))
-    {
-      $this->logger->log('Uninstalling web data for plugin');
-      
-      $filesystem = new sfFilesystem();
-
-      if(is_link($targetDir))
-      {
-        $filesystem->remove($targetDir);
-      }
-      else
-      {
-        $filesystem->remove(sfFinder::type('any')->in($targetDir));
-        $filesystem->remove($targetDir);
-      }
-    }
-  }
-
-  /**
    * Listens to the plugin.pre_install event.
    *
    * @param sfEvent $event An sfEvent instance
    */
   public function listenToPluginPreInstall($event)
   {
-    $plugin = $event['plugin'];
-    
-    $this->logger->log('Executing pre install tasks');
-    
+    // $plugin = $event['plugin'];
   }
 
   /**
@@ -106,30 +59,7 @@ class sfPluginManager extends sfPearPluginManager {
    */
   public function listenToPluginPostInstall($event)
   {
-    $this->logger->log('Executing post install tasks');
-    
-    $plugin = $event['plugin'];
-    
-    // check custom installers    
-    $install = sfFinder::type('file')->name('installer.php')
-              ->in($this->environment->getOption('plugin_dir').'/'.$plugin.'/data/install');
-    
-    foreach($install as $installer)
-    {
-      try
-      {
-        include $installer;
-      } 
-      catch(Exception $e)
-      {
-        $this->logger->log($e->getMessage());
-      }      
-    }
-    
-    // install web content
-    $this->installWebContent($event['plugin'], 
-            isset($event['plugin_dir']) ? 
-            $event['plugin_dir'] : $this->environment->getOption('plugin_dir'));    
+    // $plugin = $event['plugin'];
   }
 
   /*
@@ -139,22 +69,10 @@ class sfPluginManager extends sfPearPluginManager {
    */
   public function listenToPluginPreUninstall($event)
   {
-    $this->logger->log('Executing pre uninstall tasks');
-    
     $plugin  = $event['plugin'];
-    
     // plugin version which will be uninstalled
     $version = $event['version'];
     // check plugin migration for downgrades
-    
-    $migrations = $this->getDatabaseMigrations($plugin, $version);
-    
-    if(!$migrations)
-    {
-    }
-    
-    // remove web content from plugin, before unstall, 
-    // because we know what does belong to the plugin    
   }
 
   /**
@@ -164,10 +82,6 @@ class sfPluginManager extends sfPearPluginManager {
    */
   public function listenToPluginPostUninstall($event)
   {
-    $this->logger->log('Executing post uninstall tasks');
-
-    $this->uninstallWebContent($event['plugin']);
-    
   }
 
   /**

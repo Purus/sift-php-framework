@@ -20,12 +20,13 @@ class sfCliPluginRunInstallerTask extends sfCliPluginBaseTask {
   protected function configure()
   {
     $this->addArguments(array(
-      new sfCliCommandArgument('name', sfCliCommandArgument::REQUIRED, 'The plugin name'),
+        new sfCliCommandArgument('name', sfCliCommandArgument::REQUIRED, 'The plugin name'),
     ));
 
     $this->addOptions(array(
         new sfCliCommandOption('install', 'i', sfCliCommandOption::PARAMETER_NONE, 'Install direction', null),
         new sfCliCommandOption('uninstall', 'u', sfCliCommandOption::PARAMETER_NONE, 'The preferred version', null),
+        new sfCliCommandOption('previous-release', 'p', sfCliCommandOption::PARAMETER_OPTIONAL, 'Previous installed release. Used for migrations.'),
     ));
 
     $this->namespace = 'plugin';
@@ -68,7 +69,7 @@ EOF;
 
     // force
     $this->reloadAutoload();
-    
+
     $installer = $this->getInstaller($plugin, $options);
 
     if($install)
@@ -86,7 +87,7 @@ EOF;
 
     // after uninstalling, cleanup autoloading cache
     $this->reloadAutoload();
-    
+
     $this->logSection($this->getFullName(), 'Done.');
   }
 
@@ -104,14 +105,22 @@ EOF;
     $installerClass = sprintf('%sInstaller', $plugin);
 
     $installer = $this->environment->get('sf_plugins_dir') . '/' .
-                 $plugin . '/' .
-                 $this->environment->get('sf_lib_dir_name')
-                 . 'install' . '/' . $plugin . '.class.php';
+            $plugin . '/' .
+            $this->environment->get('sf_lib_dir_name')
+            . 'install' . '/' . $plugin . '.class.php';
 
     // options for the installer
     $options['plugin_dir'] = $this->environment->get('sf_plugins_dir') . '/' . $plugin;
-    $options['plugin']     = $plugin;
-    
+    $options['plugin'] = $plugin;
+
+    // pass to installer, which support options with underscores
+    // FIXME: maybe convert all simply by replacing - with _
+    if($options['previous-release'])
+    {
+      $options['previous_release'] = $options['previous-release'];
+      unset($options['previous-release']);
+    }
+
     if(is_readable($installer))
     {
       require_once $installer;
@@ -127,7 +136,6 @@ EOF;
       {
         throw new LogicException(sprintf('Plugin installer class "%s" is invalid. It should implement sfIPluginInstaller interface.', get_class($installer)));
       }
-      
     }
     else
     {
