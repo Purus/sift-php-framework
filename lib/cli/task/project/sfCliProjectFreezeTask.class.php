@@ -15,7 +15,7 @@
 class sfCliProjectFreezeTask extends sfCliBaseTask
 {
   /**
-   * @see sfTask
+   * @see sfCliTask
    */
   protected function configure()
   {
@@ -33,7 +33,7 @@ EOF;
   }
 
   /**
-   * @see sfTask
+   * @see sfCliTask
    */
   protected function execute($arguments = array(), $options = array())
   {

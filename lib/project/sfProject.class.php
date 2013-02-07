@@ -213,6 +213,7 @@ abstract class sfProject extends sfConfigurable {
       }
 
       // plugins
+      // FIXME: take only enabled plugins
       if($pluginDirs = glob($this->getOption('sf_plugins_dir').DS.'*'.DS.$this->getOption('sf_config_dir_name') 
               .'/autoload.yml'))
       {
@@ -230,7 +231,7 @@ abstract class sfProject extends sfConfigurable {
     // register again as second autoloader
     sfCoreAutoload::register(); 
   }
-  
+    
   public function setupPlugins()
   {
     foreach(glob($this->getOption('sf_plugins_dir').DS.'*') as $plugin)

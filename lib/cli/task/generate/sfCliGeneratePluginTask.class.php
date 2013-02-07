@@ -16,7 +16,7 @@
 class sfCliGeneratePluginTask extends sfCliGeneratorBaseTask {
 
   /**
-   * @see sfTask
+   * @see sfCliTask
    */
   protected function configure()
   {

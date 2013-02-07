@@ -21,7 +21,7 @@ class sfCliLogRotateTask extends sfCliBaseTask
   const DEF_HISTORY = 10;
 
   /**
-   * @see sfTask
+   * @see sfCliTask
    */
   protected function configure()
   {
@@ -54,7 +54,7 @@ EOF;
   }
 
   /**
-   * @see sfTask
+   * @see sfCliTask
    */
   protected function execute($arguments = array(), $options = array())
   {

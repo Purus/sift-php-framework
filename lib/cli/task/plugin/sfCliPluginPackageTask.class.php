@@ -20,7 +20,7 @@ class sfCliPluginPackageTask extends sfCliPluginBaseTask
     $interactive = true;
 
   /**
-   * @see sfTask
+   * @see sfCliTask
    */
   protected function configure()
   {
@@ -73,7 +73,7 @@ EOF;
   }
 
   /**
-   * @see sfTask
+   * @see sfCliTask
    */
   protected function execute($arguments = array(), $options = array())
   {
@@ -321,7 +321,7 @@ EOF;
   }
 
   /**
-   * @see sfTask
+   * @see sfCliTask
    */
   public function askAndValidate($question, sfValidatorBase $validator, array $options = array())
   {

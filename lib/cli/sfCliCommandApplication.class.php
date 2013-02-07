@@ -168,7 +168,7 @@ abstract class sfCliCommandApplication {
   /**
    * Registers a task object.
    *
-   * @param sfTask $task An sfTask object
+   * @param sfCliTask $task An sfCliTask object
    */
   public function registerTask(sfCliTask $task)
   {
@@ -213,7 +213,7 @@ abstract class sfCliCommandApplication {
   /**
    * Returns all registered tasks.
    *
-   * @return array An array of sfTask objects
+   * @return array An array of sfCliTask objects
    */
   public function getTasks()
   {
@@ -225,7 +225,7 @@ abstract class sfCliCommandApplication {
    *
    * @param string $name The task name or alias
    *
-   * @return sfTask An sfTask object
+   * @return sfCliTask An sfCliTask object
    */
   public function getTask($name)
   {
@@ -488,7 +488,7 @@ abstract class sfCliCommandApplication {
    *
    * @param  string  $name  The task name or a task shortcut
    *
-   * @return sfTask A sfTask object
+   * @return sfCliTask A sfCliTask object
    */
   public function getTaskToExecute($name)
   {

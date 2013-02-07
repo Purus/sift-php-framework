@@ -9,14 +9,14 @@
 /**
  * Wraps the generate module task to create a plugin module
  * 
- * @package     sfTaskExtraPlugin
+ * @package     Sift
  * @subpackage  cli_task
  * @author      Kris Wallsmith <kris.wallsmith@symfony-project.com>
  */
 class sfCliGeneratePluginModuleTask extends sfCliGeneratorBaseTask {
 
   /**
-   * @see sfTask
+   * @see sfCliTask
    */
   protected function configure()
   {
@@ -49,7 +49,7 @@ EOF;
   }
 
   /**
-   * @see sfTask
+   * @see sfCliTask
    */
   protected function execute($arguments = array(), $options = array())
   {

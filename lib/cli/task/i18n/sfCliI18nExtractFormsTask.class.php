@@ -17,7 +17,7 @@ class sfCliI18nExtractFormsTask extends sfCliI18nExtractFormTask
   protected $formFiles = array();
   
   /**
-   * @see sfTask
+   * @see sfCliTask
    */
   protected function configure()
   {
@@ -69,7 +69,7 @@ EOF;
   }
 
   /**
-   * @see sfTask
+   * @see sfCliTask
    */
   public function execute($arguments = array(), $options = array())
   {

@@ -79,12 +79,13 @@ abstract class sfApplication extends sfProject {
     // initialize config cache
     $this->initConfigCache();
     
+    // initialize autoloading
     $this->initializeAutoload();
     
     // init include path
     $this->initIncludePath();
     
-    // load all available dimensins
+    // load all available dimensions
     $this->loadDimensions();
 
     // initialize current dimension
@@ -97,7 +98,6 @@ abstract class sfApplication extends sfProject {
     $this->initOptions();
     
     // initialize autoload for the application
-
     $this->initConfiguration();
 
     $this->initialize();
@@ -270,6 +270,7 @@ abstract class sfApplication extends sfProject {
 
     // setup generation of html tags (Xhtml vs HTML)
     $this->initHtmlTagConfiguration();
+
     // include all config.php from plugins
     $this->loadPluginConfig();
 

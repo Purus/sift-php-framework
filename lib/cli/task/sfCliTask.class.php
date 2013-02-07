@@ -47,7 +47,7 @@ abstract class sfCliTask {
   }
 
   /**
-   * Initializes the sfTask instance.
+   * Initializes the sfCliTask instance.
    *
    * @param sfEventDispatcher $dispatcher  A sfEventDispatcher instance
    * @param sfCliFormatter       $formatter   A sfCliFormatter instance

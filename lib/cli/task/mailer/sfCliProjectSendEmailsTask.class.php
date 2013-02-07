@@ -15,7 +15,7 @@
 class sfProjectSendEmailsTask extends sfCliBaseTask
 {
   /**
-   * @see sfTask
+   * @see sfCliTask
    */
   protected function configure()
   {

@@ -15,7 +15,7 @@
 class sfGenerateTaskTask extends sfCliGeneratorBaseTask
 {
   /**
-   * @see sfTask
+   * @see sfCliTask
    */
   protected function configure()
   {
@@ -36,7 +36,7 @@ class sfGenerateTaskTask extends sfCliGeneratorBaseTask
     $scriptName = $this->environment->get('script_name');
     
     $this->detailedDescription = <<<EOF
-The [generate:task|INFO] creates a new sfTask class based on the name passed as
+The [generate:task|INFO] creates a new sfCliTask class based on the name passed as
 argument:
 
   [{$scriptName} generate:task namespace:name|INFO]
@@ -67,7 +67,7 @@ EOF;
   }
 
   /**
-   * @see sfTask
+   * @see sfCliTask
    */
   protected function execute($arguments = array(), $options = array())
   {

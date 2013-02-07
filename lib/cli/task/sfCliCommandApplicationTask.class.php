@@ -28,7 +28,7 @@ abstract class sfCliCommandApplicationTask extends sfCliTask
   }
 
   /**
-   * @see sfTask
+   * @see sfCliTask
    */
   public function log($messages)
   {
@@ -39,7 +39,7 @@ abstract class sfCliCommandApplicationTask extends sfCliTask
   }
 
   /**
-   * @see sfTask
+   * @see sfCliTask
    */
   public function logSection($section, $message, $size = null, $style = 'INFO')
   {
@@ -54,7 +54,7 @@ abstract class sfCliCommandApplicationTask extends sfCliTask
    *
    * @param  string $name The name of the task
    *
-   * @return sfTask
+   * @return sfCliTask
    *
    * @throws LogicException If the current task has no command application
    */

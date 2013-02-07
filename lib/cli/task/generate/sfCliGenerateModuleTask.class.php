@@ -15,7 +15,7 @@
 class sfCliGenerateModuleTask extends sfCliGeneratorBaseTask
 {
   /**
-   * @see sfTask
+   * @see sfCliTask
    */
   protected function configure()
   {
@@ -63,7 +63,7 @@ EOF;
   }
 
   /**
-   * @see sfTask
+   * @see sfCliTask
    */
   protected function execute($arguments = array(), $options = array())
   {

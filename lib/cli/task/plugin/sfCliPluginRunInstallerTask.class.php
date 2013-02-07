@@ -15,7 +15,7 @@
 class sfCliPluginRunInstallerTask extends sfCliPluginBaseTask {
 
   /**
-   * @see sfTask
+   * @see sfCliTask
    */
   protected function configure()
   {
@@ -24,8 +24,9 @@ class sfCliPluginRunInstallerTask extends sfCliPluginBaseTask {
     ));
 
     $this->addOptions(array(
-        new sfCliCommandOption('install', 'i', sfCliCommandOption::PARAMETER_NONE, 'Install direction', null),
+        new sfCliCommandOption('install', 'i', sfCliCommandOption::PARAMETER_NONE, 'Install direction', null),        
         new sfCliCommandOption('uninstall', 'u', sfCliCommandOption::PARAMETER_NONE, 'The preferred version', null),
+        new sfCliCommandOption('connection', 'c', sfCliCommandOption::PARAMETER_OPTIONAL, 'Database connection', 'default'),
         new sfCliCommandOption('previous-release', 'p', sfCliCommandOption::PARAMETER_OPTIONAL, 'Previous installed release. Used for migrations.'),
     ));
 
@@ -47,7 +48,7 @@ EOF;
   }
 
   /**
-   * @see sfTask
+   * @see sfCliTask
    */
   protected function execute($arguments = array(), $options = array())
   {
@@ -106,8 +107,8 @@ EOF;
 
     $installer = $this->environment->get('sf_plugins_dir') . '/' .
             $plugin . '/' .
-            $this->environment->get('sf_lib_dir_name')
-            . 'install' . '/' . $plugin . '.class.php';
+            $this->environment->get('sf_lib_dir_name') . '/' 
+            . 'install' . '/' . $installerClass . '.class.php';
 
     // options for the installer
     $options['plugin_dir'] = $this->environment->get('sf_plugins_dir') . '/' . $plugin;
@@ -125,7 +126,7 @@ EOF;
     {
       require_once $installer;
 
-      if(class_exists($installerClass, false))
+      if(!class_exists($installerClass, false))
       {
         throw new sfException(sprintf('Installer file does not contain plugin installer class "%s"', $installerClass));
       }

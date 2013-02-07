@@ -22,13 +22,6 @@ class sfPluginInstaller extends sfConfigurable implements sfIPluginInstaller {
   protected $task;
 
   /**
-   * Full cleanup deletes everything from database
-   *
-   * @var boolean
-   */
-  protected $fullCleanup = true;
-
-  /**
    * Array of required options
    *
    * @var array
@@ -58,12 +51,6 @@ class sfPluginInstaller extends sfConfigurable implements sfIPluginInstaller {
     parent::__construct($options);
     $this->task = $task;
 
-
-    if($this->getOption('only-upgrade'))
-    {
-      $this->fullCleanup = false;
-    }
-
     $this->configure();
   }
 
@@ -85,6 +72,7 @@ class sfPluginInstaller extends sfConfigurable implements sfIPluginInstaller {
     $this->installWebAssets();
     $this->installModel();
     $this->installMigrations();
+    $this->installData();
     $this->installSettings();
     $this->installOther();
     $this->postInstall();
@@ -95,7 +83,7 @@ class sfPluginInstaller extends sfConfigurable implements sfIPluginInstaller {
     $this->preUninstall();
     $this->uninstallWebAssets();
     $this->uninstallModel();
-    $this->uninstallMigrations();
+    $this->uninstallData();
     $this->uninstallSettings();
     $this->uninstallOther();
     $this->postUninstall();
@@ -166,7 +154,7 @@ class sfPluginInstaller extends sfConfigurable implements sfIPluginInstaller {
 
   /**
    * Installs settings
-   * 
+   *
    * @return boolean True on success, false on failure
    */
   protected function installSettings()
@@ -182,6 +170,16 @@ class sfPluginInstaller extends sfConfigurable implements sfIPluginInstaller {
    * @throws sfException
    */
   protected function installModel()
+  {
+    return true;
+  }
+
+  /**
+   * Installs data to database
+   *
+   * @return boolean True on success, false on failure
+   */
+  protected function installData()
   {
     return true;
   }
@@ -252,20 +250,10 @@ class sfPluginInstaller extends sfConfigurable implements sfIPluginInstaller {
 
     return true;
   }
-
-  /**
-   * Uninstalls migrations
-   * 
-   * @return boolean Truo on success, false on failure
-   */
-  protected function uninstallMigrations()
-  {
-    return true;
-  }
-
+  
   /**
    * Uninstalls settings
-   * 
+   *
    * @return boolean True on success, false on failure
    */
   protected function uninstallSettings()
@@ -275,10 +263,20 @@ class sfPluginInstaller extends sfConfigurable implements sfIPluginInstaller {
 
   /**
    * Uninstalls model classes
-   * 
+   *
    * @return boolean True if success, false on failure
    */
   protected function uninstallModel()
+  {
+    return true;
+  }
+
+  /**
+   * Uninstall data from database
+   *
+   * @return boolean True on success, false on failure
+   */
+  protected function uninstallData()
   {
     return true;
   }
@@ -311,7 +309,7 @@ class sfPluginInstaller extends sfConfigurable implements sfIPluginInstaller {
    */
   protected function log($message)
   {
-    return $this->task->log($message);
+    return $this->task->logSection('plugin-installer', $message);
   }
 
 }

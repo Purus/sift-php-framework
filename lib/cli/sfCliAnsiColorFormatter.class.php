@@ -13,18 +13,18 @@
  * @subpackage cli
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  */
-class sfCliAnsiColorFormatter extends sfCliFormatter
-{
+class sfCliAnsiColorFormatter extends sfCliFormatter {
+
   protected
-    $styles = array(
-      'ERROR'    => array('bg' => 'red', 'fg' => 'white', 'bold' => true),
-      'INFO'     => array('fg' => 'green', 'bold' => true),
-      'COMMENT'  => array('fg' => 'yellow'),
-      'QUESTION' => array('bg' => 'cyan', 'fg' => 'black', 'bold' => false),
-    ),
-    $options    = array('bold' => 1, 'underscore' => 4, 'blink' => 5, 'reverse' => 7, 'conceal' => 8),
-    $foreground = array('black' => 30, 'red' => 31, 'green' => 32, 'yellow' => 33, 'blue' => 34, 'magenta' => 35, 'cyan' => 36, 'white' => 37),
-    $background = array('black' => 40, 'red' => 41, 'green' => 42, 'yellow' => 43, 'blue' => 44, 'magenta' => 45, 'cyan' => 46, 'white' => 47);
+          $styles = array(
+              'ERROR' => array('bg' => 'red', 'fg' => 'yellow', 'bold' => true),
+              'INFO' => array('fg' => 'green', 'bold' => true),
+              'COMMENT' => array('fg' => 'yellow'),
+              'QUESTION' => array('fg' => 'cyan', 'bold' => true),
+                  ),
+          $options = array('bold' => 1, 'underscore' => 4, 'blink' => 5, 'reverse' => 7, 'conceal' => 8),
+          $foreground = array('black' => 30, 'red' => 31, 'green' => 32, 'yellow' => 33, 'blue' => 34, 'magenta' => 35, 'cyan' => 36, 'white' => 37),
+          $background = array('black' => 40, 'red' => 41, 'green' => 42, 'yellow' => 43, 'blue' => 44, 'magenta' => 45, 'cyan' => 46, 'white' => 47);
 
   /**
    * Sets a new style.
@@ -47,34 +47,34 @@ class sfCliAnsiColorFormatter extends sfCliFormatter
    */
   public function format($text = '', $parameters = array())
   {
-    if (!is_array($parameters) && 'NONE' == $parameters)
+    if(!is_array($parameters) && 'NONE' == $parameters)
     {
       return $text;
     }
 
-    if (!is_array($parameters) && isset($this->styles[$parameters]))
+    if(!is_array($parameters) && isset($this->styles[$parameters]))
     {
       $parameters = $this->styles[$parameters];
     }
 
     $codes = array();
-    if (isset($parameters['fg']))
+    if(isset($parameters['fg']))
     {
       $codes[] = $this->foreground[$parameters['fg']];
     }
-    if (isset($parameters['bg']))
+    if(isset($parameters['bg']))
     {
       $codes[] = $this->background[$parameters['bg']];
     }
-    foreach ($this->options as $option => $value)
+    foreach($this->options as $option => $value)
     {
-      if (isset($parameters[$option]) && $parameters[$option])
+      if(isset($parameters[$option]) && $parameters[$option])
       {
         $codes[] = $value;
       }
     }
 
-    return "\033[".implode(';', $codes).'m'.$text."\033[0m";
+    return "\033[" . implode(';', $codes) . 'm' . $text . "\033[0m";
   }
 
   /**
@@ -87,7 +87,7 @@ class sfCliAnsiColorFormatter extends sfCliFormatter
    */
   public function formatSection($section, $text, $size = null, $style = 'INFO')
   {
-    if (null === $size)
+    if(null === $size)
     {
       $size = $this->size;
     }
@@ -108,18 +108,19 @@ class sfCliAnsiColorFormatter extends sfCliFormatter
    */
   public function excerpt($text, $size = null)
   {
-    if (!$size)
+    if(!$size)
     {
       $size = $this->size;
     }
 
-    if (strlen($text) < $size)
+    if(strlen($text) < $size)
     {
       return $text;
     }
 
     $subsize = floor(($size - 3) / 2);
 
-    return substr($text, 0, $subsize).$this->format('...', 'INFO').substr($text, -$subsize);
+    return substr($text, 0, $subsize) . $this->format('...', 'INFO') . substr($text, -$subsize);
   }
+
 }

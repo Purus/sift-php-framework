@@ -15,7 +15,7 @@
 class sfCliI18nFindTask extends sfCliBaseTask {
 
   /**
-   * @see sfTask
+   * @see sfCliTask
    */
   protected function configure()
   {
@@ -49,7 +49,7 @@ EOF;
   }
 
   /**
-   * @see sfTask
+   * @see sfCliTask
    */
   public function execute($arguments = array(), $options = array())
   {    

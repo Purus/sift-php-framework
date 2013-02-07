@@ -7,7 +7,7 @@
  */
 
 // remove PEAR deprecated notices
-error_reporting(E_ERROR | E_WARNING | E_PARSE);
+error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING ^ E_DEPRECATED ^ E_STRICT);
 date_default_timezone_set('UTC');
 
 require_once 'PEAR.php';

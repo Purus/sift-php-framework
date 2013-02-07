@@ -374,7 +374,7 @@ abstract class sfCliBaseTask extends sfCliCommandApplicationTask
     foreach (get_declared_classes() as $class)
     {
       $r = new Reflectionclass($class);
-      if ($r->isSubclassOf('sfTask') && !$r->isAbstract() && !preg_match($disabledPluginsRegex, $r->getFileName()))
+      if ($r->isSubclassOf('sfCliTask') && !$r->isAbstract() && !preg_match($disabledPluginsRegex, $r->getFileName()))
       {
         $tasks[] = new $class($this->dispatcher, $this->formatter);
       }
