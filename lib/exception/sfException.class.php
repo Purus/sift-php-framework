@@ -109,11 +109,15 @@ class sfException extends Exception {
    *
    * @param Exception An Exception implementation instance
    */
-  public function printStackTrace($exception = null)
+  public function printStackTrace(Exception $exception = null)
   {
     if(!$exception)
     {
-      $exception = $this;
+      if (null === $this->wrappedException)
+      {
+        $this->setWrappedException($this);
+      }
+      $exception = $this->wrappedException;
     }
 
     $event = sfCore::getEventDispatcher()->notifyUntil(new sfEvent('application.throw_exception', array(
