@@ -130,6 +130,34 @@ class sfPDO extends PDO {
   }
   
   /**
+   * Executes an SQL statement in a single function call, returning the result set 
+   * (if any) returned by the statement as a PDOStatement object. 
+   * 
+   * @param string $statement
+   * @return mixed
+   */
+  public function query()
+  {
+    $args = func_get_args();
+    
+    if($this->isLoggingEnabled())
+    {
+      $this->log($args[0]);
+    }
+    
+    if(version_compare(PHP_VERSION, '5.3', '<')) 
+    {
+      $return = call_user_func_array(array($this, 'parent::query'), $args);
+    } 
+    else 
+    {
+      $return = call_user_func_array('parent::query', $args);
+    }
+
+    return $return;
+  }
+  
+  /**
    * Logs message
    * 
    * @param string $message

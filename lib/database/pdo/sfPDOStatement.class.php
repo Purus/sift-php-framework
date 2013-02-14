@@ -114,7 +114,7 @@ class sfPDOStatement extends PDOStatement {
         $query[] = var_export(is_scalar($param) ? $param : (string) $param, true);
       }
       
-      $this->connection->log(sprintf('Executing %s (%s)', $this->queryString, join(', ', $query)));
+      $this->connection->log(sprintf('%s (%s)', $this->queryString, join(', ', $query)));
       
       if(sfConfig::get('sf_debug'))
       {
