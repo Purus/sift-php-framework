@@ -97,7 +97,7 @@ abstract class sfApplication extends sfProject {
     // initialize options
     $this->initOptions();
     
-    // initialize autoload for the application
+    // initialize
     $this->initConfiguration();
 
     $this->initialize();

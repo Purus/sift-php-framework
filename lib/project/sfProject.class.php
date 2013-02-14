@@ -5,23 +5,23 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
- 
+
 /**
  * sfProject represents the whole project
- * 
+ *
  * @package Sift
  * @subpackage project
  */
 abstract class sfProject extends sfConfigurable {
 
   /**
-   * 
+   *
    */
   protected $plugins = array();
-  
+
   /**
    * Default options
-   * 
+   *
    * @var array
    */
   protected $defaultOptions = array(
@@ -35,7 +35,7 @@ abstract class sfProject extends sfConfigurable {
     'sf_bin_dir_name' => 'batch',
     'sf_log_dir_name' => 'log',
     'sf_lib_dir_name' => 'lib',
-    'sf_plugins_dir_name' => 'plugins',      
+    'sf_plugins_dir_name' => 'plugins',
     'sf_web_dir_name' => 'web',
     'sf_model_dir_name' => 'model',
     'sf_upload_dir_name' => 'files',
@@ -47,7 +47,7 @@ abstract class sfProject extends sfConfigurable {
     'sf_app_lib_dir_name' => 'lib',
     'sf_app_module_dir_name' => 'modules',
     'sf_app_template_dir_name' => 'templates',
-        
+
     // module wide configuration
     'sf_app_module_action_dir_name' => 'actions',
     'sf_app_module_template_dir_name' => 'templates',
@@ -57,22 +57,22 @@ abstract class sfProject extends sfConfigurable {
     'sf_app_module_config_dir_name' => 'config',
     'sf_app_module_i18n_dir_name' => 'i18n',
   );
-  
+
   protected $dispatcher;
 
   /**
    * Array of required options
-   * 
-   * @var array 
+   *
+   * @var array
    */
   protected $requiredOptions = array(
     'sf_root_dir'
   );
-  
+
   /**
    * Active application
-   * 
-   * @var sfApplication 
+   *
+   * @var sfApplication
    */
   static protected $active = null;
 
@@ -83,26 +83,40 @@ abstract class sfProject extends sfConfigurable {
    * @param sfEventDispatcher   $dispatcher The event dispatcher
    */
   public function __construct($options = array(), sfEventDispatcher $dispatcher = null)
-  {    
+  {
     $this->dispatcher = is_null($dispatcher) ? new sfEventDispatcher() : $dispatcher;
-    
+
     parent::__construct($options);
 
+    if(null === self::$active && $this instanceof sfApplication)
+    {
+      self::$active = $this;
+    }
+    
+    $this->configure();
+  }
+
+  /**
+   * Setups the project
+   * 
+   */
+  public function setup()
+  {
     if(!$this->getOption('sf_apps_dir'))
     {
       $this->setOption('sf_apps_dir', $this->getOption('sf_root_dir').DS.$this->getOption('sf_apps_dir_name'));
     }
-    
+
     if(!$this->getOption('sf_config_dir'))
     {
       $this->setOption('sf_config_dir', $this->getOption('sf_root_dir').DS.$this->getOption('sf_config_dir_name'));
     }
-    
+
     if(!$this->getOption('sf_lib_dir'))
     {
       $this->setOption('sf_lib_dir', $this->getOption('sf_root_dir').DS.$this->getOption('sf_lib_dir_name'));
     }
-  
+
     if(!$this->getOption('sf_bin_dir'))
     {
       $this->setOption('sf_bin_dir', $this->getOption('sf_root_dir').DS.$this->getOption('sf_bin_dir_name'));
@@ -111,7 +125,7 @@ abstract class sfProject extends sfConfigurable {
     if(!$this->getOption('sf_log_dir'))
     {
       $this->setOption('sf_log_dir', $this->getOption('sf_root_dir').DS.$this->getOption('sf_log_dir_name'));
-    }    
+    }
 
     if(!$this->getOption('sf_model_lib_dir'))
     {
@@ -124,8 +138,8 @@ abstract class sfProject extends sfConfigurable {
     }
 
     $sf_root_dir = $this->getOption('sf_root_dir');
-    
-    $this->addOptions(array(    
+
+    $this->addOptions(array(
       'sf_web_dir' => $sf_root_dir . DS . $this->getOption('sf_web_dir_name'),
       'sf_upload_dir' => $sf_root_dir . DS . $this->getOption('sf_web_dir_name') . DS . $this->getOption('sf_upload_dir_name'),
       'sf_root_cache_dir' => $this->getOption('sf_root_dir') . DS . $this->getOption('sf_cache_dir_name'),
@@ -136,32 +150,24 @@ abstract class sfProject extends sfConfigurable {
       'sf_doc_dir' => $sf_root_dir . DS . $this->getOption('sf_doc_dir_name'),
       'sf_plugins_dir' => $sf_root_dir . DS . $this->getOption('sf_plugins_dir_name'),
       // image font directory
-      'sf_image_font_dir' => $this->getOption('sf_root_dir') . DS . $this->getOption('sf_data_dir_name') . DS . 'fonts',        
+      'sf_image_font_dir' => $this->getOption('sf_root_dir') . DS . $this->getOption('sf_data_dir_name') . DS . 'fonts',
     ));
 
-    sfConfig::add($this->getOptions());
-    
-    if(null === self::$active && $this instanceof sfApplication)
-    {
-      self::$active = $this;
-    }
-    
-    $this->setup();
-
+    sfConfig::add($this->getOptions());   
   }
   
   /**
-   * Setups the current project
+   * Configures the current project
    *
    * Override this method if you want to customize your project.
    */
-  public function setup()
+  public function configure()
   {
   }
-    
+
   /**
    * Initializes the autoloading feature
-   * 
+   *
    * @param boolean $reload Force the reload?
    */
   public function initializeAutoload($reload = false)
@@ -176,7 +182,7 @@ abstract class sfProject extends sfConfigurable {
       // project wide autoloading
       $cacheFile = $this->getOption('sf_root_cache_dir').'/project_autoload.cache';
     }
-    
+
     // force the reload
     // clear the cache
     if($reload && is_readable($cacheFile))
@@ -193,17 +199,17 @@ abstract class sfProject extends sfConfigurable {
       }
 
       $filesystem = new sfFilesystem();
-      $filesystem->remove($finder->in($where));      
+      $filesystem->remove($finder->in($where));
     }
-    
-    $autoload = sfSimpleAutoload::getInstance($cacheFile);    
-    
+
+    $autoload = sfSimpleAutoload::getInstance($cacheFile);
+
     if(!is_readable($cacheFile))
     {
       // Sift
       $files = array(
         $this->getOption('sf_sift_data_dir') . '/config/autoload.yml'
-      );    
+      );
 
       // project
       if(is_readable(
@@ -214,24 +220,26 @@ abstract class sfProject extends sfConfigurable {
 
       // plugins
       // FIXME: take only enabled plugins
-      if($pluginDirs = glob($this->getOption('sf_plugins_dir').DS.'*'.DS.$this->getOption('sf_config_dir_name') 
+      if($pluginDirs = glob($this->getOption('sf_plugins_dir').DS.'*'.DS.$this->getOption('sf_config_dir_name')
               .'/autoload.yml'))
       {
-        $files = array_merge($files, $pluginDirs);                                    
+        $files = array_merge($files, $pluginDirs);
       }
 
       $autoload->loadConfiguration($files);
       $autoload->saveCache(true);
     }
-    
-    $autoload->register();
-    
+
     // switch the order of autoloaders, lets core be after the simple autoload
     sfCoreAutoload::unregister();
-    // register again as second autoloader
-    sfCoreAutoload::register(); 
-  }
     
+    $autoload->register();
+
+     // register again as second autoloader
+    sfCoreAutoload::register();
+    
+  }
+
   public function setupPlugins()
   {
     foreach(glob($this->getOption('sf_plugins_dir').DS.'*') as $plugin)
@@ -244,75 +252,75 @@ abstract class sfProject extends sfConfigurable {
       $this->plugins[$pluginName] = $this->getPlugin($pluginName);
     }
   }
-  
+
   /**
    * Initialize config cache
-   * 
+   *
    */
   protected function initConfigCache()
   {
     // create new config cache instance
     $this->configCache = sfConfigCache::getInstance($this);
   }
-  
+
   /**
    * Returns the dispatcher instance
-   * 
+   *
    * @return sfEventDispatcher
    */
   public function getEventDispatcher()
   {
     return $this->dispatcher;
   }
-  
+
   /**
    * Return an array of core helpers
-   * 
+   *
    * @return array
    */
   public function getCoreHelpers()
   {
-    return array('Helper', 'Url', 'Asset', 'Tag', 'Escaping');  
+    return array('Helper', 'Url', 'Asset', 'Tag', 'Escaping');
   }
 
   /**
-   * Returns sfApplication instance 
-   * 
+   * Returns sfApplication instance
+   *
    * @param string $application
    * @return sfApplication
-   * @throws RuntimeException    
+   * @throws RuntimeException
    */
   public function getApplication($application, $environment, $debug = false)
   {
     $class = sprintf('my%sApplication', sfInflector::camelize($application));
 
-    $appFile = sprintf('%s/%s/%s/%s.class.php',                                         
+    $appFile = sprintf('%s/%s/%s/%s.class.php',
                                   $this->getOption('sf_apps_dir'),
                                   $application,
                                   $this->getOption('sf_lib_dir_name'),
                                   $class);
     if(is_readable($appFile))
     {
-      require_once $appFile;      
+      require_once $appFile;
       if(!class_exists($class, false))
       {
         throw new RuntimeException(sprintf('The application "%s" does not exist.', $application));
-      }      
+      }
     }
     else
     {
       $class = 'sfGenericApplication';
     }
-    
+
     return new $class($environment, $debug, array_merge(
             $this->getOptions(), array(
                 'sf_app' => $application,
             )), $this->getEventDispatcher());
   }
-  
+
   /**
    * Returns active application
-   * 
+   *
    * @return type
    * @throws RuntimeException
    */
@@ -322,32 +330,32 @@ abstract class sfProject extends sfConfigurable {
     {
       throw new RuntimeException('There is no active application.');
     }
-    
+
     return self::$active;
   }
-  
+
   /**
    * Returns true if these is an active configuration.
-   * 
+   *
    * @return boolean
    */
   public function hasActive()
   {
     return null !== self::$active;
   }
-  
+
   /**
-   * 
+   *
    * @return array
    */
   public function getPlugins()
   {
     return $this->plugins;
   }
-  
+
   /**
    * Returns the plugin instance
-   * 
+   *
    * @param string $plugin
    * @return sfPlugin
    * @throws RuntimeException
@@ -379,11 +387,11 @@ abstract class sfProject extends sfConfigurable {
 
       // plugin
       $this->plugin[$plugin] = new $plugin(array(
-        'root_dir' => $this->getOption('sf_plugins_dir') . '/' . $plugin        
+        'root_dir' => $this->getOption('sf_plugins_dir') . '/' . $plugin
       ));
-      
+
     }
-    
+
     return $this->plugin[$plugin];
   }
 
@@ -394,7 +402,7 @@ abstract class sfProject extends sfConfigurable {
    */
   public function loadPluginConfig()
   {
-    // load plugin configurations !
+    // load plugin configurations
     if($pluginConfigs = glob($this->getOption('sf_plugins_dir').'/*/config/config.php'))
     {
       foreach($pluginConfigs as $config)
@@ -403,7 +411,7 @@ abstract class sfProject extends sfConfigurable {
       }
     }
   }
-  
+
   /**
    * Setups (X)html generation for sfHtml and sfWidget classes
    * based on sf_html5 setting
@@ -414,9 +422,9 @@ abstract class sfProject extends sfConfigurable {
     {
       sfHtml::setXhtml(false);
       sfWidget::setXhtml(false);
-    }    
+    }
   }
-  
+
   /**
    * Dispatches an event using the event system
    *
@@ -427,7 +435,7 @@ abstract class sfProject extends sfConfigurable {
   {
     return $this->getEventDispatcher()->notify(new sfEvent($name, $data));
   }
-  
+
   /**
    * Filters variable using event dispatcher. Dispatches
    * an event with given name and parameters passed.
@@ -442,8 +450,8 @@ abstract class sfProject extends sfConfigurable {
     $event = new sfEvent($eventName, $params);
     $this->getEventDispatcher()->filter($event, $value);
     return $event->getReturnValue();
-  }  
-  
+  }
+
   /**
    * Calls methods defined via sfEventDispatcher.
    *
@@ -454,9 +462,9 @@ abstract class sfProject extends sfConfigurable {
    */
   public function __call($method, $arguments)
   {
-    $event = $this->dispatcher->notifyUntil(new sfEvent('configuration.method_not_found',             
+    $event = $this->dispatcher->notifyUntil(new sfEvent('configuration.method_not_found',
             array('subject' => $this, 'method' => $method, 'arguments' => $arguments)));
-    
+
     if (!$event->isProcessed())
     {
       throw new sfException(sprintf('Call to undefined method %s::%s.', get_class($this), $method));
@@ -464,6 +472,6 @@ abstract class sfProject extends sfConfigurable {
 
     return $event->getReturnValue();
   }
-  
+
 }
 
