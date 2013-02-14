@@ -110,7 +110,10 @@ class sfPDOStatement extends PDOStatement {
       // interpolate parameters
       foreach((array)self::fixParams($this->params) as $param)
       {
-        $param = htmlspecialchars($param, ENT_QUOTES, sfConfig::get('sf_charset'));
+        if(is_string($param))
+        {
+          $param = htmlspecialchars($param, ENT_QUOTES, sfConfig::get('sf_charset'));
+        }        
         $query[] = var_export(is_scalar($param) ? $param : (string) $param, true);
       }
       
@@ -146,9 +149,13 @@ class sfPDOStatement extends PDOStatement {
   {
     foreach($params as $key => $param)
     {
-      if(strlen($param) >= 255)
+      if(is_string($param) && strlen($param) >= 255)
       {
         $params[$key] = '[' . strlen($param) / 1024 .' kB]';
+      }
+      elseif(is_resource($param))
+      {
+        $params[$key] = '[resource]';
       }
     }
     return $params;
