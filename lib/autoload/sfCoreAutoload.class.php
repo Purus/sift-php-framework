@@ -605,6 +605,7 @@ class sfCoreAutoload
     'sfsearchquerybuilderabstract' => 'search/builder/sfSearchQueryBuilderAbstract.class.php',
     'sfsearchquerybuildermysqlfulltext' => 'search/builder/sfSearchQueryBuilderMysqlFulltext.class.php',
     'sfsearchquerybuilderpgsqlfulltext' => 'search/builder/sfSearchQueryBuilderPgsqlFulltext.class.php',
+    'mysearchtools' => 'search/mySearchTools.class.php',
     'sfisearchquerylexer' => 'search/parser/sfISearchQueryLexer.interface.php',
     'sfisearchqueryparser' => 'search/parser/sfISearchQueryParser.interface.php',
     'sfsearchqueryexpression' => 'search/parser/sfSearchQueryExpression.class.php',
