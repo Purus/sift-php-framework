@@ -33,7 +33,7 @@
  *
  * @author Fabien Potencier <fabien@symfony.com>
  * @author Jordi Boggiano <j.boggiano@seld.be>
- * 
+ *
  */
 class sfClassLoader {
 
@@ -129,14 +129,26 @@ class sfClassLoader {
    */
   public function register($prepend = false)
   {
-    if(version_compare(phpversion(), '5.3.0', '>='))
+    if(version_compare(PHP_VERSION, '5.3.0', '>='))
     {
       spl_autoload_register(array($this, 'loadClass'), true, $prepend);
     }
+    elseif($prepend)
+    {
+      $loaders = spl_autoload_functions();
+      spl_autoload_register(array($this, 'loadClass'), true);
+      if($loaders)
+      {
+        foreach($loaders as $loader) 
+        {
+          spl_autoload_unregister($loader);
+          spl_autoload_register($loader, true);
+        }
+      }
+    }
     else
     {
-      // prepend parameter is available only for php > 5.3
-      spl_autoload_register(array($this, 'loadClass'), true);
+      spl_autoload_register(array($this, 'loadClass'));
     }
   }
 
@@ -199,12 +211,12 @@ class sfClassLoader {
       $classPath = null;
       $className = $class;
     }
-    
+
     // see if the file exists in the current module lib directory
     // must be in a module context
-    if(class_exists('sfContext', false) && 
-        sfContext::hasInstance() && 
-        ($module = sfContext::getInstance()->getModuleName()) && 
+    if(class_exists('sfContext', false) &&
+        sfContext::hasInstance() &&
+        ($module = sfContext::getInstance()->getModuleName()) &&
         isset($this->classMap[$module.'/'.strtolower($class)]))
     {
       return $this->classMap[$module.'/'.strtolower($class)];
