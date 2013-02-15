@@ -1,0 +1,650 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Sift exif translations\n"
+"POT-Creation-Date: 2013-02-15 15:15+0100\n"
+"PO-Revision-Date: 2013-02-15 15:17+0100\n"
+"Last-Translator: Michal Moravec - Mishal.cz <mishal@mishal.cz>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.5.4\n"
+"X-Poedit-KeywordsList: __;_;gettext;gettext_noop\n"
+"X-Poedit-Basepath: .\n"
+"X-Poedit-SearchPath-0: ../../../../lib/image\n"
+
+#: ../../../../lib/image/sfExif.class.php:110
+#, fuzzy
+msgid "Image keywords"
+msgstr "<b>Obrázek</b> %d &#215; %d: %s"
+
+#: ../../../../lib/image/sfExif.class.php:111
+#, fuzzy
+msgid "Image Title"
+msgstr "Nadpis stránky"
+
+#: ../../../../lib/image/sfExif.class.php:112
+#, fuzzy
+msgid "By"
+msgstr "po"
+
+#: ../../../../lib/image/sfExif.class.php:113
+#: ../../../../lib/image/sfExif.class.php:155
+#, fuzzy
+msgid "Copyright"
+msgstr "Autorská práva"
+
+#: ../../../../lib/image/sfExif.class.php:114
+#, fuzzy
+msgid "Caption"
+msgstr "titulek"
+
+#: ../../../../lib/image/sfExif.class.php:117
+#, fuzzy
+msgid "Image Creator"
+msgstr "Tvůrce mapy: %s"
+
+#: ../../../../lib/image/sfExif.class.php:118
+msgid "Rights"
+msgstr "Práva"
+
+#: ../../../../lib/image/sfExif.class.php:119
+msgid "Usage Terms"
+msgstr "Licenční podmínky"
+
+#: ../../../../lib/image/sfExif.class.php:122
+#, fuzzy
+msgid "Date Photo Modified"
+msgstr "Žádný prvek nebyl změněn"
+
+#: ../../../../lib/image/sfExif.class.php:123
+#, fuzzy
+msgid "Date Photo Taken"
+msgstr "nahrát moji fotografii"
+
+#: ../../../../lib/image/sfExif.class.php:124
+#, fuzzy
+msgid "Date Photo Digitized"
+msgstr "nahrát moji fotografii"
+
+#: ../../../../lib/image/sfExif.class.php:125
+#, fuzzy
+msgid "Latitude"
+msgstr "Zeměpisná šířka a délka"
+
+#: ../../../../lib/image/sfExif.class.php:126
+#, fuzzy
+msgid "Longitude"
+msgstr "Zeměpisná šířka a délka"
+
+#: ../../../../lib/image/sfExif.class.php:127
+#, fuzzy
+msgid "Camera Make"
+msgstr "Vytvořit stereo"
+
+#: ../../../../lib/image/sfExif.class.php:128
+#, fuzzy
+msgid "Camera Model"
+msgstr "Model CellView"
+
+#: ../../../../lib/image/sfExif.class.php:129
+msgid "Software Version"
+msgstr "Verze programu"
+
+#: ../../../../lib/image/sfExif.class.php:130
+#, fuzzy
+msgid "Photo Type"
+msgstr "Způso&b přihlašování:"
+
+#: ../../../../lib/image/sfExif.class.php:131
+#, fuzzy
+msgid "Photo Description"
+msgstr "(žádný popis)"
+
+#: ../../../../lib/image/sfExif.class.php:132
+msgid "File Size"
+msgstr "Velikost souboru"
+
+#: ../../../../lib/image/sfExif.class.php:133
+msgid "Width"
+msgstr "Šířka"
+
+#: ../../../../lib/image/sfExif.class.php:134
+msgid "Height"
+msgstr "Výška"
+
+#: ../../../../lib/image/sfExif.class.php:135
+#, fuzzy
+msgid "X Resolution"
+msgstr "Rozlišení"
+
+#: ../../../../lib/image/sfExif.class.php:136
+#, fuzzy
+msgid "Y Resolution"
+msgstr "Rozlišení"
+
+#: ../../../../lib/image/sfExif.class.php:137
+#, fuzzy
+msgid "Resolution Unit"
+msgstr "Jednotka délky:"
+
+#: ../../../../lib/image/sfExif.class.php:138
+#, fuzzy
+msgid "Shutter Speed"
+msgstr "Změnit rychlost"
+
+#: ../../../../lib/image/sfExif.class.php:139
+msgid "Exposure"
+msgstr "Expozice"
+
+#: ../../../../lib/image/sfExif.class.php:140
+#, fuzzy
+msgid "Focal Length"
+msgstr "Délka (sekundy)"
+
+#: ../../../../lib/image/sfExif.class.php:141
+msgid "Focal Length (35mm equiv)"
+msgstr ""
+
+#: ../../../../lib/image/sfExif.class.php:142
+#: ../../../../lib/image/sfExif.class.php:165
+msgid "Aperture"
+msgstr ""
+
+#: ../../../../lib/image/sfExif.class.php:143
+#, fuzzy
+msgid "F-Number"
+msgstr "Číslo"
+
+#: ../../../../lib/image/sfExif.class.php:144
+#, fuzzy
+msgid "ISO Setting"
+msgstr "Nastavení volby „%s“"
+
+#: ../../../../lib/image/sfExif.class.php:145
+#, fuzzy
+msgid "Exposure Bias"
+msgstr "Chyba v neurčitosti nadmořských výšek"
+
+#: ../../../../lib/image/sfExif.class.php:146
+#, fuzzy
+msgid "Exposure Mode"
+msgstr "&Režim přenosu:"
+
+#: ../../../../lib/image/sfExif.class.php:147
+#, fuzzy
+msgid "Exposure Program"
+msgstr "Název programu"
+
+#: ../../../../lib/image/sfExif.class.php:148
+#, fuzzy
+msgid "Metering Mode"
+msgstr "&Režim přenosu:"
+
+#: ../../../../lib/image/sfExif.class.php:149
+#, fuzzy
+msgid "Flash Setting"
+msgstr "Nastavení volby „%s“"
+
+#: ../../../../lib/image/sfExif.class.php:150
+#, fuzzy
+msgid "User Comment"
+msgstr "Odstranit komentář"
+
+#: ../../../../lib/image/sfExif.class.php:151
+#, fuzzy
+msgid "Color Space"
+msgstr "Nepodporovaný prostor barev JPEG (%s)"
+
+#: ../../../../lib/image/sfExif.class.php:152
+#, fuzzy
+msgid "Sensing Method"
+msgstr "Metoda interpolace"
+
+#: ../../../../lib/image/sfExif.class.php:153
+#, fuzzy
+msgid "White Balance"
+msgstr "Automatické vyvážení bílé"
+
+#: ../../../../lib/image/sfExif.class.php:154
+#, fuzzy
+msgid "Camera Orientation"
+msgstr "Orientace položky"
+
+#: ../../../../lib/image/sfExif.class.php:156
+#, fuzzy
+msgid "Artist"
+msgstr "Interpret:"
+
+#: ../../../../lib/image/sfExif.class.php:157
+#, fuzzy
+msgid "Light source"
+msgstr "Umístění zdroje světla"
+
+#: ../../../../lib/image/sfExif.class.php:158
+#, fuzzy
+msgid "Image Stabilization"
+msgstr "<b>Obrázek</b> %d &#215; %d: %s"
+
+#: ../../../../lib/image/sfExif.class.php:159
+#, fuzzy
+msgid "Scene Type"
+msgstr "Způso&b přihlašování:"
+
+#: ../../../../lib/image/sfExif.class.php:163
+#, fuzzy
+msgid "Lens Id"
+msgstr "Id existuje!"
+
+#: ../../../../lib/image/sfExif.class.php:164
+msgid "Lens"
+msgstr ""
+
+#: ../../../../lib/image/sfExif.class.php:166
+#, fuzzy
+msgid "Depth of Field"
+msgstr "Arc vrstva < 1"
+
+#: ../../../../lib/image/sfExif.class.php:167
+#, fuzzy
+msgid "Field of View"
+msgstr "&Zobrazit/Upravit"
+
+#: ../../../../lib/image/sfExif.class.php:239
+#: ../../../../lib/image/sfExif.class.php:247
+#, fuzzy, php-format
+msgid "%duration% sec"
+msgstr "min:sek"
+
+#: ../../../../lib/image/sfExif.class.php:249
+#, fuzzy
+msgid "%n% / %d% sec"
+msgstr "sek"
+
+#: ../../../../lib/image/sfExif.class.php:254
+msgid "Bulb"
+msgstr ""
+
+#: ../../../../lib/image/sfExif.class.php:320
+#, fuzzy
+msgid "Auto exposure"
+msgstr "Automatická mnemotechniku"
+
+#: ../../../../lib/image/sfExif.class.php:321
+#, fuzzy
+msgid "Manual exposure"
+msgstr "&Ruční přenos..."
+
+#: ../../../../lib/image/sfExif.class.php:322
+#, fuzzy
+msgid "Auto bracket"
+msgstr "Zvýrazňovat závorky"
+
+#: ../../../../lib/image/sfExif.class.php:323
+#: ../../../../lib/image/sfExif.class.php:337
+#: ../../../../lib/image/sfExif.class.php:356
+#: ../../../../lib/image/sfExif.class.php:470
+#: ../../../../lib/image/sfExif.class.php:505
+#: ../../../../lib/image/sfExif.class.php:513
+#: ../../../../lib/image/sfExif.class.php:567
+#: ../../../../lib/image/sfExif.class.php:584
+msgid "Unknown"
+msgstr "Neznámý"
+
+#: ../../../../lib/image/sfExif.class.php:329
+#: ../../../../lib/image/sfExif.class.php:512
+#, fuzzy
+msgid "Manual"
+msgstr "Manuálová stránka"
+
+#: ../../../../lib/image/sfExif.class.php:330
+#, fuzzy
+msgid "Normal Program"
+msgstr "Název programu"
+
+#: ../../../../lib/image/sfExif.class.php:331
+#, fuzzy
+msgid "Aperture Priority"
+msgstr "Nastavit priorit&u"
+
+#: ../../../../lib/image/sfExif.class.php:332
+#, fuzzy
+msgid "Shutter Priority"
+msgstr "Nastavit priorit&u"
+
+#: ../../../../lib/image/sfExif.class.php:333
+msgid "Creative"
+msgstr ""
+
+#: ../../../../lib/image/sfExif.class.php:334
+#, fuzzy
+msgid "Action"
+msgstr "Akce"
+
+#: ../../../../lib/image/sfExif.class.php:335
+#: ../../../../lib/image/sfExif.class.php:582
+msgid "Portrait"
+msgstr "Na výšku"
+
+#: ../../../../lib/image/sfExif.class.php:336
+#: ../../../../lib/image/sfExif.class.php:581
+msgid "Landscape"
+msgstr "Na šířku"
+
+#: ../../../../lib/image/sfExif.class.php:345
+msgid "%resulution% dots per unit"
+msgstr ""
+
+#: ../../../../lib/image/sfExif.class.php:348
+#, fuzzy
+msgid "%resulution% per unit"
+msgstr "Vstupní jednotkový faktor"
+
+#: ../../../../lib/image/sfExif.class.php:353
+#, fuzzy
+msgid "Pixels"
+msgstr "Pixely"
+
+#: ../../../../lib/image/sfExif.class.php:354
+#, fuzzy
+msgid "Inch"
+msgstr "Palec"
+
+#: ../../../../lib/image/sfExif.class.php:355
+#, fuzzy
+msgid "Centimeter"
+msgstr "Centimetr"
+
+#: ../../../../lib/image/sfExif.class.php:361
+#, fuzzy
+msgid "%width% pixeld"
+msgstr "%d: formát='%s' šířka=%d\n"
+
+#: ../../../../lib/image/sfExif.class.php:367
+#, fuzzy
+msgid "Normal (O deg)"
+msgstr "Normální ofset"
+
+#: ../../../../lib/image/sfExif.class.php:369
+msgid "Mirrored"
+msgstr ""
+
+#: ../../../../lib/image/sfExif.class.php:371
+msgid "Upsidedown"
+msgstr ""
+
+#: ../../../../lib/image/sfExif.class.php:373
+msgid "Upsidedown Mirrored"
+msgstr ""
+
+#: ../../../../lib/image/sfExif.class.php:375
+#, fuzzy
+msgid "90 deg CW Mirrored"
+msgstr "Otočit o 90&#176; vpravo"
+
+#: ../../../../lib/image/sfExif.class.php:377
+#, fuzzy
+msgid "90 deg CCW"
+msgstr "Otočit o 90&#176; vlevo"
+
+#: ../../../../lib/image/sfExif.class.php:379
+#, fuzzy
+msgid "90 deg CCW Mirrored"
+msgstr "Otočit o 90&#176; vlevo"
+
+#: ../../../../lib/image/sfExif.class.php:381
+#, fuzzy
+msgid "90 deg CW"
+msgstr "Otočit o 90&#176; vpravo"
+
+#: ../../../../lib/image/sfExif.class.php:440
+#: ../../../../lib/image/sfExif.class.php:443
+#, fuzzy
+msgid "%focal_length% mm"
+msgstr "Dolní okraj (mm):"
+
+#: ../../../../lib/image/sfExif.class.php:471
+#, fuzzy
+msgid "Average"
+msgstr "Průměrná kvalita"
+
+#: ../../../../lib/image/sfExif.class.php:472
+#, fuzzy
+msgid "Center Weighted Average"
+msgstr ",  průměrná zátěž: %.2f"
+
+#: ../../../../lib/image/sfExif.class.php:473
+#, fuzzy
+msgid "Spot"
+msgstr "SPOT NDVI import"
+
+#: ../../../../lib/image/sfExif.class.php:474
+#, fuzzy
+msgid "Multi-Spot"
+msgstr "Multi_key"
+
+#: ../../../../lib/image/sfExif.class.php:475
+#, fuzzy
+msgid "Multi-Segment"
+msgstr "Odstranit segment"
+
+#: ../../../../lib/image/sfExif.class.php:476
+#, fuzzy
+msgid "Partial"
+msgstr "částečný"
+
+#: ../../../../lib/image/sfExif.class.php:477
+#, fuzzy
+msgid "Other"
+msgstr "Další"
+
+#: ../../../../lib/image/sfExif.class.php:478
+#, fuzzy
+msgid "Uknown: %data%"
+msgstr "%s (%s) – Datové spojení: %s; "
+
+#: ../../../../lib/image/sfExif.class.php:485
+msgid "Daylight"
+msgstr ""
+
+#: ../../../../lib/image/sfExif.class.php:486
+msgid "Fluorescent"
+msgstr ""
+
+#: ../../../../lib/image/sfExif.class.php:487
+msgid "Tungsten"
+msgstr ""
+
+#: ../../../../lib/image/sfExif.class.php:488
+#: ../../../../lib/image/sfExif.class.php:524
+#, fuzzy
+msgid "Flash"
+msgstr "Video Flash"
+
+#: ../../../../lib/image/sfExif.class.php:489
+#, fuzzy
+msgid "Fine weather"
+msgstr "Rychleji"
+
+#: ../../../../lib/image/sfExif.class.php:490
+msgid "Cloudy weather"
+msgstr ""
+
+#: ../../../../lib/image/sfExif.class.php:491
+msgid "Shade"
+msgstr ""
+
+#: ../../../../lib/image/sfExif.class.php:492
+msgid "Daylight fluorescent"
+msgstr ""
+
+#: ../../../../lib/image/sfExif.class.php:493
+#, fuzzy
+msgid "Day white fluorescent"
+msgstr "Generuji bílý šum"
+
+#: ../../../../lib/image/sfExif.class.php:494
+#, fuzzy
+msgid "Cool white fluorescent"
+msgstr "Generuji bílý šum"
+
+#: ../../../../lib/image/sfExif.class.php:495
+#, fuzzy
+msgid "White fluorescent"
+msgstr "Bílý šum"
+
+#: ../../../../lib/image/sfExif.class.php:496
+#, fuzzy
+msgid "Standard light A"
+msgstr "Méně jasnosti"
+
+#: ../../../../lib/image/sfExif.class.php:497
+#, fuzzy
+msgid "Standard light B"
+msgstr "Méně jasnosti"
+
+#: ../../../../lib/image/sfExif.class.php:498
+#, fuzzy
+msgid "Standard light C"
+msgstr "Méně jasnosti"
+
+#: ../../../../lib/image/sfExif.class.php:503
+#, fuzzy
+msgid "ISO studio tungsten"
+msgstr "Podpora firmy The Seed Studio"
+
+#: ../../../../lib/image/sfExif.class.php:504
+#, fuzzy
+msgid "other light source"
+msgstr "Umístění zdroje světla"
+
+#: ../../../../lib/image/sfExif.class.php:511
+#, fuzzy
+msgid "Auto"
+msgstr "Automatická detekce"
+
+#: ../../../../lib/image/sfExif.class.php:523
+#: ../../../../lib/image/sfExif.class.php:530
+#: ../../../../lib/image/sfExif.class.php:531
+#: ../../../../lib/image/sfExif.class.php:535
+#, fuzzy
+msgid "No Flash"
+msgstr "Video Flash"
+
+#: ../../../../lib/image/sfExif.class.php:525
+msgid "Flash, strobe return light not detected"
+msgstr ""
+
+#: ../../../../lib/image/sfExif.class.php:526
+msgid "Flash, strobe return light detected"
+msgstr ""
+
+#: ../../../../lib/image/sfExif.class.php:527
+#, fuzzy
+msgid "Compulsory Flash"
+msgstr "Video Flash"
+
+#: ../../../../lib/image/sfExif.class.php:528
+msgid "Compulsory Flash, Return light not detected"
+msgstr ""
+
+#: ../../../../lib/image/sfExif.class.php:529
+msgid "Compulsory Flash, Return light detected"
+msgstr ""
+
+#: ../../../../lib/image/sfExif.class.php:532
+#, fuzzy
+msgid "Flash, Auto-Mode"
+msgstr "Inverzní režim [0=vypnuto, 1=zapnuto, 2=auto]"
+
+#: ../../../../lib/image/sfExif.class.php:533
+msgid "Flash, Auto-Mode, Return light not detected"
+msgstr ""
+
+#: ../../../../lib/image/sfExif.class.php:534
+msgid "Flash, Auto-Mode, Return light detected"
+msgstr ""
+
+#: ../../../../lib/image/sfExif.class.php:536
+#, fuzzy
+msgid "Red Eye"
+msgstr "Červená funkce"
+
+#: ../../../../lib/image/sfExif.class.php:537
+msgid "Red Eye, Return light not detected"
+msgstr ""
+
+#: ../../../../lib/image/sfExif.class.php:538
+msgid "Red Eye, Return light detected"
+msgstr ""
+
+#: ../../../../lib/image/sfExif.class.php:539
+msgid "Red Eye, Compulsory Flash"
+msgstr ""
+
+#: ../../../../lib/image/sfExif.class.php:540
+msgid "Red Eye, Compulsory Flash, Return light not detected"
+msgstr ""
+
+#: ../../../../lib/image/sfExif.class.php:541
+msgid "Red Eye, Compulsory Flash, Return light detected"
+msgstr ""
+
+#: ../../../../lib/image/sfExif.class.php:542
+#, fuzzy
+msgid "Red Eye, Auto-Mode"
+msgstr "Inverzní režim [0=vypnuto, 1=zapnuto, 2=auto]"
+
+#: ../../../../lib/image/sfExif.class.php:543
+msgid "Red Eye, Auto-Mode, Return light not detected"
+msgstr ""
+
+#: ../../../../lib/image/sfExif.class.php:544
+msgid "Red Eye, Auto-Mode, Return light detected"
+msgstr ""
+
+#: ../../../../lib/image/sfExif.class.php:560
+#, fuzzy
+msgid "Not defined"
+msgstr "<nedefinováno>"
+
+#: ../../../../lib/image/sfExif.class.php:561
+msgid "One Chip Color Area Sensor"
+msgstr ""
+
+#: ../../../../lib/image/sfExif.class.php:562
+msgid "Two Chip Color Area Sensor"
+msgstr ""
+
+#: ../../../../lib/image/sfExif.class.php:563
+msgid "Three Chip Color Area Sensor"
+msgstr ""
+
+#: ../../../../lib/image/sfExif.class.php:564
+msgid "Color Sequential Area Sensor"
+msgstr ""
+
+#: ../../../../lib/image/sfExif.class.php:565
+msgid "Trilinear Sensor"
+msgstr ""
+
+#: ../../../../lib/image/sfExif.class.php:566
+msgid "Color Sequential Linear Sensor"
+msgstr ""
+
+#: ../../../../lib/image/sfExif.class.php:573
+msgid "sRGB"
+msgstr ""
+
+#: ../../../../lib/image/sfExif.class.php:574
+msgid "Uncalibrated"
+msgstr ""
+
+#: ../../../../lib/image/sfExif.class.php:580
+msgid "Standard"
+msgstr "Standardní"
+
+#: ../../../../lib/image/sfExif.class.php:583
+#, fuzzy
+msgid "Night Scene"
+msgstr "Scéna Blender"

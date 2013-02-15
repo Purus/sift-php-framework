@@ -119,3 +119,6 @@ default:
 #        height: 100
 #        color: '#FFFFFF'
 #      font_dir: %SF_IMAGE_FONT_DIR%
+#      exif_adapter: ExifTool
+#      exif_adapter_options:
+#        exif_executable: /usr/bin/exiftool

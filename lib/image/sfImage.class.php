@@ -42,11 +42,11 @@ class sfImage {
 
   /**
    * Empty gif string
-   * 
+   *
    * @link http://emptygif.com/2010/10/29/php-echo/
    */
   const EMPTY_GIF = "\107\111\106\70\71\141\001\000\001\000\360\001\000\377\377\377\000\000\000\041\371\004\001\012\000\000\000\054\000\000\000\000\001\000\001\000\000\002\002\104\001\000\073";
-  
+
   /**
    * The adapter class.
    * @access protected
@@ -80,17 +80,17 @@ class sfImage {
    * @param string Filename of the image to be loaded
    * @param string File MIME type
    * @param string Name of a supported adapter
+   * @param boolen Fix orientation?
    */
-  public function __construct($filename = '', $mime = '', $adapter = '')
+  public function __construct($filename = '', $mime = '', $adapter = '', $fixOrientation = true)
   {
     $this->setAdapter($this->createAdapter($adapter));
 
     // Set the Image source if passed
     if($filename !== '')
     {
-      $this->load($filename, $mime);
+      $this->load($filename, $mime, $fixOrientation);
     }
-
     // Otherwise create a new blank image
     else
     {
@@ -137,9 +137,9 @@ class sfImage {
    */
   public function create($x = null, $y = null, $color = null)
   {
-    $defaults = sfConfig::get('sf_image_default_image', 
-            array('filename' => 'untitled.png', 
-                  'mime_type' => 'image/png', 
+    $defaults = sfConfig::get('sf_image_default_image',
+            array('filename' => 'untitled.png',
+                  'mime_type' => 'image/png',
                   'width' => 100, 'height' => 100)
             );
 
@@ -165,12 +165,12 @@ class sfImage {
 
     $this->getAdapter()->create($x, $y);
     $this->getAdapter()->setFilename($defaults['filename']);
-    
+
     if(isset($defaults['mime_type']))
     {
       $this->setMIMEType($defaults['mime_type']);
     }
-    
+
     // Set the image color if set
     if(is_null($color))
     {
@@ -209,7 +209,7 @@ class sfImage {
       {
         $mime = $this->fixMIMEType($mime);
       }
-      
+
       if('' == $mime)
       {
         throw new sfImageTransformException(sprintf('Mime type of the file "%s" not specified nor detected.', $filename));
@@ -333,46 +333,72 @@ class sfImage {
   /**
    * Tries to fix image orientation based on EXIF data
    *
-   * @see http://www.impulseadventure.com/photo/exif-orientation.html
-   * @see http://stackoverflow.com/questions/4266656/how-to-stop-php-imagick-auto-rotating-images-based-on-exif-orientation-data
+   * @link http://www.impulseadventure.com/photo/exif-orientation.html
+   * @link http://stackoverflow.com/questions/4266656/how-to-stop-php-imagick-auto-rotating-images-based-on-exif-orientation-data
+   * @link http://recursive-design.com/blog/2012/07/28/exif-orientation-handling-is-a-ghetto/
    */
   public function fixOrientation()
   {
-    // only if exif extension is loaded
-    if(!function_exists('exif_read_data'))
-    {
-      return false;
-    }
-
+    // orientation already fixed
     if($this->orientationFixed)
     {
+      return $this;
+    }
+
+    if(!($src = $this->getFilename()))
+    {
+      return $this;
+    }
+
+    // we will use exif
+    try
+    {
+      $exif = new sfExif();
+      $data = $exif->getData($src);
+
+      // do nothing, we don't have any data
+      if(!isset($data['Orientation']))
+      {
+        // throw exception which will be catched later
+        throw new Exception('No orientation data present.');
+      }
+      $orientation = $data['Orientation'];
+    }
+    catch(Exception $e)
+    {
+      // set to prevent multiple tries
+      $this->orientationFixed = true;
       return;
     }
 
-    $src = $this->getFilename();
-    // exif is only for jpeg and tiff
-    $mime = $this->getMIMEType();
-
-    if(!$src)
-    {
-      return false;
-    }
-
-    $exif = @exif_read_data($src);
-    if($exif === false || !isset($exif['Orientation']))
-    {
-      return;
-    }
-
-    $orientation = $exif['Orientation'];
     switch($orientation)
     {
-      case 3: // flip vertically
+      case 1:
+        // 1 is ok!
+        break;
+
+      case 2:
+        $result = $this->mirror();
+        break;
+
+      case 3:
+        $result = $this->flip()->mirror();
+        break;
+
+      case 4:
         $result = $this->flip();
+        break;
+
+      case 5:
+        $result = $this->mirror()->rotate(90);
         break;
 
       case 6: // rotate 90 degrees CCW
         $result = $this->rotate(-90);
+        break;
+
+      case 7:
+        $result = $this->flip()->rotate(90);
         break;
 
       case 8: // rotate 90 degrees CW
@@ -501,12 +527,14 @@ class sfImage {
 
   /**
    * Sets the image quality
-   * @param integer Valid range is from 0 (worst) to 100 (best)
    *
+   * @param integer Valid range is from 0 (worst) to 100 (best)
+   * @return sfImage
    */
   public function setQuality($quality)
   {
     $this->getAdapter()->setQuality($quality);
+    return $this;
   }
 
   /**
@@ -527,11 +555,11 @@ class sfImage {
   protected function autoDetectMIMETypeFromFile($filename)
   {
     return sfMimeType::getTypeFromFile($filename);
-  }  
-  
+  }
+
   /**
    * Fixes mimetype
-   * 
+   *
    * @param string $mimeType
    */
   protected function fixMIMEType($mimeType)
@@ -540,10 +568,10 @@ class sfImage {
     {
       case 'image/pjpeg': return 'image/jpeg';
     }
-    
+
     return $mimeType;
   }
-  
+
   /**
    * Returns a adapter class of the specified type
    * @access protected
@@ -586,12 +614,12 @@ class sfImage {
   }
 
   /**
-   * Returns image colors 
-   * 
+   * Returns image colors
+   *
    * @param integer $max
    * @param integer $threshold Percentage that colour needs to reach of total pixels for colour to be considered significant
    * @param sfColorPalette $palette Color pallete
-   * @return array Array of colors 
+   * @return array Array of colors
    */
   public function getColors($max = false, $threshold = 1, $granularity = 5, sfColorPalette $palette = null)
   {
@@ -671,7 +699,7 @@ class sfImage {
 
   /**
    * Returns number of pixels in the image.
-   * 
+   *
    * @return integer
    */
   public function getTotalPixels()
@@ -680,11 +708,11 @@ class sfImage {
   }
 
   /**
-   * Checks if image is grayscale image by picking $toCheck pixels and checking 
+   * Checks if image is grayscale image by picking $toCheck pixels and checking
    * if those pixels colors are grayscale.
-   *   
+   *
    * @see http://www.autoitscript.com/forum/topic/120313-check-if-an-image-is-grayscale-or-not/
-   *    
+   *
    * @param integer $toCheck Number of pixels to check (100 is default)
    * */
   public function isGrayscale($toCheck = 100)
@@ -722,7 +750,7 @@ class sfImage {
   /**
    * Returns average color of the image. Simply resizes the copy
    * of this image to 1x1 pixel and returns its color.
-   * 
+   *
    * @return sfColor
    */
   public function getAverageColor()

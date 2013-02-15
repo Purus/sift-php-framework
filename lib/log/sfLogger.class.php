@@ -166,7 +166,7 @@ class sfLogger extends sfConfigurable implements sfILogger {
 
     foreach($this->loggers as $logger)
     {
-      $logger->log((string) $message, $priority, $this->levels[$priority]);
+      $logger->log((string) $message, $priority, is_string($priority) ? $priority : $this->levels[$priority]);
     }
   }
 
