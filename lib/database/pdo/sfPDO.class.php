@@ -36,17 +36,36 @@ class sfPDO extends PDO {
     // enable logging only is logging enabled and is greater than "notice" (ie. debug, notice)
     $this->isLoggingEnabled = sfConfig::get('sf_logging_enabled') 
             && constant('SF_LOG_'.strtoupper(sfConfig::get('sf_logging_level'))) >= SF_LOG_NOTICE;
-    
-    // custom statement class
-    $this->setAttribute(PDO::ATTR_STATEMENT_CLASS, array('sfPDOStatement',         
-        array($this, array(            
-            'logging' => $this->isLoggingEnabled
-          ))));
+
+    $this->configureStatementClass(true);
     
     // always use exceptions.
     $this->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);     
   }
 
+	/**
+   * Configures the PDOStatement class for this connection.
+   * 
+   * @param      boolean $suppressError Whether to suppress an exception if the statement class cannot be set.
+   * @throws     InvalidArgumentException if the statement class cannot be set (and $suppressError is false)
+   */
+  protected function configureStatementClass($suppressError = false)
+  {
+    // extending PDOStatement is not supported with persistent connections
+    if(!$this->getAttribute(PDO::ATTR_PERSISTENT))
+    {
+      // custom statement class
+      $this->setAttribute(PDO::ATTR_STATEMENT_CLASS, array('sfPDOStatement',         
+          array($this, array(            
+              'logging' => $this->isLoggingEnabled
+            ))));
+    }
+    elseif(!$suppressError)
+    {
+      throw new InvalidArgumentException('Extending PDOStatement is not supported with persistent connections.');
+    }
+  }
+  
   /**
    * Is logging enabled? It if only if sf_logging_enabled is turned on
    * and log level is greater and equal to "notice" (ie. "debug", "notice")
