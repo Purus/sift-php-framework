@@ -532,17 +532,13 @@ class sfImageTransformGDAdapter extends sfImageTransformAdapterAbstract
   public function getRGBFromPixel($x, $y)
   {
     $resource = $this->getHolder();
-    $color   = imagecolorat($this->getHolder(), $x, $y);
-    
-    $blue    = 0x0000ff & $color;
-    $green   = 0x00ff00 & $color;
-    // the green part we have to push 8 bits to the right to get an Compareable result
-    $green = $green >> 8;
-    $red = 0xff0000 & $color;
-    // red part needs to be pushed 16 bit
-    $red = $red >> 16;
-    $alpha = ($color & 0x7F000000) >> 24;
-    return array($red, $green, $blue, $alpha);    
-  }          
+    $color = imagecolorat($this->getHolder(), $x, $y);
+    $cols = imagecolorsforindex($this->getHolder(), $color);
+    $r = $cols['red'];
+    $g = $cols['green'];
+    $b = $cols['blue'];
+    $a = $cols['alpha'];
+    return array($r, $g, $b, $a);    
+  }   
   
 }

@@ -2,14 +2,17 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(40, new lime_output_color());
+$fixturesDir = dirname(__FILE__) . '/fixtures';
+
+$t = new lime_test(56, new lime_output_color());
+
 
 $image = new sfImage();
 
 $t->diag('load()');
 
 try {
-  $image->load('unknown');  
+  $image->load('unknown');
   $t->fail('load() throws an exception if the file does not exist');
 }
 catch(sfImageTransformException $e)
@@ -17,7 +20,7 @@ catch(sfImageTransformException $e)
   $t->pass('load() throws an exception if the file does not exist');
 }
 
-$fixturesDir = dirname(__FILE__) . '/fixtures';
+
 $image->load($fixturesDir . '/bible.jpg');
 $mimeType = $image->getMIMEType();
 $t->is($mimeType, 'image/jpeg', 'getMIMEType() returns correct result.');
@@ -38,7 +41,7 @@ $t->diag('saveAs()');
 
 $tmp = tempnam(sys_get_temp_dir(), 'sfImage');
 $image->saveAs($tmp);
-        
+
 $t->is(is_readable($tmp), true, 'saveAs() saves the file with its own default mime type.');
 // cleanup
 unlink($tmp);
@@ -86,7 +89,7 @@ $images = array(
   'Portrait_5.jpg' => array(450, 600),
   'Portrait_6.jpg' => array(450, 600),
   'Portrait_7.jpg' => array(450, 600),
-  'Portrait_8.jpg' => array(450, 600),    
+  'Portrait_8.jpg' => array(450, 600),
 );
 
 // clear directory
@@ -99,16 +102,16 @@ sfConfig::set('sf_image_exif_adapter', 'native');
 $t->diag('Using Native adapter');
 
 foreach($images as $imageSrc => $expectedValue)
-{ 
+{
   // load image with fix orientation enabled
   $image = new sfImage($fixturesDir . '/orientation/' . $imageSrc);
   $image->fixOrientation()
         ->setQuality(95)
         ->saveAs($fixturesDir . '/orientation/result/native/'.$imageSrc);
-  
-  $t->is($image->getWidth() . 'x' . $image->getHeight(), 
+
+  $t->is($image->getWidth() . 'x' . $image->getHeight(),
          $expectedValue[0] . 'x' . $expectedValue[1], sprintf('the dimensions of the result image "%s" are ok', $imageSrc));
-  
+
 }
 
 $t->diag('Using ExifTool');
@@ -117,16 +120,16 @@ sfConfig::set('sf_image_exif_adapter', 'ExifTool');
 sfConfig::set('sf_image_exif_adapter_options', array('exiftool_executable' => 'exiftool'));
 
 foreach($images as $imageSrc => $expectedValue)
-{ 
+{
   // load image with fix orientation enabled
   $image = new sfImage($fixturesDir . '/orientation/' . $imageSrc);
   $image->fixOrientation()
         ->setQuality(95)
         ->saveAs($fixturesDir . '/orientation/result/exiftool/'.$imageSrc);
-  
-  $t->is($image->getWidth() . 'x' . $image->getHeight(), 
+
+  $t->is($image->getWidth() . 'x' . $image->getHeight(),
          $expectedValue[0] . 'x' . $expectedValue[1], sprintf('the dimensions of the result image "%s" are ok', $imageSrc));
-  
+
 }
 
 $t->diag('');
@@ -134,3 +137,44 @@ $t->diag('');
 $t->diag(sprintf('Please check the results in "%s" since I cannot see them. I am only a computer, but you have been created for a relation with your Creator, God.', $fixturesDir.'/orientation/result/native'));
 $t->diag('Jesus Christ is the Only Way to Him!');
 $t->diag('');
+
+// grayscale and color tests
+
+$grayscaleImages = array(
+  'grayscale_1.gif' => true,
+  'grayscale_2.jpg' => true,
+  'grayscale_3.png' => true,
+  'non_grayscale_1.jpg' => false,
+  'non_grayscale_2.jpg' => false,
+  // 'non_grayscale_3.tif' => false // Tiff is valid only for Imagick adapter
+);
+
+$t->diag('->isGrayscale()');
+$t->diag('->getAverageColor()');
+
+foreach($grayscaleImages as $image => $expectedValue)
+{
+  $img = new sfImage($fixturesDir . '/grayscale/' . $image);
+  $grayscale = $img->isGrayscale();
+  $t->isa_ok($grayscale, 'boolean', '->isGraycale() returns boolean value');
+  $t->is($grayscale, $expectedValue, sprintf('->isGraycale() works ok for "%s"', $image));
+  
+  $t->isa_ok($img->getAverageColor(), 'sfColor', '->getAverageColor() returns sfColor object');
+}
+
+$t->diag('Imagick');
+$t->todo('Implement Imagick tests');
+
+//
+//
+//sfConfig::set('sf_image_default_adapter', 'ImageMagick');
+//
+//foreach($grayscaleImages as $image => $expectedValue)
+//{
+//  $img = new sfImage($fixturesDir . '/grayscale/' . $image);
+//  $grayscale = $img->isGrayscale();
+//  $t->isa_ok($grayscale, 'boolean', '->isGraycale() returns boolean value');
+//  $t->is($grayscale, $expectedValue, sprintf('->isGraycale() works ok for "%s"', $image));
+//  
+//  $t->isa_ok($img->getAverageColor(), 'sfColor', '->getAverageColor() returns sfColor object');
+//}

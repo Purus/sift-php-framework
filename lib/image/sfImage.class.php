@@ -710,11 +710,11 @@ class sfImage {
   /**
    * Checks if image is grayscale image by picking $toCheck pixels and checking
    * if those pixels colors are grayscale.
-   *
+   * 
    * @see http://www.autoitscript.com/forum/topic/120313-check-if-an-image-is-grayscale-or-not/
-   *
    * @param integer $toCheck Number of pixels to check (100 is default)
-   * */
+   * @return boolean true if image is considered as grayscale image, false otherwise
+   */
   public function isGrayscale($toCheck = 100)
   {
     $totalPixels = $this->getTotalPixels();
@@ -722,18 +722,17 @@ class sfImage {
     {
       $toCheck = $totalPixels;
     }
-
+    
     $isGrayscale = true;
     $width = $this->getWidth();
     $height = $this->getHeight();
-
     // now check out the pixels
     for($i = 0; $i < $toCheck && $isGrayscale; $i++)
     {
       $randX = rand(0, $width - 1);
       $randY = rand(0, $height - 1);
       list($red, $green, $blue) = $this->getAdapter()->getRGBFromPixel($randX, $randY);
-      // if one of the Pixels isnt Greyscale it breaks an you know this is a color picture
+      // if one of the pixels isn't grayscale it breaks an you know this is a color picture
       if($red != $green || $green != $blue)
       {
         $isGrayscale = false;

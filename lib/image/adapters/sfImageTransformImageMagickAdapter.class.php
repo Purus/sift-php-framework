@@ -13,26 +13,28 @@
  * @subpackage image
  * @author Stuart Lowes <stuart.lowes@gmail.com>
  */
-class sfImageTransformImageMagickAdapter extends sfImageTransformAdapterAbstract
-{
+class sfImageTransformImageMagickAdapter extends sfImageTransformAdapterAbstract {
+
   /**
    * The image resource.
    * @access protected
    * @var resource
    *
    * @throws sfImageTransformException
-  */
+   */
   protected $holder;
 
   /*
    * Supported MIME types for the sfImageImageMagickAdapter
    * and their associated file extensions
+   * 
    * @var array
    */
   protected $types = array(
-    'image/jpeg' => array('jpeg','jpg'),
+    'image/jpeg' => array('jpeg', 'jpg'),
     'image/gif' => array('gif'),
-    'image/png' => array('png')
+    'image/png' => array('png'),
+    'image/tiff' => array('tiff', 'tif')
   );
 
   /**
@@ -43,7 +45,7 @@ class sfImageTransformImageMagickAdapter extends sfImageTransformAdapterAbstract
   public function __construct()
   {
     // Check that the GD extension is installed and configured
-    if (!extension_loaded('imagick'))
+    if(!extension_loaded('imagick'))
     {
       throw new sfImageTransformException('The image processing library ImageMagick is not enabled. See PHP Manual for installation instructions.');
     }
@@ -53,10 +55,10 @@ class sfImageTransformImageMagickAdapter extends sfImageTransformAdapterAbstract
 
   /**
    * Tidy up the object
-  */
+   */
   public function __destruct()
   {
-    if ($this->hasHolder())
+    if($this->hasHolder())
     {
       $this->getHolder()->destroy();
     }
@@ -68,7 +70,7 @@ class sfImageTransformImageMagickAdapter extends sfImageTransformAdapterAbstract
    * @param integer Image width
    * @param integer Image Height
    */
-  public function create($x=1, $y=1)
+  public function create($x = 1, $y = 1)
   {
     $image = new Imagick();
     $image->newImage($x, $y, new ImagickPixel('white'));
@@ -86,7 +88,7 @@ class sfImageTransformImageMagickAdapter extends sfImageTransformAdapterAbstract
    */
   public function load($filename, $mime)
   {
-    if (preg_match('/image\/.+/',$mime))
+    if(preg_match('/image\/.+/', $mime))
     {
       $this->holder = new Imagick($filename);
       $this->mime_type = $mime;
@@ -106,12 +108,11 @@ class sfImageTransformImageMagickAdapter extends sfImageTransformAdapterAbstract
    *
    * @throws sfImageTransformException
    */
-  
-   public function loadString($string)
-	{
-    return $this->getHolder()->readImageBlob($string);;
-	 }
- 
+  public function loadString($string)
+  {
+    return $this->getHolder()->readImageBlob($string);
+  }
+
   /**
    * Get the image as string
    *
@@ -121,7 +122,7 @@ class sfImageTransformImageMagickAdapter extends sfImageTransformAdapterAbstract
   {
     $this->getHolder()->setImageCompressionQuality($this->getQuality());
 
-    return (string)$this->getHolder();
+    return (string) $this->getHolder();
   }
 
   /**
@@ -143,9 +144,9 @@ class sfImageTransformImageMagickAdapter extends sfImageTransformAdapterAbstract
    * @param string MIME type
    * @return boolean
    */
-  public function saveAs($filename, $mime='')
+  public function saveAs($filename, $mime = '')
   {
-    if ('' !== $mime)
+    if('' !== $mime)
     {
       $this->setMimeType($mime);
     }
@@ -176,7 +177,7 @@ class sfImageTransformImageMagickAdapter extends sfImageTransformAdapterAbstract
    */
   public function getWidth()
   {
-    if ($this->hasHolder())
+    if($this->hasHolder())
     {
       return $this->getHolder()->getImageWidth();
     }
@@ -191,7 +192,7 @@ class sfImageTransformImageMagickAdapter extends sfImageTransformAdapterAbstract
    */
   public function getHeight()
   {
-    if ($this->hasHolder())
+    if($this->hasHolder())
     {
       return $this->getHolder()->getImageHeight();
     }
@@ -207,7 +208,7 @@ class sfImageTransformImageMagickAdapter extends sfImageTransformAdapterAbstract
    */
   public function setHolder($holder)
   {
-    if (is_object($holder) && 'Imagick' === get_class($holder))
+    if(is_object($holder) && 'Imagick' === get_class($holder))
     {
       $this->holder = $holder;
       return true;
@@ -223,7 +224,7 @@ class sfImageTransformImageMagickAdapter extends sfImageTransformAdapterAbstract
    */
   public function getHolder()
   {
-    if ($this->hasHolder())
+    if($this->hasHolder())
     {
       return $this->holder;
     }
@@ -238,7 +239,7 @@ class sfImageTransformImageMagickAdapter extends sfImageTransformAdapterAbstract
    */
   public function hasHolder()
   {
-    if (is_object($this->holder) && 'Imagick' === get_class($this->holder))
+    if(is_object($this->holder) && 'Imagick' === get_class($this->holder))
     {
       return true;
     }
@@ -256,7 +257,7 @@ class sfImageTransformImageMagickAdapter extends sfImageTransformAdapterAbstract
     return $this->mime_type;
   }
 
- /**
+  /**
    * Returns image MIME type
    * @param string valid MIME Type
    * @return boolean
@@ -265,7 +266,7 @@ class sfImageTransformImageMagickAdapter extends sfImageTransformAdapterAbstract
   public function setMimeType($mime)
   {
     $this->mime_type = $mime;
-    if ($this->hasHolder() && isset($this->types[$mime]))
+    if($this->hasHolder() && isset($this->types[$mime]))
     {
       $this->getHolder()->setImageFormat($this->types[$mime][0]);
 
@@ -293,7 +294,7 @@ class sfImageTransformImageMagickAdapter extends sfImageTransformAdapterAbstract
    */
   public function setQuality($quality)
   {
-    if (parent::setQuality($quality))
+    if(parent::setQuality($quality))
     {
       $this->getHolder()->setImageCompressionQuality($quality);
 
@@ -302,11 +303,18 @@ class sfImageTransformImageMagickAdapter extends sfImageTransformAdapterAbstract
 
     return false;
   }
-  
+
+  /**
+   * Returns color information about pixel with given coordinates
+   * 
+   * @param integer $x
+   * @param integer $y
+   * @return array
+   */
   public function getRGBFromPixel($x, $y)
   {
-    $color = $this->getHolder()->getImagePixelColor($x, $y)->getColor();    
-    return array($color['r'], $color['g'], $color['b'], $color['a']);    
-  }  
-  
+    $color = $this->getHolder()->getImagePixelColor($x, $y)->getColor();
+    return array($color['r'], $color['g'], $color['b'], $color['a']);
+  }
+
 }
