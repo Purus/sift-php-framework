@@ -452,6 +452,8 @@ class sfCoreAutoload
     'sfcrudgenerator' => 'generator/sfCrudGenerator.class.php',
     'sfgenerator' => 'generator/sfGenerator.class.php',
     'sfgeneratormanager' => 'generator/sfGeneratorManager.class.php',
+    'sfbrowsehistory' => 'history/sfBrowseHistory.class.php',
+    'sfbrowsehistoryitem' => 'history/sfBrowseHistoryItem.class.php',
     'sfi18napplicationextract' => 'i18n/extract/sfI18nApplicationExtract.class.php',
     'sfi18nextract' => 'i18n/extract/sfI18nExtract.class.php',
     'sfi18nextractanonymoususer' => 'i18n/extract/sfI18nExtractAnonymousUser.class.php',
