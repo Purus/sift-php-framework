@@ -7,12 +7,11 @@
  */
 
 /**
- * sfFileException is thrown when an error occurs while moving an uploaded file.
+ * sfFileException is thrown when an error occurs while moving an uploaded file,
+ * when file is not readable or does not exist.
  *
  * @package    Sift
  * @subpackage exception
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @author     Sean Kerr <sean@code-box.org>
  */
 class sfFileException extends sfException
 {
