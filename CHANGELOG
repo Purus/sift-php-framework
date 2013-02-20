@@ -1,1 +1,160 @@
-# Changelog
+20.02.2013 [f1bd79d] added editor:/ link handler for windows
+20.02.2013 [fadb82c] added DebugHelper to core helpers if debug is turned on
+20.02.2013 [f909600] updated docblock in sfFileException class
+20.02.2013 [39c2e36] added createContextInstance() to tasks
+20.02.2013 [7833f09] fixed bug in i18n helper
+19.02.2013 [715a6bf] added browse history
+18.02.2013 [1f7052f] fixed PDO parameter logging, permalink connections
+18.02.2013 [caeceba] updated image grayscale detection
+15.02.2013 [541ee39] added exif class
+14.02.2013 [126122c] fixed bug when using resources as query params
+14.02.2013 [9f445da] added configure method to project skeleton class
+14.02.2013 [b319407] added missing autoload setting for mySearchTools class
+14.02.2013 [e79e899] updated class loader, allow prepend with php<5.3
+14.02.2013 [f18f389] updated handling of wrapped exception
+14.02.2013 [a04fa32] updated PDO classes
+14.02.2013 [48cb7ab] updated project and app, since setup() was called twice
+14.02.2013 [7d24804] added mySearchTools class
+07.02.2013 [7d3c02b] updated tasks, installers
+06.02.2013 [09b4b03] updated error handler
+06.02.2013 [927375f] updated config cache - load options from project
+06.02.2013 [57400d5] updated plugin installers, moved doctrine stuff to myDoctrinePlugin
+05.02.2013 [d0feb2d] updated plugin installers
+05.02.2013 [0035654] updated tasks, cli
+05.02.2013 [62aff2a] plugin installer - (un)install web assets
+01.02.2013 [c8dc46f] fixed "array to string conversion" notice
+                     Issue noted on diem project https://github.com/diem-project/symfony/issues/4 Fixed in latest symfony 1.4.20
+01.02.2013 [4704403] updated functional tests bootstrap
+01.02.2013 [11b0fdf] added files to plugin skeleton, plugin installer
+01.02.2013 [a90a83c] updated tasks for plugins
+31.01.2013 [c9bbbe3] make stripComments() strip comments not based on some setting
+31.01.2013 [a1ca6b4] adding database configure task
+30.01.2013 [2b7dc25] mend
+30.01.2013 [f5fd439] updated cli script
+29.01.2013 [52f6247] fixing escaping of variables accessible to templates
+29.01.2013 [7e317be] added flash namespace constant
+29.01.2013 [f4f4818] cleaned the code
+29.01.2013 [cbf260a] removed log files
+29.01.2013 [4022cd1] fix throwing exceptions
+29.01.2013 [035eedf] fix autoloading
+29.01.2013 [6b1c8d9] removed old bootstrap file
+29.01.2013 [916c94b] removed VERSION file
+29.01.2013 [3911283] hude update, still beta quality
+25.01.2013 [2d955c2] added 'controller.change_action' event
+25.01.2013 [f6e8141] fixed invalid options in generator manager
+25.01.2013 [5feee94] added i18n extractors
+25.01.2013 [39ad5b7] updated autoloaders
+25.01.2013 [603fa58] updated unit test bootstrap
+25.01.2013 [b5d9e50] updated bootstrap
+25.01.2013 [fa8caae] added unit tests for tasks, plugin installer
+25.01.2013 [7e4012c] added plugin installers
+25.01.2013 [d28c1cd] updated license
+25.01.2013 [8acb408] added cli tasks
+25.01.2013 [f831327] updated release script, added dist directory
+25.01.2013 [2b362b9] added more informative exception text
+25.01.2013 [f3d0223] updated i18n
+25.01.2013 [227a2f4] make modules.yml optional
+25.01.2013 [d8feea0] updated command line scripts
+23.01.2013 [2503260] updated file system for cli logger, removed all mime detect code
+22.01.2013 [f61b566] updated asset helper to use sfAssetPackage
+22.01.2013 [c0b2e65] updated mail config, added replacement of constants to the mail config handler
+22.01.2013 [04e4d73] updated mail config, added replacement of constants to the mail config handler
+22.01.2013 [f308169] updated database: manager and config handler
+22.01.2013 [53a61ef] adding sfConsoleResponse
+22.01.2013 [f704eef] added links to wiki to config files
+22.01.2013 [adec7b5] adding js calendar
+22.01.2013 [11969b0] removed sfDimensionsConfigHandler
+22.01.2013 [79e885b] removed sfDimensionConfigHandler
+22.01.2013 [9f02c85] updated asset packages
+21.01.2013 [8590270] updated test scripts
+21.01.2013 [6de470c] removed htmlpurifier cached files
+21.01.2013 [ed7bd46] removed pake
+21.01.2013 [c196c8d] code cleanup
+21.01.2013 [abcc5b5] updated autoloading
+21.01.2013 [9eff668] updated mailer getInstance() method
+21.01.2013 [16a623a] updated core, removed constants.php
+21.01.2013 [0378c2b] adding errors
+21.01.2013 [5ed946a] fix regression bug in default options
+21.01.2013 [fbadc90] backported sfFinder
+21.01.2013 [92498a1] updated sfContext
+21.01.2013 [e168d7b] updated docs in sfStorage, change default cookie name
+21.01.2013 [34bc46c] fix sfConfigurable (values were not unique)
+21.01.2013 [ffec22d] update git ignores
+21.01.2013 [a70611a] add getStatusText() and getStatusTexts()
+21.01.2013 [86fb8e1] add response 'response.filter_content' event
+21.01.2013 [63ead0d] fix method for web debug
+21.01.2013 [b604861] updating exception
+21.01.2013 [dff2cc0] updating helpers
+21.01.2013 [b49f356] fixed bug in cache
+21.01.2013 [ca8267e] updating view
+21.01.2013 [d633ef7] updating mailer
+21.01.2013 [733ff98] updating user
+21.01.2013 [37691fb] updating logging
+21.01.2013 [7af0de5] updating filters
+21.01.2013 [3660d54] updating security
+21.01.2013 [1ecad5f] updating database + new sfPDO
+21.01.2013 [f11a17c] fix xliff
+21.01.2013 [6c7aafb] updating web debug
+16.01.2013 [dc14e69] adding log
+16.01.2013 [94265a4] adding core autoloader with task
+16.01.2013 [977a347] adding cli
+16.01.2013 [ae2df70] updated i18n component - now cache works properly
+15.01.2013 [414f942] updated release script
+15.01.2013 [3ff58ba] adding another ignore file
+15.01.2013 [87f40c6] adding ignore file
+15.01.2013 [c93a27d] removed cache files
+15.01.2013 [7fee34e] adding changelog
+15.01.2013 [2068543] adding license and copyright info
+15.01.2013 [a124a6a] moving check.php
+15.01.2013 [91cc0ff] adding tests
+15.01.2013 [09d2729] adding data files
+15.01.2013 [5152cd7] adding classes
+15.01.2013 [71c6438] removing sfConvert
+14.01.2013 [a3af453] adding wizard actions
+14.01.2013 [0f67d8d] adding dimensions
+14.01.2013 [3054645] adding debug
+14.01.2013 [9f37726] adding filesystem utils
+14.01.2013 [e232182] adding archive
+14.01.2013 [c1a6c6c] adding more text classes
+14.01.2013 [f1b80a3] adding more utils
+14.01.2013 [76839bf] adding core classes
+14.01.2013 [c7a2689] adding config
+14.01.2013 [b525a35] adding color
+14.01.2013 [e04e2c7] adding calendar
+14.01.2013 [114772c] adding autoloaders
+14.01.2013 [8d9fc3f] adding internal route class
+14.01.2013 [eda5324] adding text classes
+14.01.2013 [2719907] updating security check result
+14.01.2013 [f2de351] adding utils
+14.01.2013 [9300d8d] adding analytics + core js
+14.01.2013 [868a898] update ignore - netbeans project dir
+12.01.2013 [94afdd2] adding cache
+12.01.2013 [af5183b] adding database
+12.01.2013 [a5d6a93] adding routing
+12.01.2013 [c508eaf] adding controller
+12.01.2013 [7b10fae] adding mail helper
+12.01.2013 [3248daa] adding sfConfigurable
+12.01.2013 [1169326] adding response
+12.01.2013 [2ff158c] adding security
+12.01.2013 [5d0c2eb] adding sfMimeType
+12.01.2013 [369fc3c] adding view
+12.01.2013 [00bf672] adding Swift
+12.01.2013 [26ec0b0] adding Html Purifier
+12.01.2013 [c09728e] adding date
+12.01.2013 [b7fd63b] adding event dispatcher
+12.01.2013 [4792f6e] adding feed
+12.01.2013 [93904ad] adding image
+12.01.2013 [30993ce] adding json
+12.01.2013 [b90e709] adding search
+12.01.2013 [c85732b] adding user
+12.01.2013 [fb6dc05] adding utf8 support
+12.01.2013 [c498cde] adding yaml
+12.01.2013 [3e81ee5] adding browser
+12.01.2013 [be0e422] adding breadcumbs
+12.01.2013 [24fbd3b] adding actions
+12.01.2013 [d0efbc5] adding actions + check script
+12.01.2013 [b056270] cleaning repo
+29.11.2012 [d89ffab] updating readme
+27.11.2012 [3c498d5] Adding README
+27.11.2012 [8bd49ac] adding mime definitions
+27.11.2012 [7b99db8] adding LICENSE
