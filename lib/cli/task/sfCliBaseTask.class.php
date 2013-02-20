@@ -5,7 +5,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
- 
+
 /**
  * Base class for all tasks
  *
@@ -28,12 +28,12 @@ abstract class sfCliBaseTask extends sfCliCommandApplicationTask
                                       'command_manager' => $commandManager,
                                        'taks' => $this)
                                         ), $options);
-    
+
     $options = $event->getReturnValue();
 
     $this->process($commandManager, $options);
     $event = new sfEvent('command.pre_command', array('task' => &$this, 'arguments' => $commandManager->getArgumentValues(), 'options' => $commandManager->getOptionValues()));
-    
+
     $this->dispatcher->notifyUntil($event);
     if ($event->isProcessed())
     {
@@ -41,15 +41,15 @@ abstract class sfCliBaseTask extends sfCliCommandApplicationTask
     }
 
     $this->checkProjectExists();
-    
-    $requiresApplication = $commandManager->getArgumentSet()->hasArgument('application') 
+
+    $requiresApplication = $commandManager->getArgumentSet()->hasArgument('application')
                             || $commandManager->getOptionSet()->hasOption('application');
-    
+
     // task requires application to be run
     if($requiresApplication && null === $this->application)
     {
-      $application = $commandManager->getArgumentSet()->hasArgument('application') ? 
-                     $commandManager->getArgumentValue('application') : 
+      $application = $commandManager->getArgumentSet()->hasArgument('application') ?
+                     $commandManager->getArgumentValue('application') :
                      ($commandManager->getOptionSet()->hasOption('application') ? $commandManager->getOptionValue('application') : null);
 
       // environment
@@ -63,11 +63,11 @@ abstract class sfCliBaseTask extends sfCliCommandApplicationTask
         {
           $commandManager->setOption($commandManager->getOptionSet()->getOption('application'), $application);
         }
-        
+
       }
-      
+
       $this->application = $this->getApplication($application, $env);
-      
+
       // add application specific setting to the environment
       $this->environment->add($this->application->getOptions());
     }
@@ -85,6 +85,25 @@ abstract class sfCliBaseTask extends sfCliCommandApplicationTask
   }
 
   /**
+   * Creates sfContext instance for current application
+   *
+   * @throws sfException Is not application is initialized
+   */
+  public function createContextInstance()
+  {
+    if(!$this->application)
+    {
+      throw new sfException('No application is initialized. Cannot create sfContext instance.');
+    }
+
+    $name = $this->application->getName();
+    if(!sfContext::hasInstance($name))
+    {
+      sfContext::createInstance($this->application, $name);
+    }
+  }
+
+  /**
    * Returns the filesystem instance.
    *
    * @return sfFilesystem A sfFilesystem instance
@@ -94,7 +113,7 @@ abstract class sfCliBaseTask extends sfCliCommandApplicationTask
     if (!isset($this->filesystem))
     {
       if (null === $this->commandApplication || $this->commandApplication->isVerbose())
-      {        
+      {
         $this->filesystem = new sfFilesystem($this->logger, $this->formatter);
       }
       else
@@ -102,13 +121,13 @@ abstract class sfCliBaseTask extends sfCliCommandApplicationTask
         $this->filesystem = new sfFilesystem();
       }
     }
-    
+
     return $this->filesystem;
   }
-  
+
   /**
-   * Returns database 
-   * 
+   * Returns database
+   *
    * @param string $name Database connection name
    * @return sfDatabase
    * @throws sfException
@@ -116,14 +135,14 @@ abstract class sfCliBaseTask extends sfCliCommandApplicationTask
   protected function getDatabase($name = 'default')
   {
     $this->setupDatabases();
-    
+
     if(!isset($this->databases[$name]))
     {
       throw new sfException(sprintf('Invalid database connection. Connection "%s" does not exist.', $name));
     }
 
     return $this->databases[$name];
-  } 
+  }
 
   public function setupDatabases()
   {
@@ -132,7 +151,7 @@ abstract class sfCliBaseTask extends sfCliCommandApplicationTask
       $configHandler = new sfDatabaseConfigHandler();
 
       $files = array();
-      
+
       if($appConfigDir = $this->environment->get('sf_app_config_dir'))
       {
         if($file = is_readable($appConfigDir . '/' . $this->environment->get('sf_app_config_dir_name') . 'databases.yml'))
@@ -140,14 +159,14 @@ abstract class sfCliBaseTask extends sfCliCommandApplicationTask
           $files[] = $file;
         }
       }
-      
-      $files[] = $this->environment->get('sf_root_dir') . '/'. 
+
+      $files[] = $this->environment->get('sf_root_dir') . '/'.
                 $this->environment->get('sf_config_dir_name') . '/databases.yml';
-      
+
       $this->databases = $configHandler->evaluate($files);
-    }    
+    }
   }
-  
+
   /**
    * Checks if the current directory is a Sift project directory.
    *
@@ -159,13 +178,13 @@ abstract class sfCliBaseTask extends sfCliCommandApplicationTask
     {
       throw new sfException('You must be in Sift project directory.');
     }
-    
+
     return true;
   }
 
   /**
-   * Checks if an application exists.  
-   * 
+   * Checks if an application exists.
+   *
    * @param string $app  The application name
    * @param boolean $throwException Throw exception if it does not exist?
    * @return boolean true if the application exists, false otherwise (if $throwException is false)
@@ -179,14 +198,14 @@ abstract class sfCliBaseTask extends sfCliCommandApplicationTask
       {
         throw new sfException(sprintf('Application "%s" does not exist', $app));
       }
-      return false;      
+      return false;
     }
     return true;
   }
 
   /**
-   * Checks if an plugin exists.  
-   * 
+   * Checks if an plugin exists.
+   *
    * @param string $app  The plugin name
    * @param boolean $throwException Throw exception if it does not exist?
    * @return boolean true if the plugin exists, false otherwise (if $throwException is false)
@@ -200,11 +219,11 @@ abstract class sfCliBaseTask extends sfCliCommandApplicationTask
       {
         throw new sfException(sprintf('Plugin "%s" does not exist', $plugin));
       }
-      return false;      
+      return false;
     }
     return true;
   }
-  
+
   /**
    * Checks if a module exists.
    *
@@ -254,34 +273,34 @@ abstract class sfCliBaseTask extends sfCliCommandApplicationTask
 
   /**
    * Returns project property specified in config/properties.ini file
-   * 
+   *
    * @param string $property
    * @param mixed $default
    * @return mixed
    */
-  public function getProjectProperty($property, $default = null)         
+  public function getProjectProperty($property, $default = null)
   {
     // load configuration
     if(is_readable($propertyFile = $this->environment->get('sf_config_dir').'/properties.ini'))
     {
       $properties = parse_ini_file($propertyFile, true);
-      
+
       if(isset($properties['project']))
       {
         $find = $properties['project'];
-      }  
+      }
       elseif(isset($properties['symfony']))
       {
         $find = $properties['symfony'];
       }
-      
+
       return isset($find[$property]) ? $find[$property] : $default;
     }
-    
+
     return $default;
   }
 
-  
+
   /**
    * Reloads all autoloaders.
    *
@@ -293,7 +312,7 @@ abstract class sfCliBaseTask extends sfCliCommandApplicationTask
    */
   protected function reloadAutoload()
   {
-    $this->initializeAutoload($this->application ? 
+    $this->initializeAutoload($this->application ?
                               $this->application : $this->commandApplication->getProject(), true);
   }
 
@@ -385,7 +404,7 @@ abstract class sfCliBaseTask extends sfCliCommandApplicationTask
 
   /**
    * Returns path to php executable.
-   * 
+   *
    * @return string Path to php executable
    */
   protected function getPhpCli()
@@ -395,13 +414,13 @@ abstract class sfCliBaseTask extends sfCliCommandApplicationTask
       $this->phpCli = $this->findPhpCli();
     }
     return $this->phpCli;
-  }        
-          
+  }
+
   protected function getPresentationFor($application, $module, $action, $env = 'prod')
-  {    
+  {
     $file = tempnam(sys_get_temp_dir(), 'presentation');
     $rootDir  = $this->environment->get('sf_root_dir');
-    
+
     file_put_contents($file, <<<EOF
 <?php
 // This is a separated process to send mail in the queue
@@ -427,16 +446,16 @@ EOF
     ob_start();
     passthru(sprintf('%s %s 2>&1', escapeshellarg($this->getPhpCli()), escapeshellarg($file)), $return);
     $result = ob_get_clean();
-   
+
     // remove the file
     unlink($file);
- 
+
     return $result;
-  }  
-  
+  }
+
   /**
    * Finds PHP cli executable
-   * 
+   *
    * @param string $php_cli Cli php executable
    * @return string
    * @throws Exception
@@ -480,5 +499,5 @@ EOF
 
     throw new sfException('Unable to find PHP executable.');
   }
-  
+
 }
