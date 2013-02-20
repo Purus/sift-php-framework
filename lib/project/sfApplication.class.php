@@ -19,36 +19,36 @@ abstract class sfApplication extends sfProject {
 
   /**
    * Array of content filters
-   * 
-   * @var array 
+   *
+   * @var array
    */
   protected $filters = array();
-    
+
   /**
    * Array of available application dimensions
-   * 
-   * @var array 
+   *
+   * @var array
    * @link https://bitbucket.org/mishal/sift-php-framework/wiki/Dimensions
    */
   protected $applicationDimensions = array();
 
   /**
    * Instance of config cache
-   * 
-   * @var sfConfigCache 
+   *
+   * @var sfConfigCache
    */
   protected $configCache;
 
   /**
    * Dimensions
-   * 
-   * @var sfDimensions 
+   *
+   * @var sfDimensions
    */
   protected $dimensions;
 
   /**
    * Constructs the application
-   * 
+   *
    * @param string $environment Environment (prod, dev, cli, staging)
    * @param boolean $debug Turn on debugging features?
    * @param array $options Array of options
@@ -69,7 +69,7 @@ abstract class sfApplication extends sfProject {
     {
       $this->name = get_class($this);
     }
-   
+
     $this->debug = $debug;
     $this->environment = $environment;
 
@@ -78,30 +78,30 @@ abstract class sfApplication extends sfProject {
 
     // initialize config cache
     $this->initConfigCache();
-    
+
     // initialize autoloading
     $this->initializeAutoload();
-    
+
     // init include path
     $this->initIncludePath();
-    
+
     // load all available dimensions
     $this->loadDimensions();
 
     // initialize current dimension
     $this->initCurrentDimension();
-    
+
     // configures the application
     $this->configure();
 
     // initialize options
     $this->initOptions();
-    
+
     // initialize
     $this->initConfiguration();
 
     $this->initialize();
-    
+
     $this->activate();
   }
 
@@ -111,7 +111,7 @@ abstract class sfApplication extends sfProject {
    * Override this method if you want to customize your application configuration.
    */
   public function configure()
-  {    
+  {
   }
 
   /**
@@ -120,12 +120,12 @@ abstract class sfApplication extends sfProject {
    * Override this method if you want to customize your application initialization.
    */
   public function initialize()
-  {    
+  {
   }
-  
+
   /**
-   * Easly stage dimension initialization. Beware that this is called before 
-   * the sfContext gets created, so there is no access to internal objects.  
+   * Easly stage dimension initialization. Beware that this is called before
+   * the sfContext gets created, so there is no access to internal objects.
    */
   public function initCurrentDimension()
   {
@@ -142,12 +142,12 @@ abstract class sfApplication extends sfProject {
     {
       $this->checkLock();
     }
-    
+
     if(sfConfig::get('sf_check_sift_version'))
     {
       $this->checkSiftVersion();
     }
-    
+
     // we set different modes for production environment
     // if we're in a prod environment we want E_ALL, but not to fail on E_NOTICE, E_WARNING or E_STRICT
     if(!sfConfig::get('sf_debug'))
@@ -171,7 +171,7 @@ abstract class sfApplication extends sfProject {
     // get config instance
     $sf_app_config_dir_name = sfConfig::get('sf_app_config_dir_name');
     $sf_debug = sfConfig::get('sf_debug');
-        
+
     // load base settings
     include($this->configCache->checkConfig($sf_app_config_dir_name.'/settings.yml'));
     if($file = $this->configCache->checkConfig($sf_app_config_dir_name.'/app.yml', true))
@@ -183,7 +183,7 @@ abstract class sfApplication extends sfProject {
     {
       sfForm::enableCSRFProtection(sfConfig::get('sf_csrf_secret'));
     }
-    
+
     if(sfConfig::get('sf_i18n'))
     {
       $i18nConfig = include($this->configCache->checkConfig($sf_app_config_dir_name . '/i18n.yml'));
@@ -212,7 +212,7 @@ abstract class sfApplication extends sfProject {
           return $i18n->__($text, $args, $catalogue);
         }
       }
-      
+
     }
     else
     {
@@ -242,9 +242,9 @@ abstract class sfApplication extends sfProject {
             }
           }
           return strtr($string, $args);
-        }        
-      }      
-      
+        }
+      }
+
 
     }
 
@@ -258,7 +258,7 @@ abstract class sfApplication extends sfProject {
     ini_set('display_errors', $sf_debug ? 'on' : 'off');
     error_reporting(sfConfig::get('sf_error_reporting'));
 
-    // required core classes for the framework   
+    // required core classes for the framework
     if(!$sf_debug && !sfConfig::get('sf_test'))
     {
       $core_classes = $sf_app_config_dir_name . '/core_compile.yml';
@@ -303,25 +303,25 @@ abstract class sfApplication extends sfProject {
   {
     set_include_path(
       $this->getOption('sf_lib_dir').PATH_SEPARATOR.
-      $this->getOption('sf_root_dir').PATH_SEPARATOR.      
+      $this->getOption('sf_root_dir').PATH_SEPARATOR.
       $this->getOption('sf_sift_lib_dir').DIRECTORY_SEPARATOR.'vendor'.PATH_SEPARATOR.
       get_include_path()
-    );  
+    );
   }
-  
+
   public function callBootstrap()
-  {    
+  {
     $bootstrap = $this->getOption('sf_config_cache_dir').'/config_bootstrap_compile.yml.php';
     if(is_readable($bootstrap))
     {
       sfConfig::set('sf_in_bootstrap', true);
       require($bootstrap);
-    }   
+    }
   }
-  
+
   /**
    * Initializes core options. Exports those options to sfConfig class.
-   * 
+   *
    * @return void
    */
   protected function initCoreOptions()
@@ -346,7 +346,7 @@ abstract class sfApplication extends sfProject {
 
   /**
    * Loads dimensions from dimensions.yml file
-   * 
+   *
    */
   protected function loadDimensions()
   {
@@ -365,7 +365,7 @@ abstract class sfApplication extends sfProject {
   protected function initOptions()
   {
     $dimension_string = $this->getDimensions()->getDimensionString();
-    // create configuration    
+    // create configuration
     $this->addOptions(array(
         'sf_dimension' => $this->getDimensions()->getCurrentDimension(),
         // stores the dimension directories that sift will search through
@@ -383,7 +383,7 @@ abstract class sfApplication extends sfProject {
 
     sfConfig::add($this->getOptions());
   }
-  
+
   /**
    * Add a filter call back. Tell sfCore that a filter is to be run on a filter
    * at a certain point.
@@ -406,7 +406,7 @@ abstract class sfApplication extends sfProject {
 
     $this->filters[$tag][$priority][serialize($function)] = $function;
   }
-  
+
   /**
    * Remove a filter added previously. Called with the same arguments as addfilter
    *
@@ -424,7 +424,7 @@ abstract class sfApplication extends sfProject {
     }
     return false;
   }
-  
+
  /**
    * Apply filters to a tag.
    *
@@ -440,10 +440,10 @@ abstract class sfApplication extends sfProject {
 
     $args = func_get_args();
     // remove first parameter
-    array_shift($args);    
+    array_shift($args);
     // sort by priority
     krsort($this->filters[$tag]);
-    
+
     foreach($this->filters[$tag] as $priority => $phooks)
     {
       foreach($phooks as $hook)
@@ -458,16 +458,16 @@ abstract class sfApplication extends sfProject {
       }
     }
     return $args[1];
-  }  
-  
+  }
+
   /**
    * Checks if is the application locked. If yes, tries to display error message in the following order:
-   * 
+   *
    *  * sfConfig::get('sf_app_config_dir').'/unavailable.php',
    *  * sfConfig::get('sf_config_dir').'/unavailable.php',
    *  * sfConfig::get('sf_web_dir').'/errors/unavailable.php',
    *  * sfConfig::get('sf_sift_data_dir').'/errors/unavailable.php',
-   * 
+   *
    * @return void
    */
   public function checkLock()
@@ -483,7 +483,7 @@ abstract class sfApplication extends sfProject {
         $this->getOption('sf_web_dir').'/errors/unavailable.php',
         $this->getOption('sf_sift_data_dir').'/errors/unavailable.php',
       );
-      
+
       foreach($files as $file)
       {
         if(is_readable($file))
@@ -494,23 +494,23 @@ abstract class sfApplication extends sfProject {
           break;
         }
       }
-      
-      
-      
-      die(1);      
+
+
+
+      die(1);
     }
   }
-  
+
   /**
-   * Displays error page 
-   * 
+   * Displays error page
+   *
    * @param sfException $exception
    * @param string $error
    */
   public function displayErrorPage(sfException $exception, $error = 'error500')
   {
     $files = array(
-      sprintf($this->getOption('sf_app_config_dir').'/%s.php', $error),  
+      sprintf($this->getOption('sf_app_config_dir').'/%s.php', $error),
       sprintf($this->getOption('sf_config_dir').'/%s.php', $error),
       $this->getOption('sf_web_dir').'/errors/error500.php',
       $this->getOption('sf_sift_data_dir').'/errors/error500.php'
@@ -526,12 +526,12 @@ abstract class sfApplication extends sfProject {
     if(!$this->getOption('sf_test'))
     {
       exit(1);
-    }   
+    }
   }
-  
+
   /**
    * Checks if Sift has been currently updated. If yes, clears the cache directory.
-   * 
+   *
    */
   public function checkSiftVersion()
   {
@@ -544,10 +544,10 @@ abstract class sfApplication extends sfProject {
       sfToolkit::clearDirectory(sfConfig::get('sf_cache_dir'));
     }
   }
-  
+
   /**
    * Active the application
-   * 
+   *
    */
   public function activate()
   {
@@ -555,7 +555,7 @@ abstract class sfApplication extends sfProject {
 
   /**
    * Returns application name
-   * 
+   *
    * @return string The application name
    */
   public function getName()
@@ -584,8 +584,23 @@ abstract class sfApplication extends sfProject {
   }
 
   /**
+   * Returns an array of core helpers
+   *
+   * @return array
+   */
+  public function getCoreHelpers()
+  {
+    $helpers = parent::getCoreHelpers();
+    if($this->isDebug())
+    {
+      $helpers[] = 'Debug';
+    }
+    return $helpers;
+  }
+
+  /**
    * Returns sfDimensions object
-   * 
+   *
    * @return sfDimensions
    * @throws RuntimeException If dimensions are not loaded
    */
@@ -597,7 +612,7 @@ abstract class sfApplication extends sfProject {
     }
     return $this->dimensions;
   }
-  
+
   public function __toString()
   {
     return $this->name;
