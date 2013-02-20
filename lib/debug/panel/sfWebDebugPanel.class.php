@@ -41,11 +41,11 @@ abstract class sfWebDebugPanel
    * Gets the icon
    *
    * @return string Icon src tag
-   */  
+   */
   public function getIcon()
-  {    
+  {
   }
-  
+
   /**
    * Gets the text for the link.
    *
@@ -74,10 +74,10 @@ abstract class sfWebDebugPanel
   {
     return '';
   }
-  
+
   /**
    * Returns panel javascript
-   * 
+   *
    * @return string
    */
   public function getPanelJavascript()
@@ -87,7 +87,7 @@ abstract class sfWebDebugPanel
 
   /**
    * Returns the current status.
-   * 
+   *
    * @return integer A {@link sfLogger} priority constant
    */
   public function getStatus()
@@ -97,7 +97,7 @@ abstract class sfWebDebugPanel
 
   /**
    * Sets the current panel's status.
-   * 
+   *
    * @param integer $status A {@link sfLogger} priority constant
    */
   public function setStatus($status)
@@ -107,10 +107,10 @@ abstract class sfWebDebugPanel
 
   /**
    * Returns a toggler element.
-   * 
+   *
    * @param  string $element The value of an element's DOM id attribute
    * @param  string $title   A title attribute
-   * 
+   *
    * @return string
    */
   public function getToggler($element, $title = 'Toggle details')
@@ -120,9 +120,9 @@ abstract class sfWebDebugPanel
 
   /**
    * Returns a toggleable presentation of a debug stack.
-   * 
+   *
    * @param  array $debugStack
-   * 
+   *
    * @return string
    */
   public function getToggleableDebugStack($debugStack)
@@ -167,11 +167,11 @@ abstract class sfWebDebugPanel
 
   /**
    * Formats a file link.
-   * 
+   *
    * @param  string  $file A file path or class name
    * @param  integer $line
    * @param  string  $text Text to use for the link
-   * 
+   *
    * @return string
    */
   public function formatFileLink($file, $line = null, $text = null)
@@ -191,7 +191,7 @@ abstract class sfWebDebugPanel
 
     $shortFile = sfDebug::shortenFilePath($file);
 
-    if ($linkFormat = sfConfig::get('sf_file_link_format', ini_get('xdebug.file_link_format')))
+    if($linkFormat = sfConfig::get('sf_file_link_format', 'editor://open?file=%f&line=%l'))
     {
       // return a link
       return sprintf(
@@ -200,7 +200,7 @@ abstract class sfWebDebugPanel
         htmlspecialchars($shortFile, ENT_QUOTES, sfConfig::get('sf_charset')),
         null === $text ? $shortFile : $text);
     }
-    else if (null === $text)
+    elseif(null === $text)
     {
       // return the shortened file path
       return $shortFile;
@@ -216,7 +216,7 @@ abstract class sfWebDebugPanel
    * Format a SQL string with some colors on SQL keywords to make it more readable.
    *
    * @param  string $sql    SQL string to format
-   * 
+   *
    * @return string $newSql The new formatted SQL string
    */
   public function formatSql($sql)

@@ -321,6 +321,7 @@ class sfCoreAutoload
     'sfwebdebugpanelconfig' => 'debug/panel/sfWebDebugPanelConfig.class.php',
     'sfwebdebugpanelcurrentroute' => 'debug/panel/sfWebDebugPanelCurrentRoute.class.php',
     'sfwebdebugpaneldatabase' => 'debug/panel/sfWebDebugPanelDatabase.class.php',
+    'sfwebdebugpaneldocumentation' => 'debug/panel/sfWebDebugPanelDocumentation.class.php',
     'sfwebdebugpanellogs' => 'debug/panel/sfWebDebugPanelLogs.class.php',
     'sfwebdebugpanelmailer' => 'debug/panel/sfWebDebugPanelMailer.class.php',
     'sfwebdebugpanelmemory' => 'debug/panel/sfWebDebugPanelMemory.class.php',
