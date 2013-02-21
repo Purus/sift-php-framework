@@ -12,51 +12,50 @@
  * @package    Sift
  * @subpackage generator
  */
-abstract class sfGenerator
-{
-  protected
-    $generatorClass      = '',
-    $generatorManager    = null,
-    $generatedModuleName = '',
-    $theme               = 'default',
-    $moduleName          = '',
-    $table               = null,
-    // has translation?
-    $isI18n              = false,
-    // field used for culture
-    // "lang" or "culture"
-    $i18nField           = null,
-    // translations in separated table
-    // tags schema does not use separate table
-    $hasI18nRelation     = false,
-    // has nested set feature?
-    $isTree              = false,
-    
-    $hasTags             = false,
-    $tagsClassName       = null,
-    $hasTagsI18n         = false,
-    // field for lang
-    $tagsI18nCultureField = null,
-    
-    // sortable behaviour
-    $actsAsSortable      = false,
-
-    // taggable behaviour
-    $actsAsTaggable      = false,
-
-    $actsAsDataStorage   = false,
-
-    // Doctrine_Template_AttachedFile
-    $actsAsAttachedFile  = false,
-    $actsAsAttachedFileColumn = null;
-
+abstract class sfGenerator implements sfIGenerator {
 
   /**
-   * Initializes the current sfGenerator instance.
+   * Generator class
    *
-   * @param sfGeneratorManager A sfGeneratorManager instance
+   * @var string
    */
-  public function initialize(sfGeneratorManager $generatorManager)
+  protected $generatorClass;
+
+  /**
+   * sfGeneratorManager holder
+   *
+   * @var sfGeneratorManager
+   */
+  protected $generatorManager;
+
+  /**
+   * Generated module name
+   *
+   * @var string
+   */
+  protected $generatedModuleName;
+
+  /**
+   * Module name
+   *
+   * @var string
+   */
+  protected $moduleName;
+
+  /**
+   * Theme name
+   *
+   * @var string
+   */
+  protected $theme;
+
+  /**
+   * Constructs the generator
+   *
+   * @param sfGeneratorManager $generatorManager
+   * @param array $options
+   */
+  public function __construct(sfGeneratorManager $generatorManager)
   {
     $this->generatorManager = $generatorManager;
   }
@@ -67,173 +66,7 @@ abstract class sfGenerator
    */
   public function configure()
   {
-    $this->table  = Doctrine::getTable($this->getClassName());
 
-    // FIXME: refactor method names!
-    // detect common behaviours
-    $this->detectTranslation();
-    $this->detectTagsRelation();
-    $this->detectNestedSet();
-    $this->detectSortableBehaviour();
-    $this->detectDataStorage();
-    $this->detectAttachedFileBehaviour();
-  }
-
-  protected function detectAttachedFileBehaviour()
-  {
-    $this->actsAsAttachedFile = $this->table->hasTemplate('Doctrine_Template_AttachedFile');
-    if($this->actsAsAttachedFile)
-    {
-      $this->actsAsAttachedFileColumn = $this->table->getTemplate('Doctrine_Template_AttachedFile')
-        ->getOption('field');
-    }
-  }
-
-  protected function detectDataStorage()
-  {
-    $this->actsAsDataStorage = $this->table->hasTemplate('Doctrine_Template_DataStorage');
-  }
-
-  protected function detectSortableBehaviour()
-  {
-    // sortable?
-    $this->actsAsSortable = $this->table->hasTemplate('Sortable');
-  }
-
-  protected function detectNestedSet()
-  {
-    // nested set
-    $this->isTree = $this->table->getOption('treeImpl') == 'NestedSet';
-  }
-
-  protected function detectTranslation()
-  {
-    // translation detection
-    if($this->table->hasRelation('Translation'))
-    {
-      $this->isI18n                 = true;
-      $this->hasI18nRelation        = true;
-
-      if($this->table->getRelation('Translation')->getTable()->hasColumn('lang'))
-      {
-        $this->i18nField = 'lang';
-      }
-      elseif($this->table->getRelation('Translation')->getTable()->hasColumn('culture'))
-      {
-        $this->i18nField = 'culture';
-      }
-      else
-      {
-        throw new sfInitializationException(sprintf('{sfGenerator} Cannot detect culture field for "%s".', $this->table->getName()));
-      }
-    }
-    elseif($this->table->hasColumn('lang'))
-    {
-      $this->isI18n                 = true;
-      $this->hasI18nRelation        = false;
-      $this->i18nField              = 'lang';
-    }
-    elseif($this->table->hasColumn('culture'))
-    {
-      $this->i18nField              = 'culture';
-      $this->isI18n                 = true;
-    }
-  }
-
-  protected function detectTagsRelation()
-  {
-    // has tags
-    if($this->table->hasRelation('Tags'))
-    {
-      $this->hasTags       = true;
-      $relationTable       = $this->table->getRelation('Tags')->getTable();
-      $this->tagsClassName = $relationTable->getOption('name');
-      if($relationTable->hasColumn('lang'))
-      {
-        $this->hasTagsI18n = true;
-        $this->tagsI18nCultureField = 'lang';
-      }
-      elseif($relationTable->hasColumn('culture')) // BC compatibility
-      {
-        $this->hasTagsI18n = true;
-        $this->tagsI18nCultureField = 'culture';
-      }
-    }
-  }
-
-  public function hasTags()
-  {
-    return $this->hasTags;
-  }
-
-  public function hasTagsI18n()
-  {
-    return $this->hasTagsI18n;
-  }
-
-  public function getTagsClassName()
-  {
-    return $this->tagsClassName;
-  }
-
-  public function getTagsI18nCultureField()
-  {
-    return $this->tagsI18nCultureField;
-  }
-
-  protected function getTable()
-  {
-    return $this->table;
-  }
-
-  /**
-   * Has this table translation?
-   * 
-   * @return <type> boolean
-   */
-  protected function isI18n()
-  {
-    return $this->isI18n;
-  }
-
-  /**
-   * Has this table translation?
-   *
-   * @return <type> boolean
-   */
-  protected function hasI18nRelation()
-  {
-    return $this->hasI18nRelation;
-  }
-
-  /**
-   * Has this table translation?
-   *
-   * @return <type> boolean
-   */
-  protected function getI18nField()
-  {
-    return $this->i18nField;
-  }
-
-  /**
-   * Has this table nested set?
-   *
-   * @return <type> boolean
-   */
-  protected function isTree()
-  {
-    return $this->isTree;
-  }
-
-  /**
-   * Does this model act as sortable?
-   *
-   * @return <type> boolean
-   */
-  protected function actsAsSortable()
-  {
-    return $this->actsAsSortable;
   }
 
   /**
@@ -243,47 +76,19 @@ abstract class sfGenerator
    *
    * @return string The cache for the configuration file
    */
-  abstract public function generate($params = array());
+  // abstract public function generate($params = array());
 
   /**
    * Generates PHP files for a given module name.
    *
-   * @param string The name of module name to generate
-   * @param array  A list of template files to generate
-   * @param array  A list of configuration files to generate
+   * @param string $generatedModuleName The name of module name to generate
+   * @param array  $files               A list of template files to generate
    */
-  protected function generatePhpFiles($generatedModuleName, $templateFiles = array(), $configFiles = array())
+  protected function generatePhpFiles($generatedModuleName, $files = array())
   {
-    // eval actions file
-    $retval = $this->evalTemplate('actions/actions.class.php');
-
-    // save actions class
-    $this->getGeneratorManager()->getCache()->set('actions.class.php', $generatedModuleName.DIRECTORY_SEPARATOR.'actions', $retval);
-
-    // eval components file
-    $retval = $this->evalTemplate('actions/components.class.php');
-
-    // save components class
-    $this->getGeneratorManager()->getCache()->set('components.class.php', $generatedModuleName.DIRECTORY_SEPARATOR.'actions', $retval);
-
-    // generate template files
-    foreach ($templateFiles as $template)
+    foreach($files as $file)
     {
-      // eval template file
-      $retval = $this->evalTemplate('templates/'.$template);
-
-      // save template file
-      $this->getGeneratorManager()->getCache()->set($template, $generatedModuleName.DIRECTORY_SEPARATOR.'templates', $retval);
-    }
-
-    // generate config files
-    foreach ($configFiles as $config)
-    {
-      // eval config file
-      $retval = $this->evalTemplate('config/'.$config);
-
-      // save config file
-      $this->getGeneratorManager()->getCache()->set($config, $generatedModuleName.DIRECTORY_SEPARATOR.'config', $retval);
+      $this->getGeneratorManager()->save($generatedModuleName . '/' . $file, $this->evalTemplate($file));
     }
   }
 
@@ -304,16 +109,15 @@ abstract class sfGenerator
     $content = ob_get_clean();
 
     // replace [?php and ?]
-    $content = $this->replacePhpMarks($content);
-
-    $retval = "<?php\n".
-              "// auto-generated by ".$this->getGeneratorClass()."\n".
-              "// date: %s\n?>\n%s";
-    $retval = sprintf($retval, date('Y/m/d H:i:s'), $content);
-
-    return $retval;
+    return $this->replacePhpMarks($content);
   }
 
+  /**
+   * Replaces Sift constants in the $content
+   *
+   * @param string $content
+   * @return string
+   */
   protected function replaceConstants($content)
   {
     return sfToolkit::replaceConstants($content);
@@ -345,11 +149,11 @@ abstract class sfGenerator
   /**
    * Sets the generator class.
    *
-   * @param string The generator class
+   * @param string $generatorClass The generator class
    */
-  public function setGeneratorClass($generator_class)
+  public function setGeneratorClass($generatorClass)
   {
-    $this->generatorClass = $generator_class;
+    $this->generatorClass = $generatorClass;
   }
 
   /**
@@ -375,11 +179,11 @@ abstract class sfGenerator
   /**
    * Sets the module name of the generated module.
    *
-   * @param string The module name
+   * @param string $moduleName The module name
    */
-  public function setGeneratedModuleName($module_name)
+  public function setGeneratedModuleName($moduleName)
   {
-    $this->generatedModuleName = $module_name;
+    $this->generatedModuleName = $moduleName;
   }
 
   /**
@@ -424,27 +228,43 @@ abstract class sfGenerator
 
   /**
    * Underscores name
-   * 
-   * @param <type> $name
-   * @return <type> string
+   *
+   * @param string $name
+   * @return string
    */
-	public function underscore($name)
-	{
-		$name = str_replace('\\', '_', $name);
-		return sfInflector::underscore($name);
-	}
+  public function underscore($name)
+  {
+    $name = str_replace('\\', '_', $name);
+    return sfInflector::underscore($name);
+  }
 
   /**
    * Camelizes name
    *
-   * @param <type> $name
-   * @return <type> string
+   * @param string $name
+   * @return string
    */
   public function camelize($name)
   {
     $name = str_replace('\\', '_', $name);
     $name = sfInflector::camelize($name);
-    return strtolower($name[0]).substr($name, 1);
+    return strtolower($name[0]) . substr($name, 1);
+  }
+
+  /**
+   * Array export. Export array to formatted php code
+   *
+   * @param array $values
+   * @return string $php
+   */
+  protected function arrayExport($values)
+  {
+    $php = var_export($values, true);
+    $php = str_replace("\n", '', $php);
+    $php = str_replace('array (  ', 'array(', $php);
+    $php = str_replace(',)', ')', $php);
+    $php = str_replace('  ', ' ', $php);
+    return $php;
   }
 
   /**
@@ -460,10 +280,10 @@ abstract class sfGenerator
   public function __call($method, $arguments)
   {
     $event = sfCore::getEventDispatcher()->notifyUntil(
-      new sfEvent('generator.method_not_found', array(
-          'method'    => $method,
-          'arguments' => $arguments,
-          'generator' => $this)));
+            new sfEvent('generator.method_not_found', array(
+        'method' => $method,
+        'arguments' => $arguments,
+        'generator' => $this)));
 
     if(!$event->isProcessed())
     {
@@ -472,5 +292,5 @@ abstract class sfGenerator
 
     return $event->getReturnValue();
   }
-  
+
 }

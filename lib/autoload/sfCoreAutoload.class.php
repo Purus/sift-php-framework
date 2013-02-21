@@ -453,6 +453,7 @@ class sfCoreAutoload
     'sfcrudgenerator' => 'generator/sfCrudGenerator.class.php',
     'sfgenerator' => 'generator/sfGenerator.class.php',
     'sfgeneratormanager' => 'generator/sfGeneratorManager.class.php',
+    'sfigenerator' => 'generator/sfIGenerator.interface.php',
     'sfbrowsehistory' => 'history/sfBrowseHistory.class.php',
     'sfbrowsehistoryitem' => 'history/sfBrowseHistoryItem.class.php',
     'sfi18napplicationextract' => 'i18n/extract/sfI18nApplicationExtract.class.php',

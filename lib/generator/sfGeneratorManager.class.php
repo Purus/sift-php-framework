@@ -14,43 +14,96 @@
  */
 class sfGeneratorManager
 {
-  protected $cache = null;
+  /**
+   * Save path
+   *
+   * @var string
+   */
+  protected $savePath;
 
   /**
-   * Initializes the sfGeneratorManager instance.
+   * Constructs the manager
+   * 
+   * @param string $savePath Save path 
    */
-  public function initialize()
+  public function __construct($savePath)
   {
-    // create cache instance
-    $this->cache = new sfFileCache(sfConfig::get('sf_module_cache_dir'));
-    $this->cache->initialize(array('lifetime' => 86400 * 365 * 10, 'automatic_cleaning_factor' => 0));
-    $this->cache->setSuffix('');
+    $this->savePath = $savePath;
   }
 
   /**
-   * Returns the current sfCache implementation instance.
-   *
-   * @return sfCache A sfCache implementation instance
+   * Saves content to the target file
+   * 
+   * @param string $path The relative path to $savePath
+   * @param string $content  The content
+   * @return integer Number of bytes that were written to the file
+   * @throws sfFileException If something wrong happens when writing file or creating the directory
    */
-  public function getCache()
+  public function save($path, $content)
   {
-    return $this->cache;
+    $path = $this->getSavePath() . DIRECTORY_SEPARATOR . $path;
+
+    if(!is_dir(dirname($path)))
+    {
+      $current_umask = umask(0000);
+      if(false === @mkdir(dirname($path), 0777, true))
+      {
+        throw new sfFileException(sprintf('Failed to make directory "%s".', dirname($path)));
+      }
+      umask($current_umask);
+    }
+
+    if(false === $ret = @file_put_contents($path, $content))
+    {
+      throw new sfFileException(sprintf('Failed to write file "%s".', $path));
+    }
+
+    return $ret;
   }
 
   /**
    * Generates classes and templates for a given generator class.
    *
-   * @param string The generator class name
-   * @param array  An array of parameters
-   *
+   * @param string $generatorClass The generator class name
+   * @param array  $params          An array of parameters
    * @return string The cache for the configuration file
    */
-  public function generate($generator_class, $param)
+  public function generate($generatorClass, $params = array())
   {
-    $generator = new $generator_class();
-    $generator->initialize($this);
-    $data = $generator->generate($param);
+    if(!class_exists($generatorClass))
+    {
+      throw new InvalidArgumentException(sprintf('Generator class "%s" does not exist.', $generatorClass));
+    }
 
-    return $data;
+    // does it implement sfIGenerator?
+    if(!in_array('sfIGenerator', class_implements($generatorClass)))
+    {
+      throw new InvalidArgumentException(sprintf('Generator class "%s" does not implement sfIGenerator interface.', $generatorClass));
+    }
+    
+    $generator = new $generatorClass($this);
+    
+    return $generator->generate($params);
   }
+
+  /**
+   * Gets the base path to use when generating files.
+   *
+   * @return string The base path
+   */
+  public function getSavePath()
+  {
+    return $this->savePath;
+  }
+
+  /**
+   * Sets the base path to use when generating files.
+   *
+   * @param string $savePath The save path
+   */
+  public function setBasePath($savePath)
+  {
+    $this->savePath = $savePath;
+  }
+
 }

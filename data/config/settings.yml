@@ -68,8 +68,6 @@ default:
 
     # sift web directory
     sift_web_dir:           /sf
-    # Administration web directory (with assets)
-    admin_web_dir:          /sf/admin
     # Rich calendar web directory
     calendar_web_dir:       /sf/js/calendar
     
