@@ -28,17 +28,18 @@ class sfConfig
    */
   public static function get($name, $default = null)
   {
-    // smart detection so the plugins can hook on the config get() method
-    // setting name is something like: prefix.name
-    if($name[0] == '~')
+    if(isset(self::$config[$name]))
     {
-      $event = new sfEvent('config.get', 
-        array('name' => ltrim($name, '~'), 'default' => $default));
-      sfCore::getEventDispatcher()->notifyUntil($event);
-      if($event->isProcessed()) return $event->getReturnValue();
+      return self::$config[$name];
     }
-    
-    return isset(self::$config[$name]) ? self::$config[$name] : $default;
+
+    // no dot notation
+    if(strpos($name, '.') === false)
+    {
+      return $default;
+    }
+
+    return sfArray::get(self::$config, $name, $default);
   }
 
   /**
@@ -50,16 +51,12 @@ class sfConfig
    */
   public static function has($name)
   {
-    // smart detection so the plugins can hook on the config has() method
-    // setting name is something like: prefix.name
-    if($name[0] == '~')
+    if(strpos($name, '.') === false)
     {
-      $event = new sfEvent('config.has', 
-        array('name' => ltrim($name, '~'), 'default' => $default));
-      sfCore::getEventDispatcher()->notifyUntil($event);
-      if($event->isProcessed()) return $event->getReturnValue();
+      return isset(self::$config[$name]);
     }
-    return array_key_exists($name, self::$config);
+
+    return sfArray::keyExists(self::$config, $name);
   }
 
   /**
@@ -72,16 +69,15 @@ class sfConfig
    */
   public static function set($name, $value)
   {
-    // smart detection so the plugins can hook on the config has() method
-    // setting name is something like: prefix.name
-    if($name[0] == '~')
+    // not dot notation
+    if(strpos($name, '.') === false)
     {
-      $event = new sfEvent('config.set', 
-        array('name' => ltrim($name, '~'), 'value' => $value));
-      sfCore::getEventDispatcher()->notifyUntil($event);
-      if($event->isProcessed()) return $event->getReturnValue();
-    }    
-    self::$config[$name] = $value;
+      self::$config[$name] = $value;
+    }
+    else
+    {
+      sfArray::set(self::$config, $name, $value);
+    }
   }
 
   /**
@@ -94,7 +90,10 @@ class sfConfig
    */
   public static function add($parameters = array())
   {
-    self::$config = array_merge(self::$config, $parameters);
+    foreach($parameters as $p => $v)
+    {
+      self::set($p, $v);
+    }
   }
 
   /**
