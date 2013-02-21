@@ -668,6 +668,7 @@ class sfCoreAutoload
     'sfuser' => 'user/sfUser.class.php',
     'sfuseragentdetector' => 'user/sfUserAgentDetector.class.php',
     'sfutf8' => 'utf8/sfUtf8.class.php',
+    'sfarray' => 'util/sfArray.class.php',
     'sfassetpackage' => 'util/sfAssetPackage.class.php',
     'sfbitwise' => 'util/sfBitwise.class.php',
     'sfbrowser' => 'util/sfBrowser.class.php',

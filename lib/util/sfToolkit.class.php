@@ -495,7 +495,7 @@ class sfToolkit {
   /**
    *  Returns directory path used for temporary files
    *
-   * @return string Path of the temporary directory. 
+   * @return string Path of the temporary directory.
    */
   public static function getTmpDir()
   {
@@ -628,7 +628,7 @@ class sfToolkit {
 
   /**
    * Generic tlds (source: http://en.wikipedia.org/wiki/Generic_top-level_domain)
-   * 
+   *
    * @access protected
    */
   protected static $G_TLD = array(
@@ -728,7 +728,7 @@ class sfToolkit {
   public static function getMaxUploadSize()
   {
     return min(
-      self::convertPhpConfigValueToBytes(ini_get('upload_max_filesize')), 
+      self::convertPhpConfigValueToBytes(ini_get('upload_max_filesize')),
       self::convertPhpConfigValueToBytes(ini_get('post_max_size'))
     );
   }
@@ -760,7 +760,7 @@ class sfToolkit {
 
   /**
    * Sets time limit for php execution
-   * 
+   *
    * @param integer $time Time limit
    * @return boolean
    * @author Jan Kuchař (http://mujserver.net)
@@ -796,7 +796,7 @@ class sfToolkit {
 
   /**
    * Returns available memory which can be consumed by php script
-   * 
+   *
    * @return null|integer
    */
   public static function getAvailableMemory()
@@ -807,6 +807,20 @@ class sfToolkit {
       return null;
     }
     return $mem - memory_get_usage();
+  }
+
+  /**
+   * Takes a value and checks if it is a Closure or not, if it is it
+   * will return the result of the closure, if not, it will simply return the
+   * value.
+   *
+   * @param   mixed  $var  The value to get
+   * @return  mixed
+   * @author  Fuel Development Team
+   */
+  public static function getValue($var)
+  {
+    return ($var instanceof Closure) ? $var() : $var;
   }
 
 }
