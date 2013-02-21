@@ -470,17 +470,41 @@ class sfToolkit {
     return $default;
   }
 
+  /**
+   * Get path to php cli.
+   *
+   * @throws sfException If no php cli found
+   * @return string
+   */
   public static function getPhpCli()
   {
-    $path = getenv('PATH') ? getenv('PATH') : getenv('Path');
-    $suffixes = DIRECTORY_SEPARATOR == '\\' ? (getenv('PATHEXT') ? explode(PATH_SEPARATOR, getenv('PATHEXT')) : array('.exe', '.bat', '.cmd', '.com')) : array('');
-    foreach(array('php5', 'php') as $phpCli)
+    if(getenv('PHP_PATH'))
     {
-      foreach($suffixes as $suffix)
+      $php_cli = getenv('PHP_PATH');
+      if(!is_executable($php_cli))
+      {
+        throw new sfException('The defined PHP_PATH environment variable is not a valid PHP executable.');
+      }
+    }
+    else
+    {
+      $php_cli = PHP_BINDIR . DIRECTORY_SEPARATOR . 'php';
+    }
+
+    if(is_executable($php_cli))
+    {
+      return $php_cli;
+    }
+
+    $path = getenv('PATH') ? getenv('PATH') : getenv('Path');
+    $exe_suffixes = DIRECTORY_SEPARATOR == '\\' ? (getenv('PATHEXT') ? explode(PATH_SEPARATOR, getenv('PATHEXT')) : array('.exe', '.bat', '.cmd', '.com')) : array('');
+    foreach(array('php5', 'php') as $php_cli)
+    {
+      foreach($exe_suffixes as $suffix)
       {
         foreach(explode(PATH_SEPARATOR, $path) as $dir)
         {
-          $file = $dir . DIRECTORY_SEPARATOR . $phpCli . $suffix;
+          $file = $dir . DIRECTORY_SEPARATOR . $php_cli . $suffix;
           if(is_executable($file))
           {
             return $file;
@@ -489,7 +513,7 @@ class sfToolkit {
       }
     }
 
-    throw new sfException('Unable to find PHP executable');
+    throw new sfException('Unable to find PHP executable.');
   }
 
   /**
@@ -821,6 +845,31 @@ class sfToolkit {
   public static function getValue($var)
   {
     return ($var instanceof Closure) ? $var() : $var;
+  }
+
+  /**
+   * Can call system "exec" method?
+   *
+   * @return boolean True if yes, false otherwise
+   */
+  public static function canSystemCall()
+  {
+    if(function_exists('exec'))
+    {
+      try
+      {
+        $canSystemCall = (boolean)sfToolkit::getPhpCli();
+      }
+      catch(sfException $e)
+      {
+        $canSystemCall = false;
+      }
+    }
+    else
+    {
+      $canSystemCall = false;
+    }
+    return false;
   }
 
 }

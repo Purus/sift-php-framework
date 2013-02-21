@@ -411,7 +411,7 @@ abstract class sfCliBaseTask extends sfCliCommandApplicationTask
   {
     if(!isset($this->phpCli))
     {
-      $this->phpCli = $this->findPhpCli();
+      $this->phpCli = sfToolkit::getPhpCli();
     }
     return $this->phpCli;
   }
@@ -451,53 +451,6 @@ EOF
     unlink($file);
 
     return $result;
-  }
-
-  /**
-   * Finds PHP cli executable
-   *
-   * @param string $php_cli Cli php executable
-   * @return string
-   * @throws Exception
-   */
-  protected function findPhpCli()
-  {
-    if(getenv('PHP_PATH'))
-    {
-      $php_cli = getenv('PHP_PATH');
-      if(!is_executable($php_cli))
-      {
-        throw new sfException('The defined PHP_PATH environment variable is not a valid PHP executable.');
-      }
-    }
-    else
-    {
-      $php_cli = PHP_BINDIR . DIRECTORY_SEPARATOR . 'php';
-    }
-
-    if(is_executable($php_cli))
-    {
-      return $php_cli;
-    }
-
-    $path = getenv('PATH') ? getenv('PATH') : getenv('Path');
-    $exe_suffixes = DIRECTORY_SEPARATOR == '\\' ? (getenv('PATHEXT') ? explode(PATH_SEPARATOR, getenv('PATHEXT')) : array('.exe', '.bat', '.cmd', '.com')) : array('');
-    foreach(array('php5', 'php') as $php_cli)
-    {
-      foreach($exe_suffixes as $suffix)
-      {
-        foreach(explode(PATH_SEPARATOR, $path) as $dir)
-        {
-          $file = $dir . DIRECTORY_SEPARATOR . $php_cli . $suffix;
-          if(is_executable($file))
-          {
-            return $file;
-          }
-        }
-      }
-    }
-
-    throw new sfException('Unable to find PHP executable.');
   }
 
 }
