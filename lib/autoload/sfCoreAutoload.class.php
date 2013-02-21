@@ -328,6 +328,7 @@ class sfCoreAutoload
     'sfwebdebugpanelresponse' => 'debug/panel/sfWebDebugPanelResponse.class.php',
     'sfwebdebugpanelsiftversion' => 'debug/panel/sfWebDebugPanelSiftVersion.class.php',
     'sfwebdebugpaneltimer' => 'debug/panel/sfWebDebugPanelTimer.class.php',
+    'sfwebdebugpaneluser' => 'debug/panel/sfWebDebugPanelUser.class.php',
     'sfdebug' => 'debug/sfDebug.class.php',
     'sftimer' => 'debug/sfTimer.class.php',
     'sftimermanager' => 'debug/sfTimerManager.class.php',

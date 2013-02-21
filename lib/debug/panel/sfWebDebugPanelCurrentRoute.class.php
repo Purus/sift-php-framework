@@ -14,17 +14,23 @@
  */
 class sfWebDebugPanelCurrentRoute extends sfWebDebugPanel {
 
+  /**
+   *
+   * @see sfWebDebugPanel
+   */
   public function getTitle()
   {
     $module = sfContext::getInstance()->getModuleName();
     $action = sfContext::getInstance()->getActionName();
-    
-    $route  = sfRouting::getInstance()->getCurrentInternalUri(true); 
-    
-    return sprintf('<span title="Current module/action: %s/%s, Route: %s">%s/%s </span>', 
-                    $module, $action, 
+
+    $route  = sfRouting::getInstance()->getCurrentInternalUri(true);
+
+    return $module && $action ?
+            sprintf('<span title="Current module/action: %s/%s, Route: %s">%s/%s </span>',
+                    $module, $action,
                     $route ? $route : 'n/a',
-                    $module, $action);
+                    $module, $action)
+            : 'n/a';
   }
 
   public function getPanelTitle()
@@ -32,7 +38,7 @@ class sfWebDebugPanelCurrentRoute extends sfWebDebugPanel {
   }
 
   public function getPanelContent()
-  {   
+  {
   }
 
 }
