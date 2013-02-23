@@ -439,6 +439,7 @@ class sfCoreAutoload
     'sfwidgetforminputpassword' => 'form/widget/sfWidgetFormInputPassword.class.php',
     'sfwidgetforminputtext' => 'form/widget/sfWidgetFormInputText.class.php',
     'sfwidgetformnoinput' => 'form/widget/sfWidgetFormNoInput.class.php',
+    'sfwidgetformpartial' => 'form/widget/sfWidgetFormPartial.class.php',
     'sfwidgetformrecaptcha' => 'form/widget/sfWidgetFormReCaptcha.class.php',
     'sfwidgetformschema' => 'form/widget/sfWidgetFormSchema.class.php',
     'sfwidgetformschemaforeach' => 'form/widget/sfWidgetFormSchemaForEach.class.php',
