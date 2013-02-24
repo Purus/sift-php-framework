@@ -2,7 +2,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(13, new lime_output_color());
+$t = new lime_test(14, new lime_output_color());
 
 // ::get() ::set()
 $t->diag('::get() ::set()');
@@ -18,6 +18,9 @@ sfConfig::clear();
 $t->is(sfConfig::has('foo'), false, '::has() returns false if the key config does not exist');
 sfConfig::set('foo', 'bar');
 $t->is(sfConfig::has('foo'), true, '::has() returns true if the key config exists');
+sfConfig::set('bar', null);
+
+$t->is(sfConfig::has('bar'), true, '::has() returns true if the key config exists even if is the value null');
 
 // ::add()
 $t->diag('::add()');

@@ -4,7 +4,7 @@ require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 require_once(dirname(__FILE__).'/../../../lib/util/sfToolkit.class.php');
 require_once(dirname(__FILE__).'/../../../lib/util/sfArray.class.php');
 
-$t = new lime_test(11, new lime_output_color());
+$t = new lime_test(12, new lime_output_color());
 
 $array = array(
     "name" => "Jesus Christ",
@@ -47,3 +47,5 @@ $t->is(sfArray::keyExists($array, 'name'), true, 'keyExists() works ok for simpl
 $t->is(sfArray::keyExists($array, 'location.city'), true, 'keyExists() works ok for dot notation key');
 $t->is(sfArray::keyExists($array, 'location.coordinates'), true, 'keyExists() works ok for object');
 $t->is(sfArray::keyExists($array, 'location.unknown'), false, 'keyExists() works ok for invalid key');
+
+$t->is(sfArray::keyExists(array('bar' => null), 'bar'), true, 'keyExists() works ok for null value');

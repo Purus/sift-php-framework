@@ -53,7 +53,7 @@ class sfConfig
   {
     if(strpos($name, '.') === false)
     {
-      return isset(self::$config[$name]);
+      return array_key_exists($name, self::$config);
     }
 
     return sfArray::keyExists(self::$config, $name);
