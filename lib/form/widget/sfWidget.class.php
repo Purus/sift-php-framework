@@ -13,17 +13,16 @@
  * @subpackage form_widget
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  */
-abstract class sfWidget
-{
-  protected
-    $requiredOptions = array(),
-    $attributes      = array(),
-    $options         = array();
+abstract class sfWidget {
 
+  protected
+          $requiredOptions = array(),
+          $attributes = array(),
+          $options = array();
   protected static
-    $xhtml   = true,
-    $ariaEnabled = true,      
-    $charset = 'UTF-8';
+          $xhtml = true,
+          $ariaEnabled = true,
+          $charset = 'UTF-8';
 
   /**
    * Constructor.
@@ -42,19 +41,19 @@ abstract class sfWidget
     $optionKeys = array_keys($options);
 
     // check option names
-    if ($diff = array_diff($optionKeys, array_merge($currentOptionKeys, $this->requiredOptions)))
+    if($diff = array_diff($optionKeys, array_merge($currentOptionKeys, $this->requiredOptions)))
     {
       throw new InvalidArgumentException(sprintf('%s does not support the following options: \'%s\'.', get_class($this), implode('\', \'', $diff)));
     }
 
     // check required options
-    if ($diff = array_diff($this->requiredOptions, array_merge($currentOptionKeys, $optionKeys)))
+    if($diff = array_diff($this->requiredOptions, array_merge($currentOptionKeys, $optionKeys)))
     {
       throw new RuntimeException(sprintf('%s requires the following options: \'%s\'.', get_class($this), implode('\', \'', $diff)));
     }
 
     $this->options = array_merge($this->options, $options);
-    $this->attributes = array_merge($this->attributes, $attributes);    
+    $this->attributes = array_merge($this->attributes, $attributes);
   }
 
   /**
@@ -74,6 +73,7 @@ abstract class sfWidget
    */
   protected function configure($options = array(), $attributes = array())
   {
+
   }
 
   /**
@@ -141,7 +141,7 @@ abstract class sfWidget
    */
   public function setOption($name, $value)
   {
-    if (!in_array($name, array_merge(array_keys($this->options), $this->requiredOptions)))
+    if(!in_array($name, array_merge(array_keys($this->options), $this->requiredOptions)))
     {
       throw new InvalidArgumentException(sprintf('%s does not support the following option: \'%s\'.', get_class($this), $name));
     }
@@ -223,7 +223,7 @@ abstract class sfWidget
 
     return $this;
   }
-  
+
   /**
    * Remvoe HTML attribute.
    *
@@ -237,7 +237,7 @@ abstract class sfWidget
 
     return $this;
   }
-  
+
   /**
    * Returns the HTML attribute value for a given attribute name.
    *
@@ -266,7 +266,7 @@ abstract class sfWidget
 
   /**
    * Removes ARIA attributes
-   * 
+   *
    * @return sfWidget The current widget instance
    */
   public function removeAriaAttributes()
@@ -281,10 +281,10 @@ abstract class sfWidget
     }
     return $this;
   }
-  
+
   /**
    * Returns ARIA attributes assigned for this widget
-   * 
+   *
    * @return array Array of ARIA attributes
    */
   public function getAriaAttributes()
@@ -298,8 +298,8 @@ abstract class sfWidget
       }
     }
     return $attributes;
-  }  
-  
+  }
+
   /**
    * Gets the stylesheet paths associated with the widget.
    *
@@ -366,14 +366,14 @@ abstract class sfWidget
 
   /**
    * Sets WAI ARIA support flag
-   * 
+   *
    * @param boolean $boolean true if widgets must generate WAI ARIA attributes
    */
   static public function setAria($boolean)
   {
     self::$ariaEnabled = (boolean) $boolean;
   }
-  
+
   /**
    * Returns whether to generate XHTML tags or not.
    *
@@ -383,7 +383,7 @@ abstract class sfWidget
   {
     return self::$ariaEnabled;
   }
-  
+
   /**
    * Renders a HTML tag.
    *
@@ -394,7 +394,7 @@ abstract class sfWidget
    */
   public function renderTag($tag, $attributes = array())
   {
-    if (empty($tag))
+    if(empty($tag))
     {
       return '';
     }
@@ -413,7 +413,7 @@ abstract class sfWidget
    */
   public function renderContentTag($tag, $content = null, $attributes = array())
   {
-    if (empty($tag))
+    if(empty($tag))
     {
       return '';
     }
@@ -423,39 +423,51 @@ abstract class sfWidget
 
   /**
    * Enclose the value in span tags to make use of the widget's attributes
-   * 
+   *
    * Only for id or class attribute
-   * 
+   *
    * @param string $value
    * @param array $attributes
    * @return string
    */
   protected function encloseInSpanTag($value, $attributes)
   {
+    return $this->encloseInTag($value, $attributes, 'span');
+  }
+
+  /**
+   * Enclose the value in tags to make use of the widget's attributes
+   *
+   * @param string $value
+   * @param array $attributes
+   * @param string $tag Tag name
+   * @return string
+   */
+  protected function encloseInTag($value, $attributes, $tag)
+  {
     // merge custom attributes with constructor attributes
     $attributes = array_merge($this->attributes, $attributes);
-    
+
     $spanAttributes = array();
-    
+
     // whitelist attributes which make sense for the span enclosement
-    foreach ($attributes as $attribute => $attributeValue)
+    foreach($attributes as $attribute => $attributeValue)
     {
-      if (in_array($attribute, array('id', 'class')))
+      if(in_array($attribute, array('id', 'class')))
       {
         $spanAttributes[$attribute] = $attributeValue;
       }
     }
-    
-    $value = '<span' . 
-      implode('', array_map(array($this, 'attributesToHtmlCallback'), array_keys($spanAttributes), array_values($spanAttributes))) .
-      '>' .
-      $value .
-      '</span>'
-    ;
-    
+
+    $value = '<' . $tag .
+            implode('', array_map(array($this, 'attributesToHtmlCallback'), array_keys($spanAttributes), array_values($spanAttributes))) .
+            '>' .
+            $value .
+            '</' . $tag . '>';
+
     return $value;
   }
-  
+
   /**
    * Escapes a string.
    *
@@ -463,7 +475,7 @@ abstract class sfWidget
    * @return string escaped string
    */
   static public function escapeOnce($value)
-  {  
+  {
     return self::fixDoubleEscape(htmlspecialchars(!is_array($value) ? (string) $value : null, ENT_QUOTES, self::getCharset()));
   }
 
@@ -506,4 +518,5 @@ abstract class sfWidget
   {
     return false === $v || null === $v || ('' === $v && 'value' != $k) ? '' : sprintf(' %s="%s"', $k, $this->escapeOnce($v));
   }
+
 }

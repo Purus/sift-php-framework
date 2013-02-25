@@ -7,21 +7,32 @@
  */
 
 /**
- * sfWidgetFormInput represents an HTML text input tag.
+ * sfWidgetFormInput represents no input tag. Simply renders the value enclosed in span tag.
  *
  * @package    Sift
  * @subpackage form_widget
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  */
 class sfWidgetFormNoInput extends sfWidgetForm
 {
   /**
-   * Renders thw widget
-   * 
-   * @param type $name
-   * @param type $value
-   * @param type $attributes
-   * @param type $errors 
+   * Configures the current widget.
+   *
+   *  * Available options:
+   *
+   *  * tag: To which tag enclose the value? Default is "span"
+   *
+   * @param array $options     An array of options
+   * @param array $attributes  An array of default HTML attributes
+   *
+   * @see sfWidgetFormInput
+   */
+  public function configure($options = array(), $attributes = array())
+  {
+    $this->addOption('tag', 'span');
+  }
+
+  /**
+   * @see sfWidget
    */
   public function render($name, $value = null, $attributes = array(), $errors = array())
   {
@@ -33,10 +44,7 @@ class sfWidgetFormNoInput extends sfWidgetForm
     {
       $attributes['class'] .= ' form-no-input';
     }
-    
-    $value = $this->encloseInSpanTag($value, $attributes); 
-    
-    return $value;
+    return $this->encloseInTag($value, $attributes, $this->getOption('tag'));
   }
-  
+
 }
