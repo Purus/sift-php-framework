@@ -872,4 +872,97 @@ class sfToolkit {
     return false;
   }
 
+  /**
+   * Exports PHP variable
+   *
+   * @param mixed $var
+   * @param boolean $expression Find and replace php expressions?
+   * @return stirng
+   */
+  public static function varExport($var, $expressions = true)
+  {
+    // Pre-encoding look for function calls and replacing by tmp ids
+    $phpExpressions = array();
+
+    if($expressions)
+    {
+      // strip expressions from the variable
+      $var = self::_recursivePhpExprFinder($var, $phpExpressions);
+    }
+
+    // export variable
+    $var = var_export($var, true);
+
+    if($expressions)
+    {
+      $count = count($phpExpressions);
+      // put expressions back
+      if(count($phpExpressions) > 0)
+      {
+        for($i = 0; $i < $count; $i++)
+        {
+          $magicKey = $phpExpressions[$i]['magicKey'];
+          $value    = $phpExpressions[$i]['value'];
+          $var = str_replace(
+            // instead of replacing "key:magicKey", we replace directly magicKey by value because "key" never changes.
+            "'" . $magicKey . "'",
+            $value,
+            $var);
+        }
+      }
+    }
+
+    // do some cleanup
+    $var = str_replace("\n", '', $var);
+    $var = str_replace('array (  ', 'array(', $var);
+    $var = str_replace(',)', ')', $var);
+    $var = str_replace(', )', ')', $var);
+    $var = str_replace('  ', ' ', $var);
+    $var = str_replace('=>  ', '=> ', $var);
+
+    return $var;
+  }
+
+  /**
+   * Check & Replace function calls for tmp ids in the $value
+   *
+   * Check if the value is a function call, and if replace its value
+   * with a magic key and save the php expression in an array.
+   *
+   * NOTE this method is recursive.
+   *
+   * NOTE: This method is used internally by the encode method.
+   *
+   * @param mixed $value a string - object property to be exported
+   * @return void
+   */
+  protected static function _recursivePhpExprFinder(
+      &$value, array &$phpExpressions, $currentKey = null)
+  {
+    if($value instanceof sfPhpExpression)
+    {
+      $magicKey = '____php_expr_' . $currentKey . '_' . (count($phpExpressions));
+      $phpExpressions[] = array(
+          'magicKey' => $magicKey,
+          'value'    => is_object($value) ? $value->__toString() : $value
+      );
+      $value = $magicKey;
+    }
+    elseif(is_array($value))
+    {
+      foreach ($value as $k => $v)
+      {
+        $value[$k] = self::_recursivePhpExprFinder($value[$k], $phpExpressions, $k);
+      }
+    }
+    elseif(is_object($value))
+    {
+      foreach ($value as $k => $v)
+      {
+        $value->$k = self::_recursivePhpExprFinder($value->$k, $phpExpressions, $k);
+      }
+    }
+    return $value;
+  }
+
 }

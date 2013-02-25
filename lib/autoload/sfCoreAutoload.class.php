@@ -782,3 +782,4 @@ class sfCoreAutoload
   );
 
 }
+    'sfphpexpression' => 'util/sfPhpExpression.class.php',

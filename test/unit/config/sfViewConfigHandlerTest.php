@@ -355,8 +355,7 @@ $handler->mergeConfig(array(
 ));
 
 $content = <<<EOF
-  \$this->setComponentSlot('sidebar', array(
-             ));
+  \$this->setComponentSlot('sidebar', array ());
 
 EOF;
 
@@ -369,10 +368,7 @@ $handler->mergeConfig(array(
 ));
 
 $content = <<<EOF
-  \$this->setComponentSlot('sidebar', array(
-             0 => 'default',
-             1 => 'sidebar',
-             ));
+  \$this->setComponentSlot('sidebar', array(0 => 'default', 1 => 'sidebar'));
 
 EOF;
 

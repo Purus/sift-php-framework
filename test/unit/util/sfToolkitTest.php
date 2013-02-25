@@ -2,7 +2,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(74, new lime_output_color());
+$t = new lime_test(81, new lime_output_color());
 
 // ::stringToArray()
 $t->diag('::stringToArray()');
@@ -186,3 +186,46 @@ $t->diag('::getArrayValueForPath()');
 
 $t->is(sfToolkit::getArrayValueForPath($arr, 'foo[bar][baz][booze]'), null, '::getArrayValueForPath() is not fooled by php mistaking strings and array');
 $t->is(sfToolkit::getArrayValueForPathByRef($arr, 'foo[bar][baz][booze]'), null, '::getArrayValueForPathByRef() is not fooled by php mistaking strings and array');
+
+
+$t->diag('::varExport()');
+
+$var = array(
+  'min_length' => 12
+);
+
+$t->isa_ok(sfToolkit::varExport($var), 'string', 'varExport() exports string');
+$t->is(sfToolkit::varExport($var), 'array(\'min_length\' => 12)', 'varExport() exports string');
+
+$var = array(
+  'widget' => new sfPhpExpression('new stdClass()'),
+);
+
+$t->is(sfToolkit::varExport($var), 'array(\'widget\' => new stdClass())', 'varExport() exports string containing php expresion');
+
+$var = array(
+  "widget" => new sfPhpExpression('new stdClass(array("foo" => \'bar\'), null)'),
+);
+
+$t->is(sfToolkit::varExport($var), 'array(\'widget\' => new stdClass(array("foo" => \'bar\'), null))', 'varExport() exports string containing php expresion with double quotes');
+
+$var = array(
+  "widget" => new sfPhpExpression('function(){}'),
+);
+
+$t->is(sfToolkit::varExport($var), 'array(\'widget\' => function(){})', 'varExport() exports string containing php expresion with double quotes');
+
+
+$var = array(
+  "widget" => new sfPhpExpression('function(){}'),
+  'params' => array()
+);
+
+$t->is(sfToolkit::varExport($var), 'array(\'widget\' => function(){}, \'params\' => array())', 'varExport() exports string containing php expresion with closure');
+
+
+$var = array(
+  "validator" => new sfPhpExpression('new sfValidatorString(array("separator" => "\n"))'),
+);
+
+$t->is(sfToolkit::varExport($var), 'array(\'validator\' => new sfValidatorString(array("separator" => "\n")))', 'varExport() exports string containing php expresion with double quotes');

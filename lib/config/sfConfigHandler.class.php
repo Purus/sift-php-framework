@@ -101,25 +101,13 @@ abstract class sfConfigHandler {
 
   /**
    * Special function for var_export()
-   * The normal code which is returned is malformed and does not follow coding standards
-   * So we do some string replacing to clean it up
    *
    * @param string $var
    * @return void
-   * @copyright Doctrine project
    */
   public function varExport($var)
   {
-    $export = var_export($var, true);
-    $export = str_replace("\n", PHP_EOL . str_repeat(' ', 50), $export);
-    $export = str_replace('  ', ' ', $export);
-    $export = str_replace('array (', 'array(', $export);
-    $export = str_replace('array( ', 'array(', $export);
-    $export = str_replace(',)', ')', $export);
-    $export = str_replace(', )', ')', $export);
-    $export = str_replace('  ', ' ', $export);
-
-    return $export;
+    return sfToolkit::varExport($var);
   }
 
 }
