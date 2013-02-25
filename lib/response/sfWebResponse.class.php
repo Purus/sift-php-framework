@@ -10,7 +10,7 @@
  * sfWebResponse class.
  *
  * This class manages web reponses. It supports cookies and headers management.
- * 
+ *
  * @package    Sift
  * @subpackage response
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
@@ -20,7 +20,7 @@ class sfWebResponse extends sfResponse
   protected
     $cookies     = array(),
     $statusCode  = 200,
-    $statusText  = 'OK',          
+    $statusText  = 'OK',
     $statusTexts = array(
       '100' => 'Continue',
       '101' => 'Switching Protocols',
@@ -71,7 +71,7 @@ class sfWebResponse extends sfResponse
    * Initializes this sfWebResponse.
    *
    * @param sfContext A sfContext instance
-   * @return boolean true, if initialization completes successfully, otherwise false   
+   * @return boolean true, if initialization completes successfully, otherwise false
    * @throws sfInitializationException If an error occurs while initializing this Response
    */
   public function initialize($context, $parameters = array())
@@ -175,24 +175,24 @@ class sfWebResponse extends sfResponse
 
   /**
    * Status text fot the current web response.
-   * 
+   *
    * @return string
    */
   public function getStatusText()
   {
     return $this->statusTexts[$this->statusCode];
   }
-  
+
   /**
    * Array of HTTP status texts
-   * 
+   *
    * @return array
    */
   public function getStatusTexts()
   {
     return $this->statusTexts;
   }
-  
+
   /**
    * Sets a HTTP header.
    *
@@ -265,7 +265,7 @@ class sfWebResponse extends sfResponse
   {
     return sfConfig::get('sf_charset');
   }
-  
+
   /**
    * Gets response content type.
    *
@@ -329,15 +329,15 @@ class sfWebResponse extends sfResponse
   {
     if(!$this->headerOnly)
     {
-      if(is_string($this->content)) 
+      if(is_string($this->content))
       {
         parent::sendContent();
       }
-      elseif(is_callable($this->content)) 
+      elseif(is_callable($this->content))
       {
-        // Copied below from parent classes to keep behavior consistent       
+        // Copied below from parent classes to keep behavior consistent
         // clear output buffer
-        while(ob_get_level()) 
+        while(ob_get_level())
         {
           ob_end_clean();
         }
@@ -368,17 +368,17 @@ class sfWebResponse extends sfResponse
 
   /**
    * Send 256 blank characters (spaces) to force "update" of page.
-   * 
-   * Some versions of IE (7.0 for example) will not update the page 
-   * if less than 256 bytes are recieved. 
-   * 
+   *
+   * Some versions of IE (7.0 for example) will not update the page
+   * if less than 256 bytes are recieved.
+   *
    */
   public function hardFlush()
   {
-    echo str_repeat(' ', 256);    
-    flush();    
+    echo str_repeat(' ', 256);
+    flush();
   }
-  
+
   /**
    * Retrieves a normalized Header.
    *
@@ -532,6 +532,24 @@ class sfWebResponse extends sfResponse
   }
 
   /**
+   * Returns all javascripts
+   *
+   * @return array
+   */
+  public function getAllStylesheets()
+  {
+    $stylesheets = array();
+    foreach(array('first', '', 'last') as $position)
+    {
+      foreach($this->getStylesheets($position) as $file => $options)
+      {
+        $stylesheets[$file] = $options;
+      }
+    }
+    return $stylesheets;
+  }
+
+  /**
    * Adds an stylesheet to the current web response.
    *
    * @param string Stylesheet
@@ -555,17 +573,34 @@ class sfWebResponse extends sfResponse
       $this->getParameterHolder()->remove($file, 'helper/asset/auto/stylesheet'.($position ? '/'.$position : ''));
     }
   }
-  
+
   /**
    * Retrieves javascript code from the current web response.
    *
-   * @param string Directory delimiter
-   *
-   * @return string Javascript code
+   * @param string $position Position '', 'last', 'first'
+   * @return string array
    */
   public function getJavascripts($position = '')
   {
     return $this->getParameterHolder()->getAll('helper/asset/auto/javascript'.($position ? '/'.$position : ''));
+  }
+
+  /**
+   * Returns all javascripts
+   *
+   * @return array
+   */
+  public function getAllJavascripts()
+  {
+    $javascripts = array();
+    foreach(array('first', '', 'last') as $position)
+    {
+      foreach($this->getJavascripts($position) as $file => $options)
+      {
+        $javascripts[$file] = $options;
+      }
+    }
+    return $javascripts;
   }
 
   /**
@@ -592,7 +627,18 @@ class sfWebResponse extends sfResponse
       $this->getParameterHolder()->remove($file, 'helper/asset/auto/javascript'.($position ? '/'.$position : ''));
     }
   }
-  
+
+  /**
+   * Clear all assets. Discovery links, javascripts and stylesheets.
+   *
+   */
+  public function resetAssets()
+  {
+    $this->clearAutoDiscoveryLinks();
+    $this->clearJavascripts();
+    $this->clearStylesheets();
+  }
+
   /**
    * Retrieves cookies from the current web response.
    *
@@ -636,7 +682,7 @@ class sfWebResponse extends sfResponse
   public function getTitle($include_global = true)
   {
     $title = trim($this->getParameter('title', '', 'helper/asset/auto/title'));
-    
+
     $global_title = sfConfig::get('app_title_name');
 
     if($include_global && $global_title)
@@ -733,7 +779,7 @@ class sfWebResponse extends sfResponse
 
   /**
    *
-   * @param <type> $policy string
+   * @param string $policy
    *
    */
   public function setTitleMode($policy)
@@ -748,7 +794,7 @@ class sfWebResponse extends sfResponse
   /**
    * Returns current title policy
    *
-   * @return <type> string
+   * @return string
    */
   public function getTitleMode()
   {
@@ -1046,7 +1092,7 @@ class sfWebResponse extends sfResponse
 
   /**
    * Sets SEO parameters to response
-   * 
+   *
    * @param array $seo
    * @param boolean $override Override values ? Default is false =
    *                                            add values to currently set
@@ -1230,7 +1276,7 @@ class sfWebResponse extends sfResponse
       $this->getParameterHolder()->removeNamespace($namespace);
     }
   }
-  
+
   /**
    * Copies a propertie to a new one.
    *

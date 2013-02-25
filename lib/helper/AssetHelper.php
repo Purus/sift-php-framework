@@ -92,7 +92,7 @@ function auto_discovery_link_tag($type = 'rss', $url, $tag_options = array())
  */
 function javascript_path($source, $absolute = false)
 {
-  return _compute_public_path($source, 'js', 'js', $absolute);
+  return _compute_public_path($source, sfConfig::get('sf_web_js_dir_name', 'js'), 'js', $absolute);
 }
 
 /**
@@ -184,11 +184,11 @@ function javascript_include_tag()
  * @param  string asset name
  * @param  bool return absolute path ?
  * @return string file path to the stylesheet file
- * @see    stylesheet_tag  
+ * @see    stylesheet_tag
  */
 function stylesheet_path($source, $absolute = false)
 {
-  return _compute_public_path($source, 'css', 'css', $absolute);
+  return _compute_public_path($source, sfConfig::get('sf_web_css_dir_name', 'css'), 'css', $absolute);
 }
 
 /**
@@ -214,7 +214,7 @@ function stylesheet_path($source, $absolute = false)
  * @param  string asset names
  * @param  array additional HTML compliant <link> tag parameters
  * @return string HTML compliant <link> tag(s)
- * @see    stylesheet_path 
+ * @see    stylesheet_path
  */
 function stylesheet_tag()
 {
@@ -252,7 +252,7 @@ function stylesheet_tag()
 
     if(!$raw)
     {
-      // less support    
+      // less support
       if(isset($sourceOptions['less'])
               || preg_match('/\.less$/i', $source))
       {
@@ -270,7 +270,7 @@ function stylesheet_tag()
     $options = array_merge(array(
         'rel' => 'stylesheet',
         'type' => 'text/css',
-        'media' => 'screen,projection,tv',
+        'media' => sfConfig::get('sf_default_stylesheet_media', 'screen,projection,tv'),
         'href' => $source), $sourceOptions);
 
     $tag = tag('link', $options);
@@ -353,15 +353,15 @@ function decorate_with($layout)
  * - full path, like "/my_images/image.gif"
  * - file name, like "rss.gif", that gets expanded to "/images/rss.gif"
  * - file name without extension, like "logo", that gets expanded to "/images/logo.png"
- * 
+ *
  * @param  string asset name
  * @param  bool return absolute path ?
  * @return string file path to the image file
- * @see    image_tag  
+ * @see    image_tag
  */
 function image_path($source, $absolute = false)
 {
-  return _compute_public_path($source, 'images', 'png', $absolute);
+  return _compute_public_path($source, sfConfig::get('sf_web_images_dir_name', 'images'), 'png', $absolute);
 }
 
 /**
@@ -383,7 +383,7 @@ function image_path($source, $absolute = false)
  * @param  string image asset name
  * @param  array additional HTML compliant <img> tag parameters
  * @return string XHTML compliant <img> tag
- * @see    image_path 
+ * @see    image_path
  */
 function image_tag($source, $options = array())
 {
@@ -496,7 +496,7 @@ function _compute_public_path($source, $dir, $ext, $absolute = false)
  * </code>
  *
  * @return string Meta tag(s)
- * @see    include_http_metas 
+ * @see    include_http_metas
  */
 function include_metas()
 {
@@ -519,7 +519,7 @@ function include_metas()
  * <b>Note:</b> Modify the sfResponse object or the view.yml to change, add or remove HTTP metas.
  *
  * @return string XHTML compliant <meta> tag(s)
- * @see    include_metas 
+ * @see    include_metas
  */
 function include_http_metas()
 {
@@ -699,7 +699,7 @@ function add_auto_discovery_link($url, $type = 'rss', $tag_options = array())
 
 /**
  * Sets canonical URL
- * 
+ *
  * @param string $url Url
  */
 function set_canonical_url($url)
@@ -769,7 +769,7 @@ function include_canonical_url()
 
 /**
  * Returns javascript configuration for application
- * 
+ *
  * @param array $options
  * @param string $app
  * @return string string
@@ -817,23 +817,23 @@ function get_javascript_configuration($options = array(), $app = null)
 function use_jquery($position = 'first')
 {
   use_package_javascript('jquery', $position);
-  use_package_stylesheet('jquery', $position);    
+  use_package_stylesheet('jquery', $position);
 }
 
 /**
  * Use Jquery UI
- * 
- * @param string $position 
+ *
+ * @param string $position
  */
 function use_jquery_ui($position = '')
 {
   use_package_javascript('ui', $position);
-  use_package_stylesheet('ui', $position);  
+  use_package_stylesheet('ui', $position);
 }
 
 /**
  * Use asset package
- * 
+ *
  */
 function use_package()
 {
@@ -853,7 +853,7 @@ function use_package()
 
 /**
  * Use package stylesheets
- * 
+ *
  * @param string $name Package name (should be configured in asset_packages.yml)
  * @param string $position Position
  */
@@ -867,7 +867,7 @@ function use_package_stylesheet($name, $position = '')
 
 /**
  * Use package stylesheets
- * 
+ *
  * @param string $name Package name (should be configured in asset_packages.yml)
  * @param string $position Position
  */
@@ -880,11 +880,11 @@ function use_package_javascript($name, $position = '')
 }
 
 /**
- * User jquery plugin. 
- * 
+ * User jquery plugin.
+ *
  * Accepts variable number of arguments as plugin names
- * 
- * @param $name Plugin name 
+ *
+ * @param $name Plugin name
  */
 function use_jquery_plugin()
 {
@@ -899,7 +899,7 @@ function use_jquery_plugin()
 
 /**
  * Use jquery plugin stylesheets
- * 
+ *
  * @param string $name Plugin name (should be configured in asset_packages.yml)
  * @param string $position Position
  */
@@ -913,7 +913,7 @@ function use_jquery_plugin_stylesheet($name, $position = '')
 
 /**
  * Use jquery plugin javascripts
- * 
+ *
  * @param string $name Plugin name
  * @param string $position Position
  */
@@ -940,7 +940,7 @@ function include_jquery($position = 'first')
 
 /**
  * Use fancybox stylesheet(s)
- * 
+ *
  * @param string $position
  */
 function use_fancybox_stylesheet($position = '')
@@ -950,7 +950,7 @@ function use_fancybox_stylesheet($position = '')
 
 /**
  * Use easing stylesheet(s)
- * 
+ *
  */
 function use_jquery_easing()
 {
@@ -959,7 +959,7 @@ function use_jquery_easing()
 
 /**
  * Use jquery mousewheel package
- * 
+ *
  */
 function use_jquery_mousewheel()
 {
@@ -993,7 +993,7 @@ function use_fancybox_javascript($options = array())
   {
     use_jquery_mousewheel();
   }
-  
+
 }
 
 /**
@@ -1043,7 +1043,7 @@ function use_dynamic_stylesheet($css, $position = '', $options = array())
 
 /**
  * Returns url for the internal $uri
- * 
+ *
  * @param string $uri Internal uri
  * @param boolean $absolute Absolute url?
  * @return string

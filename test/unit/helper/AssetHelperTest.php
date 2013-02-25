@@ -2,10 +2,11 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 require_once($_test_dir.'/unit/sfContextMock.class.php');
+require_once($_test_dir.'/unit/sfCoreMock.class.php');
 
-sfLoader::loadHelpers(array('Helper', 'Tag', 'Url', 'Asset'));
+sfLoader::loadHelpers(array('Helper', 'Tag', 'Url', 'Asset', 'Form'));
 
-$t = new lime_test(53, new lime_output_color());
+$t = new lime_test(63, new lime_output_color());
 
 class myRequest
 {
@@ -237,3 +238,96 @@ $t->is(get_stylesheets(),
   '<link rel="stylesheet" type="text/css" media="screen,projection,tv" href="/module/action" />'."\n", 
   'use_dynamic_stylesheet() register a dynamic stylesheet in the response'
 );
+
+
+class MyForm extends sfForm
+{
+  public function getStylesheets()
+  {
+    return array( 
+ 		      '/path/to/a/foo.css',                                             // use default "screen" media 
+ 		      '/path/to/a/bar.css' => 'print',                                  // media set a value 
+ 		      '/path/to/a/buz.css' => array('position' => 'last'), // position set as an option 
+ 		      '/path/to/a/baz.css' => array('media' => 'print'),                // options support 
+ 	   );
+  }
+
+  public function getJavaScripts()
+  {
+    return array( 
+ 		      '/path/to/a/foo.js',                                             // doesn't use any option 
+ 		      '/path/to/a/bar.js' => array('position' => 'last'), // position set as an option 
+ 	        '/path/to/a/baz.js' => array('ie_condition' => 'IE'),               // options support 
+    );    
+  }
+}
+
+// get_javascripts_for_form() get_stylesheets_for_form()
+$t->diag('get_javascripts_for_form() get_stylesheets_for_form()');
+$form = new MyForm();
+$output = <<<EOF
+<script type="text/javascript" src="/path/to/a/foo.js"></script>
+<script type="text/javascript" src="/path/to/a/bar.js"></script>
+<!--[if IE]><script type="text/javascript" src="/path/to/a/baz.js"></script><![endif]-->
+
+EOF;
+$t->is(get_javascripts_for_form($form), fix_linebreaks($output), 'get_javascripts_for_form() returns script tags');
+$output = <<<EOF
+<link rel="stylesheet" type="text/css" media="screen,projection,tv" href="/path/to/a/foo.css" />
+<link rel="stylesheet" type="text/css" media="print" href="/path/to/a/bar.css" />
+<link rel="stylesheet" type="text/css" media="screen,projection,tv" href="/path/to/a/buz.css" />
+<link rel="stylesheet" type="text/css" media="print" href="/path/to/a/baz.css" />
+
+EOF;
+$t->is(get_stylesheets_for_form($form), fix_linebreaks($output), 'get_stylesheets_for_form() returns link tags');
+
+// use_javascripts_for_form() use_stylesheets_for_form()
+$t->diag('use_javascripts_for_form() use_stylesheets_for_form()');
+
+$response = sfContext::getInstance()->getResponse();
+$form = new MyForm();
+
+$response->resetAssets();
+use_stylesheets_for_form($form);
+
+$t->is_deeply( 
+	  $response->getAllStylesheets(), 
+	  array( 
+	    '/path/to/a/foo.css' => array('media' => 'screen,projection,tv'), 
+	    '/path/to/a/bar.css' => array('media' => 'print'), 
+	    '/path/to/a/baz.css' => array('media' => 'print'), 
+	    '/path/to/a/buz.css' => array('media' => 'screen,projection,tv'), 
+	  ), 
+	  'use_stylesheets_for_form() adds stylesheets to the response' 
+); 
+
+$response->resetAssets();
+use_javascripts_for_form($form);
+$t->is_deeply( 
+ 	  $response->getAllJavaScripts(), 
+ 	  array( 
+ 	    '/path/to/a/foo.js' => array(), 
+ 	    '/path/to/a/bar.js' => array(), 
+ 	    '/path/to/a/baz.js' => array('ie_condition' => 'IE'), 
+ 	  ), 
+ 	  'use_javascripts_for_form() adds javascripts to the response' 
+ 	); 
+
+// custom web paths
+$t->diag('Custom asset path handling');
+
+sfConfig::set('sf_web_js_dir_name', 'static/js');
+$t->is(javascript_path('xmlhr'), '/static/js/xmlhr.js', 'javascript_path() decorates a relative filename with js dir name and extension with custom js dir');
+$t->is(javascript_include_tag('xmlhr'),
+  '<script type="text/javascript" src="/static/js/xmlhr.js"></script>'."\n", 
+  'javascript_include_tag() takes a javascript name as its first argument');
+
+sfConfig::set('sf_web_css_dir_name', 'static/css');
+$t->is(stylesheet_path('style'), '/static/css/style.css', 'stylesheet_path() decorates a relative filename with css dir name and extension with custom css dir');
+$t->is(stylesheet_tag('style'), 
+  '<link rel="stylesheet" type="text/css" media="screen,projection,tv" href="/static/css/style.css" />'."\n", 
+  'stylesheet_tag() takes a stylesheet name as its first argument');
+
+sfConfig::set('sf_web_images_dir_name', 'static/img');
+$t->is(image_path('img'), '/static/img/img.png', 'image_path() decorates a relative filename with images dir name and png extension with custom images dir');
+$t->is(image_tag('test'), '<img src="/static/img/test.png" alt="Test" />', 'image_tag() takes an image name as its first argument');
