@@ -25,13 +25,7 @@ class sfValidatorFile extends sfValidatorBase
    *  * mime_type_guessers:   An array of mime type guesser PHP callables (must return the mime type or null)
    *  * mime_categories:      An array of mime type categories (web_images is defined by default)
    *  * path:                 The path where to save the file - as used by the sfValidatedFile class (optional)
-   *  * validated_file_class: Name of the class that manages the cleaned uploaded file (optional)
-   *
-   * There are 3 built-in mime type guessers:
-   *
-   *  * guessFromFileinfo:        Uses the finfo_open() function (from the Fileinfo PECL extension)
-   *  * guessFromMimeContentType: Uses the mime_content_type() function (deprecated)
-   *  * guessFromFileBinary:      Uses the file binary (only works on *nix system)
+   *  * uploaded_file_class: Name of the class that manages the cleaned uploaded file (optional)
    *
    * Available error codes:
    *
@@ -56,11 +50,11 @@ class sfValidatorFile extends sfValidatorBase
 
     $this->addOption('max_size');
     $this->addOption('mime_types');
-    $this->addOption('mime_type_guessers', array(
-      array($this, 'guessFromFileinfo'),
-      array($this, 'guessFromMimeContentType'),
-      array($this, 'guessFromFileBinary'),
-    ));
+//    $this->addOption('mime_type_guessers', array(
+//      array($this, 'guessFromFileinfo'),
+//      array($this, 'guessFromMimeContentType'),
+//      array($this, 'guessFromFileBinary'),
+//    ));
     $this->addOption('mime_categories', array(
       'web_images' => array(
         'image/jpeg',
@@ -69,7 +63,7 @@ class sfValidatorFile extends sfValidatorBase
         'image/x-png',
         'image/gif',
     )));
-    $this->addOption('validated_file_class', 'sfUploadedFile');
+    $this->addOption('uploaded_file_class', 'sfUploadedFile');
     $this->addOption('path', null);
 
     $this->addMessage('max_size', 'File is too large (maximum is %max_size% bytes).');
@@ -159,7 +153,7 @@ class sfValidatorFile extends sfValidatorBase
       }
     }
 
-    $class = $this->getOption('validated_file_class');
+    $class = $this->getOption('uploaded_file_class');
     return new $class($value['name'], $mimeType, $value['tmp_name'], $value['size'], $this->getOption('path'));    
   }
 
@@ -179,93 +173,7 @@ class sfValidatorFile extends sfValidatorBase
    */
   protected function getMimeType($file, $fallback)
   {
-    foreach ($this->getOption('mime_type_guessers') as $method)
-    {
-      $type = call_user_func($method, $file);
-
-      if (null !== $type && $type !== false)
-      {
-        return strtolower($type);
-      }
-    }
-
-    return strtolower($fallback);
-  }
-
-  /**
-   * Guess the file mime type with PECL Fileinfo extension
-   *
-   * @param  string $file  The absolute path of a file
-   *
-   * @return string The mime type of the file (null if not guessable)
-   */
-  protected function guessFromFileinfo($file)
-  {
-    if (!function_exists('finfo_open') || !is_readable($file))
-    {
-      return null;
-    }
-
-    if (!$finfo = new finfo(FILEINFO_MIME))
-    {
-      return null;
-    }
-
-    $type = $finfo->file($file);
-
-    // remove charset (added as of PHP 5.3)
-    if (false !== $pos = strpos($type, ';'))
-    {
-      $type = substr($type, 0, $pos);
-    }
-
-    return $type;
-  }
-
-  /**
-   * Guess the file mime type with mime_content_type function (deprecated)
-   *
-   * @param  string $file  The absolute path of a file
-   *
-   * @return string The mime type of the file (null if not guessable)
-   */
-  protected function guessFromMimeContentType($file)
-  {
-    if (!function_exists('mime_content_type') || !is_readable($file))
-    {
-      return null;
-    }
-
-    return mime_content_type($file);
-  }
-
-  /**
-   * Guess the file mime type with the file binary (only available on *nix)
-   *
-   * @param  string $file  The absolute path of a file
-   *
-   * @return string The mime type of the file (null if not guessable)
-   */
-  protected function guessFromFileBinary($file)
-  {
-    ob_start();
-    //need to use --mime instead of -i. see #6641
-    passthru(sprintf('file -b --mime %s 2>/dev/null', escapeshellarg($file)), $return);
-    if ($return > 0)
-    {
-      ob_end_clean();
-
-      return null;
-    }
-    $type = trim(ob_get_clean());
-
-    if (!preg_match('#^([a-z0-9\-]+/[a-z0-9\-]+)#i', $type, $match))
-    {
-      // it's not a type, but an error message
-      return null;
-    }
-
-    return $match[1];
+    return sfMimeType::getTypeFromFile($file, $fallback, $originalFileName = null);    
   }
 
   protected function getMimeTypesFromCategory($category)

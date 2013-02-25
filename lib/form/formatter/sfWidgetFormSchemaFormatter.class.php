@@ -53,7 +53,7 @@ abstract class sfWidgetFormSchemaFormatter
       '%field%'         => $field,
       '%error%'         => $this->formatErrorsForRow($errors, $widgetAttributes),
       '%help%'          => $this->formatHelp($help),
-      '%field_id%'      => $widgetAttributes['id'],
+      '%field_id%'      => isset($widgetAttributes['id']) ? $widgetAttributes['id'] : '',
       '%hidden_fields%' => null === $hiddenFields ? '%hidden_fields%' : $hiddenFields,
     ));
   }

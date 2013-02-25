@@ -142,7 +142,7 @@ class sfUploadedFile implements ArrayAccess
     chmod($file, $fileMode);
 
     $this->savedName = $file;
-
+    
     return is_null($this->path) ? $file : str_replace($this->path.DIRECTORY_SEPARATOR, '', $file);
   }
 

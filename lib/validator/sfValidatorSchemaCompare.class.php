@@ -21,6 +21,8 @@ class sfValidatorSchemaCompare extends sfValidatorSchema
   const LESS_THAN_EQUAL    = '<=';
   const GREATER_THAN       = '>';
   const GREATER_THAN_EQUAL = '>=';
+  const IDENTICAL          = '===';
+  const NOT_IDENTICAL      = '!==';  
 
   /**
    * Constructor.
@@ -35,6 +37,8 @@ class sfValidatorSchemaCompare extends sfValidatorSchema
    *                          * self::LESS_THAN_EQUAL
    *                          * self::GREATER_THAN
    *                          * self::GREATER_THAN_EQUAL
+   *                          * self::IDENTICAL
+   *                          * self::NOT_IDENTICAL
    *  * right_field:        The right field name
    *  * throw_global_error: Whether to throw a global error (false by default) or an error tied to the left field
    *
@@ -95,6 +99,12 @@ class sfValidatorSchemaCompare extends sfValidatorSchema
       case self::EQUAL:
         $valid = $leftValue == $rightValue;
         break;
+      case self::NOT_IDENTICAL:
+        $valid = $leftValue !== $rightValue;
+        break;
+      case self::IDENTICAL:
+        $valid = $leftValue === $rightValue;
+        break;   
       default:
         throw new InvalidArgumentException(sprintf('The operator "%s" does not exist.', $this->getOption('operator')));
     }

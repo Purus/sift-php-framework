@@ -16,7 +16,7 @@
 class sfValidatorUrl extends sfValidatorRegex
 {
   const REGEX_URL_FORMAT = '/^((%s):\/\/)%s(([a-z0-9-]+\.)+[a-z]{2,6}|\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})(:[0-9]+)?(\/?|\/\S+)$/i';
-  
+
   /**
    * @param array $options   An array of options
    * @param array $messages  An array of error messages
@@ -24,42 +24,43 @@ class sfValidatorUrl extends sfValidatorRegex
    * @see sfValidatorRegex
    */
   protected function configure($options = array(), $messages = array())
-  {     
-    parent::configure($options, $messages);    
+  {
+    parent::configure($options, $messages);
     // does the value need protocol to be present?
-    $this->addOption('strict', false);    
+    $this->addOption('strict', false);
     // check over network?
-    $this->addOption('network_check', false);    
+    $this->addOption('network_check', false);
     // valid protocols
-    $this->addOption('protocols', array('http', 'https', 'ftp', 'ftps'));     
-    $this->setOption('pattern', $this->generateRegex()); 
+    $this->addOption('protocols', array('http', 'https', 'ftp', 'ftps'));
+    $this->setOption('pattern', new sfCallable(array($this, 'generateRegex')));
   }
-  
+
   /**
    * Cleans the value
-   * 
+   *
    * @param string $value
    * @return string
    */
   protected function doClean($value)
   {
     $clean = (string) $value;
- 
+
     if(!$this->getOption('strict'))
     {
-      // If the URL doesn't start with "http", add "http://".
-      if(!preg_match('/https?:\/\/.+/', $clean))
+      // If the URL doesn't start with protocol, assume that the link is a link to
+      // http:// scheme
+      if(!preg_match(sprintf('/(%s):\/\/.+/', join('|', $this->getOption('protocols'))), $clean))
       {
         $clean = 'http://'.$clean;
       }
     }
-    
+
     $clean = parent::doClean($clean);
-    
+
     // we need to check the existance over network
     if($this->getOption('network_check'))
     {
-      $browser = new sfWebBrowser();      
+      $browser = new sfWebBrowser();
       try
       {
         // unsuccessful response
@@ -69,13 +70,13 @@ class sfValidatorUrl extends sfValidatorRegex
         }
       }
       catch(Exception $e)
-      {        
-      }      
+      {
+      }
     }
 
     return $clean;
   }
-  
+
   /**
    * Generates the current validator's regular expression.
    *
@@ -83,10 +84,10 @@ class sfValidatorUrl extends sfValidatorRegex
    */
   public function generateRegex()
   {
-    return sprintf(self::REGEX_URL_FORMAT, 
+    return sprintf(self::REGEX_URL_FORMAT,
             implode('|', $this->getOption('protocols')),
             $this->getOption('strict') ? '' : '?'
       );
   }
-    
+
 }

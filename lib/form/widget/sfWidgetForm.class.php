@@ -41,6 +41,7 @@ abstract class sfWidgetForm extends sfWidget
     $this->addOption('needs_multipart', false);
     $this->addOption('default', null);
     $this->addOption('label', null);
+    $this->addOption('help', null);
 
     parent::__construct($options, $attributes);
   }
@@ -91,6 +92,26 @@ abstract class sfWidgetForm extends sfWidget
   public function getLabel()
   {
     return $this->getOption('label');
+  }
+
+  /**
+   * Sets the help for the widget.
+   *
+   * @param string $value The help
+   */
+  public function setHelp($value)
+  {
+    $this->setOption('help', $value);
+  }
+
+  /**
+   * Returns the help for the widget.
+   *
+   * @return string The help
+   */
+  public function getHelp()
+  {
+    return $this->getOption('help');
   }
 
   /**
@@ -241,7 +262,7 @@ abstract class sfWidgetForm extends sfWidget
     // check to see if we have an array variable for a field name
     if (strstr($name, '['))
     {
-      $name = str_replace(array('[]', '][', '[', ']'), array((null !== $value ? '_'.$value : ''), '_', '_', ''), $name);
+      $name = str_replace(array('[]', '][', '[', ']'), array(((null !== $value) && !is_array($value) ? '_'.$value : ''), '_', '_', ''), $name);
     }
 
     if (false !== strpos($this->getOption('id_format'), '%s'))

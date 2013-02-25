@@ -3,7 +3,7 @@
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 require_once($_test_dir.'/unit/sfCoreMock.class.php');
 
-$t = new lime_test(5);
+$t = new lime_test(6);
 
 try 
 {

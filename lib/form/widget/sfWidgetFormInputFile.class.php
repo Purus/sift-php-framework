@@ -29,6 +29,5 @@ class sfWidgetFormInputFile extends sfWidgetFormInput
 
     $this->setOption('type', 'file');
     $this->setOption('needs_multipart', true);
-  }
-  
+  }   
 }

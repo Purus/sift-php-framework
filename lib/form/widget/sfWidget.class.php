@@ -463,8 +463,8 @@ abstract class sfWidget
    * @return string escaped string
    */
   static public function escapeOnce($value)
-  {
-    return self::fixDoubleEscape(htmlspecialchars((string) $value, ENT_QUOTES, self::getCharset()));
+  {  
+    return self::fixDoubleEscape(htmlspecialchars(!is_array($value) ? (string) $value : null, ENT_QUOTES, self::getCharset()));
   }
 
   /**

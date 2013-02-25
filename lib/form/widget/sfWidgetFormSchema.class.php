@@ -75,7 +75,7 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess
     }
 
     $this->setLabels($labels);
-    $this->helps = $helps;
+    $this->setHelps($helps);
   }
 
   /**
@@ -371,51 +371,83 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess
    */
   public function setHelps(array $helps)
   {
-    foreach ($this->fields as $name => $widget)
+    foreach($helps as $name => $help)
     {
-      if(array_key_exists($name, $helps))
-      {
-        $this->setHelp($name, $helps[$name]);
-      }
+      $this->setHelp($name, $help);
     }
     return $this;
   }
 
   /**
-   * Sets the help texts.
+   * Gets the help texts.
    *
    * @return array An array of help texts
    */
   public function getHelps()
   {
-    return $this->helps;
-  }
-
+    $helps = array();
+    foreach($this->fields as $name => $widget)
+    {
+      if($help = $widget->getHelp())
+      {
+        $helps[$name] = $help;
+      }
+    }
+    return $helps;
+   }
+ 
   /**
    * Sets a help text.
    *
    * @param string $name The field name
-   * @param string $help The help text
+   * @param string $value The help name (required - the default value is here because PHP do not allow signature changes with inheritance) 
    *
+   * @throws InvalidArgumentException when you try to set a help on a none existing widget
    * @return sfWidget The current widget instance
    */
-  public function setHelp($name, $help)
+  public function setHelp($name, $value = null)
   {
-    $this->helps[$name] = $help;
-
+    if(2 == func_num_args())
+    { 
+      if(!isset($this->fields[$name])) 
+      { 
+        throw new InvalidArgumentException(sprintf('Unable to set the help on an unexistant widget ("%s").', $name)); 
+      }
+      
+      var_dump($value);
+      $this->fields[$name]->setHelp($value); 
+    } 
+    else 
+    { 
+      // set the help for this widget schema 
+      parent::setHelp($name); 
+    }     
     return $this;
   }
 
   /**
-   * Gets a text help by field name.
+   * Gets a help text by field name. 
    *
-   * @param string $name The field name
+   * @param string $name The field name (required - the default value is here because PHP do not allow signature changes with inheritance) 
    *
+   * @throws InvalidArgumentException when you try to get a help for a none existing widget
    * @return string The help text or an empty string if it is not defined
    */
-  public function getHelp($name)
+  public function getHelp($name = null)
   {
-    return array_key_exists($name, $this->helps) ? $this->helps[$name] : '';
+    if($name !== null)
+    {
+      if (!isset($this->fields[$name]))
+      {
+        throw new InvalidArgumentException(sprintf('Unable to get the help on an unexistant widget ("%s").', $name));
+      }
+      return $this->fields[$name]->getHelp();
+    }
+    else
+    {
+      // help for this widget schema
+      return parent::getHelp();
+    }
   }
 
   /**

@@ -37,8 +37,8 @@ class sfWidgetFormSelectRadio extends sfWidgetFormChoiceBase
   {
     parent::configure($options, $attributes);
 
-    $this->addOption('class', 'radio_list');
-    $this->addOption('label_separator', '&nbsp;');
+    $this->addOption('class', 'radio-list');
+    $this->addOption('label_separator', ' ');
     $this->addOption('separator', "\n");
     $this->addOption('formatter', array($this, 'formatter'));
     $this->addOption('template', '%group% %options%');
@@ -84,6 +84,10 @@ class sfWidgetFormSelectRadio extends sfWidgetFormChoiceBase
 
   protected function formatChoices($name, $value, $choices, $attributes)
   {
+    // reset attributes, fixes problems with 
+    // attributes like "disabled" to appear in the label tag!
+    $this->attributes = array();
+    
     $inputs = array();
     foreach ($choices as $key => $option)
     {
@@ -99,10 +103,22 @@ class sfWidgetFormSelectRadio extends sfWidgetFormChoiceBase
         $baseAttributes['checked'] = 'checked';
       }
 
+      $labelAttributes = array(
+        'for' => $id
+      );
+      
+      if(sfWidget::isAriaEnabled())
+      {
+        $labelId = sprintf('%s_label', $id);
+        // overwrite attribute!
+        $attributes['aria-labelledby'] = $labelId;        
+        $labelAttributes['id'] = $labelId;
+      }
+      
       $inputs[$id] = array(
         'input' => $this->renderTag('input', array_merge($baseAttributes, $attributes)),
         'checked' => isset($baseAttributes['checked']) ? true : false,
-        'label' => $this->renderContentTag('label', self::escapeOnce($option), array('for' => $id)),
+        'label' => $this->renderContentTag('label', self::escapeOnce($option), $labelAttributes),        
         'option' => $option  
       );
     }
@@ -112,12 +128,28 @@ class sfWidgetFormSelectRadio extends sfWidgetFormChoiceBase
 
   public function formatter($widget, $inputs)
   {
+    $attributes = array();    
+    $listAtttibutes = array();
+    
+    if(sfWidget::isAriaEnabled())      
+    {
+      $attributes['role'] = 'list';
+      $listAtttibutes['role'] = 'listitem';      
+    }      
+
+    if($class = $this->getOption('class'))
+    {
+      $attributes['class'] = $class;
+    }
+    
     $rows = array();
     foreach ($inputs as $input)
     {
-      $rows[] = $this->renderContentTag('li', $input['input'].$this->getOption('label_separator').$input['label']);
+      $rows[] = $this->renderContentTag('li', 
+              $input['input'].$this->getOption('label_separator').$input['label'], $listAtttibutes);
     }
-
-    return !$rows ? '' : $this->renderContentTag('ul', implode($this->getOption('separator'), $rows), array('class' => $this->getOption('class')));
+    
+    return !$rows ? '' : $this->renderContentTag('ul', implode($this->getOption('separator'), $rows), $attributes);
   }
+  
 }
