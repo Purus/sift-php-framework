@@ -91,6 +91,7 @@ class sfWebDebug extends sfConfigurable
       $this->setPanel('database', new sfWebDebugPanelDatabase($this));
     }
 
+    $this->setPanel('less', new sfWebDebugPanelLessCompiler($this));
     $this->setPanel('mailer', new sfWebDebugPanelMailer($this));
     $this->setPanel('user', new sfWebDebugPanelUser($this));
     $this->setPanel('docs', new sfWebDebugPanelDocumentation($this));
