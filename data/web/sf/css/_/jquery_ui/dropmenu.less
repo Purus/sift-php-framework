@@ -1,0 +1,29 @@
+/**
+ * Jquery UI dropdown menu
+ *
+ *
+ */
+
+.ui-dropmenu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: @zindexDropdown;
+  display: none; // none by default, but block on "open" of the menu
+  float: left;
+  min-width: 160px;
+  padding: @baseLineHeight/2;
+  margin: 2px 0 0; // override default ul
+  list-style: none;
+  background-color: @dropdownBackground;
+  border: 1px solid #ccc; // Fallback for IE7-8
+  border: 1px solid @dropdownBorder;
+  *border-right-width: 2px;
+  *border-bottom-width: 2px;
+  .border-radius(@baseBorderRadius);
+  .box-shadow(0 5px 10px rgba(0,0,0,.2));
+}
+
+.ui-dropmenu.ui-state-loading {
+  // loading state!
+}

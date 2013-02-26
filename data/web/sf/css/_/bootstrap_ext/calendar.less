@@ -1,0 +1,28 @@
+table.calendar {
+
+  .last-day-of-week {
+    font-weight: bold;
+  }
+
+  td.today {
+    background: @btnBackground !important;
+    color: @bodyBackground !important;
+  }
+
+  td.today.has-events {
+    background: @btnPrimaryBackground !important;
+    color: @bodyBackground !important;
+  }
+
+  td.has-events {
+    background: lighten(@btnPrimaryBackground, 10%) !important;
+    color: @bodyBackground;
+    a {
+      color: @bodyBackground;
+    }
+  }
+
+  .center {
+    text-align: center;
+  }
+}

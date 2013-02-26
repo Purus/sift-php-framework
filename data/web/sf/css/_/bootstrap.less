@@ -1,0 +1,86 @@
+/**
+ * This file is part of the Sift package.
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+/**
+ * Main bootstrap - loads everything to the stylesheet.
+ *
+ * @package    Sift
+ * @subpackage less
+ */
+
+@import "_mixins";
+@import "_variables";
+@import "_fonts";
+
+// CSS Reset
+@import "_/bootstrap/reset.less";
+
+// Grid system and page structure
+@import "_/bootstrap/scaffolding.less";
+@import "_/bootstrap/grid.less";
+@import "_/bootstrap/layouts.less";
+
+// Base CSS
+@import "_/bootstrap/type.less";
+@import "_/bootstrap/code.less";
+@import "_/bootstrap/forms.less";
+@import "_/bootstrap/tables.less";
+
+// Icons
+@import "_/font_awesome/font-awesome.less";
+
+// Components: common
+@import "_/bootstrap/dropdowns.less";
+@import "_/bootstrap/wells.less";
+@import "_/bootstrap/component-animations.less";
+@import "_/bootstrap/close.less";
+
+// Components: Buttons & Alerts
+@import "_/bootstrap/buttons.less";
+@import "_/bootstrap/button-groups.less";
+@import "_/bootstrap/alerts.less"; // Note: alerts share common CSS with buttons and thus have styles in buttons.less
+
+// Components: Nav
+@import "_/bootstrap/navs.less";
+@import "_/bootstrap/navbar.less";
+@import "_/bootstrap_ext/breadcrumbs.less";
+@import "_/bootstrap/pagination.less";
+@import "_/bootstrap/pager.less";
+
+// Components: Popovers
+@import "_/bootstrap/modals.less";
+@import "_/bootstrap/tooltip.less";
+@import "_/bootstrap/popovers.less";
+
+// Components: Misc
+@import "_/bootstrap/thumbnails.less";
+@import "_/bootstrap/media.less";
+@import "_/bootstrap/labels-badges.less";
+@import "_/bootstrap/progress-bars.less";
+@import "_/bootstrap/accordion.less";
+@import "_/bootstrap/carousel.less";
+@import "_/bootstrap/hero-unit.less";
+
+// Utility classes
+@import "_/bootstrap/utilities.less";
+
+// Extensions
+@import "_/bootstrap_ext/buttons.less";
+@import "_/bootstrap_ext/forms.less";
+@import "_/bootstrap_ext/arrows.less";
+@import "_/bootstrap_ext/utilities.less";
+@import "_/bootstrap_ext/icons.less";
+@import "_/bootstrap_ext/scaffolding.less";
+@import "_/bootstrap_ext/pagination.less";
+@import "_/bootstrap_ext/labels-badges.less";
+@import "_/bootstrap_ext/calendar.less";
+@import "_/bootstrap_ext/colorbox.less";
+@import "_/bootstrap_ext/dropdowns.less";
+@import "_/bootstrap_ext/navs.less";
+
+// Jquery UI
+@import "_/jquery_ui/dropmenu.less";

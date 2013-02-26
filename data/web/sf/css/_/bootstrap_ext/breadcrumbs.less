@@ -1,0 +1,31 @@
+//
+// Breadcrumbs
+// --------------------------------------------------
+
+.breadcrumb {
+  padding: 8px 15px;
+  margin: 0 0 @baseLineHeight;
+  list-style: none;
+  background-color: @breadcrumbBackgroundColor;
+  color: @breadcrumbColor;
+  .border-radius(@baseBorderRadius);
+  li {
+    display: inline-block;
+    .ie7-inline-block();
+  }
+  a {
+    color: @breadcrumbColor;
+    text-decoration: underline;
+  }
+  a:hover {
+    text-decoration: none;
+    color: @breadcrumbColor;
+  }
+  .divider {
+    padding: 0 5px;
+    color: darken(@breadcrumbColor, 20%);
+  }
+  .active {
+    color: darken(@breadcrumbColor, 15%);
+  }
+}

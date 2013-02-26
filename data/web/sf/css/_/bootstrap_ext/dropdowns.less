@@ -1,0 +1,31 @@
+
+.dropdown-menu {
+  color: @dropdownLinkColor !important;
+
+  a {
+    text-decoration: none;
+  }
+
+  a:hover {
+    background: none;
+    color: @dropdownLinkColor !important;
+    text-decoration: none;
+  }
+
+  li > a:hover, .dropdown-menu li > a:focus, .dropdown-submenu:hover > a {
+    color: @dropdownLinkColorHover !important;
+    background: none;
+  }
+
+  // link_to_unless, link_to_if fixes
+  li > span {
+    display: block;
+    padding: 3px 20px;
+    clear: both;
+    font-weight: normal;
+    line-height: @baseLineHeight;
+    color: lighten(@dropdownLinkColor, 20%);
+    white-space: nowrap;
+  }
+
+}

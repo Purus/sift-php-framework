@@ -1,0 +1,23 @@
+// Various utilities
+
+p.no-result {
+  font-size: @fontSizeLarge;
+  margin: @baseLineHeight 0;
+}
+
+.text-right {
+  text-align: right;
+}
+
+// always show vertical scrollbar
+html {
+  overflow-y: scroll;
+}
+
+// BC compatibility
+.clear {
+  .clearfix();
+}
+
+// for printing
+.page-break  { display: none; }
