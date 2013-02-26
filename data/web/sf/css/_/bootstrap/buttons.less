@@ -93,6 +93,10 @@
 .btn-small [class*=" icon-"] {
   margin-top: 0;
 }
+.btn-mini [class^="icon-"],
+.btn-mini [class*=" icon-"] {
+  margin-top: -1px;
+}
 
 // Mini
 .btn-mini {
@@ -222,12 +226,14 @@ input[type="submit"].btn {
   color: @linkColor;
   .border-radius(0);
 }
-.btn-link:hover {
+.btn-link:hover,
+.btn-link:focus {
   color: @linkColorHover;
   text-decoration: underline;
   background-color: transparent;
 }
-.btn-link[disabled]:hover {
+.btn-link[disabled]:hover,
+.btn-link[disabled]:focus {
   color: @grayDark;
   text-decoration: none;
 }
