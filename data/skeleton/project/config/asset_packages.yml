@@ -7,17 +7,15 @@
 # %SF_CULTURE{0,2}% : substring of current user culture (only to first characters)
 # %SF_JAVASCRIPT_PATH% : web path to javascript directory (default to /js)
 
-all:
-
-  # if enabled only configured packages gets included
-  strict_mode: true  
-  
-#  packages:    
+#all:
 #
-#    mypackage_name:      
+#  packages:
+#
+#    mypackage_name:
 #      javascripts:
 #        - script.js
 #      stylesheets:
-#        - stylesheet.less
+#        - stylesheet.less: { ie_condition: lte IE10 }
 #        - another_style.css
-        
+#      require:
+#        - jquery

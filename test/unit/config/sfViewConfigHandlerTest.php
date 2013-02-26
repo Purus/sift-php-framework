@@ -1,8 +1,15 @@
 <?php
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
+require_once(dirname(__FILE__).'/../sfCoreMock.class.php');
+require_once(dirname(__FILE__).'/../sfContextMock.class.php');
 
-$t = new lime_test(24, new lime_output_color());
+$t = new lime_test(27, new lime_output_color());
+
+function fix_content($content)
+{
+  return str_replace(array("\r\n", "\n", "\r"), "\n", $content);
+}
 
 class myViewConfigHandler extends sfViewConfigHandler
 {
@@ -15,12 +22,12 @@ class myViewConfigHandler extends sfViewConfigHandler
   {
     return parent::addHtmlAsset($viewName);
   }
-  
+
   public function addComponentSlots($viewName = '')
   {
     return parent::addComponentSlots($viewName);
   }
-  
+
 }
 
 $handler = new myViewConfigHandler();
@@ -348,6 +355,63 @@ $content = <<<EOF
 EOF;
 $t->is(fix_content($handler->addHtmlAsset('myView')), fix_content($content), 'addHtmlAsset() supports the -* option to remove all assets previously added');
 
+// support for asset packages
+
+$packages = sfYaml::load(dirname(__FILE__) . '/fixtures/sfViewConfigHandler/asset_packages.yml');
+sfAssetPackage::setConfig($packages['all']);
+
+$handler->mergeConfig(array(
+  'myView' => array(
+    'asset_packages' => array('core')
+  ),
+));
+$content = <<<EOF
+  \$response->addStylesheet('core', '', array ());
+  \$response->addJavascript('core', '', array ());
+
+EOF;
+$t->is(fix_content($handler->addHtmlAsset('myView')), fix_content($content), 'addHtmlAsset() supports asset packages');
+
+$handler->mergeConfig(array(
+  'myView' => array(
+    'asset_packages' => array('ui')
+  ),
+));
+$content = <<<EOF
+  \$response->addStylesheet('core', '', array ());
+  \$response->addJavascript('core', '', array ());
+  \$response->addJavascript('jqueryui.min.js', '', array ());
+  \$response->addJavascript('ie_hacks', '', array (  'ie_condition' => 'IE lte 9',));
+
+EOF;
+$t->is(fix_content($handler->addHtmlAsset('myView')), fix_content($content), 'addHtmlAsset() supports asset packages');
+
+// filter the asset config, return another config programatically
+function filterAssetPackages(sfEvent $event, $config)
+{
+  $config = sfYaml::load(dirname(__FILE__).'/fixtures/sfViewConfigHandler/asset_packages.yml');
+  return $config['modified'];
+}
+
+sfAssetPackage::setConfig($packages['all']);
+// filter by event system
+sfCore::getEventDispatcher()->connect('asset_packages.get_config', 'filterAssetPackages');
+
+$handler->mergeConfig(array(
+  'myView' => array(
+    'asset_packages' => array('ui')
+  ),
+));
+$content = <<<EOF
+  \$response->addStylesheet('modified_core', '', array ());
+  \$response->addJavascript('modified_core', '', array ());
+  \$response->addJavascript('modified_jqueryui.min.js', '', array ());
+  \$response->addJavascript('modified_ie_hacks', '', array (  'ie_condition' => 'IE lt 10',));
+
+EOF;
+
+$t->is(fix_content($handler->addHtmlAsset('myView')), fix_content($content), 'addHtmlAsset() supports filtering of asset packages by event system');
+
 $handler->mergeConfig(array(
   'myView' => array(
     'components' => array('sidebar' => array()),
@@ -373,8 +437,3 @@ $content = <<<EOF
 EOF;
 
 $t->is(fix_content($handler->addComponentSlots('myView')), fix_content($content), 'addComponentSlots() sets component.');
-
-function fix_content($content)
-{
-  return str_replace(array("\r\n", "\n", "\r"), "\n", $content);
-}

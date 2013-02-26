@@ -1,0 +1,27 @@
+all:
+  packages:
+    core:
+      javascripts:
+        - core
+      stylesheets:
+        - core
+    ui:
+      javascripts:
+        - jqueryui.min.js
+        - ie_hacks: { ie_condition: IE lte 9  }
+      require:
+        - core
+
+modified:
+  packages:
+    core:
+      javascripts:
+        - modified_core
+      stylesheets:
+        - modified_core
+    ui:
+      javascripts:
+        - modified_jqueryui.min.js
+        - modified_ie_hacks: { ie_condition: IE lt 10 }
+      require:
+        - core

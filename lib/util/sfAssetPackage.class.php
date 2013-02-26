@@ -55,6 +55,8 @@ class sfAssetPackage {
   public static function setConfig(array $config)
   {
     self::$config = $config;
+    // reset filter flag
+    self::$filtered = false;
   }
 
   /**
