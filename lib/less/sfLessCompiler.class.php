@@ -207,8 +207,7 @@ class sfLessCompiler extends lessc {
     }
     catch(Exception $e)
     {
-      // repack the exception
-      throw new sfLessCompilerException($e->getMessage(), $e->getCode());
+      throw sfLessCompilerException::createFromException($e);
     }
 
     return sprintf('%s/cache/css/%s', $this->getRelativeUrlRoot(), $cache);
@@ -305,8 +304,20 @@ class sfLessCompiler extends lessc {
     return $out;
   }
 
+  /**
+   * Find the real file for import of $url
+   *
+   * @param string $url
+   * @return null|string
+   */
   protected function findImport($url)
   {
+    // this is an url
+    if(strpos($url, '//') !== false)
+    {
+      return null;
+    }
+
     $url = preg_replace('/.less$/i', '', $url);
     $url = sprintf(sprintf('%s.less', $url));
 
