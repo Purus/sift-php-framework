@@ -15,6 +15,52 @@
 class sfLoader {
 
   /**
+   * Array of application wide configuration files which can
+   * be overridden with a dimension
+   *
+   * @var array
+   */
+  protected static $applicationConfigurationFiles = array(
+    'app.yml', 'factories.yml',
+    'filters.yml', 'i18n.yml',
+    'logging.yml', 'settings.yml',
+    'databases.yml', 'routing.yml',
+    'asset_packages',
+  );
+
+  /**
+   * Array of module wide configuration files which can
+   * be overridden with a dimension
+   *
+   * @var array
+   */
+  protected static $moduleConfigurationFiles = array(
+    'cache.yml', 'module.yml', 'security.yml', 'view.yml'
+  );
+
+  /**
+   * Array of all confuration files (app wide + module wide) which can
+   * be overridden with a dimension
+   *
+   * @var array
+   */
+  protected static $allConfigurationFiles = array(
+    'app.yml', 'factories.yml',
+    'filters.yml', 'i18n.yml',
+    'logging.yml', 'settings.yml',
+    'databases.yml', 'routing.yml',
+    'asset_packages',
+    'cache.yml', 'module.yml', 'security.yml', 'view.yml'
+  );
+
+  /**
+   * Loaded helpers cache
+   *
+   * @var array
+   */
+  static $loadedHelpers = array();
+
+  /**
    * Gets directories where lib files are stored for a given module.
    *
    * @param string $moduleName The module name
@@ -22,14 +68,28 @@ class sfLoader {
    */
   public static function getLibDirs($moduleName)
   {
+    $libDirName = sfConfig::get('sf_app_module_lib_dir_name');
+    $moduleDirName = sfConfig::get('sf_app_module_dir_name');
+
     $dirs = array();
-    
+
     // application
-    $dirs[] = sfConfig::get('sf_app_module_dir') . DS . $moduleName . DS . 'lib';
-    $dirs = array_merge($dirs, glob(sfConfig::get('sf_plugins_dir') . DS . '*' . DS . 'modules' . DS . $moduleName . DS . 'lib'));
+    $dirs[] = sfConfig::get('sf_app_module_dir') . DS . $moduleName . DS . $libDirName;
+
+    // plugins
+    foreach(sfConfig::get('sf_plugins', array()) as $plugin)
+    {
+      if(is_dir($dir = sfConfig::get('sf_plugins_dir') . DS . $plugin . DS .
+                $moduleDirName . DS . $moduleName . DS . $libDirName))
+      {
+        $dirs[] = $dir;
+      }
+    }
+
+    $dirs = array_merge($dirs, self::getCustomDirectories($moduleName . DS . $libDirName));
+
     // generated templates in cache
-    $dirs[] = sfConfig::get('sf_module_cache_dir') . DS . 'auto' . ucfirst($moduleName) . DS . 'lib';   
-    
+    $dirs[] = sfConfig::get('sf_module_cache_dir') . DS . 'auto' . ucfirst($moduleName) . DS . $libDirName;
     return $dirs;
   }
 
@@ -41,12 +101,10 @@ class sfLoader {
   public static function getModelDirs()
   {
     // project
-    $dirs = array(sfConfig::get('sf_lib_dir') . DS . 'model' ? sfConfig::get('sf_lib_dir') . DS . 'model' : 'lib' . DS . 'model');
-    if($pluginDirs = glob(sfConfig::get('sf_plugins_dir') . DS . '*' . DS . 'lib' . DS . 'model'))
-    {
-      // plugins
-      $dirs = array_merge($dirs, $pluginDirs);
-    }
+    $dirs = array(sfConfig::get('sf_model_lib_dir'));
+    // plugins
+    $dirs = array_merge($dirs, self::getPluginDirectories(
+            sfConfig::get('sf_app_lib_dir_name') . DS . sfConfig::get('sf_model_dir_name'), false));
     return $dirs;
   }
 
@@ -61,36 +119,34 @@ class sfLoader {
   {
     $suffix = $moduleName . DS . sfConfig::get('sf_app_module_action_dir_name');
 
-    $sf_app_module_dir = sfConfig::get('sf_app_module_dir');
-
     $dirs = array();
-    
-    // Add paths for each dimension to search for new controller     
-    $sf_dimension_dirs = sfConfig::get('sf_dimension_dirs');
-    if(is_array($sf_dimension_dirs))
+
+    // load application directories
+    foreach(self::getApplicationDirectories($suffix) as $dir)
     {
-      foreach($sf_dimension_dirs as $dimension)
-      {
-        $dirs[$sf_app_module_dir . DS . $suffix . DS . $dimension] = true;
-      }
+      // modules in the app are automatically enabled
+      $dirs[$dir] = false;
     }
 
-    foreach(sfConfig::get('sf_module_dirs', array()) as $key => $value)
+    // load custom directories
+    foreach(self::getCustomDirectories($suffix) as $dir)
     {
-      $dirs[$key . DS . $suffix] = $value;
+      // enableCheck is true
+      $dirs[$dir] = true;
     }
 
-    // application
-    $dirs[$sf_app_module_dir . DS . $suffix] = false; 
-
-    if($pluginDirs = glob(sfConfig::get('sf_plugins_dir') . DS . '*' . DS . 'modules' . DS . $suffix))
+    // plugin directories
+    foreach(self::getPluginDirectories(sfConfig::get('sf_app_module_dir_name') . DS . $suffix) as $dir)
     {
-      // plugins
-      $dirs = array_merge($dirs, array_combine($pluginDirs, array_fill(0, count($pluginDirs), true)));
+      // enableCheck is true
+      $dirs[$dir] = true;
     }
 
-    // core modules
-    $dirs[sfConfig::get('sf_sift_data_dir') . DS . 'modules' . DS . $suffix] = true;                            
+    foreach(self::getCoreDirectories(sfConfig::get('sf_app_module_dir_name') . DS . $suffix) as $dir)
+    {
+      // enable check si true
+      $dirs[$dir] = true;
+    }
 
     return $dirs;
   }
@@ -105,44 +161,16 @@ class sfLoader {
   public static function getTemplateDirs($moduleName)
   {
     $suffix = $moduleName . DS . sfConfig::get('sf_app_module_template_dir_name');
-
-    $sf_app_module_dir = sfConfig::get('sf_app_module_dir');
-    $sf_dimension_dirs = sfConfig::get('sf_dimension_dirs');
-
-    $dirs = array();
-    // add paths for each dimension to search for new templates
-    foreach(sfConfig::get('sf_module_dirs', array()) as $key => $value)
-    {
-      if(is_array($sf_dimension_dirs))
-      {
-        foreach($sf_dimension_dirs as $dimension)
-        {
-          $dirs[] = $key . DS . $suffix . DS . $dimension;
-        }
-      }
-      $dirs[] = $key . DS . $suffix;
-    }
-
-    if(is_array($sf_dimension_dirs))
-    {
-      foreach($sf_dimension_dirs as $dimension)
-      {
-        $dirs[] = $sf_app_module_dir . DS . $suffix . DS . $dimension;
-      }
-    }
-
     // application
-    $dirs[] = $sf_app_module_dir . DS . $suffix;
-    if($pluginDirs = glob(sfConfig::get('sf_plugins_dir') . DS . '*' . DS . 'modules' . DS . $suffix))
-    {
-      // plugins
-      $dirs = array_merge($dirs, $pluginDirs);                                       
-    }
-
-    // core modules
-    $dirs[] = sfConfig::get('sf_sift_data_dir') . DS . 'modules' . DS . $suffix;           
+    $dirs = array_merge(array(), self::getApplicationDirectories($suffix));
+    // custom modules
+    $dirs = array_merge($dirs, self::getCustomDirectories($suffix));
+    // plugins
+    $dirs = array_merge($dirs, self::getPluginDirectories(sfConfig::get('sf_app_module_dir_name') . DS . $suffix));
+    // core
+    $dirs = array_merge($dirs, self::getCoreDirectories(sfConfig::get('sf_app_module_dir_name') . DS . $suffix));
     // generated templates in cache
-    $dirs[] = sfConfig::get('sf_module_cache_dir') . DS . 'auto' . ucfirst($suffix);         
+    $dirs[] = sfConfig::get('sf_module_cache_dir') . DS . 'auto' . ucfirst($suffix);
     return $dirs;
   }
 
@@ -193,25 +221,25 @@ class sfLoader {
     $suffix = $moduleName . DS . sfConfig::get('sf_app_module_i18n_dir_name');
 
     // application
-    $dir = sfConfig::get('sf_app_module_dir') . DS . $suffix;
-    if(is_dir($dir))
+    if(is_dir($dir = sfConfig::get('sf_app_module_dir') . DS . $suffix))
     {
       return $dir;
     }
-    
-    // plugins
-    $dirs = glob(sfConfig::get('sf_plugins_dir') . DS . '*' . DS . 'modules' . DS . $suffix);
-    if(isset($dirs[0]))
+
+    $moduleDirName = sfConfig::get('sf_app_module_dir_name');
+
+    foreach(sfConfig::get('sf_plugins', array()) as $plugin)
     {
-      return $dirs[0];
+      if(is_dir($dir = sfConfig::get('sf_plugins_dir') . DS . $plugin . DS . $moduleDirName . DS . $suffix))
+      {
+        return $dir;
+      }
     }
-    
-    $dirs = glob(sfConfig::get('sf_sift_data_dir') . DS . 'modules' . DS . $suffix);
-    
-    if(isset($dirs[0]))
+
+    if(is_dir($dir = sfConfig::get('sf_sift_data_dir') . DS . $moduleDirName . DS . $suffix))
     {
-      return $dirs[0];
-    }    
+      return $dir;
+    }
   }
 
   /**
@@ -227,14 +255,23 @@ class sfLoader {
     // project
     $dirs = array(sfConfig::get('sf_data_dir') . DS . 'generator' . DS . $class . DS . $theme . DS . 'template');
 
-    if($pluginDirs = glob(sfConfig::get('sf_plugins_dir') . DS . '*' . DS . 'data' . DS . 'generator' . DS . $class . DS . $theme . DS . 'template'))
+    // plugins
+    foreach(sfConfig::get('sf_plugins', array()) as $plugin)
     {
-      // plugin
-      $dirs = array_merge($dirs, $pluginDirs);
+      if(is_dir($pluginDir = (sfConfig::get('sf_plugins_dir') . DS . $plugin . DS . 'data' .
+                      DS . 'generator' . DS . $class . DS . $theme . DS . 'template')))
+      {
+        // plugin
+        $dirs[] = $pluginDir;
+      }
     }
 
-    // default theme
-    $dirs[] = sfConfig::get('sf_sift_data_dir') . DS . 'generator' . DS . $class . DS . 'default' . DS . 'template';
+    // core
+    if(is_dir($dir = sfConfig::get('sf_sift_data_dir') . DS . 'generator' . DS . $class . DS .
+                    $theme . DS . 'template'))
+    {
+      $dirs[] = $dir;
+    }
 
     return $dirs;
   }
@@ -252,14 +289,21 @@ class sfLoader {
     // project
     $dirs = array(sfConfig::get('sf_data_dir') . DS . 'generator' . DS . $class . DS . $theme . DS . 'skeleton');
 
-    if($pluginDirs = glob(sfConfig::get('sf_plugins_dir') . DS . '*' . DS . 'data' . DS . 'generator' . DS . $class . DS . $theme . DS . 'skeleton'))
+    // plugins
+    foreach(sfConfig::get('sf_plugins', array()) as $plugin)
     {
-      // plugin
-      $dirs = array_merge($dirs, $pluginDirs);
+      if(is_dir($pluginDir = (sfConfig::get('sf_plugins_dir') . DS . $plugin .
+                DS . 'data' . DS . 'generator' . DS . $class . DS . $theme . DS . 'skeleton')))
+      {
+        $dirs[] = $pluginDir;
+      }
     }
 
-    // default theme
-    $dirs[] = sfConfig::get('sf_sift_data_dir') . DS . 'generator' . DS . $class . DS . 'default' . DS . 'skeleton';
+    if(is_dir($dir = sfConfig::get('sf_sift_data_dir') . DS . 'generator' . DS . $class . DS . $theme . DS . 'skeleton'))
+    {
+      $dirs[] = $dir;
+    }
+
     return $dirs;
   }
 
@@ -284,7 +328,6 @@ class sfLoader {
         return $dir . DS . $path;
       }
     }
-
     throw new sfException(sprintf('Unable to load "%s" generator template in: %s', $path, implode(', ', $dirs)));
   }
 
@@ -292,91 +335,88 @@ class sfLoader {
    * Gets the configuration file paths for a given relative configuration path.
    *
    * @param string The configuration path
-   *
    * @return array An array of paths
    */
   public static function getConfigPaths($configPath)
   {
     // fix for windows paths
-    $configPath = str_replace('/', DIRECTORY_SEPARATOR, $configPath);
+    $configPath = str_replace('/', DS, $configPath);
 
-    $sf_sift_data_dir = sfConfig::get('sf_sift_data_dir');
-    $sf_root_dir = sfConfig::get('sf_root_dir');
-    $sf_app_dir = sfConfig::get('sf_app_dir');
-    $sf_plugins_dir = sfConfig::get('sf_plugins_dir');
+    $rootDir = sfConfig::get('sf_root_dir');
+    $appDir = sfConfig::get('sf_app_dir');
+    $pluginsDir = sfConfig::get('sf_plugins_dir');
 
-    $configName       = basename($configPath);
-    $globalConfigPath = basename(dirname($configPath)).DIRECTORY_SEPARATOR.$configName;
+    $configName = basename($configPath);
+    $globalConfigPath = basename(dirname($configPath)).DS.$configName;
 
+    // sift core
     $files = array(
-      $sf_sift_data_dir.DIRECTORY_SEPARATOR.$globalConfigPath,                    // sift
-      $sf_sift_data_dir.DIRECTORY_SEPARATOR.$configPath,                          // core modules
+      // sift
+      sfConfig::get('sf_sift_data_dir').DS.$globalConfigPath,
+      // sift core modules
+      sfConfig::get('sf_sift_data_dir').DS.$configPath,
     );
 
-    if($pluginDirs = glob($sf_plugins_dir.DIRECTORY_SEPARATOR.'*'.DIRECTORY_SEPARATOR.$globalConfigPath))
+    // plugins
+    foreach(sfConfig::get('sf_plugins', array()) as $plugin)
     {
-      $files = array_merge($files, $pluginDirs);                                     // plugins
+      // global
+      $files[] = $pluginsDir.DS.$plugin.DS.$globalConfigPath;
+      $files[] = $pluginsDir.DS.$plugin.DS.$configPath;
     }
 
-    $files = array_merge($files, array(
-      $sf_root_dir.DIRECTORY_SEPARATOR.$globalConfigPath,                            // project
-      $sf_root_dir.DIRECTORY_SEPARATOR.$configPath,                                  // project
-      $sf_app_dir.DIRECTORY_SEPARATOR.$globalConfigPath,                             // application
-      // disable generated module
-      // sfConfig::get('sf_cache_dir').DIRECTORY_SEPARATOR.$configPath,                                 // generated modules
-    ));
+    // project
+    $files[] = $rootDir.DS.$globalConfigPath;
+    $files[] = $rootDir.DS.$configPath;
 
-    if($pluginDirs = glob($sf_plugins_dir.DIRECTORY_SEPARATOR.'*'.DIRECTORY_SEPARATOR.$configPath))
+    // application
+    $files[] = $appDir.DS.$globalConfigPath;
+
+    // generated modules
+    $files[] = sfConfig::get('sf_cache_dir').DS.$configPath;
+
+    // module
+    $files[] = $appDir.DS.$configPath;
+
+    // If the configuration file can be overridden with a dimension, inject the appropriate path
+    if((in_array($configName, self::$allConfigurationFiles) || (strpos($configPath, 'validate'))))
     {
-      $files = array_merge($files, $pluginDirs);                                     // plugins
-    }
-
-    $files[] = $sf_app_dir.DIRECTORY_SEPARATOR.$configPath;                          // module
-
-    /**
-     * If the configuration file can be overridden with a dimension, inject the appropriate path
-     */
-    $applicationConfigurationFiles = array('app.yml', 'factories.yml', 'filters.yml', 'i18n.yml', 'logging.yml', 'settings.yml', 'databases.yml', 'routing.yml');
-    $moduleConfigurationFiles = array('cache.yml', 'module.yml', 'security.yml', 'view.yml');
-
-    $configurationFiles = array_merge($applicationConfigurationFiles, $moduleConfigurationFiles);
-
-    if((in_array($configName, $configurationFiles) || (strpos($configPath, 'validate'))))
-    {
-      $sf_dimension_dirs = sfConfig::get('sf_dimension_dirs');
-
-      if(is_array($sf_dimension_dirs) && !empty($sf_dimension_dirs))
+      $dimensionDirs = sfConfig::get('sf_dimension_dirs');
+      if(is_array($dimensionDirs) && !empty($dimensionDirs))
       {
-        $sf_dimension_dirs = array_reverse($sf_dimension_dirs);     // reverse dimensions for proper cascading
+        // reverse dimensions for proper cascading
+        $dimensionDirs = array_reverse($dimensionDirs);
 
-        $applicationDimensionDirectory = $sf_app_dir.DIRECTORY_SEPARATOR.dirname($globalConfigPath).DIRECTORY_SEPARATOR.'%s'.DIRECTORY_SEPARATOR.$configName;
-        $moduleDimensionDirectory = $sf_app_dir.DIRECTORY_SEPARATOR.dirname($configPath).DIRECTORY_SEPARATOR.'%s'.DIRECTORY_SEPARATOR.$configName;
+        $applicationDimensionDirectory = $appDir . DS . dirname($globalConfigPath) . DS . '%s' . DS . $configName;
+        $moduleDimensionDirectory = $appDir . DS . dirname($configPath) . DS . '%s' . DS . $configName;
 
-        foreach($sf_dimension_dirs as $dimension)
+        foreach($dimensionDirs as $dimension)
         {
-          if(in_array($configName, $configurationFiles))							// application
+          // application
+          if(in_array($configName, self::$allConfigurationFiles))
           {
-            foreach ($sf_dimension_dirs as $dimension)
-            {             
+            foreach($dimensionDirs as $dimension)
+            {
               $files[] = sprintf($applicationDimensionDirectory, $dimension);
             }
           }
 
-          if(in_array($configName, $moduleConfigurationFiles) || strpos($configPath, 'validate'))	     // module
+          // module
+          if(in_array($configName, self::$moduleConfigurationFiles) || strpos($configPath, 'validate'))
           {
-            foreach($sf_dimension_dirs as $dimension)
+            foreach($dimensionDirs as $dimension)
             {
               $files[] = sprintf($moduleDimensionDirectory, $dimension);
             }
           }
         }
-
       }
     }
 
     $configs = array();
     foreach(array_unique($files) as $file)
     {
+      // check existance
       if(is_readable($file))
       {
         $configs[] = $file;
@@ -399,30 +439,46 @@ class sfLoader {
 
     if($moduleName)
     {
-      // module
-      $dirs[] = sfConfig::get('sf_app_module_dir') . DS . $moduleName . DS . sfConfig::get('sf_app_module_lib_dir_name') . DS . 'helper';
-
-      if($pluginDirs = glob(sfConfig::get('sf_plugins_dir') . DS . '*' . DS . 'modules' . DS . $moduleName . DS . 'lib' . DS . 'helper'))
+      if(is_dir($dir = sfConfig::get('sf_app_module_dir') . DS . $moduleName . DS .
+              sfConfig::get('sf_app_module_lib_dir_name') . DS . 'helper'))
       {
-        // module plugins
-        $dirs = array_merge($dirs, $pluginDirs);
+        $dirs[] = $dir;
+      }
+
+      // plugins
+      foreach(sfConfig::get('sf_plugins', array()) as $plugin)
+      {
+        if(is_dir($dir = (sfConfig::get('sf_plugins_dir') . DS . $plugin . DS . 'modules' . DS .
+                $moduleName . DS . 'lib' . DS . 'helper')))
+        {
+          $dirs[] = $dir;
+        }
       }
     }
 
     // application
-    $dirs[] = sfConfig::get('sf_app_lib_dir') . DS . 'helper';
-    // project
-    $dirs[] = sfConfig::get('sf_lib_dir') . DS . 'helper';
-
-    if($pluginDirs = glob(sfConfig::get('sf_plugins_dir') . DS . '*' . DS . 'lib' . DS . 'helper'))
+    if(is_dir($dir = sfConfig::get('sf_app_lib_dir') . DS . 'helper'))
     {
-       // plugins
-      $dirs = array_merge($dirs, $pluginDirs);
+      $dirs[] = $dir;
     }
 
-    // global
-    $dirs[] = sfConfig::get('sf_sift_lib_dir') . DS . 'helper';
+    // project
+    if(is_dir($dir = sfConfig::get('sf_lib_dir') . DS . 'helper'))
+    {
+      $dirs[] = $dir;
+    }
 
+    // plugins
+    foreach(sfConfig::get('sf_plugins', array()) as $plugin)
+    {
+      if(is_dir($dir = sfConfig::get('sf_plugins_dir') . DS . $plugin . DS . 'lib' . DS . 'helper'))
+      {
+        $dirs[] = $dir;
+      }
+    }
+
+    // core
+    $dirs[] = sfConfig::get('sf_sift_lib_dir') . DS . 'helper';
     return $dirs;
   }
 
@@ -436,12 +492,11 @@ class sfLoader {
    */
   public static function loadHelpers($helpers, $moduleName = '')
   {
-    static $loaded = array();
-
     $dirs = self::getHelperDirs($moduleName);
+
     foreach((array) $helpers as $helperName)
     {
-      if(isset($loaded[$helperName]))
+      if(isset(self::$loadedHelpers[$helperName]))
       {
         continue;
       }
@@ -461,22 +516,158 @@ class sfLoader {
       if(!$included)
       {
         // search in the include path
-        if((@include('helper' . DS . $fileName)) != 1)
+        if((@include('helper' . DS . $fileName)) === false)
         {
           $dirs = array_merge($dirs, explode(PATH_SEPARATOR, get_include_path()));
-
           // remove sf_root_dir from dirs
           foreach($dirs as &$dir)
           {
             $dir = str_replace('%SF_ROOT_DIR%', sfConfig::get('sf_root_dir'), $dir);
           }
-
           throw new sfViewException(sprintf('Unable to load "%sHelper.php" helper in: %s', $helperName, implode(', ', $dirs)));
         }
       }
 
-      $loaded[$helperName] = true;
+      // mark as loaded
+      self::$loadedHelpers[$helperName] = true;
     }
+  }
+
+  /**
+   * Returns application directories for given path suffix
+   *
+   * @param string $suffix Path suffix to look for
+   * @param boolean $dimensions Look for dimensions directories?
+   * @return array
+   */
+  protected static function getApplicationDirectories($suffix, $dimensions = true)
+  {
+    $appModuleDir = sfConfig::get('sf_app_module_dir');
+    $dimensionDirs = sfConfig::get('sf_dimension_dirs', array());
+    $dirs = array();
+    if($dimensions && is_array($dimensionDirs))
+    {
+      foreach($dimensionDirs as $dimension)
+      {
+        if(is_dir($dir = $appModuleDir . DS . $suffix . DS . $dimension))
+        {
+          $dirs[] = $dir;
+        }
+      }
+    }
+    // application
+    $dirs[] = $appModuleDir . DS . $suffix;
+    return $dirs;
+  }
+
+  /**
+   * Returns plugin directories for given path suffix
+   *
+   * @param string $suffix Path suffix to look for
+   * @param boolean $dimensions Look for dimensions directories?
+   * @return array
+   */
+  protected static function getPluginDirectories($suffix, $dimensions = true)
+  {
+    $dimensionDirs = sfConfig::get('sf_dimension_dirs');
+    $pluginsDir = sfConfig::get('sf_plugins_dir');
+    $dirs = array();
+    foreach(sfConfig::get('sf_plugins', array()) as $plugin)
+    {
+      if($dimensions && is_array($dimensionDirs))
+      {
+        foreach($dimensionDirs as $dimension)
+        {
+          if(is_dir($dir = $pluginsDir . DS . $plugin . DS . $suffix . DS . $dimension))
+          {
+            // enable checks if true for plugin
+            $dirs[] = $dir;
+          }
+        }
+      }
+      if(is_dir($dir = (sfConfig::get('sf_plugins_dir') . DS . $plugin . DS . $suffix)))
+      {
+        $dirs[] = $dir;
+      }
+    }
+    return $dirs;
+  }
+
+  /**
+   * Returns custom directories for $suffix. Takes "sf_module_dirs" setting and looks
+   * for the directories. Also handles dimension directories setting "sf_dimension_dirs"
+   *
+   * @param string $suffix Path suffix to look for
+   * @param boolean $dimensions Look for dimensions directories?
+   * @return array
+   */
+  protected static function getCustomDirectories($suffix, $dimensions = true)
+  {
+    $dimensionDirs = sfConfig::get('sf_dimension_dirs');
+    $dirs = array();
+
+    // check sf_module_dirs
+    foreach(sfConfig::get('sf_module_dirs', array()) as $key => $value)
+    {
+      if(is_numeric($key))
+      {
+        $key = $value;
+      }
+
+      // add paths for each dimension to search for new controller
+      if($dimensions && is_array($dimensionDirs))
+      {
+        foreach($dimensionDirs as $dimension)
+        {
+          if(is_dir($dir = $key . DS . $suffix . DS . $dimension))
+          {
+            $dirs[] = $dir;
+          }
+        }
+      }
+
+      if(is_dir($dir = $key . DS . $suffix))
+      {
+        $dirs[] = $dir;
+      }
+    }
+
+    return $dirs;
+  }
+
+  /**
+   * Returns Sift core directories for given path suffix
+   *
+   * @param string $suffix Path suffix to look for
+   * @param boolean $dimensions Look for dimensions directories?
+   * @return array
+   */
+  protected static function getCoreDirectories($suffix, $dimensions = true)
+  {
+    $dimensionDirs = sfConfig::get('sf_dimension_dirs', array());
+    $dataDir = sfConfig::get('sf_sift_data_dir');
+
+    $dirs = array();
+
+    if($dimensions && is_array($dimensionDirs))
+    {
+      foreach($dimensionDirs as $dimension)
+      {
+        if(is_dir($dir = $dataDir . DS . $suffix . DS . $dimension))
+        {
+          $dirs[] = $dir;
+        }
+      }
+    }
+
+    // core modules
+    if(is_dir($dir = $dataDir . DS .
+                    sfConfig::get('sf_app_module_dir_name') . DS . $suffix))
+    {
+      $dirs[] = $dir;
+    }
+
+    return $dirs;
   }
 
 }
