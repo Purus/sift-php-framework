@@ -7,7 +7,6 @@
  */
 
 /**
- *
  * Allow to build rules to find files and directories.
  *
  * All rules may be invoked several times, except for ->in() method.
@@ -20,10 +19,9 @@
  *
  * Interface loosely based on perl File::Find::Rule module.
  *
- * @package    symfony
+ * @package    Sift
  * @subpackage util
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfFinder.class.php 32891 2011-08-05 07:48:34Z fabien $
  */
 class sfFinder {
 
@@ -117,16 +115,15 @@ class sfFinder {
 
   /*
    * glob, patterns (must be //) or strings
+   *
    */
-
   protected function to_regex($str)
   {
     if(preg_match('/^(!)?([^a-zA-Z0-9\\\\]).+?\\2[ims]?$/', $str))
     {
       return $str;
     }
-
-    return sfGlobToRegex::glob_to_regex($str);
+    return sfGlobToRegex::toRegex($str);
   }
 
   protected function args_to_array($arg_list, $not = false)
@@ -346,7 +343,7 @@ class sfFinder {
 
     if($this->ignore_version_control)
     {
-      $ignores = array('.svn', '_svn', 'CVS', '_darcs', '.arch-params', 
+      $ignores = array('.svn', '_svn', 'CVS', '_darcs', '.arch-params',
                        '.monotone', '.bzr', '.git', '.hg');
 
       $finder->discard($ignores)->prune($ignores);
