@@ -91,10 +91,11 @@ class sfContext
     // include the factories configuration
     require(sfConfigCache::getInstance()->checkConfig(sfConfig::get('sf_app_config_dir_name').'/factories.yml'));
 
-    // register our shutdown function
-    register_shutdown_function(array($this, 'shutdown'));
-
-    sfCore::dispatchEvent('context.load_factories', array('context' => &$this));
+    // register our shutdown function, to be called last
+    sfShutdownScheduler::getInstance()->register(array($this, 'shutdown'), array(),
+            sfShutdownScheduler::LOW_PRIORITY);
+    
+    sfCore::dispatchEvent('context.load_factories', array('context' => $this));
   }
 
   /**
@@ -189,14 +190,14 @@ class sfContext
    * Sets the current context to something else
    *
    * @param string $name  The name of the context to switch to
-   *
    */
   public static function switchTo($name)
   {
     if(!isset(self::$instances[$name]))
     {
       $current = sfContext::getInstance()->getApplication();      
-      sfContext::createInstance(sfCore::getProject()->getApplication($name, 
+      sfContext::createInstance(
+        sfCore::getProject()->getApplication($name, 
         $current->getEnvironment(), $current->isDebug()));
     }
     self::$current = $name;
