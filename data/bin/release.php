@@ -101,7 +101,7 @@ $finder = sfFinder::type('file')->ignore_version_control()->relative();
 $xml_classes = '';
 $dirs = array('lib' => 'php', 'data' => 'data');
 $skip = array(
-  'sift', 'sift.bat', 'update_core_autoloader.php', 'release.php'
+  'sift', 'sift.bat', 'update_core_autoloader.php', 'release.php', 'build_docs.php', 'changelog.php'
 );
 
 foreach($dirs as $dir => $role)
