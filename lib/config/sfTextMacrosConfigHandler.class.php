@@ -27,7 +27,7 @@ class sfTextMacrosConfigHandler extends sfSimpleYamlConfigHandler {
     $data   = array();
     foreach($config as $tag => $callable)
     {
-      if(!is_array($callable) && !is_callable($callable))
+      if(!is_array($callable) && !sfToolkit::isCallable($callable))
       {
         $callable = array($callable, 'getHtml');
       }

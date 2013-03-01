@@ -9,7 +9,7 @@
 /**
  * sfCallbackValidator allows you to use a custom callback function or method to
  * validate the input. The function should return true on valid and false on invalid
- * and should be callable using is_callable().
+ * and should be callable using sfToolkit::isCallable().
  *
  * <b>Required parameters:</b>
  *
@@ -70,10 +70,10 @@ class sfCallbackValidator extends sfValidator
     $this->getParameterHolder()->add($parameters);
 
     // check parameters
-    if (!is_callable($this->getParameterHolder()->get('callback')))
+    if (!sfToolkit::isCallable($this->getParameterHolder()->get('callback')))
     {
       // no pattern specified
-      $error = 'Callback function must be a valid callback using is_callable()';
+      $error = 'Callback function must be a valid callback using sfToolkit::isCallable()';
 
       throw new sfValidatorException($error);
     }

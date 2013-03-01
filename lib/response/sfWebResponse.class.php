@@ -333,9 +333,8 @@ class sfWebResponse extends sfResponse
       {
         parent::sendContent();
       }
-      elseif(is_callable($this->content))
+      elseif(sfToolkit::isCallable($this->content, false, $callableName))
       {
-        // Copied below from parent classes to keep behavior consistent
         // clear output buffer
         while(ob_get_level())
         {
@@ -344,9 +343,7 @@ class sfWebResponse extends sfResponse
 
         if(sfConfig::get('sf_logging_enabled'))
         {
-          $callable_name = null;
-          is_callable($this->content, false, $callable_name);
-          $this->getContext()->getLogger()->info(sprintf('{sfResponse} calling callable "%s"', $callable_name));
+          $this->getContext()->getLogger()->info(sprintf('{sfResponse} calling callable "%s"', $callableName));
         }
 
         call_user_func($this->content);
@@ -359,7 +356,7 @@ class sfWebResponse extends sfResponse
    */
   public function send()
   {
-    if(!is_callable($this->content))
+    if(!sfToolkit::isCallable($this->content))
     {
       $this->sendHttpHeaders();
     }

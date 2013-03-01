@@ -54,12 +54,13 @@ class sfTextMacroRegistry {
    *
    * @param string $tag macro tag to be searched in post content.
    * @param callable $func Hook to run when macro is found.
+   * @throws sfException If callable is invalid
    */
   public static function add($tag, $func)
   {
-    if(!is_callable($func))
+    if(!sfToolkit::isCallable($func, false, $callableName))
     {
-      throw new sfException(sprintf('Invalid callable "%s" given. Cannot add text macro for tag "%s"', var_export($func, true), $tag));
+      throw new sfException(sprintf('Invalid callable "%s" given. Cannot add text macro for tag "%s"', $callableName, $tag));
     }
     self::$macros[$tag] = $func;
   }

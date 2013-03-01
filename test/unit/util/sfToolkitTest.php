@@ -2,7 +2,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(81, new lime_output_color());
+$t = new lime_test(97, new lime_output_color());
 
 // ::stringToArray()
 $t->diag('::stringToArray()');
@@ -229,3 +229,60 @@ $var = array(
 );
 
 $t->is(sfToolkit::varExport($var), 'array(\'validator\' => new sfValidatorString(array("separator" => "\n")))', 'varExport() exports string containing php expresion with double quotes');
+
+$t->diag('->sfToolkit::extractClassName()');
+
+$t->is(sfToolkit::extractClassName('myFooBar.class.php'), 'myFooBar', 'extractClassName() returns class name from the filename');
+
+$t->is(sfToolkit::extractClassName('myFooBar.php'), 'myFooBar', 'extractClassName() returns class name from the filename');
+
+$t->diag('->sfToolkit::extractClasses()');
+
+try
+{
+  sfToolkit::extractClasses('invalid.php');
+  $t->fail('extractClasses() throws an sfFileException if the file does not exist');
+}
+catch(sfFileException $e)
+{
+  $t->pass('extractClasses() throws an sfFileException if the file does not exist');
+}
+
+$t->is(sfToolkit::extractClasses(dirname(__FILE__).'/fixtures/lib/file.php'), array(
+  'customClass',
+  'myCustomIterface',
+  'myExtendedClass',
+  'myTrulyExtendedClass'
+), 'extractClasses() returns all classes and interfaces defined in the file');
+
+$t->is(sfToolkit::extractClasses(dirname(__FILE__).'/fixtures/lib/file2.php'), array(), 'extractClasses() returns all classes and interfaces defined in the file');
+
+$t->diag('::isCallable()');
+
+$t->isa_ok(sfToolkit::isCallable('phpinfo'), 'boolean', '::isCallable() return boolean');
+$t->is(sfToolkit::isCallable('phpinfo'), true, '::isCallable() return false when callback is invalid');
+$t->is(sfToolkit::isCallable('anonsnse'), false, '::isCallable() return false when callback is invalid');
+
+class sfFoo {
+  public static function bar()
+  {
+  }
+
+  public function get()
+  {
+  }
+}
+
+$t->is(sfToolkit::isCallable(array('sfFoo', 'bar'), false, $callableName), true, '::isCallable() return true when callback is valid');
+$t->isa_ok($callableName, 'string', '::isCallable() returns callable name as string');
+$t->is($callableName, 'sfFoo::bar', '::isCallable() returns callable name');
+
+$foo = new sfFoo();
+$t->is(sfToolkit::isCallable(array($foo, 'get'), false, $callableName), true, '::isCallable() return true when callback is valid');
+$t->isa_ok($callableName, 'string', '::isCallable() returns callable name as string');
+$t->is($callableName, 'sfFoo::get', '::isCallable() returns callable name');
+
+$t->diag('::isFunctionDisabled()');
+
+$t->isa_ok(sfToolkit::isFunctionDisabled('phpinfo'), 'boolean', '::isCallable() return boolean');
+$t->is(sfToolkit::isFunctionDisabled('phpinfo'), false, '::isCallable() return false when callback is invalid');

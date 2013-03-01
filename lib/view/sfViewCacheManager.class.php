@@ -99,7 +99,7 @@ class sfViewCacheManager {
   {
     if($callable = sfConfig::get('sf_cache_namespace_callable'))
     {
-      if(!is_callable($callable))
+      if(!sfToolkit::isCallable($callable))
       {
         throw new sfException(sprintf('"%s" cannot be called as a function.', var_export($callable, true)));
       }

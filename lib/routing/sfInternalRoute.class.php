@@ -284,7 +284,7 @@ class sfInternalRoute {
     $pagerParamCallback = sprintf('my%sPager::getParameterName', 
                             ucfirst(sfConfig::get('sf_orm')));
     $pagerParam = false;    
-    if(is_callable($pagerParamCallback))
+    if(sfToolkit::isCallable($pagerParamCallback))
     {
       $pagerParam = call_user_func($pagerParamCallback);
     }    

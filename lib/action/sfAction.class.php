@@ -650,7 +650,7 @@ abstract class sfAction extends sfComponent
       $callable = $callable->getCallable();
     }
     
-    if(!is_callable($callable, false, $callableName))
+    if(!sfToolkit::isCallable($callable, false, $callableName))
     {
       throw new InvalidArgumentException(sprintf('Invalid callable "%s" given.', $callableName));
     }

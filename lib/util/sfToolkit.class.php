@@ -32,7 +32,7 @@ class sfToolkit {
       $filename = basename($filename);
     }
 
-    $pattern = '/(.*?)\.(class|interface)\.php/i';
+    $pattern = '/(.*?)(\.(class|interface))?\.php/i';
 
     if(preg_match($pattern, $filename, $match))
     {
@@ -40,6 +40,30 @@ class sfToolkit {
     }
 
     return $retval;
+  }
+
+  /**
+   * Extracts class names, interface names from the file
+   *
+   * @param string $file Absolute path to the file
+   * @throws sfFileException If the file does not exist
+   */
+  public static function extractClasses($file)
+  {
+    if(!is_readable($file))
+    {
+      throw new sfFileException(sprintf('File "%s" does not exist or is not readable.', $file));
+    }
+
+    preg_match_all('~^\s*(?:abstract\s+|final\s+)?(?:class|interface)\s+(\w+)~mi',
+                  file_get_contents($file), $matches);
+
+    if(isset($matches[1]))
+    {
+      return $matches[1];
+    }
+
+    return array();
   }
 
   /**
@@ -963,6 +987,39 @@ class sfToolkit {
       }
     }
     return $value;
+  }
+
+  /**
+   * Verify that the contents of a variable can be called as a function.
+   * Also checks if the callable is not disabled by configuration directive.
+   *
+   * @param mixed $callback The callback function to check
+   * @param boolean $syntaxOnly If set to TRUE the function only verifies that name might be a function or method.
+   *                            It will only reject simple variables that are not strings, or an array that does not
+   *                            have a valid structure to be used as a callback. The valid ones are supposed to have
+   *                            only 2 entries, the first of which is an object or a string, and the second a string.
+   * @param string $callableName Receives the "callable name". In the example below it is "someClass::someMethod".
+   * @return boolean Returns true if name is callable, false otherwise.
+   * @see is
+   */
+  public static function isCallable($callback, $syntaxOnly = false, &$callableName = '')
+  {
+    return is_callable($callback, $syntaxOnly, $callableName)
+           && !self::isFunctionDisabled($callback);
+  }
+
+  /**
+   * Checks if given function is disabled by "disable_functions" directive.
+   *
+   * @param string $callback
+   */
+  public static function isFunctionDisabled($callback)
+  {
+    if(!is_string($callback))
+    {
+      return false;
+    }
+    return in_array($callback, explode(',', ini_get('disable_functions')));
   }
 
 }

@@ -109,24 +109,24 @@ class sfSimpleAutoload {
     }
 
     $found = false;
-    
+
     // we have a class path, let's include it
     if(isset($this->classes[$class]))
     {
       $found = $this->classes[$class];
     }
-    elseif(class_exists('sfContext', false) && sfContext::hasInstance() && 
-        ($module = sfContext::getInstance()->getModuleName()) && 
+    elseif(class_exists('sfContext', false) && sfContext::hasInstance() &&
+        ($module = sfContext::getInstance()->getModuleName()) &&
         isset($this->classes[strtolower($module.'/'.$class)]))
     {
-      $found = $this->classes[strtolower($module.'/'.$class)];      
+      $found = $this->classes[strtolower($module.'/'.$class)];
     }
 
     if(!$found)
     {
       return false;
     }
-    
+
     try
     {
       require_once $found;
@@ -160,13 +160,13 @@ class sfSimpleAutoload {
 
   /**
    * Saves the cache.
-   *  
+   *
    * @param boolean $force Force the write? If false it will be only written if something has changed
    */
   public function saveCache($force = false)
   {
     if($this->cacheChanged || $force)
-    {    
+    {
       if(is_writable(dirname($this->cacheFile)))
       {
         file_put_contents($this->cacheFile, serialize(array($this->classes, $this->dirs, $this->files)));
@@ -293,8 +293,7 @@ class sfSimpleAutoload {
       $this->cacheChanged = true;
     }
 
-    preg_match_all('~^\s*(?:abstract\s+|final\s+)?(?:class|interface)\s+(\w+)~mi', file_get_contents($file), $classes);
-    foreach($classes[1] as $class)
+    foreach(sfToolkit::extractClasses($file) as $class)
     {
       $this->classes[strtolower($class)] = $file;
     }
@@ -333,7 +332,7 @@ class sfSimpleAutoload {
    * Loads configuration from the supplied files.
    *
    * @param array $files An array of autoload.yml files
-   * 
+   *
    * @see sfAutoloadConfigHandler
    */
   public function loadConfiguration(array $files)

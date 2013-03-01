@@ -143,6 +143,7 @@ class sfCoreAutoload
     require_once $libDir.'/util/sfFinder.class.php';
     require_once $libDir.'/util/sfGlobToRegex.class.php';
     require_once $libDir.'/util/sfNumberCompare.class.php';
+    require_once $libDir.'/util/sfToolkit.class.php';
 
     $files = sfFinder::type('file')
       ->prune('plugins')
@@ -158,9 +159,9 @@ class sfCoreAutoload
     $classes = '';
     foreach ($files as $file)
     {
-      $file  = str_replace(DIRECTORY_SEPARATOR, '/', $file);
-      preg_match_all('~^\s*(?:abstract\s+|final\s+)?(?:class|interface)\s+(\w+)~mi', file_get_contents($file), $_classes);
-      foreach($_classes[1] as $class)
+      $file = str_replace(DIRECTORY_SEPARATOR, '/', $file);
+      $_classes = sfToolkit::extractClasses($file);
+      foreach($_classes as $class)
       {
         $classes .= sprintf("    '%s' => '%s',\n", strtolower($class), substr(str_replace($libDir, '', $file), 1));
       }       
@@ -290,6 +291,7 @@ class sfCoreAutoload
     'sfmailconfighandler' => 'config/sfMailConfigHandler.class.php',
     'sfmodulesconfighandler' => 'config/sfModulesConfigHandler.class.php',
     'sfphpconfighandler' => 'config/sfPhpConfigHandler.class.php',
+    'sfpluginsconfighandler' => 'config/sfPluginsConfigHandler.class.php',
     'sfrootconfighandler' => 'config/sfRootConfigHandler.class.php',
     'sfroutingconfighandler' => 'config/sfRoutingConfigHandler.class.php',
     'sfsanitizeconfighandler' => 'config/sfSanitizeConfigHandler.class.php',
@@ -406,6 +408,7 @@ class sfCoreAutoload
     'myformbase' => 'form/myFormBase.class.php',
     'mywizardform' => 'form/myWizardForm.class.php',
     'sfform' => 'form/sfForm.class.php',
+    'sfformculture' => 'form/sfFormCulture.class.php',
     'sfformfield' => 'form/sfFormField.class.php',
     'sfformfieldgroup' => 'form/sfFormFieldGroup.class.php',
     'sfformfieldschema' => 'form/sfFormFieldSchema.class.php',
@@ -431,6 +434,7 @@ class sfCoreAutoload
     'sfwidgetformdate' => 'form/widget/sfWidgetFormDate.class.php',
     'sfwidgetformdaterange' => 'form/widget/sfWidgetFormDateRange.class.php',
     'sfwidgetformdatetime' => 'form/widget/sfWidgetFormDateTime.class.php',
+    'sfwidgetformdatetimerange' => 'form/widget/sfWidgetFormDateTimeRange.class.php',
     'sfwidgetformfilterdate' => 'form/widget/sfWidgetFormFilterDate.class.php',
     'sfwidgetformfilterinput' => 'form/widget/sfWidgetFormFilterInput.class.php',
     'sfwidgetforminput' => 'form/widget/sfWidgetFormInput.class.php',
@@ -688,12 +692,15 @@ class sfCoreAutoload
     'sfnumbercompare' => 'util/sfNumberCompare.class.php',
     'sfparameterholder' => 'util/sfParameterHolder.class.php',
     'sfpasswordtools' => 'util/sfPasswordTools.class.php',
+    'sfphpexpression' => 'util/sfPhpExpression.class.php',
     'sfprefetchbrowser' => 'util/sfPrefetchBrowser.class.php',
     'sfsafeurl' => 'util/sfSafeUrl.class.php',
+    'sfshutdownscheduler' => 'util/sfShutdownScheduler.class.php',
     'sftoolkit' => 'util/sfToolkit.class.php',
     'sfuuid' => 'util/sfUuid.class.php',
     'sfvalidatori18nchoicecountry' => 'validator/i18n/sfValidatorI18nChoiceCountry.class.php',
     'sfvalidatori18nchoicelanguage' => 'validator/i18n/sfValidatorI18nChoiceLanguage.class.php',
+    'sfvalidatori18nchoicetimezone' => 'validator/i18n/sfValidatorI18nChoiceTimezone.class.php',
     'sfcallbackvalidator' => 'validator/legacy/sfCallbackValidator.class.php',
     'sfcomparevalidator' => 'validator/legacy/sfCompareValidator.class.php',
     'sfdatevalidator' => 'validator/legacy/sfDateValidator.class.php',
@@ -725,6 +732,7 @@ class sfCoreAutoload
     'sfvalidatordate' => 'validator/sfValidatorDate.class.php',
     'sfvalidatordaterange' => 'validator/sfValidatorDateRange.class.php',
     'sfvalidatordatetime' => 'validator/sfValidatorDateTime.class.php',
+    'sfvalidatordatetimerange' => 'validator/sfValidatorDateTimeRange.class.php',
     'sfvalidatordecorator' => 'validator/sfValidatorDecorator.class.php',
     'sfvalidatordefault' => 'validator/sfValidatorDefault.class.php',
     'sfvalidatoremail' => 'validator/sfValidatorEmail.class.php',
@@ -783,4 +791,3 @@ class sfCoreAutoload
   );
 
 }
-    'sfphpexpression' => 'util/sfPhpExpression.class.php',
