@@ -23,8 +23,8 @@ class sfGeneratorManager
 
   /**
    * Constructs the manager
-   * 
-   * @param string $savePath Save path 
+   *
+   * @param string $savePath Save path
    */
   public function __construct($savePath)
   {
@@ -33,7 +33,7 @@ class sfGeneratorManager
 
   /**
    * Saves content to the target file
-   * 
+   *
    * @param string $path The relative path to $savePath
    * @param string $content  The content
    * @return integer Number of bytes that were written to the file
@@ -80,10 +80,9 @@ class sfGeneratorManager
     {
       throw new InvalidArgumentException(sprintf('Generator class "%s" does not implement sfIGenerator interface.', $generatorClass));
     }
-    
-    $generator = new $generatorClass($this);
-    
-    return $generator->generate($params);
+
+    $generator = new $generatorClass($this, $params);
+    return $generator->generate();
   }
 
   /**

@@ -12,69 +12,99 @@
  * @package    Sift
  * @subpackage generator
  */
-abstract class sfGeneratorModelColumn implements sfIGeneratorModelColumn {
+abstract class sfGeneratorModelColumn extends sfConfigurable implements sfIGeneratorModelColumn {
 
   /**
    * Column name
-   * 
-   * @var string 
+   *
+   * @var string
    */
   protected $name;
-  
+
+  /**
+   * Column help
+   *
+   * @var string
+   */
+  protected $help;
+
   /**
    * Column flags
-   * 
-   * @var array 
+   *
+   * @var array
    */
   protected $flags = array();
-  
+
   /**
    * Is the column real column?
-   * 
+   *
    * @var boolean
    */
   protected $isReal = false;
-  
+
   /**
    * Is primary key?
-   * 
-   * @var boolean 
+   *
+   * @var boolean
    */
   protected $isPrimaryKey = false;
-  
+
   /**
    * Is foreign key?
-   * 
+   *
    * @var boolean
    */
   protected $isForeignKey = false;
-  
+
   /**
    * Foreign class name
-   * 
+   *
    * @var string
    */
   protected $foreignClassName;
-  
+
   /**
    * Is relation alias?
-   * 
+   *
    * @var boolean
    */
   protected $isRelationAlias = false;
-  
+
   /**
-   * Contructts the column
-   * 
+   * Renderer callback
+   *
+   * @var mixed
+   */
+  protected $renderer;
+
+  /**
+   * Array of renderer arguments
+   *
+   * @var array
+   */
+  protected $rendererArguments = array();
+
+  /**
+   * sfGenerator holder
+   *
+   * @var sfIGenerator
+   */
+  protected $generator;
+
+  /**
+   * Contructs the column
+   *
    * @param string $name
    * @param array $flags
    */
-  public function __construct($name, $flags = array())
+  public function __construct(sfIGenerator $generator, $name, $options = array(), $flags = array())
   {
+    $this->generator = $generator;
     $this->name = $name;
-    $this->flags = $flags;
-    
-    $this->setup();
+
+    $this->setFlags($flags);
+
+    parent::__construct($options);
   }
 
   /**
@@ -83,17 +113,61 @@ abstract class sfGeneratorModelColumn implements sfIGeneratorModelColumn {
   public function setup()
   {
   }
-  
+
+  /**
+   * Returns generator instance
+   *
+   * @return sfIGenerator
+   */
+  public function getGenerator()
+  {
+    return $this->generator;
+  }
+
+  /**
+   * Sets generator
+   *
+   * @param sfIGenerator $generator
+   */
+  public function setGenerator(sfIGenerator $generator)
+  {
+    $this->generator = $generator;
+  }
+
   /**
    * Returns name of the column
-   * 
+   *
    * @return string
    */
   public function getName()
   {
     return $this->name;
   }
-  
+
+  /**
+   * Returns display name.
+   *
+   * @return string
+   */
+  public function getDisplayName()
+  {
+    if($name = $this->getOption('name'))
+    {
+      return $name;
+    }
+    return str_replace('_', ' ', ucfirst($this->name));
+  }
+
+  /**
+   * Returns help for this column
+   *
+   * @return string
+   */
+  public function getHelp()
+  {
+    return $this->getOption('help');
+  }
+
   /**
    * Returns true if the column maps a database column.
    *
@@ -103,7 +177,7 @@ abstract class sfGeneratorModelColumn implements sfIGeneratorModelColumn {
   {
     return $this->isReal;
   }
-  
+
   /**
    * Returns true if the column is a primary key.
    *
@@ -113,7 +187,7 @@ abstract class sfGeneratorModelColumn implements sfIGeneratorModelColumn {
   {
     return $this->isPrimaryKey;
   }
-  
+
   /**
    * Returns true if this column is a foreign key and false if it is not
    *
@@ -121,9 +195,9 @@ abstract class sfGeneratorModelColumn implements sfIGeneratorModelColumn {
    */
   public function isForeignKey()
   {
-    return $this->isForeignKey;        
+    return $this->isForeignKey;
   }
-  
+
   /**
    * Returns true if this column is a relation alias
    *
@@ -131,9 +205,9 @@ abstract class sfGeneratorModelColumn implements sfIGeneratorModelColumn {
    */
   public function isRelationAlias()
   {
-    return $this->isRelationAlias;        
+    return $this->isRelationAlias;
   }
-  
+
   /**
    * Returns true if the column is a partial.
    *
@@ -165,49 +239,242 @@ abstract class sfGeneratorModelColumn implements sfIGeneratorModelColumn {
   }
 
   /**
+   * Sets flags
+   *
+   * @param array|string $flags
+   */
+  public function setFlags($flags)
+  {
+    if(!is_array($flags))
+    {
+      $flags = array($flags);
+    }
+
+    $this->flags = $flags;
+  }
+
+  /**
+   * Returns an array of flags
+   *
+   * @return array
+   */
+  public function getFlags()
+  {
+    return $this->flags;
+  }
+
+  /**
+   * Sets the list renderer for the field.
+   *
+   * @param mixed $renderer A PHP callable
+   */
+  public function setRenderer($renderer)
+  {
+    $this->renderer = $renderer;
+  }
+
+  /**
+   * Gets the list renderer for the field.
+   *
+   * @return mixed A PHP callable
+   */
+  public function getRenderer()
+  {
+    return $this->renderer;
+  }
+
+  /**
+   * Sets the list renderer arguments for the field.
+   *
+   * @param array $arguments An array of arguments to pass to the renderer
+   */
+  public function setRendererArguments(array $arguments)
+  {
+    $this->rendererArguments = $arguments;
+  }
+
+  /**
+   * Gets the list renderer arguments for the field.
+   *
+   * @return array An array of arguments to pass to the renderer
+   */
+  public function getRendererArguments()
+  {
+    return $this->rendererArguments;
+  }
+
+  /**
    * Returns foreign class name
-   * 
+   *
    * @return string|null
    */
   public function getForeignClassName()
   {
     return $this->foreignClassName;
-  }  
-  
+  }
+
   /**
+   * Is column sortable? In other words: Can be results sorted by this column?
+   *
+   * @return boolean
+   */
+  public function isSortable()
+  {
+    return $this->isReal() || $this->isForeignKey();
+  }
+
+  /**
+   * Returns an array of credentials for this column
+   *
+   * @return array
+   */
+  public function getCredentials()
+  {
+    return $this->getOption('credentials', array());
+  }
+
+  /**
+   * Returns css class for this column
+   *
+   * @return string
+   */
+  public function getCssClass()
+  {
+    return strtolower($this->getType());
+  }
+
+  /**
+   * Returns colum name without the flag ('=', '_', '~')
+   *
+   * @param $column
+   * @return array ($column, $flag)
+   */
+  static public function splitColumnWithFlag($column)
+  {
+    $flags = array();
+    while(in_array($column[0], array('=', '_', '~')))
+    {
+      $flags[] = $column[0];
+      $column = substr($column, 1);
+    }
+    return array($column, $flags);
+  }
+
+  /**
+   * Renders itself in given context
+   *
+   * @param string $context
+   */
+  public function render($context)
+  {
+    switch($context)
+    {
+      case 'list':
+      default:
+          return $this->renderInListContext();
+      break;
+    }
+
+    throw new LogicException('Not implemented yet');
+  }
+
+  /**
+   * Renders this column in "list" context
+   *
+   * @return string
+   */
+  public function renderInListContext()
+  {
+    $html = $this->generator->getColumnGetter($this, true);
+
+    if($renderer = $this->getRenderer())
+    {
+      $html = sprintf("$html ? call_user_func_array(%s, array_merge(array(%s), %s)) : '&nbsp;'", $this->generator->asPhp($renderer), $html, $this->generator->asPhp($this->getRendererArguments()));
+    }
+    elseif($this->isComponent())
+    {
+      return sprintf("get_component('%s', '%s', array('type' => 'list', '%s' => &\$%s))", $this->generator->getModuleName(), $this->getName(), $this->generator->getSingularName(), $this->generator->getSingularName());
+    }
+    elseif($this->isPartial())
+    {
+      return sprintf("get_partial('%s/%s', array('type' => 'list', '%s' => &\$%s))", $this->generator->getModuleName(), $this->getName(), $this->generator->getSingularName(), $this->generator->getSingularName());
+    }
+    elseif('date' == $this->getType())
+    {
+      $html = sprintf("false !== strtotime($html) ? format_date(%s, \"%s\") : '&nbsp;'", $html, $this->getOption('date_format', 'f'));
+    }
+    elseif('boolean' == $this->getType())
+    {
+      $html = sprintf("get_partial('%s/list_column_boolean', array('value' => %s, '%s' => &\$%s))", $this->generator->getModuleName(), $html, $this->generator->getSingularName(), $this->generator->getSingularName());
+    }
+
+    if($this->isLink())
+    {
+      $html = sprintf("link_to(%s, '%s', \$%s)", $html, $this->generator->getRouteForAction('edit'), $this->generator->getSingularName());
+    }
+
+    return $html;
+  }
+
+  /**
+   * Is this column "not null"?
    * 
-   * @throws Exception
+   * @return boolean
    */
   public function isNotNull()
   {
-    throw new Exception('Not implemented');
   }
-  
+
   /**
+   * Is this column "null" ?
    * 
-   * @throws Exception
+   * @return boolean
    */
   public function isNull()
   {
-    throw new Exception('Not implemented');
   }
-  
+
   /**
-   * 
-   * @throws Exception
+   * Returns type of the column
+   *
    */
   public function getType()
   {
-    throw new Exception('Not implemented');
   }
-  
+
   /**
-   * 
-   * @throws Exception
+   * Returns size of the column
+   *
    */
   public function getSize()
   {
-    throw new Exception('Not implemented');
-  }    
-  
+  }
+
+  /**
+   *
+   * @see getSize();
+   */
+  public function getLength()
+  {
+    return $this->getSize();
+  }
+
+  /**
+   * Is this column IP adress?
+   *
+   * @return boolean
+   */
+  public function isIpAddress()
+  {
+  }
+
+  /**
+   * Is column culture column?
+   * 
+   * @return boolean
+   */
+  public function isCulture()
+  {
+  }
+
 }

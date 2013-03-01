@@ -4,7 +4,7 @@ require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 require_once($_test_dir.'/unit/sfContextMock.class.php');
 require_once($_test_dir.'/unit/sfCoreMock.class.php');
 
-$t = new lime_test(4, new lime_output_color());
+$t = new lime_test(9, new lime_output_color());
 
 class myGenerator extends sfGenerator
 {
@@ -40,6 +40,29 @@ catch(InvalidArgumentException $e)
 {
   $t->pass('exception is thrown when generator does not implement sfIGenerator interface');
 }
+
+$options = array(
+  'foo' => 'bar',
+  'second' => array(
+    'foo' => 'bar'
+  ),
+  'third' => array(
+    'nested' => array(
+        'foo' => 'bar'
+    ),
+  )
+);
+
+$generator = new myGenerator($manager, $options);
+
+$t->is($generator->getOption('foo'), 'bar', 'getOption() for simple option works ok');
+$t->is($generator->getOption('second'), array('foo' => 'bar'), 'getOption() for nested option works ok');
+$t->is($generator->getOption('second.foo'), 'bar', 'getOption() for nested option works ok');
+$t->is($generator->getOption('third.nested.foo'), 'bar', 'getOption() for deeply nested option works ok');
+
+// set option
+$generator->setOption('third.nested.foo', 'bar2');
+$t->is($generator->getOption('third.nested.foo'), 'bar2', 'setOption() for deeply nested option works ok');
 
 
 $dispatcher = new sfEventDispatcher();

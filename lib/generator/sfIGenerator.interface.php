@@ -13,12 +13,12 @@
  * @subpackage generator
  */
 interface sfIGenerator {
-  
+
   /**
    * Generates classes and templates.
    *
    * @return string The cache for the configuration file
-   */  
+   */
   public function generate();
-  
+
 }

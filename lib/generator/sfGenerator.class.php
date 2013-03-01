@@ -12,7 +12,7 @@
  * @package    Sift
  * @subpackage generator
  */
-abstract class sfGenerator implements sfIGenerator {
+abstract class sfGenerator extends sfConfigurable implements sfIGenerator {
 
   /**
    * Generator class
@@ -50,23 +50,56 @@ abstract class sfGenerator implements sfIGenerator {
   protected $theme;
 
   /**
+   * Theme directory
+   *
+   * @var string
+   */
+  protected $themeDir;
+
+  /**
    * Constructs the generator
    *
    * @param sfGeneratorManager $generatorManager
-   * @param array $options
+   * @param array $options Options for the generator
    */
-  public function __construct(sfGeneratorManager $generatorManager)
+  public function __construct(sfGeneratorManager $generatorManager, $options = array())
   {
     $this->generatorManager = $generatorManager;
+    $this->setGeneratorClass(get_class($this));
+
+    // this calls setup() of the generator
+    parent::__construct($options);
   }
 
   /**
    * Configures the generator
    *
    */
-  public function configure()
+  protected function configure()
   {
+  }
 
+  /**
+   * Generates the UI
+   *
+   * @return string
+   * @throws sfInitializationException
+   */
+  public function generate()
+  {
+    $themeDir = $this->getThemeDir();
+    if(!$themeDir)
+    {
+      throw new sfInitializationException('Cannot generate without themeDir!');
+    }
+
+    // generate files
+    $this->generatePhpFiles($this->getGeneratedModuleName(),
+            sfFinder::type('file')->relative()->in($this->getThemeDir()));
+
+    $data = sprintf("require_once('%s/%s/actions/actions.class.php');\n",
+                    $this->getGeneratorManager()->getSavePath(), $this->getGeneratedModuleName());
+    return $data;
   }
 
   /**
@@ -227,6 +260,48 @@ abstract class sfGenerator implements sfIGenerator {
   }
 
   /**
+   * Sets the theme directory
+   *
+   * @param string $themeDir
+   */
+  public function setThemeDir($themeDir)
+  {
+    $this->themeDir = $themeDir;
+  }
+
+  /**
+   * Returns theme directory
+   *
+   * @return string
+   */
+  public function getThemeDir()
+  {
+    return $this->themeDir;
+  }
+
+  /**
+   * Converts variable to string which can be placed to the template
+   *
+   * @param string $variable
+   * @return string
+   */
+  public function asPhp($variable)
+  {
+    return $this->varExport($variable);
+  }
+
+  /**
+   * Escapes the string
+   *
+   * @param string $string
+   * @return string
+   */
+  public function escapeString($string)
+  {
+    return str_replace("'", "\\'", $string);
+  }
+
+  /**
    * Underscores name
    *
    * @param string $name
@@ -252,6 +327,18 @@ abstract class sfGenerator implements sfIGenerator {
   }
 
   /**
+   * Exports PHP variable
+   *
+   * @param mixed $var
+   * @param boolean $expression Find and replace php expressions?
+   * @return stirng
+   */
+  public function varExport($var, $expressions = true)
+  {
+    return sfToolkit::varExport($var, $expressions);
+  }
+
+  /**
    * Array export. Export array to formatted php code
    *
    * @param array $values
@@ -259,12 +346,34 @@ abstract class sfGenerator implements sfIGenerator {
    */
   protected function arrayExport($values)
   {
-    $php = var_export($values, true);
-    $php = str_replace("\n", '', $php);
-    $php = str_replace('array (  ', 'array(', $php);
-    $php = str_replace(',)', ')', $php);
-    $php = str_replace('  ', ' ', $php);
-    return $php;
+    return $this->varExport($values);
+  }
+
+  /**
+   * Wraps content with a credential condition.
+   *
+   * @param string $content The content
+   * @param array  $credentials  The credentials
+   *
+   * @return string HTML code
+   */
+  public function addCredentialCondition($content, $credentials = array())
+  {
+    if(count($credentials))
+    {
+      $credentials = $this->asPhp($credentials);
+
+      return <<<EOF
+[?php if(\$sf_user->hasCredential($credentials)): ?]
+$content
+[?php endif; ?]
+
+EOF;
+    }
+    else
+    {
+      return $content;
+    }
   }
 
   /**
