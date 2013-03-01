@@ -14,8 +14,8 @@
  *     $loader = new sfClassLoader();
  *
  *     // register classes with namespaces
- *     $loader->add('Symfony\Component', __DIR__.'/component');
- *     $loader->add('Symfony',           __DIR__.'/framework');
+ *     $loader->add('Namespace\Component', __DIR__.'/component');
+ *     $loader->add('Namespace',           __DIR__.'/framework');
  *
  *     // activate the autoloader
  *     $loader->register();
@@ -23,8 +23,8 @@
  *     // to enable searching the include path (eg. for PEAR packages)
  *     $loader->setUseIncludePath(true);
  *
- * In this example, if you try to use a class in the Symfony\Component
- * namespace or one of its children (Symfony\Component\Console for instance),
+ * In this example, if you try to use a class in the Namespace\Component
+ * namespace or one of its children (Namespace\Component\Console for instance),
  * the autoloader will first look for the class under the component/
  * directory, and it will then fallback to the framework/ directory if not
  * found before giving up.
