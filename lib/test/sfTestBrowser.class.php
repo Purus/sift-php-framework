@@ -1,4 +1,10 @@
 <?php
+/*
+ * This file is part of the Sift PHP framework.
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 
 require_once(dirname(__FILE__).'/../vendor/lime/lime.php');
 
@@ -8,7 +14,7 @@ require_once(dirname(__FILE__).'/../vendor/lime/lime.php');
  * sfTestFunctional is backward compatible class for symfony 1.0, and 1.1.
  * For new code, you can use the sfTestFunctional class directly.
  *
- * @package    symfony
+ * @package    Sift
  * @subpackage test
  */
 class sfTestBrowser extends sfTestFunctional

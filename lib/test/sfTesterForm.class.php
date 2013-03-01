@@ -1,8 +1,6 @@
 <?php
-
 /*
- * This file is part of the symfony package.
- * (c) Fabien Potencier <fabien.potencier@symfony-project.com>
+ * This file is part of the Sift PHP framework.
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -11,10 +9,9 @@
 /**
  * sfTesterForm implements tests for forms submitted by the user.
  *
- * @package    symfony
+ * @package    Sift
  * @subpackage test
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfTesterForm.class.php 24217 2009-11-22 06:47:54Z fabien $
+ * @author     Fabien Potencier <fabien.potencier@symfony-project.com> 
  */
 class sfTesterForm extends sfTester
 {

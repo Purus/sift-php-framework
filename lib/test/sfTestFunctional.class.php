@@ -1,8 +1,6 @@
 <?php
-
 /*
- * This file is part of the symfony package.
- * (c) Fabien Potencier <fabien.potencier@symfony-project.com>
+ * This file is part of the Sift PHP framework.
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -11,10 +9,9 @@
 /**
  * sfTestFunctional tests an application by using a browser simulator.
  *
- * @package    symfony
+ * @package    Sift
  * @subpackage test
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfTestFunctional.class.php 23937 2009-11-14 17:43:12Z fabien $
  */
 class sfTestFunctional extends sfTestFunctionalBase
 {

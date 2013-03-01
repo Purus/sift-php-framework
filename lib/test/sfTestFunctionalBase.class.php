@@ -1,22 +1,19 @@
 <?php
-
-require_once(dirname(__FILE__).'/../vendor/lime/lime.php');
-
 /*
- * This file is part of the symfony package.
- * (c) Fabien Potencier <fabien.potencier@symfony-project.com>
+ * This file is part of the Sift PHP framework.
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
 
+require_once(dirname(__FILE__).'/../vendor/lime/lime.php');
+
 /**
  * sfTestFunctional tests an application by using a browser simulator.
  *
- * @package    symfony
+ * @package    Sift
  * @subpackage test
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfTestFunctionalBase.class.php 28641 2010-03-21 10:20:44Z fabien $
+ * @author     Fabien Potencier <fabien.potencier@symfony-project.com> 
  */
 abstract class sfTestFunctionalBase
 {

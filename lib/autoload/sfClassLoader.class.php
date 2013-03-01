@@ -33,7 +33,8 @@
  *
  * @author Fabien Potencier <fabien@symfony.com>
  * @author Jordi Boggiano <j.boggiano@seld.be>
- *
+ * @package Sift
+ * @subpackage autoload
  */
 class sfClassLoader {
 

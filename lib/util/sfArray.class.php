@@ -61,15 +61,15 @@ class sfArray {
     return $array;
   }
 
-	/**
-	 * Set an array item (dot-notated) to the value.
-	 *
-	 * @param   array   $array  The array to insert it into
-	 * @param   mixed   $key    The dot-notated key to set or array of keys
-	 * @param   mixed   $value  The value
-	 * @return  void
-	 */
-	public static function set(&$array, $key, $value = null)
+  /**
+   * Set an array item (dot-notated) to the value.
+   *
+   * @param   array   $array  The array to insert it into
+   * @param   mixed   $key    The dot-notated key to set or array of keys
+   * @param   mixed   $value  The value
+   * @return  void
+   */
+  public static function set(&$array, $key, $value = null)
   {
     if(is_null($key))
     {
@@ -101,7 +101,7 @@ class sfArray {
     }
   }
 
-	/**
+  /**
    * Array_key_exists with support for a dot-notated key from an array.
    *
    * @param   array   $array    The search array

@@ -6,6 +6,12 @@
  * file that was distributed with this source code.
  */
 
+/**
+ * Base class for exif adapters.
+ * 
+ * @package Sift
+ * @subpackage image 
+ */
 abstract class sfExifAdapter extends sfConfigurable {
 
   /**

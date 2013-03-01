@@ -1,21 +1,19 @@
 <?php
-
 /*
- * This file is part of SwiftMailer.
- * (c) 2009 Fabien Potencier
+ * This file is part of the Sift PHP framework.
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
 
 /**
- * Ignores messages.
- * @package Swift
- * @subpackage Plugins
- * @author Fabien Potencier
+ * Ignores messages. Simply sends them to blackhole.
+ *
+ * @package Sift
+ * @subpackage mailer
  */
-class sfMailerBlackholePlugin implements Swift_Events_SendListener
-{
+class sfMailerBlackholePlugin implements Swift_Events_SendListener {
+
   /**
    * Invoked immediately before the Message is sent.
    * @param Swift_Events_SendEvent $evt
@@ -23,7 +21,7 @@ class sfMailerBlackholePlugin implements Swift_Events_SendListener
   public function beforeSendPerformed(Swift_Events_SendEvent $evt)
   {
     $evt->cancelBubble();
-    
+
     if(sfConfig::get('sf_logging_enabled'))
     {
       sfContext::getInstance()->getLogger()->info(
@@ -31,14 +29,14 @@ class sfMailerBlackholePlugin implements Swift_Events_SendListener
       );
     }
   }
-  
+
   /**
    * Invoked immediately after the Message is sent.
-   * 
+   *
    * @param Swift_Events_SendEvent $evt
    */
   public function sendPerformed(Swift_Events_SendEvent $evt)
-  {    
+  {
   }
-  
+
 }

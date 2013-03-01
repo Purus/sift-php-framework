@@ -9,6 +9,8 @@
 /**
  * Converts HTML to plain text
  *
+ * @package Sift
+ * @subpackage text
  * @license http://www.eclipse.org/legal/epl-v10.html
  * @author Jevon Wright - initial API and implementation
  */

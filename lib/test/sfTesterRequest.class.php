@@ -1,20 +1,18 @@
 <?php
-
 /*
- * This file is part of the symfony package.
- * (c) Fabien Potencier <fabien.potencier@symfony-project.com>
+ * This file is part of the Sift PHP framework.
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
 
+
 /**
  * sfTesterRequest implements tests for the symfony request object.
  *
- * @package    symfony
+ * @package    Sift
  * @subpackage test
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfTesterRequest.class.php 27845 2010-02-10 19:46:03Z Kris.Wallsmith $
+ * @author     Fabien Potencier <fabien.potencier@symfony-project.com> 
  */
 class sfTesterRequest extends sfTester
 {

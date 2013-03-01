@@ -1,8 +1,6 @@
 <?php
-
 /*
- * This file is part of the symfony package.
- * (c) Fabien Potencier <fabien.potencier@symfony-project.com>
+ * This file is part of the Sift PHP framework.
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -11,10 +9,9 @@
 /**
  * sfTesterUser implements tests for the symfony user object.
  *
- * @package    symfony
+ * @package    Sift
  * @subpackage test
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfTesterUser.class.php 21769 2009-09-08 03:01:39Z dwhittle $
+ * @author     Fabien Potencier <fabien.potencier@symfony-project.com> 
  */
 class sfTesterUser extends sfTester
 {

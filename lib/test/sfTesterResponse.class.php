@@ -1,8 +1,6 @@
 <?php
-
 /*
- * This file is part of the symfony package.
- * (c) Fabien Potencier <fabien.potencier@symfony-project.com>
+ * This file is part of the Sift PHP framework.
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -11,10 +9,9 @@
 /**
  * sfTesterResponse implements tests for the symfony response object.
  *
- * @package    symfony
+ * @package    Sift
  * @subpackage test
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfTesterResponse.class.php 27061 2010-01-22 17:08:04Z FabianLange $
  */
 class sfTesterResponse extends sfTester
 {
@@ -185,12 +182,12 @@ class sfTesterResponse extends sfTester
         $cache = sfConfig::get('sf_cache_dir').'/sf_tester_response/w3';
         if ($cache[1] == ':')
         {
-          // On Windows systems the path will be like c:\symfony\cache\xml.dtd
+          // On Windows systems the path will be like c:\project\cache\xml.dtd
           // I did not manage to get DOMDocument loading a file protocol url including the drive letter
-          // file://c:\symfony\cache\xml.dtd or file://c:/symfony/cache/xml.dtd
+          // file://c:\project\cache\xml.dtd or file://c:/project/cache/xml.dtd
           // The first one simply doesnt work, the second one is treated as remote call.
           // However the following works. Unfortunatly this means we can only access the current disk
-          // file:///symfony/cache/xml.dtd
+          // file:///project/cache/xml.dtd
           // Note that all work for file_get_contents so the bug is most likely in DOMDocument.
           $local = 'file://'.substr(str_replace(DIRECTORY_SEPARATOR, '/', $cache), 2);
         }
@@ -204,7 +201,7 @@ class sfTesterResponse extends sfTester
           $filesystem = new sfFilesystem();
 
           $finder = sfFinder::type('any')->discard('.sf');
-          $filesystem->mirror(dirname(__FILE__).'/w3', $cache, $finder);
+          $filesystem->mirror(sfConfig::get('sf_sift_data_dir').'/data/w3', $cache, $finder);
 
           $finder = sfFinder::type('file');
           $filesystem->replaceTokens($finder->in($cache), '##', '##', array('LOCAL_W3' => $local));

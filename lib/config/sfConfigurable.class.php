@@ -6,7 +6,7 @@
  * file that was distributed with this source code.
  */
 
-/*
+/**
  * Base class for configurable classes
  *
  * @package Sift

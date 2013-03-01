@@ -1,8 +1,6 @@
 <?php
-
 /*
- * This file is part of the symfony package.
- * (c) Fabien Potencier <fabien.potencier@symfony-project.com>
+ * This file is part of the Sift PHP framework.
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -11,10 +9,9 @@
 /**
  * sfTesterViewCache implements tests for the symfony view cache manager.
  *
- * @package    symfony
+ * @package    Sift
  * @subpackage test
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfTesterViewCache.class.php 24615 2009-11-30 22:30:46Z Kris.Wallsmith $
+ * @author     Fabien Potencier <fabien.potencier@symfony-project.com> 
  */
 class sfTesterViewCache extends sfTester
 {
