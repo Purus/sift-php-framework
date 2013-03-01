@@ -15,11 +15,7 @@ sfConfig::set('sf_sift_data_dir',  $sf_sift_data_dir);
 require_once(dirname(__FILE__).'/testAutoloader.class.php');
 
 testAutoloader::initialize();
-
-function __autoload($class)
-{
-  return testAutoloader::__autoload($class);
-}
+spl_autoload_register(array('testAutoloader', '__autoload'));
 
 class sfException extends Exception
 {

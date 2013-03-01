@@ -14,56 +14,94 @@
  * @package    Sift
  * @subpackage config
  */
-class sfConfigCache extends sfConfigurable {
+class sfConfigCache {
 
+  /**
+   * Parent holder
+   *
+   * @var sfApplication|sfProject
+   */
+  protected $parent;
+
+  /**
+   * Array of configuration handler objects
+   *
+   * @var array
+   */
   protected $handlers = array();
-  
+
+  /**
+   * Instances holder
+   *
+   * @var array
+   */
   protected static $instances = array();
-  
-  protected static $instance = null;
-  
+
+  /**
+   * Constructs the object
+   *
+   * @param sfApplication|sfProject $parent
+   */
+  public function __construct(sfProject $parent)
+  {
+    $this->parent = $parent;
+  }
+
+  /**
+   * Returns configuration value from the parent
+   *
+   * @param string $name
+   * @param mixed $default
+   * @return mixed
+   */
+  public function getOption($name, $default = null)
+  {
+    return $this->parent->getOption($name, $default);
+  }
+
   /**
    * Retrieves the singleton instance of this class.
    *
+   * @param string|sfProject Application or project instance, or application, project name
    * @return sfConfigCache A sfConfigCache instance
    */
   public static function getInstance($application = null)
   {
-    $options = array();
-    
-    if(!$application)
+    $key = false;
+    if($application === null && sfCore::hasProject())
     {
-      if(sfCore::hasProject())
+      if(sfCore::getProject()->hasActive())
       {
-        if(sfCore::getProject()->hasActive())
-        {
-          $options = sfCore::getProject()->getActiveApplication()->getOptions();
-          $application = sfCore::getProject()->getActiveApplication()->getName();
-        }
-        else
-        {
-          $application = 'default';
-          $options = sfCore::getProject()->getOptions();
-        }   
+        $application = sfCore::getProject()->getActiveApplication();
+        $key = $application->getName();
+      }
+      else
+      {
+        // we need to get
+        $key = '_project_';
+        $application = sfCore::getProject();
       }
     }
     elseif($application instanceof sfApplication)
     {
-      $options = $application->getOptions();
-      $application = $application->getName();      
+      $key = $application->getName();
     }
     elseif($application instanceof sfProject)
-    {      
-      $options = $application->getOptions();
-      $application = '_project';
+    {
+      $key = '_project_';
     }
 
-    if(!isset(self::$instances[$application]))
+    if(!$key)
     {
-      self::$instances[$application] = new sfConfigCache($options);
+      throw new sfInitializationException('Invalid usage of getInstance(). No active application is present.');
     }
-    
-    return self::$instances[$application];
+
+    if(!isset(self::$instances[$key]))
+    {
+      self::$instances[$key] = new sfConfigCache($application);
+    }
+
+    return self::$instances[$key];
   }
 
   /**
@@ -87,7 +125,7 @@ class sfConfigCache extends sfConfigurable {
     $handlerToCall = null;
 
     $handler = str_replace(DIRECTORY_SEPARATOR, '/', $handler);
-    
+
     // grab the base name of the handler
     $basename = basename($handler);
     if(isset($this->handlers[$handler]))
@@ -125,7 +163,7 @@ class sfConfigCache extends sfConfigurable {
       // call the handler and retrieve the cache data
       $data = $handlerToCall->execute($configs);
 
-      $this->writeCacheFile($handler, $cache, $data);
+      self::writeCacheFile($cache, $data);
     }
     else
     {
@@ -140,7 +178,7 @@ class sfConfigCache extends sfConfigurable {
    *
    * The recompilation only occurs in a non debug environment.
    *
-   * If the configuration file path is relative, Sift will look in directories 
+   * If the configuration file path is relative, Sift will look in directories
    * defined in the sfLoader::getConfigPaths() method.
    *
    * @param string A filesystem path to a configuration file
@@ -175,7 +213,7 @@ class sfConfigCache extends sfConfigurable {
 
     if(!sfToolkit::isPathAbsolute($configPath))
     {
-      $files = sfLoader::getConfigPaths($configPath);      
+      $files = sfLoader::getConfigPaths($configPath);
     }
     else
     {
@@ -292,10 +330,10 @@ class sfConfigCache extends sfConfigurable {
     // manually create our config_handlers.yml handler
     $this->handlers['config_handlers.yml'] = new sfRootConfigHandler();
     $this->handlers['config_handlers.yml']->initialize();
-    
+
     // application configuration handlers
     require_once($this->checkConfig($this->getOption('sf_app_config_dir_name') . '/config_handlers.yml'));
-    
+
     // module level configuration handlers
     // make sure our modules directory exists
     if(is_readable($sf_app_module_dir = $this->getOption('sf_app_module_dir')))
@@ -337,28 +375,27 @@ class sfConfigCache extends sfConfigurable {
   /**
    * Writes a cache file.
    *
-   * @param string An absolute filesystem path to a configuration file
    * @param string An absolute filesystem path to the cache file that will be written
    * @param string Data to be written to the cache file
    *
    * @throws sfCacheException If the cache file cannot be written
    */
-  protected function writeCacheFile($config, $cache, &$data)
+  public static function writeCacheFile($cache, &$data)
   {
     $current_umask = umask(0000);
-    if (!is_dir(dirname($cache)))
+    if(!is_dir(dirname($cache)))
     {
-      if (false === @mkdir(dirname($cache), 0777, true))
+      if(false === @mkdir(dirname($cache), 0777, true))
       {
-        throw new sfCacheException(sprintf('Failed to make cache directory "%s" while generating cache for configuration file "%s".', dirname($cache), $config));
+        throw new sfCacheException(sprintf('Failed to make cache directory "%s".', dirname($cache)));
       }
     }
 
     $tmpFile = tempnam(dirname($cache), basename($cache));
 
-    if (!$fp = @fopen($tmpFile, 'wb'))
+    if(!$fp = @fopen($tmpFile, 'wb'))
     {
-      throw new sfCacheException(sprintf('Failed to write cache file "%s" generated from configuration file "%s".', $tmpFile, $config));
+      throw new sfCacheException(sprintf('Failed to write cache file "%s".', $tmpFile));
     }
 
     @fwrite($fp, $data);
@@ -367,16 +404,16 @@ class sfConfigCache extends sfConfigurable {
     // Hack from Agavi (http://trac.agavi.org/changeset/3979)
     // With php < 5.2.6 on win32, renaming to an already existing file doesn't work, but copy does,
     // so we simply assume that when rename() fails that we are on win32 and try to use copy()
-    if (!@rename($tmpFile, $cache))
+    if(!@rename($tmpFile, $cache))
     {
-      if (copy($tmpFile, $cache))
+      if(copy($tmpFile, $cache))
       {
         unlink($tmpFile);
       }
     }
 
     chmod($cache, 0666);
-    umask($current_umask); 
+    umask($current_umask);
   }
 
 }

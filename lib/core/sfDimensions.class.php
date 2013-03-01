@@ -17,60 +17,65 @@ class sfDimensions {
 
   /**
    * Stores the current dimensions
-   * 
-   * @var array 
+   *
+   * @var array
    */
   protected $currentDimension = array();
-  
+
   /**
    * All available dimensions
-   * 
-   * @var array 
+   *
+   * @var array
    */
   protected $availableDimensions = array();
-  
+
   /**
    * Stores all the possible directories in order based on current dimension
-   * 
+   *
    * @var array
    */
   protected $currentDimensionDirectories = array();
 
   /**
    * Constructs the dimension
-   * 
+   *
    * @param array $availableDimensions
    * @param array $defaultDimension
    */
   public function __construct(array $availableDimensions, $defaultDimension = null)
   {
     $this->availableDimensions = $availableDimensions;
-    
+
     if(null === $defaultDimension)
     {
       $defaultDimension = array();
 
-      foreach($availableDimensions as $dimension)
+      foreach($availableDimensions as $key => $dimension)
       {
         $dimension = (array)$dimension;
-        $defaultDimension[] = array_shift($dimension);
+        $defaultDimension[$key] = array_shift($dimension);
       }
     }
-    
+
     $this->currentDimension = $defaultDimension;
   }
 
   /**
    * Sets the current dimension
-   * 
+   *
    * @param array $dimension Current dimension
    * @return sfDimensions
    */
   public function setCurrentDimension($dimension)
   {
+    if(!$this->isAvailable($dimension))
+    {
+      throw new InvalidArgumentException(sprintf('Dimension "%s" is not available.', var_export($dimension, true)));
+    }
+
     // reset
-    $this->currentDimensionDirectories = array();    
-    $this->currentDimension = $dimension;    
+    $this->currentDimensionDirectories = array();
+    $this->currentDimension = $dimension;
     return $this;
   }
 
@@ -85,15 +90,34 @@ class sfDimensions {
   }
 
   /**
+   * Checks if given dimension is available
+   *
+   * @param array $dimension
+   */
+  public function isAvailable(array $dimension)
+  {
+    $allowed = array_keys($dimension);
+    foreach($allowed as $name)
+    {
+      if(!isset($this->availableDimensions[$name])
+              || !in_array($dimension[$name], $this->availableDimensions[$name]))
+      {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  /**
    * Returns an array of available dimensions
-   * 
+   *
    * @return array
    */
   public function getAvailableDimensions()
   {
     return $this->availableDimensions;
   }
-  
+
   /**
    * Gets all available dimension directories based on the current dimension
    *

@@ -4,6 +4,12 @@
 # Dimensions can be anything: culture, brand, age, host, etc..
 # The format is: <dimension_name>: [<possible_values_comma_separated>]
 
-#dimensions:
-#	culture: 		  [en, fr, it, de]
-#	theme: 			  [classic, corporate]
+# Available dimensions
+#available:
+#  culture: [en, fr, it, de]
+#  theme:   [classic, corporate]
+
+# Default dimensions
+#default:
+#  culture: en
+#  theme: corporate

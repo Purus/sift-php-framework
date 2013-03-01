@@ -14,65 +14,91 @@
  */
 abstract class sfPlugin extends sfConfigurable {
 
-  protected
-    $configuration = null,
-    $dispatcher    = null,
-    $name          = null;
+  /**
+   * Project instance
+   *
+   * @var sfProject
+   */
+  protected $project;
 
   /**
-   * 
+   * Plugin name
+   *
+   * @var string
+   */
+  protected $name;
+
+  /**
+   * Plugin's root directory
+   *
+   * @var string
+   */
+  protected $rootDir;
+
+  /**
+   * Constructs the plugin
+   *
    * @param array $options
    */
-  public function __construct($options = array())
+  public function __construct(sfProject $project, $name, $rootDir, $options = array())
   {
+    $this->project = $project;
+    $this->name = $name;
+    $this->rootDir = $rootDir;
+
     parent::__construct($options);
-    
-    $this->setup();
-    
-    if(PHP_SAPI == 'cli')
-    {
-      $this->setupCli();
-    }
-        
+
     $this->configure();
-    
-    $this->initializeAutoload();
-    $this->initialize();
   }
 
   public function setup()
   {
   }
 
-  public function setupCli()
-  {    
+  public function configure()
+  {
   }
 
-  public function configure()
-  {    
-  }
-  
   public function initialize()
-  {    
-  }  
-  
+  {
+  }
+
+  public function shutdown()
+  {
+  }
+
   /**
    * Initializes manual autoloading for the plugin.
-   * 
+   *
    * This method is called when a plugin is initialized in a project.
-   * Otherwise, autoload is handled in {@link sfApplication} 
+   * Otherwise, autoload is handled in {@link sfApplication}
    * using {@link sfAutoload}.
-   * 
+   *
+   * @param sfClassLoader $classLoader Class loader
    * @see sfSimpleAutoload
    */
-  public function initializeAutoload()
+  public function initializeAutoload(sfClassLoader $classLoader)
   {
   }
-  
-  
+
+  /**
+   * Returns plugin name
+   *
+   * @return string
+   */
+  public function getName()
+  {
+    return $this->name;
+  }
+
+  /**
+   * Returns plugin root directory
+   *
+   * @return string
+   */
   public function getRootDir()
   {
-    return $this->getOption('root_dir');
+    return $this->rootDir;
   }
 
 }

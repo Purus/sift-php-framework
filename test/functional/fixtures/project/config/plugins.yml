@@ -1,0 +1,4 @@
+all:
+  sfAutoloadPlugin: ~
+  sfConfigPlugin: ~
+  sfI18NPlugin: ~

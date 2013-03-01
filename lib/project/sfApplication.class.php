@@ -14,7 +14,11 @@
  */
 abstract class sfApplication extends sfProject {
 
-  protected $name;
+  /**
+   * Debug environment?
+   *
+   * @var boolean
+   */
   protected $debug = false;
 
   /**
@@ -47,6 +51,15 @@ abstract class sfApplication extends sfProject {
   protected $dimensions;
 
   /**
+   * Array of default options
+   *
+   * @var array
+   */
+  protected $defaultOptions = array(
+    'sf_plugins' => array()
+  );
+
+  /**
    * Constructs the application
    *
    * @param string $environment Environment (prod, dev, cli, staging)
@@ -58,51 +71,33 @@ abstract class sfApplication extends sfProject {
   {
     parent::__construct($options, $dispatcher);
 
-    // get application name from the classname
-    preg_match('/(my|sf)+(.*)Application/', get_class($this), $matches);
-
-    if(isset($matches[2]))
-    {
-      $this->name = sfInflector::tableize($matches[2]);
-    }
-    else
-    {
-      $this->name = get_class($this);
-    }
-
     $this->debug = $debug;
     $this->environment = $environment;
 
     // initialize core configuration
     $this->initCoreOptions();
-
-    // initialize config cache
-    $this->initConfigCache();
-
-    // initialize autoloading
-    $this->initializeAutoload();
-
-    // init include path
-    $this->initIncludePath();
-
     // load all available dimensions
     $this->loadDimensions();
-
     // initialize current dimension
     $this->initCurrentDimension();
-
-    // configures the application
-    $this->configure();
-
     // initialize options
     $this->initOptions();
-
-    // initialize
+    // load plugins
+    $this->loadPlugins();
+    // initialize config cache
+    $this->initConfigCache();
+    // initialize autoloading
+    $this->initializeAutoload();
+    // init include path
+    $this->initIncludePath();
+    // configures the application
+    $this->configure();
+    // setup plugins
+    $this->setupPlugins();
+    // init configuration
     $this->initConfiguration();
-
+    // initialize the application
     $this->initialize();
-
-    $this->activate();
   }
 
   /**
@@ -131,6 +126,10 @@ abstract class sfApplication extends sfProject {
   {
   }
 
+  /**
+   * Initializes configuration
+   *
+   */
   protected function initConfiguration()
   {
     // load base settings
@@ -160,7 +159,7 @@ abstract class sfApplication extends sfProject {
       set_error_handler(array('sfPhpErrorException', 'handleErrorCallback'), sfConfig::get('sf_error_reporting', E_ALL & ~E_NOTICE));
     }
 
-    register_shutdown_function(array('sfPhpErrorException', 'fatalErrorShutdownHandler'));
+    sfShutdownScheduler::getInstance()->register(array('sfPhpErrorException', 'fatalErrorShutdownHandler'), array(), sfShutdownScheduler::LOW_PRIORITY);
 
     // force setting default timezone if not set
     if(function_exists('date_default_timezone_get'))
@@ -189,7 +188,6 @@ abstract class sfApplication extends sfProject {
       $i18nConfig = include($this->configCache->checkConfig($sf_app_config_dir_name . '/i18n.yml'));
 
       $this->addOptions($i18nConfig);
-      sfConfig::add($i18nConfig);
 
       if(!function_exists('__'))
       {
@@ -216,7 +214,6 @@ abstract class sfApplication extends sfProject {
     }
     else
     {
-
       if(!function_exists('__'))
       {
         /**
@@ -244,8 +241,6 @@ abstract class sfApplication extends sfProject {
           return strtr($string, $args);
         }
       }
-
-
     }
 
     // add autoloading callables
@@ -271,8 +266,8 @@ abstract class sfApplication extends sfProject {
     // setup generation of html tags (Xhtml vs HTML)
     $this->initHtmlTagConfiguration();
 
-    // include all config.php from plugins
-    $this->loadPluginConfig();
+    // initialize plugins
+    $this->initializePlugins();
 
     // import text macros configuration
     $this->configCache->import(sprintf($sf_app_config_dir_name . '/%s/modules.yml', sfConfig::get('sf_app')), true, true);
@@ -299,22 +294,33 @@ abstract class sfApplication extends sfProject {
     }
   }
 
-  protected function initIncludePath()
+  /**
+   * Initializes plugin configuration objects.
+   *
+   */
+  protected function initializePlugins()
   {
-    set_include_path(
-      $this->getOption('sf_lib_dir').PATH_SEPARATOR.
-      $this->getOption('sf_root_dir').PATH_SEPARATOR.
-      $this->getOption('sf_sift_lib_dir').DIRECTORY_SEPARATOR.'vendor'.PATH_SEPARATOR.
-      get_include_path()
-    );
+    foreach($this->plugins as $name => $plugin)
+    {
+      if(false === $plugin->initialize() &&
+        is_readable($config = $plugin->getRootDir(). DS .
+        $this->getOption('sf_app_config_dir_name') . DS . 'config.php'))
+      {
+        require $config;
+      }
+    }
   }
 
+  /**
+   * Calls bootstrap
+   *
+   */
   public function callBootstrap()
   {
     $bootstrap = $this->getOption('sf_config_cache_dir').'/config_bootstrap_compile.yml.php';
     if(is_readable($bootstrap))
     {
-      sfConfig::set('sf_in_bootstrap', true);
+      $this->setOption('sf_in_bootstrap', true);
       require($bootstrap);
     }
   }
@@ -337,31 +343,102 @@ abstract class sfApplication extends sfProject {
       'sf_app_template_dir' => $sf_app_dir . DS . $this->getOption('sf_app_template_dir_name'),
       'sf_app_i18n_dir' => $sf_app_dir . DS . $this->getOption('sf_app_i18n_dir_name'),
     );
-
     $this->addOptions($coreOptions);
-
-    // export to sfConfig
-    sfConfig::add($this->getOptions());
   }
 
   /**
-   * Loads dimensions from dimensions.yml file
+   * Loads dimensions from dimensions.yml file. Refreshes in debug environment
+   * if the dimensions.yml file has changed after last compilation time.
    *
    */
   protected function loadDimensions()
   {
-    $this->dimensions = new sfDimensions($this->applicationDimensions);
+    // dimensions are application specific
+    // sits in the root
+    $cacheFile = $this->getOption('sf_root_cache_dir') . DS
+                 . $this->getName() . DS . 'config_dimensions.yml.php';
+
+    $file = $this->getOption('sf_app_config_dir').DS.'dimensions.yml';
+
+    $compile = false;
+    // create the file if it does not exits
+    if(is_readable($cacheFile))
+    {
+      if($this->isDebug() && filemtime($file) > filemtime($cacheFile))
+      {
+        $compile = true;
+      }
+    }
+    else // cache does not exist
+    {
+      $compile = true;
+    }
+
+    if($compile)
+    {
+      $pluginHandler = new sfDimensionsConfigHandler();
+      // application wide setting
+      $result = $pluginHandler->execute(array($file));
+      // put to cache
+      sfConfigCache::writeCacheFile($cacheFile, $result);
+    }
+
+    // load cache
+    include $cacheFile;
 
     $dimensions = array(
-        'sf_dimension' => $this->getDimensions()->getCurrentDimension(),
-        // stores the dimension directories that sift will search through
-        'sf_dimension_dirs' => $this->getDimensions()->getDimensionDirs()
+      'sf_dimension' => $this->getDimensions()->getCurrentDimension(),
+      // stores the dimension directories that sift will search through
+      'sf_dimension_dirs' => $this->getDimensions()->getDimensionDirs()
     );
 
     $this->addOptions($dimensions);
-    sfConfig::add($dimensions);
   }
 
+  /**
+   * Returns current application dimension
+   *
+   * @return array
+   */
+  public function getCurrentDimension()
+  {
+    return $this->getDimensions()->getCurrentDimension();
+  }
+
+  /**
+   * Sets current dimension
+   *
+   * @param array $dimension
+   */
+  public function setCurrentDimension(array $dimension)
+  {
+    $this->getDimensions()->setCurrentDimension($dimension);
+
+    // add to current configuration
+    $dimensions = array(
+      'sf_dimension' => $this->getDimensions()->getCurrentDimension(),
+      // stores the dimension directories that sift will search through
+      'sf_dimension_dirs' => $this->getDimensions()->getDimensionDirs()
+    );
+
+    // this will flush the values to sfConfig
+    $this->addOptions($dimensions);
+  }
+
+  /**
+   * Returns an array of available dimensions
+   *
+   * @return array
+   */
+  public function getAvailableDimensions()
+  {
+    return $this->getDimensions()->getAvailableDimensions();
+  }
+
+  /**
+   * Initialize options
+   *
+   */
   protected function initOptions()
   {
     $dimension_string = $this->getDimensions()->getDimensionString();
@@ -370,27 +447,23 @@ abstract class sfApplication extends sfProject {
         'sf_dimension' => $this->getDimensions()->getCurrentDimension(),
         // stores the dimension directories that sift will search through
         'sf_dimension_dirs' => $this->getDimensions()->getDimensionDirs(),
-        'sf_cache_dir' => $sf_cache_dir = $this->getOption('sf_base_cache_dir') . DS . $this->getEnvironment() .
-        ($dimension_string ? DS . $dimension_string : ''),
+        // SF_APP_DIR directory structure
+        'sf_cache_dir' => $sf_cache_dir = ($this->getOption('sf_base_cache_dir') . DS . $this->getEnvironment() . ($dimension_string ? DS . $dimension_string : '')),
         'sf_template_cache_dir' => $sf_cache_dir . DS . 'template',
         'sf_i18n_cache_dir' => $sf_cache_dir . DS . 'i18n',
         'sf_config_cache_dir' => $sf_cache_dir . DS . $this->getOption('sf_config_dir_name'),
         'sf_test_cache_dir' => $sf_cache_dir . DS . 'test',
         'sf_module_cache_dir' => $sf_cache_dir . DS . 'modules',
-        // SF_APP_DIR directory structure
-        'sf_cache_dir' => $this->getOption('sf_base_cache_dir') . DS . $this->getEnvironment() . ($dimension_string ? DS . $dimension_string : ''),
     ));
-
-    sfConfig::add($this->getOptions());
   }
 
   /**
-   * Add a filter call back. Tell sfCore that a filter is to be run on a filter
+   * Add a text filter callback. Tell that a filter is to be run on a filter
    * at a certain point.
-   *
-   * $tag          string  Name of the filter to hook.
-   * $function     string  Callable function to be run on the hoook
-   * $priority     integer Priority of this filter, default is 10 (higher value, higher priority)
+   * 
+   * @param string $tag Name of the filter to hook.
+   * @param string $function Callable function to be run on the hoook
+   * @param integer $priority Priority of this filter, default is 10 (higher value, higher priority)
    */
   public function addFilter($tag, $function, $priority = 10)
   {
@@ -449,7 +522,7 @@ abstract class sfApplication extends sfProject {
       foreach($phooks as $hook)
       {
         // is the method available?
-        if(!is_callable($hook))
+        if(!sfToolkit::isCallable($hook))
         {
           throw new Exception(sprintf('{sfApplication} "%s" is not callable.', var_export($hook, true)));
         }
@@ -494,9 +567,6 @@ abstract class sfApplication extends sfProject {
           break;
         }
       }
-
-
-
       die(1);
     }
   }
@@ -551,6 +621,8 @@ abstract class sfApplication extends sfProject {
    */
   public function activate()
   {
+    sfConfig::clear();
+    sfConfig::add($this->getOptions());
   }
 
   /**
@@ -560,7 +632,7 @@ abstract class sfApplication extends sfProject {
    */
   public function getName()
   {
-    return $this->name;
+    return $this->getOption('sf_app');
   }
 
   /**
@@ -608,14 +680,19 @@ abstract class sfApplication extends sfProject {
   {
     if(is_null($this->dimensions))
     {
-      throw new RuntimeException('Dimensions are not loaded.');
+      throw new RuntimeException('Application dimensions are not loaded yet.');
     }
     return $this->dimensions;
   }
 
+  /**
+   * Magic __toString() method
+   *
+   * @return string
+   */
   public function __toString()
   {
-    return $this->name;
+    return $this->getName();
   }
 
 }

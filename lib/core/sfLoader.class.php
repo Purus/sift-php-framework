@@ -357,12 +357,10 @@ class sfLoader {
       sfConfig::get('sf_sift_data_dir').DS.$configPath,
     );
 
-    // plugins
+    // plugins, global
     foreach(sfConfig::get('sf_plugins', array()) as $plugin)
-    {
-      // global
+    {      
       $files[] = $pluginsDir.DS.$plugin.DS.$globalConfigPath;
-      $files[] = $pluginsDir.DS.$plugin.DS.$configPath;
     }
 
     // project
@@ -375,6 +373,12 @@ class sfLoader {
     // generated modules
     $files[] = sfConfig::get('sf_cache_dir').DS.$configPath;
 
+    // plugins, but local
+    foreach(sfConfig::get('sf_plugins', array()) as $plugin)
+    {      
+      $files[] = $pluginsDir.DS.$plugin.DS.$configPath;
+    }
+    
     // module
     $files[] = $appDir.DS.$configPath;
 

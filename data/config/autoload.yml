@@ -2,44 +2,38 @@
 # https://bitbucket.org/mishal/sift-php-framework/wiki/Autoload
 
 autoload:
-  
+
   # plugins
   plugins_lib:
-    name:           plugins lib
-    path:           %SF_PLUGINS_DIR%/*/lib
+    path:           %SF_PLUGINS_DIR%/%SF_PLUGINS_GLOB_PATTERN%/lib
     recursive:      true
     exclude:        [vendor]
 
   plugins_module_lib:
-    name:           plugins module lib
-    path:           %SF_PLUGINS_DIR%/*/modules/*/lib
+    path:           %SF_PLUGINS_DIR%/%SF_PLUGINS_GLOB_PATTERN%/modules/*/lib
     prefix:         2
     recursive:      true
     exclude:        [vendor]
 
   # project
   project:
-    name:           project
     path:           %SF_LIB_DIR%
     recursive:      true
     exclude:        [model, sift, vendor]
 
   project_model:
-    name:           project model
     path:           %SF_MODEL_LIB_DIR%
     recursive:      true
     exclude:        [vendor]
 
   # application
   application:
-    name:           application
     path:           %SF_APP_LIB_DIR%
     recursive:      true
     exclude:        [vendor]
 
   modules:
-    name:           module
     path:           %SF_APP_DIR%/modules/*/lib
-    prefix:         true
+    prefix:         1
     recursive:      true
     exclude:        [vendor]
