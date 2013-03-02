@@ -46,12 +46,6 @@ class sfCrypt {
   public function __construct($key = null, $mode = 'ecb', 
           $algorithm = 'tripledes')
   {   
-    // try to load extension manually
-    if(!extension_loaded('mcrypt'))
-    {
-      @dl((PHP_SHLIB_SUFFIX == 'dll') ? 'php_' : '' . 'mcrypt.' . PHP_SHLIB_SUFFIX);
-    }
-
     if(!extension_loaded('mcrypt'))
     {
       throw new sfInitializationException('{sfCrypt} You must install the php mcrypt module (http://www.php.net/mcrypt)');
