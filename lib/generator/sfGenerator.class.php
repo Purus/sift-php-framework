@@ -15,6 +15,38 @@
 abstract class sfGenerator extends sfConfigurable implements sfIGenerator {
 
   /**
+   * List context
+   */
+  const CONTEXT_LIST = 'list';
+
+  /**
+   * Edit context
+   */
+  const CONTEXT_EDIT = 'edit';
+
+  /**
+   * Quick edit context
+   */
+  const CONTEXT_QUICK_EDIT = 'quick_edit';
+
+  /**
+   * Create context
+   *
+   */
+  const CONTEXT_CREATE = 'create';
+
+  /**
+   * Show context
+   */
+  const CONTEXT_SHOW = 'show';
+
+  /**
+   * Filter context
+   *
+   */
+  const CONTEXT_FILTER = 'filter';
+
+  /**
    * Generator class
    *
    * @var string

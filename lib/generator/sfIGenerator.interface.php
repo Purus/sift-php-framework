@@ -22,11 +22,12 @@ interface sfIGenerator {
   public function generate();
 
   /**
-   *
+   * Return module name
    */
   public function getModuleName();
 
   /**
+   * Sets module name
    *
    * @param string $moduleName
    */

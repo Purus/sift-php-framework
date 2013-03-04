@@ -14,12 +14,95 @@
  */
 abstract class sfGeneratorColumn extends sfConfigurable implements sfIGeneratorColumn {
 
-  const CONTEXT_LIST = 'list';
-  const CONTEXT_EDIT = 'edit';
-  const CONTEXT_QUICK_EDIT = 'quick_edit';
-  const CONTEXT_CREATE = 'create';
-  const CONTEXT_SHOW = 'show';
-  const CONTEXT_FILTER = 'filter';
+  /**
+   * String type
+   */
+  const TYPE_STRING = 'string';
+
+  /**
+   * String type
+   */
+  const TYPE_INTEGER = 'integer';
+
+  /**
+   * Boolean type
+   */
+  const TYPE_BOOLEAN = 'boolean';
+
+  /**
+   * Date type
+   */
+  const TYPE_DATE = 'date';
+
+  /**
+   * Time type
+   */
+  const TYPE_TIME = 'time';
+
+  /**
+   * Timestamp type
+   */
+  const TYPE_TIMESTAMP = 'timestamp';
+
+  /**
+   * Enum type
+   */
+  const TYPE_ENUM = 'enum';
+
+  /**
+   * Float type
+   */
+  const TYPE_FLOAT = 'float';
+
+  /**
+   * Decimal type
+   */
+  const TYPE_DECIMAL = 'decimal';
+
+  /**
+   * Double type
+   */
+  const TYPE_DOUBLE = 'double';
+
+  /**
+   * Clob type
+   */
+  const TYPE_CLOB = 'clob';
+
+  /**
+   * Blob type
+   */
+  const TYPE_BLOB = 'blob';
+
+  /**
+   * Object type
+   */
+  const TYPE_OBJECT = 'object';
+
+  /**
+   * Array type
+   */
+  const TYPE_ARRAY = 'array';
+
+  /**
+   * Gzip type
+   */
+  const TYPE_GZIP = 'gzip';
+
+  /**
+   * Bit type
+   */
+  const TYPE_BIT = 'bit';
+
+  /**
+   * Partial type
+   */
+  const TYPE_PARTIAL = 'partial';
+
+  /**
+   * Component type
+   */
+  const TYPE_COMPONENT = 'component';
 
   /**
    * Column name
@@ -485,7 +568,8 @@ abstract class sfGeneratorColumn extends sfConfigurable implements sfIGeneratorC
    */
   public function isIpAddress()
   {
-    return false;
+    return $this->isReal() && $this->getType == self::TYPE_INTEGER
+            && in_array($this->getName(), array('ip', 'ip_forwarded_for'));
   }
 
   /**
