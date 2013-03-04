@@ -20,9 +20,6 @@ abstract class sfGeneratorFormBuilder extends sfConfigurable {
    * @var array
    */
   protected $defaultOptions = array(
-
-
-
     // date column options
     'date' => array(
       'widget' => array(
@@ -75,12 +72,12 @@ abstract class sfGeneratorFormBuilder extends sfConfigurable {
   /**
    * Returns widget class, options, attributes and also validator class, options and messages for given $column
    *
-   * @param sfGeneratorModelColumn $column Column
+   * @param sfIGeneratorColumn $column Column
    * @param string $context Context (edit, list, filter, create, ...)
    * @return array
    * @throws RuntimeException
    */
-  public function getWidgetAndValidator(sfGeneratorModelColumn $column, $context = 'edit')
+  public function getWidgetAndValidator(sfIGeneratorColumn $column, $context = 'edit')
   {
     if($column->isPartial())
     {
@@ -172,11 +169,11 @@ abstract class sfGeneratorFormBuilder extends sfConfigurable {
   /**
    * Returns widget and validator for string column type
    *
-   * @param sfGeneratorModelColumn $column
+   * @param sfIGeneratorColumn $column
    * @param string $context
    * @return array
    */
-  protected function getWidgetAndValidatorString(sfGeneratorModelColumn $column, $context)
+  protected function getWidgetAndValidatorString(sfIGeneratorColumn $column, $context)
   {
     $widgetClass = $this->getOption('string.widget.class', 'sfWidgetFormInputText');
     $widgetOptions = $this->getOption('string.widget.options', array());
@@ -257,7 +254,7 @@ abstract class sfGeneratorFormBuilder extends sfConfigurable {
    *
    *
    */
-  protected function getWidgetAndValidatorBoolean(sfGeneratorModelColumn $column, $context)
+  protected function getWidgetAndValidatorBoolean(sfIGeneratorColumn $column, $context)
   {
     $widgetOptions = $widgetAttributes =
       $validatorOptions = $validatorMessages = array();
@@ -293,7 +290,7 @@ abstract class sfGeneratorFormBuilder extends sfConfigurable {
    *
    *
    */
-  protected function getWidgetAndValidatorInteger(sfGeneratorModelColumn $column, $context)
+  protected function getWidgetAndValidatorInteger(sfIGeneratorColumn $column, $context)
   {
     $widgetSubclass = 'InputText';
     $widgetOptions = $widgetAttributes =
@@ -316,7 +313,7 @@ abstract class sfGeneratorFormBuilder extends sfConfigurable {
    *
    *
    */
-  protected function getWidgetAndValidatorFloat(sfGeneratorModelColumn $column, $context)
+  protected function getWidgetAndValidatorFloat(sfIGeneratorColumn $column, $context)
   {
     return $this->getWidgetAndValidatorNumber($column, $context);
   }
@@ -326,7 +323,7 @@ abstract class sfGeneratorFormBuilder extends sfConfigurable {
    *
    *
    */
-  protected function getWidgetAndValidatorDecimal(sfGeneratorModelColumn $column, $context)
+  protected function getWidgetAndValidatorDecimal(sfIGeneratorColumn $column, $context)
   {
     return $this->getWidgetAndValidatorNumber($column, $context);
   }
@@ -336,7 +333,7 @@ abstract class sfGeneratorFormBuilder extends sfConfigurable {
    *
    *
    */
-  protected function getWidgetAndValidatorDouble(sfGeneratorModelColumn $column, $context)
+  protected function getWidgetAndValidatorDouble(sfIGeneratorColumn $column, $context)
   {
     return $this->getWidgetAndValidatorNumber($column, $context);
   }
@@ -346,7 +343,7 @@ abstract class sfGeneratorFormBuilder extends sfConfigurable {
    *
    *
    */
-  protected function getWidgetAndValidatorDate(sfGeneratorModelColumn $column, $context)
+  protected function getWidgetAndValidatorDate(sfIGeneratorColumn $column, $context)
   {
     $widgetClass = $this->getOption('date.widget.class', 'sfWidgetFormDate');
     $widgetOptions = $this->getOption('date.widget.options', array());
@@ -396,7 +393,7 @@ abstract class sfGeneratorFormBuilder extends sfConfigurable {
    *
    *
    */
-  protected function getWidgetAndValidatorTimestamp(sfGeneratorModelColumn $column, $context)
+  protected function getWidgetAndValidatorTimestamp(sfIGeneratorColumn $column, $context)
   {
     // return defaults
     $widgetClass = $this->getOption('timestamp.widget.class', 'sfWidgetFormDateTime');
@@ -450,7 +447,7 @@ abstract class sfGeneratorFormBuilder extends sfConfigurable {
    *
    *
    */
-  protected function getWidgetAndValidatorTime(sfGeneratorModelColumn $column, $context)
+  protected function getWidgetAndValidatorTime(sfIGeneratorColumn $column, $context)
   {
     // return defaults
     $widgetClass = $this->getOption('time.widget.class', 'sfWidgetFormTime');
@@ -495,7 +492,7 @@ abstract class sfGeneratorFormBuilder extends sfConfigurable {
    *
    *
    */
-  protected function getWidgetAndValidatorEnum(sfGeneratorModelColumn $column, $context)
+  protected function getWidgetAndValidatorEnum(sfIGeneratorColumn $column, $context)
   {
     // return defaults
     $widgetClass = $this->getOption('enum.widget.class', 'sfWidgetFormChoice');
@@ -522,7 +519,7 @@ abstract class sfGeneratorFormBuilder extends sfConfigurable {
    * Returns widget and validator for clob
    *
    */
-  protected function getWidgetAndValidatorClob(sfGeneratorModelColumn $column, $context)
+  protected function getWidgetAndValidatorClob(sfIGeneratorColumn $column, $context)
   {
     // return defaults
     $widgetClass = $this->getOption('clob.widget.class', 'sfWidgetFormTextarea');
@@ -546,7 +543,7 @@ abstract class sfGeneratorFormBuilder extends sfConfigurable {
    * Returns widget and validator for clob
    *
    */
-  protected function getWidgetAndValidatorBlob(sfGeneratorModelColumn $column, $context)
+  protected function getWidgetAndValidatorBlob(sfIGeneratorColumn $column, $context)
   {
     // return defaults
     $widgetClass = $this->getOption('blob.widget.class', 'sfWidgetFormNoInput');
@@ -570,7 +567,7 @@ abstract class sfGeneratorFormBuilder extends sfConfigurable {
    * Returns widget and validator for clob
    *
    */
-  protected function getWidgetAndValidatorObject(sfGeneratorModelColumn $column, $context)
+  protected function getWidgetAndValidatorObject(sfIGeneratorColumn $column, $context)
   {
     // return defaults
     $widgetClass = $this->getOption('object.widget.class', 'sfWidgetFormNoInput');
@@ -594,7 +591,7 @@ abstract class sfGeneratorFormBuilder extends sfConfigurable {
    * Returns widget and validator for clob
    *
    */
-  protected function getWidgetAndValidatorArray(sfGeneratorModelColumn $column, $context)
+  protected function getWidgetAndValidatorArray(sfIGeneratorColumn $column, $context)
   {
     // return defaults
     $widgetClass = $this->getOption('array.widget.class', 'sfWidgetFormNoInput');
@@ -618,7 +615,7 @@ abstract class sfGeneratorFormBuilder extends sfConfigurable {
    * Returns widget and validator for clob
    *
    */
-  protected function getWidgetAndValidatorGzip(sfGeneratorModelColumn $column, $context)
+  protected function getWidgetAndValidatorGzip(sfIGeneratorColumn $column, $context)
   {
     // return defaults
     $widgetClass = $this->getOption('gzip.widget.class', 'sfWidgetFormNoInput');
@@ -643,7 +640,7 @@ abstract class sfGeneratorFormBuilder extends sfConfigurable {
    *
    *
    */
-  protected function getWidgetAndValidatorNumber(sfGeneratorModelColumn $column, $context)
+  protected function getWidgetAndValidatorNumber(sfIGeneratorColumn $column, $context)
   {
     $widgetSubclass = 'InputText';
     $widgetOptions = $widgetAttributes =
@@ -667,7 +664,7 @@ abstract class sfGeneratorFormBuilder extends sfConfigurable {
    * Returns widget and validator for string column type
    *
    */
-  protected function getWidgetAndValidatorPartial(sfGeneratorModelColumn $column, $context)
+  protected function getWidgetAndValidatorPartial(sfIGeneratorColumn $column, $context)
   {
     $widgetSubclass = 'Partial';
 
@@ -692,7 +689,7 @@ abstract class sfGeneratorFormBuilder extends sfConfigurable {
    * Returns widget and validator for string column type
    *
    */
-  protected function getWidgetAndValidatorComponent(sfGeneratorModelColumn $column, $context)
+  protected function getWidgetAndValidatorComponent(sfIGeneratorColumn $column, $context)
   {
     $widgetSubclass = 'Component';
 
@@ -713,7 +710,7 @@ abstract class sfGeneratorFormBuilder extends sfConfigurable {
     );
   }
 
-  abstract protected function getWidgetAndValidatorForeignKey(sfGeneratorModelColumn $column, $context);
+  abstract protected function getWidgetAndValidatorForeignKey(sfIGeneratorColumn $column, $context);
 
   /**
    * Exports variable to string

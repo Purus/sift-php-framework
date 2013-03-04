@@ -12,7 +12,7 @@
  * @package    Sift
  * @subpackage generator
  */
-abstract class sfGeneratorModelColumn extends sfConfigurable implements sfIGeneratorModelColumn {
+abstract class sfGeneratorColumn extends sfConfigurable implements sfIGeneratorColumn {
 
   const CONTEXT_LIST = 'list';
   const CONTEXT_EDIT = 'edit';

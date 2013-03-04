@@ -12,7 +12,7 @@
  * @package    Sift
  * @subpackage generator
  */
-interface sfIGeneratorModelColumn {
+interface sfIGeneratorColumn {
 
   public function setGenerator(sfIGenerator $generator);
   public function getGenerator();
