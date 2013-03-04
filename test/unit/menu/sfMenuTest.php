@@ -3,7 +3,7 @@
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 require_once($_test_dir.'/unit/sfContextMock.class.php');
 
-$t = new lime_test(62);
+$t = new lime_test(56);
 
 sfLoader::loadHelpers('Tag', 'Url');
 
@@ -38,7 +38,7 @@ $t->is($root1->getLevel(), 0, 'Test Root 1 level is 0');
 $t->is($root2->getLevel(), 0, 'Test Root 2 level is 0');
 $t->is($child3->getLevel(), 1, 'Test Child 3 level is 1');
 $t->is($grandchild1->getLevel(), 2, 'Test Grandchild 1 level is 2');
-$t->is($grandchild1->getPathAsString(), 'Test Menu > Root 2 > Child 3 > Grandchild 1', 'Test getPathAsString() on Grandchild 1');
+$t->is($grandchild1->getPathAsString(), 'Root 2 > Child 3 > Grandchild 1', 'Test getPathAsString() on Grandchild 1');
 $t->is(get_class($root1), 'sfMenuTest', 'Test children are created as same class as parent');
 
 // array access
@@ -49,7 +49,7 @@ $children = $child3->getChildren();
 
 $t->is(count($children), 1, '->getChildren() returns 1 menu item correctly');
 
-// $t->is($children[0]->name, $grandchild1->name, '->getChildren() returns the correct menu item');
+//$t->is($children[0]->getName(), $grandchild1->getName(), '->getChildren() returns the correct menu item');
 
 
 $child3->addChild('temporary');
@@ -92,7 +92,6 @@ $t->info('           gc1   gc2 ');
 $menu['Root 2']['Child 4']['Grandchild 2'];
 $t->is((string) $menu['Root 2'], '<ul><li class="first">Child 3<ul><li class="first last">Grandchild 1</li></ul></li><li class="last">Child 4<ul><li class="first last">Grandchild 2</li></ul></li></ul>', 'Test __toString()');
 
-
 $t->info('2 - Test routes, authentication');
 
 $t->info('Add a third route to check routes, authentication');
@@ -105,26 +104,28 @@ $t->info('           gc1   gc2           ');
 $menu['Root 3']['With Route']->setRoute('http://www.google.com');
 $t->is((string) $menu['Root 3'], '<ul><li class="first last"><a href="http://www.google.com">With Route</a></li></ul>', 'Test __toString() with a route');
 
+$menu['Root 3']['With Route']->setOption('target', '_BLANK');
+$t->is((string) $menu['Root 3'], '<ul><li class="first last"><a href="http://www.google.com">With Route</a></li></ul>', 'Test __toString() with a target option');
+
 $t->is($menu['Root 3']->hasChildren(), true, 'Test hasChildren() on Root 3');
+
+$user = sfContext::getInstance()->getUser();
+$user->setAuthenticated(false);
 
 $menu['Root 3']['With Route']->requiresAuth(true);
 $t->is((string) $menu['Root 3'], '', 'Test requiresAuth()');
 $t->is($menu['Root 3']->hasChildren(), false, 'Test hasChildren() on Root 3 when user has no access to With Route');
 
 $user = sfContext::getInstance()->getUser();
-$user->isAuthenticated(true);
+$user->setAuthenticated(true);
+
 $t->is($user->isAuthenticated(), true, 'Test isAuthenticated()');
-
-//$menu['Root 3']['With Route']->setCredentials('superuser');
-
 $t->is($menu['Root 3']['With Route']->checkUserAccess($user), true, 'Test checkUserAccess()');
-
 $t->is((string) $menu['Root 3'], '<ul><li class="first last"><a href="http://www.google.com">With Route</a></li></ul>', 'Test authentication');
-// $menu->setCredentials('superuser');
-// $menu->requiresNoAuth(true);
-
-$t->is((string) $menu, '<ul><li class="first last"><a href="http://www.google.com">With Route</a></li></ul>', 'Test requiresNoAuth()');
+$menu->requiresNoAuth(true);
+$t->is((string) $menu, '', 'Test requiresNoAuth()');
 $t->is($menu['Root 3']['With Route']->getParent()->getLabel(), $menu['Root 3']->getLabel(), 'Test getLabel()');
+
 
 $t->info('3 - Test isCurrent(), toArray() and child calls');
 
@@ -140,12 +141,14 @@ $t->is($menu['Root 4']->toArray(), array(
   'name' => 'Root 4',
   'level' => 0,
   'is_current' => false,
+  'priority' => 0,
   'options' => array(),
   'children' => array(
     'Test' => array(
       'name' => 'Test',
       'level' => 1,
       'is_current' => true,
+      'priority' => 0,
       'options' => array()
     )
   )
@@ -154,7 +157,7 @@ $t->is($menu['Root 4']->toArray(), array(
 $test = new sfMenuTest('Test');
 $test->fromArray($menu['Root 4']->toArray());
 $t->is($test->toArray(), $menu['Root 4']->toArray(), 'Test fromArray()');
-$t->is($menu['Root 4']['Test']->getPathAsString(), 'Test Menu > Root 4 > Test', 'Test getPathAsString()');
+$t->is($menu['Root 4']['Test']->getPathAsString(), 'Root 4 > Test', 'Test getPathAsString()');
 $t->is($menu->getFirstChild()->getName(), 'Root 1', 'Test getFirstChild()');
 $t->is($menu->getLastChild()->getName(), 'Root 4', 'Test getLastChild()');
 
@@ -173,6 +176,80 @@ $t->is($first->isFirst(), true, 'Test isFirst()');
 $t->is($last->isLast(), true, 'Test isLast()');
 $t->is($middle->isFirst(), false, 'Test isFirst()');
 $t->is($middle->isLast(), false, 'Test isLast()');
-$t->is($first->getNum(), 1, 'Test getNum()');
-$t->is($middle->getNum(), 2, 'Test getNum()');
-$t->is($last->getNum(), 3, 'Test getNum()');
+$t->is($first->getNumber(), 1, 'Test getNum()');
+$t->is($middle->getNumber(), 2, 'Test getNum()');
+$t->is($last->getNumber(), 3, 'Test getNum()');
+
+$t->diag('->getRoot()');
+$t->isa_ok($last->getRoot(), 'sfMenuTest', 'getRoot() returns sfMenuTest element');
+$t->is($last->getRoot(), $menu, 'getRoot() returns root element');
+
+$t->diag('->getParent()');
+$t->isa_ok($last->getParent(), 'sfMenuTest', 'getParent() returns sfMenuTest element');
+$t->is($last->getParent(), $root1, 'getParent() returns parent element');
+
+$t->diag('->setPriority() ->getPriority()');
+$t->is($last->setPriority(1), $last, 'setPriority() returns the object');
+$t->is($last->getPriority(1), 1, 'getPriority() returns assigned priority');
+
+$t->diag('getFirstChild()');
+$t->is($last->getFirstChild(), false, 'getFirstChild() returns false if the item does not exist');
+
+$t->is($last->getPathAsString(), 'Root 1 > Child 3', 'getPathAsString() returns path to the item as string');
+
+$last->setRoute('http://example.com');
+$t->is($last->getPath(true), array(
+  'Root 1',
+  '<a href="http://example.com">Child 3</a>',
+), 'getPathAsString() returns links if requested');
+
+$t->is($last->getPath(false), array(
+  'Root 1',
+  'Child 3',
+), 'getPath() return array');
+
+
+$t->is($last->getPath(false, true), array(
+  'Test Menu',
+  'Root 1',
+  'Child 3',
+), 'getPath() return array of item with root element included');
+
+
+$menu->sortAllByPriority();
+
+$array = $menu->toArray();
+
+$t->is($array['children']['Root 1']['children'], array(
+  'Child 3' =>
+  array (
+    'name' => 'Child 3',
+    'route' => 'http://example.com',
+    'level' => 1,
+    'is_current' => false,
+    'priority' => 1,
+    'options' =>
+    array (
+    ),
+  ),
+  'Child 1' =>
+  array (
+    'name' => 'Child 1',
+    'level' => 1,
+    'is_current' => false,
+    'priority' => 0,
+    'options' =>
+    array (
+    ),
+  ),
+  'Child 2' =>
+  array (
+    'name' => 'Child 2',
+    'level' => 1,
+    'is_current' => false,
+    'priority' => 0,
+    'options' =>
+    array (
+    ),
+  ),
+), '->sortAllByPriority() Items are sorted by priority than by name');

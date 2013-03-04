@@ -11,117 +11,299 @@
  *
  * @package    Sift
  * @subpackage menu
- * @author     Jonathan H. Wage
- * @author     Mishal.cz <mishal@mishal.cz>
  */
-class sfMenu implements ArrayAccess, Countable, IteratorAggregate {
+class sfMenu extends sfConfigurable implements ArrayAccess, Countable, IteratorAggregate {
 
-  protected
-          $_name = null,
-          $_priority = 0,
-          $_route = null,
-          $_level = null,
-          $_parent = null,
-          $_root = null,
-          $_num = null,
-          $_requiresAuth = null,
-          $_requiresNoAuth = null,
-          $_showChildren = true,
-          $_current = false,
-          $_options = array(),
-          $_children = array(),
-          $_credentials = array();
+  /**
+   * Menu name
+   *
+   * @var string
+   */
+  protected $name;
 
+  /**
+   * Route
+   *
+   * @var string
+   */
+  protected $route;
+
+  /**
+   * Does this menu require user to be authenticated?
+   *
+   * @var boolean
+   */
+  protected $requiresAuth = false;
+
+  /**
+   * Does this menu require user to be not authenticated?
+   *
+   * @var boolean
+   */
+  protected $requiresNoAuth = false;
+
+  /**
+   * Array of children items
+   *
+   * @var array
+   */
+  protected $children = array();
+
+  /**
+   * Show children?
+   *
+   * @var boolean
+   */
+  protected $showChildren = true;
+
+  /**
+   * Nesting level
+   *
+   * @var integer
+   */
+  protected $level;
+
+  /**
+   * Returns root element
+   *
+   * @var sfMenu
+   */
+  protected $root;
+
+  /**
+   * Parent item
+   *
+   * @var sfMenu
+   */
+  protected $parent;
+
+  /**
+   * Item priority
+   *
+   * @var integer
+   */
+  protected $priority = 0;
+
+  /**
+   * Item internal number
+   *
+   * @var integer
+   */
+  protected $number;
+
+  /**
+   * Is this current item?
+   *
+   * @var boolean
+   */
+  protected $current = false;
+
+  /**
+   * Array of credentials required for this menu
+   *
+   * @var array
+   */
+  protected $credentials = array();
+
+  /**
+   * Are helpers loaded?
+   *
+   * @var boolean
+   */
+  protected static $helpersLoaded = false;
+
+  /**
+   * Constructs the menu
+   *
+   * @param string $name
+   * @param string $route
+   * @param array $options
+   */
   public function __construct($name, $route = null, $options = array())
   {
-    $this->_name = $name;
-    $this->_route = $route;
-    $this->_options = $options;
+    parent::__construct($options);
+
+    $this->name = $name;
+    $this->route = $route;
+
+    $this->loadHelpers();
+  }
+
+  /**
+   * Loads view helpers
+   *
+   */
+  protected function loadHelpers()
+  {
+    if(self::$helpersLoaded)
+    {
+      return;
+    }
 
     sfLoader::loadHelpers(array('Tag', 'Url'));
+    self::$helpersLoaded = true;
+  }
+
+  /**
+   * Sets menu name
+   *
+   * @param string $name
+   * @return sfMenu
+   */
+  public function setName($name)
+  {
+    $this->name = $name;
+    return $this;
+  }
+
+  /**
+   * Returns menu name
+   *
+   * @return string
+   */
+  public function getName()
+  {
+    return $this->name;
   }
 
   /**
    * Returns route
-   * 
+   *
    * @return string
    */
   public function getRoute()
   {
-    return $this->_route;
+    return $this->route;
   }
 
+  /**
+   * Sets menu route
+   *
+   * @param string $route
+   * @return sfMenu
+   */
   public function setRoute($route)
   {
-    $this->_route = $route;
+    $this->route = $route;
     return $this;
   }
 
-  public function getOptions()
-  {
-    return $this->_options;
-  }
-
-  public function setOptions($options)
-  {
-    $this->_options = $options;
-
-    return $this;
-  }
-
-  public function getOption($name, $default = null)
-  {
-    if(isset($this->_options[$name]))
-    {
-      return $this->_options[$name];
-    }
-    return $default;
-  }
-
-  public function setOption($name, $value)
-  {
-    $this->_options[$name] = $value;
-    return $this;
-  }
-
+  /**
+   * Does this menu require user to be authenticated?
+   *
+   * @param boolean|null $bool If boolean value is given, the value will be set.
+   * @return sfMenu|boolean
+   */
   public function requiresAuth($bool = null)
   {
     if(!is_null($bool))
     {
-      $this->_requiresAuth = $bool;
+      $this->requiresAuth = (boolean) $bool;
+      return $this;
     }
-    return $this->_requiresAuth;
+    return $this->requiresAuth;
   }
 
+  /**
+   * Does this menu require non authenticated access?
+   *
+   * @param boolean|null $bool
+   * @return sfMenu|boolean
+   */
   public function requiresNoAuth($bool = null)
   {
     if(!is_null($bool))
     {
-      $this->_requiresNoAuth = $bool;
+      $this->requiresNoAuth = $bool;
+      return $this;
     }
-    return $this->_requiresNoAuth;
+    return $this->requiresNoAuth;
+  }
+
+  /**
+   * Returns menu label
+   *
+   * @return string
+   */
+  public function getLabel()
+  {
+    return $this->getOption('label', $this->name);
+  }
+
+  /**
+   * Sets menu label
+   *
+   * @param string $label
+   * @return sfMenu
+   */
+  public function setLabel($label)
+  {
+    $this->setOption('label', $label);
+    return $this;
   }
 
   /**
    * Sets credentials for this menu item
-   * 
+   *
    * @param array $credentials
    * @return sfMenu
    */
   public function setCredentials($credentials)
   {
-    $this->_credentials = is_string($credentials) ? explode(',', $credentials) : (array) $credentials;
+    $this->credentials = is_string($credentials) ?
+            explode(',', $credentials) : (array) $credentials;
     return $this;
   }
 
+  /**
+   * Returns menu credentials
+   *
+   * @return array
+   */
   public function getCredentials()
   {
-    return $this->_credentials;
+    return $this->credentials;
   }
 
+  /**
+   * Does the menu has any credentials?
+   *
+   * @return boolean
+   */
   public function hasCredentials()
   {
-    return !empty($this->_credentials);
+    return !empty($this->credentials);
+  }
+
+  /**
+   * Checks if given user has acces to this item
+   *
+   * @param sfUser $user
+   * @return boolean
+   */
+  public function checkUserAccess(sfUser $user = null)
+  {
+    if(!sfContext::hasInstance())
+    {
+      return true;
+    }
+
+    if(is_null($user))
+    {
+      $user = sfContext::getInstance()->getUser();
+    }
+
+    if($user->isAuthenticated() && $this->requiresNoAuth())
+    {
+      return false;
+    }
+
+    if(!$user->isAuthenticated() && $this->requiresAuth())
+    {
+      return false;
+    }
+
+    return $user->hasCredential($this->getCredentials());
   }
 
   /**
@@ -134,61 +316,31 @@ class sfMenu implements ArrayAccess, Countable, IteratorAggregate {
   {
     if(!is_null($bool))
     {
-      $this->_showChildren = $bool;
+      $this->showChildren = $bool;
     }
-    return $this->_showChildren;
+    return $this->showChildren;
   }
 
   /**
-   * Checks if given user has acces to this item
-   *
-   * @param sfUser $user
-   * @return boolean
-   */
-  public function checkUserAccess(sfUser $user = null)
-  {
-    // no context instance
-    // or no credentials assigned
-    if(!sfContext::hasInstance() || !$this->hasCredentials())
-    {
-      return true;
-    }
-
-    if(is_null($user))
-    {
-      $user = sfContext::getInstance()->getUser();
-    }
-
-    // authenticated user, but item required no authentication
-    if($user->isAuthenticated() && $this->requiresNoAuth())
-    {
-      return false;
-    }
-
-    // not authenticated user, but item requires authentication
-    if(!$user->isAuthenticated() && $this->requiresAuth())
-    {
-      return false;
-    }
-
-    return $user->hasCredential($this->_credentials);
-  }
-
-  /**
-   * Sets item level
+   * Sets item nesting level
    *
    * @param integer $level
    * @return sfMenu
    */
   public function setLevel($level)
   {
-    $this->_level = $level;
+    $this->level = $level;
     return $this;
   }
 
+  /**
+   * Returns nesting level
+   *
+   * @return integer
+   */
   public function getLevel()
   {
-    if(is_null($this->_level))
+    if(is_null($this->level))
     {
       $count = -2;
       $obj = $this;
@@ -197,14 +349,19 @@ class sfMenu implements ArrayAccess, Countable, IteratorAggregate {
         $count++;
       }
       while($obj = $obj->getParent());
-      $this->_level = $count;
+      $this->level = $count;
     }
-    return $this->_level;
+    return $this->level;
   }
 
+  /**
+   * Returns root item
+   *
+   * @return sfMenu|null
+   */
   public function getRoot()
   {
-    if(is_null($this->_root))
+    if(is_null($this->root))
     {
       $obj = $this;
       do
@@ -212,54 +369,83 @@ class sfMenu implements ArrayAccess, Countable, IteratorAggregate {
         $found = $obj;
       }
       while($obj = $obj->getParent());
-      $this->_root = $found;
+      $this->root = $found;
     }
-    return $this->_root;
+    return $this->root;
   }
 
+  /**
+   * Returns parent element
+   *
+   * @return sfMenu
+   */
   public function getParent()
   {
-    return $this->_parent;
+    return $this->parent;
   }
 
-  public function setParent(sfMenu $parent)
+  /**
+   * Sets parent element
+   *
+   * @param sfMenu $parent
+   * @return sfMenu The parent item
+   */
+  protected function setParent(sfMenu $parent)
   {
-    return $this->_parent = $parent;
+    return $this->parent = $parent;
   }
 
+  /**
+   * Returns priority
+   * @return integer
+   */
   public function getPriority()
   {
-    return $this->_priority;
+    return $this->priority;
   }
 
+  /**
+   * Sets priority
+   *
+   * @param integer $priority
+   * @return sfMenu
+   */
   public function setPriority($priority)
   {
-    $this->_priority = $priority;
+    $this->priority = $priority;
     return $this;
   }
 
-  public function getName()
-  {
-    return $this->_name;
-  }
-
-  public function setName($name)
-  {
-    $this->_name = $name;
-    return $this;
-  }
-
+  /**
+   * Returns children
+   *
+   * @return array
+   */
   public function getChildren()
   {
-    return $this->_children;
+    return $this->children;
   }
 
+  /**
+   * Sets children
+   *
+   * @param array $children
+   * @return sfMenu
+   */
   public function setChildren(array $children)
   {
-    $this->_children = $children;
+    $this->children = $children;
     return $this;
   }
 
+  /**
+   * Add child item
+   *
+   * @param sfMenu|string $child
+   * @param string $route
+   * @param array $options
+   * @return sfMenu
+   */
   public function addChild($child, $route = null, $options = array())
   {
     if(!$child instanceof sfMenu)
@@ -270,157 +456,107 @@ class sfMenu implements ArrayAccess, Countable, IteratorAggregate {
 
     $child->setParent($this);
     $child->showChildren($this->showChildren());
-    $child->setNum($this->count() + 1);
+    $child->setNumber($this->count() + 1);
 
-    $this->_children[$child->getName()] = $child;
-
+    $this->children[$child->getName()] = $child;
     return $child;
   }
 
   /**
    * Removes a child from this menu item
    *
-   * @param mixed $name The name of sfSympalMenu instance to remove
+   * @param sfMenu|string $name The name of the sfMenu instance to remove
+   * @return sfMenu
    */
   public function removeChild($name)
   {
     $name = ($name instanceof sfMenu) ? $name->getName() : $name;
 
-    if(isset($this->_children[$name]))
+    if(isset($this->children[$name]))
     {
-      unset($this->_children[$name]);
+      unset($this->children[$name]);
     }
+    return $this;
   }
 
-  public function getNum()
+  /**
+   * Return item number
+   *
+   * @return integer
+   */
+  public function getNumber()
   {
-    return $this->_num;
+    return $this->number;
   }
 
-  public function setNum($num)
+  /**
+   * Set item number
+   *
+   * @param integer $num
+   */
+  public function setNumber($num)
   {
-    $this->_num = $num;
+    $this->number = $num;
   }
 
+  /**
+   * Returns first child
+   *
+   * @return sfMenu|false
+   */
   public function getFirstChild()
   {
-    return current($this->_children);
+    return current($this->children);
   }
 
+  /**
+   * Returns last child
+   *
+   * @return sfMenu|false
+   */
   public function getLastChild()
   {
-    return end($this->_children);
+    return end($this->children);
   }
 
+  /**
+   * Returns the child item. If the child does not exist, it will be created.
+   *
+   * @param string $name
+   * @return sfMenu
+   */
   public function getChild($name)
   {
-    if(!isset($this->_children[$name]))
+    if(!isset($this->children[$name]))
     {
       $this->addChild($name);
     }
 
-    return $this->_children[$name];
-  }
-
-  public function hasChildren()
-  {
-    $children = array();
-    foreach($this->_children as $child)
-    {
-      if($child->checkUserAccess())
-      {
-        $children[] = $child;
-      }
-    }
-    return !empty($children);
-  }
-
-  public function __toString()
-  {
-    try
-    {
-      return (string) $this->render();
-    }
-    catch(Exception $e)
-    {
-      return $e->getMessage();
-    }
-  }
-
-  public function render()
-  {
-    $timer = sfTimerManager::getTimer('Menu');
-    if($this->checkUserAccess() && $this->hasChildren())
-    {
-      $html = '<ul>';
-      foreach($this->_children as $child)
-      {
-        $html .= $child->renderChild();
-      }
-      $html .= '</ul>';
-      $timer->addTime();
-      return $html;
-    }
-  }
-
-  public function renderChildren()
-  {
-    $html = '';
-    foreach($this->_children as $child)
-    {
-      $html .= $child->renderChild();
-    }
-    return $html;
+    return $this->children[$name];
   }
 
   /**
-   * Renders child item
-   * 
-   * @return string|void
+   * Checks if this item has any children
+   *
+   * @return boolean
    */
-  public function renderChild()
+  public function hasChildren()
   {
-    if($this->checkUserAccess())
+    foreach($this->children as $child)
     {
-      $classes = array();
-      $class = $this->getClass();
-      if($class)
+      if($child->checkUserAccess())
       {
-        $classes[] = $class;
+        return true;
       }
-
-      if($this->isCurrent())
-      {
-        $classes[] = 'current';
-      }
-      if($this->isFirst())
-      {
-        $classes[] = 'first';
-      }
-      if($this->isLast())
-      {
-        $classes[] = 'last';
-      }
-
-      $id = false;
-      if($this->getId())
-      {
-        $id = $this->getId();
-      }
-
-      $html = sprintf('<li%s%s>', count($classes) ? sprintf(' class="%s"', join(' ', $classes)) : null, $id ? sprintf(' id="%s"', $id) : null);
-
-      // $html = sprintf('<li%s>', $this->isCurrent() ? ' class="current"' : null);
-      $html .= $this->renderChildBody();
-      if($this->hasChildren() && $this->showChildren())
-      {
-        $html .= $this->render();
-      }
-      $html .= '</li>';
-      return $html;
     }
+    return false;
   }
 
+  /**
+   * Is child current?
+   *
+   * @return boolean
+   */
   protected function isChildCurrent()
   {
     $current = false;
@@ -441,50 +577,9 @@ class sfMenu implements ArrayAccess, Countable, IteratorAggregate {
     return $current;
   }
 
-  public function renderChildBody()
-  {
-    if($this->_route)
-    {
-      $html = $this->renderLink();
-    }
-    else
-    {
-      $html = $this->renderLabel();
-    }
-    return $html;
-  }
-
-  public function renderLink()
-  {
-    sfLoader::loadHelpers('Url');
-    $options = $this->getOptions();
-
-    if(!isset($options['title']))
-    {
-      $options['title'] = $this->getLabel();
-    }
-
-    return link_to($this->renderLabel(), $this->getRoute(), $options);
-  }
-
-  protected function generateUrl($internal_uri, $absolute = false)
-  {
-    static $controller;
-    if(!isset($controller))
-    {
-      $controller = sfContext::getInstance()->getController();
-    }
-    return $controller->genUrl($internal_uri, $absolute);
-  }
-
-  public function renderLabel()
-  {
-    return $this->getLabel();
-  }
-
   /**
    * Sets or returns if node item is current
-   * 
+   *
    * @param boolean $bool
    * @return boolean
    */
@@ -492,47 +587,236 @@ class sfMenu implements ArrayAccess, Countable, IteratorAggregate {
   {
     if(!is_null($bool))
     {
-      $this->_current = $bool;
+      $this->current = $bool;
     }
-    return $this->_current;
+    return $this->current;
   }
 
+  /**
+   * Converts the object to string.
+   *
+   * @return string
+   */
+  public function __toString()
+  {
+    try
+    {
+      return (string) $this->render();
+    }
+    catch(Exception $e)
+    {
+      return $e->getMessage();
+    }
+  }
+
+  /**
+   * Renders the menu
+   *
+   * @param array Array of options
+   * @return string
+   */
+  public function render($options = array())
+  {
+    $html = '';
+    if($this->checkUserAccess() && $this->hasChildren())
+    {
+      $html = '<ul>';
+      foreach($this->children as $child)
+      {
+        $html .= $child->renderChild();
+      }
+      $html .= '</ul>';
+    }
+    return $html;
+  }
+
+  /**
+   * Renders children
+   *
+   * @return string
+   */
+  public function renderChildren()
+  {
+    $html = '';
+    foreach($this->children as $child)
+    {
+      $html .= $child->renderChild();
+    }
+    return $html;
+  }
+
+  /**
+   * Renders child item
+   *
+   * @return string
+   */
+  public function renderChild()
+  {
+    $html = '';
+
+    // can user access this item?
+    if($this->checkUserAccess())
+    {
+      $attributes = array();
+
+      if($id = $this->getId())
+      {
+        $attributes['id'] = $id;
+      }
+
+      if($classes = $this->getCssClasses())
+      {
+        $attributes['class'] = join(' ', $classes);
+      }
+
+      $html = sfHtml::tag('li', $attributes, true) . $this->renderChildBody();
+
+      if($this->hasChildren() && $this->showChildren())
+      {
+        $html .= $this->render();
+      }
+
+      $html .= '</li>';
+    }
+
+    return $html;
+  }
+
+  /**
+   * Returns css classes for this item
+   *
+   * @return array Array of css classes
+   */
+  public function getCssClasses()
+  {
+    $classes = array();
+
+    if($class = $this->getClass())
+    {
+      $classes[] = $class;
+    }
+
+    if($this->isCurrent())
+    {
+      $classes[] = 'current';
+    }
+
+    if($this->isFirst())
+    {
+      $classes[] = 'first';
+    }
+
+    if($this->isLast())
+    {
+      $classes[] = 'last';
+    }
+    return array_unique($classes);
+  }
+
+  /**
+   * Render child nody
+   *
+   * @return string
+   */
+  public function renderChildBody()
+  {
+    if($this->route)
+    {
+      return $this->renderLink();
+    }
+
+    return $this->renderLabel();
+  }
+
+  /**
+   * Renders link
+   *
+   * @return string
+   */
+  public function renderLink()
+  {
+    $options = $this->getOptions();
+    $options['title'] = $this->getOption('title', $this->getLabel());
+    return link_to($this->renderLabel(), $this->getRoute(), $options);
+  }
+
+  /**
+   * Renders label
+   *
+   * @return string
+   */
+  public function renderLabel()
+  {
+    return $this->getLabel();
+  }
+
+  /**
+   * Is this last item?
+   *
+   * @return boolean
+   */
   public function isLast()
   {
-    return $this->getNum() == $this->getParent()->count() ? true : false;
+    return $this->getNumber() == $this->getParent()->count() ? true : false;
   }
 
+  /**
+   * Is this first item?
+   *
+   * @return boolean
+   */
   public function isFirst()
   {
-    return $this->getNum() == 1 ? true : false;
+    return $this->getNumber() == 1 ? true : false;
   }
 
-  public function getLabel()
+  /**
+   * Returns path as string
+   *
+   * @param separator $separatorPath Path separator
+   * @param boolean   $withLinks Render items as links or only labels?
+   * @param boolean   $includeRoot Include root item?
+   * @return string
+   */
+  public function getPathAsString($separator = ' > ',
+          $withLinks = true, $includeRoot = false)
   {
-    return (is_array($this->_options) && isset($this->_options['label'])) ? $this->_options['label'] : $this->_name;
+    $children = $this->getPath($withLinks, $includeRoot);
+    return implode($separator, $children);
   }
 
-  public function setLabel($label)
-  {
-    $this->_options['label'] = $label;
-
-    return $this;
-  }
-
-  public function getPathAsString()
+  /**
+   * Returns path as array
+   *
+   * @param boolean $withLinks Render items as links or only labels?
+   * @param boolean $includeRoot Include root item?
+   * @return array
+   */
+  public function getPath($withLinks = true, $includeRoot = false)
   {
     $children = array();
     $obj = $this;
 
     do
     {
-      $children[] = $obj->getLabel();
+      $children[] = $withLinks && $obj->getRoute() ? $obj->renderLink() : $obj->getLabel();
     }
     while($obj = $obj->getParent());
 
-    return implode(' > ', array_reverse($children));
+    if(!$includeRoot)
+    {
+      // root is last item
+      unset($children[count($children)-1]);
+    }
+
+    return array_reverse($children);
   }
 
+  /**
+   * Call a method recursively on chilren
+   *
+   * @return sfMenu
+   */
   public function callRecursively()
   {
     $args = func_get_args();
@@ -541,7 +825,7 @@ class sfMenu implements ArrayAccess, Countable, IteratorAggregate {
 
     call_user_func_array(array($this, $args[0]), $arguments);
 
-    foreach($this->_children as $child)
+    foreach($this->children as $child)
     {
       call_user_func_array(array($child, 'callRecursively'), $args);
     }
@@ -549,26 +833,50 @@ class sfMenu implements ArrayAccess, Countable, IteratorAggregate {
     return $this;
   }
 
+  /**
+   * Returns the array representation of the menu
+   *
+   * @return array
+   */
   public function toArray()
   {
     $array = array();
     $array['name'] = $this->getName();
+
+    if($route = $this->getRoute())
+    {
+      $array['route'] = $route;
+    }
+
     $array['level'] = $this->getLevel();
     $array['is_current'] = $this->isCurrent();
     $array['priority'] = $this->getPriority();
     $array['options'] = $this->getOptions();
-    foreach($this->_children as $key => $child)
+
+    foreach($this->children as $key => $child)
     {
       $array['children'][$key] = $child->toArray();
     }
+
     return $array;
   }
 
+  /**
+   * Creates the menu from array
+   *
+   * @param array $array
+   * @return sfMenu
+   */
   public function fromArray($array)
   {
     if(isset($array['name']))
     {
       $this->setName($array['name']);
+    }
+
+    if(isset($array['route']))
+    {
+      $this->setRoute($array['route']);
     }
 
     if(isset($array['level']))
@@ -602,29 +910,55 @@ class sfMenu implements ArrayAccess, Countable, IteratorAggregate {
     return $this;
   }
 
-  public function sortByPriority()
+  /**
+   * Sorts children items by priority. If two items have the same priority
+   * they will be sorted by name.
+   *
+   * @return sfMenu
+   */
+  public function sortByPriority($culture = null)
   {
-    $culture = sfConfig::get('sf_default_culture');
+    if(is_null($culture))
+    {
+      $culture = sfContext::getInstance()->getUser()->getCulture();
+    }
 
-    // FIXME: only utf-8 is supported
-    setlocale(LC_COLLATE, sprintf('%s.utf8', $culture), sprintf('%s.UTF-8', $culture));
+    // FIXME: a bit hacky way of sorting
+    $this->collator = sfCollator::getInstance($culture);
 
-    uasort($this->_children, array($this, "_sortByPriority"));
+    uasort($this->children, array($this, '_sortByPriority'));
+
+    $this->collator = null;
 
     // fluid interface
     return $this;
   }
 
+  /**
+   * Sorts all children and their descendants by priority
+   *
+   * @return sfMenu
+   * @see callRecursively()
+   */
   public function sortAllByPriority()
   {
-    $this->callRecursively('sortByPriority');
+    return $this->callRecursively('sortByPriority');
   }
 
-  protected function _sortByPriority(&$a, &$b)
+  /**
+   * Sort by priority, then by name.
+   *
+   * For internal usage.
+   *
+   * @param sfMenu $a
+   * @param sfMenu $b
+   * @return -1|1|0
+   */
+  protected function _sortByPriority($a, $b)
   {
     if($a->getPriority() == $b->getPriority())
     {
-      return strcoll($a->getName(), $b->getName());
+      return $this->collator->compare($a->getName(), $b->getName());
     }
     else
     {
@@ -666,8 +1000,8 @@ class sfMenu implements ArrayAccess, Countable, IteratorAggregate {
     $name .= '.method_not_found';
 
     $event = sfCore::getEventDispatcher()->notifyUntil(new sfEvent($name, array(
-                'method' => $method, 'arguments' => $arguments, 'menu' => $this
-            )));
+        'method' => $method, 'arguments' => $arguments, 'menu' => $this
+    )));
 
     if(!$event->isProcessed())
     {
@@ -684,7 +1018,7 @@ class sfMenu implements ArrayAccess, Countable, IteratorAggregate {
    */
   public function count()
   {
-    return count($this->_children);
+    return count($this->children);
   }
 
   /**
@@ -694,7 +1028,7 @@ class sfMenu implements ArrayAccess, Countable, IteratorAggregate {
    */
   public function getIterator()
   {
-    return new ArrayObject($this->_children);
+    return new ArrayObject($this->children);
   }
 
   public function add($value)
@@ -704,17 +1038,17 @@ class sfMenu implements ArrayAccess, Countable, IteratorAggregate {
 
   public function current()
   {
-    return current($this->_children);
+    return current($this->children);
   }
 
   public function next()
   {
-    return next($this->_children);
+    return next($this->children);
   }
 
   public function key()
   {
-    return key($this->_children);
+    return key($this->children);
   }
 
   public function valid()
@@ -724,12 +1058,12 @@ class sfMenu implements ArrayAccess, Countable, IteratorAggregate {
 
   public function rewind()
   {
-    return reset($this->_children);
+    return reset($this->children);
   }
 
   public function offsetExists($name)
   {
-    return isset($this->_children[$name]);
+    return isset($this->children[$name]);
   }
 
   public function offsetGet($name)
@@ -744,7 +1078,7 @@ class sfMenu implements ArrayAccess, Countable, IteratorAggregate {
 
   public function offsetUnset($name)
   {
-    unset($this->_children[$name]);
+    unset($this->children[$name]);
   }
 
 }
