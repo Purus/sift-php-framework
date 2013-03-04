@@ -5,18 +5,19 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 /**
  * Generates HTML code
- * 
+ *
  * @package    Sift
- * @subpackage text
+ * @subpackage util
  */
 class sfHtml {
-  
+
   protected static
-    $xhtml   = true,
-    $charset = 'UTF-8';
-  
+          $xhtml = true,
+          $charset = 'UTF-8';
+
   /**
    * Sets the XHTML generation flag.
    *
@@ -36,25 +37,42 @@ class sfHtml {
   {
     return self::$xhtml;
   }
-  
+
+  /**
+   * Returns content tag
+   *
+   * @param string $tag Tag name like li, strong...
+   * @param string $content Content
+   * @param arrray $attributes Array of attributes
+   * @return string
+   */
   public static function contentTag($tag, $content = null, $attributes = array())
   {
-    if (empty($tag))
+    if(empty($tag))
     {
       return '';
     }
 
-    return sprintf('<%s%s>%s</%s>', $tag, self::attributesToHtml($attributes), $content, $tag);    
+    return sprintf('<%s%s>%s</%s>', $tag, self::attributesToHtml($attributes), $content, $tag);
   }
-  
+
+  /**
+   * Returns tag
+   *
+   * @param string $tag Tag name like div, span...
+   * @param array $attributes
+   * @param boolean $open Leave the tag opened?
+   * @return string
+   */
   public static function tag($tag, $attributes = array(), $open = false)
   {
-    if (empty($tag))
+    if(empty($tag))
     {
       return '';
     }
 
-    return sprintf('<%s%s%s', $tag, self::attributesToHtml($attributes), (self::$xhtml ? ' />' : '>'));
+    return sprintf('<%s%s%s', $tag, self::attributesToHtml($attributes), $open ?
+                    '>' : ((self::$xhtml ? ' />' : '>')));
   }
 
   /**
@@ -83,7 +101,7 @@ class sfHtml {
   {
     return false === $v || null === $v || ('' === $v && 'value' != $k) ? '' : sprintf(' %s="%s"', $k, self::escapeOnce($v));
   }
-  
+
   /**
    * Escapes a string.
    *
@@ -94,7 +112,7 @@ class sfHtml {
   {
     return self::fixDoubleEscape(htmlspecialchars((string) $value, ENT_QUOTES, self::getCharset()));
   }
-  
+
   /**
    * Sets the charset to use when rendering widgets.
    *
@@ -125,7 +143,7 @@ class sfHtml {
   {
     return preg_replace('/&amp;([a-z]+|(#\d+)|(#x[\da-f]+));/i', '&$1;', $escaped);
   }
-    
+
   /**
    * Wraps the content in conditional comments for Internet Explorer.
    *
@@ -133,10 +151,10 @@ class sfHtml {
    * @param  string $content
    * @return string
    * @see http://msdn.microsoft.com/en-us/library/ms537512(VS.85).aspx
-   */  
+   */
   static public function ieConditionalComment($condition, $content)
   {
     return sprintf('<!--[if %s]>%s<![endif]-->', $condition, $content);
   }
-  
+
 }
