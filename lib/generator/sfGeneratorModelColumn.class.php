@@ -14,6 +14,13 @@
  */
 abstract class sfGeneratorModelColumn extends sfConfigurable implements sfIGeneratorModelColumn {
 
+  const CONTEXT_LIST = 'list';
+  const CONTEXT_EDIT = 'edit';
+  const CONTEXT_QUICK_EDIT = 'quick_edit';
+  const CONTEXT_CREATE = 'create';
+  const CONTEXT_SHOW = 'show';
+  const CONTEXT_FILTER = 'filter';
+
   /**
    * Column name
    *
@@ -418,7 +425,7 @@ abstract class sfGeneratorModelColumn extends sfConfigurable implements sfIGener
 
   /**
    * Is this column "not null"?
-   * 
+   *
    * @return boolean
    */
   public function isNotNull()
@@ -427,7 +434,7 @@ abstract class sfGeneratorModelColumn extends sfConfigurable implements sfIGener
 
   /**
    * Is this column "null" ?
-   * 
+   *
    * @return boolean
    */
   public function isNull()
@@ -459,6 +466,18 @@ abstract class sfGeneratorModelColumn extends sfConfigurable implements sfIGener
     return $this->getSize();
   }
 
+  public function getMinLength()
+  {
+  }
+
+  public function getMaxLength()
+  {
+  }
+
+  public function isFixedLength()
+  {
+  }
+
   /**
    * Is this column IP adress?
    *
@@ -466,15 +485,42 @@ abstract class sfGeneratorModelColumn extends sfConfigurable implements sfIGener
    */
   public function isIpAddress()
   {
+    return false;
   }
 
   /**
    * Is column culture column?
-   * 
+   *
    * @return boolean
    */
   public function isCulture()
   {
+    return false;
+  }
+
+  public function isRegularExpression()
+  {
+    return false;
+  }
+
+  public function getRegularExpression()
+  {
+    return false;
+  }
+
+  public function isEmail()
+  {
+    return false;
+  }
+
+  /**
+   * Returns array of possible values. Used when column is enum type.
+   *
+   * @return array
+   */
+  public function getValues()
+  {
+    return array();
   }
 
 }

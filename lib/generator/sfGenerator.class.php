@@ -103,15 +103,6 @@ abstract class sfGenerator extends sfConfigurable implements sfIGenerator {
   }
 
   /**
-   * Generates classes and templates.
-   *
-   * @param array An array of parameters
-   *
-   * @return string The cache for the configuration file
-   */
-  // abstract public function generate($params = array());
-
-  /**
    * Generates PHP files for a given module name.
    *
    * @param string $generatedModuleName The name of module name to generate

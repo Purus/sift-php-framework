@@ -5,11 +5,19 @@ require_once dirname(__FILE__).'/../../bootstrap/unit.php';
 $t = new lime_test(12);
 
 class myGenerator implements sfIGenerator {
-  
+
   public function generate()
-  {    
+  {
   }
-  
+
+  public function setModuleName($moduleName)
+  {
+  }
+
+  public function getModuleName()
+  {
+  }
+
 }
 
 class myGeneratorModelColumn extends sfGeneratorModelColumn {}

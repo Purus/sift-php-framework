@@ -21,4 +21,15 @@ interface sfIGenerator {
    */
   public function generate();
 
+  /**
+   *
+   */
+  public function getModuleName();
+
+  /**
+   *
+   * @param string $moduleName
+   */
+  public function setModuleName($moduleName);
+
 }

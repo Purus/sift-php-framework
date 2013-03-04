@@ -14,6 +14,9 @@
  */
 interface sfIGeneratorModelColumn {
 
+  public function setGenerator(sfIGenerator $generator);
+  public function getGenerator();
+
   public function getRenderer();
   public function setRenderer($renderer);
   public function setRendererArguments(array $arguments);
@@ -32,9 +35,10 @@ interface sfIGeneratorModelColumn {
   public function isLink();
   public function isComponent();
   public function isNotNull();
-  public function isNull();  
+  public function isNull();
+
   // does the column represent ip address?
-  public function isIpAddress();  
+  public function isIpAddress();
   // does it represent culture (lang) column?
   public function isCulture();
 
@@ -44,5 +48,15 @@ interface sfIGeneratorModelColumn {
 
   public function getType();
   public function getSize();
+
+  public function getMinLength();
+  public function getMaxLength();
+  public function isFixedLength();
+  public function isRegularExpression();
+  public function getRegularExpression();
+  public function isEmail();
+
+  // for enum types
+  public function getValues();
 
 }
