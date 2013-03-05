@@ -18,7 +18,7 @@ class myGeneratorFormBuilder extends sfGeneratorFormBuilder
     )
   );
 
-  protected function getWidgetAndValidatorForeignKey(sfIGeneratorColumn $column, $context, $widgetOptions = array())
+  protected function getWidgetAndValidatorForeignKey(sfIGeneratorField $column, $context, $widgetOptions = array())
   {
     return array(
       $this->getOption('foreign_key.widget.class'),
@@ -57,7 +57,7 @@ $generator = new myGenerator();
 
 $generator->setModuleName('myModule');
 
-class myGeneratorModelColumnString extends sfGeneratorColumn {
+class myGeneratorModelColumnString extends sfGeneratorField {
 
   public function __construct(sfIGenerator $generator, $name, $options = array(), $flags = array())
   {
@@ -70,7 +70,7 @@ class myGeneratorModelColumnString extends sfGeneratorColumn {
   }
 }
 
-class myGeneratorModelColumnStringLong extends sfGeneratorColumn {
+class myGeneratorModelColumnStringLong extends sfGeneratorField {
 
   public function __construct(sfIGenerator $generator, $name, $options = array(), $flags = array())
   {
@@ -87,7 +87,7 @@ class myGeneratorModelColumnStringLong extends sfGeneratorColumn {
   }
 }
 
-class myGeneratorModelColumnStringFixed extends sfGeneratorColumn {
+class myGeneratorModelColumnStringFixed extends sfGeneratorField {
 
   public function __construct(sfIGenerator $generator, $name, $options = array(), $flags = array())
   {
@@ -108,7 +108,7 @@ class myGeneratorModelColumnStringFixed extends sfGeneratorColumn {
   }
 }
 
-class myGeneratorModelColumnStringText extends sfGeneratorColumn {
+class myGeneratorModelColumnStringText extends sfGeneratorField {
 
   public function __construct(sfIGenerator $generator, $name, $options = array(), $flags = array())
   {
@@ -125,7 +125,7 @@ class myGeneratorModelColumnStringText extends sfGeneratorColumn {
   }
 }
 
-class myGeneratorModelColumnPartial extends sfGeneratorColumn {
+class myGeneratorModelColumnPartial extends sfGeneratorField {
 
   public function __construct(sfIGenerator $generator, $name, $options = array(), $flags = array())
   {
@@ -136,7 +136,7 @@ class myGeneratorModelColumnPartial extends sfGeneratorColumn {
   }
 }
 
-class myGeneratorModelColumnComponent extends sfGeneratorColumn {
+class myGeneratorModelColumnComponent extends sfGeneratorField {
 
   public function __construct(sfIGenerator $generator, $name, $options = array(), $flags = array())
   {
@@ -147,7 +147,7 @@ class myGeneratorModelColumnComponent extends sfGeneratorColumn {
   }
 }
 
-class myGeneratorModelColumnBoolean extends sfGeneratorColumn {
+class myGeneratorModelColumnBoolean extends sfGeneratorField {
 
   public function __construct(sfIGenerator $generator, $name, $options = array(), $flags = array())
   {
@@ -167,7 +167,7 @@ class myGeneratorModelColumnBoolean extends sfGeneratorColumn {
 
 }
 
-class myGeneratorModelColumnInteger extends sfGeneratorColumn {
+class myGeneratorModelColumnInteger extends sfGeneratorField {
 
   public function __construct(sfIGenerator $generator, $name, $options = array(), $flags = array())
   {
@@ -192,7 +192,7 @@ class myGeneratorModelColumnInteger extends sfGeneratorColumn {
 
 }
 
-class myGeneratorModelColumnFloat extends sfGeneratorColumn {
+class myGeneratorModelColumnFloat extends sfGeneratorField {
 
   public function isReal()
   {

@@ -12,7 +12,7 @@
  * @package    Sift
  * @subpackage generator
  */
-abstract class sfGeneratorColumn extends sfConfigurable implements sfIGeneratorColumn {
+abstract class sfGeneratorField extends sfConfigurable implements sfIGeneratorField {
 
   /**
    * String type
