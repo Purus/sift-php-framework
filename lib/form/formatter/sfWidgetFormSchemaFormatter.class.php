@@ -115,7 +115,7 @@ abstract class sfWidgetFormSchemaFormatter
    */
   static public function setTranslationCallable($callable)
   {
-    if (!$callable instanceof sfCallable && !is_callable($callable))
+    if (!$callable instanceof sfCallable && !sfToolkit::isCallable($callable))
     {
       throw new InvalidArgumentException('Provided i18n callable should be either an instance of sfCallable or a valid PHP callable');
     }
