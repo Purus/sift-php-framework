@@ -7,7 +7,7 @@
  */
 
 /**
- * sfJqueryConfigHandler class
+ * sfAssetPackagesConfigHandler class
  *
  * @package    Sift
  * @subpackage config
@@ -56,7 +56,7 @@ class sfAssetPackagesConfigHandler extends sfSimpleYamlConfigHandler {
         // supported keys
         if(!in_array($vk, array('javascripts', 'stylesheets', 'require', 'i18n')))
         {
-          throw new sfConfigurationException(sprintf('{sfJqueryConfigHandler} Invalid configuration key "%s" key in your configuration.', $vk));
+          throw new sfConfigurationException(sprintf('{sfAssetPackagesConfigHandler} Invalid configuration key "%s" key in your configuration.', $vk));
         }
       }
       
