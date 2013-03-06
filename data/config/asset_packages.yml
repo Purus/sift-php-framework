@@ -24,6 +24,16 @@ default:
       require:
         - jquery
 
+    yepnope:
+      javascripts:
+        - %SF_SIFT_WEB_DIR%/js/yepnope/yepnope.all.min.js
+
+    js_api:
+      javascripts:
+        - '@js_api':  { generated: true }
+      require:
+        - yepnope
+
     # jquery package
     jquery:
       javascripts:

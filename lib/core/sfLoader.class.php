@@ -359,7 +359,7 @@ class sfLoader {
 
     // plugins, global
     foreach(sfConfig::get('sf_plugins', array()) as $plugin)
-    {      
+    {
       $files[] = $pluginsDir.DS.$plugin.DS.$globalConfigPath;
     }
 
@@ -375,10 +375,10 @@ class sfLoader {
 
     // plugins, but local
     foreach(sfConfig::get('sf_plugins', array()) as $plugin)
-    {      
+    {
       $files[] = $pluginsDir.DS.$plugin.DS.$configPath;
     }
-    
+
     // module
     $files[] = $appDir.DS.$configPath;
 
@@ -665,8 +665,7 @@ class sfLoader {
     }
 
     // core modules
-    if(is_dir($dir = $dataDir . DS .
-                    sfConfig::get('sf_app_module_dir_name') . DS . $suffix))
+    if(is_dir($dir = $dataDir . DS . $suffix))
     {
       $dirs[] = $dir;
     }

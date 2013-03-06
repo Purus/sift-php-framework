@@ -1,6 +1,11 @@
 # You can find more information about this file on:
 # https://bitbucket.org/mishal/sift-php-framework/wiki/Routing
 
+# dynamically generated javascript
+js_api:
+  url:   /js/api.js
+  param: { module: sfJsApi, action: index }
+
 # default rules
 homepage:
   url:   /

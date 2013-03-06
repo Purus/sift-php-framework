@@ -77,8 +77,8 @@ default:
     # package assets using minifier?
     package_assets:         false
 
-    # Activated modules from plugins or from the sift core
-    enabled_modules:        []
+    # Activated modules from plugins or from the Sift core
+    enabled_modules:        [sfJsApi]
 
     # Charset used for the response
     charset:                utf-8

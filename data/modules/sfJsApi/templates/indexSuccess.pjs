@@ -1,0 +1,42 @@
+// JsAPI implementation
+var JsAPI = JsAPI || {};
+
+/**
+ * Usage: jsAPI.usePackage()
+ */
+JsAPI.usePackage = function(b, c, e)
+{
+  if(typeof this.packageConfig.packages[b] != "undefined")
+  {
+    var n = this.getPackageDependencies(b), b = this.packageConfig.packages[b];
+    n.length && (b = n.concat(b));
+    yepnope({test: typeof e != "undefined" ? e : !0, yep: b, callback: [c]})
+  }
+};
+
+JsAPI.getPackageDependencies = function(b)
+{
+  var c = [];
+  if(this.packageConfig.dependencies[b] !== void 0)
+    for(var e = 0, n = this.packageConfig.dependencies[b].length; e < n; e++)
+    {
+      var l = this.packageConfig.dependencies[b][e];
+      this.packageConfig.packages[l] !== void 0 && (c = c.concat(this.getPackageDependencies(l)), c = c.concat(this.packageConfig.packages[l]))
+    }
+  return c;
+};
+
+/**
+ *
+ * Shortcut for JsAPI.usePackage()
+ */
+var use_package = function(b, c, e)
+{
+  JsAPI.usePackage(b, c, e)
+};
+
+// Generated configuration
+JsAPI.packageConfig = {
+  dependencies: <?php echo $dependencies; ?>,
+  packages: <?php echo $packages; ?>
+};
