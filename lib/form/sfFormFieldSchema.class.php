@@ -23,7 +23,7 @@ class sfFormFieldSchema extends sfFormField implements ArrayAccess, Iterator, Co
   /**
    * Constructor.
    *
-   * @param sfForm $form A form instance 
+   * @param sfForm $form A form instance
    * @param sfWidgetFormSchema $widget A sfWidget instance
    * @param sfFormField        $parent The sfFormField parent instance (null for the root widget)
    * @param string             $name   The field name
@@ -107,7 +107,7 @@ class sfFormFieldSchema extends sfFormField implements ArrayAccess, Iterator, Co
     {
       if (null === $widget = $this->widget[$name])
       {
-        throw new InvalidArgumentException(sprintf('Widget "%s" does not exist.', $name));
+        throw new InvalidArgumentException(sprintf('Widget "%s" does not exist in form "%s".', $name, get_class($this->getForm())));
       }
 
       $error = isset($this->error[$name]) ? $this->error[$name] : null;

@@ -80,3 +80,6 @@ modules/*/config/module.yml:
 
 config/search_sources.yml:
   class: sfSearchSourceConfigHandler
+
+config/forms.yml:
+  class: sfSimpleYamlConfigHandler

@@ -19,7 +19,7 @@ class sfFormField
     $toStringException = null;
 
   protected
-    $form   = null,      
+    $form   = null,
     $widget = null,
     $parent = null,
     $name   = '',
@@ -36,7 +36,7 @@ class sfFormField
    * @param string           $value  The field value
    * @param sfValidatorError $error  A sfValidatorError instance
    */
-  public function __construct(sfForm $form, 
+  public function __construct(sfForm $form,
           sfWidgetForm $widget, sfFormField $parent = null, $name, $value, sfValidatorError $error = null)
   {
     $this->form   = &$form;
@@ -49,14 +49,14 @@ class sfFormField
 
   /**
    * Returns sfForm instance
-   * 
+   *
    * @return sfForm
    */
   public function getForm()
   {
     return $this->form;
   }
-  
+
   /**
    * Returns the string representation of this form field.
    *
@@ -126,7 +126,7 @@ class sfFormField
   function render($attributes = array())
   {
     $attributes = $this->prepareAttributes($attributes);
-    
+
     if($this->parent)
     {
       return $this->parent->getWidget()->renderField($this->name, $this->value, $attributes, $this->error);
@@ -156,11 +156,11 @@ class sfFormField
     {
       throw new LogicException(sprintf('Unable to render the row for "%s".', $this->name));
     }
-    
+
     $attributes = $this->prepareAttributes($attributes);
-    
-    $field = $this->parent->getWidget()->renderField($this->name, $this->value, !is_array($attributes) ? array() : $attributes, $this->error);    
-    
+
+    $field = $this->parent->getWidget()->renderField($this->name, $this->value, !is_array($attributes) ? array() : $attributes, $this->error);
+
     $error = $this->error instanceof sfValidatorErrorSchema ? $this->error->getGlobalErrors() : $this->error;
 
     $help = null === $help ? $this->parent->getWidget()->getHelp($this->name) : $help;
@@ -169,12 +169,12 @@ class sfFormField
     {
       $attributes['id'] = $this->getId();
     }
-    
+
     $this->setupFormatter();
 
     return strtr($this->parent->getWidget()->getFormFormatter()->formatRow(
-            $this->renderLabel($label), $field, $error, $help, null, 
-            array_merge($this->parent->getWidget()->getAttributes(), $attributes), 
+            $this->renderLabel($label), $field, $error, $help, null,
+            array_merge($this->parent->getWidget()->getAttributes(), $attributes),
             $this->widget), array('%hidden_fields%' => ''));
   }
 
@@ -182,50 +182,55 @@ class sfFormField
   {
     if($this->parent)
     {
-      $formFormatter = $this->parent->getWidget()->getFormFormatter();      
+      $formFormatter = $this->parent->getWidget()->getFormFormatter();
     }
     else
     {
-      $formFormatter = $this->widget->getFormFormatter();   
+      $formFormatter = $this->widget->getFormFormatter();
     }
-    
-    /* @var $formFormatter sfWidgetFormSchemaFormatter */    
+
+    /* @var $formFormatter sfWidgetFormSchemaFormatter */
     $errorCssClass = $formFormatter->getErrorCssClass();
+
     if($this->error && $errorCssClass)
     {
-      isset($attributes['class']) ? 
-              $attributes['class'] .= ' ' . $errorCssClass : 
-              $attributes['class'] = $errorCssClass;        
+      $classes = array($errorCssClass);
+      if(isset($attributes['class']))
+      {
+        $classes[] = $attributes['class'];
+      }
+      $attributes['class'] = trim(implode(' ',
+        array_merge(explode(' ', $this->widget->getAttribute('class')), $classes)));
     }
 
     if(sfWidget::isAriaEnabled())
     {
-      $widgetName = $formFormatter->getWidgetSchema()->generateName($this->name);    
+      $widgetName = $formFormatter->getWidgetSchema()->generateName($this->name);
       $id = $formFormatter->getWidgetSchema()->generateId($widgetName);
-    
+
       if(!$this->isHidden() && !isset($attributes['aria-labelledby']))
       {
         $attributes['aria-labelledby'] = sprintf('%s_label', $id);
       }
-            
+
       if($this->error)
       {
         $attributes['aria-invalid'] = 'true';
       }
-      
-      if($this->widget->hasOption('disabled') 
+
+      if($this->widget->hasOption('disabled')
         && $this->widget->getOption('disabled'))
       {
-        $attributes['aria-disabled'] = 'true';  
+        $attributes['aria-disabled'] = 'true';
       }
-      
+
       if(($validator = $this->getValidator()))
       {
-        if($validator->hasOption('required') 
+        if($validator->hasOption('required')
             && $validator->getOption('required'))
         {
           $class = get_class($this->widget);
-          
+
           // Handle Special case for checkboxes
           // Checkboxes does not work as expected
           // at least with HTML5 "required" attribute
@@ -234,7 +239,7 @@ class sfFormField
           if(!in_array($class, array(
               'sfWidgetFormSelectCheckbox',
               'sfWidgetFormInputCheckbox',
-              'sfWidgetFormChoiceMany'  
+              'sfWidgetFormChoiceMany'
           )))
           {
             if(!isset($attributes['aria-required']))
@@ -248,7 +253,7 @@ class sfFormField
 
     return $attributes;
   }
-  
+
   /**
    * Returns a formatted error list.
    *
@@ -268,20 +273,20 @@ class sfFormField
 
     if($this->parent)
     {
-      $formFormatter = $this->parent->getWidget()->getFormFormatter();      
+      $formFormatter = $this->parent->getWidget()->getFormFormatter();
     }
     else
     {
-      $formFormatter = $this->widget->getFormFormatter();   
+      $formFormatter = $this->widget->getFormFormatter();
     }
-    
+
     $baseAttributes = array();
-    
+
     if(!isset($attributes['for']))
     {
       $baseAttributes['for'] = $this->getId();
     }
-    
+
     if(sfWidget::isAriaEnabled())
     {
       if(!isset($attributes['role']))
@@ -291,13 +296,13 @@ class sfFormField
       if(!isset($attributes['id']))
       {
         $attributes['id'] = sprintf('%s_label', $this->getId());
-      }      
+      }
     }
 
-    $attributes = array_merge($baseAttributes, $attributes); 
-    
+    $attributes = array_merge($baseAttributes, $attributes);
+
     $error = $this->getWidget() instanceof sfWidgetFormSchema ? $this->getWidget()->getGlobalErrors($this->error) : $this->error;
-    
+
     return $this->parent->getWidget()->getFormFormatter()->formatErrorsForRow($error, $attributes);
   }
 
@@ -351,10 +356,10 @@ class sfFormField
       $currentLabel = $this->parent->getWidget()->getLabel($this->name);
       $this->parent->getWidget()->setLabel($this->name, $label);
     }
-    
+
     // setups formatter
     $this->setupFormatter();
-    
+
     $html = $this->parent->getWidget()->getFormFormatter()->generateLabel($this->name, $attributes);
 
     if (null !== $label)
@@ -378,13 +383,13 @@ class sfFormField
     }
 
     $this->setupFormatter();
-    
+
     return $this->parent->getWidget()->getFormFormatter()->generateLabelName($this->name);
   }
 
   /**
    * Returns the name attribute of the widget.
-   * 
+   *
    * @return string The name attribute of the widget
    */
   public function renderName()
@@ -404,7 +409,7 @@ class sfFormField
 
   /**
    * Returns the id attribute of the widget. Just an alias for renderId()
-   * 
+   *
    * @return string The id attribute of the widget
    * @see renderId()
    */
@@ -453,7 +458,7 @@ class sfFormField
     $this->value = $value;
     return $this;
   }
-  
+
   /**
    * Returns the wrapped widget.
    *
@@ -493,25 +498,25 @@ class sfFormField
   {
     return null !== $this->error && count($this->error);
   }
-   
+
   public function setValidator(sfValidatorBase $validator)
   {
     $this->validator = $validator;
   }
-  
+
   public function getValidator()
   {
     return $this->validator;
   }
-  
+
   protected function setupFormatter()
   {
     $formatter = $this->parent->getWidget()->getFormFormatter();
     /* @var $formatter sfWidgetFormSchemaFormatter */
     if($this->getValidator() && !$formatter->hasValidator($this->name))
-    {      
-      $formatter->setValidator($this->name, $this->getValidator());      
+    {
+      $formatter->setValidator($this->name, $this->getValidator());
     }
   }
-  
+
 }

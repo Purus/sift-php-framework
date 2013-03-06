@@ -1,0 +1,24 @@
+# comments
+forms:
+  CommentForm:
+    body:
+      label:        Please enter your comment
+      attributes:   { class: comment }
+      errors:
+        min_length: You haven't written enough
+
+  BaseForm:
+    body:
+      errors:
+        min_length: A base min_length message
+        required:   A base required message
+
+widgets:
+  sfWidgetFormTextarea:
+    class: datepicker
+
+# validator options
+validators:
+  sfValidatorEmail:
+    messages:
+      invalid: '"%value%" is not a valid email address.'
