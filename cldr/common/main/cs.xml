@@ -1292,7 +1292,7 @@
 					</dateFormatLength>
 					<dateFormatLength type="short">
 						<dateFormat>
-							<pattern>dd.MM.yy</pattern>
+							<pattern>d.M.yyyy</pattern>
 						</dateFormat>
 					</dateFormatLength>
 				</dateFormats>
