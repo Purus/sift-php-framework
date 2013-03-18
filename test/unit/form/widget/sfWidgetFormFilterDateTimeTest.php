@@ -33,7 +33,7 @@ $t->diag('->render()');
 $ws = new sfWidgetFormSchema();
 $ws->addFormFormatter('stub', new FormFormatterStub());
 $ws->setFormFormatterName('stub');
-$w = new sfWidgetFormFilterDate(array('from' => new WidgetFormStub(), 'to' => new WidgetFormStub()));
+$w = new sfWidgetFormFilterDateTime(array('from' => new WidgetFormStub(), 'to' => new WidgetFormStub()));
 $w->setParent($ws);
 $dom->loadHTML($w->render('foo'));
 $css = new sfDomCssSelector($dom);

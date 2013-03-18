@@ -11,6 +11,7 @@
  *
  * Usage:
  *
+ * <code>
  * class mainActions extends sfActions
  * {
  *   public function executeChangeLanguage($request)
@@ -26,6 +27,7 @@
  *     return $this->redirect('@homepage');
  *   }
  * }
+ * </code>
  *
  * @package    Sift
  * @subpackage form

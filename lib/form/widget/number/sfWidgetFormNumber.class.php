@@ -7,13 +7,12 @@
  */
 
 /**
- * sfWidgetFormInput represents an HTML text input tag.
+ * sfWidgetFormNumber represents an HTML text input tag for inputting float values
  *
  * @package    Sift
  * @subpackage form_widget
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  */
-class sfWidgetFormInputText extends sfWidgetFormInput
+class sfWidgetFormNumber extends sfWidgetFormInteger
 {
   /**
    * Configures the current widget.
@@ -26,7 +25,7 @@ class sfWidgetFormInputText extends sfWidgetFormInput
   protected function configure($options = array(), $attributes = array())
   {
     parent::configure($options, $attributes);
-
-    $this->setOption('type', 'text');
+    $this->setAttribute('class', 'number');
   }
+
 }

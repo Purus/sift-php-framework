@@ -38,5 +38,5 @@ class sfWidgetFormSpamProtectTimer extends sfWidgetFormInputHidden {
     $attributes['value'] = base64_encode(time());
     parent::__construct($options, $attributes);
   }
-  
+
 }

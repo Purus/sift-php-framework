@@ -582,9 +582,13 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess
       {
         if(count($error) && $errorCssClass)
         {
-          isset($widgetAttributes['class']) ?           
-            $widgetAttributes['class'] .= ' ' . $errorCssClass :          
-            $widgetAttributes['class'] = $errorCssClass;          
+          $classes = array($errorCssClass);
+          if(isset($attributes['class']))
+          {
+            $classes[] = $attributes['class'];
+          }
+          $attributes['class'] = trim(implode(' ',
+            array_merge(explode(' ', $this->widget->getAttribute('class')), $classes)));
         }
         
         $field = $this->renderField($name, $value, $widgetAttributes, $error);

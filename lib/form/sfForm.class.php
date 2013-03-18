@@ -73,27 +73,27 @@ class sfForm implements ArrayAccess, Iterator, Countable
 
     $this->setup();
     $this->configure();
-    
+
     // setup translation catalogue
     if($this->translationCatalogue)
     {
       $this->setTranslationCatalogue($this->translationCatalogue);
     }
-    
+
     $this->addCSRFProtection($this->localCSRFSecret);
     $this->resetFormFields();
-    
+
     // generic event
     sfCore::getEventDispatcher()->notify(new sfEvent('form.post_configure', array(
       'form' => $this
     )));
-    
+
     // specific event for current class name
-    sfCore::getEventDispatcher()->notify(new sfEvent(sprintf('form.%s.post_configure', 
+    sfCore::getEventDispatcher()->notify(new sfEvent(sprintf('form.%s.post_configure',
             sfInflector::tableize(get_class($this))), array(
               'form' => $this
     )));
-    
+
   }
 
   /**
@@ -124,7 +124,7 @@ class sfForm implements ArrayAccess, Iterator, Countable
   public function configure()
   {
   }
-  
+
   /**
    * Setups the current form.
    *
@@ -148,7 +148,7 @@ class sfForm implements ArrayAccess, Iterator, Countable
   public function render($attributes = array())
   {
     $formatter = $this->widgetSchema->getFormFormatter();
-    
+
     if(!is_null($formatter))
     {
       $formatter->setValidatorSchema($this->getValidatorSchema());
@@ -158,16 +158,16 @@ class sfForm implements ArrayAccess, Iterator, Countable
         $formatter->setTranslationCatalogue($this->translationCatalogue);
       }
     }
-    
+
     return $this->getFormFieldSchema()->render($attributes);
   }
 
   /**
    * Sets translation catalogue to this form
-   * 
+   *
    * @param string $catalogue Catalogue name. Can use constants and can be module/catalogue pair
    * @return sfForm
-   * @throws sfException 
+   * @throws sfException
    */
   public function setTranslationCatalogue($catalogue)
   {
@@ -177,39 +177,39 @@ class sfForm implements ArrayAccess, Iterator, Countable
       if(!sfToolkit::isPathAbsolute($catalogue))
       {
         // we have to do some detection
-        $parts = explode('/', $catalogue);      
+        $parts = explode('/', $catalogue);
         if(count($parts) != 2)
         {
           throw new sfException(sprintf(
-            'Invalid translation catalogue "%s" given to the form "%s"', 
+            'Invalid translation catalogue "%s" given to the form "%s"',
                   $catalogue, get_class($this)));
-        }      
+        }
         $moduleName = $parts[0];
-        $catalogueName = $parts[1];      
+        $catalogueName = $parts[1];
         $catalogue = sfLoader::getI18NDir($moduleName) . '/' . $catalogueName;
       }
     }
     $this->translationCatalogue = $catalogue;
     return $this;
   }
-  
+
   public function getTranslationCatalogue()
   {
-    return $this->translationCatalogue;    
+    return $this->translationCatalogue;
   }
-    
+
   /**
    * Translates the string using form formatter
-   * 
+   *
    * @param string $str
    * @param array $params
-   * @return string 
+   * @return string
    */
   public function __($str, $params = array())
   {
-    return $this->widgetSchema->getFormFormatter()->translate($str, $params);    
+    return $this->widgetSchema->getFormFormatter()->translate($str, $params);
   }
-  
+
   /**
    * Renders the widget schema using a specific form formatter
    *
@@ -237,7 +237,7 @@ class sfForm implements ArrayAccess, Iterator, Countable
    * @param boolean $recursive False will prevent hidden fields from embedded forms from rendering
    *
    * @return string
-   * 
+   *
    * @see sfFormFieldSchema
    */
   public function renderHiddenFields($recursive = true)
@@ -247,10 +247,10 @@ class sfForm implements ArrayAccess, Iterator, Countable
 
   /**
    * Return HTML tag for submit button.
-   * 
+   *
    * @param string $value
    * @param array $attributes
-   * @return string 
+   * @return string
    */
   public function renderSubmitTag($value = 'Submit', $attributes = array())
   {
@@ -258,21 +258,21 @@ class sfForm implements ArrayAccess, Iterator, Countable
     {
       $value = $this->submitButtonNames[$value];
     }
-    
+
     $attributes = array_merge(array(
                 'name' => 'submit',
                 'value' => 'submit',
                 'type' => 'submit'), $attributes);
     return sprintf('<button%s><span>%s</span></button>', $this->getWidgetSchema()->attributesToHtml($attributes), $value);
   }
-  
+
   protected $submitButtonNames = array();
-  
+
   public function setSubmitButtonNames($names)
   {
     $this->submitButtonNames = $names;
   }
-  
+
   /**
    * Renders global errors associated with this form.
    *
@@ -307,7 +307,7 @@ class sfForm implements ArrayAccess, Iterator, Countable
    * Returns an array of errors. Its simply collects all errors
    * from all widgets from this form
    *
-   * @return array 
+   * @return array
    */
   public function getErrors()
   {
@@ -320,7 +320,7 @@ class sfForm implements ArrayAccess, Iterator, Countable
     }
     return $errors;
   }
-  
+
   /**
    * Binds the form with input values.
    *
@@ -350,7 +350,7 @@ class sfForm implements ArrayAccess, Iterator, Countable
 
       $this->taintedFiles = array();
     }
-    
+
     try
     {
       $this->doBind(self::deepArrayUnion($this->taintedValues, self::convertFileInformation($this->taintedFiles)));
@@ -368,9 +368,9 @@ class sfForm implements ArrayAccess, Iterator, Countable
 
   /**
    * Binds the current form validate it in one step.
-   * 
+   *
    * @param sfRequest $request
-   * @return boolean 
+   * @return boolean
    */
   public function bindAndValid(sfRequest $request)
   {
@@ -379,9 +379,9 @@ class sfForm implements ArrayAccess, Iterator, Countable
 
   /**
    * Binds request to the form
-   * 
+   *
    * @param sfRequest $request
-   * @return sfForm 
+   * @return sfForm
    */
   public function bindRequest(sfRequest $request)
   {
@@ -389,7 +389,7 @@ class sfForm implements ArrayAccess, Iterator, Countable
 
     $validatorSchema = $this->validatorSchema;
     $allowExtra = $validatorSchema->getOption('allow_extra_fields');
-    
+
     // we don't have the values as array but separated values
     if($nameFormat === false || $nameFormat == '%s')
     {
@@ -401,10 +401,10 @@ class sfForm implements ArrayAccess, Iterator, Countable
       else
       {
         $all = $request->getParameterHolder()->getAll();
-        unset($all['module'], $all['action']);        
+        unset($all['module'], $all['action']);
         $params = array_merge($all, $request->getGetParameters());
-      }      
-      $files = $request->getFiles();      
+      }
+      $files = $request->getFiles();
     }
     else
     {
@@ -424,12 +424,12 @@ class sfForm implements ArrayAccess, Iterator, Countable
         }
       }
     }
-    
+
     $this->bind($params, $files);
-    
+
     return $this;
   }
-  
+
   /**
    * Cleans and binds values to the current form.
    *
@@ -439,7 +439,7 @@ class sfForm implements ArrayAccess, Iterator, Countable
   {
     // filters the values via event dispatcher
     $values = sfCore::getEventDispatcher()->filter(
-              new sfEvent('form.filter_values', 
+              new sfEvent('form.filter_values',
                 array('form' => $this)), $values)->getReturnValue();
     try
     {
@@ -448,14 +448,14 @@ class sfForm implements ArrayAccess, Iterator, Countable
       {
         foreach($this->values as $field => $value)
         {
-          if(!isset($this[$field])) continue;        
+          if(!isset($this[$field])) continue;
           $this[$field]->setValue($value);
-        }  
-      }      
+        }
+      }
     }
     catch (sfValidatorError $error)
-    {    
-      sfCore::getEventDispatcher()->notify(new sfEvent('form.validation_error', 
+    {
+      sfCore::getEventDispatcher()->notify(new sfEvent('form.validation_error',
               array('error' => $error, 'form' => $this)));
       throw $error;
     }
@@ -547,9 +547,9 @@ class sfForm implements ArrayAccess, Iterator, Countable
 
   /**
    * Sets the name of the form
-   * 
+   *
    * @param string $name
-   * @return sfForm 
+   * @return sfForm
    */
   public function setName($name)
   {
@@ -560,11 +560,11 @@ class sfForm implements ArrayAccess, Iterator, Countable
     }
     return $this;
   }
-  
+
   /**
    * Sets name format for the widgetSchema. This is just an alias
    * for $this->widgetSchema->setNameFormat()
-   * 
+   *
    * @param string|false $format
    * @return sfForm
    */
@@ -573,18 +573,18 @@ class sfForm implements ArrayAccess, Iterator, Countable
     $this->widgetSchema->setNameFormat($format);
     return $this;
   }
-  
+
   /**
    * Gets name format for the widgetSchema. This is just an alias
    * for $this->widgetSchema->getNameFormat()
-   * 
+   *
    * @return string
    */
   public function getNameFormat()
   {
     return $this->widgetSchema->getNameFormat();
   }
-  
+
   /**
    * Returns the array name under which user data can retrieved.
    *
@@ -604,14 +604,14 @@ class sfForm implements ArrayAccess, Iterator, Countable
 
   /**
    * Returns form key (used when no id given to the form)
-   * 
+   *
    * @return string
    */
   public function getKey()
   {
     return $this->key;
   }
-  
+
   /**
    * Gets the error schema associated with the form.
    *
@@ -727,7 +727,7 @@ class sfForm implements ArrayAccess, Iterator, Countable
    * @param  string $name The name used to embed the form
    *
    * @return sfForm
-   * 
+   *
    * @throws InvalidArgumentException If there is no form embedded with the supplied name
    */
   public function getEmbeddedForm($name)
@@ -878,6 +878,17 @@ class sfForm implements ArrayAccess, Iterator, Countable
   }
 
   /**
+   * Checks if given field has any validator assigned
+   *
+   * @param string $name The field name
+   * @return boolean
+   */
+  public function hasValidator($name)
+  {
+    return isset($this->validatorSchema[$name]);
+  }
+
+  /**
    * Sets the validator schema associated with this form.
    *
    * @param sfValidatorSchema $validatorSchema A sfValidatorSchema instance
@@ -938,7 +949,7 @@ class sfForm implements ArrayAccess, Iterator, Countable
   /**
    * Sets label for the field.
    * Is is a shortcut method for $this->widgetSchema->setLabel()
-   * 
+   *
    * @param string $field
    * @param string $label
    * @return sfWidget The current widget instance
@@ -952,39 +963,39 @@ class sfForm implements ArrayAccess, Iterator, Countable
   /**
    * Sets the help for the field
    * Is is a shortcut method for $this->widgetSchema->setHelp()
-   * 
+   *
    * @param string $field
    * @param string $help
    * @return sfWidget The current widget instance
-   */  
+   */
   public function setHelp($field, $help)
   {
     $this->widgetSchema->setHelp($field, $help);
     return $this;
   }
-  
+
   /**
-   * Sets the post validator. This is a shortcut method for 
-   * 
+   * Sets the post validator. This is a shortcut method for
+   *
    * @param sfValidatorBase $validator sfValidatorBase instance
-   * @return sfForm 
+   * @return sfForm
    */
   public function setFinalValidator(sfValidatorBase $validator)
   {
     $this->validatorSchema->setPostValidator($validator);
     return $this;
-  } 
-  
+  }
+
   /**
    * Returns post validator
-   * 
-   * @return sfValidatorBase 
+   *
+   * @return sfValidatorBase
    */
   public function getFinalValidator()
   {
     return $this->validatorSchema->getPostValidator();
   }
-  
+
   /**
    * Sets the pre validator.
    *
@@ -1006,7 +1017,7 @@ class sfForm implements ArrayAccess, Iterator, Countable
   {
     return $this->validatorSchema->preValidator;
   }
-  
+
   /**
    * Gets a widget for the given field name.
    *
@@ -1072,25 +1083,25 @@ class sfForm implements ArrayAccess, Iterator, Countable
 
   /**
    * Returns an array of rules and messages for validation
-   * 
+   *
    * @return array
    */
   public function getJavascriptFinalValidation()
   {
     return array(array(), array());
   }
-  
+
   /**
    * Returns javascript error placement function. Used by placing validation
    * errors using javascript. Can return sfJsonExpression object.
-   * 
-   * @return string 
+   *
+   * @return string
    */
   public function getJavascriptErrorPlacement()
   {
     return false;
   }
-  
+
   /**
    * Returns the current form's options.
    *
@@ -1243,19 +1254,19 @@ class sfForm implements ArrayAccess, Iterator, Countable
 
   /**
    * Removes protection of the form
-   * 
-   * @return sfForm 
+   *
+   * @return sfForm
    */
   public function removeCsrfProtection()
   {
-    $this->localCSRFSecret = false;    
+    $this->localCSRFSecret = false;
     if ($this->isCSRFProtected())
     {
       unset($this[self::$CSRFFieldName]);
-    }    
+    }
     return $this;
   }
-  
+
   /**
    * Returns a CSRF token, given a secret.
    *
@@ -1356,10 +1367,10 @@ class sfForm implements ArrayAccess, Iterator, Countable
 
   /**
    * Opens the form with <form /> tag with given route and options
-   * 
+   *
    * @param string $route
    * @param array $opt
-   * @return string 
+   * @return string
    */
   public function open($route = null, $opt = array())
   {
@@ -1380,12 +1391,12 @@ class sfForm implements ArrayAccess, Iterator, Countable
 
     $opt = array_merge($defaults, $opt);
     $url = '';
-    
+
     if(!empty($route))
     {
       $url = url_for($route);
     }
-    
+
     if(isset($opt['query_string']))
     {
       $url .= '?' . $opt['query_string'];
@@ -1418,29 +1429,29 @@ class sfForm implements ArrayAccess, Iterator, Countable
 
     return $this->renderFormTag($url, $opt);
   }
-  
+
   /**
    * Closes the form.
-   * 
-   * @return string 
+   *
+   * @return string
    */
   public function close()
   {
     return '</form>';
   }
-  
+
   /**
    * Renders submit tag
-   * 
+   *
    * @param string $value
    * @param array $attributes
-   * @return string 
+   * @return string
    */
   public function submit($value = 'Submit', $attributes = array())
   {
     return $this->renderSubmitTag($value, $attributes);
   }
-  
+
   /**
    * Renders the form tag.
    *
@@ -1800,10 +1811,10 @@ class sfForm implements ArrayAccess, Iterator, Countable
 
     return $array1;
   }
-  
+
   /**
    * Adds group with $name and $label of $fields to the form
-   * 
+   *
    * @param string $name
    * @param string $label
    * @param arrray $fields
@@ -1815,10 +1826,10 @@ class sfForm implements ArrayAccess, Iterator, Countable
     $this->groups[$name] = new sfFormFieldGroup($this, $label, $fields, $priority);
     return $this;
   }
-  
+
   /**
    * Removes field group and all fields associated with the group
-   * 
+   *
    * @param string $name Name of the group
    */
   public function removeGroup($name)
@@ -1826,7 +1837,7 @@ class sfForm implements ArrayAccess, Iterator, Countable
     try {
       $group = $this->getGroup($name);
       foreach($group->getFields() as $f => $field)
-      {    
+      {
         unset($this[$f]);
       }
       // remove the group
@@ -1839,17 +1850,17 @@ class sfForm implements ArrayAccess, Iterator, Countable
 
   /**
    * Has field group?
-   * 
-   * @param string $name 
+   *
+   * @param string $name
    */
   public function hasGroup($name)
   {
     return isset($this->groups[$name]);
   }
-  
+
   /**
    * Returns field group
-   * 
+   *
    * @param string $name
    * @return sfFormFieldGroup sfFormFieldGroup
    * @throws If there is no group with the supplied name
@@ -1858,14 +1869,14 @@ class sfForm implements ArrayAccess, Iterator, Countable
   {
     if(!isset($this->groups[$name]))
     {
-      throw new InvalidArgumentException(sprintf('Group "%s" does not exist.', $name));      
+      throw new InvalidArgumentException(sprintf('Group "%s" does not exist.', $name));
     }
     return $this->groups[$name];
   }
-  
+
   /**
    * Renders given group
-   * 
+   *
    * @param string $name Name of the group to render
    * @return string
    */
@@ -1873,61 +1884,64 @@ class sfForm implements ArrayAccess, Iterator, Countable
   {
     return $this->getGroup($name)->render();
   }
-  
+
   /**
    * Does this form have groups?
-   * 
-   * @return boolean 
+   *
+   * @return boolean
    */
   public function hasGroups()
   {
     return count($this->groups) !== 0;
   }
-  
+
   /**
    * Returns groups of fields
-   * 
+   *
    * @return array
    */
-  public function getGroups()
-  {   
-    uasort($this->groups, array($this, '_sortGroups'));    
+  public function getGroups($sort = true)
+  {
+    if($sort)
+    {
+      uasort($this->groups, array($this, '_sortGroups'));
+    }
     return $this->groups;
   }
-  
+
   /**
    * Changes $fielName to hidden
-   * 
+   *
    * @param string $fieldName
-   * @return sfForm 
+   * @return sfForm
    */
   public function changeToHidden($fieldName)
   {
     $this->widgetSchema[$fieldName] = new sfWidgetFormInputHidden();
     return $this;
   }
-  
+
   /**
    * Disables $fieldName
-   * 
+   *
    * @param string $fieldName
-   * @return sfForm 
+   * @return sfForm
    */
   public function changeToDisabled($fieldName)
   {
-    $this->widgetSchema[$fieldName]->setAttribute('disabled', 'disabled');    
+    $this->widgetSchema[$fieldName]->setAttribute('disabled', 'disabled');
     if(sfWidget::isAriaEnabled())
     {
       $this->widgetSchema[$fieldName]->setAttribute('aria-disabled', 'true');
     }
     return $this;
   }
-  
+
   /**
    * Changes $fieldName to readonly mode
-   * 
+   *
    * @param string $fieldName
-   * @return sfForm 
+   * @return sfForm
    */
   public function changeToReadOnly($fieldName)
   {
@@ -1935,35 +1949,35 @@ class sfForm implements ArrayAccess, Iterator, Countable
     if(sfWidget::isAriaEnabled())
     {
       $this->widgetSchema[$fieldName]->setAttribute('aria-readonly', 'true');
-    }    
+    }
     return $this;
   }
-  
+
   /**
-   * Changes $fieldName to email 
-   * 
+   * Changes $fieldName to email
+   *
    * @param string $fieldName
-   * @return sfForm 
+   * @return sfForm
    */
   public function changeToEmail($fieldName)
   {
     $this->validatorSchema[$fieldName] = new sfValidatorEmail($this->validatorSchema[$fieldName]->getOptions());
     return $this;
   }
-  
+
   /**
    * Returns required star HTML code
-   * 
+   *
    * @return string
    */
   public function getRequiredLabelMarkup()
   {
     return $this->widgetSchema->getFormFormatter()->getRequiredLabelMarkup();
   }
-  
+
   /**
    * Sorts groups by the priority
-   * 
+   *
    * @param sfFormFieldGroup $a
    * @param sfFormFieldGroup $b
    * @return integer 1 or -1
@@ -1974,32 +1988,32 @@ class sfForm implements ArrayAccess, Iterator, Countable
     // added to the stack
     return $a->getPriority() > $b->getPriority() ? -1 : 1;
   }
-  
+
   /**
    * Returns sfUser instance
-   * 
+   *
    * @return sfUser
    */
   public function getUser()
   {
     return $this->user ? $this->user : sfContext::getInstance()->getUser();
   }
-  
+
   /**
    * Sets user to this form
-   * 
+   *
    * @param sfUser $user
-   * @return myFormBase 
+   * @return myFormBase
    */
   public function setUser(sfUser $user)
   {
     $this->user = $user;
     return $this;
   }
-  
+
   /**
    *
-   * @return type 
+   * @return type
    */
   public function debug()
   {
@@ -2007,14 +2021,14 @@ class sfForm implements ArrayAccess, Iterator, Countable
     {
       return;
     }
-    
+
     $string = '';
     // debug errors
     foreach($this->getErrorSchema()->getErrors() as $key => $error)
     {
       if($key == $this->getCSRFFieldName()) continue;
       $string .= '<p>' . $key . ': ' . $error . '</p>';
-    }    
+    }
     return $string;
   }
 
@@ -2030,8 +2044,8 @@ class sfForm implements ArrayAccess, Iterator, Countable
   public function __call($method, $arguments)
   {
     $event = sfCore::getEventDispatcher()->notifyUntil(
-            new sfEvent('form.method_not_found', 
-                    array('method' => $method, 
+            new sfEvent('form.method_not_found',
+                    array('method' => $method,
                           'arguments' => $arguments)));
     /* @var $event sfEvent */
     if($event->isProcessed())
@@ -2040,5 +2054,5 @@ class sfForm implements ArrayAccess, Iterator, Countable
     }
     throw new sfException(sprintf('Call to undefined method %s::%s.', get_class($this), $method));
   }
-  
+
 }

@@ -34,7 +34,7 @@ $t->diag('->render()');
 $ws = new sfWidgetFormSchema();
 $ws->addFormFormatter('stub', $formatter = new FormFormatterMock());
 $ws->setFormFormatterName('stub');
-$w = new sfWidgetFormDateRange(array('from' => new WidgetFormStub(), 'to' => new WidgetFormStub()));
+$w = new sfWidgetFormDateTimeRange(array('from' => new WidgetFormStub(), 'to' => new WidgetFormStub()));
 $w->setParent($ws);
 $t->is($w->render('foo'), 'translation[from ##WidgetFormStub## to ##WidgetFormStub##]', '->render() replaces %from% and %to%');
 $t->is($formatter->translateSubjects, array('from %from% to %to%'), '->render() translates the template option');
