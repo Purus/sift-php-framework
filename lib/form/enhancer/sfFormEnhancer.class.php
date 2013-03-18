@@ -7,7 +7,7 @@
  */
 
 /**
- * sfFormEnhancer enhanced form widgets and validators with configured attributes.
+ * sfFormEnhancer enhances form widgets and validators with configured attributes.
  *
  * @package    Sift
  * @subpackage form
@@ -22,23 +22,13 @@ class sfFormEnhancer extends sfConfigurable {
   protected $enhanced = array();
 
   /**
-   * Constructs the object
-   *
-   * @param array $options Array of options
-   */
-  public function __construct($options = array())
-  {
-    parent::__construct($options);
-  }
-
-  /**
    * Enhances a form.
    *
    * @param sfForm $form
    */
   public function enhance(sfForm $form)
   {
-    $this->enhanceFormFields($form->getFormFieldSchema(), get_class($form), $form->getEmbeddedForms());
+    $this->enhanceFormFields($form, $form->getFormFieldSchema(), get_class($form), $form->getEmbeddedForms());
     $this->enhanced[] = $form;
   }
 
@@ -49,10 +39,10 @@ class sfFormEnhancer extends sfConfigurable {
    * @param string            $formClass      The name of the form class these fields are from
    * @param array             $embeddedForms  An array of forms embedded in the fields' form
    */
-  protected function enhanceFormFields(sfFormFieldSchema $fieldSchema, $formClass, array $embeddedForms = array())
+  protected function enhanceFormFields(sfForm $form, sfFormFieldSchema $fieldSchema, $formClass, array $embeddedForms = array())
   {
     // loop through the fields and apply the global configuration
-    foreach($fieldSchema as $field)
+    foreach($fieldSchema as $name => $field)
     {
       if($field instanceof sfFormFieldSchema)
       {
@@ -67,14 +57,13 @@ class sfFormEnhancer extends sfConfigurable {
         }
       }
 
-      $this->enhanceWidget($field->getWidget());
-
-      if($field->hasError())
+      $validator = null;
+      
+      if($form->hasValidator($name))
       {
-        $validator = $field->getError()->getValidator();
-
+        $validator = $form->getValidator($name);
         $this->enhanceValidator($validator);
-
+        
         if($validator instanceof sfValidatorSchema)
         {
           if($preValidator = $validator->getPreValidator())
@@ -87,7 +76,10 @@ class sfFormEnhancer extends sfConfigurable {
           }
         }
       }
-    }
+      
+      $this->enhanceWidget($field->getWidget(), $validator);
+      
+    } // end foreach fields
 
     // loop through the form's lineage and apply configuration
     foreach(self::getLineage($formClass) as $class)
@@ -151,10 +143,11 @@ class sfFormEnhancer extends sfConfigurable {
 
   /**
    * Enhances a widget.
-   *
+   * 
    * @param sfWidget $widget
+   * @param sfValidatorBase $validator
    */
-  public function enhanceWidget(sfWidget $widget)
+  public function enhanceWidget(sfWidget $widget, sfValidatorBase $validator = null)
   {
     foreach(self::getLineage($widget) as $class)
     {
@@ -175,6 +168,8 @@ class sfFormEnhancer extends sfConfigurable {
 
         foreach($config['attributes'] as $name => $value)
         {
+          $value = $this->getValue($name, $value, $widget, $validator);
+          
           if('class' == $name)
           {
             // non-destructive
@@ -187,6 +182,66 @@ class sfFormEnhancer extends sfConfigurable {
         }
       }
     }
+    
+
+  }
+  
+  /**
+   * 
+   * @param type $name
+   * @param type $value
+   * @param type $widget
+   * @param type $validator
+   * @return type
+   */
+  protected function getValue($name, $value, $widget, $validator)    
+  {
+    if(preg_match('/\!\!callback:\s?(.*+)/', $value, $matches))
+    {
+      if(strpos($value, '->') !== false)
+      {
+        list($object, $method) = explode('->', $matches[1]);
+      }
+      else
+      {
+        $object = '$this';
+        $method = $matches[1];
+      }
+      
+      // sanitize method name
+      $method = rtrim($method, '()');
+      
+      $callback = false;
+      
+      switch($object)
+      {
+        case 'widget':
+        case '$widget':      
+          $callback = array($widget, $method);          
+          break;
+        
+        case 'this':
+        case '$this':
+        case 'enhancer':
+        case '$enhancer':
+          
+          $callback = array($this, $method);          
+          break;
+        
+        // FIXME: add validator?        
+      }
+      
+      if($callback && !is_callable($callback, false, $callableName))
+      {
+        throw new sfConfigurationException(sprintf('Invalid callback "%s" given for "%s". Key: "%s"', $callableName, get_class($widget), $name));
+      }
+
+      $value = call_user_func_array($callback, array(
+        $name, $widget, $validator        
+      ));
+    }
+    
+    return $value;
   }
 
   /**

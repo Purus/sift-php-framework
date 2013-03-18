@@ -34,10 +34,19 @@ default:
       require:
         - yepnope
 
+    # form setup
+    js_form_setup:
+      javascripts:
+        - '@js_form_setup':  { generated: true }
+      require:
+        - core
+        - js_api
+
     # jquery package
     jquery:
       javascripts:
-        - //ajax.googleapis.com/ajax/libs/jquery/1.8.1/jquery.min.js
+        - //code.jquery.com/jquery-1.9.1.min.js
+        - //code.jquery.com/jquery-migrate-1.1.1.min.js
 
     google_analytics_tracker:
       javascripts:
@@ -60,11 +69,13 @@ default:
       require:
         - jquery
 
-    # jquery ui
+    # jQuery UI
     ui:
       javascripts:
-        - //ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js
-      stylesheets: []
+        - //code.jquery.com/ui/1.10.1/jquery-ui.min.js
+        - %SF_SIFT_WEB_DIR%/js/jquery_ui_extensions/jquery-ui-timepicker-addon.js
+      stylesheets:
+         - %SF_SIFT_WEB_DIR%/css/_/jquery_ui/ui.less
       require:
         - jquery
 
@@ -119,12 +130,3 @@ default:
         - //netdna.bootstrapcdn.com/twitter-bootstrap/2.3.0/js/bootstrap.min.js
       require:
         - jquery
-
-    date_picker:
-      javascripts:
-        - %SF_SIFT_WEB_DIR%/js/bootstrap/bootstrap-datetimepicker.js
-        - %SF_SIFT_WEB_DIR%/js/bootstrap/locales/bootstrap-datetimepicker.%SF_CULTURE{0,2}%.js
-      stylesheets:
-        - %SF_SIFT_WEB_DIR%/css/_/bootstrap/datetimepicker.less
-      require:
-        - bootstrap

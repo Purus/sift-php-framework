@@ -42,6 +42,33 @@ abstract class sfGeneratorFormBuilder extends sfConfigurable {
       sfGeneratorField::TYPE_BIT => array(),
     ),
 
+    // filter context
+    // validators are configured to pass all data
+    sfGenerator::CONTEXT_FILTER => array(
+      sfGeneratorField::TYPE_STRING => array(
+        'validator' => array(
+          'class' => 'sfValidatorPass'
+        )
+      ),
+      sfGeneratorField::TYPE_INTEGER => array(),
+      sfGeneratorField::TYPE_FLOAT => array(),
+      sfGeneratorField::TYPE_DOUBLE => array(),
+      sfGeneratorField::TYPE_DECIMAL => array(),
+      sfGeneratorField::TYPE_DATE => array(),
+      sfGeneratorField::TYPE_TIME => array(),
+      sfGeneratorField::TYPE_TIMESTAMP => array(
+        'validator' => array(
+          'class' => 'sfValidatorPass'
+        )
+      ),
+      sfGeneratorField::TYPE_CLOB => array(),
+      sfGeneratorField::TYPE_BLOB => array(),
+      sfGeneratorField::TYPE_OBJECT => array(),
+      sfGeneratorField::TYPE_ARRAY => array(),
+      sfGeneratorField::TYPE_GZIP => array(),
+      sfGeneratorField::TYPE_BIT => array(),
+    ),
+    
     // global wide settings
     //
     // date column options
@@ -93,98 +120,102 @@ abstract class sfGeneratorFormBuilder extends sfConfigurable {
   }
 
   /**
-   * Returns widget class, options, attributes and also validator class, options and messages for given $column
+   * Returns widget class, options, attributes and also validator class, options and messages for given $field
    *
-   * @param sfIGeneratorField $column Column
+   * @param sfIGeneratorField $field Column
    * @param string $context Context (edit, list, filter, create, ...)
    * @return array
    * @throws RuntimeException If column cannot be handled. (Unknown type)
    */
-  public function getWidgetAndValidator(sfIGeneratorField $column, $context = 'edit')
+  public function getWidgetAndValidator(sfIGeneratorField $field, $context = 'edit')
   {
-    if($column->isPartial())
+    if($field->isPartial())
     {
-      return $this->getWidgetAndValidatorPartial($column, $context);
+      return $this->getWidgetAndValidatorPartial($field, $context);
     }
-    elseif($column->isComponent())
+    elseif($field->isComponent())
     {
-      return $this->getWidgetAndValidatorComponent($column, $context);
+      return $this->getWidgetAndValidatorComponent($field, $context);
     }
-    elseif($column->isForeignKey())
+    elseif($field->isForeignKey())
     {
-      return $this->getWidgetAndValidatorForeignKey($column, $context);
+      return $this->getWidgetAndValidatorForeignKey($field, $context);
+    }
+    elseif($field->isRelationAlias())
+    {
+      return $this->getWidgetAndValidatorRelationAlias($field, $context);
     }
     // we have real column
-    elseif($column->isReal())
+    elseif($field->isReal())
     {
-      switch($column->getType())
+      switch($field->getType())
       {
         case sfGeneratorField::TYPE_BOOLEAN:
-          return $this->getWidgetAndValidatorBoolean($column, $context);
+          return $this->getWidgetAndValidatorBoolean($field, $context);
           break;
 
         case sfGeneratorField::TYPE_STRING:
-          return $this->getWidgetAndValidatorString($column, $context);
+          return $this->getWidgetAndValidatorString($field, $context);
           break;
 
         case sfGeneratorField::TYPE_INTEGER:
-          return $this->getWidgetAndValidatorInteger($column, $context);
+          return $this->getWidgetAndValidatorInteger($field, $context);
           break;
 
         case sfGeneratorField::TYPE_DATE:
-          return $this->getWidgetAndValidatorDate($column, $context);
+          return $this->getWidgetAndValidatorDate($field, $context);
           break;
 
         case sfGeneratorField::TYPE_TIMESTAMP:
-          return $this->getWidgetAndValidatorTimestamp($column, $context);
+          return $this->getWidgetAndValidatorTimestamp($field, $context);
           break;
 
         case sfGeneratorField::TYPE_TIME:
-          return $this->getWidgetAndValidatorTime($column, $context);
+          return $this->getWidgetAndValidatorTime($field, $context);
           break;
 
         case sfGeneratorField::TYPE_ENUM:
-          return $this->getWidgetAndValidatorEnum($column, $context);
+          return $this->getWidgetAndValidatorEnum($field, $context);
           break;
 
         case sfGeneratorField::TYPE_FLOAT:
-          return $this->getWidgetAndValidatorFloat($column, $context);
+          return $this->getWidgetAndValidatorFloat($field, $context);
           break;
 
         case sfGeneratorField::TYPE_DOUBLE:
-          return $this->getWidgetAndValidatorDouble($column, $context);
+          return $this->getWidgetAndValidatorDouble($field, $context);
           break;
 
         case sfGeneratorField::TYPE_DECIMAL:
-          return $this->getWidgetAndValidatorDecimal($column, $context);
+          return $this->getWidgetAndValidatorDecimal($field, $context);
           break;
 
         case sfGeneratorField::TYPE_CLOB:
-          return $this->getWidgetAndValidatorClob($column, $context);
+          return $this->getWidgetAndValidatorClob($field, $context);
           break;
 
         case sfGeneratorField::TYPE_BLOB:
-          return $this->getWidgetAndValidatorBlob($column, $context);
+          return $this->getWidgetAndValidatorBlob($field, $context);
           break;
 
         case sfGeneratorField::TYPE_OBJECT:
-          return $this->getWidgetAndValidatorObject($column, $context);
+          return $this->getWidgetAndValidatorObject($field, $context);
           break;
 
         case sfGeneratorField::TYPE_ARRAY:
-          return $this->getWidgetAndValidatorArray($column, $context);
+          return $this->getWidgetAndValidatorArray($field, $context);
           break;
 
         case sfGeneratorField::TYPE_GZIP:
-          return $this->getWidgetAndValidatorGzip($column, $context);
+          return $this->getWidgetAndValidatorGzip($field, $context);
           break;
 
         case sfGeneratorField::TYPE_BIT:
-          return $this->getWidgetAndValidatorBit($column, $context);
+          return $this->getWidgetAndValidatorBit($field, $context);
           break;
 
         default:
-          throw new RuntimeException(sprintf('Not implemented for "%s"', $column->getType()));
+          throw new RuntimeException(sprintf('Not implemented for "%s"', $field->getType()));
           break;
       }
     }
@@ -196,11 +227,11 @@ abstract class sfGeneratorFormBuilder extends sfConfigurable {
   /**
    * Returns widget and validator for string column type
    *
-   * @param sfIGeneratorField $column
+   * @param sfIGeneratorField $field
    * @param string $context
    * @return array
    */
-  protected function getWidgetAndValidatorString(sfIGeneratorField $column, $context)
+  protected function getWidgetAndValidatorString(sfIGeneratorField $field, $context)
   {
     $widgetClass = $this->getOptionFor('widget.class', sfGeneratorField::TYPE_STRING, $context, 'sfWidgetFormInputText');
     $widgetOptions = $this->getOptionFor('widget.options', sfGeneratorField::TYPE_STRING, $context, array());
@@ -209,7 +240,7 @@ abstract class sfGeneratorFormBuilder extends sfConfigurable {
     $validatorOptions = $this->getOptionFor('validator.options', sfGeneratorField::TYPE_STRING, $context, array());
     $validatorMessages = $this->getOptionFor('validator.messages', sfGeneratorField::TYPE_STRING, $context, array());
 
-    $length = $column->getLength();
+    $length = $field->getLength();
 
     if($length > 255)
     {
@@ -217,16 +248,16 @@ abstract class sfGeneratorFormBuilder extends sfConfigurable {
     }
 
     // we have it fixed to some length
-    if($length && $column->isFixedLength())
+    if($length && $field->isFixedLength())
     {
       $validatorOptions['min_length'] = $length;
       $validatorOptions['max_length'] = $length;
     }
-    elseif($minLength = $column->getMinLength())
+    elseif($minLength = $field->getMinLength())
     {
       $validatorOptions['min_length'] = $minLength;
     }
-    elseif($maxLength = $column->getMaxLength())
+    elseif($maxLength = $field->getMaxLength())
     {
       $validatorOptions['max_length'] = $maxLength;
     }
@@ -236,22 +267,18 @@ abstract class sfGeneratorFormBuilder extends sfConfigurable {
     }
 
     // validator
-    if($column->isEmail())
+    if($field->isEmail())
     {
-      $validatorClass = 'Email';
+      $validatorClass = 'sfValidatorEmail';
     }
-    elseif($column->isRegularExpression() &&
-      ($regexp = $column->getRegularExpression()))
+    elseif($field->isRegularExpression() &&
+      ($regexp = $field->getRegularExpression()))
     {
       $validatorOptions['pattern'] = $regexp;
-      $validatorClass = 'Regex';
+      $validatorClass = 'sfvalidtorRegex';
     }
 
-    // not null
-    if($column->isNotNull())
-    {
-      $validatorOptions['required'] = true;
-    }
+    $validatorOptions = $this->addValidationOptions($field, $context, $validatorOptions);
     
     return array(
       $widgetClass, $widgetOptions, $widgetAttributes,
@@ -262,11 +289,11 @@ abstract class sfGeneratorFormBuilder extends sfConfigurable {
   /**
    * Returns widget and validator for boolean column type
    *
-   * @param sfIGeneratorField $column
+   * @param sfIGeneratorField $field
    * @param string $context Generator context (edit, list...)
    * @return array
    */
-  protected function getWidgetAndValidatorBoolean(sfIGeneratorField $column, $context)
+  protected function getWidgetAndValidatorBoolean(sfIGeneratorField $field, $context)
   {
     switch($context)
     {
@@ -279,7 +306,7 @@ abstract class sfGeneratorFormBuilder extends sfConfigurable {
               'choices' => array('' => 'yes or no', 1 => 'yes', 0 => 'no')
             )),
           $this->getOptionFor('widget.attributes', sfGeneratorField::TYPE_BOOLEAN, $context, array(), false),
-          $this->getOptionFor('validator.class', sfGeneratorField::TYPE_BOOLEAN, $context, 'sfValidatorInteger', false),
+          $this->getOptionFor('validator.class', sfGeneratorField::TYPE_BOOLEAN, $context, 'sfValidatorChoice', false),
           array_merge($this->getOptionFor('validator.options', sfGeneratorField::TYPE_BOOLEAN, $context, array(), false),
             array(
               'choices' => array('', 0, 1)
@@ -295,7 +322,11 @@ abstract class sfGeneratorFormBuilder extends sfConfigurable {
           $this->getOptionFor('widget.options', sfGeneratorField::TYPE_BOOLEAN, $context, array()),
           $this->getOptionFor('widget.attributes', sfGeneratorField::TYPE_BOOLEAN, $context, array()),
           $this->getOptionFor('validator.class', sfGeneratorField::TYPE_BOOLEAN, $context, 'sfValidatorBoolean'),
-          $this->getOptionFor('validator.options', sfGeneratorField::TYPE_BOOLEAN, $context, array()),
+          // add validation options
+          $this->addValidationOptions(
+            $field, $context,          
+            $this->getOptionFor('validator.options', sfGeneratorField::TYPE_BOOLEAN, $context, array())
+          ),
           $this->getOptionFor('validator.messages', sfGeneratorField::TYPE_BOOLEAN, $context, array())
         );
         break;
@@ -305,11 +336,11 @@ abstract class sfGeneratorFormBuilder extends sfConfigurable {
   /**
    * Returns widget and validator for integer column type
    *
-   * @param sfIGeneratorField $column
+   * @param sfIGeneratorField $field
    * @param string $context Generator context (edit, list...)
    * @return array
    */
-  protected function getWidgetAndValidatorInteger(sfIGeneratorField $column, $context)
+  protected function getWidgetAndValidatorInteger(sfIGeneratorField $field, $context)
   {
     // return defaults
     return array(
@@ -317,7 +348,13 @@ abstract class sfGeneratorFormBuilder extends sfConfigurable {
       $this->getOptionFor('widget.options', sfGeneratorField::TYPE_INTEGER, $context, array()),
       $this->getOptionFor('widget.attributes', sfGeneratorField::TYPE_INTEGER, $context, array()),
       $this->getOptionFor('validator.class', sfGeneratorField::TYPE_INTEGER, $context, 'sfValidatorInteger'),
-      $this->getOptionFor('validator.options', sfGeneratorField::TYPE_INTEGER, $context, array()),
+      
+      // add validation options
+      $this->addValidationOptions(
+        $field, $context,
+        $this->getOptionFor('validator.options', sfGeneratorField::TYPE_INTEGER, $context, array())
+      ),
+      
       $this->getOptionFor('validator.messages', sfGeneratorField::TYPE_INTEGER, $context, array())
     );
   }
@@ -325,11 +362,11 @@ abstract class sfGeneratorFormBuilder extends sfConfigurable {
   /**
    * Returns widget and validator for float column type
    *
-   * @param sfIGeneratorField $column
+   * @param sfIGeneratorField $field
    * @param string $context Generator context (edit, list...)
    * @return array
    */
-  protected function getWidgetAndValidatorFloat(sfIGeneratorField $column, $context)
+  protected function getWidgetAndValidatorFloat(sfIGeneratorField $field, $context)
   {
     // return defaults
     return array(
@@ -337,7 +374,11 @@ abstract class sfGeneratorFormBuilder extends sfConfigurable {
       $this->getOptionFor('widget.options', sfGeneratorField::TYPE_FLOAT, $context, array()),
       $this->getOptionFor('widget.attributes', sfGeneratorField::TYPE_FLOAT, $context, array()),
       $this->getOptionFor('validator.class', sfGeneratorField::TYPE_FLOAT, $context, 'sfValidatorNumber'),
-      $this->getOptionFor('validator.options', sfGeneratorField::TYPE_FLOAT, $context, array()),
+      // add validation options
+      $this->addValidationOptions(
+        $field, $context,      
+        $this->getOptionFor('validator.options', sfGeneratorField::TYPE_FLOAT, $context, array())
+      ),
       $this->getOptionFor('validator.messages', sfGeneratorField::TYPE_FLOAT, $context, array())
     );
   }
@@ -345,11 +386,11 @@ abstract class sfGeneratorFormBuilder extends sfConfigurable {
   /**
    * Returns widget and validator for decimal type
    *
-   * @param sfIGeneratorField $column
+   * @param sfIGeneratorField $field
    * @param string $context Generator context (edit, list...)
    * @return array
    */
-  protected function getWidgetAndValidatorDecimal(sfIGeneratorField $column, $context)
+  protected function getWidgetAndValidatorDecimal(sfIGeneratorField $field, $context)
   {
     // return defaults
     return array(
@@ -357,7 +398,11 @@ abstract class sfGeneratorFormBuilder extends sfConfigurable {
       $this->getOptionFor('widget.options', sfGeneratorField::TYPE_DECIMAL, $context, array()),
       $this->getOptionFor('widget.attributes', sfGeneratorField::TYPE_DECIMAL, $context, array()),
       $this->getOptionFor('validator.class', sfGeneratorField::TYPE_DECIMAL, $context, 'sfValidatorNumber'),
-      $this->getOptionFor('validator.options', sfGeneratorField::TYPE_DECIMAL, $context, array()),
+      // add validation options
+      $this->addValidationOptions(
+        $field, $context,      
+        $this->getOptionFor('validator.options', sfGeneratorField::TYPE_DECIMAL, $context, array())
+      ),
       $this->getOptionFor('validator.messages', sfGeneratorField::TYPE_DECIMAL, $context, array())
     );
   }
@@ -365,11 +410,11 @@ abstract class sfGeneratorFormBuilder extends sfConfigurable {
   /**
    * Returns widget and validator for double type
    *
-   * @param sfIGeneratorField $column
+   * @param sfIGeneratorField $field
    * @param string $context Generator context (edit, list...)
    * @return array
    */
-  protected function getWidgetAndValidatorDouble(sfIGeneratorField $column, $context)
+  protected function getWidgetAndValidatorDouble(sfIGeneratorField $field, $context)
   {
     // return defaults
     return array(
@@ -377,7 +422,11 @@ abstract class sfGeneratorFormBuilder extends sfConfigurable {
       $this->getOptionFor('widget.options', sfGeneratorField::TYPE_DOUBLE, $context, array()),
       $this->getOptionFor('widget.attributes', sfGeneratorField::TYPE_DOUBLE, $context, array()),
       $this->getOptionFor('validator.class', sfGeneratorField::TYPE_DOUBLE, $context, 'sfValidatorNumber'),
-      $this->getOptionFor('validator.options', sfGeneratorField::TYPE_DOUBLE, $context, array()),
+      // add validation options
+      $this->addValidationOptions(
+        $field, $context,      
+        $this->getOptionFor('validator.options', sfGeneratorField::TYPE_DOUBLE, $context, array())
+      ),
       $this->getOptionFor('validator.messages', sfGeneratorField::TYPE_DOUBLE, $context, array())
     );
   }
@@ -385,11 +434,11 @@ abstract class sfGeneratorFormBuilder extends sfConfigurable {
   /**
    * Returns widget and validator for date type
    *
-   * @param sfIGeneratorField $column
+   * @param sfIGeneratorField $field
    * @param string $context Generator context (edit, list...)
    * @return array
    */
-  protected function getWidgetAndValidatorDate(sfIGeneratorField $column, $context)
+  protected function getWidgetAndValidatorDate(sfIGeneratorField $field, $context)
   {
     $widgetClass = $this->getOption(sprintf('%s.widget.class',  sfGeneratorField::TYPE_DATE), 'sfWidgetFormDate');
     $widgetOptions = $this->getOption(sprintf('%s.widget.options',  sfGeneratorField::TYPE_DATE), array());
@@ -408,7 +457,7 @@ abstract class sfGeneratorFormBuilder extends sfConfigurable {
               'to_date' => new sfPhpExpression(sprintf('new %s(%s, %s)', $widgetClass, $this->varExport($widgetOptions), $this->varExport($widgetAttributes))),
             )),
           $this->getOptionFor('widget.attributes', sfGeneratorField::TYPE_DATE, $context, array(), false),
-          $this->getOptionFor('validator.class', sfGeneratorField::TYPE_DATE, $context, 'sfValidatorDateRange', false),
+          $this->getOptionFor('validator.class', sfGeneratorField::TYPE_DATE, $context, 'sfValidatorDateRange', false),          
           $this->getOptionFor('validator.options', sfGeneratorField::TYPE_DATE, $context, array(), false),
           $this->getOptionFor('validator.messages', sfGeneratorField::TYPE_DATE, $context, array(), false)
         );
@@ -422,7 +471,11 @@ abstract class sfGeneratorFormBuilder extends sfConfigurable {
           $widgetOptions,
           $widgetAttributes,
           $this->getOptionFor('validator.class', sfGeneratorField::TYPE_DATE, $context, 'sfValidatorDate'),
-          $this->getOptionFor('validator.options', sfGeneratorField::TYPE_DATE, $context, array()),
+          // add validation options
+          $this->addValidationOptions(
+            $field, $context,          
+            $this->getOptionFor('validator.options', sfGeneratorField::TYPE_DATE, $context, array())
+          ),
           $this->getOptionFor('validator.messages', sfGeneratorField::TYPE_DATE, $context, array())
         );
         break;
@@ -432,16 +485,23 @@ abstract class sfGeneratorFormBuilder extends sfConfigurable {
   /**
    * Returns widget and validator for timestamp type
    *
-   * @param sfIGeneratorField $column
+   * @param sfIGeneratorField $field
    * @param string $context Generator context (edit, list...)
    * @return array
    */
-  protected function getWidgetAndValidatorTimestamp(sfIGeneratorField $column, $context)
+  protected function getWidgetAndValidatorTimestamp(sfIGeneratorField $field, $context)
   {
     $widgetClass = $this->getOption(sprintf('%s.widget.class',  sfGeneratorField::TYPE_TIMESTAMP), 'sfWidgetFormDateTime');
     $widgetOptions = $this->getOption(sprintf('%s.widget.options',  sfGeneratorField::TYPE_TIMESTAMP), array());
     $widgetAttributes = $this->getOption(sprintf('%s.widget.attributes',  sfGeneratorField::TYPE_TIMESTAMP), array());
 
+    $validatorClass = $this->getOptionFor('validator.class', sfGeneratorField::TYPE_TIMESTAMP, $context, 'sfValidatorDateTime');
+    // add validation options
+    $validatorOptions = $this->addValidationOptions($field, $context,      
+                              $this->getOptionFor('validator.options', sfGeneratorField::TYPE_TIMESTAMP, $context, array()));
+   
+    $validatorMessages = $this->getOptionFor('validator.messages', sfGeneratorField::TYPE_TIMESTAMP, $context, array());
+    
     // manage contexts
     switch($context)
     {
@@ -449,7 +509,7 @@ abstract class sfGeneratorFormBuilder extends sfConfigurable {
       // from: [] to: [] filters
       case sfGenerator::CONTEXT_FILTER:
         return array(
-          $this->getOptionFor('widget.class', sfGeneratorField::TYPE_TIMESTAMP, $context, 'sfWidgetFormDateTimeFilter', false),
+          $this->getOptionFor('widget.class', sfGeneratorField::TYPE_TIMESTAMP, $context, 'sfWidgetFormFilterDateTime', false),
           array_merge($this->getOptionFor('widget.options', sfGeneratorField::TYPE_TIMESTAMP, $context, array(), false),
             array(
               'from_date' => new sfPhpExpression(sprintf('new %s(%s, %s)', $widgetClass, $this->varExport($widgetOptions), $this->varExport($widgetAttributes))),
@@ -458,8 +518,14 @@ abstract class sfGeneratorFormBuilder extends sfConfigurable {
               'to_time' => new sfPhpExpression(sprintf('new %s(%s, %s)', $this->getOption('time.widget.class', 'sfWidgetFormDateTime'), $this->varExport($widgetOptions), $this->varExport($widgetAttributes))),
             )),
           $this->getOptionFor('widget.attributes', sfGeneratorField::TYPE_TIMESTAMP, $context, array(), false),
-          $this->getOptionFor('validator.class', sfGeneratorField::TYPE_TIMESTAMP, $context, 'sfValidatorDateTimeRange', false),
-          $this->getOptionFor('validator.options', sfGeneratorField::TYPE_TIMESTAMP, $context, array(), false),
+          $this->getOptionFor('validator.class', sfGeneratorField::TYPE_TIMESTAMP, $context, 'sfValidatorDateTime', false),
+          array_merge($this->getOptionFor('validator.options', sfGeneratorField::TYPE_TIMESTAMP, $context, array(), false),
+          array(
+              // 'from_date' => new sfPhpExpression(sprintf('new %s(%s, %s)', $validatorClass, $this->varExport($validatorOptions), $this->varExport($validatorMessages))),
+              // 'to_date' => new sfPhpExpression(sprintf('new %s(%s, %s)', $validatorClass, $this->varExport($validatorOptions), $this->varExport($validatorMessages))),
+             // 'from_time' => new sfPhpExpression(sprintf('new %s(%s, %s)', $this->getOption('time.widget.class', 'sfWidgetFormDateTime'), $this->varExport($widgetOptions), $this->varExport($widgetAttributes))),
+             // 'to_time' => new sfPhpExpression(sprintf('new %s(%s, %s)', $this->getOption('time.widget.class', 'sfWidgetFormDateTime'), $this->varExport($widgetOptions), $this->varExport($widgetAttributes))),
+          )),
           $this->getOptionFor('validator.messages', sfGeneratorField::TYPE_TIMESTAMP, $context, array(), false)
         );
         break;
@@ -469,20 +535,20 @@ abstract class sfGeneratorFormBuilder extends sfConfigurable {
       $widgetClass,
       $widgetOptions,
       $widgetAttributes,
-      $this->getOptionFor('validator.class', sfGeneratorField::TYPE_TIMESTAMP, $context, 'sfValidatorDateTime'),
-      $this->getOptionFor('validator.options', sfGeneratorField::TYPE_TIMESTAMP, $context, array()),
-      $this->getOptionFor('validator.messages', sfGeneratorField::TYPE_TIMESTAMP, $context, array())
+      $validatorClass,
+      $validatorOptions,
+      $validatorMessages
     );
   }
 
   /**
    * Returns widget and validator for time type
    *
-   * @param sfIGeneratorField $column
+   * @param sfIGeneratorField $field
    * @param string $context Generator context (edit, list...)
    * @return array
    */
-  protected function getWidgetAndValidatorTime(sfIGeneratorField $column, $context)
+  protected function getWidgetAndValidatorTime(sfIGeneratorField $field, $context)
   {
     $widgetClass = $this->getOption(sprintf('%s.widget.class',  sfGeneratorField::TYPE_TIME), 'sfWidgetFormTime');
     $widgetOptions = $this->getOption(sprintf('%s.widget.options',  sfGeneratorField::TYPE_TIME), array());
@@ -516,7 +582,11 @@ abstract class sfGeneratorFormBuilder extends sfConfigurable {
       $widgetOptions,
       $widgetAttributes,
       $this->getOptionFor('validator.class', sfGeneratorField::TYPE_TIME, $context, 'sfValidatorTime'),
-      $this->getOptionFor('validator.options', sfGeneratorField::TYPE_TIME, $context, array()),
+      // add validation options
+      $this->addValidationOptions(
+        $field, $context,      
+        $this->getOptionFor('validator.options', sfGeneratorField::TYPE_TIME, $context, array())
+      ),
       $this->getOptionFor('validator.messages', sfGeneratorField::TYPE_TIME, $context, array())
     );
   }
@@ -524,25 +594,29 @@ abstract class sfGeneratorFormBuilder extends sfConfigurable {
   /**
    * Returns widget and validator for enum column type
    *
-   * @param sfIGeneratorField $column
+   * @param sfIGeneratorField $field
    * @param string $context
    * @return array
    */
-  protected function getWidgetAndValidatorEnum(sfIGeneratorField $column, $context)
+  protected function getWidgetAndValidatorEnum(sfIGeneratorField $field, $context)
   {
     // return defaults
     return array(
       $this->getOptionFor('widget.class', sfGeneratorField::TYPE_ENUM, $context, 'sfWidgetFormChoice'),
       array_merge($this->getOptionFor('widget.options', sfGeneratorField::TYPE_ENUM, $context, array()),
         array(
-          'choices' => $column->getValues()
+          'choices' => $field->getValues()
         )
       ),
       $this->getOptionFor('widget.attributes', sfGeneratorField::TYPE_ENUM, $context, array()),
       $this->getOptionFor('validator.class', sfGeneratorField::TYPE_ENUM, $context, 'sfValidatorChoice'),
-      array_merge($this->getOptionFor('validator.options', sfGeneratorField::TYPE_ENUM, $context, array()),
-        array(
-          'choices' => $column->getValues()
+      // add validation options
+      $this->addValidationOptions(
+        $field, $context,      
+          array_merge($this->getOptionFor('validator.options', sfGeneratorField::TYPE_ENUM, $context, array()),
+            array(
+              'choices' => $field->getValues()
+          )
         )
       ),
       $this->getOptionFor('validator.messages', sfGeneratorField::TYPE_ENUM, $context, array())
@@ -552,11 +626,11 @@ abstract class sfGeneratorFormBuilder extends sfConfigurable {
   /**
    * Returns widget and validator for clob column type
    *
-   * @param sfIGeneratorField $column
+   * @param sfIGeneratorField $field
    * @param string $context
    * @return array
    */
-  protected function getWidgetAndValidatorClob(sfIGeneratorField $column, $context)
+  protected function getWidgetAndValidatorClob(sfIGeneratorField $field, $context)
   {
     // return defaults
     return array(
@@ -564,7 +638,11 @@ abstract class sfGeneratorFormBuilder extends sfConfigurable {
       $this->getOptionFor('widget.options', sfGeneratorField::TYPE_CLOB, $context, array()),
       $this->getOptionFor('widget.attributes', sfGeneratorField::TYPE_CLOB, $context, array()),
       $this->getOptionFor('validator.class', sfGeneratorField::TYPE_CLOB, $context, 'sfValidatorString'),
-      $this->getOptionFor('validator.options', sfGeneratorField::TYPE_CLOB, $context, array()),
+      // add validation options
+      $this->addValidationOptions(
+        $field, $context,      
+        $this->getOptionFor('validator.options', sfGeneratorField::TYPE_CLOB, $context, array())
+      ),
       $this->getOptionFor('validator.messages', sfGeneratorField::TYPE_CLOB, $context, array())
     );
   }
@@ -572,11 +650,11 @@ abstract class sfGeneratorFormBuilder extends sfConfigurable {
   /**
    * Returns widget and validator for blob column type
    *
-   * @param sfIGeneratorField $column
+   * @param sfIGeneratorField $field
    * @param string $context
    * @return array
    */
-  protected function getWidgetAndValidatorBlob(sfIGeneratorField $column, $context)
+  protected function getWidgetAndValidatorBlob(sfIGeneratorField $field, $context)
   {
     // return defaults
     return array(
@@ -584,7 +662,11 @@ abstract class sfGeneratorFormBuilder extends sfConfigurable {
       $this->getOptionFor('widget.options', sfGeneratorField::TYPE_BLOB, $context, array()),
       $this->getOptionFor('widget.attributes', sfGeneratorField::TYPE_BLOB, $context, array()),
       $this->getOptionFor('validator.class', sfGeneratorField::TYPE_BLOB, $context, 'sfValidatorPass'),
-      $this->getOptionFor('validator.options', sfGeneratorField::TYPE_BLOB, $context, array()),
+      // add validation options
+      $this->addValidationOptions(
+        $field, $context,      
+        $this->getOptionFor('validator.options', sfGeneratorField::TYPE_BLOB, $context, array())
+      ),
       $this->getOptionFor('validator.messages', sfGeneratorField::TYPE_BLOB, $context, array())
     );
   }
@@ -592,21 +674,29 @@ abstract class sfGeneratorFormBuilder extends sfConfigurable {
   /**
    * Returns widget and validator for partial column type
    *
-   * @param sfIGeneratorField $column
+   * @param sfIGeneratorField $field
    * @param string $context
    * @return array
    */
-  protected function getWidgetAndValidatorPartial(sfIGeneratorField $column, $context)
+  protected function getWidgetAndValidatorPartial(sfIGeneratorField $field, $context)
   {
     return array(
       $this->getOptionFor('widget.class', sfGeneratorField::TYPE_PARTIAL, $context, 'sfWidgetFormPartial'),
       array_merge($this->getOptionFor('widget.options', sfGeneratorField::TYPE_PARTIAL, $context, array()),
         array(
-          'partial' => sprintf('%s/%s', $column->getGenerator()->getModuleName(), $column->getName())
+          'partial' => sprintf('%s/%s', $field->getGenerator()->getModuleName(), $field->getName())
         )),
-      $this->getOptionFor('widget.attributes', sfGeneratorField::TYPE_PARTIAL, $context, array()),
+      array_merge($this->getOptionFor('widget.attributes', sfGeneratorField::TYPE_PARTIAL, $context, array()),
+        array(
+          'type' => $context
+        )
+      ),
       $this->getOptionFor('validator.class', sfGeneratorField::TYPE_PARTIAL, $context, 'sfValidatorPass'),
-      $this->getOptionFor('validator.options', sfGeneratorField::TYPE_PARTIAL, $context, array()),
+      // add validation options
+      $this->addValidationOptions(
+        $field, $context,      
+        $this->getOptionFor('validator.options', sfGeneratorField::TYPE_PARTIAL, $context, array())
+      ),
       $this->getOptionFor('validator.messages', sfGeneratorField::TYPE_PARTIAL, $context, array())
     );
   }
@@ -614,21 +704,25 @@ abstract class sfGeneratorFormBuilder extends sfConfigurable {
   /**
    * Returns widget and validator for component type
    *
-   * @param sfIGeneratorField $column
+   * @param sfIGeneratorField $field
    * @param string $context
    * @return array
    */
-  protected function getWidgetAndValidatorComponent(sfIGeneratorField $column, $context)
+  protected function getWidgetAndValidatorComponent(sfIGeneratorField $field, $context)
   {
     return array(
       $this->getOptionFor('widget.class', sfGeneratorField::TYPE_COMPONENT, $context, 'sfWidgetFormComponent'),
       array_merge($this->getOptionFor('widget.options', sfGeneratorField::TYPE_COMPONENT, $context, array(
       )), array(
-        'component' => sprintf('%s/%s', $column->getGenerator()->getModuleName(), $column->getName())
+        'component' => sprintf('%s/%s', $field->getGenerator()->getModuleName(), $field->getName())
       )),
       $this->getOptionFor('widget.attributes', sfGeneratorField::TYPE_COMPONENT, $context, array()),
       $this->getOptionFor('validator.class', sfGeneratorField::TYPE_COMPONENT, $context, 'sfValidatorPass'),
-      $this->getOptionFor('validator.options', sfGeneratorField::TYPE_COMPONENT, $context, array()),
+      // add validation options
+      $this->addValidationOptions(
+        $field, $context,      
+        $this->getOptionFor('validator.options', sfGeneratorField::TYPE_COMPONENT, $context, array())
+      ),
       $this->getOptionFor('validator.messages', sfGeneratorField::TYPE_COMPONENT, $context, array())
     );
   }
@@ -636,11 +730,11 @@ abstract class sfGeneratorFormBuilder extends sfConfigurable {
   /**
    * Returns widget and validator for object type
    *
-   * @param sfIGeneratorField $column
+   * @param sfIGeneratorField $field
    * @param string $context
    * @return array
    */
-  protected function getWidgetAndValidatorObject(sfIGeneratorField $column, $context)
+  protected function getWidgetAndValidatorObject(sfIGeneratorField $field, $context)
   {
     // return defaults
     return array(
@@ -648,7 +742,11 @@ abstract class sfGeneratorFormBuilder extends sfConfigurable {
       $this->getOptionFor('widget.options', sfGeneratorField::TYPE_OBJECT, $context, array()),
       $this->getOptionFor('widget.attributes', sfGeneratorField::TYPE_OBJECT, $context, array()),
       $this->getOptionFor('validator.class', sfGeneratorField::TYPE_OBJECT, $context, 'sfValidatorPass'),
-      $this->getOptionFor('validator.options', sfGeneratorField::TYPE_OBJECT, $context, array()),
+      // add validation options
+      $this->addValidationOptions(
+        $field, $context,      
+        $this->getOptionFor('validator.options', sfGeneratorField::TYPE_OBJECT, $context, array())
+      ),
       $this->getOptionFor('validator.messages', sfGeneratorField::TYPE_OBJECT, $context, array())
     );
   }
@@ -656,11 +754,11 @@ abstract class sfGeneratorFormBuilder extends sfConfigurable {
   /**
    * Returns widget and validator for array type
    *
-   * @param sfIGeneratorField $column
+   * @param sfIGeneratorField $field
    * @param string $context
    * @return array
    */
-  protected function getWidgetAndValidatorArray(sfIGeneratorField $column, $context)
+  protected function getWidgetAndValidatorArray(sfIGeneratorField $field, $context)
   {
     // return defaults
     return array(
@@ -668,7 +766,11 @@ abstract class sfGeneratorFormBuilder extends sfConfigurable {
       $this->getOptionFor('widget.options', sfGeneratorField::TYPE_ARRAY, $context, array()),
       $this->getOptionFor('widget.attributes', sfGeneratorField::TYPE_ARRAY, $context, array()),
       $this->getOptionFor('validator.class', sfGeneratorField::TYPE_ARRAY, $context, 'sfValidatorPass'),
-      $this->getOptionFor('validator.options', sfGeneratorField::TYPE_ARRAY, $context, array()),
+      // add validation options
+      $this->addValidationOptions(
+        $field, $context,      
+        $this->getOptionFor('validator.options', sfGeneratorField::TYPE_ARRAY, $context, array())
+      ),
       $this->getOptionFor('validator.messages', sfGeneratorField::TYPE_ARRAY, $context, array())
     );
   }
@@ -676,11 +778,11 @@ abstract class sfGeneratorFormBuilder extends sfConfigurable {
   /**
    * Returns widget and validator for gzip type
    *
-   * @param sfIGeneratorField $column
+   * @param sfIGeneratorField $field
    * @param string $context
    * @return array
    */
-  protected function getWidgetAndValidatorGzip(sfIGeneratorField $column, $context)
+  protected function getWidgetAndValidatorGzip(sfIGeneratorField $field, $context)
   {
     // return defaults
     return array(
@@ -688,7 +790,11 @@ abstract class sfGeneratorFormBuilder extends sfConfigurable {
       $this->getOptionFor('widget.options', sfGeneratorField::TYPE_GZIP, $context, array()),
       $this->getOptionFor('widget.attributes', sfGeneratorField::TYPE_GZIP, $context, array()),
       $this->getOptionFor('validator.class', sfGeneratorField::TYPE_GZIP, $context, 'sfValidatorPass'),
-      $this->getOptionFor('validator.options', sfGeneratorField::TYPE_GZIP, $context, array()),
+      // add validation options
+      $this->addValidationOptions(
+        $field, $context,      
+        $this->getOptionFor('validator.options', sfGeneratorField::TYPE_GZIP, $context, array())
+      ),
       $this->getOptionFor('validator.messages', sfGeneratorField::TYPE_GZIP, $context, array())
     );
   }
@@ -696,11 +802,11 @@ abstract class sfGeneratorFormBuilder extends sfConfigurable {
   /**
    * Returns widget and validator for bit type of column
    *
-   * @param sfIGeneratorField $column
+   * @param sfIGeneratorField $field
    * @param string $context
    * @return array
    */
-  protected function getWidgetAndValidatorBit(sfIGeneratorField $column, $context)
+  protected function getWidgetAndValidatorBit(sfIGeneratorField $field, $context)
   {
     // return defaults
     return array(
@@ -708,7 +814,11 @@ abstract class sfGeneratorFormBuilder extends sfConfigurable {
       $this->getOptionFor('widget.options', sfGeneratorField::TYPE_BIT, $context, array()),
       $this->getOptionFor('widget.attributes', sfGeneratorField::TYPE_BIT, $context, array()),
       $this->getOptionFor('validator.class', sfGeneratorField::TYPE_BIT, $context, 'sfValidatorPass'),
-      $this->getOptionFor('validator.options', sfGeneratorField::TYPE_BIT, $context, array()),
+      // add validation options
+      $this->addValidationOptions(
+        $field, $context,      
+        $this->getOptionFor('validator.options', sfGeneratorField::TYPE_BIT, $context, array())
+      ),
       $this->getOptionFor('validator.messages', sfGeneratorField::TYPE_BIT, $context, array())
     );
   }
@@ -716,12 +826,39 @@ abstract class sfGeneratorFormBuilder extends sfConfigurable {
   /**
    * Returns widget and validator for foreign key type
    *
-   * @param sfIGeneratorField $column
+   * @param sfIGeneratorField $field
    * @param string $context
    * @return array
    */
-  abstract protected function getWidgetAndValidatorForeignKey(sfIGeneratorField $column, $context);
+  abstract protected function getWidgetAndValidatorForeignKey(sfIGeneratorField $field, $context);
 
+  /**
+   * Returns widget and validator for relation alias
+   *
+   * @param sfIGeneratorField $field
+   * @param string $context
+   * @return array
+   */
+  abstract protected function getWidgetAndValidatorRelationAlias(sfIGeneratorField $field, $context);
+  
+  /**
+   * Adds additional options for validator based on $field properties (not null...)
+   * 
+   * @param sfIGeneratorField $field
+   * @param string $context
+   * @param array $options Array of options for validator
+   * @return array Array of options for validator
+   */
+  public function addValidationOptions(sfIGeneratorField $field, $context, $options)
+  {
+    if($field->isNotNull())
+    {
+      $options['required'] = true;
+    }
+    
+    return $options;
+  }
+  
   /**
    * Returns option for given $key. Searches in context wide settings and than in widget type specific
    * setting.
@@ -738,22 +875,22 @@ abstract class sfGeneratorFormBuilder extends sfConfigurable {
    * </code>
    *
    * @param string $key Key like widget.class
-   * @param string $columnType sfGeneratorField::TYPE_* constant
+   * @param string $fieldType sfGeneratorField::TYPE_* constant
    * @param string $context Context
    * @param mixed $default Default value nor global nor context wide setting was not found
    * @param boolean $fallback Fallback to column type setting? Ie search only in context wide setting?
    * @return mixed
    */
-  protected function getOptionFor($key, $columnType, $context, $default, $fallback = true)
+  protected function getOptionFor($key, $fieldType, $context, $default, $fallback = true)
   {
     if($fallback)
     {
-      return $this->getOption(sprintf('%s.%s.%s', $context, $columnType, $key),
-             $this->getOption(sprintf('%s.%s', $columnType, $key), $default));
+      return $this->getOption(sprintf('%s.%s.%s', $context, $fieldType, $key),
+             $this->getOption(sprintf('%s.%s', $fieldType, $key), $default));
     }
 
     // no search in column type setting, just in context wide setting
-    return $this->getOption(sprintf('%s.%s.%s', $context, $columnType, $key), $default);
+    return $this->getOption(sprintf('%s.%s.%s', $context, $fieldType, $key), $default);
   }
 
   /**

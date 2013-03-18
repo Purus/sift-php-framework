@@ -219,8 +219,12 @@
 
 #sf-web-debug-config-summary {
   display: inline-block;
-  padding: 5px;
+  padding: 0.3em;
+  margin: 0;
   background: #eee url('data:image/png;base64,R0lGODlhAQAVALMAAO3t7evr6+7u7t3d3dvb2+zs7ODg4N7e3urq6ubm5uTk5Nra2uLi4ujo6AAAAAAAACH5BAAAAAAALAAAAAABABUAAAQOUAhAS7ioJcXMGQNBLBEAOw==') repeat-x bottom;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  border-radius: 5px;    
 }
 
 #sf-web-debug-config-summary li
@@ -245,9 +249,16 @@
 
 }
 
+.sfWebDebugWarning {
+  -moz-border-radius: 2px;
+  -webkit-border-radius: 2px;
+  border-radius: 2px;  
+}
+
 .sfWebDebugWarning, .sfWebDebugWarning td
 {
   background-color: orange !important;
+
 }
 
 .sfWebDebugError, .sfWebDebugError td

@@ -161,6 +161,13 @@ abstract class sfGeneratorField extends sfConfigurable implements sfIGeneratorFi
   protected $isRelationAlias = false;
 
   /**
+   * Is many to many relation alias?
+   *
+   * @var boolean
+   */
+  protected $isManyToManyRelationAlias = false;
+  
+  /**
    * Renderer callback
    *
    * @var mixed
@@ -299,6 +306,16 @@ abstract class sfGeneratorField extends sfConfigurable implements sfIGeneratorFi
   }
 
   /**
+   * Returns true if this column is a many to many relation alias
+   *
+   * @return boolean
+   */
+  public function isManyToManyRelationAlias()
+  {
+    return $this->isManyToManyRelationAlias;
+  }
+  
+  /**
    * Returns true if the column is a partial.
    *
    * @return boolean true if the column is a partial, false otherwise
@@ -434,12 +451,12 @@ abstract class sfGeneratorField extends sfConfigurable implements sfIGeneratorFi
   }
 
   /**
-   * Returns colum name without the flag ('=', '_', '~')
+   * Returns field name without the flag ('=', '_', '~')
    *
    * @param $column
    * @return array ($column, $flag)
    */
-  static public function splitColumnWithFlag($column)
+  static public function splitFieldWithFlag($column)
   {
     $flags = array();
     while(in_array($column[0], array('=', '_', '~')))
@@ -448,62 +465,6 @@ abstract class sfGeneratorField extends sfConfigurable implements sfIGeneratorFi
       $column = substr($column, 1);
     }
     return array($column, $flags);
-  }
-
-  /**
-   * Renders itself in given context
-   *
-   * @param string $context
-   */
-  public function render($context)
-  {
-    switch($context)
-    {
-      case 'list':
-      default:
-          return $this->renderInListContext();
-      break;
-    }
-
-    throw new LogicException('Not implemented yet');
-  }
-
-  /**
-   * Renders this column in "list" context
-   *
-   * @return string
-   */
-  public function renderInListContext()
-  {
-    $html = $this->generator->getColumnGetter($this, true);
-
-    if($renderer = $this->getRenderer())
-    {
-      $html = sprintf("$html ? call_user_func_array(%s, array_merge(array(%s), %s)) : '&nbsp;'", $this->generator->asPhp($renderer), $html, $this->generator->asPhp($this->getRendererArguments()));
-    }
-    elseif($this->isComponent())
-    {
-      return sprintf("get_component('%s', '%s', array('type' => 'list', '%s' => &\$%s))", $this->generator->getModuleName(), $this->getName(), $this->generator->getSingularName(), $this->generator->getSingularName());
-    }
-    elseif($this->isPartial())
-    {
-      return sprintf("get_partial('%s/%s', array('type' => 'list', '%s' => &\$%s))", $this->generator->getModuleName(), $this->getName(), $this->generator->getSingularName(), $this->generator->getSingularName());
-    }
-    elseif('date' == $this->getType())
-    {
-      $html = sprintf("false !== strtotime($html) ? format_date(%s, \"%s\") : '&nbsp;'", $html, $this->getOption('date_format', 'f'));
-    }
-    elseif('boolean' == $this->getType())
-    {
-      $html = sprintf("get_partial('%s/list_column_boolean', array('value' => %s, '%s' => &\$%s))", $this->generator->getModuleName(), $html, $this->generator->getSingularName(), $this->generator->getSingularName());
-    }
-
-    if($this->isLink())
-    {
-      $html = sprintf("link_to(%s, '%s', \$%s)", $html, $this->generator->getRouteForAction('edit'), $this->generator->getSingularName());
-    }
-
-    return $html;
   }
 
   /**

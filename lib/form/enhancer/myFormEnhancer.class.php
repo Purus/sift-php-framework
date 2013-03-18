@@ -12,4 +12,4 @@
  * @package    Sift
  * @subpackage form
  */
-class myFormEnhancer extends sfFormEnhancer {}
+class myFormEnhancer extends sfFormEnhancerRich {}

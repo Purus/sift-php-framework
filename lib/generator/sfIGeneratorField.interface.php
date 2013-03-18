@@ -21,7 +21,8 @@ interface sfIGeneratorField {
   public function setRenderer($renderer);
   public function setRendererArguments(array $arguments);
   public function getRendererArguments();
-  public function render($context);
+  
+  // public function render($context);
 
   public function getName();
   public function getHelp();
@@ -45,6 +46,7 @@ interface sfIGeneratorField {
   public function isReal();
   public function getForeignClassName();
   public function isRelationAlias();
+  public function isManyToManyRelationAlias();
 
   public function getType();
   public function getSize();

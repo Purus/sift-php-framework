@@ -7,14 +7,18 @@
  */
 
 /**
- * PHP partial mail view (extension .pjs)
+ * Javascript view (extension .pjs), used for generating javascript
  *
  * @package    Sift
  * @subpackage view
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  */
 class sfJavascriptView extends sfPHPView
 {
+  /**
+   * File extension
+   * 
+   * @var string 
+   */
   protected $extension = '.pjs';
 
   public function configure()

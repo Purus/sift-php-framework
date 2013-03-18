@@ -1,41 +1,188 @@
-// JsAPI implementation
+/**
+ * JsAPI v1.1
+ *
+ * @package Sift
+ * @subpackage javascript
+ */
 var JsAPI = JsAPI || {};
 
 /**
- * Usage: jsAPI.usePackage()
+ * Holder for already loaded resources. Part of workaround yepnope's bug #91
+ *
+ * @link https://github.com/SlexAxton/yepnope.js/issues/91
  */
-JsAPI.usePackage = function(b, c, e)
+JsAPI.loadedResources = [];
+
+/**
+ * Initialized flag
+ */
+JsAPI.isInitialized = false;
+
+/**
+ * Initializes. Loads scripts from the document and marks them as loaded
+ * so they wont be loaded twice by use_package
+ * 
+ */
+JsAPI.initialize = function()
 {
-  if(typeof this.packageConfig.packages[b] != "undefined")
+  // get all loaded scripts
+  var scripts = document.getElementsByTagName('script');
+  for(var i = 0; i < scripts.length; i++)
   {
-    var n = this.getPackageDependencies(b), b = this.packageConfig.packages[b];
-    n.length && (b = n.concat(b));
-    yepnope({test: typeof e != "undefined" ? e : !0, yep: b, callback: [c]})
+    if(scripts[i].src)
+    {
+      this.loadedResources[scripts[i].src] = true;
+    }
   }
 };
 
-JsAPI.getPackageDependencies = function(b)
+/**
+ * Use package with its dependencies
+ *
+ * @param pckg Package name as configured in assets_packages.yml
+ * @param function callback Callback function to be invoked on EVERY load of asset callback: function(url, result, key) {}
+ * @param function complete Complete function to be invoked when all files are loaded
+ * @param boolean test Test expression
+ * 
+ * @link http://yepnopejs.com/
+ */
+JsAPI.usePackage = function(pckg, callback, complete, test)
 {
-  var c = [];
-  if(this.packageConfig.dependencies[b] !== void 0)
-    for(var e = 0, n = this.packageConfig.dependencies[b].length; e < n; e++)
+  if(!this.isInitialized)
+  {
+    this.initialize();
+    this.isInitialized = true;
+  }  
+  
+  if(typeof this.packageConfig.packages[pckg] !== "undefined")
+  {
+    var dependencies = this.getPackageDependencies(pckg);
+    var toLoad = this.packageConfig.packages[pckg];
+
+    if(dependencies.length)
     {
-      var l = this.packageConfig.dependencies[b][e];
-      this.packageConfig.packages[l] !== void 0 && (c = c.concat(this.getPackageDependencies(l)), c = c.concat(this.packageConfig.packages[l]))
+      toLoad = dependencies.concat(toLoad);
     }
-  return c;
+
+    // undefined? we force the load
+    if(typeof test == 'undefined')
+    {
+      test = true;
+    }
+    
+    // get only those which are not loaded
+    toLoad = this.processResources(toLoad);
+
+    // prepare options for yepnope
+    var options = {
+      test: test,
+      yep: toLoad
+    }
+
+    if(typeof callback == 'function')
+    {
+      options.callback = [callback];
+    }
+
+    if(typeof complete == 'function')
+    {
+      options.complete = complete;
+    }
+
+    yepnope(options);
+  }
+  else
+  {
+    if("console" in window)
+    {
+      console.error('Invalid package "' + pckg + '".');
+    }
+  }
+
 };
 
 /**
+ * Process resources, returns only those which are not loaded yet.
  *
- * Shortcut for JsAPI.usePackage()
+ * This is a part of workaround yepnope's bug #91
+ * @link https://github.com/SlexAxton/yepnope.js/issues/91
  */
-var use_package = function(b, c, e)
+JsAPI.processResources = function(resources, complete)
 {
-  JsAPI.usePackage(b, c, e)
+  var notLoaded = [];
+  for(var i = 0; i < resources.length; i++)
+  {
+    if(!this.loadedResources[resources[i]])
+    {
+      notLoaded.push(resources[i]);
+    }
+    this.loadedResources[resources[i]] = true;
+  }
+  return notLoaded;
 };
 
-// Generated configuration
+/**
+ * Returns package dependencies for package (pckg)
+ * 
+ * @param {string} pckg Package name
+ */
+JsAPI.getPackageDependencies = function(pckg)
+{
+  var assets = [];
+  if(this.packageConfig.dependencies[pckg] !== undefined)
+  {
+    for(var i = 0, c = this.packageConfig.dependencies[pckg].length; i < c; i++)
+    {
+      var pckgName = this.packageConfig.dependencies[pckg][i];
+      if(this.packageConfig.packages[pckgName] !== undefined)
+      {
+        // load dependencies for this pckg
+        assets = assets.concat(this.getPackageDependencies(pckgName));
+        assets = assets.concat(this.packageConfig.packages[pckgName]);
+      }
+    }
+  }
+  
+  // protocol
+  var scheme = document.location.protocol;
+  
+  // fix schema less urls
+  for(var i = 0; i < assets.length; i++)
+  {    
+    var parts = assets[i].split('!');
+    var url = parts.pop();
+    // url starts as //somethong which is scheme less URL as defined in 
+    // http://tools.ietf.org/html/rfc3986#section-4.2    
+    if(url.match(/^\/\//))
+    {
+      url = scheme + url;      
+      // rewrite assets[i]
+      // glue it back
+      assets[i] = parts.join('!') + url;
+    }
+  }
+  return assets;
+}
+
+/**
+ * Use package with its dependencies
+ *
+ * @param pckg Package name as configured in assets_packages.yml
+ * @param function callback Callback function to be invoked on EVERY load of asset callback: function(url, result, key) {}
+ * @param function complete Complete function to be invoked when all files are loaded
+ * @param boolean test Test expression
+ * 
+ * @link http://yepnopejs.com/
+ */
+var use_package = function(pckg, callback, complete, test)
+{
+  JsAPI.usePackage(pckg, callback, complete, test);
+};
+
+/**
+ * Configuration of packages and their dependencies
+ * 
+ */
 JsAPI.packageConfig = {
   dependencies: <?php echo $dependencies; ?>,
   packages: <?php echo $packages; ?>

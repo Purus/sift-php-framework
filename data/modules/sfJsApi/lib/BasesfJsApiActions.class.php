@@ -20,7 +20,6 @@ class BasesfJsApiActions extends myActions {
   public function executeIndex()
   {
     $this->setViewClass('sfJavascript');
-    $this->getResponse()->setContentType('application/javascript');
 
     $packages = array();
     $dependencies = array();
@@ -42,7 +41,7 @@ class BasesfJsApiActions extends myActions {
       $stylesheets = $this->parseAssets($stylesheets, 'css');
       $javascripts = $this->parseAssets($javascripts, 'js');
 
-      $assets = array_merge($javascripts, $stylesheets);
+      $assets = array_merge($stylesheets, $javascripts);
 
       // dependencies
       if(isset($package['require']) && count($package['require']))
@@ -58,6 +57,43 @@ class BasesfJsApiActions extends myActions {
   }
 
   /**
+   * Form setup action. This is application specific.
+   * Generates javascript code to make the form inputs rich.
+   * 
+   * Adds datepickers to datetime inputs, make textareas
+   * rich editors and so on.
+   * 
+   */
+  public function executeFormSetup()
+  {
+    $this->setViewClass('sfJavascript');    
+    
+    $setup = sfCore::filterByEventListeners($setup = '', 'js.form_setup', array());
+    
+    if($setup)
+    {
+      if($setup instanceof sfCallable)
+      {
+        return $this->renderCallable($setup);
+      }
+      else
+      {
+        return $this->renderText($setup);
+      }
+    }
+    
+    // we need to do our job    
+    // this should be moved to helper!
+    $culture = sfCulture::getInstance($this->getRequestParameter('culture', 
+                sfConfig::get('sf_i18n_default_culture')));    
+    $this->monthNames = $culture->getDateTimeFormat()->getAbbreviatedMonthNames();    
+    $this->dayNames = $culture->getDateTimeFormat()->getAbbreviatedDayNames();    
+    $this->firstDay = $culture->getDateTimeFormat()->getFirstDayOfWeek();
+    
+    
+  }
+  
+  /**
    * Parses array of asssets to be prepared for yepnope
    *
    * @param array $assets Array of assets to be parsed
@@ -66,7 +102,7 @@ class BasesfJsApiActions extends myActions {
    */
   protected function parseAssets($assets, $type)
   {
-    sfLoader::loadHelpers('Asset');
+    sfLoader::loadHelpers(array('Asset', 'Url'));
 
     $result = array();
 
@@ -102,7 +138,7 @@ class BasesfJsApiActions extends myActions {
       }
       elseif(isset($options['generated']))
       {
-        $file = _dynamic_path($source, $absolute);
+        $source = _dynamic_path($source, $absolute);
         $raw = true;
       }
 
@@ -110,7 +146,7 @@ class BasesfJsApiActions extends myActions {
       {
         if($type == 'js')
         {
-          $file = javascript_path($source, $absolute);
+          $source = javascript_path($source, $absolute);
         }
         elseif($type == 'css')
         {
@@ -128,7 +164,7 @@ class BasesfJsApiActions extends myActions {
           }
 
           // mark is as css
-          $source = sprintf('css!%s', $source);
+          $source = sprintf('css!%s', $source);          
         }
       }
 

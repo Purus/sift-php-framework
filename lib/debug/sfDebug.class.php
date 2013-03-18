@@ -274,63 +274,109 @@ class sfDebug {
   }
   
   /**
-   * 
-   * *  * @see http://redotheoffice.com/?p=65
-   */
-
-  /**
    * Dumps a variable in readable format
    * 
    * @param mixed $var 
    * @param boolean $exit Exit after dumping the variable (default is false)
+   * @param array $stack Custom backtrace stack
+   * @link http://redotheoffice.com/?p=65
    */
-  public static function dump($var, $exit = false, $info = false)
+  public static function dump($var, $exit = false, $stack = null)
   {
+    static $dumpCssIncluded;
+    
+    $cli = PHP_SAPI == 'cli' ? true : false;
     $scope = false;
     $prefix = 'unique';
     $suffix = 'value';
 
     if($scope)
+    {
       $vals = $scope;
+    }      
     else
+    {
       $vals = $GLOBALS;
-
+    }
+    
     $old = $var;
     $var = $new = $prefix . rand() . $suffix;
-    $vname = FALSE;
+    $vname = false;
+    
     foreach($vals as $key => $val)
+    {
       if($val === $new)
+      {
         $vname = $key;
+      }
+    }
+        
     $var = $old;
 
-    $html = '<pre class="sfVarDump">';
+    $stack = $stack == null ? debug_backtrace() : $stack;
+    
+    $_caller = $stack[1];
+    $fileinfo = $stack[0];
 
-    if($info != false)
+    $caller = '';
+    if(isset($_caller['class']) && isset($_caller['type']))
     {
-      $html .= '<strong class="sfVarDumpInfo">' . htmlspecialchars($info) . ':</strong><br />';
+      $caller = $_caller['class'].''.$_caller['type'];
     }
-    else
-    {
-      $stack = debug_backtrace();
-      $caller = $stack[1];
-      $fileinfo = $stack[0];
+    
+    $code = explode("\n", preg_replace('/\r\n|\r/', "\n", file_get_contents($fileinfo['file'])));
 
-      $html .= 'in <strong>';
-      if(isset($caller['class']) && isset($caller['type']))
+    $linkFormat = sfConfig::get('sf_file_link_format', 'editor://open?file=%f&line=%l');
+    
+    $output = strtr('<h2>Variable dump in <a href="%EDITOR_OPEN_LINK%">%CALLER%%%function%% on line %%line%%</a>: %%variable%%</h2>
+    %DUMP%', array(
+        '%EDITOR_OPEN_LINK%' => strtr($linkFormat, array('%f' => $fileinfo['file'], '%l' => $fileinfo['line'])),
+        '%CALLER%' => self::getCallerInfo($stack),
+        '%%function%%' => $_caller['function'], 
+        '%%line%%' => $fileinfo['line'],
+        '%%variable%%' => htmlspecialchars(preg_replace('/(.*?)dump\((.*?)\);(.*)/i', '$2', $code[$fileinfo['line'] - 1])),
+        '%DUMP%' => self::doDump($var, $vname)
+    ));
+
+    if(!$cli)
+    {
+      if(!$dumpCssIncluded)
       {
-        $html .= "{$caller['class']}{$caller['type']}";
-      }
+        $output .= '<style type="text/css">';      
+        $output .= <<< CSS
+  pre.sf-var-dump {
+    margin: 0.7em;
+    padding: 0.5em;
+    width: auto;
+    display: block;
+    background: #fff;
+    font-size: 12px;
+    font-family: Courier;
+  }
+                
+  pre.sf-var-dump h2 {
+    display: inline;
+    margin: 0;
+    padding: 0;
+    font-size: 14px;
+  }
+                
+  .sf-debug-integer {
+    color: green;
+  }
 
-      $html .= "{$caller['function']}</strong> on line {$fileinfo['line']}: ";
-      $code = explode("\n", preg_replace('/\r\n|\r/', "\n", file_get_contents($fileinfo['file'])));
-      $vname = "<strong>" . htmlspecialchars(preg_replace('/(.*?)dump\((.*?)\);(.*)/i', '$2', $code[$fileinfo['line'] - 1])) . "</strong>";
+  .sf-debug-object {
+    color: darkblue;
+  }
+CSS;
+        $output .= '</style>';
+        $dumpCssIncluded = true;
+      }
+        
+      $output = sprintf('<pre class="sf-var-dump">%s</pre>', $output);
     }
 
-    $html .= self::doDump($var, $vname);
-
-    $html .= "</pre>";
-
-    echo $html;
+    echo $output;
 
     if($exit)
     {
@@ -338,7 +384,140 @@ class sfDebug {
     }
   }
 
+  public static function getCallerInfo($trace) 
+  {
+    $c = '';
+    $file = '';
+    $func = '';
+    $class = '';     
+    if (isset($trace[2])) {
+        $file = $trace[1]['file'];
+        $func = $trace[2]['function'];
+        if ((substr($func, 0, 7) == 'include') || (substr($func, 0, 7) == 'require')) {
+            $func = '';
+        }
+    } else if (isset($trace[1])) {
+        $file = $trace[1]['file'];
+        $func = '';
+    }
+    if (isset($trace[3]['class'])) {
+        $class = $trace[3]['class'];
+        $func = $trace[3]['function'];
+        $file = $trace[2]['file'];
+    } else if (isset($trace[2]['class'])) {
+        $class = $trace[2]['class'];
+        $func = $trace[2]['function'];
+        $file = $trace[1]['file'];
+    }
+    if ($file != '') $file = basename($file);
+    $c = $file . ": ";
+    $c .= ($class != '') ? ":" . $class . "->" : "";
+    $c .= ($func != '') ? $func . "(): " : "";
+    return($c);
+}
+
   protected static function doDump(&$var, $var_name = null, $indent = null, $reference = null)
+  {
+    // $do_dump_indent = "<span style='color:#eeeeee;'>|</span> &nbsp;&nbsp; ";
+    $do_dump_indent = ' &nbsp;&nbsp; ';
+    $reference = $reference . $var_name;
+    $keyvar = 'the_do_dump_recursion_protection_scheme';
+    $keyname = 'referenced_object_name';
+
+    $html = '';
+
+    if(is_array($var) && isset($var[$keyvar]))
+    {
+      $real_var = &$var[$keyvar];
+      $real_name = &$var[$keyname];
+      $type = ucfirst(gettype($real_var));
+      $html .= "$indent$var_name <span style=\"color:#a2a2a2\">$type</span> = <span style=\"color:#e87800;\">&amp;$real_name</span><br />";
+    }
+    else
+    {
+      $var = array($keyvar => $var, $keyname => $reference);
+      $avar = &$var[$keyvar];
+
+      $type = strtolower(gettype($avar));
+      if($type == "string")
+        $type_color = "<span style='color:green'>";
+      elseif($type == "integer")
+        $type_color = "<span style='color:red'>";
+      elseif($type == "double")
+      {
+        $type_color = "<span style='color:#0099c5'>";
+        $type = "float";
+      }
+      elseif($type == "boolean")
+        $type_color = "<span style='color:#92008d'>";
+      elseif($type == "null")
+        $type_color = "<span style='color:black'>";
+
+      if(is_array($avar))
+      {
+        $count = count($avar);
+        $html .= "$indent" . ($var_name ? "$var_name => " : "") . "<span style='color:#a2a2a2'>$type ($count)</span><br>";
+        if($count > 0)
+        {
+          $html .= "$indent(<br />";
+          $keys = array_keys($avar);
+          foreach($keys as $name)
+          {
+            $value = &$avar[$name];
+            $html .= self::doDump($value, is_integer($name) ? "[$name]" : "['$name']", $indent . $do_dump_indent, $reference);
+          }
+          $html .= "$indent)<br>";
+        }
+      }
+      elseif(is_object($avar))
+      {
+        
+        // $html .= "$indent$var_name <span style='color:#a2a2a2'>is a</span> <b>" . get_class($avar) . "</b> (";
+        $html .= sprintf('%s%s is a <span class="sf-debug-object">%s</span>', $indent, $var_name, get_class($avar));
+        $i = 0;
+        foreach($avar as $name => $value)
+        {
+          if($i == 0)
+          {
+            $html .= '<br />';
+          }
+          $html .= sprintf('%s', self::doDump($value, $name, $indent.$do_dump_indent, $reference));          
+          $i++;
+        }
+
+        if(method_exists($avar, '__toString'))
+        {
+          $html .= $indent.$do_dump_indent . '<br /><strong>__toString:</strong><br />';
+          $html .= $indent.$do_dump_indent . strip_tags($avar->__toString()) . '<br />';
+        }
+
+        // $html .= $indent."<br />";
+      }
+      elseif(is_int($avar))
+      {
+        $html .= sprintf('%s%s = <span class="sf-debug-integer">%s</span> %s', $indent, $var_name, $type, $avar);
+      }
+      elseif(is_string($avar))
+      {
+        $html .= "$indent$var_name = <span style='color:#a2a2a2'>$type(" . sfUtf8::len($avar) . ")</span> $type_color\"$avar\"</span><br>";
+      }
+        
+      elseif(is_float($avar))
+        $html .= "$indent$var_name = <span style='color:#a2a2a2'>$type</span> $type_color$avar</span><br>";
+      elseif(is_bool($avar))
+        $html .= "$indent$var_name = <span style='color:#a2a2a2'>$type</span> $type_color" . ($avar == 1 ? "TRUE" : "FALSE") . "</span><br>";
+      elseif(is_null($avar))
+        $html .= "$indent$var_name = <span style='color:#a2a2a2'>$type</span><br>";
+      else
+        $html .= "$indent$var_name = <span style='color:#a2a2a2'>$type(" . sfUtf8::len($avar) . ")</span> $avar<br>";
+
+      $var = $var[$keyvar];
+    }
+
+    return $html;
+  }
+  
+  protected static function doDumpOLD(&$var, $var_name = null, $indent = null, $reference = null)
   {
     // $do_dump_indent = "<span style='color:#eeeeee;'>|</span> &nbsp;&nbsp; ";
     $do_dump_indent = "&nbsp;&nbsp;";

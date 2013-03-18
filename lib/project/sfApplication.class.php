@@ -60,6 +60,13 @@ abstract class sfApplication extends sfProject {
   );
 
   /**
+   * Form enhancer object
+   * 
+   * @var sfFormEnhancer
+   */
+  protected $formEnhancer;
+  
+  /**
    * Constructs the application
    *
    * @param string $environment Environment (prod, dev, cli, staging)
@@ -393,6 +400,17 @@ abstract class sfApplication extends sfProject {
     );
 
     $this->addOptions($dimensions);
+  }
+  
+  public function getFormEnhancer()
+  {
+    if(!$this->formEnhancer)
+    {
+      $config = include $this->configCache->checkConfig('config/forms.yml');
+      $this->formEnhancer = new sfFormEnhancerRich($config);
+    }
+    
+    return $this->formEnhancer;
   }
 
   /**

@@ -265,11 +265,11 @@ class sfI18nDateFormatter {
   }
 
   /**
-   * Gets the pattern from DateTimeFormatInfo or some predefined patterns.
+   * Gets the pattern from sfI18nDateFormat or some predefined patterns.
    * If the $pattern parameter is an array of 2 element, it will assume
    * that the first element is the date, and second the time
    * and try to find an appropriate pattern and apply 
-   * DateTimeFormatInfo::formatDateTime
+   * sfI18nDateFormatter::formatDateTime
    * See the tutorial documentation for futher details on the patterns.
    *
    * @param mixed $pattern a pattern.

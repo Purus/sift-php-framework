@@ -19,12 +19,14 @@ class sfBasicSecurityUser extends sfUser implements sfSecurityUser {
   const LAST_REQUEST_NAMESPACE = 'sift/user/sfUser/lastRequest';
   const AUTH_NAMESPACE = 'sift/user/sfUser/authenticated';
   const CREDENTIAL_NAMESPACE = 'sift/user/sfUser/credentials';
+  const ID_NAMESPACE = 'sift/user/sfUser/id';
 
   protected $lastRequest = null;
   protected $credentials = null;
   protected $authenticated = null;
   protected $timedout = false;
-
+  protected $id = null;
+  
   /**
    * Clears all credentials.
    *
@@ -207,6 +209,24 @@ class sfBasicSecurityUser extends sfUser implements sfSecurityUser {
   }
 
   /**
+   * Returns Id of the user
+   */
+  public function getId()
+  {
+    return $this->id;
+  }
+
+  /**
+   * Returns the user Id
+   * 
+   * @param string $id
+   */
+  public function setId($id)
+  {    
+    $this->id = $id;
+  }
+  
+  /**
    * Returns the timestamp of the last user request.
    *
    * @param  integer
@@ -227,6 +247,7 @@ class sfBasicSecurityUser extends sfUser implements sfSecurityUser {
     $this->authenticated = $storage->read(self::AUTH_NAMESPACE);
     $this->credentials = $storage->read(self::CREDENTIAL_NAMESPACE);
     $this->lastRequest = $storage->read(self::LAST_REQUEST_NAMESPACE);
+    $this->id = $storage->read(self::ID_NAMESPACE);
 
     if($this->authenticated == null)
     {
@@ -244,6 +265,7 @@ class sfBasicSecurityUser extends sfUser implements sfSecurityUser {
         }
         $this->setTimedOut();
         $this->setAuthenticated(false);
+        $this->setId(null);
       }
     }
 
@@ -259,6 +281,7 @@ class sfBasicSecurityUser extends sfUser implements sfSecurityUser {
 
     $storage->write(self::AUTH_NAMESPACE, $this->authenticated);
     $storage->write(self::CREDENTIAL_NAMESPACE, $this->credentials);
+    $storage->write(self::ID_NAMESPACE, $this->id);
 
     // call the parent shutdown method
     parent::shutdown();

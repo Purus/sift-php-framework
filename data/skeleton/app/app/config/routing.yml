@@ -1,17 +1,23 @@
 # You can find more information about this file on:
 # https://bitbucket.org/mishal/sift-php-framework/wiki/Routing
 
-# dynamically generated javascript
+# javascript API, dynamically generated javascript
 js_api:
-  url:   /js/api.js
+  url:   /js/:sf_culture/api.js
   param: { module: sfJsApi, action: index }
+
+# form setup
+js_form_setup:
+  url:   /js/:sf_culture/form_setup.js
+  param: { module: sfJsApi, action: formSetup }
 
 # default rules
 homepage:
   url:   /
   param: { module: default, action: index }
 
-# generic rules
+# !!! Remove in production !!!
+# Generic rules
 # please, remove them by adding more specific rules
 default_index:
   url:   /:module
