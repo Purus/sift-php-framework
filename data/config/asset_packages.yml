@@ -2,8 +2,13 @@
 # https://bitbucket.org/mishal/sift-php-framework/wiki/AssetPackages
 
 dev:
- # packages map
+
+  # packages map
   packages:
+
+    jquery:
+      - %SF_SIFT_WEB_DIR%/js/jquery/jquery-1.9.1.min.js
+
     validation:
       javascripts:
         - %SF_SIFT_WEB_DIR%/js/validate/jquery.validate.js
@@ -73,7 +78,7 @@ default:
     ui:
       javascripts:
         - //code.jquery.com/ui/1.10.1/jquery-ui.min.js
-        - %SF_SIFT_WEB_DIR%/js/jquery_ui_extensions/jquery-ui-timepicker-addon.js
+        - %SF_SIFT_WEB_DIR%/js/jquery_ui_ext/jquery-ui-timepicker-addon.js
       stylesheets:
          - %SF_SIFT_WEB_DIR%/css/_/jquery_ui/ui.less
       require:
