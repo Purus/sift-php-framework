@@ -302,6 +302,7 @@ class sfViewConfigHandler extends sfYamlConfigHandler {
 
     if($this->getConfigValue('has_layout', $viewName) && false !== $layout = $this->getConfigValue('layout', $viewName))
     {
+      $layout = sfToolkit::replaceConstants($layout);
       $data = "  \$this->setDecoratorTemplate('$layout'.\$this->getExtension());\n";
     }
 
