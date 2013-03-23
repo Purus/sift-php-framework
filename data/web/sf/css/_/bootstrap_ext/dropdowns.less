@@ -12,9 +12,15 @@
     text-decoration: none;
   }
 
-  li > a:hover, .dropdown-menu li > a:focus, .dropdown-submenu:hover > a {
+  > li > a:hover,
+  > li > a:focus,
+  .dropdown-submenu:hover > a,
+  .dropdown-submenu:focus > a
+  {
     color: @dropdownLinkColorHover !important;
     background: none;
+    // IE9 and down
+    filter: none;
   }
 
   // link_to_unless, link_to_if fixes
@@ -26,6 +32,11 @@
     line-height: @baseLineHeight;
     color: lighten(@dropdownLinkColor, 20%);
     white-space: nowrap;
+  }
+
+  li.head {
+    font-weight: bold;
+    font-size: @fontSizeLarge;
   }
 
 }
