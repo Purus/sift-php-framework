@@ -186,9 +186,6 @@ class sfWebDebug extends sfConfigurable
 
         '.implode("\n", $panels).'
 </div>
-<style type="text/css">
-'.$this->getDebugCss().'
-</style>
 <script type="text/javascript">
 '.$this->getDebugJavascript().'
 </script>

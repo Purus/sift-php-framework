@@ -16,22 +16,22 @@ class sfWebDebugLogger extends sfVarLogger {
 
   /**
    * Web debug holder
-   * 
-   * @var sfWebDebug 
+   *
+   * @var sfWebDebug
    */
   protected $webDebug = null;
 
   /**
    * Array of default options
-   * 
-   * @var array 
+   *
+   * @var array
    */
   protected $defaultOptions = array(
     'web_debug_class'   => 'sfWebDebug',
-    'web_debug_options' => array(        
+    'web_debug_options' => array(
     )
   );
-  
+
   /**
    * Initializes the web debug logger.
    *
@@ -43,22 +43,22 @@ class sfWebDebugLogger extends sfVarLogger {
     {
       return;
     }
-    
+
     sfCore::getEventDispatcher()->connect('context.load_factories', array($this, 'listenForLoadFactories'));
     sfCore::getEventDispatcher()->connect('web_debug.filter_content', array($this, 'filterResponseContent'));
     sfCore::getEventDispatcher()->connect('application.render_exception', array($this, 'filterExceptionContent'));
-    
+
   }
 
   /**
    * Listens for "context.load_factories" event.
-   * 
+   *
    * @param sfEvent $event
    */
   public function listenForLoadFactories(sfEvent $event)
-  {    
+  {
     $debugClass   = $this->getOption('web_debug_class', 'sfWebDebug');
-    $debugOptions = array_merge(array(      
+    $debugOptions = array_merge(array(
       'request_parameters' => $event['context']->getRequest()->getParameterHolder()->getAll(),
     ), (array)$this->getOption('web_debug_options', array()));
     $this->webDebug = new $debugClass($this, $debugOptions);
@@ -78,9 +78,12 @@ class sfWebDebugLogger extends sfVarLogger {
     {
       return $content;
     }
-    return str_ireplace('</body>', $this->webDebug->getHtml() . '</body>', $content);  
+
+    $content = str_ireplace('</head>', "<style type=\"text/css\">\n".$this->webDebug->getDebugCss().'</style>' . '</head>', $content);
+    $content = str_ireplace('</body>', $this->webDebug->getHtml() . '</body>', $content);
+    return $content;
   }
-  
+
  /**
    * Listens to the application.render_exception event.
    *
@@ -95,13 +98,13 @@ class sfWebDebugLogger extends sfVarLogger {
     {
       return $content;
     }
-    
+
     if(!$this->webDebug)
     {
       return $content;
     }
-    
-    return str_ireplace('</body>', $this->webDebug->getHtml() . '</body>', $content);  
-  }  
-  
+
+    return str_ireplace('</body>', $this->webDebug->getHtml() . '</body>', $content);
+  }
+
 }
