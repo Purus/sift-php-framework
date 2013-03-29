@@ -473,6 +473,7 @@ class sfCoreAutoload
     'sfi18nextractanonymoususer' => 'i18n/extract/sfI18nExtractAnonymousUser.class.php',
     'sfi18nextractloggedinuser' => 'i18n/extract/sfI18nExtractLoggedInUser.class.php',
     'sfi18nformextract' => 'i18n/extract/sfI18nFormExtract.class.php',
+    'sfi18njavascriptextractor' => 'i18n/extract/sfI18nJavascriptExtractor.class.php',
     'sfi18nmoduleextract' => 'i18n/extract/sfI18nModuleExtract.class.php',
     'sfi18nphpextractor' => 'i18n/extract/sfI18nPhpExtractor.class.php',
     'sfi18nyamlextractor' => 'i18n/extract/sfI18nYamlExtractor.class.php',
