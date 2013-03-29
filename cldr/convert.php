@@ -338,14 +338,43 @@ foreach($files as $file)
     // first day of week
     $data['calendar'][$type]['firstDayOfWeek'] = $firstDayOfWeek;
 
-    // FIXME: todo
-    $data['calendar'][$type]['amPmMarkers'] = array();
-
     // dayPeriods
-    $dayPeriods = $calendar->xpath('dayPeriods/dayPeriodContext/dayPeriodWidth/dayPeriod');
-    foreach($dayPeriods as $dayPeriod)
+    $dayPeriodWidths = $calendar->xpath('dayPeriods/dayPeriodContext/dayPeriodWidth');
+    $markers = array();
+    foreach($dayPeriodWidths as $dayPeriodWidth)
     {
-      $data['calendar'][$type]['amPmMarkers'][] = (string)$dayPeriod;
+      $dAttributes = $dayPeriodWidth->attributes();
+
+      if((string)$dAttributes['type'] != 'wide')
+      {
+        // continue;
+      }
+
+      foreach($dayPeriodWidth->xpath('dayPeriod') as $dayPeriod)
+      {
+        $attributes = $dayPeriod->attributes();
+        $dType = (string)$attributes['type'];
+
+        if((string)$attributes['alt'] == 'variant')
+        {
+          continue;
+        }
+
+        // we have to catch only am, pm
+        if($dType == 'am')
+        {
+          $markers['am'] = (string)$dayPeriod;
+        }
+        elseif($dType == 'pm')
+        {
+          $markers['pm']= (string)$dayPeriod;
+        }
+      }
+    }
+
+    if(isset($markers['am']) && isset($markers['pm']))
+    {
+      $data['calendar'][$type]['amPmMarkers'][] = array($markers['am'], $markers['pm']);
     }
 
     // timeFormats

@@ -16,6 +16,21 @@ dev:
         - %SF_SIFT_WEB_DIR%/js/validate/jquery.validate.custom_callback.js
         - %SF_SIFT_WEB_DIR%/js/validate/localization/messages_%SF_CULTURE{0,2}%.js
 
+    core:
+      javascripts:
+        - %SF_SIFT_WEB_DIR%/js/core/config.js
+        - %SF_SIFT_WEB_DIR%/js/core/cookie.js
+        - %SF_SIFT_WEB_DIR%/js/core/plugins.js
+        - %SF_SIFT_WEB_DIR%/js/core/application.js
+        - %SF_SIFT_WEB_DIR%/js/core/api.js
+        - %SF_SIFT_WEB_DIR%/js/core/forms.js
+        - %SF_SIFT_WEB_DIR%/js/core/bootstrap.js
+        - %SF_SIFT_WEB_DIR%/js/core/i18n.js
+        - %SF_SIFT_WEB_DIR%/js/core/globalize.js
+        - %SF_SIFT_WEB_DIR%/js/core/i18n/%SF_CULTURE%.js
+        - %SF_SIFT_WEB_DIR%/js/core/logger.js
+        - %SF_SIFT_WEB_DIR%/js/core/tools.js
+        
 default:
 
   # packages map
@@ -24,8 +39,8 @@ default:
     # core library
     core:
       javascripts:
-        - %SF_SIFT_WEB_DIR%/js/core/core.js
-        - %SF_SIFT_WEB_DIR%/js/core/i18n/%SF_CULTURE{0,2}%.js
+        - %SF_SIFT_WEB_DIR%/js/core/core.min.js
+        - %SF_SIFT_WEB_DIR%/js/core/i18n/%SF_CULTURE%.min.js
       require:
         - jquery
 
@@ -77,8 +92,8 @@ default:
     # jQuery UI
     ui:
       javascripts:
-        - //code.jquery.com/ui/1.10.1/jquery-ui.min.js
-        - %SF_SIFT_WEB_DIR%/js/jquery_ui_ext/jquery-ui-timepicker-addon.js
+        - %SF_SIFT_WEB_DIR%/js/jquery_ui/jquery-ui.min.js
+        - %SF_SIFT_WEB_DIR%/js/jquery_ui_ext/jquery-ui-timepicker-addon.min.js
       stylesheets:
          - %SF_SIFT_WEB_DIR%/css/_/jquery_ui/ui.less
       require:
@@ -135,3 +150,12 @@ default:
         - //netdna.bootstrapcdn.com/twitter-bootstrap/2.3.0/js/bootstrap.min.js
       require:
         - jquery
+
+    editable:
+      javascripts:
+        - %SF_SIFT_WEB_DIR%/js/x_editable/x_editable.min.js
+      stylesheets:
+        - %SF_SIFT_WEB_DIR%/css/_/x_editable/x_editable.less
+      require:
+        - ui
+        - bootstrap

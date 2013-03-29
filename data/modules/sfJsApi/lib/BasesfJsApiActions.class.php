@@ -81,16 +81,6 @@ class BasesfJsApiActions extends myActions {
         return $this->renderText($setup);
       }
     }
-    
-    // we need to do our job    
-    // this should be moved to helper!
-    $culture = sfCulture::getInstance($this->getRequestParameter('culture', 
-                sfConfig::get('sf_i18n_default_culture')));    
-    $this->monthNames = $culture->getDateTimeFormat()->getAbbreviatedMonthNames();    
-    $this->dayNames = $culture->getDateTimeFormat()->getAbbreviatedDayNames();    
-    $this->firstDay = $culture->getDateTimeFormat()->getFirstDayOfWeek();
-    
-    
   }
   
   /**

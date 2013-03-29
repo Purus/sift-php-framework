@@ -1,0 +1,127 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Sift PHP framework\n"
+"POT-Creation-Date: 2013-03-29 09:44+0100\n"
+"PO-Revision-Date: 2013-03-29 12:09+0100\n"
+"Last-Translator: Michal Moravec - Mishal.cz <mishal@mishal.cz>\n"
+"Language-Team: Sift PHP framework team\n"
+"Language: cs_CZ\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.5.5\n"
+"X-Poedit-KeywordsList: __\n"
+"X-Poedit-Basepath: .\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"Plural-Forms: nplurals=3; plural=n==1 ? 0 : n>=2 && n<=4 ? 1 : 2;\n"
+"X-Poedit-SearchPath-0: ../../../modules/sfJsApi\n"
+"X-Poedit-SearchPath-1: ../../../web/sf/js/core\n"
+
+#: ../../../modules/sfJsApi/templates/formSetupSuccess.pjs:15
+msgid "Today"
+msgstr "Dnes"
+
+#: ../../../modules/sfJsApi/templates/formSetupSuccess.pjs:16
+#: ../../../modules/sfJsApi/templates/formSetupSuccess.pjs:42
+msgid "Close"
+msgstr "Zavřít"
+
+#: ../../../modules/sfJsApi/templates/formSetupSuccess.pjs:17
+msgid "Next"
+msgstr "Další"
+
+#: ../../../modules/sfJsApi/templates/formSetupSuccess.pjs:18
+msgid "Previous"
+msgstr "Předchozí"
+
+#: ../../../modules/sfJsApi/templates/formSetupSuccess.pjs:34
+msgid "Choose time"
+msgstr "Vyberte čas"
+
+#: ../../../modules/sfJsApi/templates/formSetupSuccess.pjs:35
+msgid "Time"
+msgstr "Čas"
+
+#: ../../../modules/sfJsApi/templates/formSetupSuccess.pjs:36
+msgid "Hours"
+msgstr "Hodiny"
+
+#: ../../../modules/sfJsApi/templates/formSetupSuccess.pjs:37
+msgid "Minutes"
+msgstr "Minuty"
+
+#: ../../../modules/sfJsApi/templates/formSetupSuccess.pjs:38
+msgid "Seconds"
+msgstr "Sekundy"
+
+#: ../../../modules/sfJsApi/templates/formSetupSuccess.pjs:39
+msgid "Miliseconds"
+msgstr "Milisekundy"
+
+#: ../../../modules/sfJsApi/templates/formSetupSuccess.pjs:40
+msgid "Timezone"
+msgstr "Časové pásmo"
+
+#: ../../../modules/sfJsApi/templates/formSetupSuccess.pjs:41
+msgid "Now"
+msgstr "Nyní"
+
+msgid "close"
+msgstr "zavřít"
+
+msgid "Alert"
+msgstr "Alert"
+
+msgid "Ok"
+msgstr "Ok"
+
+msgid "Confirmation"
+msgstr "Confirmation"
+
+msgid "Cancel"
+msgstr "Cancel"
+
+msgid "The server is too busy at the moment."
+msgstr "The server is too busy at the moment."
+
+msgid ""
+"This action requires to be logged in and you are not logged in. Redirect to "
+"login page?"
+msgstr ""
+"This action requires to be logged in and you are not logged in. Redirect to "
+"login page?"
+
+#~ msgid "foo"
+#~ msgstr "bar"
+
+#~ msgid "Result not dound, but Jesus is Alive!"
+#~ msgstr "Result not dound, but Jesus is Alive!"
+
+#~ msgid "0"
+#~ msgstr "close"
+
+#~ msgid "1"
+#~ msgstr "Alert"
+
+#~ msgid "2"
+#~ msgstr "Ok"
+
+#~ msgid "3"
+#~ msgstr "Confirmation"
+
+#~ msgid "4"
+#~ msgstr "Cancel"
+
+#~ msgid "5"
+#~ msgstr "The server is too busy at the moment."
+
+#~ msgid "6"
+#~ msgstr ""
+#~ "This action requires to be logged in and you are not logged in. Redirect "
+#~ "to login page?"
+
+#~ msgid "7"
+#~ msgstr "close"
+
+#~ msgid "8"
+#~ msgstr "Result not dound, but Jesus is Alive!"
