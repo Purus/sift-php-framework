@@ -16,6 +16,7 @@ class myAssetPackage extends sfAssetPackage {
 }
 
 sfConfig::set('sf_sift_web_dir', '/sf/foobar');
+sfConfig::set('sf_culture', 'en');
 
 $config = sfYaml::load(dirname(__FILE__) . '/fixtures/asset_packages.yml');
 

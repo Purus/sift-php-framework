@@ -197,19 +197,7 @@ class sfAssetPackage {
     }
     elseif(is_string($value))
     {
-      $value = sfToolkit::replaceConstants($value);
-      // %SF_CULTURE{0,2}% -> substr($culture, 0, 2)
-      // %SF_CULTURE%
-      if(preg_match('~%SF_CULTURE({(\d)+,(\d)+})?%~', $value, $matches))
-      {
-        $culture = sfContext::getInstance()->getUser()->getCulture();
-        if(isset($matches[2]) && isset($matches[3]))
-        {
-          $culture = substr($culture, $matches[2], $matches[3]);
-        }
-        $value = preg_replace('~%SF_CULTURE(.*)?%~', $culture, $value);
-      }
-
+      $value = sfToolkit::replaceConstantsWithModifiers($value);
       $request = sfContext::getInstance()->getRequest();
       $sf_relative_url_root = $request->getRelativeUrlRoot();
 
