@@ -2,7 +2,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(97, new lime_output_color());
+$t = new lime_test(103, new lime_output_color());
 
 // ::stringToArray()
 $t->diag('::stringToArray()');
@@ -286,3 +286,26 @@ $t->diag('::isFunctionDisabled()');
 
 $t->isa_ok(sfToolkit::isFunctionDisabled('phpinfo'), 'boolean', '::isCallable() return boolean');
 $t->is(sfToolkit::isFunctionDisabled('phpinfo'), false, '::isCallable() return false when callback is invalid');
+
+$t->diag('replaceConstantsWithModifiers');
+
+sfConfig::set('foo', 'barfoo');
+
+$t->is(sfToolkit::replaceConstantsWithModifiers('my value with a %foo{0,1}% constant'), 'my value with a b constant', '::replaceConstantsWithModifiers() replaces constants enclosed in %');
+$t->is(sfToolkit::replaceConstantsWithModifiers('my value with a %foo{0,4}% constant'), 'my value with a barf constant', '::replaceConstantsWithModifiers() replaces constants enclosed in %');
+
+sfConfig::set('foo', 'bar foo');
+
+$t->is(sfToolkit::replaceConstantsWithModifiers('my value with a %foo{slugify}% constant'), 'my value with a bar-foo constant', '::replaceConstantsWithModifiers() replaces constants enclosed in %');
+$t->is(sfToolkit::replaceConstantsWithModifiers('%Y/%m/%d %H:%M'), '%Y/%m/%d %H:%M', '::replaceConstantsWithModifiers() does not replace unknown constants');
+$t->is(sfToolkit::replaceConstantsWithModifiers('my value with a %foo{slugify|2,3}% constant'), 'my value with a r-f constant', '::replaceConstantsWithModifiers() replaces constants enclosed in %');
+
+try
+{
+  sfToolkit::replaceConstantsWithModifiers('my value with a %foo{abc}% constant');
+  $t->fail('::replaceConstantsWithModifiers() throws logic exception if modifier is not understood.');
+}
+catch(LogicException $e)
+{
+  $t->pass('::replaceConstantsWithModifiers() throws logic exception if modifier is not understood.');
+}

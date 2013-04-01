@@ -382,6 +382,91 @@ class sfToolkit {
   }
 
   /**
+   * Replaces constant identifiers in a scalar value with value modifiers.
+   * Value with string %SF_CULTURE{0,2}% will be replaced with the configuration
+   * value using the substring modifier like:
+   *
+   * <code>
+   * substring(sfConfig::get('sf_culture'), 0, 2).
+   * </code>
+   *
+   * All possible modifiers are:
+   *
+   *  * %CONFIG_VALUE{x,y}% -> substring(CONFIG_VALUE, x, y)
+   *  * %CONFIG_VALUE{slugify}% -> will convert underscores, spaces to dashes
+   *
+   * Modifiers can be nested and are applied in left to right order:
+   *
+   * <code>
+   * %SF_CULTURE{slugify|0,2}% will apply "slugify" modifier and than "substring"
+   * </code>
+   *
+   * This method calls also replaceConstants().
+   *
+   * @param string $value the value to perform the replacement on
+   * @return string the value with substitutions made
+   * @see replaceConstants
+   */
+  public static function replaceConstantsWithModifiers($value)
+  {
+    return is_string($value) ? preg_replace_callback('/%(.+?)\{(.+?)\}+%/',
+      array('self', 'replaceConstantsWithModifiersCallback'),
+      // call replace constants too
+      self::replaceConstants($value)) : $value;
+  }
+
+  /**
+   * Callback for replaceConstantsWithModifiers method.
+   *
+   * @param array $v Match returned from preg_replace_callback
+   * @see replaceConstantsWithModifiers
+   */
+  protected static function replaceConstantsWithModifiersCallback($v)
+  {
+    // nothing found
+    if(!sfConfig::has(strtolower($v[1])))
+    {
+      return $v[0];
+    }
+
+    $value = sfConfig::get(strtolower($v[1]));
+    $expressions = explode('|', $v[2]);
+
+    // we have expressions
+    foreach($expressions as $s)
+    {
+      switch($s)
+      {
+        case 'slugify':
+          $value = str_replace(array(' ', '_'), '-', $value);
+        break;
+
+        default:
+
+          if(strpos($s, ',') !== false)
+          {
+            $parts = explode(',', $s);
+            switch(count($parts))
+            {
+              case 1:
+                $value = sfUtf8::sub($value, $parts[0]);
+              break;
+              case 2:
+                $value = sfUtf8::sub($value, $parts[0], $parts[1]);
+              break;
+            }
+          }
+          else
+          {
+            throw new LogicException(sprintf('Modifier exporession "%s" in "%s" not understood.', $s, $v[0]));
+          }
+        break;
+      }
+    }
+    return $value;
+  }
+
+  /**
    * Returns subject replaced with regular expression matchs
    *
    * @param mixed subject to search
