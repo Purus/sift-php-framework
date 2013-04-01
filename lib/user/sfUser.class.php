@@ -5,8 +5,8 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
- 
-/** 
+
+/**
  * sfUser wraps a client session and provides accessor methods for user
  * attributes. It also makes storing and retrieving multiple page form data
  * rather easy by allowing user attributes to be stored in namespaces, which
@@ -15,7 +15,7 @@
  * @package    Sift
  * @subpackage user
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @author     Sean Kerr <sean@code-box.org> 
+ * @author     Sean Kerr <sean@code-box.org>
  */
 class sfUser {
 
@@ -28,7 +28,7 @@ class sfUser {
    * Culture namespace
    */
   const CULTURE_NAMESPACE = 'sift/user/sfUser/culture';
-  
+
   /**
    * Flash messages namespace
    */
@@ -160,7 +160,7 @@ class sfUser {
 
   /**
    * Returns user IP address
-   * 
+   *
    * @return string
    */
   public function getIp()
@@ -170,19 +170,19 @@ class sfUser {
 
   /**
    * Returns "REAL" IP address (in case of a proxy)
-   * 
+   *
    * @return string
    */
   public function getRealIp()
   {
-    return $this->getIpForwardedFor() ? 
+    return $this->getIpForwardedFor() ?
             $this->getIpForwardedFor() : $this->getIp();
   }
 
   /**
    * Returns IP address of the user
-   * 
-   * @return string 
+   *
+   * @return string
    */
   public function getIpForwardedFor()
   {
@@ -191,7 +191,7 @@ class sfUser {
 
   /**
    * Returns hostname of the user IP
-   * 
+   *
    * @return string
    */
   public function getHostname()
@@ -201,31 +201,31 @@ class sfUser {
 
   /**
    * Returns user agent of the site visitor
-   * 
+   *
    * @return string
    */
   public function getUserAgent()
   {
     return sfContext::getInstance()->getRequest()->getUserAgent();
   }
-  
+
   /**
    * Returns browser name of the visitor user agent
-   * 
-   * @return string 
+   *
+   * @return string
    */
   public function getBrowserName()
   {
     $browser = $this->getBrowser();
-    return $browser['name'];   
+    return $browser['name'];
   }
-  
+
   public function getBrowserVersion()
   {
     $browser = $this->getBrowser();
     return $browser['version'];
   }
-  
+
   public function getBrowser()
   {
     if(!$this->hasAttribute('browser_guessed', self::ATTRIBUTE_NAMESPACE))
@@ -233,8 +233,8 @@ class sfUser {
       $guess = sfUserAgentDetector::guess($this->getUserAgent());
       $this->setAttribute('browser_guessed', $guess, self::ATTRIBUTE_NAMESPACE);
     }
-    return $this->getAttribute('browser_guessed', null, self::ATTRIBUTE_NAMESPACE);    
-  }  
+    return $this->getAttribute('browser_guessed', null, self::ATTRIBUTE_NAMESPACE);
+  }
 
   /**
    * Detects if the user is bot (Google, Yahoo, Seznam)...
@@ -246,7 +246,7 @@ class sfUser {
     $browser = $this->getBrowser();
     return $browser['is_bot'];
   }
-  
+
   /**
    * Returns true is user agent is mobile device
    *
@@ -255,7 +255,7 @@ class sfUser {
   public function isMobile()
   {
     $browser = $this->getBrowser();
-    return $browser['is_mobile'];    
+    return $browser['is_mobile'];
   }
 
   public function setTimezone($timezone)
@@ -267,7 +267,7 @@ class sfUser {
 
   /**
    * Returns timezone
-   * 
+   *
    * @return string
    */
   public function getTimezone()
@@ -387,6 +387,16 @@ class sfUser {
     }
 
     return $event->getReturnValue();
+  }
+
+  /**
+   * __toString magic method
+   *
+   * @return string
+   */
+  public function __toString()
+  {
+    return sprintf('[Instance of %s]', get_class($this));
   }
 
 }
