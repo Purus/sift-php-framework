@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Sift PHP framework\n"
-"POT-Creation-Date: 2013-03-29 09:44+0100\n"
-"PO-Revision-Date: 2013-03-29 12:09+0100\n"
+"POT-Creation-Date: 2013-04-01 11:27+0100\n"
+"PO-Revision-Date: 2013-04-01 11:27+0100\n"
 "Last-Translator: Michal Moravec - Mishal.cz <mishal@mishal.cz>\n"
 "Language-Team: Sift PHP framework team\n"
 "Language: cs_CZ\n"
@@ -16,55 +16,6 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : n>=2 && n<=4 ? 1 : 2;\n"
 "X-Poedit-SearchPath-0: ../../../modules/sfJsApi\n"
 "X-Poedit-SearchPath-1: ../../../web/sf/js/core\n"
-
-#: ../../../modules/sfJsApi/templates/formSetupSuccess.pjs:15
-msgid "Today"
-msgstr "Dnes"
-
-#: ../../../modules/sfJsApi/templates/formSetupSuccess.pjs:16
-#: ../../../modules/sfJsApi/templates/formSetupSuccess.pjs:42
-msgid "Close"
-msgstr "Zavřít"
-
-#: ../../../modules/sfJsApi/templates/formSetupSuccess.pjs:17
-msgid "Next"
-msgstr "Další"
-
-#: ../../../modules/sfJsApi/templates/formSetupSuccess.pjs:18
-msgid "Previous"
-msgstr "Předchozí"
-
-#: ../../../modules/sfJsApi/templates/formSetupSuccess.pjs:34
-msgid "Choose time"
-msgstr "Vyberte čas"
-
-#: ../../../modules/sfJsApi/templates/formSetupSuccess.pjs:35
-msgid "Time"
-msgstr "Čas"
-
-#: ../../../modules/sfJsApi/templates/formSetupSuccess.pjs:36
-msgid "Hours"
-msgstr "Hodiny"
-
-#: ../../../modules/sfJsApi/templates/formSetupSuccess.pjs:37
-msgid "Minutes"
-msgstr "Minuty"
-
-#: ../../../modules/sfJsApi/templates/formSetupSuccess.pjs:38
-msgid "Seconds"
-msgstr "Sekundy"
-
-#: ../../../modules/sfJsApi/templates/formSetupSuccess.pjs:39
-msgid "Miliseconds"
-msgstr "Milisekundy"
-
-#: ../../../modules/sfJsApi/templates/formSetupSuccess.pjs:40
-msgid "Timezone"
-msgstr "Časové pásmo"
-
-#: ../../../modules/sfJsApi/templates/formSetupSuccess.pjs:41
-msgid "Now"
-msgstr "Nyní"
 
 msgid "close"
 msgstr "zavřít"
@@ -90,6 +41,45 @@ msgid ""
 msgstr ""
 "This action requires to be logged in and you are not logged in. Redirect to "
 "login page?"
+
+msgid "Today"
+msgstr "Dnes"
+
+msgid "Close"
+msgstr "Zavřít"
+
+msgid "Next"
+msgstr "Další"
+
+msgid "Previous"
+msgstr "Předchozí"
+
+msgid "Choose time"
+msgstr "Vyberte čas"
+
+msgid "Time"
+msgstr "Čas"
+
+msgid "Hours"
+msgstr "Hodiny"
+
+msgid "Minutes"
+msgstr "Minuty"
+
+msgid "Seconds"
+msgstr "Sekundy"
+
+msgid "Miliseconds"
+msgstr "Milisekundy"
+
+msgid "Timezone"
+msgstr "Časové pásmo"
+
+msgid "Now"
+msgstr "Nyní"
+
+msgid "Empty"
+msgstr "Nevyplněno"
 
 #~ msgid "foo"
 #~ msgstr "bar"

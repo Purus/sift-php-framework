@@ -15,6 +15,17 @@
  */
 
 /**
+ * X-editable allows to create editable elements on your page. It can be used with any engine
+ * (bootstrap, jquery-ui, jquery only) and includes both popup and inline modes.
+ * See {@link http://vitalets.github.com/x-editable/}
+ *
+ * @name Xeditable
+ * @requires jQuery
+ * @requires jQueryUI
+ * @class
+ */
+
+/**
  * @fileOverview This file contains form setup. Widget are transformed to rich widgets.
  */
 (function(Application) {
@@ -28,10 +39,23 @@
    *
    * @param {DOM element} context Context
    * @memberOf Application.behaviors
+   * @see Application.setupForms()
    */
   Application.behaviors.coreSetupForms = function(context)
   {
     Application.setupForms(context);
+  };
+
+  /**
+   * Behavior for editable actions.
+   *
+   * @param {DOM element} context Context
+   * @memberOf Application.behaviors
+   * @see Application.setupEditableActions()
+   */
+  Application.behaviors.coreSetupEditableActions = function(context)
+  {
+    Application.setupEditableActions(context);
   };
 
   /**
@@ -255,6 +279,85 @@
           culture : culture
         }, $(this).data('spinnerOptions') || {}));
       });
+    });
+  };
+
+  /**
+   * Returns an array of editable options for an element
+   *
+   * @param {jQuery object} $element
+   * @returns {options} Array of options
+   */
+  Application.getEditableOptions = function($element)
+  {
+    var options = {
+      // where is the widget placed?
+      // https://github.com/twitter/bootstrap/issues/1411
+      placement: Application.widgetPlacement,
+      // bootstrap popover placement
+      container: 'body',
+      mode:      'popup',
+      emptytext: __('Empty')
+    };
+
+    var type = $element.data('type');
+
+    // we have to decide what options:
+    // see: http://vitalets.github.com/x-editable/docs.html
+    // text|textarea|select|date|checklist
+    switch(type)
+    {
+      case 'date':
+        options.datepicker = Application.getDateWidgetOptions($element);
+      break;
+    }
+
+    return options;
+  };
+
+  /**
+   * On save callback for editable. If server returned new value it will be
+   * replaced.
+   *
+   * @param {jQuery event} e
+   * @param {Object} params Parameters
+   */
+  Application.editableOnSaveCallback = function(e, params)
+  {
+    // assuming server response: '{success: true}'
+    if(params.response && params.response.success)
+    {
+      // we have a value from server, lets update it
+      if(typeof params.response.value !== 'undefined')
+      {
+        // this is date object
+        if(params.newValue instanceof Date)
+        {
+          params.newValue = new Date(params.response.value);
+        }
+        else
+        {
+          params.newValue = params.response.value;
+        }
+      }
+    }
+  };
+
+  /**
+   * Setup editable features using X-editable
+   *
+   * @param {DOM element} context
+   * @requires JqueryUI
+   * @requires Xeditable
+   */
+  Application.setupEditableActions = function(context)
+  {
+    $('a.editable-action', context).each(function()
+    {
+      var $element = $(this);
+      // prepare options for X-editable
+      var options = $.extend({}, Application.getEditableOptions($element), $element.data('editableOptions') || {});
+      $element.editable(options).on('save', Application.editableOnSaveCallback);
     });
   };
 
