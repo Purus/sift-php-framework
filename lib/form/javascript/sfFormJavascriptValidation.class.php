@@ -14,7 +14,7 @@
  * @author     Mishal.cz <mishal at mishal dot cz>
  */
 class sfFormJavascriptValidation {
-  
+
   const REQUIRED = 'required';
   const REMOTE   = 'remote';
   const MIN_LENGTH = 'minlength';
@@ -25,69 +25,69 @@ class sfFormJavascriptValidation {
   const RANGE = 'range';
   const EMAIL = 'email';
   const URL   = 'url';
-  
+
   const FILE_EXTENSION = 'accept';
   const NUMBER = 'number';
   const EQUAL_TO = 'equalTo';
   const DIGITS = 'digits';
-  
+
   const CREDIT_CARD = 'creditcard';
-  
+
   // these are in additional_methods.js
   const MIN_WORDS   = 'minWords';
   const MAX_WORDS   = 'maxWords';
   const RANGE_WORDS = 'rangeWords';
-  const FILE_SIZE   = 'fileSize';  
-  
+  const FILE_SIZE   = 'fileSize';
+
   // custom methods
-  const CUSTOM_CALLBACK = 'customCallback';  
+  const CUSTOM_CALLBACK = 'customCallback';
   const NOT_EQUAL_TO = 'notEqualTo';
   const REGEX_PATTERN = 'regexPattern';
   const REGEX_PATTERN_NEGATIVE = 'regexPatternNegative';
-  
+
   /**
    * Array of all valid options for jQuery validate plugin
-   * 
+   *
    * @var array
    * @see http://docs.jquery.com/Plugins/Validation/validate#options
    */
-  protected static $validOptions = array(    
+  protected static $validOptions = array(
     // form id
-    'id',  
-    // Use this element type to create error messages and to look for existing 
-    // error messages. The default, "label", has the advantage of creating 
-    // a meaningful link between error message and invalid field using the 
-    // for attribute (which is always used, no matter the element type).  
-    // Default: "label"  
-    'error_element', 
-      
-    // Use this class to create error labels, to look for existing error 
-    // labels and to add it to invalid elements.  
-    // Default: "form-error"  
+    'id',
+    // Use this element type to create error messages and to look for existing
+    // error messages. The default, "label", has the advantage of creating
+    // a meaningful link between error message and invalid field using the
+    // for attribute (which is always used, no matter the element type).
+    // Default: "label"
+    'error_element',
+
+    // Use this class to create error labels, to look for existing error
+    // labels and to add it to invalid elements.
+    // Default: "form-error"
     'error_class',
-      
+
     // This class is added to an element after it was validated and considered valid.
     // Default: "form-valid"
-    'valid_class',  
-    
-    // Hide and show this container when validating.  
-    // jQuery selector  
+    'valid_class',
+
+    // Hide and show this container when validating.
+    // jQuery selector
     'error_container',
-      
-     // Wrap error labels with the specified element. Useful in combination 
-     // with errorLabelContainer to create a list of error messages. 
-    'wrapper', 
-      
-     // Hide and show this container when validating. 
+
+     // Wrap error labels with the specified element. Useful in combination
+     // with errorLabelContainer to create a list of error messages.
+    'wrapper',
+
+     // Hide and show this container when validating.
      // jQuery selector
-    'error_label_container',      
-    
-    // A custom message display handler. Gets the map of errors as the first 
-    // argument and and array of errors as the second, called in the context 
-    // of the validator object. The arguments contain only those elements 
-    // currently validated, which can be a single element when doing 
-    // validation onblur/keyup. You can trigger 
-    // (in addition to your own messages) the default behaviour by 
+    'error_label_container',
+
+    // A custom message display handler. Gets the map of errors as the first
+    // argument and and array of errors as the second, called in the context
+    // of the validator object. The arguments contain only those elements
+    // currently validated, which can be a single element when doing
+    // validation onblur/keyup. You can trigger
+    // (in addition to your own messages) the default behaviour by
     // calling this.defaultShowErrors().
     'show_errors',
 
@@ -95,108 +95,109 @@ class sfFormJavascriptValidation {
     'highlight',
     'unhighlight',
     'ignore_title',
-      
-    // Callback for custom code when an invalid form is submitted. 
-    // Called with a event object as the first argument, and the 
-    // validator as the second.  
-    'invalid_handler', 
-      
-    // Callback for handling the actual submit when the form is valid. 
-    // Gets the form as the only argument. Replaces the default submit. 
-    // The right place to submit a form via Ajax after its validated.    
-    'submit_handler', 
-      
-    // Elements to ignore when validating, simply filtering them out. 
-    // jQuery's not-method is used, therefore everything that is accepted 
-    // by not() can be passed as this option. Inputs of type submit and 
-    // reset are always ignored, so are disabled elements.      
+
+    // Callback for custom code when an invalid form is submitted.
+    // Called with a event object as the first argument, and the
+    // validator as the second.
+    'invalid_handler',
+
+    // Callback for handling the actual submit when the form is valid.
+    // Gets the form as the only argument. Replaces the default submit.
+    // The right place to submit a form via Ajax after its validated.
+    'submit_handler',
+
+    // Elements to ignore when validating, simply filtering them out.
+    // jQuery's not-method is used, therefore everything that is accepted
+    // by not() can be passed as this option. Inputs of type submit and
+    // reset are always ignored, so are disabled elements.
     'ignore',
 
     'error_placement',
-      
-    // Validate the form on submit. Set to false to use only 
-    // other events for validation.  
-    //   Default: true  
+
+    // Validate the form on submit. Set to false to use only
+    // other events for validation.
+    //   Default: true
     'onsubmit',
 
-    // Validate elements (except checkboxes/radio buttons) on blur. 
-    // If nothing is entered, all rules are skipped, except when the 
-    // field was already marked as invalid.  
+    // Validate elements (except checkboxes/radio buttons) on blur.
+    // If nothing is entered, all rules are skipped, except when the
+    // field was already marked as invalid.
     // Default: true
     'onfocusout',
 
-    // Validate elements on keyup. As long as the field is not marked as 
-    // invalid, nothing happens. Otherwise, all rules are checked 
+    // Validate elements on keyup. As long as the field is not marked as
+    // invalid, nothing happens. Otherwise, all rules are checked
     // on each key up event.
-    // Default: true  
+    // Default: true
     'onkeyup',
-    
+
     // Validate checkboxes and radio buttons on click.
-    // Default: true 
-    'onclick', 
-      
-    // Focus the last active or first invalid element on submit 
-    // via validator.focusInvalid(). The last active element is the one 
+    // Default: true
+    'onclick',
+
+    // Focus the last active or first invalid element on submit
+    // via validator.focusInvalid(). The last active element is the one
     // that had focus when the form was submitted, avoiding to steal its focus.
-    // If there was no element focused, the first one in the form gets it, 
+    // If there was no element focused, the first one in the form gets it,
     // unless this option is turned off.
     // Default: true
     'focus_invalid',
-   
-    // If enabled, removes the errorClass from the invalid elements and hides 
-    // all errors messages whenever the element is focused. Avoid combination 
+
+    // If enabled, removes the errorClass from the invalid elements and hides
+    // all errors messages whenever the element is focused. Avoid combination
     // with focusInvalid.
-    // Default: false  
+    // Default: false
     'focus_cleanup',
-      
-    // In case you use metadata for other plugins, too, you want to wrap your 
-    // validation rules into their own object that can be specified via 
-    // this option.  
+
+    // In case you use metadata for other plugins, too, you want to wrap your
+    // validation rules into their own object that can be specified via
+    // this option.
     'meta',
-      
-    // Enables debug mode. If true, the form is not submitted and certain 
-    // errors are displayed on the console (requires Firebug or Firebug lite). 
-    // Try to enable when a form is just submitted instead of validation 
-    // stopping the submit.      
+
+    // Enables debug mode. If true, the form is not submitted and certain
+    // errors are displayed on the console (requires Firebug or Firebug lite).
+    // Try to enable when a form is just submitted instead of validation
+    // stopping the submit.
     'debug'
   );
 
   /**
    * Default options
-   * 
-   * @var array 
+   *
+   * @var array
    */
-  protected static $defaultOptions = array(    
+  protected static $defaultOptions = array(
     'error_class' => 'form-error',
     'valid_class' => 'form-valid',
-    'error_element' => 'label',  
+    'error_element' => 'label',
     'debug' => false,
     'focus_invalid' => false,
     'onkeyup' => false,
     // 'onclick' => false,
-    'focus_cleanup' => true
+    'focus_cleanup' => true,
+    'ignore' => '.ignore'
   );
-  
+
   /**
    * Generates javascript validation javascript code using jQuery plugin
    * "validate"
-   * 
+   *
    * @param sfForm $form
    * @param array $options
    * @param boolean $triggerValidation Trigger the validation programatically?
-   * @return string 
+   * @return string
    * @see http://docs.jquery.com/Plugins/Validation
    */
-  public static function getForForm(sfForm $form, $options = array(), 
+  public static function getForForm(sfForm $form, $options = array(),
           $triggerValidation = false)
   {
     $options = sfInputFilters::toArray($options);
-    
+
     if(!isset($options['id']))
     {
-      $options['id'] = $form->getKey();      
+      $options['id'] = $form->getKey();
     }
-    
+
     $currentOptionKeys = array_keys(self::$validOptions);
     $optionKeys = array_keys($options);
 
@@ -205,15 +206,15 @@ class sfFormJavascriptValidation {
     {
       throw new InvalidArgumentException(sprintf('sfFormJavascriptValidation does not support the following options: \'%s\'.', implode('\', \'', $diff)));
     }
-    
+
     $options = array_merge(self::$defaultOptions, $options);
 
     if(!isset($options['error_placement']))
     {
-      try 
+      try
       {
         $placement = $form->getJavascriptErrorPlacement();
-        if($placement) 
+        if($placement)
         {
           $options['error_placement'] = $placement;
         }
@@ -222,68 +223,79 @@ class sfFormJavascriptValidation {
       {
       }
     }
-    
+
     if(!isset($options['error_placement']))
     {
       $options['error_placement'] = self::getErrorPlacementExpression();
-    }  
-    
+    }
+
     if(!isset($options['unhighlight']))
     {
-      $options['unhighlight'] = self::getUnhighlightExpression();      
+      $options['unhighlight'] = self::getUnhighlightExpression();
     }
-    
+
+    if(!isset($options['submit_handler']))
+    {
+      $options['submit_handler'] = self::getSubmitHandlerExpression();
+    }
+
     $formId = $options['id'];
-    
+
     list($rules, $messages) = self::getValidationRulesAndMessagesForForm($form);
-    
+
     // we have no rules! nothing to do!
     if(!count($rules))
     {
       return '';
     }
-    
+
     // validator javascript name
-    $validatorJsVarName = sprintf('%sFormValidator', 
-            sfInflector::camelize(str_replace('-', '_', strtolower($formId))));  
+    $validatorJsVarName = sprintf('%sFormValidator',
+            sfInflector::camelize(str_replace('-', '_', strtolower($formId))));
     $validatorJsVarName{0} = strtolower($validatorJsVarName{0});
-    
+
     $js = array();
-    
+
     // make the validator accessible from global context
     $js[] = sprintf('var %s;', $validatorJsVarName);
-    
-    $js[] = sprintf('Application.behaviors.setup%sFormValidation = function(context)', 
+
+    $js[] = sprintf('Application.behaviors.setup%sFormValidation = function(context)',
               sfInflector::camelize(str_replace('-', '_', strtolower($formId))));
     $js[] = '{';
     $js[] = sprintf('  %s = $(\'#%s\').validate({', $validatorJsVarName, $formId);
-    
-    $js[] = sprintf('    rules: %s,', sfJson::encode($rules));    
+
+    $js[] = sprintf('    rules: %s,', sfJson::encode($rules));
     $js[] = sprintf('    messages: %s,', sfJson::encode($messages));
-    
+
     // valid options
     foreach(self::$validOptions as $option)
     {
       // skip options that are not set
       if(!isset($options[$option])) continue;
-      
+
       switch($option)
       {
-        case 'submit_handler':          
-          $js[] = (strpos($options[$option], 'function(') === false) ? 
-                    sprintf('    submitHandler: function(form) { %s },', $options[$option]) :
-                    sprintf('    submitHandler: %s ,', sfJson::encode($options[$option]));          
-        break;  
+        case 'submit_handler':
+          $js[] = (strpos($options[$option], 'function(') === false) ?
+                    sprintf('    submitHandler: function(form) { %s },',
+                      self::replacePlaceholders($options[$option], array(
+                        'form_id' => $formId,
+                      ))) :
+                    sprintf('    submitHandler: %s ,',
+                      self::replacePlaceholders(sfJson::encode($options[$option], array(
+                        'form_id' => $formId,
+                      ))));
+        break;
 
         case 'invalid_handler':
-          $js[] = (strpos($options[$option], 'function(') === false) ? 
+          $js[] = (strpos($options[$option], 'function(') === false) ?
                     sprintf('    invalidHandler: function(e, validator) { %s },', $options[$option]) :
                     sprintf('    invalidHandler: %s ,', sfJson::encode($options[$option]));
         break;
 
         case 'error_placement':
-          $js[] = (strpos($options[$option], 'function(') !== false 
-                    || ($options[$option] instanceof sfJsonExpression)) ?                     
+          $js[] = (strpos($options[$option], 'function(') !== false
+                    || ($options[$option] instanceof sfJsonExpression)) ?
                     sprintf('    errorPlacement: %s ,', sfJson::encode($options[$option])) :
                     sprintf('    errorPlacement: function(error, element) { %s },', $options[$option]);
         break;
@@ -293,87 +305,87 @@ class sfFormJavascriptValidation {
           $option_name[0] = strtolower($option_name[0]);
           $js[] = sprintf('    %s: %s,', $option_name, sfJson::encode($options[$option]));
         break;
-      }      
+      }
     }
-    
+
     // trim last comma
     $merged = rtrim(join("\n", $js), ',');
-    
+
     $js   = array();
     $js[] = $merged;
-    
+
     $js[] = '  });';
-    
+
     if($triggerValidation)
     {
       $js[] = '// trigger the validation programatically';
       $js[] = sprintf('%s.form();', $validatorJsVarName);
     }
-    
+
     // mark labels (or error elements) returned by server side
-    // as generated by the validation plugin        
+    // as generated by the validation plugin
     // and also as role="alert" for WAI ARIA support
-    $js[] = sprintf('  $(\'%s\', \'#%s\').attr(\'generated\', true)%s;', 
+    $js[] = sprintf('  $(\'%s\', \'#%s\').attr(\'generated\', true)%s;',
             $options['error_element'], $formId,
             sfWidget::isAriaEnabled() ? ('.attr(\'role\', \'alert\')') : ''
     );
-    
+
     $js[] = '};';
-    
+
     return join("\n", $js);
   }
-  
+
   /**
    * Retrieve validation rules and messages for the $form. Also includes validation
    * rules and messages for embedded forms. This is a recursive method.
-   * 
+   *
    * @param sfForm $form
    * @param string $embededFormName
    * @param sfForm $parentForm
-   * @return array Array array(array $rules, array $messages)  
+   * @return array Array array(array $rules, array $messages)
    */
-  public static function getValidationRulesAndMessagesForForm(sfForm $form,           
+  public static function getValidationRulesAndMessagesForForm(sfForm $form,
           $embededFormName = null, sfForm $parentForm = null)
-  {    
+  {
     $rules = array();
     $messages = array();
-    
-    // loop all fields 
+
+    // loop all fields
     foreach($form->getValidatorSchema()->getFields() as $field_name => $validator)
     {
-      /* @var $validator sfWidgetValidator */      
+      /* @var $validator sfWidgetValidator */
       // store original field_name
       $_fieldName = $field_name;
-      
+
       // get the field names
       $field_name = sprintf($form->getWidgetSchema()->getNameFormat(), $field_name);
-      
+
       // multiple values fix for checkboxes
-      if($validator->hasOption('multiple') 
+      if($validator->hasOption('multiple')
           && $validator->getOption('multiple'))
       {
         $field_name .= '[]';
       }
-            
+
       // we have to rewrite the name because its embeded in another form
       if($parentForm)
       {
         // we need to fix the field name if parent form is in deep array
-        // due to form->embedFormForeach() which wraps the forms inside another sfForm form        
-        $field_name = str_replace(array('[[', ']]'), array('[', ']'), 
+        // due to form->embedFormForeach() which wraps the forms inside another sfForm form
+        $field_name = str_replace(array('[[', ']]'), array('[', ']'),
                       sprintf($parentForm->getWidgetSchema()->getNameFormat(), $embededFormName)
-                      . sprintf('[%s]', $_fieldName));      
+                      . sprintf('[%s]', $_fieldName));
       }
-      
+
       $skipToNext = false;
 
       // does validator know how to validate itself?
       if(is_callable(array($validator, 'getJavascriptValidationRules')))
-      {         
+      {
         $r = $validator->getJavascriptValidationRules();
         if($r && count($r))
         {
-          $rules[$field_name] = $r;        
+          $rules[$field_name] = $r;
         }
         $skipToNext = true;
       }
@@ -388,8 +400,8 @@ class sfFormJavascriptValidation {
         }
         $skipToNext = true;
       }
-      
-      if($validator instanceof sfValidatorSchemaForEach || 
+
+      if($validator instanceof sfValidatorSchemaForEach ||
          $validator instanceof sfValidatorSchema)
       {
         $skipToNext = true;
@@ -397,14 +409,14 @@ class sfFormJavascriptValidation {
 
       // continue to next field
       if($skipToNext) continue;
-      
+
       // get the validator options associated with the validator
-      $field_options  = $field->getOptions();      
+      $field_options  = $field->getOptions();
       $field_messages = $field->getMessages();
-      
-      $required = $validator->hasOption('required') 
+
+      $required = $validator->hasOption('required')
                   && $validator->getOption('required');
-      
+
       if($required)
       {
         $rules[$field_name]['required'] = true;
@@ -412,17 +424,17 @@ class sfFormJavascriptValidation {
       }
 
     }
-    
-    try 
-    {      
-      list($formRules, $formMessages) = $form->getJavascriptFinalValidation();      
+
+    try
+    {
+      list($formRules, $formMessages) = $form->getJavascriptFinalValidation();
       $rules = sfToolkit::arrayDeepMerge($rules, $formRules);
       $messages = sfToolkit::arrayDeepMerge($messages, $formMessages);
     }
     catch(sfException $e)
     {
     }
-    
+
     $embeded = $form->getEmbeddedForms();
     foreach($embeded as $embededFormName => $embededForm)
     {
@@ -431,67 +443,62 @@ class sfFormJavascriptValidation {
       {
         $embededForms = $embededForm->getEmbeddedForms();
         foreach($embededForms as $name => $embededForm2)
-        {          
+        {
           $embededFormName = sprintf('[%s][%s]', $embededFormName, $name);
-          list($r, $m) = self::getValidationRulesAndMessagesForForm($embededForm2,               
+          list($r, $m) = self::getValidationRulesAndMessagesForForm($embededForm2,
                     $embededFormName, $parentForm ? $parentForm : $form);
-          
+
           $rules    = array_merge($rules, $r);
-          $messages = array_merge($messages, $m);          
+          $messages = array_merge($messages, $m);
         }
       }
       else
       {
-        list($r, $m) = self::getValidationRulesAndMessagesForForm($embededForm,               
+        list($r, $m) = self::getValidationRulesAndMessagesForForm($embededForm,
                   $embededFormName, $parentForm ? $parentForm : $form);
         $rules    = array_merge($rules, $r);
-        $messages = array_merge($messages, $m);        
+        $messages = array_merge($messages, $m);
       }
-      
+
     }
 
-    // translate messages if form has translation catalogue
-    if($form->getTranslationCatalogue())
+    foreach($messages as $field_name => $_field_messages)
     {
-      foreach($messages as $field_name => $_field_messages)
+      foreach($_field_messages as $index => $message)
       {
-        foreach($_field_messages as $index => $message)
+        // we have something special! handle messages with placeholders
+        // carefully, fixed message is already translated
+        if($message instanceof sfFormJavascriptFixedValidationMessage)
         {
-          // we have something special! handle messages with placeholders
-          // carefully, fixed message is already translated
-          if($message instanceof sfFormJavascriptFixedValidationMessage)
-          {            
-            $message = sprintf("function(parameters, element) { return '%s'.replace('%%value%%', jQuery(element).val(), 'g'); }",
-                          $form->__($message->getMessage(), $message->getParameters())
-                       );
-          }
-          else
-          {
-            $message = $form->__($message);
-          }
-          
-          $messages[$field_name][$index] = (string)$message;
+          $message = sprintf("function(parameters, element) { return '%s'.replace('%%value%%', jQuery(element).val(), 'g'); }",
+                        $form->__($message->getMessage(), $message->getParameters())
+                     );
         }
+        else
+        {
+          $message = $form->__($message);
+        }
+        $messages[$field_name][$index] = (string)$message;
       }
     }
-    
+
     return array(
       $rules, $messages
     );
   }
-  
+
   /**
    * Fixes validation message to be used by client side javascript. Replaces
    * all occurencies of %option% with its value
-   * 
+   *
    * @param sfValidatorBase $validator
    * @param string $message
-   * @return string 
+   * @return string
    */
   public static function fixValidationMessage(sfValidatorBase $validator, $message)
-  { 
+  {
     $message = $validator->getMessage($message);
-    
+
     // no placeholders found, simply return message
     if(strpos($message, '%') === false)
     {
@@ -501,13 +508,13 @@ class sfFormJavascriptValidation {
     // "%value%" is too long (%max_length% characters max).
     // match all %param%
     preg_match_all('/%[a-zA-Z_]+%/', $message, $matches);
-    
+
     if(!count($matches))
     {
       return $message;
     }
-    
-    $params = array();    
+
+    $params = array();
     foreach($matches[0] as $match)
     {
       $option = str_replace('%', '', $match);
@@ -519,50 +526,50 @@ class sfFormJavascriptValidation {
       }
       $params[$match] = $validator->getOption($option);
     }
-    
+
     return new sfFormJavascriptFixedValidationMessage($message, $params);
   }
-  
+
   /**
    * Returns unhighlight expression (Filtered by event system)
-   * 
+   *
    * Event name: "form.javascript.validation.expression.unhighlight"
-   * 
+   *
    * @return sfJsonExpression
    */
   public static function getUnhighlightExpression()
   {
     $expression = new sfJsonExpression(sprintf(
-'function(element, errorClass, validClass) { 
-  if(element.type === \'radio\') 
+'function(element, errorClass, validClass) {
+  if(element.type === \'radio\')
   {
     var $element = this.findByName(element.name);
-  } 
+  }
   else
   {
     var $element = $(element);
   }
 
   var countInvalid = 0;
-  for(i in this.invalid) 
+  for(i in this.invalid)
   {
-    if(this.invalid.hasOwnProperty(i)) 
+    if(this.invalid.hasOwnProperty(i))
     {
       countInvalid++;
     }
   }
-  
+
   var countSubmitted = 0;
-  for(i in this.submitted) 
+  for(i in this.submitted)
   {
-    if(this.submitted.hasOwnProperty(i)) 
+    if(this.submitted.hasOwnProperty(i))
     {
       countSubmitted++;
     }
   }
-  
+
   var isInvalid = element.name in this.invalid;
-  
+
   // validate action has not been performed on the form
   // return!
   if(!countInvalid && !countSubmitted)
@@ -575,32 +582,32 @@ class sfFormJavascriptValidation {
     if(element.name in this.submitted)
     {
       isInvalid = false;
-    }        
+    }
   }
-  
+
   if(!isInvalid)
   {
     $element.removeClass(errorClass).addClass(validClass)%s;
-    
+
   }
   else
   {
     $(element).addClass(errorClass)%s;
   }
-  
+
 }', (sfWidgetForm::isAriaEnabled() ? '.removeAttr(\'aria-invalid\')' : ''),
     (sfWidgetForm::isAriaEnabled() ? '.attr(\'aria-invalid\', true)' : '')
   ));
-  
-    return sfCore::filterByEventListeners($expression, 
+
+    return sfCore::filterByEventListeners($expression,
             'form.javascript.validation.expression.unhighlight');
   }
-  
+
   /**
    * Returns error_placement expression (Filtered by event system)
-   * 
+   *
    * Event name: "form.javascript.validation.expression.error_placement"
-   * 
+   *
    * @return sfJsonExpression
    */
   public static function getErrorPlacementExpression()
@@ -609,14 +616,19 @@ class sfFormJavascriptValidation {
     // FIXME: javascript validation should know how is the input renderer
     // from form formatter!
     $placement = '
+error.click(function(e)
+{
+  var $that = $(this);
+  element.trigger(\'myfocus.from_error_label\', [$that]);
+});
 // place after element
 var parent = element.parents(\'.form-field-wrapper:first\');
 if(!parent.length)
-{ 
+{
   error.insertAfter(element);
   return;
 }
-error.appendTo(parent); 
+error.appendTo(parent);
 var offset = element.position();
 var width = element.outerWidth();
 var left = offset.left + width - error.outerWidth();
@@ -625,9 +637,8 @@ error.css({
   top: top,
   left: Math.abs(left)
 });
-
 ';
-    
+
     if(sfWidgetForm::isAriaEnabled())
     {
       $expression = new sfJsonExpression(sprintf('function(error, element) {
@@ -637,11 +648,42 @@ error.css({
     }
     else
     {
-      $expression = new sfJsonExpression(sprintf('function(error, element) { %s }', $placement));      
+      $expression = new sfJsonExpression(sprintf('function(error, element) { %s }', $placement));
     }
-    
-    return sfCore::filterByEventListeners($expression, 
-            'form.javascript.validation.expression.error_placement');                
+
+    return sfCore::filterByEventListeners($expression,
+            'form.javascript.validation.expression.error_placement');
   }
-  
+
+  /**
+   * Hook for rich editors to update the textareas here
+   * before validation is performed on the inputs
+   *
+   * @link http://stackoverflow.com/questions/5126565/jquery-validation-of-textarea-integrated-with-ckeditor
+   * @return sfJsonExpression
+   */
+  public static function getSubmitHandlerExpression()
+  {
+    $handler = 'form.submit();';
+    $expression = new sfJsonExpression($handler);
+    return sfCore::filterByEventListeners($expression, 'form.javascript.validation.expression.submit_handler');
+  }
+
+  /**
+   * Replaces placeholders in given string
+   *
+   * @param string $string String containing placeholders
+   * @param array $placeholders Associative Array of placeholder names and values
+   * @return string
+   */
+  public static function replacePlaceholders($string, $placeholders)
+  {
+    $replacement = array();
+    foreach($placeholders as $placeholder => $value)
+    {
+      $replacement[sprintf('%%%s%%', $placeholder)] = $value;
+    }
+    return strtr($string, $replacement);
+  }
+
 }

@@ -120,3 +120,7 @@ default:
 #      exif_adapter: ExifTool
 #      exif_adapter_options:
 #        exif_executable: /usr/bin/exiftool
+    # rich editor settings
+    #sf_rich_text_editor:
+    #  driver: CKEditor
+    #  options: []

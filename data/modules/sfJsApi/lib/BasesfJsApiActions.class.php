@@ -81,6 +81,24 @@ class BasesfJsApiActions extends myActions {
         return $this->renderText($setup);
       }
     }
+    
+    // rich editor
+    $this->richEditorOptions = $this->getRichEditorOptions();
+  }
+  
+  /**
+   * Returns an array iof rich editor options which will be exported to javascript
+   * configuration
+   * 
+   * @return array
+   */
+  protected function getRichEditorOptions()
+  {
+    $editor = sfRichTextEditor::factory(
+      sfConfig::get('sf_rich_text_editor.driver', 'CKEditor'),
+      sfConfig::get('sf_rich_text_editor.options', array())
+      );
+    return $editor->getOptionsForJavascript();
   }
   
   /**

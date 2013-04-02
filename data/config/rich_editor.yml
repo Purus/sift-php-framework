@@ -1,0 +1,115 @@
+# You can find more information about this file on:
+# https://bitbucket.org/mishal/sift-php-framework/wiki/RichEditor
+
+# All possible options are:
+# http://docs.ckeditor.com/#!/api/CKEDITOR.config
+
+all:
+
+  # Custom configuration file
+  #customConfig: ''
+
+  language: %SF_CULTURE{0,2}%
+  uiColor:  '#ffffff'
+  disableNativeSpellChecker: false
+
+  # Remove path information
+  removePlugins: elementspath
+
+  # Word specific settings
+  pasteFromWordRemoveFontStyles: true
+  pasteFromWordRemoveStyles: true
+
+  # Toolbar groups definition
+  toolbar:
+    -
+      name: tools
+      items:
+        - Maximize
+    -
+      name: paragraph
+      items:
+        - Bold
+        - Italic
+        - Strike
+        - RemoveFormat
+        #- Outdent
+        #- Indent
+        #- '-'
+        #- Blockquote
+    -
+      name: lists
+      items:
+        - NumberedList
+        - BulletedList
+    -
+      name: styles
+      items:
+        - Styles
+        - Format
+    -
+      name: links
+      items:
+       - Link
+       - Unlink
+       - Anchor
+    -
+      name: insert
+      items:
+        - Image
+        - Table
+        - HorizontalRule
+        - SpecialChar
+
+    -
+      name: clipboard
+      items:
+        - Cut
+        - Copy
+        - Paste
+        - PasteText
+        - PasteFromWord
+        - '-'
+        - Undo
+        - Redo
+    -
+      name: document
+      items:
+        - Source
+
+full:
+
+  justifyClasses:
+    - AlignLeft
+    - AlignCenter
+    - AlignRight
+    - AlignJustify
+
+  # Skin customization
+  # skin: custom,%SF_SIFT_WEB_DIR%/js/ckeditor/skins/custom/
+
+  # File browser callbacks
+  # filebrowserBrowseUrl: ''
+  # filebrowserImageBrowseLinkUrl: ''
+  # filebrowserImageUploadUrl: ''
+  # filebrowserUploadUrl: ''
+
+  # array of css stylesheets to be applied
+  contentsCss: []
+
+  baseHref: ''
+
+  allowedContent:
+    'strong b i ul ol big small': true,
+    'h1 h2 h3 p blockquote li':
+      styles: 'text-align'
+    a:
+      attributes: !href,target
+    img:
+      attributes: !src,alt
+      styles: width,height
+      classes: left,right
+
+minimal:
+
+  allowedContent: 'p'

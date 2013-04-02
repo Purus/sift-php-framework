@@ -83,3 +83,7 @@ config/search_sources.yml:
 
 config/forms.yml:
   class: sfSimpleYamlConfigHandler
+
+config/rich_editor.yml:
+  class: sfRichEditorConfigHandler
+

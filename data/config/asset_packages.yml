@@ -30,7 +30,7 @@ dev:
         - %SF_SIFT_WEB_DIR%/js/core/i18n/%SF_CULTURE%.js
         - %SF_SIFT_WEB_DIR%/js/core/logger.js
         - %SF_SIFT_WEB_DIR%/js/core/tools.js
-        
+
 default:
 
   # packages map
@@ -159,3 +159,8 @@ default:
       require:
         - ui
         - bootstrap
+
+    # Rich editor
+    editor:
+      javascripts:
+        - %SF_SIFT_WEB_DIR%/js/ckeditor/ckeditor.js

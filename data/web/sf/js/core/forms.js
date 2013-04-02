@@ -73,6 +73,7 @@
     Application.setupDateWidgets(context);
     Application.setupDateTimeWidgets(context);
     Application.setupNumberWidgets(context);
+    Application.setupTextareas(context);
   };
 
   /**
@@ -358,6 +359,81 @@
       // prepare options for X-editable
       var options = $.extend({}, Application.getEditableOptions($element), $element.data('editableOptions') || {});
       $element.editable(options).on('save', Application.editableOnSaveCallback);
+    });
+  };
+
+  /**
+   * Returns options for rich editor. Should be implemented in custom extension
+   * to Application javascript or inside sfJsApi module. See @js_form_setup route (and sfJsApi module)
+   * which generates the configuration dynamically from rich_editor.yml configuration file.
+   *
+   * @returns {Object}
+   */
+  Application.getRichEditorOptions = Application.getRichEditorOptions || function()
+  {
+    return {};
+  };
+
+  /**
+   * Rich editor setup for $element with given options. Default editor is CKEDITOR, 
+   * but can be customized to use any available editor. 
+   * See the documentation for more information on this topic.
+   *
+   * @param {jQuery object} $element
+   * @param {Object} options Array of options
+   */
+  Application.setupRichEditor = function($element, options)
+  {
+    use_package('editor', function()
+    {
+      var editor = CKEDITOR.replace($element.get(0), options);
+      
+      // this is triggered inside
+      // validation ErrorPlacement function
+      // see sfFormJavascriptValidation::getErrorPlacementExpression()      
+      $element.on('myfocus.from_error_label', function(e, label)
+      {
+        editor.focus();
+        if(label)
+        {
+          label.hide();
+        }
+      });
+
+      // Focus on the editor when corresponding label has been clicked
+      $('label[for="' + $element.attr('name') + '"]').click(function(e)
+      {
+        editor.focus();
+      });
+
+      editor.on('afterCommandExec', function(e)       
+      {
+        e.editor.updateElement();
+        $element.trigger('change');
+      });
+      
+      editor.on('blur', function(e)
+      {
+        $element.trigger('blur');
+      });
+
+    });    
+  };
+
+  /**
+   * Setup textareas to be replaced with CKEditor if requested.
+   *
+   * @param {DOM element} context
+   * @requires CKEditor
+   */
+  Application.setupTextareas = function(context)
+  {
+    $('textarea.rich', context).each(function()
+    {
+      var $element = $(this);
+      // options for editor
+      var options = $.extend({}, Application.getRichEditorOptions(), $element.data('editorOptions') || {});
+      Application.setupRichEditor($element, options);
     });
   };
 

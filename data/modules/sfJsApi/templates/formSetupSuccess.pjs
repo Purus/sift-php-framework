@@ -1,3 +1,38 @@
-<?php use_helper('I18N'); ?>
+(function(Application) {
 
-// Empty for now.
+  Application = Application || {
+    'behaviors' : {}
+  };
+
+  /**
+   * Returns options for rich editor
+   *
+   * @param {String} Type of the editor?
+   * @returns {Object}
+   */
+  Application.getRichEditorOptions = function(type)
+  {
+    if(typeof type === 'undefined')
+    {
+      type = '<?php echo escape_once(key($richEditorOptions)); ?>';
+    }
+
+    switch(type)
+    {
+<?php foreach($richEditorOptions as $type => $options): ?>
+      case '<?php echo ($type); ?>':
+        return <?php echo sfJson::encode($options); ?>;
+        break;
+<?php endforeach; ?>
+    }
+
+    // fallback
+    return {};
+  };
+
+  if(!window.Application)
+  {
+    window.Application = Application;
+  }
+
+}(window.Application));

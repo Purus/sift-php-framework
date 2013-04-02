@@ -12,31 +12,74 @@
  * @package    Sift
  * @subpackage helper
  */
-abstract class sfRichTextEditor
+abstract class sfRichTextEditor extends sfConfigurable implements sfIRichTextEditor
 {
-  protected
-    $name = '',
-    $content = '',
-    $options = array();
-
   /**
-   * Initializes this rich text editor.
+   * Returns an instance of rich editor driver
    *
-   * @param string The tag name
-   * @param string The rich text editor content
-   * @param array  An array of options
+   * @param string $driver Driver name
+   * @param array $options Array of options for the driver
+   * @return sfIRichTextEditor
+   * @throws LogicException
+   * @throws InvalidArgumentException
    */
-  public function initialize($name, $content, $options = array())
+  public static function factory($driver, $options = array())
   {
-    $this->name = $name;
-    $this->content = $content;
-    $this->options = $options;
+    $driverObj = false;
+    if(class_exists($class = sprintf('sfRichTextEditorDriver%s', ucfirst($driver))))
+    {
+      $driverObj = new $class($options);
+    }
+    else if(class_exists($class = $driver))
+    {
+      $driverObj = new $class($options);
+    }
+
+    if($driverObj)
+    {
+      if(!$driverObj instanceof sfIRichTextEditor)
+      {
+        throw new LogicException(sprintf('Driver "%s" does not implement sfIRichTextEditor interface.', $driver));
+      }
+      return $driverObj;
+    }
+    throw new InvalidArgumentException(sprintf('Invalid antivir driver "%s".', $driver));
   }
 
   /**
-   * Returns the rich text editor as HTML.
+   * Constructs the editor
    *
-   * @return string Rich text editor HTML representation
+   * @param array $options
    */
-  abstract public function toHTML();
+  public function __construct($options = array())
+  {
+    $options = sfToolkit::arrayDeepMerge($this->loadOptions(), $options);
+    parent::__construct($options);
+  }
+
+  /**
+   * Loads options from config/rich_editor.yml file. Also filters the configuration
+   * using "rich_text_editor.load_options" event.
+   *
+   * @return array Array of options
+   */
+  public function loadOptions()
+  {
+    $config = include sfConfigCache::getInstance()->checkConfig('config/rich_editor.yml');
+    array_walk_recursive($config, create_function('&$config', '$config = sfToolkit::replaceConstantsWithModifiers($config);'));
+    return sfCore::filterByEventListeners($config, 'rich_text_editor.load_options', array(
+      'editor' => $this
+    ));
+  }
+
+  /**
+   * Returns options for javascript
+   *
+   * @return array Array of options to be exported to javascript
+   */
+  public function getOptionsForJavascript()
+  {
+    return $this->getOptions();
+  }
+
 }
