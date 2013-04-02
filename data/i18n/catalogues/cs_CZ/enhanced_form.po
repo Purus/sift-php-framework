@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Sift PHP framework\n"
-"POT-Creation-Date: 2013-04-01 11:27+0100\n"
-"PO-Revision-Date: 2013-04-01 11:27+0100\n"
+"POT-Creation-Date: 2013-04-02 13:21+0100\n"
+"PO-Revision-Date: 2013-04-02 13:21+0100\n"
 "Last-Translator: Michal Moravec - Mishal.cz <mishal@mishal.cz>\n"
 "Language-Team: Sift PHP framework team\n"
 "Language: cs_CZ\n"
@@ -80,6 +80,21 @@ msgstr "Nyní"
 
 msgid "Empty"
 msgstr "Nevyplněno"
+
+msgid "No matches found."
+msgstr "Žádné záznamy nenalezeny."
+
+msgid "Please enter %number% more characters."
+msgstr "Prosím vložte ještě %number% znaků."
+
+msgid "You can only select %number% item(s)."
+msgstr "Můžete vybrat jen %number% položky(ek)."
+
+msgid "Loading more results..."
+msgstr "Načítám více záznamů..."
+
+msgid "Searching..."
+msgstr "Hledám..."
 
 #~ msgid "foo"
 #~ msgstr "bar"

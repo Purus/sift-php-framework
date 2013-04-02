@@ -164,3 +164,11 @@ default:
     editor:
       javascripts:
         - %SF_SIFT_WEB_DIR%/js/ckeditor/ckeditor.js
+
+    # Select2
+    # http://ivaynberg.github.com/select2/
+    select:
+      javascripts:
+        - %SF_SIFT_WEB_DIR%/js/select2/select2.min.js
+      stylesheets:
+        - %SF_SIFT_WEB_DIR%/css/_/select2/select2.less

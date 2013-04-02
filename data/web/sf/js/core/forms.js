@@ -26,6 +26,16 @@
  */
 
 /**
+ * Select2 is a jQuery based replacement for select boxes. It supports searching, remote data sets,
+ * and infinite scrolling of results.
+ * See {@link http://ivaynberg.github.com/select2/}
+ *
+ * @name Select2
+ * @requires jQuery
+ * @class
+ */
+
+/**
  * @fileOverview This file contains form setup. Widget are transformed to rich widgets.
  */
 (function(Application) {
@@ -74,6 +84,7 @@
     Application.setupDateTimeWidgets(context);
     Application.setupNumberWidgets(context);
     Application.setupTextareas(context);
+    Application.setupSelects(context);
   };
 
   /**
@@ -375,8 +386,8 @@
   };
 
   /**
-   * Rich editor setup for $element with given options. Default editor is CKEDITOR, 
-   * but can be customized to use any available editor. 
+   * Rich editor setup for $element with given options. Default editor is CKEDITOR,
+   * but can be customized to use any available editor.
    * See the documentation for more information on this topic.
    *
    * @param {jQuery object} $element
@@ -387,10 +398,10 @@
     use_package('editor', function()
     {
       var editor = CKEDITOR.replace($element.get(0), options);
-      
+
       // this is triggered inside
       // validation ErrorPlacement function
-      // see sfFormJavascriptValidation::getErrorPlacementExpression()      
+      // see sfFormJavascriptValidation::getErrorPlacementExpression()
       $element.on('myfocus.from_error_label', function(e, label)
       {
         editor.focus();
@@ -406,18 +417,18 @@
         editor.focus();
       });
 
-      editor.on('afterCommandExec', function(e)       
+      editor.on('afterCommandExec', function(e)
       {
         e.editor.updateElement();
         $element.trigger('change');
       });
-      
+
       editor.on('blur', function(e)
       {
         $element.trigger('blur');
       });
 
-    });    
+    });
   };
 
   /**
@@ -435,6 +446,59 @@
       var options = $.extend({}, Application.getRichEditorOptions(), $element.data('editorOptions') || {});
       Application.setupRichEditor($element, options);
     });
+  };
+
+  /**
+   * Returns an array of options for Select2 plugin
+   *
+   * @param {jQuery object} jQuery object
+   * @returns {Object}
+   * @requires Select2
+   */
+  Application.getSelectOptions = function($element)
+  {
+    var options = {
+      width: 'element',
+      formatNoMatches: function () { return __('No matches found.'); },
+      formatInputTooShort: function (input, min) { return __('Please enter %number% more characters.', { '%number%' : min - input.length}); },
+      formatSelectionTooBig: function (limit) { return __('You can only select %number% item(s).', { '%number%': limit }); },
+      formatLoadMore: function (pageNumber) { return __('Loading more results...'); },
+      formatSearching: function () { return __('Searching...'); }
+    };
+
+    // is select multiple?
+    if($element.prop('multiple'))
+    {
+      options.closeOnSelect = false;
+    }
+
+    return options;
+  };
+
+  /**
+   * Setup selects using "select" asset package
+   *
+   * @param {DOM element} context
+   * @requires Select2
+   */
+  Application.setupSelects = function(context)
+  {
+    var selects = $('select.rich', context);
+    if(!selects.length)
+    {
+      return;
+    }
+
+    use_package('select', function()
+    {
+      selects.each(function()
+      {
+        var $element = $(this);
+        var options = $.extend({}, Application.getSelectOptions($element), $element.data('selectOptions') || {});
+        $element.select2(options);
+      });
+    });
+
   };
 
   if(typeof window.Application === 'undefined')
