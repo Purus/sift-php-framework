@@ -2,7 +2,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(1, new lime_output_color());
+$t = new lime_test(2, new lime_output_color());
 
 $tests = array(
   'test.js' => array(
@@ -15,6 +15,10 @@ $tests = array(
     'string 1: single quotes',
     'string 2: \'escaped single quotes\'',
     'Jesus is Lord!',
+  ),
+  'arguments.js' => array(
+    'Please enter %number% more characters.',
+    'Please enter %number% more characters with arguments.',
   )
 );
 

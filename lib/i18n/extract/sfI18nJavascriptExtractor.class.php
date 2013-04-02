@@ -117,10 +117,11 @@ class sfI18nJavascriptExtractor extends sfConfigurable implements sfII18nExtract
 
     // extracted messages
     $messages = array();
-
+        
     // extract func calls
-    preg_match_all(
-      '# (?:' . $keywords . ') \(\\ *" ( (?: (?>[^"\\\\]++) | \\\\\\\\ | (?<!\\\\)\\\\(?!\\\\) | \\\\" )* ) (?<!\\\\)"\\ *\) #ix', $content, $matches, PREG_SET_ORDER
+    // @see http://stackoverflow.com/questions/15762060/regular-expression-to-extract-javascript-method-calls
+    preg_match_all( 
+      '# (?:' . $keywords . ') \(\\ *" ( (?: (?>[^"\\\\]++) | \\\\\\\\ | (?<!\\\\)\\\\(?!\\\\) | \\\\" )* ) (?<!\\\\)"\\ *(?:\)|,) #ix', $content, $matches, PREG_SET_ORDER
     );
 
     foreach($matches as $m)
@@ -129,15 +130,16 @@ class sfI18nJavascriptExtractor extends sfConfigurable implements sfII18nExtract
     }
 
     $matches = array();
+    // @see http://stackoverflow.com/questions/15762060/regular-expression-to-extract-javascript-method-calls
     preg_match_all(
-      "# (?:$keywords) \(\\ *' ( (?: (?>[^'\\\\]++) | \\\\\\\\ | (?<!\\\\)\\\\(?!\\\\) | \\\\' )* ) (?<!\\\\)'\\ *\) #ix", $content, $matches, PREG_SET_ORDER
+      "# (?:$keywords) \(\\ *' ( (?: (?>[^'\\\\]++) | \\\\\\\\ | (?<!\\\\)\\\\(?!\\\\) | \\\\' )* ) (?<!\\\\)'\\ *(?:\)|,) #ix", $content, $matches, PREG_SET_ORDER
     );
 
     foreach($matches as $m)
     {
       $messages[] = stripslashes($m[1]);
     }
-
+    
     // make the array unique
     // http://www.php.net/manual/en/function.array-unique.php#77743
     return array_keys(array_flip($messages));
