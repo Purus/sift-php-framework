@@ -172,3 +172,11 @@ default:
         - %SF_SIFT_WEB_DIR%/js/select2/select2.min.js
       stylesheets:
         - %SF_SIFT_WEB_DIR%/css/_/select2/select2.less
+
+    dual_list:
+      javascripts:
+        - %SF_SIFT_WEB_DIR%/js/dual_list/jquery.dual_list.min.js
+      stylesheets:
+        - %SF_SIFT_WEB_DIR%/css/_/dual_list/dual_list.less
+      require:
+        - ui

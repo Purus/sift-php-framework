@@ -85,6 +85,7 @@
     Application.setupNumberWidgets(context);
     Application.setupTextareas(context);
     Application.setupSelects(context);
+    Application.setupDualLists(context);
   };
 
   /**
@@ -499,6 +500,31 @@
       });
     });
 
+  };
+
+  /**
+   * Setups dual lists
+   *
+   * @param {DOM element} context
+   * @requires DualList
+   */
+  Application.setupDualLists = function(context)
+  {
+    var dualLists = $('div.dual-list', context);
+    if(!dualLists.length)
+    {
+      return;
+    }
+
+    use_package('dual_list', function()
+    {
+      dualLists.each(function()
+      {
+        var $element = $(this);
+        var options = $.extend({}, $element.data('dualListOptions') || {});
+        $element.dualList(options);
+      });
+    });
   };
 
   if(typeof window.Application === 'undefined')
