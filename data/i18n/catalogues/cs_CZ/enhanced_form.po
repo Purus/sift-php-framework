@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Sift PHP framework\n"
-"POT-Creation-Date: 2013-04-08 13:52+0100\n"
-"PO-Revision-Date: 2013-04-08 13:52+0100\n"
+"POT-Creation-Date: 2013-04-08 22:37+0100\n"
+"PO-Revision-Date: 2013-04-08 22:37+0100\n"
 "Last-Translator: Michal Moravec - Mishal.cz <mishal@mishal.cz>\n"
 "Language-Team: Sift PHP framework team\n"
 "Language: cs_CZ\n"
@@ -21,26 +21,35 @@ msgid "close"
 msgstr "zavřít"
 
 msgid "Alert"
-msgstr "Alert"
+msgstr "Upozornění"
 
 msgid "Ok"
 msgstr "Ok"
 
 msgid "Confirmation"
-msgstr "Confirmation"
+msgstr "Potvrzení"
 
 msgid "Cancel"
-msgstr "Cancel"
+msgstr "Zrušit"
+
+msgid "Are you sure?"
+msgstr "Jste si jist(a)?"
 
 msgid "The server is too busy at the moment."
-msgstr "The server is too busy at the moment."
+msgstr "Server je nyní přiliš zaneprázdněný."
 
 msgid ""
 "This action requires to be logged in and you are not logged in. Redirect to "
 "login page?"
 msgstr ""
-"This action requires to be logged in and you are not logged in. Redirect to "
-"login page?"
+"Pro provedení této akce je nutné být přihlášen(a), ale vy nejste. "
+"Přesměrovat na přihlašovací stránku?"
+
+msgid ""
+"This action requires to be logged in and you are not logged in. Please login."
+msgstr ""
+"Tato akce vyžaduje aby jste byl(a) příhlášena, ale vy nejste. Prosím "
+"přihlašte se."
 
 msgid "Choose time"
 msgstr "Vyberte čas"

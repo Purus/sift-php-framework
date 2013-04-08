@@ -292,25 +292,35 @@
     // do we have jquery ui loaded?
     if($.isFunction($.fn.dialog))
     {
-      $('body').append('<div id="application-dialog" />');
-      $('#application-dialog').html('<div>' + message + '</div>').dialog(
+      var applicationDialog = $('#application-dialog');
+      if(!applicationDialog.length)
       {
-        dialogClass:  'ui-dropshadow',
+        applicationDialog = $('<div id="application-dialog" />');
+        $('body').append(applicationDialog);
+      }
+      // save the callback for future use
+      applicationDialog.data('callback', callback);
+      applicationDialog.html('<div>' + message + '</div>').dialog(
+      {
+        dialogClass: 'ui-dropshadow',
         closeOnEscape: true,
-        autoOpen:      true,
-        minHeight:     50,
-        modal:         true,
+        autoOpen: true,
+        minHeight: 50,
+        modal: true,
         closeText: __('close'),
         resizable: false,
-        zIndex:      1111,
-        title: '<span class="ui-icon ui-icon-info left"></span> ' + (title ? title : __('Confirmation')),
+        // zIndex: 1111, // how?
+        title: (title ? title : __('Confirmation')),
         buttons: [
         {
           text: __('Ok'),
+          'class': 'btn btn-primary',
           click: function()
           {
-            $(this).dialog('close');
-            $('#application-dialog').remove();
+            var that = $(this);
+            var callback = $(this).data('callback');
+            that.dialog('close');
+            that.removeData('callback').remove();
             if($.isFunction(callback))
             {
               callback.apply();
@@ -319,14 +329,16 @@
         },
         {
           text: __('Cancel'),
+          'class': 'btn',
           click: function()
           {
             $(this).dialog('close');
-            $('#application-dialog').remove();
+            applicationDialog.remove();
           }
         }
         ]
-      });
+      }
+    );
     }
     // fallback if jqueryui is not loaded, use builtin ugly confirmation
     else
@@ -340,6 +352,64 @@
         }
       }
     }
+  };
+
+  /**
+   * Behavior for confirmation links. You can make links to be confirmed by user
+   * simply by adding "confirm" class to the link. If you provide "data-confirm"
+   * HTML5 attribute the text from this attribute will be shown to the user. When no
+   * data-confirm attribute is present default message will be used.
+   *
+   * @param {DOM element} context
+   */
+  Application.setupConfirmLinks = function(context)
+  {
+    $('a.confirm', context).click(function(e)
+    {
+      var that = $(this);
+      var confirm = that.data('confirm') || __('Are you sure?')
+      // FIXME: make icons configurable?
+      Application.confirm('<i class="icon-exclamation-sign icon-large"></i> ' + confirm, function()
+      {
+        // we have a target
+        var target = that.prop('target');
+        if(target)
+        {
+          window.open(that.attr('href'), target);
+        }
+        else
+        {
+          window.location = that.attr('href');
+        }
+      });
+      e.preventDefault();
+    });
+  };
+
+  /**
+   * Setup external links (will be opened in new window)
+   *
+   * @param {DOM element} context
+   */
+  Application.setupExternalLinks = function(context)
+  {
+    $('a.external', context).click(function(e)
+    {
+      $(this).prop('target', 'external');
+    });
+  };
+
+  /**
+   * Setup links
+   *
+   * @param {DOM element} context Context
+   * @memberOf Application.behaviors
+   * @see Application.coreSetupLinks()
+   */
+  Application.behaviors.coreSetupLinks = function(context)
+  {
+    Application.setupConfirmLinks(context);
+    Application.setupExternalLinks(context);
   };
 
   /**
@@ -403,26 +473,15 @@
     }
   };
 
-  // Global Killswitch on the <html> element
-  if(Application.jsEnabled) {
-
-    // Global Killswitch on the <html> element
-    $(document.documentElement).addClass('js');
-
-    // Attach all behaviors.
-    $(document).ready(function()
-    {
-      var domain = Config.get('cookie_domain');
-      var path   = Config.get('cookie_path');
-      // set cookie, session timeout
-      Cookie.set('has_js', 1, '', path, domain);
-      // detect timezone
-      Application.detectTimezone();
-      // attach behaviours
-      Application.attachBehaviors(this);
-    });
-
-    // setup ajax requests
+  /**
+   * Setups ajax requests. Using following configuration:
+   * Handles 500, 401 and 403 error codes.
+   *
+   * * ajax_timeout (default -1 = no timeout)
+   *
+   */
+  Application.setupAjax = function()
+  {
     $.ajaxSetup({
       timeout: Config.get('ajax_timeout', -1)
     });
@@ -433,7 +492,6 @@
       .bind('ajaxError', function(e, jqxhr, settings, exception)
       {
         var textStatus = jqxhr.statusText;
-
         // catch errors like: parsererror, error, timeout
         if(textStatus == 'parsererror' ||
            textStatus == 'error' ||
@@ -444,8 +502,7 @@
           var url          = settings.url;
           var cookies      = document.cookie;
 
-          Logger.logToServer(
-          {
+          Logger.logToServer({
             error:  'Ajax error',
             status: textStatus,
             url: url,
@@ -481,6 +538,7 @@
             Application.alert(result.html);
           }
         }
+        // not authorized
         else if(jqxhr.status == 401)
         {
           if(result && result.html)
@@ -499,10 +557,17 @@
           }
           else // fallback
           {
-            Application.alert(__('This action requires to be logged in and you are not logged in. Redirect to login page?'));
-            if(url = Config.get('login_url'))
+            var url = Config.get('login_url');
+            if(url)
             {
-              window.location.href = url;
+              Application.confirm(__('This action requires to be logged in and you are not logged in. Redirect to login page?'), function()
+              {
+                window.location.href = url;
+              });
+            }
+            else
+            {
+              Application.alert(__('This action requires to be logged in and you are not logged in. Please login.'));
             }
           }
         }
@@ -510,9 +575,41 @@
 
   };
 
+  /**
+   * Setup application
+   *
+   */
+  Application.setup = function()
+  {
+    // Global Killswitch on the <html> element
+    if(Application.jsEnabled)
+    {
+      // Global Killswitch on the <html> element
+      $(document.documentElement).addClass('js');
+
+      // setup ajax
+      Application.setupAjax();
+
+      // Attach all behaviors.
+      $(document).ready(function()
+      {
+        var domain = Config.get('cookie_domain');
+        var path   = Config.get('cookie_path');
+        Cookie.set('has_js', 1, '', path, domain);
+        // detect timezone
+        Application.detectTimezone();
+        // attach behaviours
+        Application.attachBehaviors(this);
+      });
+    };
+
+  };
+
   if(typeof window.Application === 'undefined')
   {
     window.Application = Application;
   }
+
+  Application.setup();
 
 }(window.jQuery, window, window.Application));
