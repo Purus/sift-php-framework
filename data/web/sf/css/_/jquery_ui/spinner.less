@@ -8,13 +8,17 @@
  *
  * http://docs.jquery.com/UI/Spinner#theming
  */
+
 .ui-spinner {
 	position: relative;
 	display: inline-block;
 	overflow: hidden;
 	padding: 0;
 	vertical-align: middle;
+  .border-radius(@baseBorderRadius);
+  border: 1px solid @tableBorder;
 }
+
 .ui-spinner-input {
 	border: none;
 	background: none;
@@ -25,6 +29,7 @@
 	margin-left: .4em;
 	margin-right: 22px;
 }
+
 .ui-spinner-button {
 	width: 16px;
 	height: 50%;
@@ -37,13 +42,19 @@
 	display: block;
 	overflow: hidden;
 	right: 0;
+  .border-bottom-left-radius(0);
+  .border-top-left-radius(0);
+  text-decoration: none;
 }
+
 /* more specificity required here to overide default borders */
 .ui-spinner a.ui-spinner-button {
 	border-top: none;
 	border-bottom: none;
 	border-right: none;
+  text-decoration: none;
 }
+
 /* vertical centre icon */
 .ui-spinner .ui-icon {
 	position: absolute;
@@ -56,10 +67,4 @@
 }
 .ui-spinner-down {
 	bottom: 0;
-}
-
-/* TR overrides */
-.ui-spinner .ui-icon-triangle-1-s {
-	/* need to fix icons sprite */
-	background-position: -65px -16px;
 }

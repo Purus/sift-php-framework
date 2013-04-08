@@ -13,6 +13,7 @@
   width: 17em;
   padding: .2em .2em 0 !important;
   display: none;
+  z-index: @zindexFixedNavbar+1 !important;
 
   background-color: @dropdownBackground;
   border: 1px solid #ccc; // Fallback for IE7-8
@@ -21,30 +22,8 @@
   *border-bottom-width: 2px;
   .border-radius(@baseBorderRadius);
   .box-shadow(0 5px 10px rgba(0,0,0,.2));
-
-  &:before {
-    content: '';
-    display: inline-block;
-    border-left:   7px solid transparent;
-    border-right:  7px solid transparent;
-    border-bottom: 7px solid #ccc;
-    border-bottom-color: rgba(0,0,0,.2);
-    position: absolute;
-    top: -7px;
-    left: 6px;
-  }
-  &:after {
-    content: '';
-    display: inline-block;
-    border-left:   6px solid transparent;
-    border-right:  6px solid transparent;
-    border-bottom: 6px solid @white;
-    position: absolute;
-    top: -6px;
-    left: 7px;
-  }
-
 }
+
 .ui-datepicker .ui-datepicker-header {
   position: relative;
   padding: .2em 0;
@@ -54,23 +33,40 @@
 .ui-datepicker .ui-datepicker-next {
   position: absolute;
   top: 2px;
+  overflow: hidden;
+  width: 1em;
+  height: 1.5em;
+  .ui-button();
 }
 
 .ui-datepicker .ui-datepicker-prev-hover,
 .ui-datepicker .ui-datepicker-next-hover {
-  
+
 }
+
 .ui-datepicker .ui-datepicker-prev {
   left: 2px;
+  &:after {
+    font-family: "FontAwesome";
+    // arrow-left
+    content: "\f060";
+  }
 }
+
 .ui-datepicker .ui-datepicker-next {
   right: 2px;
+  &:after {
+    font-family: "FontAwesome";
+    // arrow-right
+    content: "\f061";
+  }
 }
+
 .ui-datepicker .ui-datepicker-prev-hover {
-  
+
 }
 .ui-datepicker .ui-datepicker-next-hover {
-  
+
 }
 
 .ui-datepicker .ui-datepicker-prev span,
@@ -81,26 +77,32 @@
   margin-left: -8px;
   top: 50%;
   margin-top: -8px;
+  display: none;
 }
+
 .ui-datepicker .ui-datepicker-title {
   margin: 0 2.3em;
   line-height: 1.8em;
   text-align: center;
 }
+
 .ui-datepicker .ui-datepicker-title select {
-  font-size: 1em;
+  font-size: inherit;
   margin: 1px 0;
 }
+
 .ui-datepicker select.ui-datepicker-month-year {
   width: 100%;
 }
+
 .ui-datepicker select.ui-datepicker-month,
 .ui-datepicker select.ui-datepicker-year {
   width: 49%;
 }
+
 .ui-datepicker table {
   width: 100%;
-  font-size: .9em;
+  font-size: inherit;
   border-collapse: collapse;
   margin: 0 0 .4em;
 }
@@ -121,6 +123,12 @@
   text-align: right;
   text-decoration: none;
 }
+
+.ui-datepicker .ui-state-active {
+  background: @blue;
+  color: @white;
+}
+
 .ui-datepicker .ui-datepicker-buttonpane {
   background-image: none;
   margin: .7em 0 0 0;

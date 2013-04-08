@@ -36,6 +36,15 @@
  */
 
 /**
+ * The timepicker addon adds a timepicker to jQuery UI Datepicker.
+ * See {@link http://trentrichardson.com/examples/timepicker/}
+ *
+ * @name jQueryUITimepicker
+ * @requires jQueryUI
+ * @class
+ */
+
+/**
  * @fileOverview This file contains form setup. Widget are transformed to rich widgets.
  */
 (function(Application) {
@@ -86,6 +95,39 @@
     Application.setupTextareas(context);
     Application.setupSelects(context);
     Application.setupDualLists(context);
+  };
+
+  /**
+   * Returns default timepicker options
+   *
+   * @param {String} [culture] User culture
+   * @return {Object} Array of options
+   * @name getTimePickerOptions
+   * @function
+   * @methodOf Application
+   * @requires I18n
+   * @requires Globalize
+   */
+  Application.getTimePickerOptions = function(culture)
+  {
+    var cultureData = Globalize.culture(culture ? culture : Config.get('culture'));
+    return {
+      timeOnlyTitle: __('Choose time'),
+      timeText: __('Time'),
+      hourText: __('Hours'),
+      minuteText: __('Minutes'),
+      secondText: __('Seconds'),
+      millisecText: __('Miliseconds'),
+      timezoneText: __('Timezone'),
+      currentText: __('Now'),
+      closeText: __('Close'),
+      timeFormat: cultureData.calendar.patterns['t'],
+      showTime: false,
+      timeOnly: true,
+      // FIXME: this should be namespaced, not like this!
+      controlType: typeof myJqueryUIDatetimePickerControl === 'object' ?
+                    myJqueryUIDatetimePickerControl : 'select'
+    };
   };
 
   /**
@@ -148,7 +190,13 @@
       isRTL: false,
       changeYear: false,
       changeMonth: false,
-      showOtherMonths: false
+      showOtherMonths: false,
+      showButtonPanel: true,
+      // FIXME: this should be namespaced, not like this!
+      controlType: typeof myJqueryUIDatetimePickerControl === 'object' ?
+                    myJqueryUIDatetimePickerControl : 'select',
+      timeOnly: false,
+      showTime: false
     });
   };
 
@@ -158,9 +206,26 @@
    * @param {DOM element} [context] Context
    * @requires JsAPI
    * @requires jQueryUI
+   * @requires jQueryUITimepicker
    */
   Application.setupTimeWidgets = function(context)
   {
+    var timeWidgets =  $('input.time', context).not('.hasDatePicker');
+
+    if(!timeWidgets.length)
+    {
+      return;
+    }
+
+    // date picker inputs
+    use_package('ui', function()
+    {
+      timeWidgets.each(function()
+      {
+        var that = $(this);
+        that.timepicker(Application.getTimeWidgetOptions(that));
+      });
+    }, null, typeof $.fn.timepicker === 'undefined');
 
   };
 
@@ -173,7 +238,7 @@
    */
   Application.setupDateWidgets = function(context)
   {
-    var dateWidgets =  $('input.date', context).not('.hasDatePicker');
+    var dateWidgets = $('input.date', context).not('.hasDatePicker');
 
     if(!dateWidgets.length)
     {
@@ -188,7 +253,29 @@
         var that = $(this);
         that.datepicker(Application.getDateWidgetOptions(that));
       });
-    });
+    }, null, typeof $.fn.datepicker === 'undefined');
+  };
+
+  /**
+   * Returns options for date widget using data attribute
+   * "data-timepicker-options" of the $element and default options.
+   *
+   * @description
+   * Initialize the widget with the options from the element,
+   * defaulting to an empty object if the data attribute isn't set.
+   *
+   * @example
+   *  &lt;input type="text" class="time" data-timepicker-options="{dateFormat:'HH:mm'}" /&gt;
+   *
+   * @param {jQuery object} $element JQuery object
+   * @returns {Object} Array of options for the $element
+   * @see getDatePickerOptions()
+   */
+  Application.getTimeWidgetOptions = function($element)
+  {
+    var options = $.extend({}, Application.getTimePickerOptions(), $element.data('timepickerOptions') || {});
+
+    return options;
   };
 
   /**
@@ -200,7 +287,7 @@
    * defaulting to an empty object if the data attribute isn't set.
    *
    * @example
-   *  &lt;input type="text" class="date" data-datepicker-options="{format:'d.m.Y'}" /&gt;
+   *  &lt;input type="text" class="date" data-datepicker-options="{dateFormat:'d.m.Y'}" /&gt;
    *
    * @param {jQuery object} $element JQuery object
    * @returns {Object} Array of options for the $element
@@ -209,15 +296,62 @@
   Application.getDateWidgetOptions = function($element)
   {
     var options = $.extend({}, Application.getDatePickerOptions(), $element.data('datepickerOptions') || {});
-    // evaluate the expression
+
     if(options.minDate)
     {
       try { options.minDate =  eval('(' + options.minDate + ')'); }
       catch(e) {}
     }
+
     if(options.maxDate)
     {
       try { options.maxDate =  eval('(' + options.maxDate + ')'); }
+      catch(e) {}
+    }
+
+    return options;
+  };
+
+  /**
+   * Returns options for date widget using data attribute
+   * "data-datepicker-options" of the $element and default options.
+   *
+   * @description
+   * Initialize the widget with the options from the element,
+   * defaulting to an empty object if the data attribute isn't set.
+   *
+   * @example
+   *  &lt;input type="text" class="date" data-datepicker-options="{dateFormat:'d.m.Y'}" /&gt;
+   *
+   * @param {jQuery object} $element JQuery object
+   * @returns {Object} Array of options for the $element
+   * @see getDatePickerOptions()
+   */
+  Application.getDateTimeWidgetOptions = function($element)
+  {
+    var options = $.extend({}, Application.getDateTimePickerOptions(), $element.data('datetimepickerOptions') || {});
+
+    if(options.minDate)
+    {
+      try { options.minDate =  eval('(' + options.minDate + ')'); }
+      catch(e) {}
+    }
+
+    if(options.maxDate)
+    {
+      try { options.maxDate =  eval('(' + options.maxDate + ')'); }
+      catch(e) {}
+    }
+
+    if(options.minDateTime)
+    {
+      try { options.minDateTime =  eval('(' + options.minDateTime + ')'); }
+      catch(e) {}
+    }
+
+    if(options.maxDateTime)
+    {
+      try { options.maxDateTime =  eval('(' + options.maxDateTime + ')'); }
       catch(e) {}
     }
 
@@ -246,24 +380,10 @@
       // callback to be called when all assets from the package are loaded
       dateTimeInputs.each(function()
       {
-        var options = $.extend({}, Application.getDateTimePickerOptions(), $(this).data('datetimepickerOptions') || {});
-        // evaluate the expression
-        if(options.minDate)
-        {
-          try { options.minDate =  eval('(' + options.minDate + ')'); }
-          catch(e) {}
-        }
-        if(options.maxDate)
-        {
-          try { options.maxDate =  eval('(' + options.maxDate + ')'); }
-          catch(e) {}
-        }
-
-        // create datetimepicker
-        $(this).datetimepicker(options);
-
+        var that = $(this);
+        that.datetimepicker(Application.getDateTimeWidgetOptions(that));
       });
-    });
+    }, null, typeof $.fn.timepicker === 'undefined');
   };
 
   /**
@@ -322,6 +442,10 @@
     {
       case 'date':
         options.datepicker = Application.getDateWidgetOptions($element);
+        // clear text
+        options.clear = __('clear');
+        // do we have format?
+        options.format = options.datepicker.format || 'yyyy-m-d';
       break;
     }
 
@@ -498,7 +622,7 @@
         var options = $.extend({}, Application.getSelectOptions($element), $element.data('selectOptions') || {});
         $element.select2(options);
       });
-    });
+    }, null, typeof $.fn.select2 === 'undefined');
 
   };
 

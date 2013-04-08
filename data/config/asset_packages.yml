@@ -94,6 +94,7 @@ default:
       javascripts:
         - %SF_SIFT_WEB_DIR%/js/jquery_ui/jquery-ui.min.js
         - %SF_SIFT_WEB_DIR%/js/jquery_ui_ext/jquery-ui-timepicker-addon.min.js
+        - %SF_SIFT_WEB_DIR%/js/jquery_ui_ext/jquery.ui.timepicker-control.min.js
       stylesheets:
          - %SF_SIFT_WEB_DIR%/css/_/jquery_ui/ui.less
       require:

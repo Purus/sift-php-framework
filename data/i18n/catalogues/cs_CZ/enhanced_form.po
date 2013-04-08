@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Sift PHP framework\n"
-"POT-Creation-Date: 2013-04-02 13:21+0100\n"
-"PO-Revision-Date: 2013-04-02 13:21+0100\n"
+"POT-Creation-Date: 2013-04-08 13:52+0100\n"
+"PO-Revision-Date: 2013-04-08 13:52+0100\n"
 "Last-Translator: Michal Moravec - Mishal.cz <mishal@mishal.cz>\n"
 "Language-Team: Sift PHP framework team\n"
 "Language: cs_CZ\n"
@@ -42,18 +42,6 @@ msgstr ""
 "This action requires to be logged in and you are not logged in. Redirect to "
 "login page?"
 
-msgid "Today"
-msgstr "Dnes"
-
-msgid "Close"
-msgstr "Zavřít"
-
-msgid "Next"
-msgstr "Další"
-
-msgid "Previous"
-msgstr "Předchozí"
-
 msgid "Choose time"
 msgstr "Vyberte čas"
 
@@ -78,8 +66,23 @@ msgstr "Časové pásmo"
 msgid "Now"
 msgstr "Nyní"
 
+msgid "Close"
+msgstr "Zavřít"
+
+msgid "Today"
+msgstr "Dnes"
+
+msgid "Next"
+msgstr "Další"
+
+msgid "Previous"
+msgstr "Předchozí"
+
 msgid "Empty"
 msgstr "Nevyplněno"
+
+msgid "clear"
+msgstr "smazat"
 
 msgid "No matches found."
 msgstr "Žádné záznamy nenalezeny."
