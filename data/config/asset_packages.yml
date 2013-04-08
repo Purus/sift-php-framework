@@ -147,7 +147,7 @@ default:
     # Twitter bootstrap
     bootstrap:
       javascripts:
-        - //netdna.bootstrapcdn.com/twitter-bootstrap/2.3.0/js/bootstrap.min.js
+        - %SF_SIFT_WEB_DIR%/js/bootstrap/bootstrap.min.js
       require:
         - jquery
 
