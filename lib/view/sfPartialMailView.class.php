@@ -13,7 +13,7 @@
  * @subpackage view
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  */
-class sfPartialMailView extends sfPHPView
+class sfPartialMailView extends sfPartialView
 {
   /**
    * Executes any presentation logic for this view.
