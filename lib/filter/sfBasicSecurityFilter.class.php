@@ -70,7 +70,7 @@ class sfBasicSecurityFilter extends sfSecurityFilter
         {
           return $this->handle403Ajax();
         }
-        
+
         // the user doesn't have access, exit stage left
         $controller->forward(sfConfig::get('sf_secure_module'), sfConfig::get('sf_secure_action'));
 
@@ -84,50 +84,50 @@ class sfBasicSecurityFilter extends sfSecurityFilter
       {
         return $this->handle401Ajax();
       }
-      
+
       if(sfConfig::get('sf_use_flash'))
       {
         // set flash error, so the user knows whats going on
-        $user->setAttribute('error', __('You have to be logged in to access this page.', array(),                 
+        $user->setAttribute('error', __('You have to be logged in to access this page.', array(),
                 sfConfig::get('sf_sift_data_dir') . '/i18n/catalogues/action'), sfUser::FLASH_NAMESPACE);
       }
-      
+
       // the user is not authenticated
       $controller->forward(sfConfig::get('sf_login_module'), sfConfig::get('sf_login_action'));
 
       throw new sfStopException();
     }
   }
-  
+
   /**
    * Handles 401 (Not authorized) case when requested via Ajax
-   * 
+   *
    * @return void
    */
   protected function handle401Ajax()
   {
-    $response = $this->getContext()->getResponse();        
+    $response = $this->getContext()->getResponse();
     // Using 401 status code without "WWW-Authenticate" header
-    // violates the RFC 
+    // violates the RFC
     // @see http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html
     $response->setStatusCode(401);
-    $response->setHeaderOnly(true);        
+    $response->setHeaderOnly(true);
     $response->send();
-    return;      
+    return;
   }
-  
+
   /**
    * Handles 403 (Forbidden) case when requested via Ajax
-   * 
+   *
    * @return void
    */
   protected function handle403Ajax()
   {
     $response = $this->getContext()->getResponse();
-    $response->setStatusCode(403);          
-    $response->setHeaderOnly(true); 
-    $response->send();          
-    return;    
+    $response->setStatusCode(403);
+    $response->setHeaderOnly(true);
+    $response->send();
+    return;
   }
-  
+
 }
