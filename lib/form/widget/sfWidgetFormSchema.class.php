@@ -395,12 +395,12 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess
     }
     return $helps;
    }
- 
+
   /**
    * Sets a help text.
    *
    * @param string $name The field name
-   * @param string $value The help name (required - the default value is here because PHP do not allow signature changes with inheritance) 
+   * @param string $value The help name (required - the default value is here because PHP do not allow signature changes with inheritance)
    *
    * @throws InvalidArgumentException when you try to set a help on a none existing widget
    * @return sfWidget The current widget instance
@@ -408,27 +408,27 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess
   public function setHelp($name, $value = null)
   {
     if(2 == func_num_args())
-    { 
-      if(!isset($this->fields[$name])) 
-      { 
-        throw new InvalidArgumentException(sprintf('Unable to set the help on an unexistant widget ("%s").', $name)); 
+    {
+      if(!isset($this->fields[$name]))
+      {
+        throw new InvalidArgumentException(sprintf('Unable to set the help on an unexistant widget ("%s").', $name));
       }
-      
+
       var_dump($value);
-      $this->fields[$name]->setHelp($value); 
-    } 
-    else 
-    { 
-      // set the help for this widget schema 
-      parent::setHelp($name); 
-    }     
+      $this->fields[$name]->setHelp($value);
+    }
+    else
+    {
+      // set the help for this widget schema
+      parent::setHelp($name);
+    }
     return $this;
   }
 
   /**
-   * Gets a help text by field name. 
+   * Gets a help text by field name.
    *
-   * @param string $name The field name (required - the default value is here because PHP do not allow signature changes with inheritance) 
+   * @param string $name The field name (required - the default value is here because PHP do not allow signature changes with inheritance)
    *
    * @throws InvalidArgumentException when you try to get a help for a none existing widget
    * @return string The help text or an empty string if it is not defined
@@ -530,7 +530,7 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess
     $clone = clone $widget;
     $clone->setIdFormat($this->options['id_format']);
 
-    return $clone->render($this->generateName($name), $value, 
+    return $clone->render($this->generateName($name), $value,
             array_merge($clone->getAttributes(), $attributes), $errors, $widget);
   }
 
@@ -588,9 +588,11 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess
             $classes[] = $attributes['class'];
           }
           $attributes['class'] = trim(implode(' ',
-            array_merge(explode(' ', $this->widget->getAttribute('class')), $classes)));
+            array_merge(explode(' ',
+                    ($this->widget ? $this->widget->getAttribute('class') : '')
+                    ), $classes)));
         }
-        
+
         $field = $this->renderField($name, $value, $widgetAttributes, $error);
 
         // don't add a label tag and errors if we embed a form schema
@@ -599,10 +601,10 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess
 
         $widgetName = $this->getFormFormatter()->getWidgetSchema()->generateName($name);
         $id = $this->getFormFormatter()->getWidgetSchema()->generateId($widgetName);
-    
+
         $rows[] = $formFormat->formatRow($label, $field, $error, $this->getHelp($name), null, array(
           'id'   => $id,
-          'name' => $widgetName    
+          'name' => $widgetName
         ), $widget);
       }
     }
