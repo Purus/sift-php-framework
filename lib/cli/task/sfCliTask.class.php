@@ -11,7 +11,7 @@
  *
  * @package    Sift
  * @subpackage cli_task
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com> 
+ * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  */
 abstract class sfCliTask {
 
@@ -26,7 +26,7 @@ abstract class sfCliTask {
     $dispatcher          = null,
     $formatter           = null,
     $logger              = null;
-  
+
   public
     $environment         = null;
 
@@ -36,9 +36,9 @@ abstract class sfCliTask {
    * @param sfEventDispatcher $dispatcher  An sfEventDispatcher instance
    * @param sfCliFormatter       $formatter   An sfCliFormatter instance
    */
-  public function __construct(sfCliTaskEnvironment $env, 
-                              sfEventDispatcher $dispatcher, 
-                              sfCliFormatter $formatter, 
+  public function __construct(sfCliTaskEnvironment $env,
+                              sfEventDispatcher $dispatcher,
+                              sfCliFormatter $formatter,
                               sfILogger $logger)
   {
     $this->initialize($env, $dispatcher, $formatter, $logger);
@@ -53,8 +53,8 @@ abstract class sfCliTask {
    * @param sfCliFormatter       $formatter   A sfCliFormatter instance
    */
   public function initialize(sfCliTaskEnvironment $env,
-                             sfEventDispatcher $dispatcher, 
-                             sfCliFormatter $formatter, 
+                             sfEventDispatcher $dispatcher,
+                             sfCliFormatter $formatter,
                              sfILogger $logger)
   {
     $this->environment = $env;
@@ -67,6 +67,15 @@ abstract class sfCliTask {
    * Configures the current task.
    */
   protected function configure()
+  {
+  }
+
+  /**
+   * Setups autoloading feature for the task
+   *
+   * @param sfClassLoader $classLoader
+   */
+  public function setupAutoload(sfClassLoader $classLoader)
   {
   }
 
@@ -370,19 +379,19 @@ abstract class sfCliTask {
                 'command_manager' => $commandManager,
                 'task' => $this
             )), $options);
-    
+
     $options = $event->getReturnValue();
 
     $this->process($commandManager, $options);
 
     $event = new sfEvent('cli_task.pre_execute', array(
-            'arguments' => $commandManager->getArgumentValues(), 
+            'arguments' => $commandManager->getArgumentValues(),
             'options' => $commandManager->getOptionValues(),
             'task' => $this
     ));
-    
+
     $this->dispatcher->notifyUntil($event);
-    
+
     if($event->isProcessed())
     {
       return $event->getReturnValue();
@@ -406,7 +415,7 @@ abstract class sfCliTask {
     {
       $messages = array($messages);
     }
-    
+
     foreach($messages as $message)
     {
       $this->logger->log($message);
@@ -683,5 +692,5 @@ abstract class sfCliTask {
      }
 
      return mb_strlen($string, $encoding);
-   }   
+   }
 }

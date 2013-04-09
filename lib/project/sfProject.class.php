@@ -506,16 +506,24 @@ abstract class sfProject extends sfConfigurable {
       return false;
     }
 
-    $cacheFile = $this->getOption('sf_cache_dir') . DS .
-                 $this->getOption('sf_config_dir_name') .
-                 DS . 'config_plugins.yml.php';
+    if($this instanceof sfProject)
+    {
+      $cacheFile = $this->getOption('sf_root_cache_dir') .
+                   DS . 'config_plugins.yml.php';
+    }
+    else
+    {
+      $cacheFile = $this->getOption('sf_cache_dir') . DS .
+                   $this->getOption('sf_config_dir_name') .
+                   DS . 'config_plugins.yml.php';
+    }
 
     $compile = false;
 
     // create the file if it does not exits
     if(is_readable($cacheFile))
     {
-      if($this->isDebug())
+      if($this instanceof sfApplication && $this->isDebug())
       {
         $time = 0;
 

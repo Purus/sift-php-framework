@@ -91,13 +91,15 @@ abstract class sfCliCommandApplication {
 
     // initialize project autoload
     $this->project->initializeAutoload();
+    $this->project->loadPlugins();
     $this->project->setupPlugins();
 
+    $classLoader = new sfClassLoader();
     foreach($this->project->getPlugins() as $plugin)
     {
-      $plugin->initializeAutoload();
+      $plugin->initializeAutoload($classLoader);
     }
-
+    $classLoader->register();
   }
 
   /**
@@ -198,14 +200,22 @@ abstract class sfCliCommandApplication {
   public function autodiscoverTasks()
   {
     $tasks = array();
+
+    $classLoader = new sfClassLoader();
+
     foreach(get_declared_classes() as $class)
     {
       $r = new ReflectionClass($class);
       if($r->isSubclassOf('sfCliTask') && !$r->isAbstract())
       {
-        $tasks[] = new $class($this->environment, $this->dispatcher, $this->formatter, $this->logger);
+        $task = new $class($this->environment, $this->dispatcher, $this->formatter, $this->logger);
+        // we have to setup autoload for a task
+        $task->setupAutoload($classLoader);
+        $tasks[] = $task;
       }
     }
+
+    $classLoader->register();
 
     return $tasks;
   }
