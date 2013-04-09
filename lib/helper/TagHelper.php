@@ -161,10 +161,14 @@ function _get_option(&$options, $name, $default = null)
 function body_tag($options = array())
 {
   $options = _parse_attributes($options);
+
   $classes = sfContext::getInstance()->getResponse()->getBodyClasses();
+
   if(count($classes))
   {
-    $options['class'] = join(' ', array_values($classes));
+    $options['class'] = isset($options['class']) ?
+            join(' ', array_merge(array_values($classes), array($options['class']))) :
+            join(' ', array_merge(array_values($classes)));
   }
   $id = sfContext::getInstance()->getResponse()->getBodyId();
   if($id)
