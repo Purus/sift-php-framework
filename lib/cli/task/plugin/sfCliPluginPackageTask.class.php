@@ -247,9 +247,13 @@ EOF;
     }    
 
     // FIXME: this should be configured somewhere!
-    $tokens['SIFT_CHANNEL'] = 'pear.lab';
+    $tokens['SIFT_CHANNEL'] = $this->environment->get('pear-channel', 'pear.lab');
     
-    $finder = sfFinder::type('any')->maxdepth(0)->prune('test')->discard('test', 'package.xml.tmpl');
+    $finder = sfFinder::type('any')->maxdepth(0)
+                ->prune('test')->discard('test', 'package.xml.tmpl')
+                ->prune('nbproject')->discard('nbproject')
+                ->prune('.gitignore')->discard('.gitignore');
+
     $tokens['CONTENTS'] = $this->buildContents($this->pluginDir, $finder);
 
     $this->getFilesystem()->copy($templatePath, $this->pluginDir.'/package.xml');
