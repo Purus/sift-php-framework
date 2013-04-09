@@ -39,16 +39,26 @@
   width: 90%;
   overflow: hidden;
   text-overflow: ellipsis;
+  font-weight: bold;
 }
+
 .ui-dialog .ui-dialog-titlebar-close {
   position: absolute;
   right: .3em;
   top: 50%;
   width: 21px;
   margin: -10px 0 0 0;
-  padding: 1px;
-  height: 20px;
+  .ui-button();
+  padding: 1px !important;
+  height: auto;
+
+  &:after {
+    // icon-remove
+    content: "\f00d";
+    font-family: FontAwesome;
+  }
 }
+
 .ui-dialog .ui-dialog-content {
   position: relative;
   border: 0;
@@ -63,13 +73,47 @@
   margin-top: .5em;
   padding: .3em 1em .5em .4em;
 }
+
 .ui-dialog .ui-dialog-buttonpane .ui-dialog-buttonset {
   float: right;
 }
+
+
 .ui-dialog .ui-dialog-buttonpane button {
   margin: .5em .4em .5em 0;
   cursor: pointer;
+  .ui-button();
+
+  &.btn {
+    // reset here as of 2.0.3 due to Recess property order
+    border-color: #c5c5c5;
+    border-color: rgba(0,0,0,.15) rgba(0,0,0,.15) rgba(0,0,0,.25);
+  }
+  &.btn-primary {
+    .buttonBackground(@btnPrimaryBackground, @btnPrimaryBackgroundHighlight);
+  }
+  // Warning appears are orange
+  &.btn-warning {
+    .buttonBackground(@btnWarningBackground, @btnWarningBackgroundHighlight);
+  }
+  // Danger and error appear as red
+  &.btn-danger {
+    .buttonBackground(@btnDangerBackground, @btnDangerBackgroundHighlight);
+  }
+  // Success appears as green
+  &.btn-success {
+    .buttonBackground(@btnSuccessBackground, @btnSuccessBackgroundHighlight);
+  }
+  // Info appears as a neutral blue
+  &.btn-info {
+    .buttonBackground(@btnInfoBackground, @btnInfoBackgroundHighlight);
+  }
+  // Inverse appears as dark gray
+  &.btn-inverse {
+    .buttonBackground(@btnInverseBackground, @btnInverseBackgroundHighlight);
+  }
 }
+
 .ui-dialog .ui-resizable-se {
   width: 12px;
   height: 12px;
@@ -77,6 +121,7 @@
   bottom: -5px;
   background-position: 16px 16px;
 }
+
 .ui-draggable .ui-dialog-titlebar {
   cursor: move;
 }
