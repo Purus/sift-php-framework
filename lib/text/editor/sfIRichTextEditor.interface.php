@@ -10,7 +10,7 @@
  * sfIRichTextEditor is an interface for rich editors
  *
  * @package    Sift
- * @subpackage helper
+ * @subpackage text_editor
  */
 interface sfIRichTextEditor {
 

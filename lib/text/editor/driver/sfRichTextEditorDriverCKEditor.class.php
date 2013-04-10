@@ -10,7 +10,7 @@
  * Rich editor for CKEditor.
  *
  * @package    Sift
- * @subpackage helper
+ * @subpackage text_editor
  * @see        http://ckeditor.com/
  */
 class sfRichTextEditorDriverCKEditor extends sfRichTextEditor

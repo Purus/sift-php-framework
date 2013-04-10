@@ -505,35 +505,16 @@ function textarea_tag($name, $content = null, $options = array())
   {
     if(true === $rich)
     {
-      $rich = sfConfig::get('sf_rich_text_editor_class', 'TinyMCE');
+      $driver = sfConfig::get('sf_rich_text_editor_class', 'CKEditor');
     }
-
-    // switch for backward compatibility
-    switch($rich)
+    else
     {
-      case 'tinymce':
-        $rich = 'TinyMCE';
-        break;
-      case 'fck':
-        $rich = 'FCK';
-        break;
+      $driver = $rich;
     }
 
-    $editorClass = 'sfRichTextEditor' . $rich;
-
-    if(!class_exists($editorClass))
-    {
-      throw new sfConfigurationException(sprintf('The rich text editor "%s" does not exist.', $editorClass));
-    }
-
-    $sfEditor = new $editorClass();
-    if(!in_array('sfRichTextEditor', class_parents($sfEditor)))
-    {
-      throw new sfConfigurationException(sprintf('The editor "%s" must extend sfRichTextEditor.', $editorClass));
-    }
-    $sfEditor->initialize($name, $content, $options);
-
-    return $sfEditor->toHTML();
+    // FIXME: add support for driver options
+    $sfEditor = sfRichTextEditor::factory($driver);
+    return $sfEditor->toHTML($name, $content, $options);
   }
 
   return content_tag('textarea', escape_once((is_object($content)) ? $content->__toString() : $content), array_merge(array('name' => $name, 'id' => get_id_from_name(_get_option($options, 'id', $name), null)), _convert_options($options)));

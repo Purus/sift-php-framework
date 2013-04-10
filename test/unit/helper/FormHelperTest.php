@@ -31,11 +31,11 @@ class myRequest
   {
     return false;
   }
-  
+
   public function getHost()
   {
     return false;
-  }  
+  }
 }
 
 class myResponse
@@ -211,11 +211,15 @@ $t->is(textarea_tag('name', null, array('size' => '5x20')), '<textarea name="nam
 
 require_once(sfConfig::get('sf_sift_lib_dir').'/text/editor/sfRichTextEditor.class.php');
 
-class sfRichTextEditorSample extends sfRichTextEditor
+class sfRichTextEditorDriverSample extends sfRichTextEditor
 {
-  public function toHTML()
+  public function toHTML($name, $content, $options = array())
   {
     return 'fake editor';
+  }
+
+  public function loadOptions()
+  {
   }
 }
 
@@ -223,17 +227,18 @@ $t->like(textarea_tag('name', 'content', array('rich' => 'Sample')), '/fake edit
 sfConfig::set('sf_rich_text_editor_class', 'Sample');
 $t->like(textarea_tag('name', 'content', array('rich' => true)), '/fake editor/', 'textarea_tag() can be configured to change the default editor by configuration');
 
-class sfRichTextEditorSampleBis
+class sfRichTextEditorDriverSampleBis
 {
 }
+
 try
 {
   textarea_tag('name', 'content', array('rich' => 'SampleBis'));
-  $t->fail('textarea_tag() custom editor must extends sfRichTextEditor');
+  $t->fail('textarea_tag() custom editor must implement sfIRichTextEditor');
 }
-catch (sfConfigurationException $e)
+catch (LogicException $e)
 {
-  $t->pass('textarea_tag() custom editor must extends sfRichTextEditor');
+  $t->pass('textarea_tag() custom editor must implement sfIRichTextEditor');
 }
 
 // checkbox_tag()

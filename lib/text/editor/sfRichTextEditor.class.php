@@ -10,7 +10,7 @@
  * sfRichTextEditor is an abstract class for rich text editor classes.
  *
  * @package    Sift
- * @subpackage helper
+ * @subpackage text_editor
  */
 abstract class sfRichTextEditor extends sfConfigurable implements sfIRichTextEditor
 {
@@ -43,7 +43,7 @@ abstract class sfRichTextEditor extends sfConfigurable implements sfIRichTextEdi
       }
       return $driverObj;
     }
-    throw new InvalidArgumentException(sprintf('Invalid antivir driver "%s".', $driver));
+    throw new InvalidArgumentException(sprintf('Invalid rich editor driver "%s".', $driver));
   }
 
   /**
