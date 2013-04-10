@@ -46,20 +46,52 @@ class sfWebDebugPanelUser extends sfWebDebugPanel {
   public function getPanelContent()
   {
     $user = sfContext::getInstance()->getUser();
-    if($user->isAuthenticated())
-    {
-      $html = array();
+    $html = array();
 
-      foreach($user->getCredentials() as $credential)
+    $html[] = '<tr><td><h2>Credentials:</h2></td></tr>';
+
+    $credentials = $user->getCredentials();
+    if(count($credentials))
+    {
+      foreach($credentials as $credential)
       {
         $html[] = sprintf('<tr><td>%s</td></tr>', $credential);
       }
-
-      return sprintf('<h2>Credentials</h2><table>
-        <thead><tr><td>Credential</td></tr></thead>
-          <tbody>%s</tbody>
-        </table>', join("\n", $html));
     }
+    else
+    {
+      $html[] = '<tr><td>No credentials</td></tr>';
+    }
+
+    $html[] = '<tr><td><h2>Attributes:</h2>';
+
+    $attributes = sfDebug::flattenParameterHolder($user->getAttributeHolder());
+
+    foreach($attributes as $name => $attributes)
+    {
+      if(!count($attributes))
+      {
+        continue;
+      }
+
+      $html[] = sprintf('<h3>%s:</h3>', $name);
+      if(is_array($attributes))
+      {
+        $html[] = '<ul>';
+        foreach($attributes as $attributeName => $attribute)
+        {
+          $html[] = sprintf('<li>%s: %s</li>', $attributeName, is_array($attribute) ? var_export($attribute, true) : $attribute);
+        }
+        $html[] = '</ul>';
+      }
+      else
+      {
+        $html[] = $attributes;
+      }
+    }
+
+    $html[] = sprintf('</td></tr>');
+    return sprintf('<table><tbody>%s</tbody></table>', join("\n", $html));
   }
 
 }
