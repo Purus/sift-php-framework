@@ -11,7 +11,6 @@
  *
  * @package    Sift
  * @subpackage plugin
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  */
 class sfPluginRecursiveDependencyException extends sfPluginException
 {

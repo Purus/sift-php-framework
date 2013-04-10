@@ -6,7 +6,8 @@
  * file that was distributed with this source code.
  */
 
-require_once 'PEAR/Downloader.php';
+// load PEAR
+require_once dirname(__FILE__) . '/PEAR_bootstrap.php';
 
 /**
  * sfPearDownloader downloads files from the Internet.

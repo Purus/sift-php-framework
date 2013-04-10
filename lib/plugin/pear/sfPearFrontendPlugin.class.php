@@ -6,8 +6,8 @@
  * file that was distributed with this source code.
  */
 
-require_once 'PEAR/Frontend.php';
-require_once 'PEAR/Frontend/CLI.php';
+// load PEAR
+require_once dirname(__FILE__) . '/PEAR_bootstrap.php';
 
 /**
  * The PEAR Frontend object.
@@ -30,7 +30,7 @@ class sfPearFrontendPlugin extends PEAR_Frontend_CLI {
   {
     $this->dispatcher = $dispatcher;
   }
-  
+
   public function setLogger(sfLogger $logger)
   {
     $this->logger = $logger;
@@ -46,7 +46,7 @@ class sfPearFrontendPlugin extends PEAR_Frontend_CLI {
     if($this->logger)
     {
       $this->logger->log($this->splitLongLine($text));
-    }    
+    }
     // $this->dispatcher->notify(new sfEvent($this, 'application.log', $this->splitLongLine($text)));
   }
 

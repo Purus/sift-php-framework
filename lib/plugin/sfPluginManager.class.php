@@ -85,7 +85,8 @@ class sfPluginManager extends sfPearPluginManager {
   }
 
   /**
-   * Registers the symfony package for the current version.
+   * Registers the Sift package for the current version.
+   *
    */
   protected function registerSift()
   {

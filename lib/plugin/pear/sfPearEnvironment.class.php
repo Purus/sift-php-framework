@@ -6,17 +6,8 @@
  * file that was distributed with this source code.
  */
 
-// remove PEAR deprecated notices
-error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING ^ E_DEPRECATED ^ E_STRICT);
-date_default_timezone_set('UTC');
-
-require_once 'PEAR.php';
-require_once 'PEAR/Config.php';
-require_once 'PEAR/Registry.php';
-require_once 'PEAR/Command.php';
-require_once 'PEAR/PackageFile/v2/rw.php';
-require_once 'PEAR/Dependency2.php';
-require_once 'PEAR/Installer.php';
+// load PEAR
+require_once dirname(__FILE__) . '/PEAR_bootstrap.php';
 
 /**
  * sfPearEnvironment represents a PEAR environment.

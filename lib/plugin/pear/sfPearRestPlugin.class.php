@@ -82,7 +82,7 @@ class sfPearRestPlugin extends sfPearRest11
 
     if (PEAR::isError($info))
     {
-      throw new sfPluginRestException(sprintf('Unable to get plugin licence information for plugin "%s": %s', $plugin, $info->getMessage())); 
+      throw new sfPluginRestException(sprintf('Unable to get plugin licence information for plugin "%s": %s', $plugin, $info->getMessage()));
     }
 
     if (null === $info)

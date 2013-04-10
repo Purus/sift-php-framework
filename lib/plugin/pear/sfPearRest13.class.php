@@ -6,7 +6,8 @@
  * file that was distributed with this source code.
  */
 
-require_once 'PEAR/REST/13.php';
+// load PEAR
+require_once dirname(__FILE__) . '/PEAR_bootstrap.php';
 
 /**
  * sfPearRest10 interacts with a PEAR channel that supports REST 1.1.
