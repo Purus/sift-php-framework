@@ -234,9 +234,9 @@ class sfFormJavascriptValidation {
       $options['unhighlight'] = self::getUnhighlightExpression();
     }
 
-    if(!isset($options['submit_handler']))
+    if(!isset($options['submit_handler']) && ($submitHandler = self::getSubmitHandlerExpression()))
     {
-      $options['submit_handler'] = self::getSubmitHandlerExpression();
+      $options['submit_handler'] = $submitHandler;
     }
 
     $formId = $options['id'];
@@ -664,8 +664,7 @@ error.css({
    */
   public static function getSubmitHandlerExpression()
   {
-    $handler = 'form.submit();';
-    $expression = new sfJsonExpression($handler);
+    $expression = '';    
     return sfCore::filterByEventListeners($expression, 'form.javascript.validation.expression.submit_handler');
   }
 
