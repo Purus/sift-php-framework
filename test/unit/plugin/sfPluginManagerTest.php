@@ -7,7 +7,7 @@ $t = new lime_test(40);
 @include_once('PEAR.php');
 if (!class_exists('PEAR'))
 {
-  $t->skip('PEAR must be installed', 40); 
+  $t->skip('PEAR must be installed', 40);
   return;
 }
 
@@ -27,7 +27,7 @@ $options = array(
   'cache_dir'             => $temp.'/cache',
   'preferred_state'       => 'stable',
   'rest_base_class'       => 'sfPearRestTest',
-  'downloader_base_class' => 'sfPearDownloaderTest',
+  'downloader_base_class' => 'sfPearDownloaderTest'
 );
 
 $dispatcher = new sfEventDispatcher();
@@ -63,10 +63,10 @@ class myPluginManager extends sfPluginManager
     $mainPackage->setLicense('MIT License');
     $mainPackage->clearContents();
     $mainPackage->resetFilelist();
-    $mainPackage->addMaintainer('lead', 'fabpot', 'Fabien Potencier', 'fabien.potencier@symfony-project.com');
+    $mainPackage->addMaintainer('lead', 'jesus', 'Jesus Christ', 'kingofkings@heavenlykingdom.eternity');
     $mainPackage->setNotes('-');
     $mainPackage->setPearinstallerDep('1.4.3');
-    $mainPackage->setPhpDep('5.1.0');
+    $mainPackage->setPhpDep('5.2.4');
 
     $this->environment->getRegistry()->deletePackage('sfMainPackage', 'pear.example.com');
     if (!$this->environment->getRegistry()->addPackage2($mainPackage))
@@ -91,7 +91,8 @@ $t->diag('->initialize()');
 $environment = new sfPearEnvironment($dispatcher, $options);
 $pluginManager = new myPluginManager($dispatcher, $environment, $logger, array(
     'web_dir' => '',
-    'sift_pear_channel' => ''
+    'sift_pear_channel' => 'pear.lab',
+    'sift_version' => sfCore::VERSION
 ));
 
 $t->is($pluginManager->getEnvironment(), $environment, '->initialize() takes a sfPearEnvironment as its second argument');
@@ -205,9 +206,9 @@ catch (sfPluginDependencyException $e)
 }
 
 $t->diag('install a plugin with a dependency and force installation of all dependencies');
-$pluginManager->installPlugin('sfFooPlugin', array('install_deps' => true));
-$t->is(file_get_contents($temp.'/plugins/sfFooPlugin/VERSION'), '1.0.0', '->installPlugin() can take a install_deps option');
-$t->is(file_get_contents($temp.'/plugins/sfTestPlugin/VERSION'), '1.1.3', '->installPlugin() can take a install_deps option');
+$pluginManager->installPlugin('sfFooPlugin', array('install-deps' => true));
+$t->is(file_get_contents($temp.'/plugins/sfFooPlugin/VERSION'), '1.0.0', '->installPlugin() can take a install-deps option');
+$t->is(file_get_contents($temp.'/plugins/sfTestPlugin/VERSION'), '1.1.3', '->installPlugin() can take a install-deps option');
 $pluginManager->uninstallPlugin('sfFooPlugin');
 $pluginManager->uninstallPlugin('sfTestPlugin');
 
@@ -252,7 +253,7 @@ $t->diag('install a plugin with a dependency which is installed with a too old v
 $pluginManager->setMainPackageVersion('1.0.0');
 $pluginManager->installPlugin('sfTestPlugin', array('version' => '1.0.4'));
 $pluginManager->setMainPackageVersion('1.1.0');
-$pluginManager->installPlugin('sfFooPlugin', array('install_deps' => true));
+$pluginManager->installPlugin('sfFooPlugin', array('install-deps' => true));
 $t->is(file_get_contents($temp.'/plugins/sfFooPlugin/VERSION'), '1.0.0', '->installPlugin() installs a plugin if all dependencies are installed');
 $pluginManager->uninstallPlugin('sfFooPlugin');
 $pluginManager->uninstallPlugin('sfTestPlugin');

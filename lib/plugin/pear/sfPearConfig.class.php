@@ -7,7 +7,7 @@
  */
 
 // load PEAR
-require_once 'PEAR/Config.php';
+require_once dirname(__FILE__) . '/PEAR_bootstrap.php';
 
 /**
  * sfPearConfig.

@@ -6,7 +6,8 @@
  * file that was distributed with this source code.
  */
 
-require_once 'PEAR/REST.php';
+// load PEAR
+require_once dirname(__FILE__) . '/PEAR_bootstrap.php';
 
 /**
  * sfPearRest interacts with a PEAR channel.
@@ -19,11 +20,11 @@ class sfPearRest extends PEAR_REST {
   /**
    * @see PEAR_REST::downloadHttp()
    */
-  public function downloadHttp($url, $lastmodified = null, $accept = false)
+  public function downloadHttp($url, $lastmodified = null, $accept = false, $channel = false)
   {
     return parent::downloadHttp($url, $lastmodified, array_merge(
-            false !== $accept ? $accept : array(), 
-            array(/*"\r\nX-SIFT-VERSION: " . SIFT_VERSION*/)));
+            false !== $accept ? $accept : array(),
+            array(/*"\r\nX-SIFT-VERSION: " . SIFT_VERSION*/)), $channel);
   }
 
 }

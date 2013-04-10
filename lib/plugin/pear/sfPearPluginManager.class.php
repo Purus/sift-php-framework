@@ -26,7 +26,7 @@ class sfPearPluginManager extends sfConfigurable {
    */
   protected $defaultOptions = array(
     // Options for PEAR_Installer class.
-    // 
+    //
     // * - installroot   : optional prefix directory for installation
     // * - force         : force installation
     // * - register-only : update registry but don't install files
@@ -34,12 +34,12 @@ class sfPearPluginManager extends sfConfigurable {
     // * - soft          : fail silently
     // * - nodeps        : ignore dependency conflicts/missing dependencies
     // * - alldeps       : install all dependencies
-    // * - onlyreqdeps   : install only required dependencies      
+    // * - onlyreqdeps   : install only required dependencies
     'pear_installer_options' => array(
         'upgrade' => true
     )
   );
-  
+
   /**
    * Constructs a new sfPluginManager.
    *
@@ -112,10 +112,10 @@ class sfPearPluginManager extends sfConfigurable {
 
     return $installed;
   }
-  
+
   /**
    * Is given plugin installed?
-   * 
+   *
    * @param string $plugin Plugin name
    * @param string $channel Channel name
    * @return boolean
@@ -126,16 +126,16 @@ class sfPearPluginManager extends sfConfigurable {
     {
       $channel = $this->environment->getConfig()->get('default_channel');
     }
-    
+
     $installedPlugins = $this->getInstalledPlugins();
     foreach($installedPlugins as $installed)
     {
-      if($installed->getPackage() == $plugin 
+      if($installed->getPackage() == $plugin
               && $installed->getChannel() == $channel)
       {
         return true;
-      }      
-    }    
+      }
+    }
     return false;
   }
 
@@ -165,19 +165,19 @@ class sfPearPluginManager extends sfConfigurable {
 
   /**
    * Upgrades a plugin.
-   * 
+   *
    * @param string $plugin
    * @param array $options
    * @return Boolean|string true if the plugin is already installed, the name of the installed plugin otherwise
    */
   public function upgradePlugin($plugin, $options = array())
   {
-    return $this->installPlugin($plugin, $options, true);    
+    return $this->installPlugin($plugin, $options, true);
   }
 
   /**
    * Packages a plugin
-   * 
+   *
    * @param string $pluginPackageXml Path to package.xml file
    * @param array $options
    * @throws sfException
@@ -195,7 +195,7 @@ class sfPearPluginManager extends sfConfigurable {
 
     $package = $packager->package($pluginPackageXml, !$options['nocompress']);
 
-    if(PEAR::isError($package))
+    if(@PEAR::isError($package))
     {
       throw new sfException($package->getMessage());
     }
@@ -274,7 +274,7 @@ class sfPearPluginManager extends sfConfigurable {
 
       // convert the plugin package into a discrete download URL
       $download = $this->environment->getRest()->getPluginDownloadURL($plugin, $version, $stability);
-      if(PEAR::isError($download))
+      if(@PEAR::isError($download))
       {
         throw new sfPluginException(sprintf('Problem downloading the plugin "%s": %s', $plugin, $download->getMessage()));
       }
@@ -289,14 +289,14 @@ class sfPearPluginManager extends sfConfigurable {
     if($isPackage)
     {
       $this->checkPluginDependencies($plugin, $version, array(
-          'install_deps' => isset($options['install_deps']) ? (bool) $options['install_deps'] : false,
+          'install-deps' => isset($options['install-deps']) ? (bool) $options['install-deps'] : false,
           'stability' => $stability,
       ));
     }
 
     // download the actual URL to the plugin
     $downloaded = $downloader->download(array($download));
-    if(PEAR::isError($downloaded))
+    if(@PEAR::isError($downloaded))
     {
       throw new sfPluginException(sprintf('Problem when downloading "%s": %s', $download, $downloaded->getMessage()));
     }
@@ -319,7 +319,7 @@ class sfPearPluginManager extends sfConfigurable {
     $pluginPackage = $downloaded[0];
 
     $installer = new PEAR_Installer($this);
-    
+
     // * - installroot   : optional prefix directory for installation
     // * - force         : force installation
     // * - register-only : update registry but don't install files
@@ -330,12 +330,12 @@ class sfPearPluginManager extends sfConfigurable {
     // * - onlyreqdeps   : install only required dependencies
 
     $installer->setOptions(array('upgrade' => true, 'force' => $force));
-    
+
     $packages = array($pluginPackage);
     $installer->sortPackagesForInstall($packages);
     PEAR::staticPushErrorHandling(PEAR_ERROR_RETURN);
     $err = $installer->setDownloadedPackages($packages);
-    if(PEAR::isError($err))
+    if(@PEAR::isError($err))
     {
       PEAR::staticPopErrorHandling();
       throw new sfPluginException($err->getMessage());
@@ -343,14 +343,14 @@ class sfPearPluginManager extends sfConfigurable {
 
     $info = $installer->install($pluginPackage, array('upgrade' => true));
     PEAR::staticPopErrorHandling();
-    
-    if(PEAR::isError($info) || !is_array($info))
+
+    if(@PEAR::isError($info) || !is_array($info))
     {
       $this->dispatcher->notify(new sfEvent('plugin.post_install.failure', array(
           'channel' => $channel,
           'manager' => $this,
-          'plugin' => $pluginPackage->getPackage())));      
-      
+          'plugin' => $pluginPackage->getPackage())));
+
       throw new sfPluginException(sprintf('Installation of "%s" plugin failed: %s', $plugin, $info->getMessage()));
     }
 
@@ -364,7 +364,7 @@ class sfPearPluginManager extends sfConfigurable {
     unset($this->installing[$channel . '/' . $plugin]);
 
     return $pluginPackage->getPackage();
-    
+
   }
 
   /**
@@ -398,12 +398,12 @@ class sfPearPluginManager extends sfConfigurable {
     $package = $this->environment->getRegistry()->parsePackageName($plugin, $channel);
 
     $installer = new PEAR_Installer($this);
-    
+
     $packages = array($this->environment->getRegistry()->getPackage($plugin, $channel));
     $installer->setUninstallPackages($packages);
     $ret = $installer->uninstall($package);
 
-    if(PEAR::isError($ret))
+    if(@PEAR::isError($ret))
     {
       throw new sfPluginException(sprintf('Problem uninstalling plugin "%s": %s', $plugin, $ret->getMessage()));
     }
@@ -438,7 +438,7 @@ class sfPearPluginManager extends sfConfigurable {
    * Available options:
    *
    *  * stability:    The stability preference
-   *  * install_deps: Whether to automatically install dependencies (default to false)
+   *  * install-deps: Whether to automatically install dependencies (default to false)
    *
    * @param string $plugin  The plugin name
    * @param string $version The plugin version
@@ -607,10 +607,10 @@ class sfPearPluginManager extends sfConfigurable {
   {
     $dependencyChecker = new PEAR_Dependency2($this->environment->getConfig(), array(), array('package' => '', 'channel' => ''));
 
-    PEAR::staticPushErrorHandling(PEAR_ERROR_RETURN);
+    @PEAR::staticPushErrorHandling(PEAR_ERROR_RETURN);
     $e = $dependencyChecker->validatePackageDependency($dependency, true, array());
-    PEAR::staticPopErrorHandling();
-    if(PEAR::isError($e))
+    @PEAR::staticPopErrorHandling();
+    if(@PEAR::isError($e))
     {
       return false;
     }
