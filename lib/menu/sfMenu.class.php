@@ -914,7 +914,11 @@ class sfMenu extends sfConfigurable implements ArrayAccess, Countable, IteratorA
    * Sorts children items by priority. If two items have the same priority
    * they will be sorted by name.
    *
+   * WARNING! This reorders the items, but methods like isLast() does not work!
+   * Workaround is needed!
+   *
    * @return sfMenu
+   * @todo Find a workaround for a bug with invalid $this->isLast() $this->isFirst() calls after reordering. See above notice.
    */
   public function sortByPriority($culture = null)
   {
