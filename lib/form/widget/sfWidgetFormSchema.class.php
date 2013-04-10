@@ -413,8 +413,6 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess
       {
         throw new InvalidArgumentException(sprintf('Unable to set the help on an unexistant widget ("%s").', $name));
       }
-
-      var_dump($value);
       $this->fields[$name]->setHelp($value);
     }
     else

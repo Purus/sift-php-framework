@@ -129,7 +129,6 @@ EOF
       }
       else
       {
-        var_dump($result);
         $this->logSection($this->getFullName(), 'Error prefetching app.', null, 'ERROR');
       }
     }
