@@ -1,7 +1,7 @@
 <?php
 
 /**
- * lessphp v0.3.8
+ * lessphp v0.3.9
  * http://leafo.net/lessphp
  *
  * LESS css compiler, adapted from http://lesscss.org
@@ -38,7 +38,7 @@
  * handling things like indentation.
  */
 class lessc {
-	static public $VERSION = "v0.3.8";
+	static public $VERSION = "v0.3.9";
 	static protected $TRUE = array("keyword", "true");
 	static protected $FALSE = array("keyword", "false");
 
@@ -1127,7 +1127,7 @@ class lessc {
 	 * Expects H to be in range of 0 to 360, S and L in 0 to 100
 	 */
 	protected function toRGB($color) {
-		if ($color == 'color') return $color;
+		if ($color[0] == 'color') return $color;
 
 		$H = $color[1] / 360;
 		$S = $color[2] / 100;
@@ -2065,7 +2065,7 @@ class lessc_parser {
 	static protected $supressDivisionProps =
 		array('/border-radius$/i', '/^font$/i');
 
-	protected $blockDirectives = array("font-face", "keyframes", "page", "-moz-document");
+	protected $blockDirectives = array("font-face", "keyframes", "page", "-moz-document", "viewport", "-moz-viewport", "-o-viewport", "-ms-viewport");
 	protected $lineDirectives = array("charset");
 
 	/**
@@ -2653,7 +2653,6 @@ class lessc_parser {
 			}
 
 			if (!empty($rejectStrs) && in_array($tok, $rejectStrs)) {
-				$ount = null;
 				break;
 			}
 
@@ -3062,7 +3061,7 @@ class lessc_parser {
 	protected function end() {
 		if ($this->literal(';')) {
 			return true;
-		} elseif ($this->count == strlen($this->buffer) || $this->buffer{$this->count} == '}') {
+		} elseif ($this->count == strlen($this->buffer) || $this->buffer[$this->count] == '}') {
 			// if there is end of file or a closing block next then we don't need a ;
 			return true;
 		}
