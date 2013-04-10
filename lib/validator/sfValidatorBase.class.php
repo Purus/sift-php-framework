@@ -562,7 +562,7 @@ abstract class sfValidatorBase
    * @param string $message
    * @param string $priority 
    */
-  protected function log($message, $priority = SF_LOG_INFO)
+  protected function log($message, $priority = sfLogger::INFO)
   {
     if(class_exists('sfConfig') && sfConfig::get('sf_logging_enabled') 
       && sfContext::hasInstance())

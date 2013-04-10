@@ -11,7 +11,6 @@
  *
  * @package    Sift
  * @subpackage log
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  */
 class sfNoLogger implements sfILogger
 {
@@ -31,7 +30,7 @@ class sfNoLogger implements sfILogger
    * @param string Message priority
    * @param string Message priority name
    */
-  public function log($message, $priority = SF_LOG_INFO)
+  public function log($message, $priority = sfLogger::INFO)
   {
   }
 
@@ -41,5 +40,5 @@ class sfNoLogger implements sfILogger
   public function shutdown()
   {
   }
-  
+
 }

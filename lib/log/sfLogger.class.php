@@ -6,76 +6,107 @@
  * file that was distributed with this source code.
  */
 
-define('SF_LOG_EMERG', 0); // System is unusable
-define('SF_LOG_ALERT', 1); // Immediate action required
-define('SF_LOG_CRIT', 2); // Critical conditions
-define('SF_LOG_ERR', 3); // Error conditions
-define('SF_LOG_WARNING', 4); // Warning conditions
-define('SF_LOG_NOTICE', 5); // Normal but significant
-define('SF_LOG_INFO', 6); // Informational
-define('SF_LOG_DEBUG', 7); // Debug-level messages
-
 /**
  * sfLogger manages all logging in Sift projects.
  *
- * sfLogger can be configuration via the logging.yml configuration file.
+ * sfLogger can be configured via the logging.yml configuration file.
  * Loggers can also be registered directly in the logging.yml configuration file.
  *
- * This level list is ordered by highest priority (SF_LOG_EMERG) to lowest priority (SF_LOG_DEBUG):
- * - EMERG:   System is unusable
- * - ALERT:   Immediate action required
- * - CRIT:    Critical conditions
- * - ERR:     Error conditions
- * - WARNING: Warning conditions
- * - NOTICE:  Normal but significant
- * - INFO:    Informational
- * - DEBUG:   Debug-level messages
+ * This level list is ordered by highest priority (sfLogger::EMERG) to lowest priority (sfLogger::DEBUG):
+ *
+ * - sfLogger::EMERG:   System is unusable
+ * - sfLogger::ALERT:   Immediate action required
+ * - sfLogger::CRIT:    Critical conditions
+ * - sfLogger::ERR:     Error conditions
+ * - sfLogger::WARNING: Warning conditions
+ * - sfLogger::NOTICE:  Normal but significant
+ * - sfLogger::INFO:    Informational
+ * - sfLogger::DEBUG:   Debug-level messages
  *
  * @package    Sift
  * @subpackage log
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  */
 class sfLogger extends sfConfigurable implements sfILogger {
 
   /**
+   * System is unusable
+   */
+  const EMERG = 0;
+
+  /**
+   * Immediate action required
+   */
+  const ALERT = 1;
+
+  /**
+   * Critical conditions
+   */
+  const CRIT = 2;
+
+  /**
+   * Error conditions
+   */
+  const ERR = 3;
+
+  /**
+   * Warning conditions
+   */
+  const WARNING = 4;
+
+  /**
+   * Normal but significant
+   */
+  const NOTICE = 5;
+
+  /**
+   * Informational
+   */
+  const INFO = 6;
+
+  /**
+   * Debug-level messages
+   */
+  const DEBUG = 7;
+
+  /**
    * Array of loggers
-   * 
-   * @var array 
+   *
+   * @var array
    */
   protected $loggers = array();
-  
+
   /**
    * Default level
-   * 
+   *
    */
-  protected $level = SF_LOG_EMERG;
-  
+  protected $level = self::EMERG;
+
   /**
    * Log level map
-   * 
-   * @var array 
+   *
+   * @var array
    */
   protected $levels = array(
-    SF_LOG_EMERG => 'emerg',
-    SF_LOG_ALERT => 'alert',
-    SF_LOG_CRIT => 'crit',
-    SF_LOG_ERR => 'err',
-    SF_LOG_WARNING => 'warning',
-    SF_LOG_NOTICE => 'notice',
-    SF_LOG_INFO => 'info',
-    SF_LOG_DEBUG => 'debug',
+    self::EMERG => 'emerg',
+    self::ALERT => 'alert',
+    self::CRIT => 'crit',
+    self::ERR => 'err',
+    self::WARNING => 'warning',
+    self::NOTICE => 'notice',
+    self::INFO => 'info',
+    self::DEBUG => 'debug',
   );
-  
+
   /**
    * Instance holder
-   * 
-   * @var sfLogger 
+   *
+   * @var sfLogger
    */
   protected static $logger = null;
 
   /**
    * Constructs the object
-   * 
+   *
    * @param array $options
    */
   public function __construct($options = array())
@@ -103,7 +134,7 @@ class sfLogger extends sfConfigurable implements sfILogger {
 
   /**
    * Initializes the logger.
-   * 
+   *
    * @param array $options
    */
   public function initialize($options = array())
@@ -157,7 +188,7 @@ class sfLogger extends sfConfigurable implements sfILogger {
    * @param string Message
    * @param string Message priority
    */
-  public function log($message, $priority = SF_LOG_INFO)
+  public function log($message, $priority = self::INFO)
   {
     if($this->getLogLevel() < $priority)
     {
@@ -177,7 +208,7 @@ class sfLogger extends sfConfigurable implements sfILogger {
    */
   public function emerg($message)
   {
-    $this->log($message, SF_LOG_EMERG);
+    $this->log($message, self::EMERG);
   }
 
   /**
@@ -187,7 +218,7 @@ class sfLogger extends sfConfigurable implements sfILogger {
    */
   public function alert($message)
   {
-    $this->log($message, SF_LOG_ALERT);
+    $this->log($message, self::ALERT);
   }
 
   /**
@@ -197,7 +228,7 @@ class sfLogger extends sfConfigurable implements sfILogger {
    */
   public function crit($message)
   {
-    $this->log($message, SF_LOG_CRIT);
+    $this->log($message, self::CRIT);
   }
 
   /**
@@ -207,7 +238,7 @@ class sfLogger extends sfConfigurable implements sfILogger {
    */
   public function err($message)
   {
-    $this->log($message, SF_LOG_ERR);
+    $this->log($message, self::ERR);
   }
 
   /**
@@ -217,7 +248,7 @@ class sfLogger extends sfConfigurable implements sfILogger {
    */
   public function warning($message)
   {
-    $this->log($message, SF_LOG_WARNING);
+    $this->log($message, self::WARNING);
   }
 
   /**
@@ -227,7 +258,7 @@ class sfLogger extends sfConfigurable implements sfILogger {
    */
   public function notice($message)
   {
-    $this->log($message, SF_LOG_NOTICE);
+    $this->log($message, self::NOTICE);
   }
 
   /**
@@ -237,7 +268,7 @@ class sfLogger extends sfConfigurable implements sfILogger {
    */
   public function info($message)
   {
-    $this->log($message, SF_LOG_INFO);
+    $this->log($message, self::INFO);
   }
 
   /**
@@ -247,7 +278,7 @@ class sfLogger extends sfConfigurable implements sfILogger {
    */
   public function debug($message)
   {
-    $this->log($message, SF_LOG_DEBUG);
+    $this->log($message, self::DEBUG);
   }
 
   /**
@@ -268,7 +299,7 @@ class sfLogger extends sfConfigurable implements sfILogger {
 
     return $this->levels[$priority];
   }
-  
+
   /**
    * Executes the shutdown procedure.
    *

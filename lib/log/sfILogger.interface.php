@@ -14,6 +14,6 @@
  */
 interface sfILogger {
 
-  public function log($message, $priority = SF_LOG_INFO);
+  public function log($message, $priority = sfLogger::INFO);
   
 }

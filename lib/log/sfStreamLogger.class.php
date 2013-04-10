@@ -62,7 +62,7 @@ class sfStreamLogger extends sfLogger
    * @param string $message   Message
    * @param string $priority  Message priority
    */
-  public function log($message, $priority = SF_LOG_INFO)
+  public function log($message, $priority = sfLogger::INFO)
   {
     fwrite($this->stream, $message.PHP_EOL);
     flush();

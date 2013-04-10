@@ -93,7 +93,7 @@ class sfEmailLogger extends sfLogger
    * @param string $message   Message
    * @param string $priority  Message priority
    */
-  public function log($message, $priority = SF_LOG_INFO)
+  public function log($message, $priority = sfLogger::INFO)
   {
     $this->log = true;
     $this->body .= strtr($this->getOption('format'), array(

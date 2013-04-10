@@ -77,7 +77,7 @@ class sfFileLogger extends sfLogger
    * @param string Message priority name
    * @param string Application name (default to Sift)
    */
-  public function log($message, $priority = SF_LOG_INFO)
+  public function log($message, $priority = sfLogger::INFO)
   {
     flock($this->fp, LOCK_EX);
     fwrite($this->fp, strtr($this->getOption('format'), array(

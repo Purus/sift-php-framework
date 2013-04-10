@@ -115,7 +115,7 @@ class sfI18nFilter extends sfFilter {
     }
   }
   
-  protected function log($message, $level = SF_LOG_DEBUG)
+  protected function log($message, $level = sfLogger::DEBUG)
   {
     if(sfConfig::get('sf_logging_enabled'))
     {

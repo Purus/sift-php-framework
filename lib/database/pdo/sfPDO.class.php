@@ -35,7 +35,7 @@ class sfPDO extends PDO {
     
     // enable logging only is logging enabled and is greater than "notice" (ie. debug, notice)
     $this->isLoggingEnabled = sfConfig::get('sf_logging_enabled') 
-            && constant('SF_LOG_'.strtoupper(sfConfig::get('sf_logging_level'))) >= SF_LOG_NOTICE;
+            && constant('sfLogger::'.strtoupper(sfConfig::get('sf_logging_level'))) >= sfLogger::NOTICE;
 
     $this->configureStatementClass(true);
     

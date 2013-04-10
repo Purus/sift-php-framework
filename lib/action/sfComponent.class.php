@@ -108,7 +108,7 @@ abstract class sfComponent {
   {
     if(sfConfig::get('sf_logging_enabled'))
     {
-      $this->context->getLogger()->log($message, constant('SF_LOG_' . strtoupper($priority)));
+      $this->context->getLogger()->log($message, constant('sfLogger::' . strtoupper($priority)));
     }
   }
 

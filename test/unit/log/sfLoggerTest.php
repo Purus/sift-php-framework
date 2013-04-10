@@ -9,7 +9,7 @@ class myLogger implements sfILogger
 {
   public $log = '';
 
-  public function log($message, $priority = SF_LOG_INFO)
+  public function log($message, $priority = sfLogger::INFO)
   {
     $this->log .= $message;
   }
@@ -40,14 +40,14 @@ $t->is($logger->getLoggers(), array(), '->initialize() initializes the logger an
 
 // ->setLogLevel() ->getLogLevel()
 $t->diag('->setLogLevel() ->getLogLevel()');
-$t->is($logger->getLogLevel(), SF_LOG_EMERG, '->getLogLevel() gets the current log level');
-$logger->setLogLevel(SF_LOG_WARNING);
-$t->is($logger->getLogLevel(), SF_LOG_WARNING, '->setLogLevel() sets the log level');
+$t->is($logger->getLogLevel(), sfLogger::EMERG, '->getLogLevel() gets the current log level');
+$logger->setLogLevel(sfLogger::WARNING);
+$t->is($logger->getLogLevel(), sfLogger::WARNING, '->setLogLevel() sets the log level');
 
 // ->log()
 $t->diag('->log()');
 $logger->initialize();
-$logger->setLogLevel(SF_LOG_DEBUG);
+$logger->setLogLevel(sfLogger::DEBUG);
 $logger->registerLogger($myLogger);
 $logger->registerLogger($myLogger);
 $logger->log('message');
@@ -57,11 +57,11 @@ $t->is($myLogger->log, 'messagemessage', '->log() calls all registered loggers')
 $t->diag('log levels');
 foreach (array('emerg', 'alert', 'crit', 'err', 'warning', 'notice', 'info', 'debug') as $level)
 {
-  $levelConstant = 'SF_LOG_'.strtoupper($level);
+  $levelConstant = 'sfLogger::'.strtoupper($level);
 
   foreach (array('emerg', 'alert', 'crit', 'err', 'warning', 'notice', 'info', 'debug') as $logLevel)
   {
-    $logLevelConstant = 'SF_LOG_'.strtoupper($logLevel);
+    $logLevelConstant = 'sfLogger::'.strtoupper($logLevel);
     $logger->setLogLevel(constant($logLevelConstant));
 
     $myLogger->log = '';
@@ -75,11 +75,11 @@ foreach (array('emerg', 'alert', 'crit', 'err', 'warning', 'notice', 'info', 'de
 $t->diag('log shortcuts');
 foreach (array('emerg', 'alert', 'crit', 'err', 'warning', 'notice', 'info', 'debug') as $level)
 {
-  $levelConstant = 'SF_LOG_'.strtoupper($level);
+  $levelConstant = 'sfLogger::'.strtoupper($level);
 
   foreach (array('emerg', 'alert', 'crit', 'err', 'warning', 'notice', 'info', 'debug') as $logLevel)
   {
-    $logger->setLogLevel(constant('SF_LOG_'.strtoupper($logLevel)));
+    $logger->setLogLevel(constant('sfLogger::'.strtoupper($logLevel)));
 
     $myLogger->log = '';
     $logger->log('foo', constant($levelConstant));
