@@ -30,7 +30,7 @@ class sfDebug {
 
     return $values;
   }
-  
+
   /**
    * Returns symfony information as an array.
    *
@@ -43,13 +43,13 @@ class sfDebug {
       'lib_dir' => sfConfig::get('sf_sift_lib_dir'),
       'data_dir' => sfConfig::get('sf_sift_data_dir'),
     );
-  }  
+  }
 
   /**
    * Shortens a file path by replacing symfony directory constants.
-   * 
+   *
    * @param  string $file
-   * 
+   *
    * @return string
    */
   public static function shortenFilePath($file)
@@ -64,7 +64,7 @@ class sfDebug {
     }
     return $file;
   }
-  
+
   /**
    * Returns PHP globals variables as a sorted array.
    *
@@ -183,7 +183,14 @@ class sfDebug {
   public static function flattenParameterHolder($parameterHolder, $removeObjects = false)
   {
     $values = array();
-    if ($parameterHolder instanceof sfNamespacedParameterHolder)
+    if ($parameterHolder instanceof sfFlatParameterHolder)
+    {
+      foreach ($parameterHolder->getAll() as $key => $value)
+      {
+        $values[$key] = $value;
+      }
+    }
+    else
     {
       foreach ($parameterHolder->getNamespaces() as $ns)
       {
@@ -193,13 +200,6 @@ class sfDebug {
           $values[$ns][$key] = $value;
         }
         ksort($values[$ns]);
-      }
-    }
-    else
-    {
-      foreach ($parameterHolder->getAll() as $key => $value)
-      {
-        $values[$key] = $value;
       }
     }
 
@@ -241,7 +241,7 @@ class sfDebug {
 
     return $nvalues;
   }
-  
+
   /**
    * Returns user parameters as an array.
    *
@@ -272,11 +272,11 @@ class sfDebug {
 
     return $data;
   }
-  
+
   /**
    * Dumps a variable in readable format
-   * 
-   * @param mixed $var 
+   *
+   * @param mixed $var
    * @param boolean $exit Exit after dumping the variable (default is false)
    * @param array $stack Custom backtrace stack
    * @link http://redotheoffice.com/?p=65
@@ -284,7 +284,7 @@ class sfDebug {
   public static function dump($var, $exit = false, $stack = null)
   {
     static $dumpCssIncluded;
-    
+
     $cli = PHP_SAPI == 'cli' ? true : false;
     $scope = false;
     $prefix = 'unique';
@@ -293,16 +293,16 @@ class sfDebug {
     if($scope)
     {
       $vals = $scope;
-    }      
+    }
     else
     {
       $vals = $GLOBALS;
     }
-    
+
     $old = $var;
     $var = $new = $prefix . rand() . $suffix;
     $vname = false;
-    
+
     foreach($vals as $key => $val)
     {
       if($val === $new)
@@ -310,11 +310,11 @@ class sfDebug {
         $vname = $key;
       }
     }
-        
+
     $var = $old;
 
     $stack = $stack == null ? debug_backtrace() : $stack;
-    
+
     $_caller = $stack[1];
     $fileinfo = $stack[0];
 
@@ -323,16 +323,16 @@ class sfDebug {
     {
       $caller = $_caller['class'].''.$_caller['type'];
     }
-    
+
     $code = explode("\n", preg_replace('/\r\n|\r/', "\n", file_get_contents($fileinfo['file'])));
 
     $linkFormat = sfConfig::get('sf_file_link_format', 'editor://open?file=%f&line=%l');
-    
+
     $output = strtr('<h2>Variable dump in <a href="%EDITOR_OPEN_LINK%">%CALLER%%%function%% on line %%line%%</a>: %%variable%%</h2>
     %DUMP%', array(
         '%EDITOR_OPEN_LINK%' => strtr($linkFormat, array('%f' => $fileinfo['file'], '%l' => $fileinfo['line'])),
         '%CALLER%' => self::getCallerInfo($stack),
-        '%%function%%' => $_caller['function'], 
+        '%%function%%' => $_caller['function'],
         '%%line%%' => $fileinfo['line'],
         '%%variable%%' => htmlspecialchars(preg_replace('/(.*?)dump\((.*?)\);(.*)/i', '$2', $code[$fileinfo['line'] - 1])),
         '%DUMP%' => self::doDump($var, $vname)
@@ -342,7 +342,7 @@ class sfDebug {
     {
       if(!$dumpCssIncluded)
       {
-        $output .= '<style type="text/css">';      
+        $output .= '<style type="text/css">';
         $output .= <<< CSS
   pre.sf-var-dump {
     margin: 0.7em;
@@ -353,14 +353,14 @@ class sfDebug {
     font-size: 12px;
     font-family: Courier;
   }
-                
+
   pre.sf-var-dump h2 {
     display: inline;
     margin: 0;
     padding: 0;
     font-size: 14px;
   }
-                
+
   .sf-debug-integer {
     color: green;
   }
@@ -372,7 +372,7 @@ CSS;
         $output .= '</style>';
         $dumpCssIncluded = true;
       }
-        
+
       $output = sprintf('<pre class="sf-var-dump">%s</pre>', $output);
     }
 
@@ -384,12 +384,12 @@ CSS;
     }
   }
 
-  public static function getCallerInfo($trace) 
+  public static function getCallerInfo($trace)
   {
     $c = '';
     $file = '';
     $func = '';
-    $class = '';     
+    $class = '';
     if (isset($trace[2])) {
         $file = $trace[1]['file'];
         $func = $trace[2]['function'];
@@ -471,7 +471,7 @@ CSS;
       }
       elseif(is_object($avar))
       {
-        
+
         // $html .= "$indent$var_name <span style='color:#a2a2a2'>is a</span> <b>" . get_class($avar) . "</b> (";
         $html .= sprintf('%s%s is a <span class="sf-debug-object">%s</span>', $indent, $var_name, get_class($avar));
         $i = 0;
@@ -481,7 +481,7 @@ CSS;
           {
             $html .= '<br />';
           }
-          $html .= sprintf('%s', self::doDump($value, $name, $indent.$do_dump_indent, $reference));          
+          $html .= sprintf('%s', self::doDump($value, $name, $indent.$do_dump_indent, $reference));
           $i++;
         }
 
@@ -501,7 +501,7 @@ CSS;
       {
         $html .= "$indent$var_name = <span style='color:#a2a2a2'>$type(" . sfUtf8::len($avar) . ")</span> $type_color\"$avar\"</span><br>";
       }
-        
+
       elseif(is_float($avar))
         $html .= "$indent$var_name = <span style='color:#a2a2a2'>$type</span> $type_color$avar</span><br>";
       elseif(is_bool($avar))
@@ -516,7 +516,7 @@ CSS;
 
     return $html;
   }
-  
+
   protected static function doDumpOLD(&$var, $var_name = null, $indent = null, $reference = null)
   {
     // $do_dump_indent = "<span style='color:#eeeeee;'>|</span> &nbsp;&nbsp; ";
