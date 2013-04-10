@@ -68,7 +68,8 @@ class BasesfJsApiActions extends myActions {
   {
     $this->setViewClass('sfJavascript');    
     
-    $setup = sfCore::filterByEventListeners($setup = '', 'js.form_setup', array());
+    $setup = '';
+    $setup = sfCore::filterByEventListeners($setup, 'js.form_setup', array());
     
     if($setup)
     {
