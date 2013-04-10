@@ -699,6 +699,7 @@ class sfCoreAutoload
     'sfcontext' => 'util/sfContext.class.php',
     'sfdomcssselector' => 'util/sfDomCssSelector.class.php',
     'sffinder' => 'util/sfFinder.class.php',
+    'sfflatparameterholder' => 'util/sfFlatParameterHolder.class.php',
     'sfglobtoregex' => 'util/sfGlobToRegex.class.php',
     'sfhtml' => 'util/sfHtml.class.php',
     'sfinflector' => 'util/sfInflector.class.php',
