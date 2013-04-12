@@ -2,7 +2,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(103, new lime_output_color());
+$t = new lime_test(111, new lime_output_color());
 
 // ::stringToArray()
 $t->diag('::stringToArray()');
@@ -309,3 +309,22 @@ catch(LogicException $e)
 {
   $t->pass('::replaceConstantsWithModifiers() throws logic exception if modifier is not understood.');
 }
+
+$t->diag('isBlank()');
+
+$blankTests = array(
+  '' => true,
+  'ahoj' => false,
+  0 => false,
+  '-0' => false
+);
+
+foreach($blankTests as $test => $expected)
+{
+  $t->is(sfToolkit::isBlank($test), $expected, 'isBlank() works as expected');
+}
+
+$t->is(sfToolkit::isBlank(array()), true, 'isBlank() works as expected for array');
+$t->is(sfToolkit::isBlank(array('0')), false, 'isBlank() works as expected for array');
+$t->is(sfToolkit::isBlank(array('0', '')), false, 'isBlank() works as expected for array');
+$t->is(sfToolkit::isBlank(array(array())), false, 'isBlank() works as expected for array');

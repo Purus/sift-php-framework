@@ -1107,4 +1107,22 @@ class sfToolkit {
     return in_array($callback, explode(',', ini_get('disable_functions')));
   }
 
+  /**
+   * Check if the value is blank.
+   *
+   * When you need to accept these as valid, non-empty values:
+   *
+   *  - 0 (0 as an integer)
+   *  - 0.0 (0 as a float)
+   *  - "0" (0 as a string)
+   *
+   *
+   * @param mixed $value
+   * @return boolean
+   */
+  public static function isBlank($value)
+  {
+    return empty($value) && !is_numeric($value);
+  }
+
 }
