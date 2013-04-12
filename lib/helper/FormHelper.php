@@ -180,7 +180,15 @@ function select_tag($name, $option_tags = null, $options = array())
     $option_tags = options_for_select($option_tags);
   }
 
-  return content_tag('select', $option_tags, array_merge(array('name' => $name, 'id' => get_id_from_name($id)), $options));
+  $default = array();
+
+  if($name)
+  {
+    $default['name'] = $name;
+    $default['id'] = get_id_from_name($id);
+  }
+
+  return content_tag('select', $option_tags, array_merge($default, $options));
 }
 
 /**
