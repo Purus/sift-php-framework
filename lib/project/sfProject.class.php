@@ -120,7 +120,7 @@ abstract class sfProject extends sfConfigurable {
   public function configure()
   {
   }
-  
+
   /**
    * Setups the project
    *
@@ -323,6 +323,16 @@ abstract class sfProject extends sfConfigurable {
   }
 
   /**
+   * Returns the configuration cache instance
+   *
+   * @return sfConfigCache
+   */
+  protected function getConfigCache()
+  {
+    return $this->configCache;
+  }
+
+  /**
    * Returns the dispatcher instance
    *
    * @return sfEventDispatcher
@@ -482,7 +492,7 @@ abstract class sfProject extends sfConfigurable {
 
   /**
    * Initializes include path
-   * 
+   *
    */
   protected function initIncludePath()
   {
@@ -592,7 +602,7 @@ abstract class sfProject extends sfConfigurable {
     }
 
     // application wide setting
-    if($this->getOption('sf_app_config_dir') && 
+    if($this->getOption('sf_app_config_dir') &&
       is_readable($file = $this->getOption('sf_app_config_dir').'/plugins.yml'))
     {
       $files[] = $file;
