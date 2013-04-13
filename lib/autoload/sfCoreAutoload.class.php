@@ -710,6 +710,7 @@ class sfCoreAutoload
     'sfpasswordtools' => 'util/sfPasswordTools.class.php',
     'sfphpexpression' => 'util/sfPhpExpression.class.php',
     'sfprefetchbrowser' => 'util/sfPrefetchBrowser.class.php',
+    'sfreflectionclass' => 'util/sfReflectionClass.class.php',
     'sfsafeurl' => 'util/sfSafeUrl.class.php',
     'sfshutdownscheduler' => 'util/sfShutdownScheduler.class.php',
     'sftoolkit' => 'util/sfToolkit.class.php',
