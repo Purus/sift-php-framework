@@ -52,7 +52,7 @@ class sfWidgetFormDateRange extends sfWidgetForm
    */
   public function render($name, $value = null, $attributes = array(), $errors = array())
   {
-    $values = array_merge(array('from' => '', 'to' => '', 'is_empty' => ''), is_array($value) ? $value : array());
+    $value = array_merge(array('from' => '', 'to' => '', 'is_empty' => ''), is_array($value) ? $value : array());
 
     return strtr($this->translate($this->getOption('template')), array(
       '%from%'      => $this->getOption('from')->render($name.'[from]', $value['from']),
