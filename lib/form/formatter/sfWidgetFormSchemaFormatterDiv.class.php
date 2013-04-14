@@ -20,7 +20,7 @@ class sfWidgetFormSchemaFormatterDiv extends sfWidgetFormSchemaFormatter
   $rowFormat       = '', // unused
   $errorRowFormat  = "%errors%\n",
   $errorListFormatInARow = '%errors%',
-  $helpFormat      = ' <span class="form-help-contextual" title="%help%"><span class="icon-help"><span class="hide">?</span></span></span>',
+  $helpFormat      = ' <span class="form-help-contextual" title="%help%"><span class="icon-question-sign"></span></span>',
   $decoratorFormat = "\n    %content%",
   $errorRowFormatInARow = "<label %attributes%>%error%</label>\n",
   $namedErrorRowFormatInARow = "%name%: %error%\n",
