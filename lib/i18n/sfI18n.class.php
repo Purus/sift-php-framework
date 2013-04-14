@@ -289,7 +289,7 @@ class sfI18n {
   /**
    * Appends a $source to the translation chain
    * 
-   * @param sfIMessageSource $source
+   * @param sfII18nMessageSource $source
    * @return sfI18N
    */
   public function appendMessageSource(sfII18nMessageSource $source)
@@ -353,11 +353,11 @@ class sfI18n {
   /**
    * Adds a source to the translation chain
    * 
-   * @param sfIMessageSource $source
+   * @param sfII18nMessageSource $source
    * @param boolean $prepend Prepend to the translation chain?
    * @return sfI18N
    */
-  public function addMessageSource(sfIMessageSource $source, $prepend = false)
+  public function addMessageSource(sfII18nMessageSource $source, $prepend = false)
   {
     return $prepend ? $this->prependMessageSource($source) : $this->appendMessageSource($source);
   }
