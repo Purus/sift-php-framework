@@ -95,6 +95,7 @@
     Application.setupTextareas(context);
     Application.setupSelects(context);
     Application.setupDualLists(context);
+    Application.setupContextualHelp(context);
   };
 
   /**
@@ -649,6 +650,43 @@
         $element.dualList(options);
       });
     });
+  };
+
+  /**
+   * Setup form contextual help. All span.form-help-contextual
+   * inside the forms (or in given context are transformed to tooltips)
+   *
+   * @param {DOM element} context
+   * @requires jQuery.tooltip
+   */
+  Application.setupContextualHelp = function(context)
+  {
+    // tooltip not present
+    if(typeof $.fn.tooltip === 'undefined')
+    {
+      return;
+    }
+
+    // we limit only to form if context is document!
+    // this can slow
+    if(context === window.document)
+    {
+      var helps = $('form span.form-help-contextual', context);
+    }
+    else
+    {
+      var helps = $('span.form-help-contextual', context);
+    }
+
+    if(!helps.length)
+    {
+      return;
+    }
+
+    helps.tooltip({
+      container: 'body'
+    });
+
   };
 
   if(typeof window.Application === 'undefined')
