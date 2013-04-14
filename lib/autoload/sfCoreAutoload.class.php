@@ -436,6 +436,7 @@ class sfCoreAutoload
     'sfwidgetforminputfile' => 'form/widget/file/sfWidgetFormInputFile.class.php',
     'sfwidgetforminputfileeditable' => 'form/widget/file/sfWidgetFormInputFileEditable.class.php',
     'sfwidgetforminputhidden' => 'form/widget/hidden/sfWidgetFormInputHidden.class.php',
+    'sfwidgetformi18naggregate' => 'form/widget/i18n/sfWidgetFormI18nAggregate.class.php',
     'sfwidgetformi18nchoicecountry' => 'form/widget/i18n/sfWidgetFormI18nChoiceCountry.class.php',
     'sfwidgetformi18nchoicecurrency' => 'form/widget/i18n/sfWidgetFormI18nChoiceCurrency.class.php',
     'sfwidgetformi18nchoicelanguage' => 'form/widget/i18n/sfWidgetFormI18nChoiceLanguage.class.php',
