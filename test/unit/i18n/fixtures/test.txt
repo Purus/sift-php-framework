@@ -1,0 +1,10 @@
+# This is a samle translation database
+# 
+Hello world
+Jesus is my Lord
+Create new "%%title%%" 
+
+
+   Hello
+
+This is a hash #1
