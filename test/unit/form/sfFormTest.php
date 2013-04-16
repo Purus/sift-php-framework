@@ -3,7 +3,7 @@
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 require_once($_test_dir.'/unit/sfCoreMock.class.php');
 
-$t = new lime_test(173);
+$t = new lime_test(175);
 
 // disable aria support
 sfWidgetForm::setAria(false);
@@ -1061,3 +1061,10 @@ $t->is($f->getValue('a'), 'bbbbbb', 'event system works ok for value filtering')
 
 // FIXME: tohle je spatne!
 $t->is($f['a']->getValue(), 'bbbbbb', 'event system works ok for value filtering');
+
+$t->diag('hasFileUpload');
+
+$f = new sfForm();
+$t->is($f->hasFileUpload(), false, 'hasFileUpload() works ok');
+$f->setWidget('foo', new sfWidgetFormInputFile());
+$t->is($f->hasFileUpload(), true, 'hasFileUpload() works ok');

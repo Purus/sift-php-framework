@@ -1990,6 +1990,23 @@ class sfForm implements ArrayAccess, Iterator, Countable
   }
 
   /**
+   * Does this form have any file upload?
+   *
+   * @return boolean
+   */
+  public function hasFileUpload()
+  {
+    foreach($this as $field)
+    {
+      if($field->getWidget() instanceof sfWidgetFormInputFile)
+      {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  /**
    * Returns sfUser instance
    *
    * @return sfUser
