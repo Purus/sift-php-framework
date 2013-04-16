@@ -256,7 +256,6 @@
         modal:       true,
         closeText:   __('close'),
         resizable:   false,
-        zIndex:      1111,
         title:       (title ? title : __('Alert')),
         buttons: [
         {
@@ -309,7 +308,6 @@
         modal: true,
         closeText: __('close'),
         resizable: false,
-        // zIndex: 1111, // how?
         title: (title ? title : __('Confirmation')),
         buttons: [
         {
