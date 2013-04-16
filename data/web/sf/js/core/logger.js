@@ -8,12 +8,20 @@
 /* global Config: false */
 
 /**
+ * Browser debugging console.
+ *
+ * @name Console
+ * @class
+ */
+
+/**
  * Logger - logs events to console and/or to server
  *
  * @name Logger
  * @class
  * @requires Config
  * @requires jQuery
+ * @requires Console
  * @static
  */
 (function($, window) {
@@ -51,7 +59,7 @@
     var hasConsole = function()
     {
       // do we have console available?
-      if(typeof console !== 'undefined')
+      if(typeof window.console !== 'undefined')
       {
         return true;
       }
@@ -136,7 +144,7 @@
       {
         if(isEnabled() && hasConsole())
         {
-          console.log(arguments.length > 1 ? Array.prototype.slice.call(arguments) : arguments[0]);
+          window.console.log(arguments.length > 1 ? Array.prototype.slice.call(arguments) : arguments[0]);
         }
       },
 
@@ -150,7 +158,7 @@
       {
         if(isEnabled() && hasConsole())
         {
-          console.debug(arguments.length > 1 ? Array.prototype.slice.call(arguments) : arguments[0]);
+          window.console.debug(arguments.length > 1 ? Array.prototype.slice.call(arguments) : arguments[0]);
         }
       },
 
@@ -164,7 +172,7 @@
       {
         if(isEnabled() && hasConsole())
         {
-          console.error(arguments.length > 1 ? Array.prototype.slice.call(arguments) : arguments[0]);
+          window.console.error(arguments.length > 1 ? Array.prototype.slice.call(arguments) : arguments[0]);
         }
       },
 
@@ -204,5 +212,30 @@
   }();
 
   window.Logger = Logger;
+
+  // Prevent errors when there is a console.log debug message left in the source
+  // and the browser has no console
+  // Taken from: http://stackoverflow.com/questions/7892509/is-there-a-way-to-log-to-console-without-breaking-code-under-ie
+  if(!('console' in window) )
+  {
+    var names = ['log', 'debug', 'info', 'warn', 'error', 'assert', 'dir', 'dirxml', 'group', 'groupEnd', 'time', 'timeEnd', 'count', 'trace', 'profile', 'profileEnd'];
+    window.console = {};
+    for(var i = 0; i < names.length; ++i)
+    {
+      window.console[names[i]] = function(){};
+    }
+  }
+  else
+  {
+    // if it exists but doesn't contain all the same methods....silly ie
+    var names = ['log', 'debug', 'info', 'warn', 'error', 'assert', 'dir', 'dirxml', 'group', 'groupEnd', 'time', 'timeEnd', 'count', 'trace', 'profile', 'profileEnd'];
+    for(var i = 0; i < names.length; ++i)
+    {
+      if(!window.console[names[i]])
+      {
+        window.console[names[i]] = function() {};
+      }
+    }
+  };
 
 }(window.jQuery, window));

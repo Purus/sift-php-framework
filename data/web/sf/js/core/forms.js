@@ -578,11 +578,13 @@
    * Returns an array of options for Select2 plugin
    *
    * @param {jQuery object} jQuery object
-   * @returns {Object}
-   * @requires Select2
+   * @returns {options} Array of options
    */
   Application.getSelectOptions = function($element)
   {
+    /**
+     * Array of options for Select2
+     */
     var options = {
       width: 'element',
       formatNoMatches: function () { return __('No matches found.'); },
