@@ -2,7 +2,7 @@
 
 require_once(dirname(__FILE__) . '/../../bootstrap/unit.php');
 
-$t = new lime_test(60);
+$t = new lime_test(66);
 
 $tmpDir = rtrim(sys_get_temp_dir(), DIRECTORY_SEPARATOR);
 
@@ -229,6 +229,31 @@ $t->is($f->getOriginalExtension(), '', '->getOriginalExtension() returns an orig
 
 $f = new sfUploadedFile('test', 'text/plain', $tmpDir . '/test.txt', strlen($content));
 $t->is($f->getOriginalExtension('bin'), 'bin', '->getOriginalExtension() takes a default extension as its first argument');
+
+$t->diag('multiple');
+
+$v = new testValidatorFile(array('multiple' => true));
+
+try
+{
+  $v->clean(array(array('test' => true)));
+  $t->fail('->clean() throws an sfValidatorError if the given value is not well formatted');
+  $t->skip('', 1);
+}
+catch(sfValidatorError $e)
+{
+  $t->pass('->clean() throws an sfValidatorError if the given value is not well formatted');
+  $t->is($e->getCode(), 'invalid', '->clean() throws a sfValidatorError');
+}
+
+$f = $v->clean(array(array('tmp_name' => $tmpDir . '/test.txt')));
+foreach($f as $file)
+{
+  $t->ok($file instanceof sfUploadedFile, '->clean() returns a sfUploadedFile instance');
+  $t->is($file->getOriginalName(), '', '->clean() returns a sfUploadedFile with an empty original name if the name is not passed in the initial value');
+  $t->is($file->getSize(), strlen($content), '->clean() returns a sfUploadedFile with a computed file size if the size is not passed in the initial value');
+  $t->is($file->getType(), 'text/plain', '->clean() returns a sfUploadedFile with a guessed content type');
+}
 
 unlink($tmpDir . '/test.txt');
 sfToolkit::clearDirectory($tmpDir . '/foo');

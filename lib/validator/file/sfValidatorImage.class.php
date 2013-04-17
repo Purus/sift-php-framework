@@ -15,7 +15,7 @@
  */
 class sfValidatorImage extends sfValidatorFile
 {
-  
+
   /**
    * Configures the current validator.
    *
@@ -53,7 +53,7 @@ class sfValidatorImage extends sfValidatorFile
     parent::configure($options, $messages);
 
     $this->addOption('persistent', isset($options['persistent']) ? $options['persistent'] : false);
-    
+
     // we set "web images" category if nothing is provided in options array
     if(!$this->getOption('mime_types'))
     {
@@ -72,7 +72,7 @@ class sfValidatorImage extends sfValidatorFile
 
     // image preview, only used with persistent feature
     $this->addOption('preview', true);
-    
+
     // image thumbnail options, default to 100x100 square
     $this->addOption('create_preview_options', array(
       'width'   => 100,
@@ -80,12 +80,12 @@ class sfValidatorImage extends sfValidatorFile
       'method'  => 'left',
       'quality' => 80
     ));
-    
+
     $this->addOption('create_preview_callable', array($this, 'createPreview'));
 
     $this->setMessage('required', isset($messages['required']) ? $messages['required'] : 'Select an image to be uploaded.');
     $this->setMessage('invalid', isset($messages['invalid']) ? $messages['invalid'] : 'Invalid file uploaded.');
-    
+
     $this->addMessage('too_small', 'Image dimensions %width%x%height%px are too small (minimum is %min_width%x%min_height%px).');
     $this->addMessage('too_large', 'Image dimensions %width%x%height%px are too large (maximum is %max_width%x%max_height%px).');
   }
@@ -111,7 +111,7 @@ class sfValidatorImage extends sfValidatorFile
 
     // try our image validation
     $class = $this->getOption('validated_file_class');
-    
+
     // we have a valid uploaded file, lets check if its an image
     // and its dimensions are ok!
     if($result instanceof $class)
@@ -139,7 +139,7 @@ class sfValidatorImage extends sfValidatorFile
       }
     }
 
-    
+
     // image is valid
     // persistent
     if($this->getOption('persistent'))
@@ -151,7 +151,7 @@ class sfValidatorImage extends sfValidatorFile
       {
         $this->deleteOldUploads();
       }
-      
+
       // we make unique filename in the directory
       do
       {
@@ -172,12 +172,12 @@ class sfValidatorImage extends sfValidatorFile
         $previewCallable = $this->getOption('create_preview_callable');
         $filename        = $uuid . $result->getExtension();
         $previewTarget   = $previewDir . DS . $filename;
-        
+
         // make thumbnail
         call_user_func($previewCallable, $result->getTempName(), $result->getType(), $previewTarget);
         $preview = $previewWebDir . '/' . $filename;
 
-        $dimensions = @getimagesize($previewTarget);        
+        $dimensions = @getimagesize($previewTarget);
       }
 
       // we save this file
@@ -202,7 +202,7 @@ class sfValidatorImage extends sfValidatorFile
         new sfEvent('form.validator.image.persistent.post_save', array(
           'info' => $info, 'file' => $result, 'persistent_info' => $persistentUploadInfo
       )));
-      
+
     }
 
     return $result;
@@ -258,17 +258,17 @@ class sfValidatorImage extends sfValidatorFile
 
   /**
    * Deletes old uploaded files stored in persistent directory
-   * 
-   * @return boolean 
+   *
+   * @return boolean
    */
   protected function deleteOldUploads()
   {
     // clear data files
-    $persistentDir  = $this->getPersistentDir();    
+    $persistentDir  = $this->getPersistentDir();
     $files = sfFinder::type('file')->ignore_version_control()
               ->name('*.dat')->name('*.file')->in($persistentDir);
     $now = time();
-    
+
     foreach($files as $file)
     {
       if($now - filemtime($file) >= $this->getOption('persistent_upload_lifetime'))
@@ -276,12 +276,12 @@ class sfValidatorImage extends sfValidatorFile
         @unlink($file);
       }
     }
-    
+
     // clear previews
     $previewDir = $this->getPreviewDir();
     $files      = sfFinder::type('file')->ignore_version_control()
                     ->name('*')->in($previewDir);
-    
+
     foreach($files as $file)
     {
       if($now - filemtime($file) > $this->getOption('persistent_upload_lifetime'))
@@ -314,10 +314,10 @@ class sfValidatorImage extends sfValidatorFile
    */
   public function getActiveMessages()
   {
-    $messages = parent::getActiveMessages();    
+    $messages = parent::getActiveMessages();
     $messages[] = $this->getMessage('too_small');
     $messages[] = $this->getMessage('too_large');
     return $messages;
   }
-  
+
 }

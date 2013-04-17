@@ -25,7 +25,7 @@ class sfValidatorFile extends sfValidatorBase
    *  * mime_type_guessers:   An array of mime type guesser PHP callables (must return the mime type or null)
    *  * mime_categories:      An array of mime type categories (web_images is defined by default)
    *  * path:                 The path where to save the file - as used by the sfValidatedFile class (optional)
-   *  * uploaded_file_class: Name of the class that manages the cleaned uploaded file (optional)
+   *  * uploaded_file_class:  Name of the class that manages the cleaned uploaded file (optional)
    *
    * Available error codes:
    *
@@ -50,11 +50,7 @@ class sfValidatorFile extends sfValidatorBase
 
     $this->addOption('max_size');
     $this->addOption('mime_types');
-//    $this->addOption('mime_type_guessers', array(
-//      array($this, 'guessFromFileinfo'),
-//      array($this, 'guessFromMimeContentType'),
-//      array($this, 'guessFromFileBinary'),
-//    ));
+
     $this->addOption('mime_categories', array(
       'web_images' => array(
         'image/jpeg',
@@ -63,8 +59,12 @@ class sfValidatorFile extends sfValidatorBase
         'image/x-png',
         'image/gif',
     )));
+
     $this->addOption('uploaded_file_class', 'sfUploadedFile');
     $this->addOption('path', null);
+
+    // mutiple files?
+    $this->addOption('multiple', false);
 
     $this->addMessage('max_size', 'File is too large (maximum is %max_size% bytes).');
     $this->addMessage('mime_types', 'Invalid mime type (%mime_type%).');
@@ -77,7 +77,7 @@ class sfValidatorFile extends sfValidatorBase
   /**
    * This validator always returns a sfValidatedFile object.
    *
-   * The input value must be an array with the following keys:
+   * The input value must be an array with the following keys (if multiple options is set to false):
    *
    *  * tmp_name: The absolute temporary path to the file
    *  * name:     The original file name (optional)
@@ -85,13 +85,46 @@ class sfValidatorFile extends sfValidatorBase
    *  * error:    The error code (optional)
    *  * size:     The file size in bytes (optional)
    *
+   * If multiple is set to true, $value has to be an array of arrays (see above).
+   *
    * @see sfValidatorBase
    */
   protected function doClean($value)
   {
+    // multiple option, we are cleaning array of values
+    if($this->getOption('multiple'))
+    {
+      if(!is_array($value))
+      {
+        throw new sfValidatorError($this, 'invalid');
+      }
+
+      $result = array();
+      foreach($value as $v)
+      {
+        $result[] = $this->doCleanSingle($v);
+      }
+
+      return $result;
+    }
+    else
+    {
+      return $this->doCleanSingle($value);
+    }
+  }
+
+  /**
+   * Cleans a single value
+   *
+   * @param array $value
+   * @return sfUploadedFile
+   * @throws sfValidatorError
+   */
+  protected function doCleanSingle($value)
+  {
     if (!is_array($value) || !isset($value['tmp_name']))
     {
-      throw new sfValidatorError($this, 'invalid', array('value' => (string) $value));
+      throw new sfValidatorError($this, 'invalid');
     }
 
     if (!isset($value['name']))
@@ -154,7 +187,7 @@ class sfValidatorFile extends sfValidatorBase
     }
 
     $class = $this->getOption('uploaded_file_class');
-    return new $class($value['name'], $mimeType, $value['tmp_name'], $value['size'], $this->getOption('path'));    
+    return new $class($value['name'], $mimeType, $value['tmp_name'], $value['size'], $this->getOption('path'));
   }
 
   /**
@@ -173,7 +206,7 @@ class sfValidatorFile extends sfValidatorBase
    */
   protected function getMimeType($file, $fallback)
   {
-    return sfMimeType::getTypeFromFile($file, $fallback, $originalFileName = null);    
+    return sfMimeType::getTypeFromFile($file, $fallback, $originalFileName = null);
   }
 
   protected function getMimeTypesFromCategory($category)
@@ -200,7 +233,7 @@ class sfValidatorFile extends sfValidatorBase
         ||
       (is_array($value) && isset($value['error']) && UPLOAD_ERR_NO_FILE === $value['error']);
   }
-  
+
   public function getActiveMessages()
   {
     return array_merge(parent::getActiveMessages(), array(
@@ -212,7 +245,7 @@ class sfValidatorFile extends sfValidatorBase
       $this->getMessage('extension')
     ));
   }
-  
+
   public function getJavascriptValidationRules()
   {
     $rules = parent::getJavascriptValidationRules();
@@ -220,40 +253,40 @@ class sfValidatorFile extends sfValidatorBase
     {
       $rules[sfFormJavascriptValidation::FILE_SIZE] = $maxSize;
     }
-    
+
     if($mime_types = $this->getOption('mime_types'))
     {
-      $mimeTypes = is_array($mime_types) ? 
-        $mime_types : 
+      $mimeTypes = is_array($mime_types) ?
+        $mime_types :
         $this->getMimeTypesFromCategory($mime_types);
-      
+
       $extensions = array();
       foreach($mimeTypes as $mime)
       {
         $extensions[sfMimeType::getExtensionFromType($mime, 'unknown', false)] = true;
       }
-      
+
       // fix extensions
       $extensions = $this->fixFileExtensions($extensions);
-      
-      // unset in case there is unknown 
-      unset($extensions['unknown']);      
+
+      // unset in case there is unknown
+      unset($extensions['unknown']);
       $extensions = join('|', array_keys($extensions));
 
-      $rules[sfFormJavascriptValidation::FILE_EXTENSION] = $extensions;      
+      $rules[sfFormJavascriptValidation::FILE_EXTENSION] = $extensions;
     }
-    
-    return $rules;    
+
+    return $rules;
   }
-  
+
   protected function fixFileExtensions($extensions)
   {
     if(isset($extensions['jpg']))
     {
       $extensions['jpeg'] = true;
     }
-    
+
     return $extensions;
   }
-  
+
 }
