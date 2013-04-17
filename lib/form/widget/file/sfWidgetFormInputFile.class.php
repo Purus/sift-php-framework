@@ -7,11 +7,10 @@
  */
 
 /**
- * sfWidgetFormInputFile represents an upload HTML input tag.
+ * sfWidgetFormInputFile represents an upload input tag.
  *
  * @package    Sift
  * @subpackage form_widget
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  */
 class sfWidgetFormInputFile extends sfWidgetFormInput
 {
@@ -27,7 +26,35 @@ class sfWidgetFormInputFile extends sfWidgetFormInput
   {
     parent::configure($options, $attributes);
 
+    // single or multiple uploads?
+    $this->addOption('multiple', false);
+    // input options
     $this->setOption('type', 'file');
     $this->setOption('needs_multipart', true);
-  }   
+  }
+
+  /**
+   * @see sfWidgetForm
+   */
+  public function render($name, $value = null, $attributes = array(), $errors = array())
+  {
+    if($this->getOption('multiple'))
+    {
+      if('[]' != substr($name, -2))
+      {
+        $name .= '[]';
+      }
+    }
+
+    // prepare attributes
+    // multiple is valid only for HTML5
+    if($this->getOption('multiple') && !sfWidget::isXhtml())
+    {
+      // FIXME: in HTML5 the valid attibute is something like <input multiple>
+      $attributes['multiple'] = 'multiple';
+    }
+
+    return parent::render($name, $value, $attributes, $errors);
+  }
+
 }
