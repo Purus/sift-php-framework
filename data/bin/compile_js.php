@@ -75,18 +75,33 @@ class sfJsCompilerCommand {
   {
     $command = array();
 
-    $files = sfFinder::type('file')
-              ->name('*.js')
-              ->maxdepth(0)
-              ->discard('*.min.js')
-              ->in($options['js_data_dir'] . '/core');
+//    $files = sfFinder::type('file')
+//              ->name('*.js')
+//              ->maxdepth(0)
+//              ->discard('*.min.js')
+//              ->in($options['js_data_dir'] . '/core');
+
+    $files = array(
+       'config.js',
+        'cookie.js',
+        'plugins.js',
+        'application.js',
+        'api.js',
+        'forms.js',
+        'bootstrap.js',
+        'i18n.js',
+        'globalize.js',
+        'logger.js',
+        'tools.js'
+    );
+
 
     $tmpFile = tempnam(sys_get_temp_dir(), 'core_compile');
 
     $fileContents = array();
     foreach($files as $file)
     {
-      $fileContents[] = file_get_contents($file);
+      $fileContents[] = file_get_contents($options['js_data_dir']  . '/core/'.$file);
     }
 
     file_put_contents($tmpFile, join("\n\n", $fileContents));
@@ -196,6 +211,61 @@ Globalize.addCultureInfo(\'%s\', \'%s\', %s);
 
     $this->callCompiler($command);
   }
+
+  public function compileBootstrap($options = array())
+  {
+    $command = array();
+
+    $files = array(
+      'bootstrap-transition.js',
+      'bootstrap-alert.js',
+      'bootstrap-button.js',
+      'bootstrap-carousel.js',
+      'bootstrap-collapse.js',
+      'bootstrap-dropdown.js',
+      'bootstrap-modal.js',
+      'bootstrap-tooltip.js',
+      'bootstrap-popover.js',
+      'bootstrap-scrollspy.js',
+      'bootstrap-tab.js',
+      'bootstrap-typeahead.js',
+      'bootstrap-inputmask.js',
+      'bootstrap-rowlink.js',
+      'bootstrap-fileupload.js',
+      'bootstrap-affix.js'
+    );
+
+//    $files = sfFinder::type('file')
+//              ->name($files)
+//              ->in($options['js_data_dir'] . '/bootstrap');
+//
+    $tmpFile = tempnam(sys_get_temp_dir(), 'btstrp_compile');
+
+    $fileContents = array();
+    foreach($files as $file)
+    {
+      $fileContents[] = file_get_contents($options['js_data_dir'] . '/bootstrap/' . $file);
+    }
+
+    file_put_contents($tmpFile, join("\n\n", $fileContents));
+
+    $command[] = sprintf('--js %s', $tmpFile);
+
+    // $command[] = '--compilation_level WHITESPACE_ONLY';
+    // SIMPLE_OPTIMIZATIONS | ADVANCED_OPTIMIZATIONS]
+
+    // $command[] = sprintf('--js_output_file %s', escapeshellarg($options['js_data_dir'] . '/globalize/globalize.min.js'));
+    // output file
+    $command[] = sprintf('> %s', $options['js_data_dir'] . '/bootstrap/bootstrap.min.js');
+
+    $command = join(' ', $command);
+
+    $this->callCompiler($command);
+
+
+
+  }
+
 
 }
 
