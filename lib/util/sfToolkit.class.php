@@ -304,6 +304,38 @@ class sfToolkit {
     }
   }
 
+  /**
+   * "Extend" recursively array $a with array $b values (no deletion in $a, just added and updated values)
+   *
+   * @param array $a
+   * @param array $b
+   * @return array
+   * @see http://stackoverflow.com/questions/6813884/array-merge-on-an-associative-array-in-php
+   * @see http://php.net/manual/en/function.array-merge.php#95294
+   */
+  public static function arrayExtend($a, $b)
+  {
+    foreach($b as $k => $v)
+    {
+      if(is_array($v))
+      {
+        if(!isset($a[$k]))
+        {
+          $a[$k] = $v;
+        }
+        else
+        {
+          $a[$k] = self::arrayExtend($a[$k], $v);
+        }
+      }
+      else
+      {
+        $a[$k] = $v;
+      }
+    }
+    return $a;
+  }
+
   public static function stringToArray($string)
   {
     preg_match_all('/

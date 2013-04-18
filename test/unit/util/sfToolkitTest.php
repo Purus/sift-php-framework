@@ -2,7 +2,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(111, new lime_output_color());
+$t = new lime_test(113, new lime_output_color());
 
 // ::stringToArray()
 $t->diag('::stringToArray()');
@@ -328,3 +328,44 @@ $t->is(sfToolkit::isBlank(array()), true, 'isBlank() works as expected for array
 $t->is(sfToolkit::isBlank(array('0')), false, 'isBlank() works as expected for array');
 $t->is(sfToolkit::isBlank(array('0', '')), false, 'isBlank() works as expected for array');
 $t->is(sfToolkit::isBlank(array(array())), false, 'isBlank() works as expected for array');
+
+$t->diag('arrayExtend()');
+
+$test = array(
+  'widget' => array(
+    'class' => 'sfFoobarWidget',
+    'options' => array(
+      'culture' => 'en'
+    )
+  )
+);
+
+$test2 = array(
+  'widget' =>  array(
+    'class' => 'sfFoobarWidgetAnotherOne',
+    'options' => array(
+      'add_empty' => true
+    )
+  )
+);
+
+$expected = array(
+  'widget' =>  array(
+    'class' => 'sfFoobarWidgetAnotherOne',
+     'options' => array(
+      'culture' => 'en',
+      'add_empty' => true
+  ))
+);
+
+$expected2 = array(
+  'widget' =>  array(
+    'class' => 'sfFoobarWidget',
+     'options' => array(
+      'add_empty' => true,
+      'culture' => 'en'
+  ))
+);
+
+$t->is(sfToolkit::arrayExtend($test, $test2), $expected, '->arrayExtend() works ok');
+$t->is(sfToolkit::arrayExtend($test2, $test), $expected2, '->arrayExtend() works ok');
