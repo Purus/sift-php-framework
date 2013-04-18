@@ -2,14 +2,12 @@
 span.form-help-contextual {
   color: #000;
   text-decoration: none;
-  background: url("@{images_path}/form/help.png") top left no-repeat;
   width: 16px;
   height: 16px;
   display: inline-block;
 }
 
 div.form-help {
-  background: url("@{images_path}/form/help.png") 0 0.3em no-repeat;
   font-size: 9pt;
   padding: 0.3em;
   padding-left: 20px;
@@ -28,6 +26,7 @@ label.required {
 
 label.inline {
   display: inline;
+  vertical-align: middle;
 }
 
 label.checkbox input,
@@ -186,4 +185,10 @@ ul.checkbox-list {
     bottom: auto !important;
   }
 
+}
+
+.form-i18n-aggregate {
+  margin:1em 0 0 1em;
+  border-left: 2px solid #ccc;
+  padding: 0.5em;
 }
