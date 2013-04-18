@@ -1,0 +1,5 @@
+# You can find more information about this file on:
+# https://bitbucket.org/mishal/sift-php-framework/wiki/Cache
+all:
+  enabled: true
+  lifetime: 3600
