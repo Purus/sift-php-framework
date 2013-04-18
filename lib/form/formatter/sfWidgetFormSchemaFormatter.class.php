@@ -17,14 +17,14 @@ abstract class sfWidgetFormSchemaFormatter
 {
   protected static
     $translationCallable       = null;
-  
+
   protected
     $rowFormat                 = '',
     $helpFormat                = '%help%',
     $errorRowFormat            = '%errors%',
     $errorListFormatInARow     = "  <ul class=\"error_list\">\n%errors%  </ul>\n",
     $errorRowFormatInARow      = "    <li>%error%</li>\n",
-    $namedErrorRowFormatInARow = "    <li>%name%: %error%</li>\n",          
+    $namedErrorRowFormatInARow = "    <li>%name%: %error%</li>\n",
     $requiredLabelCssClass     = 'required',
     $requiredLabelFormat       = '%label_name% <span class="%css_class%"><span>*</span></span>',
     // rendering of sfFormFieldGroups
@@ -42,10 +42,10 @@ abstract class sfWidgetFormSchemaFormatter
    */
   public function __construct(sfWidgetFormSchema $widgetSchema)
   {
-    $this->setWidgetSchema($widgetSchema);    
+    $this->setWidgetSchema($widgetSchema);
   }
 
-  public function formatRow($label, $field, $errors = array(), $help = '', $hiddenFields = null, 
+  public function formatRow($label, $field, $errors = array(), $help = '', $hiddenFields = null,
           $widgetAttributes = array(), sfWidgetForm $widget = null)
   {
     return strtr($this->getRowFormat(), array(
@@ -122,7 +122,7 @@ abstract class sfWidgetFormSchemaFormatter
 
     self::$translationCallable = $callable;
   }
-  
+
   static public function removeTranslationCallable()
   {
     self::$translationCallable = null;
@@ -137,10 +137,10 @@ abstract class sfWidgetFormSchemaFormatter
 
     return strtr($this->getHelpFormat(), array('%help%' => $this->translate($help)));
   }
-  
+
   /**
    * Error element
-   * 
+   *
    * @return string
    */
   public function getErrorElement()
@@ -170,10 +170,10 @@ abstract class sfWidgetFormSchemaFormatter
       $errors = array($errors);
     }
 
-    isset($widgetAttributes['class']) ? 
-      $widgetAttributes['class'] .= ' ' . $this->errorCssClass : 
+    isset($widgetAttributes['class']) ?
+      $widgetAttributes['class'] .= ' ' . $this->errorCssClass :
       $widgetAttributes['class'] = $this->errorCssClass;
-    
+
     return strtr($this->getErrorListFormatInARow(), array(
             '%field_id%' => isset($widgetAttributes['for']) ? $widgetAttributes['for'] : '',
             '%errors%' => implode('', $this->unnestErrors($errors, '', $widgetAttributes))
@@ -190,8 +190,8 @@ abstract class sfWidgetFormSchemaFormatter
    */
   public function generateLabel($name, $attributes = array())
   {
-    $is_required = false;    
-    
+    $is_required = false;
+
     if($this->validatorSchema && isset($this->validatorSchema[$name]))
     {
       $validator = $this->validatorSchema[$name];
@@ -210,64 +210,64 @@ abstract class sfWidgetFormSchemaFormatter
          $validator->getOption('required'))
       {
         $is_required = true;
-      }      
+      }
     }
-    
+
     $labelName = $this->generateLabelName($name);
     if(false === $labelName)
     {
       return '';
     }
 
-    if (!isset($attributes['for']))
+    if (!isset($attributes['for']) && $this->widgetSchema[$name]->isLabelable())
     {
       $attributes['for'] = $this->widgetSchema->generateId($this->widgetSchema->generateName($name));
     }
 
     if($is_required)
     {
-      if(isset($attributes['required_label_class']))        
+      if(isset($attributes['required_label_class']))
       {
         $class = $attributes['required_label_class'];
         unset($attributes['required_label_class']);
-      }          
-      else 
+      }
+      else
       {
         $class = $this->requiredLabelCssClass;
       }
-      
+
       $labelName = strtr($this->requiredLabelFormat, array(
         '%label_name%' => $labelName,
         '%css_class%'  => $class,
       ));
-      
+
       // add class also to the label itself
       isset($attributes['class']) ? $attributes['class'] .= ' ' . $class :
-        $attributes['class'] = $class;       
+        $attributes['class'] = $class;
     }
-    
-    if(sfWidget::isAriaEnabled() && !isset($attributes['id']))
+
+    if(sfWidget::isAriaEnabled() && !isset($attributes['id']) && isset($attributes['for']))
     {
       $attributes['id'] = sprintf('%s_label', $attributes['for']);
     }
 
-    return $this->widgetSchema->renderContentTag('label', $labelName, $attributes);    
+    return $this->widgetSchema->renderContentTag('label', $labelName, $attributes);
   }
 
   /**
-   * Used for displaying bellow the form 
+   * Used for displaying bellow the form
    * to the user what is used to display required fields
    * in the form
-   * 
-   * @return string 
+   *
+   * @return string
    */
   public function getRequiredLabelMarkup()
   {
     return strtr($this->requiredLabelFormat, array(
-      '%label_name%' => '', 
+      '%label_name%' => '',
       '%css_class%' => $this->requiredLabelCssClass));
   }
-  
+
   /**
    * Generates the label name for the given field name.
    *
@@ -286,7 +286,7 @@ abstract class sfWidgetFormSchemaFormatter
 
     return $this->translate($label);
   }
-  
+
   /**
    * Get i18n catalogue name
    *
@@ -321,18 +321,18 @@ abstract class sfWidgetFormSchemaFormatter
     $attributes = array();
     foreach($widgetAttributes as $a => $v)
     {
-      $attributes[] = sprintf('%s="%s"', $a, htmlspecialchars($v, ENT_NOQUOTES, 
+      $attributes[] = sprintf('%s="%s"', $a, htmlspecialchars($v, ENT_NOQUOTES,
               sfWidget::getCharset(), false));
     }
-    
+
     $attributes = join(' ', $attributes);
-    
+
     foreach ($errors as $name => $error)
     {
       $fieldId = isset($widgetAttributes['id']) ? $widgetAttributes['id'] : '';
       if ($error instanceof ArrayAccess || is_array($error))
       {
-        $newErrors = array_merge($newErrors, 
+        $newErrors = array_merge($newErrors,
                 $this->unnestErrors($error, ($prefix ? $prefix.' > ' : '').$name),
                 $widgetAttributes
                 );
@@ -350,8 +350,8 @@ abstract class sfWidgetFormSchemaFormatter
 
         if (!is_integer($name))
         {
-          $newErrors[] = strtr($this->getNamedErrorRowFormatInARow(), 
-                  array('%error%' => $err, 
+          $newErrors[] = strtr($this->getNamedErrorRowFormatInARow(),
+                  array('%error%' => $err,
                         '%name%' => ($prefix ? $prefix.' > ' : '').$name,
                         '%field_id%' => $fieldId,
                         '%attributes%' => $attributes
@@ -359,8 +359,8 @@ abstract class sfWidgetFormSchemaFormatter
         }
         else
         {
-          $newErrors[] = strtr($this->getErrorRowFormatInARow(), 
-                  array('%error%' => $err, 
+          $newErrors[] = strtr($this->getErrorRowFormatInARow(),
+                  array('%error%' => $err,
                         '%field_id%' => $fieldId,
                         '%attributes%' => $attributes
                       ));
@@ -453,47 +453,47 @@ abstract class sfWidgetFormSchemaFormatter
 
   /**
    * Returns sfWidgetFormSchema instance
-   * 
+   *
    * @return sfWidgetFormSchema
    */
   public function getWidgetSchema()
   {
     return $this->widgetSchema;
   }
-  
+
   /**
    * Sets the widget schema associated with this formatter instance.
    *
    * @param sfValidatorSchema $validatorSchema A sfValidatorSchema instance
-   */  
+   */
   public function setValidatorSchema(sfValidatorSchema $validatorSchema)
   {
     $this->validatorSchema = $validatorSchema;
   }
-  
+
   /**
    * Return sfValidatorSchema instance
-   * 
-   * @return sfValidatorSchema 
+   *
+   * @return sfValidatorSchema
    */
   public function getValidatorSchema()
   {
     return $this->validatorSchema;
   }
-  
+
   /**
    * Sets the validator for field $name.
    *
    * @param sfValidatorSchema $validatorSchema A sfValidatorSchema instance
-   */  
+   */
   public function setValidator($name, sfValidatorBase $validator)
   {
     $this->validators[$name] = $validator;
   }
-  
+
   /**
    * Return sfValidatorBase instance or false
-   * 
+   *
    * @return sfValidatorBase
    */
   public function getValidator($name)
@@ -503,32 +503,32 @@ abstract class sfWidgetFormSchemaFormatter
 
   /**
    * Return is validator for the field name exists in this decorator
-   * 
+   *
    * @return boolean
    */
   public function hasValidator($name)
   {
     return isset($this->validators[$name]);
   }
-  
+
   /**
    * Returns CSS class for errors
-   * 
+   *
    * @return string
    */
   public function getErrorCssClass()
   {
     return $this->errorCssClass;
   }
-  
+
   /**
    * Returns field grou format
-   * 
+   *
    * @return string
    */
   public function getFieldGroupFormat()
   {
     return $this->fieldGroupFormat;
   }
-  
+
 }
