@@ -371,6 +371,16 @@ class sfFormField
   }
 
   /**
+   * Is the field labelable?
+   *
+   * @return boolean
+   */
+  public function isLabelable()
+  {
+    return $this->getWidget()->isLabelable();
+  }
+
+  /**
    * Returns the label name given a widget name.
    *
    * @return string The label name

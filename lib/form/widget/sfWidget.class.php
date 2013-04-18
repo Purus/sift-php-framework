@@ -507,7 +507,7 @@ abstract class sfWidget {
   /**
    * Prepares an attribute key and value for HTML representation.
    *
-   * It removes empty attributes, except for the value one.
+   * It removes empty attributes, except for the value one and HTML5 data attributes.
    *
    * @param  string $k  The attribute key
    * @param  string $v  The attribute value
@@ -516,7 +516,23 @@ abstract class sfWidget {
    */
   protected function attributesToHtmlCallback($k, $v)
   {
+    // this is a data attribute, leave it here!
+    if(strpos($k, 'data-') === 0)
+    {
+      return sprintf(' %s="%s"', $k, $this->escapeOnce($v));
+    }
+
     return false === $v || null === $v || ('' === $v && 'value' != $k) ? '' : sprintf(' %s="%s"', $k, $this->escapeOnce($v));
+  }
+
+  /**
+   * Is this widget labelable?
+   *
+   * @return boolean
+   */
+  public function isLabelable()
+  {
+    return true;
   }
 
 }

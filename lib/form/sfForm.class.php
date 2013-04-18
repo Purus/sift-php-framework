@@ -1378,16 +1378,24 @@ class sfForm implements ArrayAccess, Iterator, Countable
 
     $opt = sfInputFilters::toArray($opt);
 
-    $defaults = array(
-      'class' => isset($opt['class']) ? $opt['class'] : '',
-      'id' => $this->getKey(),
-      'anchor' => false
-    );
+    $class = array();
+    // form has file upload
+    if($this->hasFileUpload())
+    {
+      $class[] = 'has-file-upload';
+    }
 
     if(isset($opt['class']))
     {
+      $class[] = $opt['class'];
       unset($opt['class']);
     }
+
+    $defaults = array(
+      'class' => join(' ', $class),
+      'id' => $this->getKey(),
+      'anchor' => false
+    );
 
     $opt = array_merge($defaults, $opt);
     $url = '';
