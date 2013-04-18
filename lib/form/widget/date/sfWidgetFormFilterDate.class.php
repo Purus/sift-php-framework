@@ -5,7 +5,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
- 
+
 /**
  * sfWidgetFormFilterDate represents a date filter widget.
  *
@@ -38,7 +38,8 @@ class sfWidgetFormFilterDate extends sfWidgetFormDateRange
     $this->addOption('with_empty', true);
     $this->addOption('empty_label', 'is empty');
     $this->addOption('template', 'from %from% to %to%');
-    $this->addOption('filter_template', '%date_range% %empty_checkbox% %empty_label%');
+    $this->addOption('filter_template', sprintf('%%date_range%% %%empty_checkbox%% %s%%empty_label%%',
+            sfHtml::isXhtml() ? '<br />' : '<br>'));
   }
 
   /**
@@ -63,5 +64,5 @@ class sfWidgetFormFilterDate extends sfWidgetFormDateRange
       '%empty_label%'    => $this->getOption('with_empty') ? $this->renderContentTag('label', $this->translate($this->getOption('empty_label')), array('for' => $this->generateId($name.'[is_empty]'))) : '',
     ));
   }
-  
+
 }
