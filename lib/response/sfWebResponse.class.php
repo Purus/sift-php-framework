@@ -356,10 +356,14 @@ class sfWebResponse extends sfResponse
    */
   public function send()
   {
+    sfCore::getEventDispatcher()->notify(
+            new sfEvent('response.send', array('response' => &$this)));
+
     if(!sfToolkit::isCallable($this->content))
     {
       $this->sendHttpHeaders();
     }
+
     $this->sendContent();
   }
 
