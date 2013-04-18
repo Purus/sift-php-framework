@@ -35,7 +35,7 @@ $cwd = getcwd();
 
 chdir(dirname($libDir));
 
-$cmd = sprintf('java -jar %s %s/app/run.js %s -a -t=%s -d=%s -r=2 --exclude="min.js"',
+$cmd = sprintf('java -jar %s %s/app/run.js %s -a -t=%s -d=%s -r=2 --exclude="min.js" --exclude="globalize.js"',
         $jsDocDir . '/jsrun.jar',
         $jsDocDir,
         basename($libDir),
