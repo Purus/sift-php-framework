@@ -19,7 +19,7 @@ class sfCliI18nExtractTask extends sfCliBaseTask
   protected function configure()
   {
     $this->addArguments(array(
-      new sfCliCommandArgument('application', sfCliCommandArgument::REQUIRED, 'The application or plugin name'),
+      new sfCliCommandArgument('app', sfCliCommandArgument::REQUIRED, 'The application or plugin name'),
       new sfCliCommandArgument('culture', sfCliCommandArgument::REQUIRED, 'The target culture'),
     ));
 
@@ -70,7 +70,7 @@ EOF;
    */
   public function execute($arguments = array(), $options = array())
   {
-    $application = $arguments['application'];
+    $application = $arguments['app'];
     
     $plugin = false;
     
