@@ -71,8 +71,14 @@ class sfWidgetFormI18nAggregate extends sfWidgetForm
     $widgets = array();
 
     // render the widget for each culture
-    foreach($cultures as $culture)
+    foreach($cultures as $culture => $cultureName)
     {
+      if(is_numeric($culture))
+      {
+        $culture = $cultureName;
+        $cultureName = false;
+      }
+
       $widgetName = sprintf('%s[%s]', $name, $culture);
       $widgetValue = isset($value[$culture]) ? $value[$culture] : null;
 
@@ -81,6 +87,11 @@ class sfWidgetFormI18nAggregate extends sfWidgetForm
       if($this->getOption('add_flag'))
       {
         $label = sprintf('%s %s', $this->getFlag($culture), $label);
+      }
+
+      if($cultureName)
+      {
+        $label= sprintf('%s %s', $label, $cultureName);
       }
 
       $widgets[$culture] = array(
@@ -135,7 +146,14 @@ class sfWidgetFormI18nAggregate extends sfWidgetForm
     return strtr($this->getOption('flag_template'), array(
       '%culture%' => $culture
     ));
+  }
 
+  /**
+   * @see sfWidgetForm
+   */
+  public function isLabelable()
+  {
+    return false;
   }
 
 }
