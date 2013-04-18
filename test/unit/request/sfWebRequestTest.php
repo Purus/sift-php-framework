@@ -2,7 +2,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(61, new lime_output_color());
+$t = new lime_test(67, new lime_output_color());
 
 class myRequest extends sfWebRequest
 {
@@ -351,3 +351,82 @@ $t->is_deeply($request->getRawString('foo'), 'bar <li>', '->getBool() returns ra
 $t->is_deeply($request->getRawStringArray('category'), array('1', 'hacked', '2', '\\"'), '->getRawStringArray() returns array');
 
 $t->is_deeply($request->getFiltered('category', array(sfInputFilters::TO_BOOLEAN)), array(true, true, true, true), '->getRawStringArray() returns array');
+
+$_FILES = array('foofiles' =>
+  array (
+    'name' =>
+    array (
+      0 => 'foo.zip',
+      1 => 'index.html',
+    ),
+    'type' =>
+    array (
+      0 => 'application/octet-stream',
+      1 => 'text/html',
+    ),
+    'tmp_name' =>
+    array (
+      0 => '/tmp/php293.tmp',
+      1 => '/tmp/php294.tmp',
+    ),
+    'error' =>
+    array (
+      0 => 0,
+      1 => 0,
+    ),
+    'size' =>
+    array (
+      0 => 35193,
+      1 => 2,
+    ),
+  ));
+
+$request->initialize($context);
+$t->is($request->getFiles('foofiles'), array(
+    array(
+      'error' => 0,
+      'name' => 'foo.zip',
+      'type' => 'application/octet-stream',
+      'tmp_name' => '/tmp/php293.tmp',
+      'size' => 35193,
+    ),
+    array(
+    'error' => 0,
+    'name' => 'index.html',
+    'type' => 'text/html',
+    'tmp_name' => '/tmp/php294.tmp',
+    'size' => 2,
+    )
+), '->getFiles() return array of files');
+
+$expected = array(
+    'error' => 0,
+    'name' => 'foo.zip',
+    'type' => 'application/octet-stream',
+    'tmp_name' => '/tmp/php293.tmp',
+    'size' => 35193,
+  );
+
+$t->is($request->hasFile('foofiles'), true, '->hasFile() return false if the file does not exists');
+$t->is_deeply($request->getFileValues('foofiles[0]'), $expected, '->getFilesValues() return an array of file information');
+$t->is($request->getFileValue('foofiles[0]', 'name'), 'foo.zip', '->getFileValue() return a correct file information');
+$t->is($request->getFileValue('foofiles[0]', 'size'), 35193, '->getFileValue() return a correct file information');
+
+$t->is($request->getFiles(),   array('foofiles' =>
+  array (
+    0 =>
+    array (
+      'error' => 0,
+      'name' => 'foo.zip',
+      'type' => 'application/octet-stream',
+      'tmp_name' => '/tmp/php293.tmp',
+      'size' => 35193,
+    ),
+    1 =>
+    array (
+      'error' => 0,
+      'name' => 'index.html',
+      'type' => 'text/html',
+      'tmp_name' => '/tmp/php294.tmp',
+      'size' => 2,
+))), '->getFiles() return an array of all files');
