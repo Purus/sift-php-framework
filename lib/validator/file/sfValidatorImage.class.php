@@ -110,7 +110,7 @@ class sfValidatorImage extends sfValidatorFile
     /* @var $result sfUploadedFile */
 
     // try our image validation
-    $class = $this->getOption('validated_file_class');
+    $class = $this->getOption('uploaded_file_class');
 
     // we have a valid uploaded file, lets check if its an image
     // and its dimensions are ok!
