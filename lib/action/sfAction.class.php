@@ -1,7 +1,7 @@
 <?php
 /*
  * This file is part of the Sift PHP framework
- * 
+ *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
@@ -169,7 +169,7 @@ abstract class sfAction extends sfComponent
       $this->forward($module, $action);
     }
   }
-  
+
   /**
    * Forwards current action to security action (without browser redirection).
    *
@@ -179,10 +179,10 @@ abstract class sfAction extends sfComponent
    */
   public function forwardToSecure()
   {
-    $this->forward(sfConfig::get('sf_secure_module'), 
+    $this->forward(sfConfig::get('sf_secure_module'),
             sfConfig::get('sf_secure_action'));
   }
-  
+
   /**
    * If the condition is true, forwards current action to to security action (without browser redirection).
    *
@@ -190,13 +190,13 @@ abstract class sfAction extends sfComponent
    *
    * @param  bool   A condition that evaluates to true or false
    * @throws sfStopException
-   */  
+   */
   public function forwardToSecureIf($condition)
   {
-    $this->forwardIf($condition, sfConfig::get('sf_secure_module'), 
+    $this->forwardIf($condition, sfConfig::get('sf_secure_module'),
             sfConfig::get('sf_secure_action'));
   }
-  
+
   /**
    * Unless the condition is true, forwards current action to security action (without browser redirection).
    *
@@ -204,10 +204,10 @@ abstract class sfAction extends sfComponent
    *
    * @param  bool   A condition that evaluates to true or false
    * @throws sfStopException
-   */  
+   */
   public function forwardToSecureUnless($condition)
   {
-    $this->forwardUnless($condition, 
+    $this->forwardUnless($condition,
             sfConfig::get('sf_secure_module'), sfConfig::get('sf_secure_action'));
   }
 
@@ -287,7 +287,7 @@ abstract class sfAction extends sfComponent
            | sfRequest::POST
            | sfRequest::PUT
            | sfRequest::DELETE
-           | sfRequest::HEAD 
+           | sfRequest::HEAD
            | sfRequest::NONE;
   }
 
@@ -460,35 +460,35 @@ abstract class sfAction extends sfComponent
   public function redirectToReferer($default = '@homepage')
   {
     $url = $this->getRequest()->getReferer();
-    
+
     // try to get uri from request
     if(!$url)
     {
       $parameters = array(
-        'uri', 'return_url', 'return_uri'   
+        'uri', 'return_url', 'return_uri'
       );
-      
+
       foreach($parameters as $parameter)
       {
         if($this->getRequest()->hasParameter($parameter))
         {
-          $url = $this->getRequest()->getParameter($parameter);          
-          // is this url encoded using sfSafeUrl::encode()? 
+          $url = $this->getRequest()->getParameter($parameter);
+          // is this url encoded using sfSafeUrl::encode()?
           if(sfSafeUrl::decode($url))
-          {  
+          {
             $url = sfSafeUrl::decode($url);
-          }          
+          }
           break;
         }
       }
     }
-    
+
     // check against open redirect attacks
     if($url && sfSecurity::isRedirectUrlValid($url))
     {
       $url = urldecode($url);
-    }    
-    
+    }
+
     return $this->redirect($url ? $url : $default);
   }
 
@@ -509,15 +509,15 @@ abstract class sfAction extends sfComponent
         case 'array':
           return $this->getRequest()->getArray($name, $default);
         break;
-      
+
         case 'string':
           return $this->getRequest()->getString($name, $default);
-        break;      
+        break;
 
         case 'string_array':
           return $this->getRequest()->getStringArray($name, $default);
         break;
-      
+
         case 'int':
         case 'integer':
           return $this->getRequest()->getInt($name, $default);
@@ -526,36 +526,36 @@ abstract class sfAction extends sfComponent
         case 'int_array':
         case 'integer_array':
           return $this->getRequest()->getIntArray($name, $default);
-        break;      
-      
+        break;
+
         case 'float':
         case 'double':
         case 'real':
           return $this->getRequest()->getFloat($name, $default);
         break;
-      
+
         case 'float_array':
         case 'double_array':
         case 'real_array':
           return $this->getRequest()->getFloatArray($name, $default);
         break;
-      
+
         case 'bool':
         case 'boolean':
           return $this->getRequest()->getBool($name, $default);
         break;
-      
+
         case 'bool_array':
         case 'boolean_array':
           return $this->getRequest()->getBoolArray($name, $default);
-        break;      
+        break;
 
         default:
           throw new InvalidArgumentException(sprintf('Invalid clean "%s" method given', $clean_method));
-        break;      
+        break;
       }
     }
-    
+
     return $this->requestParameterHolder->get($name, $default);
   }
 
@@ -630,7 +630,13 @@ abstract class sfAction extends sfComponent
     }
     $response = $this->getResponse();
     $response->setContent('');
-    $response->setContentType('application/json');    
+
+    // set content type only if there is no content type set
+    if(!$response->getHttpHeader('Content-type'))
+    {
+      $response->setContentType('application/json');
+    }
+
     return $this->renderText($data);
   }
 
@@ -649,20 +655,20 @@ abstract class sfAction extends sfComponent
     {
       $callable = $callable->getCallable();
     }
-    
+
     if(!sfToolkit::isCallable($callable, false, $callableName))
     {
       throw new InvalidArgumentException(sprintf('Invalid callable "%s" given.', $callableName));
     }
-    
+
     $this->getResponse()->setContent($callable);
-    
+
     return sfView::NONE;
   }
-  
+
   /**
    * Sends an image to browser
-   * 
+   *
    * @param sfImage $image
    * @param string $contentType
    * @return void
@@ -673,7 +679,7 @@ abstract class sfAction extends sfComponent
     $response->setContentType($contentType);
     return $this->renderText($image->toString());
   }
-  
+
   /**
    * Renders as XML
    *
@@ -825,7 +831,7 @@ abstract class sfAction extends sfComponent
     {
       sfContext::getInstance()->getLogger()->err('{sfAction} getMailBody() is deprecated. Use $mail_message->setBodyFromPartial() instead.');
     }
-    
+
     // validate email type
     if(!in_array($type, array('plain', 'html')))
     {
@@ -839,7 +845,7 @@ abstract class sfAction extends sfComponent
 
     $vars['sf_email_type']      = $type;
     $vars['sf_mailer_message']  = $message;
-    
+
     return $this->getPartial($partial, $vars, 'sfPartialMail');
   }
 
@@ -852,7 +858,7 @@ abstract class sfAction extends sfComponent
   {
     return $this->getContext()->getMailer();
   }
-  
+
   /**
    * Download a file using its absolute path
    *
@@ -878,5 +884,5 @@ abstract class sfAction extends sfComponent
     $downloader->setData($data);
     return $this->renderCallable(array(&$downloader, 'send'));
   }
-  
+
 }
