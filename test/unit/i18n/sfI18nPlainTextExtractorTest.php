@@ -2,29 +2,19 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(2, new lime_output_color());
+$t = new lime_test(1, new lime_output_color());
 
 $tests = array(
-  'test.js' => array(
-    'Hello world, testing jsgettext',
-    'string 2: double quotes',
-    '/* comment in string */',
-    'regexp in string: /[a-z]+/',
-    'string 2: "escaped double quotes"',
-    'Test string',
-    'string 1: single quotes',
-    'string 2: \'escaped single quotes\'',
-    'Jesus is Lord!',
+  'test.txt' => array(
+    'Hello world',
+    'Jesus is my Lord',
+    'Create new "%%title%%"',
+    'Hello',
+    'This is a hash #1',
   ),
-  'arguments.js' => array(
-    'Please enter %number% more characters.',
-    'Please enter %number% more characters with arguments.',
-  )
 );
 
-$extractor = new sfI18nJavascriptExtractor(array(
-
-));
+$extractor = new sfI18nPlainTextExtractor();
 
 foreach($tests as $file => $expected)
 {
