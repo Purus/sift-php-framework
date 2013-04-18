@@ -237,8 +237,8 @@ function _compress_javascript($buffer)
   {
     if(sfConfig::get('sf_logging_enabled'))
     {
-      sfContext::getInstance()->getLogger()->err('Javascript compression library is not present. Cannot minimize inline scripts.');
-    }    
+      sfLogger::getInstance()->info('Javascript compression library is not present. Cannot minimize inline scripts.');
+    }
     return $buffer;
   }
   
