@@ -51,6 +51,7 @@ class sfWidgetFormDualList extends sfWidgetFormChoice {
   {
     parent::configure($options, $attributes);
 
+    $this->addOption('model', null);
     $this->addOption('class', 'dual-list');
     $this->addOption('associated_first', true);
     $this->addOption('label_available', $this->translate('Available'));
@@ -316,6 +317,15 @@ EOF
         $this->setOption('choices', new sfCallable($callable));
       }
     }
+  }
+
+  /**
+   *
+   * @see sfWidgetForm
+   */
+  public function isLabelable()
+  {
+    return false;
   }
 
 }
