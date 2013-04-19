@@ -83,12 +83,15 @@ EOF;
       $this->logSection($this->getFullName(), sprintf('Extracting i18n strings for the "%s" application ("%s")', $application, $culture));
     }
 
+    // we need to create the context first
+    // because its setting current connection to the default one
+    $this->createContextInstance($this->getFirstApplication());
+
     if($options['connection'])
     {
       $connection = $this->getDatabase($options['connection']);
+      $connection->connect();
     }
-
-    $this->createContextInstance($this->getFirstApplication());
 
     $extract = new sfI18nApplicationExtract(array(
         'app_dir' => $dir,
