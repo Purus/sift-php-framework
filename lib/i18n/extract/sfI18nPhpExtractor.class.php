@@ -8,23 +8,23 @@
 
 /**
  * Extracts messages from php files
- * 
+ *
  * @package    Sift
  * @subpackage i18n_extract
  */
 class sfI18nPhpExtractor extends sfConfigurable implements sfII18nExtractor
-{  
+{
  /**
    * Default options
-   * 
-   * @var array 
+   *
+   * @var array
    */
   protected $defaultOptions = array(
     'functions' => array(
-        '__', 'format_number_choice'    
+        '__', 'format_number_choice'
     )
   );
-  
+
   /**
    * Extract i18n strings for the given content.
    *
@@ -33,17 +33,17 @@ class sfI18nPhpExtractor extends sfConfigurable implements sfII18nExtractor
    * @return array An array of i18n strings
    */
   public function extract($content)
-  {    
-    $functions = $this->findFunctionCalls($this->getOption('functions'), $content);  
-    
+  {
+    $functions = $this->findFunctionCalls($this->getOption('functions'), $content);
+
     $strings = array();
-    
+
     foreach($functions as $function)
     {
       $toBeTranslated = $function['args'][0];
       if(isset($function['args'][2]))
       {
-        $domain = $function['args'][2];                
+        $domain = $function['args'][2];
       }
       else
       {
@@ -60,25 +60,25 @@ class sfI18nPhpExtractor extends sfConfigurable implements sfII18nExtractor
       {
         continue;
       }
-      
-      $strings[$domain][] = $toBeTranslated;  
+
+      $strings[$domain][] = $toBeTranslated;
     }
-    
-    return $strings;    
+
+    return $strings;
   }
-  
+
   /**
-	 * Finds all function calls in $code and returns an array with an associative array for each function:
-   * 
-	 *	- name - name of the function
-	 *	- args - array for the function arguments. Each string literal is represented by itself, other arguments are represented by null.
-	 *  - line - line number
-   * 
+   * Finds all function calls in $code and returns an array with an associative array for each function:
+   *
+   *  - name - name of the function
+   *  - args - array for the function arguments. Each string literal is represented by itself, other arguments are represented by null.
+   *  - line - line number
+   *
    * Taken from Wordpress i18n tools
-   * 
+   *
    * @link http://svn.automattic.com/wordpress-i18n/tools/trunk/extract/extract.php
-	 */
-	protected function findFunctionCalls($function_names, $code) 
+   */
+  protected function findFunctionCalls($function_names, $code)
   {
     $comment_prefix = 'translators:';
     $tokens = token_get_all($code);
@@ -163,5 +163,5 @@ class sfI18nPhpExtractor extends sfConfigurable implements sfII18nExtractor
       $current_argument = null;
     }
     return $function_calls;
-	}  
+  }
 }

@@ -7,10 +7,10 @@
  */
 
 /**
- * Dummy class which simulates anonymous user. Used for extracting 
+ * Dummy class which simulates anonymous user. Used for extracting
  * strings from forms (which can be dynamically configured to display fields only
  * for anonymous user)
- * 
+ *
  * @package Sift
  * @subpackage i18n_extract
  */
@@ -22,13 +22,13 @@ class sfI18nExtractAnonymousUser extends sfUser implements sfSecurityUser {
   }
 
   public function addCredential($credential)
-  {    
+  {
   }
 
   public function clearCredentials()
-  {    
+  {
   }
-  
+
   public function hasCredential($credential)
   {
     return false;

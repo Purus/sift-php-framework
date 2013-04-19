@@ -24,12 +24,182 @@ class sfI18nApplicationExtract extends sfI18nExtract
   );
 
   /**
-   * RENAME!!!
+   * Array of default options
+   *
+   * @var array
+   */
+  protected $defaultOptions = array(
+    'source_driver' => 'gettext'
+  );
+
+  /**
+   * Extracts i18n strings.
+   *
+   */
+  public function extract()
+  {
+    $this->extractPhpFiles();
+    $this->extractModules();
+    $this->extractMenuYamlFiles();
+    $this->extractUserProfileYamlFiles();
+    $this->extractForms();
+
+    // parse extracted
+    $this->parseAllSeenMessages();
+  }
+
+  /**
+   * Extracts strings from php files belonging to the application.
+   *
+   */
+  protected function extractPhpFiles()
+  {
+    $directories = sfFinder::type('dir')
+            ->not_name('form') // we are extracting forms separatelly
+            ->in($this->getOption('app_dir').'/'.$this->getOption('lib_dir_name'));
+    $extracted = $this->extractFromPhpFiles($directories);
+    $this->sortExtracted($extracted);
+  }
+
+  /**
+   * Extracts strings from the application's modules
+   *
+   */
+  protected function extractModules()
+  {
+    $modulesDir = $this->getOption('app_dir').'/'.$this->getOption('module_dir_name');
+    $modules = sfFinder::type('dir')->maxdepth(0)->ignore_version_control()->in($modulesDir);
+
+    foreach($modules as $module)
+    {
+      $moduleName = basename($module);
+
+      $moduleExtractor = new sfI18nModuleExtract(array(
+          'culture' => $this->getOption('culture'),
+          'module_dir' => $module
+      ));
+
+      $extracted = $moduleExtractor->extract();
+      $this->sortExtracted($extracted, 'module', $moduleName);
+    }
+  }
+
+  /**
+   * Extracts strings from menu.yml yaml files
+   *
+   */
+  protected function extractMenuYamlFiles()
+  {
+    $menuExtractor = new sfI18nYamlMenuExtractor();
+    // menu yaml files
+    $menuFiles = sfFinder::type('file')->name('menu.yml')->in($this->getOption('app_dir').'/'.
+                  $this->getOption('config_dir_name'));
+    foreach($menuFiles as $file)
+    {
+      $extracted = $menuExtractor->extract(file_get_contents($file));
+      $this->sortExtracted($extracted);
+    }
+  }
+
+  /**
+   * Extracts strings from user_profile.yml yaml files
+   *
+   * @todo This does not belong to core, there should be a way to hook on the extraction
+   * process from plugin tasks, leaving this here for now. Needs more work.
+   *
+   */
+  protected function extractUserProfileYamlFiles()
+  {
+    $menuExtractor = new sfI18nYamlMenuExtractor();
+
+    $userProfileFiles = sfFinder::type('file')->name('user_profile.yml')->in($this->getOption('app_dir').'/'.
+                         $this->getOption('config_dir_name'));
+
+    foreach($userProfileFiles as $file)
+    {
+      ob_start();
+      @eval('?>' . file_get_contents($file) . '<?php ');
+      $contents = ob_get_contents();
+      ob_end_clean();
+
+      if(!$contents)
+      {
+        continue;
+      }
+
+      $extracted = $menuExtractor->extract(file_get_contents($file));
+      $this->sortExtracted($extracted);
+    }
+  }
+
+  /**
+   * Extracts strings from application forms
+   *
+   */
+  protected function extractForms()
+  {
+    $files = sfFinder::type('file')->in($this->getOption('app_dir') . '/' .
+              $this->getOption('lib_dir_name') . '/form');
+
+    foreach($files as $file)
+    {
+      // which classes are in the file?
+      $classes = sfToolkit::extractClasses($file);
+      foreach($classes as $class)
+      {
+        try {
+          // create form extractor
+          $extractor = new sfI18nFormExtract(array(
+            'form' => $class,
+            'culture' => $this->getOption('culture')
+          ));
+          $this->sortExtracted($extractor->extract());
+        }
+        catch(Exception $e)
+        {
+          throw new sfException(
+                  sprintf('Error extracting form "%s". Original message was: %s',
+                  $class, $e->getMessage()), $e->getCode());
+        }
+      }
+    }
+  }
+
+  /**
+   * Parses all seen messages and updates the sources
+   *
+   */
+  protected function parseAllSeenMessages()
+  {
+    foreach($this->allSeenMessages as $catalogue => $messages)
+    {
+      $source = sfI18nMessageSource::factory($this->getOption('source_driver'), dirname($catalogue));
+      $source->setCulture($this->culture);
+      $source->load(basename($catalogue));
+
+      $this->currentMessages[$catalogue] = array();
+
+      foreach($source->read() as $c => $translations)
+      {
+        foreach($translations as $key => $values)
+        {
+          $this->currentMessages[$catalogue][] = $key;
+        }
+      }
+
+      $newMessages = array_diff($this->allSeenMessages[$catalogue], $this->currentMessages[$catalogue]);
+      $this->newMessages[$catalogue] = $newMessages;
+      $this->oldMessages[$catalogue] = array_diff($this->currentMessages[$catalogue], $this->allSeenMessages[$catalogue]);
+      $this->sources[$catalogue] = $source;
+    }
+  }
+
+  /**
+   * Sorts extracted messages by the translation catalogue
    *
    * @param array $extracted
    * @param string $context
    * @param string $module
-   * @todo REFACTOR!
    */
   protected function sortExtracted($extracted, $context = 'application', $module = null)
   {
@@ -103,7 +273,6 @@ class sfI18nApplicationExtract extends sfI18nExtract
         {
           $key = $domain;
         }
-
       }
 
       foreach($messages as $message)
@@ -111,61 +280,6 @@ class sfI18nApplicationExtract extends sfI18nExtract
         $this->allSeenMessages[$key][] = $message;
       }
     }
-  }
-
-  /**
-   * Extracts i18n strings.
-   *
-   */
-  public function extract()
-  {
-    // extract string from application files
-    $extracted = $this->extractFromPhpFiles(array(
-      $this->getOption('root_dir').'/'.$this->getOption('lib_dir_name'),
-      $this->getOption('app_dir').'/'.$this->getOption('lib_dir_name'),
-      $this->getOption('app_dir').'/'.$this->getOption('template_dir_name'),
-    ));
-
-    $this->sortExtracted($extracted);
-
-    $modulesDir = $this->getOption('app_dir').'/'.$this->getOption('module_dir_name');
-    $modules = sfFinder::type('dir')->maxdepth(0)->ignore_version_control()->in($modulesDir);
-
-    foreach($modules as $module)
-    {
-      $moduleName = basename($module);
-
-      $moduleExtractor = new sfI18nModuleExtract(array(
-          'culture' => $this->getOption('culture'),
-          'module_dir' => $module
-      ));
-
-      $extracted = $moduleExtractor->extract();
-      $this->sortExtracted($extracted, 'module', $moduleName);
-    }
-
-    foreach($this->allSeenMessages as $catalogue => $messages)
-    {
-      $source = sfI18nMessageSource::factory('gettext', dirname($catalogue));
-      $source->setCulture($this->culture);
-      $source->load(basename($catalogue));
-
-      $this->currentMessages[$catalogue] = array();
-
-      foreach($source->read() as $c => $translations)
-      {
-        foreach($translations as $key => $values)
-        {
-          $this->currentMessages[$catalogue][] = $key;
-        }
-      }
-
-      $newMessages = array_diff($this->allSeenMessages[$catalogue], $this->currentMessages[$catalogue]);
-      $this->newMessages[$catalogue] = $newMessages;
-      $this->oldMessages[$catalogue] = array_diff($this->currentMessages[$catalogue], $this->allSeenMessages[$catalogue]);
-      $this->sources[$catalogue] = $source;
-    }
-
   }
 
 }

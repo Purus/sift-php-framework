@@ -8,7 +8,7 @@
 
 /**
  * Yaml extractor base class
- * 
+ *
  * @package    Sift
  * @subpackage i18n_extract
  */

@@ -28,6 +28,7 @@ class sfCliI18nExtractTask extends sfCliBaseTask
       new sfCliCommandOption('display-old', null, sfCliCommandOption::PARAMETER_NONE, 'Output all old strings'),
       new sfCliCommandOption('auto-save', null, sfCliCommandOption::PARAMETER_NONE, 'Save the new strings'),
       new sfCliCommandOption('auto-delete', null, sfCliCommandOption::PARAMETER_NONE, 'Delete old strings'),
+      new sfCliCommandOption('connection', null, sfCliCommandOption::PARAMETER_OPTIONAL, 'Connection name', 'default'),
     ));
 
     $this->namespace = 'i18n';
@@ -35,7 +36,7 @@ class sfCliI18nExtractTask extends sfCliBaseTask
     $this->briefDescription = 'Extracts i18n strings from application or plugin';
 
     $scriptName = $this->environment->get('script_name');
-    
+
     $this->detailedDescription = <<<EOF
 The [i18n:extract|INFO] task extracts i18n strings from your project files
 for the given application (or plugin) and target culture:
@@ -54,7 +55,7 @@ To save them in the i18n message catalogue, use the [--auto-save|COMMENT] option
   [{$scriptName} i18n:extract --auto-save front cs_CZ|INFO]
 
 If you want to display strings that are present in the i18n messages
-catalogue but are not found in the application (or plugin), use the 
+catalogue but are not found in the application (or plugin), use the
 [--display-old|COMMENT] option:
 
   [{$scriptName} i18n:extract --display-old front cs_CZ|INFO]
@@ -71,9 +72,9 @@ EOF;
   public function execute($arguments = array(), $options = array())
   {
     $application = $arguments['app'];
-    
+
     $plugin = false;
-    
+
     // this is a plugin
     if(preg_match('|Plugin$|', $application))
     {
@@ -86,7 +87,7 @@ EOF;
       $this->checkAppExists($application);
       $dir = $this->environment->get('sf_apps_dir') . '/' . $application;
     }
-    
+
     $culture = $arguments['culture'];
 
     if($plugin)
@@ -97,64 +98,109 @@ EOF;
     {
       $this->logSection($this->getFullName(), sprintf('Extracting i18n strings for the "%s" application ("%s")', $application, $culture));
     }
-      
+
+    if($options['connection'])
+    {
+      $connection = $this->getDatabase($options['connection']);
+    }
+
+    // create context, since it is needed for extraction of forms
+    if(!sfContext::hasInstance())
+    {
+      $application = $this->getFirstApplication();
+      if(!$application)
+      {
+        throw new sfCliCommandException('There is no application, cannot create context instance');
+      }
+      sfContext::createInstance($this->getApplication($application, $this->environment->get('sf_environment')));
+    }
+
     $extract = new sfI18nApplicationExtract(array(
         'app_dir' => $dir,
         'root_dir' => $this->environment->get('sf_root_dir'),
         'culture' => $culture
     ));
-      
+
     // do the extraction
     $extract->extract();
 
-    $this->logSection('i18n', sprintf('found "%d" new i18n strings', $extract->getNewMessagesCount()));
-    $this->logSection('i18n', sprintf('found "%d" old i18n strings', $extract->getOldMessagesCount()));
+    $this->logSection($this->getFullName(), sprintf('Found "%d" new i18n strings', $extract->getNewMessagesCount()));
+    $this->logSection($this->getFullName(), sprintf('Found "%d" old i18n strings', $extract->getOldMessagesCount()));
 
     if ($options['display-new'])
     {
-      $this->logSection('i18n', sprintf('display new i18n strings', $extract->getNewMessagesCount()));
+      $this->logSection($this->getFullName(), sprintf('display new i18n strings', $extract->getNewMessagesCount()));
+      $found = 0;
       foreach ($extract->getNewMessages() as $domain => $messages)
       {
         if(count($messages))
         {
-          // $this->log('               '.$domain."\n");
+          $this->logSection($this->getFullName(), 'Domain: '. $this->replacePaths($domain));
         }
         foreach($messages as $message)
         {
-          $this->log('               '.$message."\n");
-        }        
+          $this->log('                '.$message);
+          $found++;
+        }
+      }
+      if(!$found)
+      {
+        $this->logSection($this->getFullName(), 'No new messages to be displayed.');
       }
     }
 
     if ($options['auto-save'])
     {
-      $this->logSection('i18n', 'saving new i18n strings');
+      $this->logSection($this->getFullName(), 'Saving new i18n strings');
 
       $extract->saveNewMessages();
     }
 
     if ($options['display-old'])
     {
-      $this->logSection('i18n', sprintf('display old i18n strings', $extract->getOldMessagesCount()));
+      $this->logSection($this->getFullName(), sprintf('display old i18n strings', $extract->getOldMessagesCount()));
+      $found = 0;
       foreach($extract->getOldMessages() as $domain => $messages)
       {
         if(count($messages))
         {
-          // $this->log('               '.$domain."\n");
+          $this->logSection($this->getFullName(), 'Domain: ' . $this->replacePaths($domain));
         }
         foreach($messages as $message)
         {
-          $this->log('               '.$message."\n");
+          $this->log('                '.$message);
+          $found++;
         }
+      }
+
+      if(!$found)
+      {
+        $this->logSection($this->getFullName(), 'No old messages to be displayed.');
       }
     }
 
     if ($options['auto-delete'])
     {
-      $this->logSection('i18n', 'deleting old i18n strings');
-
+      $this->logSection($this->getFullName(), 'Deleting old i18n strings');
       $extract->deleteOldMessages();
     }
-    
+
+  }
+
+  /**
+   * Replaces path to be display in the console
+   *
+   * @param string $path
+   * @return string
+   */
+  protected function replacePaths($path)
+  {
+    return str_replace(array(
+      $this->environment->get('sf_plugins_dir'),
+      $this->environment->get('sf_root_dir')
+    ), array(
+      '%SF_PLUGINS_DIR%',
+      '%SF_ROOT_DIR%'
+    ), $path);
   }
 }

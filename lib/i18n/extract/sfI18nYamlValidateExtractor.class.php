@@ -8,7 +8,7 @@
 
 /**
  * Extracts messages from validate.yml files
- * 
+ *
  * @package    Sift
  * @subpackage i18n_extract
  */

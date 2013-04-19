@@ -7,10 +7,10 @@
  */
 
 /**
- * Dummy class which simulates logged in user. Used for extracting 
+ * Dummy class which simulates logged in user. Used for extracting
  * strings from forms (which can be dynamically configured to display fields only
  * for logged in user)
- * 
+ *
  * @package Sift
  * @subpackage i18n_extract
  */

@@ -9,9 +9,10 @@
 // define dummy translation function
 if(!function_exists('__'))
 {
+
   /**
    * Translate function. Leaves the message untouched.
-   *  
+   *
    * @param string $text
    * @param array $args
    * @param string $catalogue
@@ -19,13 +20,14 @@ if(!function_exists('__'))
    */
   function __($string, $args = array(), $catalogue = 'messages')
   {
-    return  $string;
+    return $string;
   }
+
 }
 
 /**
  * Extracts string from application
- * 
+ *
  * @package    Sift
  * @subpackage i18n_extract
  * @see http://trac.symfony-project.org/browser/plugins/sfI18nFormExtractorPlugin
@@ -37,13 +39,14 @@ class sfI18nFormExtract extends sfI18nExtract {
           $form,
           $catalogueName,
           $cataloguePath,
-          $content,          
-          $messages = array();
+          $content;
+
+  protected $strings = array();
 
   /**
    * Array of required options
-   * 
-   * @var array 
+   *
+   * @var array
    */
   protected $requiredOptions = array(
       'form',
@@ -56,26 +59,26 @@ class sfI18nFormExtract extends sfI18nExtract {
     $reflection = $this->checkForm($class);
 
     $this->form = new $class();
-    
+
     // where do the translations sit?
     $catalogue = $this->form->getTranslationCatalogue();
     if(!$catalogue)
     {
-      throw new sfCliCommandArgumentsException(sprintf('The form "%s" has setup its translation catalogue.', $class));
+      throw new sfException(sprintf('The form "%s" has no translation catalogue assigned.', $class));
     }
-    
-    $this->catalogue     = $catalogue;
+
+    $this->catalogue = $catalogue;
     $this->catalogueName = basename($catalogue);
     $this->cataloguePath = dirname($catalogue);
 
     if(!is_dir($this->cataloguePath))
     {
-      throw new sfCliCommandArgumentsException(sprintf('The form catalogue specifies the path "%s" which does not exist.', $this->cataloguePath));
+      throw new sfException(sprintf('The form catalogue specifies the path "%s" which does not exist.', $this->cataloguePath));
     }
-    
+
     // load form contents
     $this->content = file_get_contents($reflection->getFileName());
-    
+
     // disable translation
     $this->form->setTranslationCatalogue(false);
     $formatter = $this->form->getWidgetSchema()->getFormFormatter();
@@ -90,7 +93,7 @@ class sfI18nFormExtract extends sfI18nExtract {
 
   /**
    * Checks if the given form extends sfForm and is initializable (can be constructed)
-   * 
+   *
    * @param string $class
    * @return ReflectionClass
    * @throws sfCliCommandArgumentsException
@@ -104,9 +107,9 @@ class sfI18nFormExtract extends sfI18nExtract {
       throw new sfCliCommandArgumentsException(sprintf('Form "%s" is not an instance of sfForm.', $class));
     }
 
-    // check if we can contruct the form, 
+    // check if we can contruct the form,
     // how do the __contructor arguments look like?
-    // are the optional or array based? 
+    // are the optional or array based?
     $constructor = $reflection->getConstructor();
     $parameters = $constructor->getParameters();
     $cannotCreate = false;
@@ -125,13 +128,13 @@ class sfI18nFormExtract extends sfI18nExtract {
 
     if($cannotCreate)
     {
-      // FIXME: make it possible to extract only __() or $this->__() function calls      
+      // FIXME: make it possible to extract only __() or $this->__() function calls
       throw new sfCliCommandArgumentsException(sprintf('Class "%s" is not initiable. Cannot extract strings.', $class));
     }
-    
+
     return $reflection;
   }
-  
+
   /**
    * Extracts i18n strings.
    *
@@ -139,28 +142,30 @@ class sfI18nFormExtract extends sfI18nExtract {
   public function extract()
   {
     // empty
-    $this->messages = array();
+    $this->strings = array();
 
     // extract from file
     $extractor = new sfI18nPhpExtractor();
 
-    // be carefull this contains messages 
+    // be carefull this contains strings
     // grouped by the domain
     $extractedMessages = $extractor->extract($this->content);
 
-    // FIXME: how to deal its,
-    // we just get all messages found and make them as they belong to the form
-
     foreach($extractedMessages as $domain => $messages)
     {
+      if($domain === sfI18nExtract::UNKNOWN_DOMAIN)
+      {
+        $domain = $this->catalogue;
+      }
+
       foreach($messages as $message)
       {
-        $this->messages[] = $message;
+        $this->strings[$domain][] = $message;
       }
     }
 
     $this->form->setUser(new sfI18nExtractLoggedInUser());
-    
+
     // reconfigure the form without translations
     // as logged in user with all credentials
     $this->form->configure();
@@ -185,27 +190,19 @@ class sfI18nFormExtract extends sfI18nExtract {
     $this->processValues();
     $this->registerErrorMessages();
 
-    // all extracted messages
-    $this->allSeenMessages = array($this->catalogue => $this->getFormMessages());
-    
-    $source = sfI18nMessageSource::factory($this->getOption('source_type', 'gettext'), $this->cataloguePath);
-    $source->setCulture($this->culture);
-    $source->load(basename($this->catalogueName));
-    
-    $this->sources[$this->catalogue] = $source;
-    
-    $this->currentMessages[$this->catalogue] = array();
-
-    foreach($source->read() as $c => $translations)
+    foreach($this->strings as $domain => $strings)
     {
-      foreach($translations as $key => $values)
+      foreach($strings as $id => $string)
       {
-        $this->currentMessages[$this->catalogue][] = $key;
+        if(empty($string))
+        {
+          unset($strings[$id]);
+        }
       }
-    }  
-    
-    $this->newMessages[$this->catalogue] = array_diff($this->allSeenMessages[$this->catalogue], $this->currentMessages[$this->catalogue]);
-    $this->oldMessages[$this->catalogue] = array_diff($this->currentMessages[$this->catalogue], $this->allSeenMessages[$this->catalogue]);     
+      $this->strings[$domain] = array_unique($strings);
+    }
+
+    return $this->strings;
   }
 
   private function registerErrorMessages()
@@ -219,30 +216,15 @@ class sfI18nFormExtract extends sfI18nExtract {
     $this->merge($this->form->getValidatorSchema()->getPreValidator());
   }
 
-  private function getFormMessages()
-  {
-    $this->messages = array_unique($this->messages);
-    $msgs = array();
-    foreach($this->messages as $message)
-    {
-      if(!empty($message))
-      {
-        $msgs[] = $message;
-      }
-    }
-    return $msgs;
-  }
-
   private function merge($field)
   {
     if(!$field)
     {
       return;
     }
-    if(method_exists($field, 'getActiveMessages')
-            && method_exists($field, 'getValidators'))
+    if(method_exists($field, 'getActiveMessages') && method_exists($field, 'getValidators'))
     {
-      $this->messages = array_merge($this->messages, $field->getActiveMessages());
+      $this->strings[$this->catalogue] = array_merge($this->strings[$this->catalogue], $field->getActiveMessages());
       foreach($field->getValidators() as $f)
       {
         $this->merge($f);
@@ -250,7 +232,7 @@ class sfI18nFormExtract extends sfI18nExtract {
     }
     elseif(method_exists($field, 'getActiveMessages'))
     {
-      $this->messages = array_merge($this->messages, $field->getActiveMessages());
+      $this->strings[$this->catalogue] = array_merge($this->strings[$this->catalogue], $field->getActiveMessages());
     }
   }
 
@@ -259,7 +241,7 @@ class sfI18nFormExtract extends sfI18nExtract {
     $labels = $this->form->getWidgetSchema()->getLabels();
     foreach($labels as $key => $value)
     {
-      $this->messages[] = $value;
+      $this->strings[$this->catalogue][] = $value;
     }
   }
 
@@ -270,7 +252,7 @@ class sfI18nFormExtract extends sfI18nExtract {
     {
       if($label = $group->getLabel())
       {
-        $this->messages[] = $label;
+        $this->strings[$this->catalogue][] = $label;
       }
     }
   }
@@ -286,7 +268,7 @@ class sfI18nFormExtract extends sfI18nExtract {
     }
     else
     {
-      $this->messages[] = $value;
+      $this->strings[$this->catalogue][] = $value;
     }
   }
 
@@ -317,18 +299,18 @@ class sfI18nFormExtract extends sfI18nExtract {
     {
       if(empty($value))
       {
-        $this->messages[] = $key;
+        $this->strings[$this->catalogue][] = $key;
       }
       else
       {
-        $this->messages[] = $value;
+        $this->strings[$this->catalogue][] = $value;
       }
     }
   }
-  
+
   /**
    * Callble for the form. Returns the message untouched.
-   * 
+   *
    * @param string $message
    * @param array $parameters
    * @return string

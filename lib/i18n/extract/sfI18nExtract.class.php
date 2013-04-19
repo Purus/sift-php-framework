@@ -8,7 +8,7 @@
 
 /**
  * Extract i18n strings
- * 
+ *
  * @package    Sift
  * @subpackage i18n_extract
  */
@@ -16,16 +16,16 @@ abstract class sfI18nExtract extends sfConfigurable {
 
   /**
    * Unknown translation domain
-   * 
+   *
    */
   const UNKNOWN_DOMAIN = '___UNKNOWN_DOMAIN___';
-  
+
   /**
    * Global application domain
    */
   const GLOBAL_APPLICATION_DOMAIN = '__GLOBAL_APPLICATION_DOMAIN__';
 
-  protected 
+  protected
     $sources = array(),
     $allSeenMessages = array(),
     $currentMessages = array(),
@@ -36,8 +36,8 @@ abstract class sfI18nExtract extends sfConfigurable {
 
   /**
    * Array of default options
-   * 
-   * @var array 
+   *
+   * @var array
    */
   protected $defaultOptions = array(
     'source_type'     => 'gettext',
@@ -50,10 +50,10 @@ abstract class sfI18nExtract extends sfConfigurable {
     'validate_dir_name' => 'validate',
     'i18n_dir_name' => 'i18n'
   );
-  
+
   /**
    * Array of required options
-   * @var array 
+   * @var array
    */
   protected $requiredOptions = array(
     'culture'
@@ -61,7 +61,7 @@ abstract class sfI18nExtract extends sfConfigurable {
 
   /**
    * Array of options
-   * 
+   *
    * @param array $options
    */
   public function __construct($options = array())
@@ -69,7 +69,7 @@ abstract class sfI18nExtract extends sfConfigurable {
     parent::__construct($options);
 
     $this->culture = $options['culture'];
-    $this->configure();    
+    $this->configure();
   }
 
   /**
@@ -264,7 +264,7 @@ abstract class sfI18nExtract extends sfConfigurable {
 
   /**
    * Replaces constants in the string
-   * 
+   *
    * @param string $string
    * @return string
    */

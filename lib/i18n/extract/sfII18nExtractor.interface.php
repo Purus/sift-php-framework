@@ -8,9 +8,9 @@
 
 /**
  * Extractor interface
- * 
+ *
  * @package    Sift
- * @subpackage i18n_extract 
+ * @subpackage i18n_extract
  */
 interface sfII18nExtractor
 {
@@ -22,5 +22,5 @@ interface sfII18nExtractor
    * @return array An array of i18n strings
    */
   public function extract($content);
-  
+
 }
