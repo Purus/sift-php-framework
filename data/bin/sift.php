@@ -15,18 +15,19 @@ require_once($sf_sift_lib_dir.'/autoload/sfCoreAutoload.class.php');
 sfCoreAutoload::register();
 
 try
-{ 
+{
   $environment = new sfCliTaskEnvironment(array(
-    'sf_sift_version'  => sfCore::getVersion(),  
+    'sf_sift_version'  => sfCore::getVersion(),
     'sf_sift_name'     => 'Sift',
     'sf_root_dir'      => getcwd(),
+    'sf_environment'   => 'cli',
     'sf_sift_lib_dir'  => $sf_sift_lib_dir,
-    'sf_sift_data_dir' => $sf_sift_data_dir,  
+    'sf_sift_data_dir' => $sf_sift_data_dir,
     'script_name'      => sprintf('./%s', $_SERVER['PHP_SELF'])
   ));
-  
+
   $application = new sfCliRootCommandApplication($environment);
-  $statusCode = $application->run();  
+  $statusCode = $application->run();
 }
 catch(Exception $e)
 {
