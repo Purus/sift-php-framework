@@ -8,10 +8,10 @@
 
 /**
  * sfII18NMessageSource interface.
- * 
+ *
  * All messages source used by sfI18nMessageFormat must be of sfII18nMessageSource.
  * It defines a set of operations to add and retrieve messages from the
- * message source. In addition, message source can load a particular 
+ * message source. In addition, message source can load a particular
  * catalogue.
  *
  * @author Xiang Wei Zhuo <weizhuo[at]gmail[dot]com>
@@ -42,7 +42,7 @@ interface sfII18nMessageSource {
    * # "catalogue+variant" the catalogue and its variants.
    * # "source string" translation keys, and its translations.
    * <code>
-   *   array('catalogue+variant' => 
+   *   array('catalogue+variant' =>
    *       array('source string' => 'target string', ...)
    *             ...),
    *        ...);
@@ -53,7 +53,7 @@ interface sfII18nMessageSource {
   public function read();
 
   /**
-   * Saves the list of untranslated blocks to the translation source. 
+   * Saves the list of untranslated blocks to the translation source.
    * If the translation was not found, you should add those
    * strings to the translation source via the <b>append()</b> method.
    *
@@ -76,7 +76,7 @@ interface sfII18nMessageSource {
    *
    * @param string the source message to delete.
    * @param string the catalogue to delete from.
-   * @return boolean true if deleted, false otherwise. 
+   * @return boolean true if deleted, false otherwise.
    */
   public function delete($message, $catalogue = 'messages');
 
@@ -87,14 +87,14 @@ interface sfII18nMessageSource {
    * @param string the new translation string.
    * @param string comments
    * @param string the catalogue of the translation.
-   * @return boolean true if translation was updated, false otherwise. 
+   * @return boolean true if translation was updated, false otherwise.
    */
   public function update($text, $target, $comments, $catalogue = 'messages');
 
   /**
    * Returns a list of catalogue as key and all it variants as value.
    *
-   * @return array list of catalogues 
+   * @return array list of catalogues
    */
   public function catalogues();
 
@@ -108,13 +108,18 @@ interface sfII18nMessageSource {
   /**
    * Get the culture identifier for the source.
    *
-   * @return string culture identifier. 
+   * @return string culture identifier.
    */
   public function getCulture();
-  
+
   /**
    * Returns an id of this source
    */
   public function getId();
+
+  /**
+   * Returns original source
+   */
+  public function getOriginalSource();
 
 }

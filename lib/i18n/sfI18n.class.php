@@ -16,31 +16,38 @@ class sfI18n {
 
   /**
    * Instance holder
-   * 
-   * @var sfI18n 
+   *
+   * @var sfI18n
    */
   protected static $instance;
-  
+
   /**
    * Array of sfII18nMessageSources
-   * 
-   * @var array 
+   *
+   * @var array
    */
   protected $sources = array();
-  
+
   /**
    * Culture
-   * 
-   * @var string 
+   *
+   * @var string
    */
   protected $culture;
-  
+
   /**
    * sfContext holder
-   * 
-   * @var sfContext 
+   *
+   * @var sfContext
    */
   protected $context;
+
+  /**
+   * Array of requested translations
+   *
+   * @var array
+   */
+  protected $requestedTranslations = array();
 
   public function initialize(sfContext $context, $options = array())
   {
@@ -49,11 +56,11 @@ class sfI18n {
 
     // FIXME: load fallback sources as last instance translators
     // for: core sift, forms, this should be passed as options
-    
-    $this->appendMessageSource($this->createMessageSource(sfConfig::get('sf_i18n_source'), 
+
+    $this->appendMessageSource($this->createMessageSource(sfConfig::get('sf_i18n_source'),
                                sfConfig::get('sf_app_i18n_dir')));
   }
-  
+
   /**
    * Returns single instance of this class
    *
@@ -68,7 +75,7 @@ class sfI18n {
     }
     return self::$instance;
   }
-  
+
   /**
    * Translates given string with arguments using i18n catalogue(s).
    *
@@ -82,22 +89,33 @@ class sfI18n {
    * @param string $catalogue
    * @param string $culture Force to given culture
    * @return string
-   */  
+   */
   public function __($string, $args = array(), $catalogue = 'messages', $culture = null)
   {
     if(sfConfig::get('sf_debug'))
     {
       $timer = sfTimerManager::getTimer('Translation');
     }
-    
+
     list($source, $catalogue) = $this->prepareSources($catalogue);
 
     $translated = false;
-    
+
     if($source)
     {
-      $source['source']->setCulture($culture ? $culture : $this->getCulture());    
+      $source['source']->setCulture($culture ? $culture : $this->getCulture());
       $translated = $source['formatter']->formatExists($string, $args, $catalogue);
+    }
+
+    // we are in learning mode, catch what we translated
+    if(sfConfig::get('sf_i18n_learning_mode'))
+    {
+      $this->requestedTranslations[$catalogue][$string] = array(
+        'source'        => $source['source'] ? $source['source']->getOriginalSource() : false,
+        'target'        => $translated ? $translated : '',
+        'params'        => is_array($args) ? implode(', ', array_keys($args)) : '',
+        'is_translated' => (boolean)$translated
+      );
     }
 
     if(!$translated)
@@ -109,11 +127,11 @@ class sfI18n {
         {
           continue;
         }
-        
+
         // we force to given culture
         $_source['source']->setCulture($culture ? $culture : $this->getCulture());
-        
-        try 
+
+        try
         {
           $translated = $_source['formatter']->formatExists($string, $args, $catalogue);
         }
@@ -124,28 +142,34 @@ class sfI18n {
             throw $e;
           }
         }
-        
+
         if($translated)
         {
           break;
         }
-        
+
       }
     }
-    
+
     if(sfConfig::get('sf_debug'))
     {
       $timer->addTime();
     }
-    
+
     return $translated ? $translated : strtr($string, (array)$args);
   }
-  
+
+  /**
+   * Prepare source for given $catalogue
+   *
+   * @param string $catalogue
+   * @return boolean
+   */
   protected function prepareSources($catalogue)
   {
-    $catalogue = sfToolkit::replaceConstants($catalogue); 
+    $catalogue = sfToolkit::replaceConstants($catalogue);
 
-    $directory = false;    
+    $directory = false;
     // we have an absolute path for the catalogue
     if(sfToolkit::isPathAbsolute($catalogue))
     {
@@ -153,12 +177,12 @@ class sfI18n {
       $catalogue = basename($catalogue);
       $hash      = sprintf('%s_%s_%s', $directory, $catalogue, $this->getCulture());
     }
-    // we have module/catalogue pair    
-    elseif(strpos($catalogue, '/') !== false 
+    // we have module/catalogue pair
+    elseif(strpos($catalogue, '/') !== false
         && preg_match('/^([a-zA-Z]+)\/([a-zA-Z]+)$/i', $catalogue, $matches))
     {
       $moduleName = $matches[1];
-      $catalogue  = $matches[2];      
+      $catalogue  = $matches[2];
       $directory  = sfLoader::getI18NDir($moduleName);
       $hash       = sprintf('%s_%s_%s', $moduleName, $catalogue, $this->getCulture());
     }
@@ -167,33 +191,43 @@ class sfI18n {
       $moduleName = $this->context->getModuleName();
       $directory = sfLoader::getI18NDir($moduleName);
       // current module is taken
-      $hash = sprintf('%s_%s_%s', $moduleName, $catalogue, $this->getCulture());        
+      $hash = sprintf('%s_%s_%s', $moduleName, $catalogue, $this->getCulture());
     }
 
     // nothing found, unknown directory
     if(!$directory)
-    {      
+    {
       return false;
     }
-    
+
     if(!isset($this->sources[$hash]))
     {
-      $type = sfConfig::get('sf_i18n_source'); 
+      $type = sfConfig::get('sf_i18n_source');
       $source = $this->createMessageSource($type, $directory);
-      
+
       $cache = new sfFileCache(array(
         'cache_dir' => sfConfig::get('sf_cache_dir') . '/i18n/' . dechex(crc32($hash))
       ));
-      
+
       $source->setCache($cache);
 
       $this->sources[$hash] = array(
         'source'    => &$source,
-        'formatter' => $this->createMessageFormatter($source)          
+        'formatter' => $this->createMessageFormatter($source)
       );
     }
-    
-    return array(&$this->sources[$hash], $catalogue);    
+
+    return array(&$this->sources[$hash], $catalogue);
+  }
+
+  /**
+   * Returns an array of requested translations
+   *
+   * @return array
+   */
+  public function getRequestedTranslations()
+  {
+    return $this->requestedTranslations;
   }
 
   /**
@@ -236,16 +270,16 @@ class sfI18n {
     }
     return $string;
   }
-  
+
   /**
    * Sets culture to all message sources
-   * 
+   *
    * @param string $culture current user culture
    */
   public function setCulture($culture)
   {
     $this->culture = $culture;
-        
+
     // change user locale for formatting, collation, and internal error messages
     setlocale(LC_ALL, 'en_US.utf8', 'en_US.UTF8', 'en_US.utf-8', 'en_US.UTF-8');
     setlocale(LC_COLLATE, $culture . '.utf8', $culture . '.UTF8', $culture . '.utf-8', $culture . '.UTF-8');
@@ -258,20 +292,20 @@ class sfI18n {
     {
       $source['source']->setCulture($culture);
     }
-    
+
     return $this;
-  } 
-  
+  }
+
   /**
    * Returns a culture
-   * 
+   *
    * @return string
    */
   public function getCulture()
   {
     return $this->culture;
   }
-  
+
   /**
    * Translates the string. This is just an alias for __()
    * @param string $str
@@ -288,24 +322,24 @@ class sfI18n {
 
   /**
    * Appends a $source to the translation chain
-   * 
+   *
    * @param sfII18nMessageSource $source
    * @return sfI18N
    */
   public function appendMessageSource(sfII18nMessageSource $source)
-  {    
+  {
     $this->sources[] = array(
       'source' => $source,
-      'formatter' => $this->createMessageFormatter($source)        
+      'formatter' => $this->createMessageFormatter($source)
     );
-    
+
     return $this;
   }
 
   /**
-   * Creates a message source object. This is an alias for 
+   * Creates a message source object. This is an alias for
    * sfI18nMessageSource::factory() method.
-   * 
+   *
    * @param string $type
    * @param string $source
    * @return sfII18nMessageSource
@@ -314,10 +348,10 @@ class sfI18n {
   {
     return sfI18nMessageSource::factory($type, $source);
   }
-  
+
   /**
    * Creates message formatter
-   * 
+   *
    * @param sfII18NMessageSource $source
    * @return sfI18nMessageFormatter
    */
@@ -327,15 +361,15 @@ class sfI18n {
     if(sfConfig::get('sf_debug') && sfConfig::get('sf_i18n_debug'))
     {
       $messageFormat->setUntranslatedPS(array(
-          sfConfig::get('sf_i18n_untranslated_prefix'), 
+          sfConfig::get('sf_i18n_untranslated_prefix'),
           sfConfig::get('sf_i18n_untranslated_suffix')));
     }
     return $messageFormat;
   }
-  
+
   /**
    * Prepends a $source to the translation chain
-   * 
+   *
    * @param sfIMessageSource $source
    * @return sfI18N
    */
@@ -346,13 +380,13 @@ class sfI18n {
       'source' => $source,
       'formatter' => $this->createMessageFormatter($source)
     );
-    $this->sources = array_reverse($this->sources, true); 
+    $this->sources = array_reverse($this->sources, true);
     return $this;
   }
-  
+
   /**
    * Adds a source to the translation chain
-   * 
+   *
    * @param sfII18nMessageSource $source
    * @param boolean $prepend Prepend to the translation chain?
    * @return sfI18N
@@ -364,7 +398,7 @@ class sfI18n {
 
   /**
    * Is the given $source registered for translations?
-   * 
+   *
    * @param sfII18nMessageSource $source
    * @return boolean
    */
@@ -379,10 +413,10 @@ class sfI18n {
     }
     return false;
   }
-  
+
   /**
    * Returns country name for given ISO code
-   * 
+   *
    * @param string $iso
    * @param string $culture
    * @return string
@@ -392,10 +426,10 @@ class sfI18n {
     $countries = $this->getCultureInstance($culture)->getCountries();
     return (array_key_exists($iso, $countries)) ? $countries[$iso] : '';
   }
-  
+
   /**
    * Returns sfCulture instance for given culture. Or current culture if no $culture parameter passed.
-   * 
+   *
    * @param string $culture Culture
    * @return sfCulture
    */
@@ -403,10 +437,10 @@ class sfI18n {
   {
     return sfCulture::getInstance($culture ? $culture : $this->getCulture());
   }
-    
+
   /**
    * Returns culture native name
-   * 
+   *
    * @param string $culture
    * @return string
    */
@@ -414,10 +448,10 @@ class sfI18n {
   {
     return $this->getCultureInstance($culture)->getNativeName();
   }
-  
+
   /**
    * Return timestamp from a date formatted with a given culture
-   * 
+   *
    * @param mixed $date
    * @param string $culture
    * @return integer
@@ -431,7 +465,7 @@ class sfI18n {
 
   /**
    * Return a d, m and y from a date formatted with a given culture
-   * 
+   *
    * @param integer $date
    * @param string $culture
    * @return int|null
@@ -442,7 +476,7 @@ class sfI18n {
     {
       return 0;
     }
-    
+
     $dateFormatInfo = sfI18nDateTimeFormat::getInstance($culture ? $culture : $this->getCulture());
     $dateFormat = $dateFormatInfo->getShortDatePattern();
 
@@ -455,7 +489,7 @@ class sfI18n {
       'm' => strpos($dateFormat, 'M'),
       'y' => strpos($dateFormat, 'y'),
     );
-    
+
     $tmp = array_flip($a);
     ksort($tmp);
     $i = 0;
@@ -475,9 +509,9 @@ class sfI18n {
     else
     {
       return null;
-    }    
+    }
   }
-  
+
   /**
    * Returns the hour, minute from a date formatted with a given culture.
    *
@@ -492,8 +526,8 @@ class sfI18n {
     {
       return 0;
     }
-      
-    $timeFormatInfo = sfI18nDateTimeFormat::getInstance($culture ? $culture : $this->getCulture());    
+
+    $timeFormatInfo = sfI18nDateTimeFormat::getInstance($culture ? $culture : $this->getCulture());
     $timeFormat = $timeFormatInfo->getShortTimePattern();
 
     // We construct the regexp based on time format
@@ -526,7 +560,7 @@ class sfI18n {
     {
       return null;
     }
-    
-  }  
-  
+
+  }
+
 }

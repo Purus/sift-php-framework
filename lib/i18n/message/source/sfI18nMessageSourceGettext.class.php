@@ -94,6 +94,16 @@ class sfI18nMessageSourceGettext extends sfI18nMessageSource {
   }
 
   /**
+   * Returns original source
+   *
+   * @return string
+   */
+  public function getOriginalSource()
+  {
+    return $this->source;
+  }
+
+  /**
    * Gets the last modified unix-time for this particular catalogue+variant.
    * Just use the file modified time.
    *

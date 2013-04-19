@@ -8,15 +8,15 @@
 
 /**
  * sfMessageSource_XLIFF class.
- * 
+ *
  * Using XML XLIFF format as the message source for translation.
  * Details and example of XLIFF can be found in the following URLs.
  *
  * # http://www.opentag.com/xliff.htm
  * # http://www-106.ibm.com/developerworks/xml/library/x-localis2/
- * 
+ *
  * See the sfI18nMessageSource::factory() method to instantiate this class.
- * 
+ *
  * @author Xiang Wei Zhuo <weizhuo[at]gmail[dot]com>
  * @package Sift
  * @subpackage i18n
@@ -25,13 +25,13 @@ class sfI18nMessageSourceXliff extends sfI18nMessageSource {
 
   /**
    * Message data filename extension.
-   * @var string 
+   * @var string
    */
   protected $dataExt = '.xml';
 
   /**
    * Separator between culture name and source.
-   * @var string 
+   * @var string
    */
   protected $dataSeparator = '.';
 
@@ -53,7 +53,7 @@ class sfI18nMessageSourceXliff extends sfI18nMessageSource {
    * @return array of messages.
    */
   protected function &loadData($filename)
-  {   
+  {
     libxml_use_internal_errors(true);
     if(!$xml = simplexml_load_file($filename))
     {
@@ -61,7 +61,7 @@ class sfI18nMessageSourceXliff extends sfI18nMessageSource {
 
       return $error;
     }
-    
+
     libxml_use_internal_errors(false);
     $translationUnit = $xml->xpath('//trans-unit');
 
@@ -102,6 +102,16 @@ class sfI18nMessageSourceXliff extends sfI18nMessageSource {
   }
 
   /**
+   * Returns original source
+   *
+   * @return string
+   */
+  public function getOriginalSource()
+  {
+    return $this->source;
+  }
+
+  /**
    * Determines if the XLIFF file source is valid.
    *
    * @param string XLIFF file
@@ -116,7 +126,7 @@ class sfI18nMessageSourceXliff extends sfI18nMessageSource {
    * Gets all the variants of a particular catalogue.
    *
    * @param string catalogue name
-   * @return array list of all variants for this catalogue. 
+   * @return array list of all variants for this catalogue.
    */
   protected function getCatalogueList($catalogue)
   {
@@ -147,7 +157,7 @@ class sfI18nMessageSourceXliff extends sfI18nMessageSource {
    * This should only be called by getCatalogueList()
    *
    * @param string a particular catalogue.
-   * @return array a list of catalogues. 
+   * @return array a list of catalogues.
    * @see getCatalogueList()
    */
   protected function getCatalogueByDir($catalogue)
@@ -173,7 +183,7 @@ class sfI18nMessageSourceXliff extends sfI18nMessageSource {
    * Returns a list of catalogue and its culture ID.
    * E.g. array('messages', 'en_AU')
    *
-   * @return array list of catalogues 
+   * @return array list of catalogues
    * @see getCatalogues()
    */
   public function catalogues()
@@ -186,7 +196,7 @@ class sfI18nMessageSourceXliff extends sfI18nMessageSource {
    * of directory structures.
    * E.g. array('messages', 'en_AU')
    *
-   * @return array list of catalogues 
+   * @return array list of catalogues
    */
   protected function getCatalogues($dir = null, $variant = null)
   {
@@ -229,7 +239,7 @@ class sfI18nMessageSourceXliff extends sfI18nMessageSource {
    * Gets the variant for a catalogue depending on the current culture.
    *
    * @param string catalogue
-   * @return string the variant. 
+   * @return string the variant.
    * @see save()
    * @see update()
    * @see delete()
@@ -254,7 +264,7 @@ class sfI18nMessageSourceXliff extends sfI18nMessageSource {
   }
 
   /**
-   * Saves the list of untranslated blocks to the translation source. 
+   * Saves the list of untranslated blocks to the translation source.
    * If the translation was not found, you should add those
    * strings to the translation source via the <b>append()</b> method.
    *
@@ -452,7 +462,7 @@ class sfI18nMessageSourceXliff extends sfI18nMessageSource {
    *
    * @param string the source message to delete.
    * @param string the catalogue to delete from.
-   * @return boolean true if deleted, false otherwise. 
+   * @return boolean true if deleted, false otherwise.
    */
   public function delete($message, $catalogue = 'messages')
   {
