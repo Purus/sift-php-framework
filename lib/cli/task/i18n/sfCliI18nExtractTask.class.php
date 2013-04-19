@@ -28,7 +28,7 @@ class sfCliI18nExtractTask extends sfCliI18nBaseTask
       new sfCliCommandOption('display-old', null, sfCliCommandOption::PARAMETER_NONE, 'Output all old strings'),
       new sfCliCommandOption('auto-save', null, sfCliCommandOption::PARAMETER_NONE, 'Save the new strings'),
       new sfCliCommandOption('auto-delete', null, sfCliCommandOption::PARAMETER_NONE, 'Delete old strings'),
-      new sfCliCommandOption('connection', null, sfCliCommandOption::PARAMETER_OPTIONAL, 'Connection name', 'default'),
+      new sfCliCommandOption('connection', null, sfCliCommandOption::PARAMETER_OPTIONAL, 'Connection name', 'mock'),
     ));
 
     $this->namespace = 'i18n';
