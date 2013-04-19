@@ -7,7 +7,7 @@
  */
 
 /**
- * Provides debugginf info to the reponse
+ * Provides debugging info to the reponse
  *
  * @package    Sift
  * @subpackage filter
@@ -21,11 +21,6 @@ class sfWebDebugFilter extends sfFilter {
    */
   public function execute($filterChain)
   {
-    // execute this filter only once
-    if($this->isFirstCall())
-    {      
-    }
-    
     // execute next filter
     $filterChain->execute();
 
@@ -57,12 +52,11 @@ class sfWebDebugFilter extends sfFilter {
       'context'   => &$context,
       'controller' => &$controller,
     ));
-    
+
     if($content != $newContent)
     {
-      $response->setContent($newContent);    
+      $response->setContent($newContent);
     }
-    
   }
 
 }
