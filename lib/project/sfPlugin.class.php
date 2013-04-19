@@ -101,4 +101,14 @@ abstract class sfPlugin extends sfConfigurable {
     return $this->rootDir;
   }
 
+  /**
+   * Magic to string method
+   *
+   * @return string
+   */
+  public function __toString()
+  {
+    return $this->getName();
+  }
+
 }
