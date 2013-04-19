@@ -3,6 +3,13 @@
 
 #all:
 #  default:
-#    class:          sfPDODatabase
+#    class: sfPDODatabase
 #    param:
-#      dsn:          mysql://root@localhost/dbname
+#      dsn: mysql://root@localhost/dbname
+
+#cli:
+#  mock:
+#    class: sfMockDatabase
+#dev:
+#  mock:
+#    class: sfMockDatabase

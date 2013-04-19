@@ -316,6 +316,7 @@ class sfCoreAutoload
     'sfpdostatement' => 'database/pdo/sfPDOStatement.class.php',
     'sfdatabase' => 'database/sfDatabase.class.php',
     'sfdatabasemanager' => 'database/sfDatabaseManager.class.php',
+    'sfmockdatabase' => 'database/sfMockDatabase.class.php',
     'sfpdodatabase' => 'database/sfPDODatabase.class.php',
     'sfdate' => 'date/sfDate.class.php',
     'sfdatetimetoolkit' => 'date/sfDateTimeToolkit.class.php',
