@@ -693,4 +693,23 @@ abstract class sfCliTask {
 
      return mb_strlen($string, $encoding);
    }
+
+  /**
+   * Zips a content of a folder (excelude itself).
+   *
+   * Usage:
+   *
+   *  $this->createArchiveFromDirectory('/path/to/sourceDir', '/path/to/out.zip');
+   *
+   * @param string $sourcePath Path of directory to be zip.
+   * @param string $outZipPath Path of output zip file.
+   */
+  public function createArchiveFromDirectory($sourcePath, $outZipPath)
+  {
+    $z = new sfZipArchive();
+    $z->create($outZipPath);
+    $z->addDir($sourcePath, '');
+    return $z->close();
+  }
+
 }

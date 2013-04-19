@@ -87,10 +87,16 @@ abstract class sfCliBaseTask extends sfCliCommandApplicationTask
   /**
    * Creates sfContext instance for current application
    *
+   * @param $application Application name
    * @throws sfException Is not application is initialized
    */
-  public function createContextInstance()
+  public function createContextInstance($application = null)
   {
+    if(is_string($application))
+    {
+      $this->application = $this->getApplication($application, $this->environment->get('sf_environment'));
+    }
+
     if(!$this->application)
     {
       throw new sfException('No application is initialized. Cannot create sfContext instance.');

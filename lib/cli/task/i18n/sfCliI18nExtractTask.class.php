@@ -11,7 +11,7 @@
  * @package    Sift
  * @subpackage cli_task
  */
-class sfCliI18nExtractTask extends sfCliBaseTask
+class sfCliI18nExtractTask extends sfCliI18nBaseTask
 {
   /**
    * @see sfCliTask
@@ -71,28 +71,12 @@ EOF;
    */
   public function execute($arguments = array(), $options = array())
   {
-    $application = $arguments['app'];
-
-    $plugin = false;
-
-    // this is a plugin
-    if(preg_match('|Plugin$|', $application))
-    {
-      $this->checkPluginExists($application);
-      $plugin = $application;
-      $dir = $this->environment->get('sf_plugins_dir') . '/' . $plugin;
-    }
-    else
-    {
-      $this->checkAppExists($application);
-      $dir = $this->environment->get('sf_apps_dir') . '/' . $application;
-    }
+    list($application, $dir, $isPlugin) = $this->getApplicationOrPlugin($arguments['app']);
 
     $culture = $arguments['culture'];
-
-    if($plugin)
+    if($isPlugin)
     {
-      $this->logSection($this->getFullName(), sprintf('Extracting i18n strings for the "%s" plugin ("%s")', $plugin, $culture));
+      $this->logSection($this->getFullName(), sprintf('Extracting i18n strings for the "%s" plugin ("%s")', $application, $culture));
     }
     else
     {
@@ -104,16 +88,7 @@ EOF;
       $connection = $this->getDatabase($options['connection']);
     }
 
-    // create context, since it is needed for extraction of forms
-    if(!sfContext::hasInstance())
-    {
-      $application = $this->getFirstApplication();
-      if(!$application)
-      {
-        throw new sfCliCommandException('There is no application, cannot create context instance');
-      }
-      sfContext::createInstance($this->getApplication($application, $this->environment->get('sf_environment')));
-    }
+    $this->createContextInstance($this->getFirstApplication());
 
     $extract = new sfI18nApplicationExtract(array(
         'app_dir' => $dir,

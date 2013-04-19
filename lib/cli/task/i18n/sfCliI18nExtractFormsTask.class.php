@@ -21,10 +21,7 @@ class sfCliI18nExtractFormsTask extends sfCliI18nExtractFormTask
    */
   protected function configure()
   {
-    $this->addArguments(array(
-      new sfCliCommandArgument('application', sfCliCommandArgument::REQUIRED, 'The application or plugin name'),
-      new sfCliCommandArgument('culture', sfCliCommandArgument::REQUIRED, 'The target culture'),
-    ));
+    parent::configure();
 
     $this->addOptions(array(
       new sfCliCommandOption('exclude-global', null, sfCliCommandOption::PARAMETER_NONE, 'Exclude project wide forms?'),

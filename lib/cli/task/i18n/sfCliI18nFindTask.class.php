@@ -7,12 +7,13 @@
  */
 
 /**
- * Finds non "i18n ready" strings in an application.
+ * Finds non "i18n ready" strings in an application. This task needs more work
+ * to be more usable.
  *
  * @package    Sift
  * @subpackage cli_task
  */
-class sfCliI18nFindTask extends sfCliBaseTask {
+class sfCliI18nFindTask extends sfCliI18nBaseTask {
 
   /**
    * @see sfCliTask
@@ -20,7 +21,7 @@ class sfCliI18nFindTask extends sfCliBaseTask {
   protected function configure()
   {
     $this->addArguments(array(
-        new sfCliCommandArgument('application', sfCliCommandArgument::REQUIRED, 'The application name'),
+        new sfCliCommandArgument('app', sfCliCommandArgument::REQUIRED, 'The application name'),
     ));
 
     $this->addOptions(array(
@@ -32,7 +33,7 @@ class sfCliI18nFindTask extends sfCliBaseTask {
     $this->briefDescription = 'Finds non "i18n ready" strings in an application templates';
 
     $scriptName = $this->environment->get('script_name');
-    
+
     $this->detailedDescription = <<<EOF
 The [i18n:find|INFO] task finds non internationalized strings embedded in templates:
 
@@ -52,27 +53,30 @@ EOF;
    * @see sfCliTask
    */
   public function execute($arguments = array(), $options = array())
-  {    
-    $application = $arguments['application'];
-    
-    $this->checkAppExists($application);
-    
-    $this->logSection($this->getFullName(), sprintf('Find non "i18n ready" strings in the "%s" application', $application));
+  {
+    list($application, $dir, $isPlugin) = $this->getApplicationOrPlugin($arguments['app']);
+
+    if($isPlugin)
+    {
+      $this->logSection($this->getFullName(), sprintf('Find non "i18n ready" strings in the "%s" plugin', $application));
+    }
+    else
+    {
+      $this->logSection($this->getFullName(), sprintf('Find non "i18n ready" strings in the "%s" application', $application));
+    }
 
     // Look in templates
     $dirs = array();
     $moduleNames = sfFinder::type('dir')->maxdepth(0)->relative()
-            ->in($this->environment->get('sf_apps_dir') . '/' . $application . '/modules');
-    
+            ->in($dir . '/' . $this->environment->get('sf_app_module_dir_name'));
+
     foreach($moduleNames as $moduleName)
     {
-      $dirs[] = $this->environment->get('sf_apps_dir') . '/' . 
-                $application . '/' . $this->environment->get('sf_app_module_dir_name') . '/' . 
-                $moduleName . '/templates';
+      $dirs[] = $dir . '/' . $this->environment->get('sf_app_module_dir_name') . '/' .
+                $moduleName . '/' . $this->environment->get('sf_app_template_dir_name');
     }
-    
-    $dirs[] = $this->environment->get('sf_apps_dir') . '/' . $application .  '/templates';
-    
+
+    $dirs[] = $dir . '/'. $this->environment->get('sf_app_template_dir_name');
 
     $strings = array();
     foreach($dirs as $dir)
@@ -86,15 +90,15 @@ EOF;
         }
 
         $content = file_get_contents($template);
-        // remove doctype        
+        // remove doctype
         $content = preg_replace('/<!DOCTYPE.*?>/', '', $content);
-        
+
         $dom = new DomDocument('1.0', $this->environment->get('sf_charset', 'UTF-8'));
         // $dom = new DomDocument();
-        //libxml_use_internal_errors(true);        
+        //libxml_use_internal_errors(true);
         @$dom->loadXML('<doc>' . $content . '</doc>');
         // libxml_clear_errors();
-        
+
         $nodes = array($dom);
         while($nodes)
         {
@@ -126,7 +130,7 @@ EOF;
                 // this is a call to php function!
                 if(T_CONSTANT_ENCAPSED_STRING === $id)
                 {
-                  // $strings[$template][] = substr($text, 1, -1);
+                  $strings[$template][] = sfUtf8::sub($text, 1, -1);
                 }
               }
             }
@@ -142,15 +146,15 @@ EOF;
         continue;
       }
 
-      $this->logSection($this->getFullName(), sprintf('strings in "%s"', str_replace(str_replace(DIRECTORY_SEPARATOR, '/', $this->environment->get('sf_root_dir') . '/'), '', $template)), 1000);
-      
+      $this->logSection($this->getFullName(), sprintf('Strings in "%s"', str_replace(str_replace(DIRECTORY_SEPARATOR, '/', $this->environment->get('sf_root_dir') . '/'), '', $template)), 1000);
+
       foreach($messages as $message)
       {
         $message = trim($message);
         $this->log("  $message\n");
       }
+
     }
-    
   }
 
 }

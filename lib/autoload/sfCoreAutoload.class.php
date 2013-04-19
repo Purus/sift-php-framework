@@ -236,6 +236,8 @@ class sfCoreAutoload
     'sfcligeneratetesttask' => 'cli/task/generate/sfCliGenerateTestTask.class.php',
     'sfcligeneratorbasetask' => 'cli/task/generate/sfCliGeneratorBaseTask.class.php',
     'sfclihelptask' => 'cli/task/help/sfCliHelpTask.class.php',
+    'sfclii18nbasetask' => 'cli/task/i18n/sfCliI18nBaseTask.class.php',
+    'sfclii18nbundletask' => 'cli/task/i18n/sfCliI18nBundleTask.class.php',
     'sfclii18nextractformtask' => 'cli/task/i18n/sfCliI18nExtractFormTask.class.php',
     'sfclii18nextractformstask' => 'cli/task/i18n/sfCliI18nExtractFormsTask.class.php',
     'sfclii18nextracttask' => 'cli/task/i18n/sfCliI18nExtractTask.class.php',
