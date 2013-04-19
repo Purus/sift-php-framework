@@ -47,7 +47,6 @@ class sfWebDebugLogger extends sfVarLogger {
     sfCore::getEventDispatcher()->connect('context.load_factories', array($this, 'listenForLoadFactories'));
     sfCore::getEventDispatcher()->connect('web_debug.filter_content', array($this, 'filterResponseContent'));
     sfCore::getEventDispatcher()->connect('application.render_exception', array($this, 'filterExceptionContent'));
-
   }
 
   /**
@@ -104,7 +103,9 @@ class sfWebDebugLogger extends sfVarLogger {
       return $content;
     }
 
-    return str_ireplace('</body>', $this->webDebug->getHtml() . '</body>', $content);
+    $content = str_ireplace('</head>', "<style type=\"text/css\">\n".$this->webDebug->getDebugCss().'</style>' . '</head>', $content);
+    $content = str_ireplace('</body>', $this->webDebug->getHtml() . '</body>', $content);
+    return $content;
   }
 
 }
