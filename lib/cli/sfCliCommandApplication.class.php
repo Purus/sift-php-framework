@@ -89,17 +89,9 @@ abstract class sfCliCommandApplication {
     // bind project
     sfCore::bindProject($this->project);
 
-    // initialize project autoload
-    $this->project->initializeAutoload();
     $this->project->loadPlugins();
     $this->project->setupPlugins();
-
-    $classLoader = new sfClassLoader();
-    foreach($this->project->getPlugins() as $plugin)
-    {
-      $plugin->initializeAutoload($classLoader);
-    }
-    $classLoader->register();
+    $this->project->initializeAutoload();
   }
 
   /**

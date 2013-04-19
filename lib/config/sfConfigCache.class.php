@@ -289,7 +289,16 @@ class sfConfigCache {
     $config = str_replace(array('\\', '/', ' '), '_', $config);
     $config .= '.php';
 
-    return sfConfig::get('sf_config_cache_dir') . '/' . $config;
+    if($this->parent instanceof sfApplication)
+    {
+      $dir = $this->getOption('sf_config_cache_dir');
+    }
+    else
+    {
+      $dir = $this->getOption('sf_root_cache_dir');
+    }
+
+    return $dir . '/' . $config;
   }
 
   /**
@@ -334,9 +343,11 @@ class sfConfigCache {
     // application configuration handlers
     require_once($this->checkConfig($this->getOption('sf_app_config_dir_name') . '/config_handlers.yml'));
 
+    $sf_app_module_dir = $this->getOption('sf_app_module_dir');
+
     // module level configuration handlers
     // make sure our modules directory exists
-    if(is_readable($sf_app_module_dir = $this->getOption('sf_app_module_dir')))
+    if($sf_app_module_dir && is_readable($sf_app_module_dir))
     {
       // ignore names
       $ignore = array('.', '..', 'CVS', '.svn', '.git');
