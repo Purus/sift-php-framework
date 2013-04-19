@@ -10,9 +10,9 @@
  * sfMessageSourceGettext class
  *
  * Using Gettext MO format as the message source for translation.
- * 
+ *
  * See the sfI18nMessageSource::factory() method to instantiate this class.
- * 
+ *
  * @author Xiang Wei Zhuo <weizhuo[at]gmail[dot]com>
  * @package Sift
  * @subpackage i18n
@@ -21,25 +21,25 @@ class sfI18nMessageSourceGettext extends sfI18nMessageSource {
 
   /**
    * Message data filename extension.
-   * @var string 
+   * @var string
    */
   protected $dataExt = '.mo';
 
   /**
    * PO data filename extension
-   * @var string 
+   * @var string
    */
   protected $poExt = '.po';
 
   /**
    * Separator between culture name and source.
-   * @var string 
+   * @var string
    */
   protected $dataSeparator = '.';
 
   /**
    * Constructs the source
-   * 
+   *
    * @param string $source Catalogue directory
    */
   public function __construct($source)
@@ -55,7 +55,7 @@ class sfI18nMessageSourceGettext extends sfI18nMessageSource {
    */
   protected function &loadData($filename)
   {
-    $mo = sfI18nGettext::factory('Mo', $filename);    
+    $mo = sfI18nGettext::factory('Mo', $filename);
     $mo->load();
     $result = $mo->toArray();
 
@@ -75,7 +75,7 @@ class sfI18nMessageSourceGettext extends sfI18nMessageSource {
    * Determines if the MO file source is valid.
    *
    * @param string MO file
-   * @return boolean true if valid, false otherwise. 
+   * @return boolean true if valid, false otherwise.
    */
   protected function isValidSource($filename)
   {
@@ -86,7 +86,7 @@ class sfI18nMessageSourceGettext extends sfI18nMessageSource {
    * Gets the MO file for a specific message catalogue and cultural variant.
    *
    * @param string message catalogue
-   * @return string full path to the MO file. 
+   * @return string full path to the MO file.
    */
   protected function getSource($variant)
   {
@@ -139,7 +139,7 @@ class sfI18nMessageSourceGettext extends sfI18nMessageSource {
    * This should only be called by getCatalogueList()
    *
    * @param string a particular catalogue.
-   * @return array a list of catalogues. 
+   * @return array a list of catalogues.
    * @see getCatalogueList()
    */
   protected function getCatalogueByDir($catalogue)
@@ -165,7 +165,7 @@ class sfI18nMessageSourceGettext extends sfI18nMessageSource {
    * Gets the variant for a catalogue depending on the current culture.
    *
    * @param string catalogue
-   * @return string the variant. 
+   * @return string the variant.
    * @see save()
    * @see update()
    * @see delete()
@@ -196,12 +196,12 @@ class sfI18nMessageSourceGettext extends sfI18nMessageSource {
   }
 
   /**
-   * Saves the list of untranslated blocks to the translation source. 
+   * Saves the list of untranslated blocks to the translation source.
    * If the translation was not found, you should add those
    * strings to the translation source via the append() method.
    *
    * @param string the catalogue to add to
-   * @return boolean true if saved successfuly, false otherwise.   
+   * @return boolean true if saved successfuly, false otherwise.
    */
   public function save($catalogue = 'messages')
   {
@@ -281,7 +281,7 @@ class sfI18nMessageSourceGettext extends sfI18nMessageSource {
    *
    * @param string the source message to delete.
    * @param string the catalogue to delete from.
-   * @return boolean true if deleted, false otherwise. 
+   * @return boolean true if deleted, false otherwise.
    */
   function delete($message, $catalogue = 'messages')
   {
@@ -404,7 +404,7 @@ class sfI18nMessageSourceGettext extends sfI18nMessageSource {
   /**
    * Returns a list of catalogue as key and all it variants as value.
    *
-   * @return array list of catalogues 
+   * @return array list of catalogues
    */
   public function catalogues()
   {
@@ -416,7 +416,7 @@ class sfI18nMessageSourceGettext extends sfI18nMessageSource {
    * of directory structures.
    * E.g. array('messages','en_AU')
    *
-   * @return array list of catalogues 
+   * @return array list of catalogues
    */
   protected function getCatalogues($dir = null, $variant = null)
   {
@@ -483,6 +483,11 @@ class sfI18nMessageSourceGettext extends sfI18nMessageSource {
     $po = sfI18nGettext::factory('PO', $po_file);
     $result['meta']['PO-Revision-Date'] = date('Y-m-d H:i:s');
     $result['meta']['Content-Type'] = 'text/plain; charset=utf-8';
+
+    // add another meta to save translators time clicking in the translation tool
+    $result['meta']['Language'] = $this->culture;
+    $result['meta']['Project-Id-Version'] = '1.0';
+
     $result['strings'] = array();
 
     $po->fromArray($result);
