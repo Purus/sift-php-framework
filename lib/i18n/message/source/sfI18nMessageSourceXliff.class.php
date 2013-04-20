@@ -7,7 +7,7 @@
  */
 
 /**
- * sfMessageSource_XLIFF class.
+ * sfI18nMessageSourceXliff class.
  *
  * Using XML XLIFF format as the message source for translation.
  * Details and example of XLIFF can be found in the following URLs.

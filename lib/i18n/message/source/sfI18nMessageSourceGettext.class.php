@@ -293,7 +293,7 @@ class sfI18nMessageSourceGettext extends sfI18nMessageSource {
    * @param string the catalogue to delete from.
    * @return boolean true if deleted, false otherwise.
    */
-  function delete($message, $catalogue = 'messages')
+  public function delete($message, $catalogue = 'messages')
   {
     $variants = $this->getVariants($catalogue);
     if($variants)

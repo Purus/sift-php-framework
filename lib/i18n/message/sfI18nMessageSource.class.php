@@ -13,16 +13,13 @@
  * using the factory method. The default valid sources are
  *
  *  # XLIFF -- using XML XLIFF format to store the translation messages.
- *  # SQLite -- Store the translation messages in a SQLite database.
- *  # MySQL -- Using a MySQL database to store the messages.
  *  # gettext -- Translated messages are stored in the gettext format.
  *
  * A custom message source can be instantiated by specifying the filename
  * parameter to point to the custom class file. E.g.
  * <code>
  *   $resource = '...'; //custom message source resource
- *   $classfile = '../sfMessageSource_MySource.php'; //custom message source
- *   $source = sfMessageSource::factory('MySource', $resource, $classfile);
+ *   $source = sfMessageSource::factory('MySource', $resource);
  * </code>
  *
  * If you are writting your own message sources, pay attention to the
@@ -70,21 +67,21 @@ abstract class sfI18nMessageSource implements sfII18nMessageSource {
 
   /**
    * The translation cache.
-   * 
+   *
    * @var sfCache
    */
   protected $cache;
-  
+
   /**
    * Array of untranslated strings
-   * 
-   * @var array 
+   *
+   * @var array
    */
   protected $untranslated = array();
 
   /**
    * sfI18nMessageSource must be initialized using the factory method.
-   * 
+   *
    */
   public function __construct()
   {
@@ -110,20 +107,20 @@ abstract class sfI18nMessageSource implements sfII18nMessageSource {
   public static function factory($type, $source = '.')
   {
     $className = sprintf('sfI18nMessageSource%s', ucfirst(strtolower($type)));
-    
+
     if(class_exists($className))
     {
-      return new $className($source);      
+      return new $className($source);
     }
     elseif(class_exists($type))
     {
-      // try loading 
-      return new $type($source);      
+      // try loading
+      return new $type($source);
     }
-    
+
     throw new sfException(sprintf('Unable to find source type "%s".', $type));
   }
-  
+
   /**
    * Loads a particular message catalogue. Use read() to
    * to get the array of messages. The catalogue loading sequence
@@ -138,7 +135,7 @@ abstract class sfI18nMessageSource implements sfII18nMessageSource {
    *  # [7] Continue with the foreach loop, e.g. goto [2].
    *
    * @param  string  a catalogue to load
-   * @return boolean always true
+   * @return sfI18nMessageSource
    * @see    read()
    */
   public function load($catalogue = 'messages')
@@ -184,7 +181,7 @@ abstract class sfI18nMessageSource implements sfII18nMessageSource {
       }
     }
 
-    return true;
+    return $this;
   }
 
   /**
@@ -196,6 +193,17 @@ abstract class sfI18nMessageSource implements sfII18nMessageSource {
   public function read()
   {
     return $this->messages;
+  }
+
+  /**
+   * Returns the array of messages. This is an alias for read()
+   *
+   * @return array
+   * @see read()
+   */
+  public function getMessages()
+  {
+    return $this->read();
   }
 
   /**
@@ -212,10 +220,12 @@ abstract class sfI18nMessageSource implements sfII18nMessageSource {
    * Sets the cache handler for caching the messages.
    *
    * @param sfMessageCache the cache handler.
+   * @return sfI18nMessageSource
    */
   public function setCache(sfCache $cache)
   {
     $this->cache = $cache;
+    return $this;
   }
 
   /**
@@ -223,6 +233,7 @@ abstract class sfI18nMessageSource implements sfII18nMessageSource {
    * to save the messages to source.
    *
    * @param string message to add
+   * @return sfI18nMessageSource
    */
   public function append($message)
   {
@@ -230,16 +241,19 @@ abstract class sfI18nMessageSource implements sfII18nMessageSource {
     {
       $this->untranslated[] = $message;
     }
+    return $this;
   }
 
   /**
    * Sets the culture for this message source.
    *
    * @param string culture name
+   * @returns sfI18nMessageSource
    */
   public function setCulture($culture)
   {
     $this->culture = $culture;
+    return $this;
   }
 
   /**
@@ -308,15 +322,15 @@ abstract class sfI18nMessageSource implements sfII18nMessageSource {
   {
     return array();
   }
-  
+
   /**
    * Returns an id of this source.
-   * 
+   *
    * @return string
    */
   public function getId()
   {
     return md5($this->source);
   }
-  
+
 }
