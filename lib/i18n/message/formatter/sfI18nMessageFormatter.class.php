@@ -9,20 +9,14 @@
 /**
  * sfI18nMessageFormatter class
  *
- * Format a message, that is, for a particular message find the 
- * translated message. The following is an example using 
- * a SQLite database to store the translation message. 
- * Create a new message format instance and echo "Hello"
- * in simplified Chinese. This assumes that the world "Hello"
- * is translated in the database.
+ * Format a message, that is, for a particular message find the
+ * translated message.
  *
  * <code>
- *  $source = sfI18nMessageSource::factory('SQLite', 'sqlite://messages.db');
- *  $source->setCulture('zh_CN');
- *  $source->setCache(new sfI18nMessageCache('./tmp'));
+ *  $source = sfI18nMessageSource::factory('gettext', '/i18n');
+ *  $source->setCulture('en_GB');
+ *  $formatter = new sfI18nMessageFormatter($source);
  *
- *  $formatter = new sfI18nMessageFormatter($source); 
- *  
  *  echo $formatter->format('Hello');
  * </code>
  *
@@ -64,7 +58,7 @@ class sfI18nMessageFormatter {
 
   /**
    * Set the default catalogue.
-   * @var string 
+   * @var string
    */
   public $catalogue = 'messages';
 
@@ -88,7 +82,7 @@ class sfI18nMessageFormatter {
     if($charset)
     {
       $this->setCharset($charset);
-    }    
+    }
   }
 
   /**
@@ -140,10 +134,10 @@ class sfI18nMessageFormatter {
    * using the $catalogue parameter.
    * The output charset is determined by $this->getCharset();
    *
-   * @param string the string to translate.
-   * @param array a list of string to substitute.
-   * @param string get the translation from a particular message
-   * @param string charset, the input AND output charset catalogue.
+   * @param string $string the string to translate.
+   * @param array $args a list of string to substitute.
+   * @param string $catalogue get the translation from a particular message
+   * @param string $charset charset, the input AND output charset catalogue.
    * @return string translated string.
    */
   public function format($string, $args = array(), $catalogue = null, $charset = null)
@@ -158,6 +152,15 @@ class sfI18nMessageFormatter {
     return sfI18n::i18n2Encoding($s, $charset);
   }
 
+  /**
+   * Checks if given string exists in the source
+   *
+   * @param string $string
+   * @param array $args
+   * @param string $catalogue
+   * @param string $charset
+   * @return
+   */
   public function formatExists($string, $args = array(), $catalogue = null, $charset = null)
   {
     if(empty($charset))
@@ -166,7 +169,6 @@ class sfI18nMessageFormatter {
     }
 
     $s = $this->getFormattedString(sfI18n::i18n2Utf8($string, $charset), $args, $catalogue);
-
     return sfI18n::i18n2Encoding($s, $charset);
   }
 
@@ -232,6 +234,14 @@ class sfI18nMessageFormatter {
     return $string;
   }
 
+  /**
+   * Returns formatted string. Does the lookup in the catalogue.
+   *
+   * @param string $string
+   * @param array $args
+   * @param string $catalogue
+   * @return null|string Null if translation not found, or when NOT in translation mode and translation is empty
+   */
   protected function getFormattedString($string, $args = array(), $catalogue = null)
   {
     if(empty($catalogue))
@@ -260,10 +270,20 @@ class sfI18nMessageFormatter {
         }
 
         // found, but untranslated
+        // If the translation is empty, we need to decide what to do:
+        // 1) if IN translator mode, return formatted message using nontranslated prefix/suffix
+        // 2) if NOT in translator mode, return null
         if(empty($target))
         {
-          return $this->postscript[0] . $this->replaceArgs($string, $args) . $this->postscript[1];
+          // we are in translator mode
+          if($this->isInTranslatorMode())
+          {
+            return $this->postscript[0] . $this->replaceArgs($string, $args) . $this->postscript[1];
+          }
+
+          return null;
         }
+
         return $this->replaceArgs($target, $args);
       }
     }
@@ -271,6 +291,25 @@ class sfI18nMessageFormatter {
     return null;
   }
 
+  /**
+   * Is the formatter in translator mode? If there are non blank values for
+   * untranslated prefix or suffix
+   *
+   * @return boolean True if in translator mode, false otherwise
+   * @see setUntranslatedPS
+   */
+  protected function isInTranslatorMode()
+  {
+    return !empty($this->postscript[0]) || !empty($this->postscript[1]);
+  }
+
+  /**
+   * Replaces arguments in given string
+   *
+   * @param string $string
+   * @param array $args
+   * @return string
+   */
   protected function replaceArgs($string, $args)
   {
     // replace object with strings
@@ -288,7 +327,7 @@ class sfI18nMessageFormatter {
   /**
    * Gets the message source.
    *
-   * @return MessageSource 
+   * @return MessageSource
    */
   public function getSource()
   {
@@ -297,7 +336,7 @@ class sfI18nMessageFormatter {
 
   /**
    * Sets the prefix and suffix to append to untranslated messages.
-   * e.g. $postscript=array('[T]','[/T]'); will output 
+   * e.g. $postscript=array('[T]','[/T]'); will output
    * "[T]Hello[/T]" if the translation for "Hello" can not be determined.
    *
    * @param array first element is the prefix, second element the suffix.
