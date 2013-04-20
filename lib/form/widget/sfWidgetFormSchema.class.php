@@ -214,14 +214,18 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess
 
     if (!isset($this->formFormatters[$name]))
     {
-      $class = 'sfWidgetFormSchemaFormatter'.ucfirst($name);
-
-      if (!class_exists($class))
+      if (class_exists($class = 'sfWidgetFormSchemaFormatter'.ucfirst($name)))
+      {
+        $this->formFormatters[$name] = new $class($this);
+      }
+      elseif(class_exists($name))
+      {
+        $this->formFormatters[$name] = new $name($this);
+      }
+      else
       {
         throw new InvalidArgumentException(sprintf('The form formatter "%s" does not exist.', $name));
       }
-
-      $this->formFormatters[$name] = new $class($this);
     }
 
     return $this->formFormatters[$name];
