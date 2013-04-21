@@ -8,11 +8,11 @@
 
 /**
  * sfI18nConfigHandler parses i18n.yml configuration files
- * 
+ *
  * @package    Sift
  * @subpackage config
  */
-class sfI18nConfigHandler extends sfDefineEnvironmentConfigHandler
+class sfI18nConfigHandler extends sfSimpleYamlConfigHandler
 {
  /**
    * Executes this configuration handler.
@@ -35,13 +35,19 @@ class sfI18nConfigHandler extends sfDefineEnvironmentConfigHandler
       $prefix .= "'.strtolower(\$moduleName).'_";
     }
 
-    // parse the yaml
-    $myConfig = $this->mergeEnvironment(self::parseYamls($configFiles));
+    $myConfig = self::parseYamls($configFiles);
+
+    $myConfig = sfToolkit::arrayDeepMerge(
+      isset($myConfig['default']) && is_array($myConfig['default']) ? $myConfig['default'] : array(),
+      isset($myConfig['all']) && is_array($myConfig['all']) ? $myConfig['all'] : array(),
+      isset($myConfig[sfConfig::get('sf_environment')]) && is_array($myConfig[sfConfig::get('sf_environment')]) ? $myConfig[sfConfig::get('sf_environment')] : array()
+    );
 
     $values = array();
     foreach ($myConfig as $category => $keys)
     {
-      $values = array_merge($values, $this->getValues($prefix, $category, $keys));
+      $category = $prefix.$category;
+      $values[$category] = $this->replaceConstants($keys);
     }
 
     // compile data
@@ -55,6 +61,6 @@ class sfI18nConfigHandler extends sfDefineEnvironmentConfigHandler
     }
 
     return $retval;
-  } 
-  
+  }
+
 }

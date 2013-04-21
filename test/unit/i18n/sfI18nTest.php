@@ -1,12 +1,14 @@
 <?php
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
+require_once(dirname(__FILE__).'/../sfContextMock.class.php');
+require_once(dirname(__FILE__).'/../sfCoreMock.class.php');
 require_once(sfConfig::get('sf_sift_lib_dir').'/i18n/sfI18N.class.php');
 
 $t = new lime_test(12, new lime_output_color());
 
 $t->diag('i18n');
-$i18n = sfI18n::getInstance();
+$i18n = new sfI18n(new sfContext());
 
 $time =  mktime(10, 30, 0, 8, 1, 2008);
 

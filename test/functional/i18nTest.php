@@ -6,22 +6,24 @@ if (!include(dirname(__FILE__).'/../bootstrap/functional.php'))
   return;
 }
 
+sfToolkit::clearDirectory(sfConfig::get('sf_root_cache_dir'));
+
 $b = new sfTestBrowser();
 
 // default culture (cs_CZ)
 $b->
   get('/')
   ->with('response')->begin()
-  ->isStatusCode(200)  
+  ->isStatusCode(200)
   ->checkElement('#action', '/an english sentence/i')
-  ->checkElement('#template', '/an english sentence/i')        
-  ->end()        
+  ->checkElement('#template', '/an english sentence/i')
+  ->end()
   ->with('request')->begin()
     ->isParameter('module', 'i18n')
     ->isParameter('action', 'index')
-  ->end()      
+  ->end()
   ->with('user')->begin()
-    ->isCulture('cs_CZ')   
+    ->isCulture('cs_CZ')
   ->end();
 
 $b->
@@ -39,7 +41,6 @@ $b->
   // messages in the global directories
   checkElement('#action', '/une phrase en français/i')->
   checkElement('#template', '/une phrase en français/i')->
-
   // messages in the module directories
   checkElement('#action_local', '/une phrase locale en français/i')->
   checkElement('#template_local', '/une phrase locale en français/i')->
@@ -53,11 +54,10 @@ $b->
   checkElement('#template_other_local', '/une autre phrase locale en français/i')
   ->end();
 
-
 // messages for a module plugin
 $b->
   get('/fr/sfI18NPlugin/index')
-  ->with('response')->begin()->   
+  ->with('response')->begin()->
     isStatusCode(200)->
     checkElement('#action', '/une phrase en français/i')->
     checkElement('#template', '/une phrase en français/i')->
@@ -71,3 +71,5 @@ $b->
   ->with('user')->begin()->
     isCulture('fr')->
   end();
+
+// sfToolkit::clearDirectory(sfConfig::get('sf_root_cache_dir'));

@@ -3,10 +3,8 @@ default:
     content-type: text/html
 
   metas:
-    title:        symfony project
+    title:        Sift PHP framework
     robots:       index, follow
-    description:  symfony project
-    keywords:     symfony, project
     language:     en
 
   stylesheets:

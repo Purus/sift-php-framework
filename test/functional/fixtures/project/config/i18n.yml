@@ -1,2 +1,8 @@
-default:
-  source: gettext
+all:
+  default_culture: cs_CZ
+  enabled_cultures: [cs_CZ, fr_FR]  
+  param:
+    source_type: gettext
+#    sources:
+#      application:
+#        enabled: true

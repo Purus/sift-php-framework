@@ -1,18 +1,30 @@
-# You can find more information about this file on: 
+# You can find more information about this file on:
 # https://bitbucket.org/mishal/sift-php-framework/wiki/I18n
 default:
-  default_culture:     cs_CZ
-  enabled:
-    cultures:          [cs_CZ]
-  source:              gettext
-  debug:               false
-  cache:               true
-  untranslated_prefix: "[T]"
-  untranslated_suffix: "[/T]"
-  # enable editing of translations in debug toolbar?
-  learning_mode:       false
-  # what language is used as source language
-  source_culture:      en_GB
-  
-test:
-  learning_mode: false
+  default_culture: cs_CZ
+  enabled_cultures: [cs_CZ]
+  param:
+    cache_dir: %SF_I18N_CACHE_DIR%
+    # enable editing of translations in debug toolbar?
+    translator_mode: false
+    source: gettext
+    debug: false
+    cache: true
+    untranslated_prefix: "[T]"
+    untranslated_suffix: "[/T]"
+    # what language is used as source language
+    source_culture: en_GB
+    # source which will be registered upon i18n creation
+    sources:
+      application:
+        source: %SF_APP_I18N_DIR%
+        enabled: false
+      core:
+        source: %SF_SIFT_DATA_DIR%/i18n/catalogues
+      base_form:
+        source: %SF_SIFT_DATA_DIR%/i18n/catalogues
+        class: sfI18nMessageSourceGettextSingleCatalogue
+        # additional arguments for the instance of class
+        # first argument is the source
+        arguments:
+          - base_form

@@ -2,16 +2,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2011-03-18 17:28+0100\n"
+"PO-Revision-Date: 2013-04-20 21:38+0100\n"
 "Last-Translator: Michal Moravec - Mishal.cz <mishal@mishal.cz>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.5.5\n"
 
 msgid "an english sentence"
 msgstr "une autre phrase en français"
 
 msgid "a local english sentence"
 msgstr "une autre phrase locale en français"
-

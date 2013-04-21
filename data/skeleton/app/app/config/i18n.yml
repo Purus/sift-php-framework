@@ -2,3 +2,6 @@
 # https://bitbucket.org/mishal/sift-php-framework/wiki/I18n
 #all:
 #  default_culture:  cs_CZ
+#  sources:
+#    application:
+#      enabled: true

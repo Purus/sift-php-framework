@@ -8,7 +8,8 @@ class sfContext
   public $request;
   public $response;
   public $actionStack;
-  
+  public $dispatcher;
+
   static public function getInstance()
   {
     if (!isset(self::$instance))
@@ -71,7 +72,7 @@ class sfContext
 
     return $user;
   }
-  
+
   public function getController()
   {
     if(!$this->controller)
@@ -81,16 +82,25 @@ class sfContext
     }
 
     return $this->controller;
-  }  
-  
+  }
+
   public function getViewCacheManager()
   {
     return false;
   }
-  
+
   public function getActionStack()
   {
     return $this->actionStack;
   }
-  
+
+  public function getEventDispatcher()
+  {
+    if(!$this->dispatcher)
+    {
+      $this->dispatcher = new sfEventDispatcher();
+    }
+    return $this->dispatcher;
+  }
+
 }
