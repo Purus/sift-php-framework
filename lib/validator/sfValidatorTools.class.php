@@ -7,12 +7,11 @@
  */
 
 /**
- * sfValidatorTools provides various utility methods for usage inside 
+ * sfValidatorTools provides various utility methods for usage inside
  * custom validators
  *
  * @package    Sift
  * @subpackage validator
- * @author     Mishal <mishal at mishal dot cz>
  */
 class sfValidatorTools {
 
@@ -23,9 +22,9 @@ class sfValidatorTools {
 
   /**
    * Validates czech company IN number
-   * 
+   *
    * @param string $in
-   * @return boolean 
+   * @return boolean
    * @see http://latrine.dgx.cz/jak-overit-platne-ic-a-rodne-cislo
    */
   public static function validateCompanyIn($in)
@@ -61,9 +60,9 @@ class sfValidatorTools {
 
   /**
    * Validates birht number. Only czech numbers are supported.
-   * 
+   *
    * @param string $rc
-   * @return boolean 
+   * @return boolean
    */
   public static function verifyBirthNumber($rc)
   {

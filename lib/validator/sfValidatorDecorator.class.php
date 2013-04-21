@@ -15,12 +15,11 @@
  *
  * @package    Sift
  * @subpackage validator
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  */
-abstract class sfValidatorDecorator extends sfValidatorBase
-{
+abstract class sfValidatorDecorator extends sfValidatorBase {
+
   protected
-    $validator = null;
+          $validator = null;
 
   /**
    * @see sfValidatorBase
@@ -29,17 +28,17 @@ abstract class sfValidatorDecorator extends sfValidatorBase
   {
     $this->validator = $this->getValidator();
 
-    if (!$this->validator instanceof sfValidatorBase)
+    if(!$this->validator instanceof sfValidatorBase)
     {
       throw new RuntimeException('The getValidator() method must return a sfValidatorBase instance.');
     }
 
-    foreach ($options as $key => $value)
+    foreach($options as $key => $value)
     {
       $this->validator->setOption($key, $value);
     }
 
-    foreach ($messages as $key => $value)
+    foreach($messages as $key => $value)
     {
       $this->validator->setMessage($key, $value);
     }
@@ -165,4 +164,5 @@ abstract class sfValidatorDecorator extends sfValidatorBase
   {
     return $this->validator->getDefaultMessages();
   }
+
 }

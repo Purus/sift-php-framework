@@ -80,7 +80,7 @@ $t->is($e->getMessageFormat(), '', '->getMessageFormat() always returns an empty
 
 // ->getMessage()
 $t->diag('->getMessage()');
-$t->is($e->getMessage(), '"foo" is too long (1 characters max). e2 ["bar" is too short (5 characters min).] 2 ["foo" is too long (1 characters max).]', '->getMessage() returns the error message string');
+$t->is($e->getMessage(), 'Value is too long (1 characters max). e2 [Value is too short (5 characters min).] 2 [Value is too long (1 characters max).]', '->getMessage() returns the error message string');
 
 // ->getCode()
 $t->diag('->getCode()');

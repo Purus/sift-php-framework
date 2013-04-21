@@ -1,18 +1,20 @@
 <?php
 
-class sfContext
-{
-  private static $instance = null;
+class sfContext {
 
+  private static $instance = null;
+  public $user;
   public $controller;
   public $request;
   public $response;
   public $actionStack;
   public $dispatcher;
+  public $storage;
+  public $i18n;
 
   static public function getInstance()
   {
-    if (!isset(self::$instance))
+    if(!isset(self::$instance))
     {
       self::$instance = new sfContext();
     }
@@ -54,23 +56,32 @@ class sfContext
 
   public function getStorage()
   {
-    $storage = sfStorage::newInstance('sfSessionTestStorage');
-    $storage->initialize($this);
+    if(!$this->storage)
+    {
+      $this->storage = sfStorage::newInstance('sfSessionTestStorage');
+      $this->storage->initialize($this);
+    }
 
-    return $storage;
+    return $this->storage;
+  }
+
+  public function getI18n()
+  {
+    if(!$this->i18n)
+    {
+      $this->i18n = new sfI18n($this);
+    }
+    return $this->i18n;
   }
 
   public function getUser()
   {
-    static $user;
-
-    if (!$user)
+    if(!$this->user)
     {
-      $user = new sfBasicSecurityUser;
-      $user->initialize($this);
+      $this->user = new sfBasicSecurityUser();
+      $this->user->initialize($this);
     }
-
-    return $user;
+    return $this->user;
   }
 
   public function getController()

@@ -84,7 +84,7 @@ $t->is($f2['password']->renderLabel(), '<label for="test_password" class="requir
 
 // binds some data
 $f2->bind(array()); 
-$t->is($f2['password']->renderError(), '<label for="test_password" role="alert" id="test_password_label" class="form-error">Required.</label>' . "\n", 'renderError() renders all atttributes');
+$t->is($f2['password']->renderError(), '<label for="test_password" role="alert" id="test_password_label" class="form-error">This value is required.</label>' . "\n", 'renderError() renders all atttributes');
 
 
 $t->diag('checkbox');
@@ -94,4 +94,4 @@ $f->bind(array());
 
 // FIXME: checkboxes have ids like checkbox_1, so the label for attribute is wrong
 // but how to handle the label make it as label for the first of the checkboxes? 
-$t->is($f['checkbox']->renderError(), '<label for="checkbox" role="alert" id="checkbox_label" class="form-error">Required.</label>'."\n", 'renderError() includes aria-required attribute');
+$t->is($f['checkbox']->renderError(), '<label for="checkbox" role="alert" id="checkbox_label" class="form-error">This value is required.</label>'."\n", 'renderError() includes aria-required attribute');

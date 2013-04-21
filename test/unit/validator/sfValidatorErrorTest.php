@@ -30,7 +30,7 @@ $t->is($e->getMessageFormat(), $v->getMessage($e->getCode()), '->getMessageForma
 
 // ->getMessage()
 $t->diag('->getMessage()');
-$t->is($e->getMessage(), '"foo&lt;br /&gt;" is too long (1 characters max).', '->getMessage() returns the error message string');
+$t->is($e->getMessage(), 'Value is too long (1 characters max).', '->getMessage() returns the error message string');
 
 // ->getCode()
 $t->diag('->getCode()');

@@ -83,17 +83,19 @@ class sfForm implements ArrayAccess, Iterator, Countable
     $this->addCSRFProtection($this->localCSRFSecret);
     $this->resetFormFields();
 
-    // generic event
-    sfCore::getEventDispatcher()->notify(new sfEvent('form.post_configure', array(
-      'form' => $this
-    )));
+    if(sfContext::hasInstance())
+    {
+      // generic event
+      sfContext::getInstance()->getEventDispatcher()->notify(new sfEvent('form.post_configure', array(
+        'form' => $this
+      )));
 
-    // specific event for current class name
-    sfCore::getEventDispatcher()->notify(new sfEvent(sprintf('form.%s.post_configure',
-            sfInflector::tableize(get_class($this))), array(
-              'form' => $this
-    )));
-
+      // specific event for current class name
+      sfContext::getInstance()->getEventDispatcher()->notify(new sfEvent(sprintf('form.%s.post_configure',
+        sfInflector::tableize(get_class($this))), array(
+          'form' => $this
+      )));
+    }
   }
 
   /**

@@ -399,7 +399,7 @@ $f->bind(array());
 $t->ok(!$f->isValid(), '->isValid() returns false if the form does not pass the validation');
 $t->ok($f->hasErrors(), '->isValid() returns true if the form does not pass the validation');
 $t->is($f->getValues(), array(), '->getValues() returns an empty array if the form does not pass the validation');
-$t->is($f->getErrorSchema()->getMessage(), 'first_name [Required.] last_name [Required.]', '->getErrorSchema() returns an error schema object with all errors');
+$t->is($f->getErrorSchema()->getMessage(), 'first_name [This value is required.] last_name [This value is required.]', '->getErrorSchema() returns an error schema object with all errors');
 
 $t->diag('bind when field names are numeric');
 $f = new FormTest();

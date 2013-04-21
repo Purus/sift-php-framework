@@ -35,6 +35,8 @@ class sfWidgetFormI18nChoiceEnabledLanguages extends sfWidgetFormChoice {
       $languages[$culture] = $allLanguages[substr($culture, 0, 2)];
     }
 
+    $this->setOption('translate_choices', false);
+
     $this->addOption('culture');
     $this->addOption('add_empty', false);
 
@@ -45,10 +47,6 @@ class sfWidgetFormI18nChoiceEnabledLanguages extends sfWidgetFormChoice {
     }
 
     $this->setOption('choices', $languages);
-
-    $options['translate_choices'] = false;
-
-    parent::configure($options, $attributes);
   }
 
 }

@@ -20,6 +20,7 @@ class sfUser {
   /**
    * Attributes namespace
    */
+
   const ATTRIBUTE_NAMESPACE = 'sift/user/sfUser/attributes';
 
   /**
@@ -147,18 +148,20 @@ class sfUser {
    */
   public function setCulture($culture)
   {
-    if($this->culture != $culture)
+    if($culture === null)
     {
-      // dispatch event
-      $this->context->getEventDispatcher()->notify(new sfEvent('user.change_culture', array(
-          'previous' => $this->culture,
-          'culture' => $culture)));
-
-      $this->culture = $culture;
-
-      // add the culture in the routing default parameters
-      sfConfig::set('sf_routing_defaults', array_merge((array) sfConfig::get('sf_routing_defaults'), array('sf_culture' => $culture)));
+      $culture = sfConfig::get('sf_i18n_default_culture');
     }
+
+    // dispatch event
+    $this->context->getEventDispatcher()->notify(new sfEvent('user.change_culture', array(
+        'previous' => $this->culture,
+        'culture' => $culture)));
+
+    $this->culture = $culture;
+
+    // add the culture in the routing default parameters
+    sfConfig::set('sf_routing_defaults', array_merge((array) sfConfig::get('sf_routing_defaults'), array('sf_culture' => $culture)));
   }
 
   /**
@@ -289,8 +292,7 @@ class sfUser {
   {
     date_default_timezone_set($timezone);
     $this->context->getEventDispatcher()->notify(
-         new sfEvent('user.change_timezone',
-         array('method' => 'setTimezone', 'timezone' => $timezone)));
+            new sfEvent('user.change_timezone', array('method' => 'setTimezone', 'timezone' => $timezone)));
   }
 
   /**
@@ -404,9 +406,9 @@ class sfUser {
   {
     $event = $this->context->getEventDispatcher()->notifyUntil(
             new sfEvent('user.method_not_found', array(
-                'user' => $this,
-                'method' => $method,
-                'arguments' => $arguments)));
+        'user' => $this,
+        'method' => $method,
+        'arguments' => $arguments)));
 
     if(!$event->isProcessed())
     {

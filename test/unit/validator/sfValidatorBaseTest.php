@@ -159,11 +159,11 @@ $t->is($v->getOptions(), array('required' => true, 'trim' => false, 'empty_value
 
 // ->getMessages()
 $t->diag('->getMessages()');
-$t->is($v->getMessages(), array('required' => 'Required.', 'invalid' => 'Invalid.', 'foo' => 'bar'), '->getMessages() returns an array of all error messages');
+$t->is($v->getMessages(), array('required' => 'This value is required.', 'invalid' => 'This value is invalid.', 'foo' => 'bar'), '->getMessages() returns an array of all error messages');
 
 // ->getMessage()
 $t->diag('->getMessage()');
-$t->is($v->getMessage('required'), 'Required.', '->getMessage() returns an error message string');
+$t->is($v->getMessage('required'), 'This value is required.', '->getMessage() returns an error message string');
 $t->is($v->getMessage('nonexistant'), '', '->getMessage() returns an empty string if the message does not exist');
 
 // ->setMessage()
@@ -192,7 +192,7 @@ catch(InvalidArgumentException $e)
 // ->setMessages()
 $t->diag('->setMessages()');
 $v->setMessages(array('required' => 'This is required!'));
-$t->is($v->getMessages(), array('invalid' => 'Invalid.', 'required' => 'This is required!'), '->setMessages() changes all error messages');
+$t->is($v->getMessages(), array('invalid' => 'This value is invalid.', 'required' => 'This is required!'), '->setMessages() changes all error messages');
 
 // ->addMessage()
 $t->diag('->addMessage()');

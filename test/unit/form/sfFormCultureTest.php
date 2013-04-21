@@ -12,6 +12,7 @@ $dispatcher = new sfEventDispatcher();
 $sessionPath = sys_get_temp_dir() . '/sessions_' . rand(11111, 99999);
 $storage = new sfSessionTestStorage(array('session_path' => $sessionPath));
 $user = new sfUser();
+$user->initialize(sfContext::getInstance());
 $user->setCulture('en');
 
 $request = sfContext::getInstance()->getRequest();

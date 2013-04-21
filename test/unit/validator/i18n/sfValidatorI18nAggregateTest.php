@@ -100,7 +100,7 @@ catch (sfValidatorError $e)
 
 try
 {
-  $v->setMessage('invalid', 'Invalid.');
+  $v->setMessage('invalid', 'This value is invalid.');
   $v->clean(array('cs_CZ' => 'foo'));
   $t->fail('->clean() throws an sfValidatorError exception if one of the validators fails');
   $t->skip('', 2);

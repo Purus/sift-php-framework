@@ -1,58 +1,24 @@
 <?php
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
+require_once($_test_dir.'/unit/sfContextMock.class.php');
 
 $t = new lime_test(16, new lime_output_color());
 
-class sfContext
-{
-  public static $instance;
-  
-  public
-    $storage  = null,
-    $user     = null,
-    $request  = null;
-
-  public static function getInstance()
-  {
-    if (!isset(self::$instance))
-    {
-      self::$instance = new sfContext();
-    }
-
-    return self::$instance;
-  }
-
-  public function getRequest()
-  {
-    return $this->request;
-  }
-
-  public function getUser()
-  {
-    return $this->user;
-  }
-
-  public function getStorage()
-  {
-    return $this->storage;
-  }
-}
-
 class sfTestUser extends sfUser {
-  
+
   protected $agent;
-  
+
   public function setUserAgent($a)
   {
     $this->getAttributeHolder()->remove('browser_guessed', self::ATTRIBUTE_NAMESPACE);
     $this->agent = $a;
   }
-  
+
   public function getUserAgent()
   {
     return $this->agent;
-  }  
+  }
 }
 
 $context = new sfContext();

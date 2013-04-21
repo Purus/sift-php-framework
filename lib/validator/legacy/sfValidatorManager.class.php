@@ -5,22 +5,20 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
- 
+
 /**
  * sfValidatorManager provides management for request parameters and their
  * associated validators.
  *
  * @package    Sift
  * @subpackage validator_legacy
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @author     Sean Kerr <sean@code-box.org>
  */
-class sfValidatorManager
-{
+class sfValidatorManager {
+
   protected
-    $groups  = array(),
-    $names   = array(),
-    $request = null;
+          $groups = array(),
+          $names = array(),
+          $request = null;
 
   /**
    * Clears this validator manager so it can be reused.
@@ -29,8 +27,8 @@ class sfValidatorManager
   {
     $this->groups = null;
     $this->groups = array();
-    $this->names  = null;
-    $this->names  = array();
+    $this->names = null;
+    $this->names = array();
   }
 
   /**
@@ -40,7 +38,7 @@ class sfValidatorManager
    */
   public function execute()
   {
-    if (sfConfig::get('sf_logging_enabled'))
+    if(sfConfig::get('sf_logging_enabled'))
     {
       sfContext::getInstance()->getLogger()->info('{sfValidator} validation execution');
     }
@@ -51,22 +49,22 @@ class sfValidatorManager
     // if 1 or more groups exist, we'll have to do a second pass
     $pass = 1;
 
-    while (true)
+    while(true)
     {
-      foreach ($this->names as $name => &$data)
+      foreach($this->names as $name => &$data)
       {
-        if (isset($data['_is_parent']))
+        if(isset($data['_is_parent']))
         {
           // this is a parent
-          foreach ($data as $subname => &$subdata)
+          foreach($data as $subname => &$subdata)
           {
-            if ($subname == '_is_parent')
+            if($subname == '_is_parent')
             {
               // this isn't an actual index, but more of a flag
               continue;
             }
 
-            if ($subdata['validation_status'] == true && !$this->validate($subname, $subdata, $name))
+            if($subdata['validation_status'] == true && !$this->validate($subname, $subdata, $name))
             {
               // validation failed
               $retval = false;
@@ -76,7 +74,7 @@ class sfValidatorManager
         else
         {
           // single parameter
-          if ($data['validation_status'] == true && !$this->validate($name, $data, null))
+          if($data['validation_status'] == true && !$this->validate($name, $data, null))
           {
             // validation failed
             $retval = false;
@@ -84,7 +82,7 @@ class sfValidatorManager
         }
       }
 
-      if (count($this->groups) == 0 || $pass == 2)
+      if(count($this->groups) == 0 || $pass == 2)
       {
         break;
       }
@@ -118,38 +116,37 @@ class sfValidatorManager
   public function registerName($name, $required = true, $message = 'Required', $parent = null, $group = null, $isFile = false)
   {
     // create the entry
-    $entry                      = array();
-    $entry['group']             = null;
-    $entry['is_file']           = $isFile;
-    $entry['required']          = $required;
-    $entry['required_msg']      = $message;
+    $entry = array();
+    $entry['group'] = null;
+    $entry['is_file'] = $isFile;
+    $entry['required'] = $required;
+    $entry['required_msg'] = $message;
     $entry['validation_status'] = true;
-    $entry['validators']        = array();
+    $entry['validators'] = array();
 
-    if ($parent != null)
+    if($parent != null)
     {
       // this parameter has a parent array
-      if (!isset($this->names[$parent]))
+      if(!isset($this->names[$parent]))
       {
         // create the parent array
         $this->names[$parent] = array('_is_parent' => true);
       }
 
       // register this parameter
-      $this->names[$parent][$name] =& $entry;
+      $this->names[$parent][$name] = & $entry;
     }
     else
     {
       // no parent
-
       // register this parameter
-      $this->names[$name] =& $entry;
+      $this->names[$name] = & $entry;
     }
 
-    if ($group != null)
+    if($group != null)
     {
       // set group
-      if (!isset($this->groups[$group]))
+      if(!isset($this->groups[$group]))
       {
         // create our group
         $this->groups[$group] = array('_force' => false);
@@ -159,7 +156,7 @@ class sfValidatorManager
       $this->groups[$group][] = $name;
 
       // add a reference back to the group array to the file/param array
-      $entry['group'] =& $this->groups[$group];
+      $entry['group'] = & $this->groups[$group];
     }
   }
 
@@ -172,7 +169,7 @@ class sfValidatorManager
    */
   public function registerValidator($name, $validator, $parent = null)
   {
-    if ($parent != null)
+    if($parent != null)
     {
       // this parameter has a parent
       $this->names[$parent][$name]['validators'][] = $validator;
@@ -196,19 +193,19 @@ class sfValidatorManager
   protected function validate(&$name, &$data, $parent)
   {
     // get defaults
-    $error     = null;
+    $error = null;
     $errorName = null;
-    $force     = null !== $data['group'] ? $data['group']['_force'] : false;
-    $retval    = true;
-    $value     = null;
+    $force = null !== $data['group'] ? $data['group']['_force'] : false;
+    $retval = true;
+    $value = null;
 
     // get our parameter value
-    if ($parent == null)
+    if($parent == null)
     {
       // normal file/parameter
       $errorName = $name;
 
-      if ($data['is_file'])
+      if($data['is_file'])
       {
         // file
         $value = $this->request->getFile($name);
@@ -222,13 +219,13 @@ class sfValidatorManager
     else
     {
       // we have a parent
-      $errorName = $parent.'{'.$name.'}';
-      if ($data['is_file'])
+      $errorName = $parent . '{' . $name . '}';
+      if($data['is_file'])
       {
         // file
-        $parent = $this->request->getFile($parent.'['.$name.']');
+        $parent = $this->request->getFile($parent . '[' . $name . ']');
 
-        if ($parent != null)
+        if($parent != null)
         {
           $value = $parent;
         }
@@ -241,7 +238,7 @@ class sfValidatorManager
           $key = sprintf('%s[%s]', $match[1], $match[2]);
           // parameter
           $parent = $this->request->getParameterHolder()->get($key);
-          if ($parent != null && isset($parent[$name]))
+          if($parent != null && isset($parent[$name]))
           {
             $value = $parent[$name];
           }
@@ -250,7 +247,7 @@ class sfValidatorManager
         {
           // parameter
           $parent = $this->request->getParameterHolder()->get($parent);
-          if ($parent != null && isset($parent[$name]))
+          if($parent != null && isset($parent[$name]))
           {
             $value = $parent[$name];
           }
@@ -259,16 +256,15 @@ class sfValidatorManager
     }
 
     // now for the dirty work
-    if (
-      ($data['is_file'] && !$value['name'])
-      ||
-      (!$data['is_file'] && (is_array($value) ? sfToolkit::isArrayValuesEmpty($value) : ($value === null || strlen($value) == 0)))
+    if(
+            ($data['is_file'] && !$value['name']) ||
+            (!$data['is_file'] && (is_array($value) ? sfToolkit::isArrayValuesEmpty($value) : ($value === null || strlen($value) == 0)))
     )
     {
-      if ($data['required'] || $force)
+      if($data['required'] || $force)
       {
         // it's empty!
-        $error  = $data['required_msg'];
+        $error = $data['required_msg'];
         $retval = false;
       }
       else
@@ -283,18 +279,18 @@ class sfValidatorManager
       $error = null;
 
       // get group force status
-      if ($data['group'] != null)
+      if($data['group'] != null)
       {
         // we set this because we do have a value for a parameter in this group
         $data['group']['_force'] = true;
       }
 
-      if (count($data['validators']) > 0)
+      if(count($data['validators']) > 0)
       {
         // loop through our validators
-        foreach ($data['validators'] as $validator)
+        foreach($data['validators'] as $validator)
         {
-          if (!$validator->execute($value, $error))
+          if(!$validator->execute($value, $error))
           {
             $retval = false;
 
@@ -304,7 +300,7 @@ class sfValidatorManager
       }
     }
 
-    if (!$retval)
+    if(!$retval)
     {
       // set validation status
       $data['validation_status'] = false;
@@ -315,4 +311,5 @@ class sfValidatorManager
 
     return $retval;
   }
+
 }

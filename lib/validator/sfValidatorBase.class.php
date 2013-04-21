@@ -13,20 +13,18 @@
  *
  * @package    Sift
  * @subpackage validator
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  */
-abstract class sfValidatorBase
-{
-  protected static
-    $charset = 'UTF-8',
-    $globalDefaultMessages = array('invalid' => 'Invalid.', 'required' => 'Required.');
+abstract class sfValidatorBase {
 
+  protected static
+          $charset = 'UTF-8',
+          $globalDefaultMessages = array('invalid' => 'This value is invalid.', 'required' => 'This value is required.');
   protected
-    $requiredOptions = array(),
-    $defaultMessages = array(),
-    $defaultOptions  = array(),
-    $messages        = array(),
-    $options         = array();
+          $requiredOptions = array(),
+          $defaultMessages = array(),
+          $defaultOptions = array(),
+          $messages = array(),
+          $options = array();
 
   /**
    * Constructor.
@@ -47,7 +45,7 @@ abstract class sfValidatorBase
    */
   public function __construct($options = array(), $messages = array())
   {
-    $this->options  = array_merge(array('required' => true, 'trim' => false, 'empty_value' => null), $this->options);
+    $this->options = array_merge(array('required' => true, 'trim' => false, 'empty_value' => null), $this->options);
     $this->messages = array_merge(array('required' => self::$globalDefaultMessages['required'], 'invalid' => self::$globalDefaultMessages['invalid']), $this->messages);
 
     $this->configure($options, $messages);
@@ -59,24 +57,24 @@ abstract class sfValidatorBase
     $optionKeys = array_keys($options);
 
     // check option names
-    if ($diff = array_diff($optionKeys, array_merge($currentOptionKeys, $this->requiredOptions)))
+    if($diff = array_diff($optionKeys, array_merge($currentOptionKeys, $this->requiredOptions)))
     {
       throw new InvalidArgumentException(sprintf('%s does not support the following options: \'%s\'.', get_class($this), implode('\', \'', $diff)));
     }
 
     // check error code names
-    if ($diff = array_diff(array_keys($messages), array_keys($this->messages)))
+    if($diff = array_diff(array_keys($messages), array_keys($this->messages)))
     {
       throw new InvalidArgumentException(sprintf('%s does not support the following error codes: \'%s\'.', get_class($this), implode('\', \'', $diff)));
     }
 
     // check required options
-    if ($diff = array_diff($this->requiredOptions, array_merge($currentOptionKeys, $optionKeys)))
+    if($diff = array_diff($this->requiredOptions, array_merge($currentOptionKeys, $optionKeys)))
     {
       throw new RuntimeException(sprintf('%s requires the following options: \'%s\'.', get_class($this), implode('\', \'', $diff)));
     }
 
-    $this->options  = array_merge($this->options, $options);
+    $this->options = array_merge($this->options, $options);
     $this->messages = array_merge($this->messages, $messages);
   }
 
@@ -97,6 +95,7 @@ abstract class sfValidatorBase
    */
   protected function configure($options = array(), $messages = array())
   {
+
   }
 
   /**
@@ -136,7 +135,7 @@ abstract class sfValidatorBase
    */
   public function setMessage($name, $value)
   {
-    if (!in_array($name, array_keys($this->messages)))
+    if(!in_array($name, array_keys($this->messages)))
     {
       throw new InvalidArgumentException(sprintf('%s does not support the following error code: \'%s\'.', get_class($this), $name));
     }
@@ -207,7 +206,7 @@ abstract class sfValidatorBase
    */
   public function setOption($name, $value)
   {
-    if (!in_array($name, array_merge(array_keys($this->options), $this->requiredOptions)))
+    if(!in_array($name, array_merge(array_keys($this->options), $this->requiredOptions)))
     {
       throw new InvalidArgumentException(sprintf('%s does not support the following option: \'%s\'.', get_class($this), $name));
     }
@@ -304,16 +303,16 @@ abstract class sfValidatorBase
   {
     $clean = $value;
 
-    if ($this->options['trim'] && is_string($clean))
+    if($this->options['trim'] && is_string($clean))
     {
       $clean = trim($clean);
     }
 
     // empty value?
-    if ($this->isEmpty($clean))
+    if($this->isEmpty($clean))
     {
       // required?
-      if ($this->options['required'])
+      if($this->options['required'])
       {
         throw new sfValidatorError($this, 'required');
       }
@@ -402,9 +401,9 @@ abstract class sfValidatorBase
   }
 
   /**
-   * Returns messages used by the validator. This method is usefull to 
+   * Returns messages used by the validator. This method is usefull to
    * i18n extract which extract only those messages which are in use
-   * 
+   *
    * @return array Array of messages.
    */
   public function getActiveMessages()
@@ -413,17 +412,17 @@ abstract class sfValidatorBase
     if($invalid = $this->getMessage('invalid'))
     {
       $messages[] = $invalid;
-    }    
+    }
     if($this->getOption('required'))
     {
       $messages[] = $this->getMessage('required');
     }
     return $messages;
   }
-  
+
   /**
    * Returns javascript validation rules
-   * 
+   *
    * @return array
    */
   public function getJavascriptValidationRules()
@@ -431,15 +430,15 @@ abstract class sfValidatorBase
     if($this->hasOption('required'))
     {
       return array(
-        sfFormJavascriptValidation::REQUIRED => $this->getOption('required')
+          sfFormJavascriptValidation::REQUIRED => $this->getOption('required')
       );
     }
     return array();
   }
-  
+
   /**
    * Returns javascript validation messages
-   * 
+   *
    * @return array
    */
   public function getJavascriptValidationMessages()
@@ -452,18 +451,18 @@ abstract class sfValidatorBase
     }
     return $messages;
   }
-  
+
   /**
    * Returns an array of javascript validation rules and messages
-   * 
+   *
    * @return array
    */
   public function getJavascriptValidation()
   {
-    return array($this->getJavascriptValidationRules(), 
-                  $this->getJavascriptValidationMessages());
+    return array($this->getJavascriptValidationRules(),
+        $this->getJavascriptValidationMessages());
   }
-  
+
   /**
    * Sets default messages for all possible error codes.
    *
@@ -473,7 +472,7 @@ abstract class sfValidatorBase
   {
     $this->defaultMessages = $messages;
   }
-  
+
   /**
    * Returns default option values.
    *
@@ -506,11 +505,7 @@ abstract class sfValidatorBase
     $options = $this->getOptionsWithoutDefaults();
     $messages = $this->getMessagesWithoutDefaults();
 
-    return sprintf('%s%s(%s%s)',
-      str_repeat(' ', $indent),
-      str_replace('sfValidator', '', get_class($this)),
-      $options ? sfYamlInline::dump($options) : ($messages ? '{}' : ''),
-      $messages ? ', '.sfYamlInline::dump($messages) : ''
+    return sprintf('%s%s(%s%s)', str_repeat(' ', $indent), str_replace('sfValidator', '', get_class($this)), $options ? sfYamlInline::dump($options) : ($messages ? '{}' : ''), $messages ? ', ' . sfYamlInline::dump($messages) : ''
     );
   }
 
@@ -524,9 +519,9 @@ abstract class sfValidatorBase
     $messages = $this->messages;
 
     // remove default option values
-    foreach ($this->getDefaultMessages() as $key => $value)
+    foreach($this->getDefaultMessages() as $key => $value)
     {
-      if (array_key_exists($key, $messages) && $messages[$key] === $value)
+      if(array_key_exists($key, $messages) && $messages[$key] === $value)
       {
         unset($messages[$key]);
       }
@@ -545,9 +540,9 @@ abstract class sfValidatorBase
     $options = $this->options;
 
     // remove default option values
-    foreach ($this->getDefaultOptions() as $key => $value)
+    foreach($this->getDefaultOptions() as $key => $value)
     {
-      if (array_key_exists($key, $options) && $options[$key] === $value)
+      if(array_key_exists($key, $options) && $options[$key] === $value)
       {
         unset($options[$key]);
       }
@@ -555,21 +550,20 @@ abstract class sfValidatorBase
 
     return $options;
   }
-  
+
   /**
    * Logs to Sift logger (only if configured)
-   * 
+   *
    * @param string $message
-   * @param string $priority 
+   * @param string $priority
    */
   protected function log($message, $priority = sfLogger::INFO)
   {
-    if(class_exists('sfConfig') && sfConfig::get('sf_logging_enabled') 
-      && sfContext::hasInstance())
+    if(class_exists('sfConfig') && sfConfig::get('sf_logging_enabled'))
     {
-      sfContext::getInstance()->getLogger()->log(
-        sprintf('{%s} %s', get_class($this), $message), $priority);
+      sfLogger::getInstance()->log(
+              sprintf('{%s} %s', get_class($this), $message), $priority);
     }
   }
-  
+
 }
