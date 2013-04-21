@@ -62,7 +62,7 @@ class sfDateValidator extends sfValidator
             break;
           case '==':
             $valid = $value1 == $value2;
-            break;          
+            break;
           case '<=':
             $valid = $value1 <= $value2;
             break;
@@ -88,16 +88,16 @@ class sfDateValidator extends sfValidator
 
   /**
    * Converts the given date into a Unix timestamp.
-   * 
+   *
    * Returns null if the date is invalid
-   * 
+   *
    * @param $value    Date to convert
    * @param $culture  Language culture to use
    */
   protected function getValidDate($value, $culture)
   {
     // Use the language culture date format
-    $result = sfI18n::getInstance()->getDate($value, $culture);
+    $result = sfContext::getInstance()->getI18n()->getDate($value, $culture);
     list($d, $m, $y) = $result;
 
     // Make sure the date is a valid gregorian calendar date also

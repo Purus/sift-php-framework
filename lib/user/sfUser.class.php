@@ -14,8 +14,6 @@
  *
  * @package    Sift
  * @subpackage user
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @author     Sean Kerr <sean@code-box.org>
  */
 class sfUser {
 
@@ -32,28 +30,40 @@ class sfUser {
   /**
    * Flash messages namespace
    */
-  const FLASH_NAMESPACE  = 'sift/flash';
-
-  protected
-  $parameterHolder = null,
-  $attributeHolder = null,
-  $culture = null,
-  $context = null;
+  const FLASH_NAMESPACE = 'sift/flash';
 
   /**
-   * Retrieve the current application context.
+   * Parameter holder
    *
-   * @return Context A Context instance.
+   * @var sfParameterHolder
    */
-  public function getContext()
-  {
-    return $this->context;
-  }
+  protected $parameterHolder;
+
+  /**
+   * Attribute holder
+   *
+   * @var sfParameterHolder
+   */
+  protected $attributeHolder;
+
+  /**
+   * User culture
+   *
+   * @var string
+   */
+  protected $culture;
+
+  /**
+   * Context instance
+   *
+   * @var sfContext
+   */
+  protected $context;
 
   /**
    * Initialize this User.
    *
-   * @param Context A Context instance.
+   * @param sfContext A Context instance.
    * @param array   An associative array of initialization parameters.
    *
    * @return bool true, if initialization completes successfully, otherwise
@@ -121,6 +131,16 @@ class sfUser {
   }
 
   /**
+   * Retrieve the current application context.
+   *
+   * @return sfContext A sfContext instance.
+   */
+  public function getContext()
+  {
+    return $this->context;
+  }
+
+  /**
    * Sets culture.
    *
    * @param  string culture
@@ -129,19 +149,12 @@ class sfUser {
   {
     if($this->culture != $culture)
     {
-      if($this->culture != null)
-      {
-        // dispatch event
-        sfCore::dispatchEvent('user.change_culture', array('culture' => $culture));
-      }
+      // dispatch event
+      $this->context->getEventDispatcher()->notify(new sfEvent('user.change_culture', array(
+          'previous' => $this->culture,
+          'culture' => $culture)));
 
       $this->culture = $culture;
-
-      // change the message format object with the new culture
-      if(sfConfig::get('sf_i18n'))
-      {
-        $this->context->getI18n()->setCulture($culture);
-      }
 
       // add the culture in the routing default parameters
       sfConfig::set('sf_routing_defaults', array_merge((array) sfConfig::get('sf_routing_defaults'), array('sf_culture' => $culture)));
@@ -165,7 +178,7 @@ class sfUser {
    */
   public function getIp()
   {
-    return sfContext::getInstance()->getRequest()->getIp();
+    return $this->context->getRequest()->getIp();
   }
 
   /**
@@ -186,7 +199,7 @@ class sfUser {
    */
   public function getIpForwardedFor()
   {
-    return sfContext::getInstance()->getRequest()->getIpForwardedFor();
+    return $this->context->getRequest()->getIpForwardedFor();
   }
 
   /**
@@ -196,7 +209,7 @@ class sfUser {
    */
   public function getHostname()
   {
-    return sfContext::getInstance()->getRequest()->getHostname();
+    return $this->context->getRequest()->getHostname();
   }
 
   /**
@@ -206,7 +219,7 @@ class sfUser {
    */
   public function getUserAgent()
   {
-    return sfContext::getInstance()->getRequest()->getUserAgent();
+    return $this->context->getRequest()->getUserAgent();
   }
 
   /**
@@ -220,12 +233,21 @@ class sfUser {
     return $browser['name'];
   }
 
+  /**
+   * Returns browser version
+   * @return string
+   */
   public function getBrowserVersion()
   {
     $browser = $this->getBrowser();
     return $browser['version'];
   }
 
+  /**
+   * Returns browser (aka user agent)
+   *
+   * @return string
+   */
   public function getBrowser()
   {
     if(!$this->hasAttribute('browser_guessed', self::ATTRIBUTE_NAMESPACE))
@@ -258,11 +280,17 @@ class sfUser {
     return $browser['is_mobile'];
   }
 
+  /**
+   * Sets timezone
+   *
+   * @param string $timezone
+   */
   public function setTimezone($timezone)
   {
     date_default_timezone_set($timezone);
-    sfCore::getEventDispatcher()->notify(new sfEvent('user.change_timezone',
-                    array('method' => 'setTimezone', 'timezone' => $timezone)));
+    $this->context->getEventDispatcher()->notify(
+         new sfEvent('user.change_timezone',
+         array('method' => 'setTimezone', 'timezone' => $timezone)));
   }
 
   /**
@@ -272,14 +300,14 @@ class sfUser {
    */
   public function getTimezone()
   {
-    $request = sfContext::getInstance()->getRequest();
+    $request = $this->context->getRequest();
     $offset = $request->getCookie('timezone_offset');
-    $dst    = $request->getCookie('timezone_daylightsavings');
+    $dst = $request->getCookie('timezone_daylightsavings');
 
     if($offset !== null && $dst !== null)
     {
       $offset *= 3600;
-      $zone   = timezone_name_from_abbr('', $offset, $dst);
+      $zone = timezone_name_from_abbr('', $offset, $dst);
       if($zone !== false)
       {
         $this->setTimezone($zone);
@@ -360,7 +388,6 @@ class sfUser {
 
     // write culture to the storage
     $storage->write(self::CULTURE_NAMESPACE, $this->culture);
-
   }
 
   /**
@@ -375,11 +402,11 @@ class sfUser {
    */
   public function __call($method, $arguments)
   {
-    $event = sfCore::getEventDispatcher()->notifyUntil(
-      new sfEvent('user.method_not_found', array(
-          'user'      => $this,
-          'method'    => $method,
-          'arguments' => $arguments)));
+    $event = $this->context->getEventDispatcher()->notifyUntil(
+            new sfEvent('user.method_not_found', array(
+                'user' => $this,
+                'method' => $method,
+                'arguments' => $arguments)));
 
     if(!$event->isProcessed())
     {

@@ -122,4 +122,16 @@ interface sfII18nMessageSource {
    */
   public function getOriginalSource();
 
+  /**
+   * Sets cache for this source
+   *
+   * @param sfCache $cache
+   */
+  public function setCache(sfCache $cache);
+
+  /**
+   * Returns cache instance
+   */
+  public function getCache();
+
 }

@@ -5,7 +5,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
- 
+
 /**
  * sfContext provides information about the current application context, such as
  * the module and action names and the module directory. References to the
@@ -15,29 +15,27 @@
  * @package    Sift
  * @subpackage util
  */
-class sfContext
-{
-  protected
-    $dispatcher        = null,
-    $application       = null;
-          
-  protected
-    $actionStack       = null,
-    $controller        = null,
-    $databaseManager   = null,
-    $request           = null,
-    $response          = null,
-    $storage           = null,
-    $viewCacheManager  = null,
-    $i18n              = null,
-    $logger            = null,
-    $user              = null,
-    $mailer            = null;
+class sfContext {
 
+  protected
+          $dispatcher = null,
+          $application = null;
+  protected
+          $actionStack = null,
+          $controller = null,
+          $databaseManager = null,
+          $request = null,
+          $response = null,
+          $storage = null,
+          $viewCacheManager = null,
+          $i18n = null,
+          $logger = null,
+          $user = null,
+          $mailer = null;
   protected static
-    $instances = array(),
-    $current   = null;
-  
+          $instances = array(),
+          $current = null;
+
   /**
    * Creates a new context instance.
    *
@@ -57,28 +55,28 @@ class sfContext
     self::$current = $name;
     self::$instances[$name] = new $class();
 
-    if (!self::$instances[$name] instanceof sfContext)
+    if(!self::$instances[$name] instanceof sfContext)
     {
       throw new sfFactoryException(sprintf('Class "%s" is not of the type sfContext.', $class));
     }
 
     self::$instances[$name]->initialize($application);
-    
+
     return self::$instances[$name];
   }
-  
+
   protected function initialize($application)
   {
     $this->application = $application;
-    $this->dispatcher  = $application->getEventDispatcher();
-    
+    $this->dispatcher = $application->getEventDispatcher();
+
     $this->logger = sfLogger::getInstance();
-    if (sfConfig::get('sf_logging_enabled'))
+    if(sfConfig::get('sf_logging_enabled'))
     {
       $this->logger->info('{sfContext} initialization');
     }
 
-    if (sfConfig::get('sf_use_database'))
+    if(sfConfig::get('sf_use_database'))
     {
       // setup our database connections
       $this->databaseManager = new sfDatabaseManager();
@@ -89,16 +87,16 @@ class sfContext
     $this->actionStack = new sfActionStack();
 
     // include the factories configuration
-    require(sfConfigCache::getInstance()->checkConfig(sfConfig::get('sf_app_config_dir_name').'/factories.yml'));
+    require(sfConfigCache::getInstance()->checkConfig(sfConfig::get('sf_app_config_dir_name') . '/factories.yml'));
 
     // register our shutdown function, to be called last
-    sfShutdownScheduler::getInstance()->register(array($this, 'shutdown'), array(),
-            sfShutdownScheduler::LOW_PRIORITY);
-    
+    sfShutdownScheduler::getInstance()->register(array($this, 'shutdown'), array(), sfShutdownScheduler::LOW_PRIORITY);
+
     sfCore::dispatchEvent('context.load_factories', array('context' => $this));
   }
 
   /**
+   * Returns application instance
    * 
    * @return sfApplication
    */
@@ -106,21 +104,21 @@ class sfContext
   {
     return $this->application;
   }
-  
+
   /**
    * Retrieves the singleton instance of this class.
    *
-   * @param  string    $name   The name of the sfContext to retrieve.
+   * @param string $name The name of the sfContext to retrieve.
    *
-   * @return sfContext An sfContext implementation instance.
+   * @return sfContext The sfContext implementation instance.
    */
   static public function getInstance($name = null)
   {
-    if (null === $name)
+    if(null === $name)
     {
       $name = self::$current;
     }
-    
+
     if(!isset(self::$instances[$name]))
     {
       throw new sfException(sprintf('The "%s" context does not exist.', $name));
@@ -128,7 +126,7 @@ class sfContext
 
     return self::$instances[$name];
   }
-  
+
   /**
    * Checks to see if there has been a context created
    *
@@ -136,48 +134,47 @@ class sfContext
    *
    * @return bool true is instanced, otherwise false
    */
-
   public static function hasInstance($name = null)
   {
-    if (null === $name)
+    if(null === $name)
     {
       $name = self::$current;
     }
 
     return isset(self::$instances[$name]);
-  } 
-  
+  }
+
   /**
-   * Loads the symfony factories.
+   * Loads the factories.
+   * 
    */
   public function loadFactories()
   {
-    if (sfConfig::get('sf_use_database'))
+    if(sfConfig::get('sf_use_database'))
     {
       // setup our database connections
-      $this->factories['databaseManager'] = new sfDatabaseManager($this->application, 
-              array('auto_shutdown' => false));
+      $this->factories['databaseManager'] = new sfDatabaseManager($this->application, array('auto_shutdown' => false));
     }
 
     // create a new action stack
     $this->factories['actionStack'] = new sfActionStack();
 
-    if (sfConfig::get('sf_debug') && sfConfig::get('sf_logging_enabled'))
+    if(sfConfig::get('sf_debug') && sfConfig::get('sf_logging_enabled'))
     {
       $timer = sfTimerManager::getTimer('Factories');
     }
 
     // include the factories configuration
     require(sfConfigCache::getInstance()->checkConfig('config/factories.yml'));
-      
+
     $this->dispatcher->notify(new sfEvent('context.load_factories'));
 
-    if (sfConfig::get('sf_debug') && sfConfig::get('sf_logging_enabled'))
+    if(sfConfig::get('sf_debug') && sfConfig::get('sf_logging_enabled'))
     {
       $timer->addTime();
     }
   }
-  
+
   /**
    * Dispatches the current request.
    */
@@ -185,7 +182,7 @@ class sfContext
   {
     $this->getController()->dispatch();
   }
-  
+
   /**
    * Sets the current context to something else
    *
@@ -195,14 +192,13 @@ class sfContext
   {
     if(!isset(self::$instances[$name]))
     {
-      $current = sfContext::getInstance()->getApplication();      
+      $current = sfContext::getInstance()->getApplication();
       sfContext::createInstance(
-        sfCore::getProject()->getApplication($name, 
-        $current->getEnvironment(), $current->isDebug()));
+              sfCore::getProject()->getApplication($name, $current->getEnvironment(), $current->isDebug()));
     }
     self::$current = $name;
   }
-  
+
   /**
    * Retrieve the action name for this context.
    *
@@ -212,12 +208,11 @@ class sfContext
   public function getActionName()
   {
     // get the last action stack entry
-    if ($this->actionStack && $lastEntry = $this->actionStack->getLastEntry())
+    if($this->actionStack && $lastEntry = $this->actionStack->getLastEntry())
     {
       return $lastEntry->getActionName();
     }
   }
-
 
   /**
    * Retrieve the ActionStack.
@@ -234,10 +229,10 @@ class sfContext
    *
    * @return sfController The current sfController implementation instance.
    */
-   public function getController()
-   {
-     return $this->controller;
-   }
+  public function getController()
+  {
+    return $this->controller;
+  }
 
   /**
    * Retrieves the mailer.
@@ -279,7 +274,7 @@ class sfContext
    */
   public function getDatabaseConnection($name = 'default')
   {
-    if ($this->databaseManager != null)
+    if($this->databaseManager != null)
     {
       return $this->databaseManager->getDatabase($name)->getConnection();
     }
@@ -289,7 +284,7 @@ class sfContext
 
   public function retrieveObjects($class, $peerMethod, $options = array())
   {
-    $retrievingClass = 'sf'.ucfirst(sfConfig::get('sf_orm', 'doctrine')).'DataRetriever';
+    $retrievingClass = 'sf' . ucfirst(sfConfig::get('sf_orm', 'doctrine')) . 'DataRetriever';
 
     return call_user_func(array($retrievingClass, 'retrieveObjects'), $class, $peerMethod, $options);
   }
@@ -313,9 +308,9 @@ class sfContext
   public function getModuleDirectory()
   {
     // get the last action stack entry
-    if ($this->actionStack && $lastEntry = $this->actionStack->getLastEntry())
+    if($this->actionStack && $lastEntry = $this->actionStack->getLastEntry())
     {
-      return sfConfig::get('sf_app_module_dir').'/'.$lastEntry->getModuleName();
+      return sfConfig::get('sf_app_module_dir') . '/' . $lastEntry->getModuleName();
     }
   }
 
@@ -328,7 +323,7 @@ class sfContext
   public function getModuleName()
   {
     // get the last action stack entry
-    if ($this->actionStack && $lastEntry = $this->actionStack->getLastEntry())
+    if($this->actionStack && $lastEntry = $this->actionStack->getLastEntry())
     {
       return $lastEntry->getModuleName();
     }
@@ -343,7 +338,7 @@ class sfContext
   public function getCurrentViewInstance()
   {
     // get the last action stack entry
-    if ($this->actionStack && $lastEntry = $this->actionStack->getLastEntry())
+    if($this->actionStack && $lastEntry = $this->actionStack->getLastEntry())
     {
       return $lastEntry->getViewInstance();
     }
@@ -408,13 +403,6 @@ class sfContext
    */
   public function getI18N()
   {
-    if(!$this->i18n && sfConfig::get('sf_i18n'))
-    {
-      $this->i18n = sfI18n::getInstance();
-      // FIXME: load options from i18n.yml
-      $this->i18n->initialize($this, array());
-    }
-
     return $this->i18n;
   }
 
@@ -426,6 +414,16 @@ class sfContext
   public function getUser()
   {
     return $this->user;
+  }
+
+  /**
+   * Returns dispatcher instance
+   *
+   * @return sfEventDispatcher
+   */
+  public function getEventDispatcher()
+  {
+    return $this->dispatcher;
   }
 
   /**
@@ -441,19 +439,20 @@ class sfContext
     $this->getRequest()->shutdown();
     $this->getResponse()->shutdown();
 
-    if (sfConfig::get('sf_logging_enabled'))
+    if(sfConfig::get('sf_logging_enabled'))
     {
       $this->getLogger()->shutdown();
     }
 
-    if (sfConfig::get('sf_use_database'))
+    if(sfConfig::get('sf_use_database'))
     {
       $this->getDatabaseManager()->shutdown();
     }
 
-    if (sfConfig::get('sf_cache'))
+    if(sfConfig::get('sf_cache'))
     {
       $this->getViewCacheManager()->shutdown();
     }
   }
+
 }

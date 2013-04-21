@@ -99,23 +99,37 @@ abstract class sfI18nMessageSource implements sfII18nMessageSource {
    * Custom message source are possible by supplying the a valid className as type
    * in the factory method.
    *
-   * @param string the message source type.
-   * @param string the location of the resource.
-   * @return sfI18nMessageSource a new message source of the specified type.
+   * @param string $type The message source type.
+   * @param string $source The location of the resource.
+   * @param array $arguments Array of additional arguments to pass for the source class. First argument is always the source
+   * @return sfI18nMessageSource A new message source of the specified type.
    * @throws sfException
    */
-  public static function factory($type, $source = '.')
+  public static function factory($type, $source = '.', $arguments = array())
   {
-    $className = sprintf('sfI18nMessageSource%s', ucfirst(strtolower($type)));
-
-    if(class_exists($className))
+    $class = false;
+    if(class_exists($className = sprintf('sfI18nMessageSource%s', ucfirst(strtolower($type)))))
     {
-      return new $className($source);
+      $class = $className;
     }
     elseif(class_exists($type))
     {
-      // try loading
-      return new $type($source);
+      $class = $type;
+    }
+
+    if($class)
+    {
+      // we have any additional arguments, we wil use reflection
+      if(count($arguments))
+      {
+        $reflection = new sfReflectionClass($class);
+        array_unshift($arguments, $source);
+        return $reflection->newInstanceArgs($arguments);
+      }
+      else
+      {
+        return new $class($source);
+      }
     }
 
     throw new sfException(sprintf('Unable to find source type "%s".', $type));

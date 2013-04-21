@@ -12,14 +12,7 @@
  * @package    Sift
  * @subpackage i18n
  */
-class sfI18n {
-
-  /**
-   * Instance holder
-   *
-   * @var sfI18n
-   */
-  protected static $instance;
+class sfI18n extends sfConfigurable {
 
   /**
    * Array of sfII18nMessageSources
@@ -49,31 +42,113 @@ class sfI18n {
    */
   protected $requestedTranslations = array();
 
-  public function initialize(sfContext $context, $options = array())
+  /**
+   * Default options
+   *
+   * @var array
+   */
+  protected $defaultOptions = array(
+    'charset' => 'UTF-8',
+    'debug' => false,
+    'cache' => false,
+    'cache_dir' => '',
+    'translator_mode' => false,
+    'untranslated_prefix' => '[T]',
+    'untranslated_suffix' => '[/T]',
+    'source_type' => 'gettext',
+    // sources which are registered upon object creation
+    'sources' => array()
+  );
+
+  /**
+   * Event dispatched object
+   *
+   * @var sfEventDispatcher
+   */
+  protected $dispatcher;
+
+  /**
+   * Current module in the application.
+   *
+   * @var string
+   * @see listenToControllerChangeActionEvent()
+   */
+  protected $moduleName;
+
+  /**
+   * Constructs the I18n
+   *
+   * @param sfContext $context Context instance
+   * @param array $options
+   */
+  public function __construct(sfContext $context, $options = array())
   {
     $this->context = $context;
     $this->culture = $context->getUser()->getCulture();
 
-    // FIXME: load fallback sources as last instance translators
-    // for: core sift, forms, this should be passed as options
+    // This should be taken from context
+    $this->context->getEventDispatcher()->connect('user.change_culture',
+      array($this, 'listenToUserChangeCultureEvent')
+    );
 
-    $this->appendMessageSource($this->createMessageSource(sfConfig::get('sf_i18n_source'),
-                               sfConfig::get('sf_app_i18n_dir')));
+    // calls setup()
+    parent::__construct($options);
   }
 
   /**
-   * Returns single instance of this class
+   * Setup the object
    *
-   * @return sfI18N instance
    */
-  public static function getInstance()
+  public function setup()
   {
-    if(!isset(self::$instance))
+    if($this->getOption('cache') && !$this->getOption('cache_dir'))
     {
-      $class = __CLASS__;
-      self::$instance = new $class();
+      throw new InvalidArgumentException('Cache directory option "cache_dir" is missing');
     }
-    return self::$instance;
+
+    foreach(array_reverse($this->getOption('sources', array())) as $source)
+    {
+      if(!$source instanceof sfII18nMessageSource)
+      {
+        // skip disabled sources
+        if(isset($source['enabled']) && !$source['enabled'])
+        {
+          continue;
+        }
+
+        if(!isset($source['source']))
+        {
+          throw new InvalidArgumentException('Given source is missing "source" key');
+        }
+
+        $arguments = array();
+        if(isset($source['arguments']))
+        {
+          $arguments = $source['arguments'];
+        }
+
+        $type = isset($source['type']) ? $source['type'] : $this->getOption('source_type');
+
+        if(isset($source['class']))
+        {
+          $type = $source['class'];
+        }
+
+        $source = $this->createMessageSource($type, $source['source'], $arguments);
+      }
+
+      $this->appendMessageSource($source);
+    }
+  }
+
+  /**
+   * Is running in translator mode?
+   *
+   * @return boolean
+   */
+  public function isInTranslatorMode()
+  {
+    return $this->getOption('translator_mode');
   }
 
   /**
@@ -92,15 +167,14 @@ class sfI18n {
    */
   public function __($string, $args = array(), $catalogue = 'messages', $culture = null)
   {
-    if(sfConfig::get('sf_debug'))
+    if($this->getOption('debug'))
     {
       $timer = sfTimerManager::getTimer('Translation');
     }
 
-    list($source, $catalogue) = $this->prepareSources($catalogue);
+    list($source, $catalogue) = $this->prepareSources($catalogue, $string);
 
     $translated = false;
-
     if($source)
     {
       $source['source']->setCulture($culture ? $culture : $this->getCulture());
@@ -108,7 +182,7 @@ class sfI18n {
     }
 
     // we are in learning mode, catch what we translated
-    if(sfConfig::get('sf_i18n_learning_mode'))
+    if($this->getOption('translator_mode'))
     {
       $this->requestedTranslations[$catalogue][$string] = array(
         'source'        => $source['source'] ? $source['source']->getOriginalSource() : false,
@@ -123,6 +197,7 @@ class sfI18n {
       // loop all sources and find the translation
       foreach($this->sources as $_source)
       {
+        // don'ty try the same source again
         if($_source == $source)
         {
           continue;
@@ -137,7 +212,7 @@ class sfI18n {
         }
         catch(sfException $e)
         {
-          if(sfConfig::get('sf_debug'))
+          if($this->getOption('debug'))
           {
             throw $e;
           }
@@ -147,11 +222,10 @@ class sfI18n {
         {
           break;
         }
-
       }
     }
 
-    if(sfConfig::get('sf_debug'))
+    if($this->getOption('debug'))
     {
       $timer->addTime();
     }
@@ -175,7 +249,7 @@ class sfI18n {
     {
       $directory = dirname($catalogue);
       $catalogue = basename($catalogue);
-      $hash      = sprintf('%s_%s_%s', $directory, $catalogue, $this->getCulture());
+      $hash      = sprintf('%s_%s', $directory, $catalogue);
     }
     // we have module/catalogue pair
     elseif(strpos($catalogue, '/') !== false
@@ -184,33 +258,25 @@ class sfI18n {
       $moduleName = $matches[1];
       $catalogue  = $matches[2];
       $directory  = sfLoader::getI18NDir($moduleName);
-      $hash       = sprintf('%s_%s_%s', $moduleName, $catalogue, $this->getCulture());
+      $hash       = sprintf('%s_%s', $directory, $catalogue);
     }
-    else
+    // we have any module
+    elseif($moduleName = $this->context->getModuleName())
     {
-      $moduleName = $this->context->getModuleName();
       $directory = sfLoader::getI18NDir($moduleName);
       // current module is taken
-      $hash = sprintf('%s_%s_%s', $moduleName, $catalogue, $this->getCulture());
+      $hash = sprintf('%s_%s', $directory, $catalogue);
     }
 
     // nothing found, unknown directory
     if(!$directory)
     {
-      return false;
+      return array(false, false);
     }
 
     if(!isset($this->sources[$hash]))
     {
-      $type = sfConfig::get('sf_i18n_source');
-      $source = $this->createMessageSource($type, $directory);
-
-      $cache = new sfFileCache(array(
-        'cache_dir' => sfConfig::get('sf_cache_dir') . '/i18n/' . dechex(crc32($hash))
-      ));
-
-      $source->setCache($cache);
-
+      $source = $this->createMessageSource($this->getOption('source_type'), $directory);
       $this->sources[$hash] = array(
         'source'    => &$source,
         'formatter' => $this->createMessageFormatter($source)
@@ -291,6 +357,7 @@ class sfI18n {
     foreach($this->sources as $id => &$source)
     {
       $source['source']->setCulture($culture);
+      $source['formatter']->reset();
     }
 
     return $this;
@@ -329,7 +396,7 @@ class sfI18n {
   public function appendMessageSource(sfII18nMessageSource $source)
   {
     $this->sources[] = array(
-      'source' => $source,
+      'source' => &$source,
       'formatter' => $this->createMessageFormatter($source)
     );
 
@@ -337,16 +404,38 @@ class sfI18n {
   }
 
   /**
-   * Creates a message source object. This is an alias for
-   * sfI18nMessageSource::factory() method.
+   * Creates a message source object. Creates a message source and assigns cache object
+   * to this instance.
    *
    * @param string $type
    * @param string $source
+   * @param array $arguments Arguments for the
    * @return sfII18nMessageSource
    */
-  public function createMessageSource($type, $source)
+  public function createMessageSource($type, $source, $arguments = array())
   {
-    return sfI18nMessageSource::factory($type, $source);
+    $cache = false;
+
+    if($this->getOption('cache'))
+    {
+      // cache directory
+      // FIXME: is this unique enough?
+      // http://programmers.stackexchange.com/questions/49550/which-hashing-algorithm-is-best-for-uniqueness-and-speed
+      $cacheDir = dechex(crc32($source . $type . $this->getCulture() . serialize($arguments)));
+
+      $cache = new sfFileCache(array(
+        'cache_dir' => $this->getOption('cache_dir').'/'.$cacheDir
+      ));
+    }
+
+    $source = sfI18nMessageSource::factory($type, $source, $arguments);
+
+    if($cache)
+    {
+      $source->setCache($cache);
+    }
+
+    return $source;
   }
 
   /**
@@ -357,12 +446,13 @@ class sfI18n {
    */
   public function createMessageFormatter(sfII18NMessageSource $source)
   {
-    $messageFormat = new sfI18nMessageFormatter($source, sfConfig::get('sf_charset'));
-    if(sfConfig::get('sf_debug') && sfConfig::get('sf_i18n_debug'))
+    $messageFormat = new sfI18nMessageFormatter($source, $this->getOption('charset'));
+    if($this->getOption('debug'))
     {
       $messageFormat->setUntranslatedPS(array(
-          sfConfig::get('sf_i18n_untranslated_prefix'),
-          sfConfig::get('sf_i18n_untranslated_suffix')));
+        $this->getOption('untranslated_prefix'),
+        $this->getOption('untranslated_suffix'))
+      );
     }
     return $messageFormat;
   }
@@ -380,8 +470,19 @@ class sfI18n {
       'source' => $source,
       'formatter' => $this->createMessageFormatter($source)
     );
+
     $this->sources = array_reverse($this->sources, true);
     return $this;
+  }
+
+  /**
+   * Listens to "user.change_culture" event
+   *
+   * @param sfEvent $event
+   */
+  public function listenToUserChangeCultureEvent(sfEvent $event)
+  {
+    $this->setCulture($event['culture']);
   }
 
   /**
@@ -560,7 +661,6 @@ class sfI18n {
     {
       return null;
     }
-
   }
 
 }

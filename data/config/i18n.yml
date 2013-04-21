@@ -7,7 +7,7 @@ default:
     cache_dir: %SF_I18N_CACHE_DIR%
     # enable editing of translations in debug toolbar?
     translator_mode: false
-    source: gettext
+    source_type: gettext
     debug: false
     cache: true
     untranslated_prefix: "[T]"
@@ -21,9 +21,11 @@ default:
         enabled: false
       core:
         source: %SF_SIFT_DATA_DIR%/i18n/catalogues
+        enabled: false
       base_form:
         source: %SF_SIFT_DATA_DIR%/i18n/catalogues
         class: sfI18nMessageSourceGettextSingleCatalogue
+        enabled: false
         # additional arguments for the instance of class
         # first argument is the source
         arguments:

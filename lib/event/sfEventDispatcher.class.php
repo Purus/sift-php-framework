@@ -86,6 +86,10 @@ class sfEventDispatcher {
     {
       foreach($listeners as $listener)
       {
+        if(!sfToolkit::isCallable($listener, false, $callableName))
+        {
+          throw new sfException(sprintf('Invalid callable "%s" listens to "%s"', $callableName, $event->getName()));
+        }
         call_user_func($listener, $event);        
       }
     }

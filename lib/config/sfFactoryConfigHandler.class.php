@@ -5,15 +5,13 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
- 
+
 /**
  * sfFactoryConfigHandler allows you to specify which factory implementation the
  * system will use.
  *
  * @package    Sift
  * @subpackage config
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @author     Sean Kerr <sean@code-box.org>
  */
 class sfFactoryConfigHandler extends sfYamlConfigHandler
 {
@@ -24,8 +22,8 @@ class sfFactoryConfigHandler extends sfYamlConfigHandler
    *
    * @return string Data to be written to a cache file
    *
-   * @throws <b>sfConfigurationException</b> If a requested configuration file does not exist or is not readable
-   * @throws <b>sfParseException</b> If a requested configuration file is improperly formatted
+   * @throws sfConfigurationException If a requested configuration file does not exist or is not readable
+   * @throws sfParseException If a requested configuration file is improperly formatted
    */
   public function execute($configFiles)
   {
@@ -44,7 +42,7 @@ class sfFactoryConfigHandler extends sfYamlConfigHandler
     $instances = array();
 
     // available list of factories
-    $factories = array('controller', 'request', 'response', 'storage', 'user', 'view_cache');
+    $factories = array('controller', 'request', 'response', 'storage', 'user', 'view_cache', 'i18n');
 
     // let's do our fancy work
     foreach ($factories as $factory)
@@ -142,6 +140,16 @@ class sfFactoryConfigHandler extends sfYamlConfigHandler
                              "    \$this->viewCacheManager->initialize(\$this, sfConfig::get('sf_factory_view_cache', '%s'), sfConfig::get('sf_factory_view_cache_parameters', %s));\n".
                              " }\n",
                              $class, $parameters);
+          break;
+
+        case 'i18n':
+
+          $inits[] = sprintf("\n  if (sfConfig::get('sf_i18n'))\n  {\n".
+                     "    \$class = sfConfig::get('sf_factory_i18n', '%s');\n".
+                     "    \$this->i18n = new \$class(\$this, sfConfig::get('sf_i18n_param', array()));\n".
+                     "    sfWidgetFormSchemaFormatter::setTranslationCallable(array(\$this->i18n, '__'));\n".
+                     "  }\n"
+                     , $class);
           break;
       }
     }

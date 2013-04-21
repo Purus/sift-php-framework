@@ -106,6 +106,18 @@ class sfI18nMessageFormatter {
   }
 
   /**
+   * Resets the formatter.
+   *
+   * @return sfI18nMessageFormatter
+   */
+  public function reset()
+  {
+    $this->messages = array();
+    $this->catalogues = array();
+    return $this;
+  }
+
+  /**
    * Loads the message from a particular catalogue. A listed
    * loaded catalogues is kept to prevent reload of the same
    * catalogue. The load catalogue messages are stored
@@ -115,7 +127,10 @@ class sfI18nMessageFormatter {
    */
   protected function loadCatalogue($catalogue)
   {
-    if(in_array($catalogue, $this->catalogues))
+    // prevent collisions with different cultures
+    $catalogueHash = $catalogue . $this->source->getCulture();
+
+    if(in_array($catalogueHash, $this->catalogues))
     {
       return;
     }
@@ -123,7 +138,7 @@ class sfI18nMessageFormatter {
     if($this->source->load($catalogue))
     {
       $this->messages[$catalogue] = $this->source->read();
-      $this->catalogues[] = $catalogue;
+      $this->catalogues[] = $catalogueHash;
     }
   }
 
