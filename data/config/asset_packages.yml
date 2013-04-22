@@ -102,8 +102,7 @@ default:
 
     modernizr:
       javascripts:
-        - %SF_SIFT_WEB_DIR%/js/modernizr/modernizr.custom.96327.js
-        - %SF_SIFT_WEB_DIR%/js/modernizr/font_smoothing.js
+        - %SF_SIFT_WEB_DIR%/js/modernizr/modernizr.all.min.js
 
     validation:
       javascripts:

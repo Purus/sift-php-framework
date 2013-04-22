@@ -401,17 +401,34 @@
       return;
     }
 
+    var browserSupportsNumberInput = false;
+
+    // the browser support number input
+    if(typeof window.Modernizr !== 'undefined'
+      && window.Modernizr.input && window.Modernizr.input.step)
+    {
+      browserSupportsNumberInput = true;
+    }
+
     // date picker inputs
     use_package('ui', function()
     {
       numberInputs.each(function()
       {
-        var culture = $(this).data('culture') ? $(this).data('culture') : Config.get('culture');
+        var $element = $(this);
+        if($element.prop('type') === 'number' && browserSupportsNumberInput)
+        {
+          // Returning non-false is the same as a continue statement in a for loop;
+          // it will skip immediately to the next iteration.
+          return true;
+        }
+
+        var culture = $element.data('culture') ? $element.data('culture') : Config.get('culture');
         // fix for globalize culture format cs-CZ is Sift's cs_CZ
         culture = culture.replace('_', '-');
-        $(this).spinner($.extend({
+        $element.spinner($.extend({
           culture : culture
-        }, $(this).data('spinnerOptions') || {}));
+        }, $element.data('spinnerOptions') || {}));
       });
     }, null, typeof $.fn.spinner === 'undefined');
   };
