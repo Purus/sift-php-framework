@@ -28,7 +28,7 @@ class sfI18nYamlGeneratorExtractor extends sfI18nYamlExtractor {
    */
   protected $defaultOptions = array(
       'excluded_strings' => array(
-          'Basic', 'list', 'delete', 'create', 'edit', 'save', 'save and add'
+        'list', 'delete', 'create', 'edit', 'save', 'save and add'
       )
   );
 
@@ -108,11 +108,16 @@ class sfI18nYamlGeneratorExtractor extends sfI18nYamlExtractor {
     {
       foreach($params['list']['batch_actions'] as $field => $options)
       {
-        if(isset($options['name']) && !in_array($options['name'], $this->getOption('excluded_strings')))
+        // this is a default action, but with custom name
+        if($field[0] == '_' && isset($options['name']) && !empty($options['name']))
         {
           $this->strings[] = $options['name'];
         }
-        else
+        elseif(isset($options['name']) && !in_array($options['name'], $this->getOption('excluded_strings')))
+        {
+          $this->strings[] = $options['name'];
+        }
+        elseif($field[0] != '_')
         {
           $this->strings[] = $field;
         }
@@ -123,7 +128,12 @@ class sfI18nYamlGeneratorExtractor extends sfI18nYamlExtractor {
     {
       foreach($params['list']['object_actions'] as $field => $options)
       {
-        if(isset($options['name']) && !in_array($options['name'], $this->getOption('excluded_strings')))
+        // this is a default action, but with custom name
+        if($field[0] == '_' && isset($options['name']) && !empty($options['name']))
+        {
+          $this->strings[] = $options['name'];
+        }
+        elseif(isset($options['name']) && !in_array($options['name'], $this->getOption('excluded_strings')))
         {
           $this->strings[] = $options['name'];
         }
@@ -176,7 +186,7 @@ class sfI18nYamlGeneratorExtractor extends sfI18nYamlExtractor {
       }
     }
 
-    return $this->strings;
+    return array_unique($this->strings);
   }
 
   protected function getFromFields($fields)
