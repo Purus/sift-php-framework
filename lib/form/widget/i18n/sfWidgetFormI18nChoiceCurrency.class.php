@@ -11,7 +11,6 @@
  *
  * @package    Sift
  * @subpackage form_widget
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  */
 class sfWidgetFormI18nChoiceCurrency extends sfWidgetFormChoice
 {

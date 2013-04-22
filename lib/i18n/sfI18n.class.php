@@ -106,7 +106,7 @@ class sfI18n extends sfConfigurable {
       throw new InvalidArgumentException('Cache directory option "cache_dir" is missing');
     }
 
-    foreach(array_reverse($this->getOption('sources', array())) as $source)
+    foreach($this->getOption('sources', array()) as $name => $source)
     {
       if(!$source instanceof sfII18nMessageSource)
       {
@@ -118,7 +118,7 @@ class sfI18n extends sfConfigurable {
 
         if(!isset($source['source']))
         {
-          throw new InvalidArgumentException('Given source is missing "source" key');
+          throw new InvalidArgumentException(sprintf('Given source "%s" is missing "source" key', $name));
         }
 
         $arguments = array();

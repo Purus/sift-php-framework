@@ -27,7 +27,7 @@ class sfValidatorHtml extends sfValidatorString
    */
   protected function configure($options = array(), $messages = array())
   {
-    $this->addMessage('allowed_tags', 'Your field contains unsupported HTML tags.');
+    $this->addMessage('allowed_tags', 'The text contains unallowed HTML tags.');
 
     $this->addOption('strip', true);
     // Mandatory. We don't complain about HTML here, we clean it

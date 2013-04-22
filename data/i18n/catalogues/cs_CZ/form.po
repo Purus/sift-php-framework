@@ -1,0 +1,231 @@
+msgid ""
+msgstr ""
+"PO-Revision-Date: 2013-04-22 09:22+0100\n"
+"Project-Id-Version: 1.0\n"
+"POT-Creation-Date: \n"
+"Last-Translator: Michal Moravec - Mishal.cz <mishal@mishal.cz>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.5.5\n"
+"Language: cs\n"
+
+msgid "This value is required."
+msgstr "Tuto hodnotu je nutné zadat."
+
+msgid "This value is invalid."
+msgstr "Tato hodnota není platná."
+
+msgid "Value \"%value%\" is forbidden."
+msgstr "Hodnota \"%value%\" je zákázána."
+
+msgid "Selected choice is invalid."
+msgstr "Vybraná možnost není platná."
+
+msgid "At least %min% values must be selected (%count% values selected)."
+msgstr "Musí být vybrány minimálně %min% volby (%count% vybráno)."
+
+msgid "At most %max% values must be selected (%count% values selected)."
+msgstr "Mohou být vybrány maximálně %max% volby (%count% vybráno)."
+
+msgid "Date is required."
+msgstr "Datum je nutné zadat."
+
+msgid "\"%value%\" is invalid date value."
+msgstr "\"%value%\" není platná hodnota pro datum."
+
+msgid "\"%value%\" does not match the date format (%date_format%)."
+msgstr "\"%value%\" neodpovídá formátu pro datum (%date_format%)."
+
+msgid "The date must be before %max%."
+msgstr "Datum musí být před %max%."
+
+msgid "The date must be after %min%."
+msgstr "Datum musí být po %min%."
+
+msgid "The date cannot be in the future."
+msgstr "Datum nemůže být v budoucnosti."
+
+msgid "The date cannot be in the past."
+msgstr "Datum nemůže být v minulosti."
+
+msgid "The time interval between the two dates is too short."
+msgstr "Časový interval mezi dvěma datumy je příliš krátký."
+
+msgid "The time interval between the two dates is too long."
+msgstr "Časový interval mezi dvěma datumy je příliš dlouhý."
+
+msgid "The start date must be prior to the end date."
+msgstr "Datum začátku musí před datem konce."
+
+msgid "Unexpected extra form field named \"%field%\"."
+msgstr "Neočekávané pole formuláře s názvem \"%field%\"."
+
+msgid ""
+"The form submission cannot be processed. It probably means that you have "
+"uploaded a file that is too big."
+msgstr ""
+"Formulář nemohl být zpracován. Pravděpodobně to znamená, že jste odeslal(a) "
+"soubor, který byl příliš veliký."
+
+msgid "Time is required."
+msgstr "Zadejte čas."
+
+msgid "\"%value%\" is invalid time value."
+msgstr "\"%value%\" není platná hodnota pro čas."
+
+msgid "\"%value%\" does not match the time format (%time_format%)."
+msgstr "\"%value%\" neodpovídá formátu pro čas (%time_format%)."
+
+msgid "Select a file to be uploaded."
+msgstr "Vyberte soubor, který bude nahrán."
+
+msgid "Invalid file uploaded."
+msgstr "Byl nahrán neplatný soubor."
+
+msgid "File is too large (maximum is %max_size% bytes)."
+msgstr "Soubor je příliš velký (maximum je %max_size%)."
+
+msgid "Invalid mime type (%mime_type%)."
+msgstr "Neplatný typ souboru."
+
+msgid "The uploaded file was only partially uploaded."
+msgstr "Nahrávaný soubor byl nakopírován jen z části."
+
+msgid "Missing a temporary folder."
+msgstr "Chybějící dočasný adresář."
+
+msgid "Failed to write file to disk."
+msgstr "Chyba při zápisu na disk."
+
+msgid "File upload stopped by extension."
+msgstr "Nahrávání souboru bylo zastaveno rozšířením."
+
+msgid "Select an image to be uploaded."
+msgstr "Vyberte obrázek, který bude nahrán."
+
+msgid ""
+"Image dimensions %width%x%height%px are too small (minimum is %min_width%x"
+"%min_height%px)."
+msgstr ""
+"Rozměry obrázku %width%x%height%px jsou moc malé. (minimum je %min_width%x"
+"%min_height%px)."
+
+msgid ""
+"Image dimensions %width%x%height%px are too large (maximum is %max_width%x"
+"%max_height%px)."
+msgstr ""
+"Rozměry obrázku %width%x%height%px jsou moc velké. (minimum je %min_width%x"
+"%min_height%px)."
+
+msgid "\"%value%\" is invalid birth number."
+msgstr "\"%value%\" není platné datum narození."
+
+msgid "\"%value%\" is invalid company IN number."
+msgstr "\"%value%\" není platné IČ."
+
+msgid "\"%value%\" is not an integer."
+msgstr "\"%value%\" není celé číslo."
+
+msgid "\"%value%\" must be at most %max%."
+msgstr "\"%value%\" musí být maximálně %max%."
+
+msgid "\"%value%\" must be at least %min%."
+msgstr "\"%value%\" musí být alespoň %min%."
+
+msgid "\"%value%\" is not a valid IP address."
+msgstr "\"%value%\" není platná IP adresa."
+
+msgid "\"%value%\" is not a number."
+msgstr "\"%value%\" není číslo."
+
+msgid "\"%value%\" must be less than %max%."
+msgstr "\"%value%\" musí být menší než %min%."
+
+msgid "\"%value%\" must be greater than %min%."
+msgstr "\"%value%\" musí být větší než %min%."
+
+msgid "This session has expired. Please reload the page and try again."
+msgstr "Platnost stránky vypršela. Prosím obnovte stránku a zkuste to znovu."
+
+msgid "Value is too long (%max_length% characters max)."
+msgstr "Hodnota je příliš dlouhá. (Max. %max_length% znaků)."
+
+msgid "Value is too short (%min_length% characters min)."
+msgstr "Hodnota je příliš krátká. (Min. %min_length% znaků)."
+
+msgid "\"%value%\" is invalid URL."
+msgstr "\"%value%\" není platná adresa URL."
+
+msgid "\"%value%\" is invalid zip code."
+msgstr "\"%value%\" není platné PSČ."
+
+msgid "The captcha is not valid (%error%)."
+msgstr "Captcha není platná (%error%)."
+
+msgid "Unable to check the captcha from the server (%error%)."
+msgstr "Nepodařilo se ověřit captchu ze serveru (%error%)."
+
+msgid "Spam bots are not welcomed here. Go away!"
+msgstr "Spamboti tady nejsou vítáni. Jdi pryč!"
+
+msgid "\"%value%\" is invalid company VAT number."
+msgstr "\"%value%\" není platné DIČ."
+
+msgid "Email is required."
+msgstr "Zadejte email."
+
+msgid "Email is invalid."
+msgstr "Email není platný."
+
+msgid "Email \"%value%\" does not exist."
+msgstr "Email \"%value%\" neexistuje."
+
+msgid "The text contains unallowed HTML tags."
+msgstr "Text obsahuje nepovolené HTML značky."
+
+msgid "Password is required."
+msgstr "Zadejte heslo."
+
+msgid "Password is invalid."
+msgstr "Heslo není platné."
+
+msgid "Password is too long (%max_length% characters max)."
+msgstr "Heslo je příliš dlouhé. (maximálně %max_length% znaků)."
+
+msgid "Password is too short (%min_length% characters min)."
+msgstr "Heslo je příliš krátké. (minimálně %min_length% znaků)."
+
+msgid "Phone number is required."
+msgstr "Telefonní číslo je nutné zadat."
+
+msgid "\"%value%\" is invalid phone number."
+msgstr "\"%value%\" není platné telefonní číslo."
+
+msgid "is empty"
+msgstr "nevyplněno"
+
+msgid "from %from% to %to%"
+msgstr "od %from% do %to%"
+
+msgid "remove the current file"
+msgstr "smazat současný soubor"
+
+msgid "Available"
+msgstr "Dostupné"
+
+msgid "Select all"
+msgstr "Označit vše"
+
+msgid "Unselect all"
+msgstr "Zrušit označení"
+
+msgid "Inverse selection"
+msgstr "Obrátit výběr"
+
+msgid "Filter"
+msgstr "Filtr"
+
+msgid "Selected"
+msgstr "Vybráno"

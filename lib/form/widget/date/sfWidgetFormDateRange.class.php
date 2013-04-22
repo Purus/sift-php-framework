@@ -5,16 +5,15 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
- 
+
 /**
  * sfWidgetFormDateRange represents a date range widget.
  *
  * @package    Sift
- * @subpackage widget
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
+ * @subpackage form_widget
  */
-class sfWidgetFormDateRange extends sfWidgetForm
-{
+class sfWidgetFormDateRange extends sfWidgetForm {
+
   /**
    * Configures the current widget.
    *
@@ -55,8 +54,8 @@ class sfWidgetFormDateRange extends sfWidgetForm
     $value = array_merge(array('from' => '', 'to' => '', 'is_empty' => ''), is_array($value) ? $value : array());
 
     return strtr($this->translate($this->getOption('template')), array(
-      '%from%'      => $this->getOption('from')->render($name.'[from]', $value['from']),
-      '%to%'        => $this->getOption('to')->render($name.'[to]', $value['to']),
+        '%from%' => $this->getOption('from')->render($name . '[from]', $value['from']),
+        '%to%' => $this->getOption('to')->render($name . '[to]', $value['to']),
     ));
   }
 
@@ -79,4 +78,5 @@ class sfWidgetFormDateRange extends sfWidgetForm
   {
     return array_unique(array_merge($this->getOption('from')->getJavaScripts(), $this->getOption('to')->getJavaScripts()));
   }
+
 }

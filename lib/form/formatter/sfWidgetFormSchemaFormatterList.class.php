@@ -11,7 +11,6 @@
  *
  * @package    Sift
  * @subpackage form
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  */
 class sfWidgetFormSchemaFormatterList extends sfWidgetFormSchemaFormatter
 {

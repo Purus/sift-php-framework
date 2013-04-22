@@ -11,10 +11,9 @@
  *
  * @package    Sift
  * @subpackage form_widget
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  */
-class sfWidgetFormInput extends sfWidgetForm
-{
+class sfWidgetFormInput extends sfWidgetForm {
+
   /**
    * Constructor.
    *
@@ -31,7 +30,7 @@ class sfWidgetFormInput extends sfWidgetForm
   {
     $this->addRequiredOption('type');
     $this->setOption('type', 'text');
-    $this->addOption('size');    
+    $this->addOption('size');
   }
 
   /**
@@ -49,17 +48,17 @@ class sfWidgetFormInput extends sfWidgetForm
   public function render($name, $value = null, $attributes = array(), $errors = array())
   {
     $baseAttributes = array(
-      'type' => $this->getOption('type'), 
-      'name' => $name, 
-      'value' => $value
+        'type' => $this->getOption('type'),
+        'name' => $name,
+        'value' => $value
     );
-    
+
     if($size = $this->getOption('size'))
     {
       $baseAttributes['size'] = $size;
     }
-    
+
     return $this->renderTag('input', array_merge($baseAttributes, $attributes));
   }
-  
+
 }

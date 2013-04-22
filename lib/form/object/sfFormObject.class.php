@@ -5,13 +5,12 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
- 
+
 /**
  * Base class for forms that deal with a single object.
- * 
+ *
  * @package    Sift
  * @subpackage form
- * @author     Kris Wallsmith <kris.wallsmith@symfony-project.com>
  */
 abstract class sfFormObject extends myForm
 {
@@ -21,7 +20,7 @@ abstract class sfFormObject extends myForm
 
   /**
    * Returns the current model name.
-   * 
+   *
    * @return string
    */
   abstract public function getModelName();
@@ -47,7 +46,7 @@ abstract class sfFormObject extends myForm
    * Processes cleaned up values.
    *
    * @param  array $values An array of values
-   * 
+   *
    * @return array An array of cleaned up values
    */
   abstract public function processValues($values);
@@ -105,7 +104,7 @@ abstract class sfFormObject extends myForm
    * @return mixed The current saved object
    *
    * @see doSave()
-   * 
+   *
    * @throws sfValidatorError If the form is not valid
    */
   public function save($con = null)

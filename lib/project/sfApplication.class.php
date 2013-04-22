@@ -61,11 +61,11 @@ abstract class sfApplication extends sfProject {
 
   /**
    * Form enhancer object
-   * 
+   *
    * @var sfFormEnhancer
    */
   protected $formEnhancer;
-  
+
   /**
    * Constructs the application
    *
@@ -218,6 +218,8 @@ abstract class sfApplication extends sfProject {
         }
       }
 
+      // add translation callable to the forms
+      sfWidgetFormSchemaFormatter::setTranslationCallable('__');
     }
     else
     {
@@ -401,7 +403,7 @@ abstract class sfApplication extends sfProject {
 
     $this->addOptions($dimensions);
   }
-  
+
   public function getFormEnhancer()
   {
     if(!$this->formEnhancer)
@@ -409,7 +411,7 @@ abstract class sfApplication extends sfProject {
       $config = include $this->configCache->checkConfig('config/forms.yml');
       $this->formEnhancer = new sfFormEnhancerRich($config);
     }
-    
+
     return $this->formEnhancer;
   }
 
@@ -478,7 +480,7 @@ abstract class sfApplication extends sfProject {
   /**
    * Add a text filter callback. Tell that a filter is to be run on a filter
    * at a certain point.
-   * 
+   *
    * @param string $tag Name of the filter to hook.
    * @param string $function Callable function to be run on the hoook
    * @param integer $priority Priority of this filter, default is 10 (higher value, higher priority)

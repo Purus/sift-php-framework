@@ -11,7 +11,6 @@
  *
  * @package    Sift
  * @subpackage form_widget
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  */
 class sfWidgetFormFilterInput extends sfWidgetForm
 {
@@ -34,7 +33,8 @@ class sfWidgetFormFilterInput extends sfWidgetForm
   {
     $this->addOption('with_empty', true);
     $this->addOption('empty_label', 'is empty');
-    $this->addOption('template', '%input%<br />%empty_checkbox% %empty_label%');
+
+    $this->addOption('template', sprintf('%%input%% %s %%empty_checkbox%% %%empty_label%%', sfWidget::isXhtml() ? '<br />' : '<br>'));
   }
 
   /**

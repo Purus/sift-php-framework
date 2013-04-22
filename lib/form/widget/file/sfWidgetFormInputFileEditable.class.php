@@ -12,7 +12,6 @@
  *
  * @package    Sift
  * @subpackage form_widget
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  */
 class sfWidgetFormInputFileEditable extends sfWidgetFormInputFile
 {
@@ -54,7 +53,10 @@ class sfWidgetFormInputFileEditable extends sfWidgetFormInputFile
     $this->addOption('edit_mode', true);
     $this->addOption('with_delete', true);
     $this->addOption('delete_label', 'remove the current file');
-    $this->addOption('template', '%file%<br />%input%<br />%delete% %delete_label%');
+
+    $break = sfWidget::isXhtml() ? '<br />' : '<br>';
+
+    $this->addOption('template', sprintf('%%file%% %s %%input%% %s %%delete%% %%delete_label%%', $break, $break));
   }
 
   /**

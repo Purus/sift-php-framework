@@ -11,10 +11,9 @@
  *
  * @package    Sift
  * @subpackage form_widget
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  */
-class sfWidgetFormI18nSelectLanguage extends sfWidgetFormSelect
-{
+class sfWidgetFormI18nSelectLanguage extends sfWidgetFormSelect {
+
   /**
    * Constructor.
    *
@@ -44,11 +43,12 @@ class sfWidgetFormI18nSelectLanguage extends sfWidgetFormSelect
     $languages = sfCulture::getInstance($culture)->getLanguages(isset($options['languages']) ? $options['languages'] : null);
 
     $addEmpty = isset($options['add_empty']) ? $options['add_empty'] : false;
-    if (false !== $addEmpty)
+    if(false !== $addEmpty)
     {
       $languages = array_merge(array('' => true === $addEmpty ? '' : $addEmpty), $languages);
     }
 
     $this->setOption('choices', $languages);
   }
+
 }

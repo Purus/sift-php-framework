@@ -8,5 +8,5 @@ all:
         enabled: true
       core:
         enabled: true
-      base_form:
+      form:
         enabled: true

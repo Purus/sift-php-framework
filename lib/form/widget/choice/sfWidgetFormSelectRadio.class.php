@@ -11,10 +11,9 @@
  *
  * @package    Sift
  * @subpackage form_widget
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  */
-class sfWidgetFormSelectRadio extends sfWidgetFormChoiceBase
-{
+class sfWidgetFormSelectRadio extends sfWidgetFormChoiceBase {
+
   /**
    * Constructor.
    *
@@ -58,7 +57,7 @@ class sfWidgetFormSelectRadio extends sfWidgetFormChoiceBase
    */
   public function render($name, $value = null, $attributes = array(), $errors = array())
   {
-    if ('[]' != substr($name, -2))
+    if('[]' != substr($name, -2))
     {
       $name .= '[]';
     }
@@ -66,10 +65,10 @@ class sfWidgetFormSelectRadio extends sfWidgetFormChoiceBase
     $choices = $this->getChoices();
 
     // with groups?
-    if (count($choices) && is_array(next($choices)))
+    if(count($choices) && is_array(next($choices)))
     {
       $parts = array();
-      foreach ($choices as $key => $option)
+      foreach($choices as $key => $option)
       {
         $parts[] = strtr($this->getOption('template'), array('%group%' => $key, '%options%' => $this->formatChoices($name, $value, $option, $attributes)));
       }
@@ -84,42 +83,42 @@ class sfWidgetFormSelectRadio extends sfWidgetFormChoiceBase
 
   protected function formatChoices($name, $value, $choices, $attributes)
   {
-    // reset attributes, fixes problems with 
+    // reset attributes, fixes problems with
     // attributes like "disabled" to appear in the label tag!
     $this->attributes = array();
-    
+
     $inputs = array();
-    foreach ($choices as $key => $option)
+    foreach($choices as $key => $option)
     {
       $baseAttributes = array(
-        'name'  => substr($name, 0, -2),
-        'type'  => 'radio',
-        'value' => self::escapeOnce($key),
-        'id'    => $id = $this->generateId($name, self::escapeOnce($key)),
+          'name' => substr($name, 0, -2),
+          'type' => 'radio',
+          'value' => self::escapeOnce($key),
+          'id' => $id = $this->generateId($name, self::escapeOnce($key)),
       );
 
-      if (strval($key) == strval($value === false ? 0 : $value))
+      if(strval($key) == strval($value === false ? 0 : $value))
       {
         $baseAttributes['checked'] = 'checked';
       }
 
       $labelAttributes = array(
-        'for' => $id
+          'for' => $id
       );
-      
+
       if(sfWidget::isAriaEnabled())
       {
         $labelId = sprintf('%s_label', $id);
         // overwrite attribute!
-        $attributes['aria-labelledby'] = $labelId;        
+        $attributes['aria-labelledby'] = $labelId;
         $labelAttributes['id'] = $labelId;
       }
-      
+
       $inputs[$id] = array(
-        'input' => $this->renderTag('input', array_merge($baseAttributes, $attributes)),
-        'checked' => isset($baseAttributes['checked']) ? true : false,
-        'label' => $this->renderContentTag('label', self::escapeOnce($option), $labelAttributes),        
-        'option' => $option  
+          'input' => $this->renderTag('input', array_merge($baseAttributes, $attributes)),
+          'checked' => isset($baseAttributes['checked']) ? true : false,
+          'label' => $this->renderContentTag('label', self::escapeOnce($option), $labelAttributes),
+          'option' => $option
       );
     }
 
@@ -128,28 +127,27 @@ class sfWidgetFormSelectRadio extends sfWidgetFormChoiceBase
 
   public function formatter($widget, $inputs)
   {
-    $attributes = array();    
+    $attributes = array();
     $listAtttibutes = array();
-    
-    if(sfWidget::isAriaEnabled())      
+
+    if(sfWidget::isAriaEnabled())
     {
       $attributes['role'] = 'list';
-      $listAtttibutes['role'] = 'listitem';      
-    }      
+      $listAtttibutes['role'] = 'listitem';
+    }
 
     if($class = $this->getOption('class'))
     {
       $attributes['class'] = $class;
     }
-    
+
     $rows = array();
-    foreach ($inputs as $input)
+    foreach($inputs as $input)
     {
-      $rows[] = $this->renderContentTag('li', 
-              $input['input'].$this->getOption('label_separator').$input['label'], $listAtttibutes);
+      $rows[] = $this->renderContentTag('li', $input['input'] . $this->getOption('label_separator') . $input['label'], $listAtttibutes);
     }
-    
+
     return !$rows ? '' : $this->renderContentTag('ul', implode($this->getOption('separator'), $rows), $attributes);
   }
-  
+
 }

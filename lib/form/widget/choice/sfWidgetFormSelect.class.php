@@ -11,10 +11,9 @@
  *
  * @package    Sift
  * @subpackage form_widget
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  */
-class sfWidgetFormSelect extends sfWidgetFormChoiceBase
-{
+class sfWidgetFormSelect extends sfWidgetFormChoiceBase {
+
   /**
    * Constructor.
    *
@@ -33,7 +32,7 @@ class sfWidgetFormSelect extends sfWidgetFormChoiceBase
     parent::configure($options, $attributes);
 
     $this->addOption('multiple', false);
-    $this->addOption('disabled', array()); // disabled options keys 
+    $this->addOption('disabled', array()); // disabled options keys
   }
 
   /**
@@ -50,11 +49,11 @@ class sfWidgetFormSelect extends sfWidgetFormChoiceBase
    */
   public function render($name, $value = null, $attributes = array(), $errors = array())
   {
-    if ($this->getOption('multiple'))
+    if($this->getOption('multiple'))
     {
       $attributes['multiple'] = 'multiple';
 
-      if ('[]' != substr($name, -2))
+      if('[]' != substr($name, -2))
       {
         $name .= '[]';
       }
@@ -62,7 +61,7 @@ class sfWidgetFormSelect extends sfWidgetFormChoiceBase
 
     $choices = $this->getChoices();
 
-    return $this->renderContentTag('select', "\n".implode("\n", $this->getOptionsForSelect($value, $choices))."\n", array_merge(array('name' => $name), $attributes));
+    return $this->renderContentTag('select', "\n" . implode("\n", $this->getOptionsForSelect($value, $choices)) . "\n", array_merge(array('name' => $name), $attributes));
   }
 
   /**
@@ -78,7 +77,7 @@ class sfWidgetFormSelect extends sfWidgetFormChoiceBase
     $mainAttributes = $this->attributes;
     $this->attributes = array();
 
-    if (!is_array($value))
+    if(!is_array($value))
     {
       $value = array($value);
     }
@@ -87,24 +86,24 @@ class sfWidgetFormSelect extends sfWidgetFormChoiceBase
     $value_set = array_flip($value);
 
     $options = array();
-    foreach ($choices as $key => $option)
+    foreach($choices as $key => $option)
     {
-      if (is_array($option))
+      if(is_array($option))
       {
         $options[] = $this->renderContentTag('optgroup', implode("\n", $this->getOptionsForSelect($value, $option)), array('label' => self::escapeOnce($key)));
       }
       else
       {
         $attributes = array('value' => self::escapeOnce($key));
-        if (isset($value_set[strval($key)]))
+        if(isset($value_set[strval($key)]))
         {
           $attributes['selected'] = 'selected';
         }
-        
-        if (in_array($key, $this->getOption('disabled'))) 
-        { 
-          $attributes['disabled'] = 'disabled'; 
-        }         
+
+        if(in_array($key, $this->getOption('disabled')))
+        {
+          $attributes['disabled'] = 'disabled';
+        }
 
         $options[] = $this->renderContentTag('option', self::escapeOnce($option), $attributes);
       }
@@ -114,4 +113,5 @@ class sfWidgetFormSelect extends sfWidgetFormChoiceBase
 
     return $options;
   }
+
 }

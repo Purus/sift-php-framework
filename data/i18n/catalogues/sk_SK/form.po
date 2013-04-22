@@ -1,0 +1,220 @@
+msgid ""
+msgstr ""
+"PO-Revision-Date: 2013-04-22 09:18:56\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Language: sk\n"
+"Project-Id-Version: 1.0\n"
+"POT-Creation-Date: \n"
+"Last-Translator: Michal Moravec - Mishal.cz <mishal@mishal.cz>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.5.5\n"
+
+msgid "This value is required."
+msgstr "Túto hodnotu je nutné zadať."
+
+msgid "This value is invalid."
+msgstr "Táto hodnota nie je platná."
+
+msgid "Value \"%value%\" is forbidden."
+msgstr ""
+
+msgid "Selected choice is invalid."
+msgstr ""
+
+msgid "At least %min% values must be selected (%count% values selected)."
+msgstr ""
+
+msgid "At most %max% values must be selected (%count% values selected)."
+msgstr ""
+
+msgid "Date is required."
+msgstr ""
+
+msgid "\"%value%\" is invalid date value."
+msgstr ""
+
+msgid "\"%value%\" does not match the date format (%date_format%)."
+msgstr ""
+
+msgid "The date must be before %max%."
+msgstr ""
+
+msgid "The date must be after %min%."
+msgstr ""
+
+msgid "The date cannot be in the future."
+msgstr ""
+
+msgid "The date cannot be in the past."
+msgstr ""
+
+msgid "The time interval between the two dates is too short."
+msgstr ""
+
+msgid "The time interval between the two dates is too long."
+msgstr ""
+
+msgid "The start date must be prior to the end date."
+msgstr ""
+
+msgid "Unexpected extra form field named \"%field%\"."
+msgstr ""
+
+msgid "The form submission cannot be processed. It probably means that you have uploaded a file that is too big."
+msgstr ""
+
+msgid "Time is required."
+msgstr ""
+
+msgid "\"%value%\" is invalid time value."
+msgstr ""
+
+msgid "\"%value%\" does not match the time format (%time_format%)."
+msgstr ""
+
+msgid "Select a file to be uploaded."
+msgstr ""
+
+msgid "Invalid file uploaded."
+msgstr ""
+
+msgid "File is too large (maximum is %max_size% bytes)."
+msgstr ""
+
+msgid "Invalid mime type (%mime_type%)."
+msgstr ""
+
+msgid "The uploaded file was only partially uploaded."
+msgstr ""
+
+msgid "Missing a temporary folder."
+msgstr "Chýba dočasný adresár."
+
+msgid "Failed to write file to disk."
+msgstr ""
+
+msgid "File upload stopped by extension."
+msgstr ""
+
+msgid "Select an image to be uploaded."
+msgstr ""
+
+msgid "Image dimensions %width%x%height%px are too small (minimum is %min_width%x%min_height%px)."
+msgstr ""
+
+msgid "Image dimensions %width%x%height%px are too large (maximum is %max_width%x%max_height%px)."
+msgstr ""
+
+msgid "\"%value%\" is invalid birth number."
+msgstr ""
+
+msgid "\"%value%\" is invalid company IN number."
+msgstr ""
+
+msgid "\"%value%\" is not an integer."
+msgstr ""
+
+msgid "\"%value%\" must be at most %max%."
+msgstr ""
+
+msgid "\"%value%\" must be at least %min%."
+msgstr ""
+
+msgid "\"%value%\" is not a valid IP address."
+msgstr ""
+
+msgid "\"%value%\" is not a number."
+msgstr ""
+
+msgid "\"%value%\" must be less than %max%."
+msgstr ""
+
+msgid "\"%value%\" must be greater than %min%."
+msgstr ""
+
+msgid "This session has expired. Please reload the page and try again."
+msgstr ""
+
+msgid "Value is too long (%max_length% characters max)."
+msgstr ""
+
+msgid "Value is too short (%min_length% characters min)."
+msgstr ""
+
+msgid "\"%value%\" is invalid URL."
+msgstr ""
+
+msgid "\"%value%\" is invalid zip code."
+msgstr ""
+
+msgid "The captcha is not valid (%error%)."
+msgstr ""
+
+msgid "Unable to check the captcha from the server (%error%)."
+msgstr ""
+
+msgid "Spam bots are not welcomed here. Go away!"
+msgstr ""
+
+msgid "\"%value%\" is invalid company VAT number."
+msgstr ""
+
+msgid "Email is required."
+msgstr ""
+
+msgid "Email is invalid."
+msgstr ""
+
+msgid "Email \"%value%\" does not exist."
+msgstr ""
+
+msgid "The text contains unallowed HTML tags."
+msgstr ""
+
+msgid "Password is required."
+msgstr ""
+
+msgid "Password is invalid."
+msgstr ""
+
+msgid "Password is too long (%max_length% characters max)."
+msgstr ""
+
+msgid "Password is too short (%min_length% characters min)."
+msgstr ""
+
+msgid "Phone number is required."
+msgstr ""
+
+msgid "\"%value%\" is invalid phone number."
+msgstr ""
+
+msgid "is empty"
+msgstr ""
+
+msgid "from %from% to %to%"
+msgstr ""
+
+msgid "remove the current file"
+msgstr ""
+
+msgid "Available"
+msgstr ""
+
+msgid "Select all"
+msgstr ""
+
+msgid "Unselect all"
+msgstr ""
+
+msgid "Inverse selection"
+msgstr ""
+
+msgid "Filter"
+msgstr ""
+
+msgid "Selected"
+msgstr ""
+

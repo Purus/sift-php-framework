@@ -11,10 +11,9 @@
  *
  * @package    Sift
  * @subpackage form_widget
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  */
-class sfWidgetFormI18nSelectCountry extends sfWidgetFormSelect
-{
+class sfWidgetFormI18nSelectCountry extends sfWidgetFormSelect {
+
   /**
    * Constructor.
    *
@@ -44,11 +43,12 @@ class sfWidgetFormI18nSelectCountry extends sfWidgetFormSelect
     $countries = sfCulture::getInstance($culture)->getCountries(isset($options['countries']) ? $options['countries'] : null);
 
     $addEmpty = isset($options['add_empty']) ? $options['add_empty'] : false;
-    if (false !== $addEmpty)
+    if(false !== $addEmpty)
     {
       $countries = array_merge(array('' => true === $addEmpty ? '' : $addEmpty), $countries);
     }
 
     $this->setOption('choices', $countries);
   }
+
 }

@@ -11,7 +11,6 @@
  *
  * @package    Sift
  * @subpackage form
- * @author     Mishal.cz <mishal at mishal dot cz>
  */
 class sfFormJavascriptFixedValidationMessage {
 
@@ -20,7 +19,7 @@ class sfFormJavascriptFixedValidationMessage {
 
   /**
    * Constructs the object
-   * 
+   *
    * @param string $message Message
    * @param string $javascript Javascript code
    * @param array $parameters Array of parameters for translation string
@@ -30,10 +29,10 @@ class sfFormJavascriptFixedValidationMessage {
     $this->message = $message;
     $this->parameters = $parameters;
   }
-  
+
   /**
    * Sets the message
-   * 
+   *
    * @param string $message
    * @return sfFormJavascriptFixedValidationMessage
    */
@@ -42,40 +41,40 @@ class sfFormJavascriptFixedValidationMessage {
     $this->message = $message;
     return $this;
   }
-  
+
   /**
    * Returns message
-   * 
+   *
    * @return string
    */
   public function getMessage()
   {
     return $this->message;
   }
-  
+
   /**
    * Converts the object to string
-   * 
+   *
    * @return string
    */
   public function __toString()
   {
     return strtr($this->message, $this->parameters);
   }
-  
+
   /**
    * Returns an array of parameters
-   * 
+   *
    * @return array
    */
   public function getParameters()
   {
     return $this->parameters;
   }
-  
+
   /**
    * Sets translation parameters
-   * 
+   *
    * @param array $parameters Array of translation parameters
    * @return sfFormJavascriptFixedValidationMessage
    */
@@ -84,5 +83,5 @@ class sfFormJavascriptFixedValidationMessage {
     $this->parameters = $parameters;
     return $this;
   }
-  
+
 }

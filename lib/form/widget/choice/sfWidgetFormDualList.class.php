@@ -24,23 +24,32 @@ class sfWidgetFormDualList extends sfWidgetFormChoice {
    *
    * Available options:
    *
-   *  * choices:            An array of possible choices (required)
-   *  * class:              The main class of the widget
-   *  * class_select:       The class for the two select tags
-   *  * label_unassociated: The label for unassociated
-   *  * label_associated:   The label for associated
-   *  * unassociate:        The HTML for the unassociate link
-   *  * associate:          The HTML for the associate link
-   *  * associated_first:   Whether the associated list if first (true by default)
-   *  * template:           The HTML template to use to render this widget
-   *                        The available placeholders are:
-   *                          * label_associated
-   *                          * label_unassociated
-   *                          * associate
-   *                          * unassociate
-   *                          * associated
-   *                          * unassociated
-   *                          * class
+   *  * choices:                  An array of possible choices (required)
+   *  * class:                    The main class of the widget
+   *  * class_select:             The class for the two select tags
+   *  * label_available:          The label for available
+   *  * label_associated:         The label for associated
+   *  * label_select_all          The label for select all filter
+   *  * label_unselect_all        The label for unselect all filter
+   *  * label_inverse_selection   The label for inverse selection filter
+   *  * label_filter_placeholder: The label for filter input
+   *  * available_button:         The HTML for available button
+   *  * associate_button:         The HTML for associate button
+   *  * associated_first:         Whether the associated list if first (true by default)
+   *  * template:                 The HTML template to use to render this widget
+   *                              The available placeholders are:
+   *                                * associated_list
+   *                                * available_list
+   *                                * label_associated
+   *                                * label_available
+   *                                * label_select_all
+   *                                * label_unselect_all
+   *                                * label_inverse_selection
+   *                                * label_filter_placeholder
+   *                                * available_button
+   *                                * associate_button
+   *                                * class
+   *                                * associated_count
    *
    * @param array $options     An array of options
    * @param array $attributes  An array of default HTML attributes
@@ -54,12 +63,12 @@ class sfWidgetFormDualList extends sfWidgetFormChoice {
     $this->addOption('model', null);
     $this->addOption('class', 'dual-list');
     $this->addOption('associated_first', true);
-    $this->addOption('label_available', $this->translate('Available'));
-    $this->addOption('label_associated', $this->translate('Associated'));
-    $this->addOption('label_select_all', $this->translate('Select all'));
-    $this->addOption('label_unselect_all', $this->translate('Unselect all'));
-    $this->addOption('label_inverse_selection', $this->translate('Inverse selection'));
-    $this->addOption('label_filter_placeholder', $this->translate('Filter'));
+    $this->addOption('label_available', 'Available');
+    $this->addOption('label_associated', 'Selected');
+    $this->addOption('label_select_all', 'Select all');
+    $this->addOption('label_unselect_all', 'Unselect all');
+    $this->addOption('label_inverse_selection', 'Inverse selection');
+    $this->addOption('label_filter_placeholder', 'Filter');
 
     $this->addOption('asset_package', 'dual_list');
 
@@ -242,12 +251,12 @@ EOF
               '%id%' => $this->generateId($name),
               '%available_count%' => count($unassociated),
               '%associated_count%' => count($associated),
-              '%label_associated%' => $this->getOption('label_associated'),
-              '%label_available%' => $this->getOption('label_available'),
-              '%label_select_all%' => $this->getOption('label_select_all'),
-              '%label_unselect_all%' => $this->getOption('label_unselect_all'),
-              '%label_filter_placeholder%' => $this->escapeOnce($this->getOption('label_filter_placeholder')),
-              '%label_inverse_selection%' => $this->getOption('label_inverse_selection'),
+              '%label_associated%' => $this->translate($this->getOption('label_associated')),
+              '%label_available%' => $this->translate($this->getOption('label_available')),
+              '%label_select_all%' => $this->translate($this->getOption('label_select_all')),
+              '%label_unselect_all%' => $this->translate($this->getOption('label_unselect_all')),
+              '%label_filter_placeholder%' => $this->escapeOnce($this->translate($this->getOption('label_filter_placeholder'))),
+              '%label_inverse_selection%' => $this->translate($this->getOption('label_inverse_selection')),
               '%associate_button%' => $this->getOption('associate_button'),
               '%available_button%' => $this->getOption('available_button'),
               '%associated_list%' => $this->renderContentTag('ul', join("\n", $associatedHtml)),
@@ -306,6 +315,15 @@ EOF
     return sfAssetPackage::getStylesheets($this->getOption('asset_package'));
   }
 
+  /**
+   * @see sfWidgetForm
+   */
+  public function isLabelable()
+  {
+    return false;
+  }
+
+
   public function __clone()
   {
     if($this->getOption('choices') instanceof sfCallable)
@@ -317,15 +335,6 @@ EOF
         $this->setOption('choices', new sfCallable($callable));
       }
     }
-  }
-
-  /**
-   *
-   * @see sfWidgetForm
-   */
-  public function isLabelable()
-  {
-    return false;
   }
 
 }

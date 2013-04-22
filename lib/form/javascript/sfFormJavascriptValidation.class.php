@@ -11,7 +11,6 @@
  *
  * @package    Sift
  * @subpackage form
- * @author     Mishal.cz <mishal at mishal dot cz>
  */
 class sfFormJavascriptValidation {
 
@@ -664,7 +663,7 @@ error.css({
    */
   public static function getSubmitHandlerExpression()
   {
-    $expression = '';    
+    $expression = '';
     return sfCore::filterByEventListeners($expression, 'form.javascript.validation.expression.submit_handler');
   }
 

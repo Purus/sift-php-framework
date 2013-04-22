@@ -11,10 +11,9 @@
  *
  * @package    Sift
  * @subpackage form_widget
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  */
-class sfWidgetFormSelectMany extends sfWidgetFormSelect
-{
+class sfWidgetFormSelectMany extends sfWidgetFormSelect {
+
   /**
    * Configures the current widget.
    *
@@ -29,4 +28,5 @@ class sfWidgetFormSelectMany extends sfWidgetFormSelect
 
     $this->setOption('multiple', true);
   }
+
 }

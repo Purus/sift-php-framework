@@ -11,10 +11,9 @@
  *
  * @package    Sift
  * @subpackage form_widget
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  */
-class sfWidgetFormTime extends sfWidgetFormDate
-{
+class sfWidgetFormTime extends sfWidgetFormDate {
+
   /**
    * Constructor.
    *

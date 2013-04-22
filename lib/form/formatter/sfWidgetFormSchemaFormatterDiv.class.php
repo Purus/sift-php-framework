@@ -5,13 +5,12 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
- 
+
 /**
  * sfWidgetFormSchemaFormatterDiv forms the form using div layout.
  *
  * @package    Sift
  * @subpackage form
- * @author     Mishal.cz <mishal at mishal dot cz>
  */
 class sfWidgetFormSchemaFormatterDiv extends sfWidgetFormSchemaFormatter
 {
@@ -29,7 +28,7 @@ class sfWidgetFormSchemaFormatterDiv extends sfWidgetFormSchemaFormatter
   protected $inlineWidgets = array(
     'sfWidgetFormInputCheckbox', 'sfWidgetFormNoInput'
   );
-  
+
   /**
    * Generates a label for the given field name.
    *
@@ -44,12 +43,12 @@ class sfWidgetFormSchemaFormatterDiv extends sfWidgetFormSchemaFormatter
 
     if($inline)
     {
-      isset($attributes['class']) ? 
-        $attributes['class'] .= 'inline' : 
+      isset($attributes['class']) ?
+        $attributes['class'] .= 'inline' :
         $attributes['class'] = 'inline';
     }
-    
-    return parent::generateLabel($name, $attributes);    
+
+    return parent::generateLabel($name, $attributes);
   }
 
   public function formatRow($label, $field, $errors = array(), $help = '', $hiddenFields = null,
@@ -57,26 +56,26 @@ class sfWidgetFormSchemaFormatterDiv extends sfWidgetFormSchemaFormatter
   {
 
     $inline = in_array(get_class($widget), $this->inlineWidgets);
-    
+
     $html = array();
-    
+
     $html[] = ($inline) ? '<div class="form-row inline">' : '<div class="form-row">';
 
     // we need to make it inline!
     $html[] = ($inline) ? '<div class="form-field-wrapper inline">' : '<div class="form-field-wrapper">';
-    
+
     // inline widget like checkbox is rendered first
     if($inline)
     {
-      $html[] = $field;      
+      $html[] = $field;
       $html[] = $label;
     }
     else
     {
       $html[] = $label;
-      $html[] = $field;      
+      $html[] = $field;
     }
-    
+
     if($errors)
     {
       if(!is_array($errors))
@@ -88,7 +87,7 @@ class sfWidgetFormSchemaFormatterDiv extends sfWidgetFormSchemaFormatter
           '%field_id%'  => $widgetAttributes['id']
       ));
     }
-    
+
     $html[] = '</div>';
 
     // render help
@@ -96,13 +95,13 @@ class sfWidgetFormSchemaFormatterDiv extends sfWidgetFormSchemaFormatter
     {
       $html[] = $this->formatHelp($help);
     }
-    
+
     $html[] = '</div>';
-    
+
     // place a placeholder for hidden fields if hiddenFiels is null
     $html[] = null === $hiddenFields ? '%hidden_fields%' : $hiddenFields;
-    
+
     return join("\n", $html);
   }
-  
+
 }

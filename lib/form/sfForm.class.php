@@ -20,7 +20,6 @@
  *
  * @package    Sift
  * @subpackage form
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  */
 class sfForm implements ArrayAccess, Iterator, Countable
 {
@@ -210,6 +209,20 @@ class sfForm implements ArrayAccess, Iterator, Countable
   public function __($str, $params = array())
   {
     return $this->widgetSchema->getFormFormatter()->translate($str, $params);
+  }
+
+  /**
+   * Sets translation callable to the form formatter.
+   * This is an equal method of calling
+   *
+   * sfWidgetFormSchemaFormatter::setTranslationCallable($callable);
+   *
+   * @param mixed|sfCallable $callable
+   * @return
+   */
+  public function setTranslationCallable($callable)
+  {
+    return $this->widgetSchema->getFormFormatter()->setTranslationCallable($callable);
   }
 
   /**

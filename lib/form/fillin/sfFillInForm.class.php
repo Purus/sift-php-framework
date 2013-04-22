@@ -5,20 +5,19 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
- 
+
 /**
  * Fillin utility to fill in form fields in given HTML code.
  *
  * @package    Sift
  * @subpackage form
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  */
 class sfFillInForm {
 
   protected
-  $converters = array(),
-  $skipFields = array(),
-  $types = array('text', 'checkbox', 'radio', 'hidden', 'password');
+          $converters = array(),
+          $skipFields = array(),
+          $types = array('text', 'checkbox', 'radio', 'hidden', 'password');
 
   public function addConverter($callable, $fields)
   {
@@ -101,7 +100,7 @@ class sfFillInForm {
     {
       $xml = $prolog . $xml;
     }
-    
+
     @$dom->loadXML($xml);
     $dom = $this->fillInDom($dom, $formName, $formId, $values);
     return $dom->saveXML();
@@ -214,7 +213,7 @@ class sfFillInForm {
         {
           $value = $this->getValue($values, $name);
         }
-        
+
         $multiple = $element->hasAttribute('multiple');
 
         foreach($xpath->query('descendant::' . $ns . 'option', $element) as $option)

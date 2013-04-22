@@ -28,10 +28,9 @@
  *
  * @package    Sift
  * @subpackage form_widget
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  */
-class sfWidgetFormReCaptcha extends sfWidgetForm
-{
+class sfWidgetFormReCaptcha extends sfWidgetForm {
+
   /**
    * Configures the current widget.
    *
@@ -87,4 +86,5 @@ class sfWidgetFormReCaptcha extends sfWidgetForm
   {
     return $this->getOption('use_ssl') ? $this->getOption('server_url_ssl') : $this->getOption('server_url');
   }
+
 }

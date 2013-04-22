@@ -11,10 +11,9 @@
  *
  * @package    Sift
  * @subpackage form_widget
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  */
-class sfWidgetFormSchemaForEach extends sfWidgetFormSchema
-{
+class sfWidgetFormSchemaForEach extends sfWidgetFormSchema {
+
   /**
    * Constructor.
    *
@@ -30,4 +29,5 @@ class sfWidgetFormSchemaForEach extends sfWidgetFormSchema
   {
     parent::__construct(array_fill(0, $count, $widget), $options, $attributes, $labels);
   }
+
 }

@@ -11,10 +11,9 @@
  *
  * @package    Sift
  * @subpackage form_widget
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  */
-class sfWidgetFormTextarea extends sfWidgetForm
-{
+class sfWidgetFormTextarea extends sfWidgetForm {
+
   /**
    * Configures the current widget.
    *
@@ -45,4 +44,5 @@ class sfWidgetFormTextarea extends sfWidgetForm
   {
     return $this->renderContentTag('textarea', self::escapeOnce($value), array_merge(array('name' => $name), $attributes));
   }
+
 }

@@ -217,7 +217,7 @@ class sfI18nMessageSourceGettext extends sfI18nMessageSource {
   {
     $messages = $this->untranslated;
 
-    if(count($messages) <= 0)
+    if(!count($messages))
     {
       return false;
     }
@@ -356,7 +356,7 @@ class sfI18nMessageSourceGettext extends sfI18nMessageSource {
    * @param string the catalogue of the translation.
    * @return boolean true if translation was updated, false otherwise.
    */
-  public function update($text, $target, $comments, $catalogue = 'messages')
+  public function update($text, $target, $comments = '', $catalogue = 'messages')
   {
     $variants = $this->getVariants($catalogue);
     if($variants)
@@ -492,10 +492,10 @@ class sfI18nMessageSourceGettext extends sfI18nMessageSource {
 
     $po = sfI18nGettext::factory('PO', $po_file);
     $result['meta']['PO-Revision-Date'] = date('Y-m-d H:i:s');
-    $result['meta']['Content-Type'] = 'text/plain; charset=utf-8';
+    $result['meta']['Content-Type'] = 'text/plain; charset=UTF-8';
 
     // add another meta to save translators time clicking in the translation tool
-    $result['meta']['Language'] = $this->culture;
+    $result['meta']['Language'] = substr($this->culture, 0, 2);
     $result['meta']['Project-Id-Version'] = '1.0';
 
     $result['strings'] = array();

@@ -11,13 +11,12 @@
  *
  * @package    Sift
  * @subpackage form_widget
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  */
 abstract class sfWidgetForm extends sfWidget
 {
   protected
     $parent   = null;
-  
+
   /**
    * Constructor.
    *
@@ -45,7 +44,7 @@ abstract class sfWidgetForm extends sfWidget
 
     parent::__construct($options, $attributes);
   }
-  
+
   /**
    * Sets the default value for the widget.
    *
@@ -275,7 +274,7 @@ abstract class sfWidgetForm extends sfWidget
 
     return $name;
   }
-  
+
   /**
    * Generates a two chars range
    *
@@ -348,7 +347,7 @@ abstract class sfWidgetForm extends sfWidget
    * @param  array $parameters  The values to replace the placeholders
    *
    * @return array              The translated texts
-   * 
+   *
    * @see sfWidgetFormSchemaFormatter::translate()
    */
   protected function translateAll(array $texts, array $parameters = array())

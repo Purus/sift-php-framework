@@ -11,10 +11,9 @@
  *
  * @package    Sift
  * @subpackage form_widget
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  */
-class sfWidgetFormInputPassword extends sfWidgetFormInput
-{
+class sfWidgetFormInputPassword extends sfWidgetFormInput {
+
   /**
    * Configures the current widget.
    *
@@ -52,4 +51,5 @@ class sfWidgetFormInputPassword extends sfWidgetFormInput
   {
     return parent::render($name, $this->getOption('always_render_empty') ? null : $value, $attributes, $errors);
   }
+
 }

@@ -11,8 +11,6 @@
  *
  * @package    Sift
  * @subpackage form
- * @author     Mishal.cz <mishal at mishal dot cz>
- * @author     Thibault Duplessis (www.diem-project.org)
  */
 class sfWidgetFormSchemaFormatterMyList extends sfWidgetFormSchemaFormatter
 {

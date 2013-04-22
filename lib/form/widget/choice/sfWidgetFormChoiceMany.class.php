@@ -11,10 +11,9 @@
  *
  * @package    Sift
  * @subpackage form_widget
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  */
-class sfWidgetFormChoiceMany extends sfWidgetFormChoice
-{
+class sfWidgetFormChoiceMany extends sfWidgetFormChoice {
+
   /**
    * @param array $options     An array of options
    * @param array $attributes  An array of default HTML attributes
@@ -27,4 +26,5 @@ class sfWidgetFormChoiceMany extends sfWidgetFormChoice
 
     $this->setOption('multiple', true);
   }
+
 }

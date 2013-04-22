@@ -31,7 +31,7 @@ class sfI18nGettextPo extends sfI18nGettext {
    * Load PO file
    *
    * @access  public
-   * @return  mixed   Returns true on success or PEAR_Error on failure.
+   * @return  mixed   Returns true on success or false on failure.
    * @param   string  $file
    */
   public function load($file = null)
@@ -52,6 +52,7 @@ class sfI18nGettextPo extends sfI18nGettext {
     $pattern =
             '/(msgid\s+("(.*)*?"\s*)+)\s+' .
             '(msgstr\s+("(.*)*?"\s*)+)/';
+
 
     // match all msgid/msgstr entries
     $matched = preg_match_all($pattern, $contents, $matches);
