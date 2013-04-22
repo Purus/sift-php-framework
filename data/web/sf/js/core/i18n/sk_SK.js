@@ -13,7 +13,7 @@
  */
 
 // add translation strings
-// nothing
+I18n.addTranslation({"Ok":"Ok","Searching...":"H\u013ead\u00e1m..."});
 
 // add culture information information
 Globalize.addCultureInfo('default', 'sk_SK', {"name":"sk_SK","englishName":"Slovak (Slovakia)","isRTL":false,"numberFormat":{",":"\u00a0",".":",","NaN":"NaN","negativeInfinity":"+\u221e","positiveInfinity":"-\u221e","groupSizes":[3],"percent":{"pattern":[],",":" ",".":""}},"calendars":{"standard":{"name":"gregorian","firstDay":1,"days":{"names":["nede\u013ea","pondelok","utorok","streda","\u0161tvrtok","piatok","sobota"],"namesAbbr":["ne","po","ut","st","\u0161t","pi","so"],"namesShort":["N","P","U","S","\u0160","P","S"]},"months":{"names":["janu\u00e1r","febru\u00e1r","marec","apr\u00edl","m\u00e1j","j\u00fan","j\u00fal","august","september","okt\u00f3ber","november","december"],"namesAbbr":["jan","feb","mar","apr","m\u00e1j","j\u00fan","j\u00fal","aug","sep","okt","nov","dec"],"namesShort":["j","f","m","a","m","j","j","a","s","o","n","d"]},"AM":["dopoludnia","dopoludnia","DOPOLUDNIA"],"PM":["popoludn\u00ed","popoludn\u00ed","POPOLUDN\u00cd"],"eras":{"name":"n.l.","start":null,"offset":0},"twoDigitYearMax":2029,"patterns":{"d":"d.M.yyyy","D":"d. MMMM y","t":"H:mm","T":"H:mm:ss z","f":"EEEE, d. MMMM y","F":"H:mm:ss zzzz","M":"MMMM dd","Y":"MMMM yyyy"}}}});

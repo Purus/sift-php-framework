@@ -1,11 +1,11 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: Sift PHP framework\n"
-"POT-Creation-Date: 2013-04-08 22:37+0100\n"
-"PO-Revision-Date: 2013-04-08 22:37+0100\n"
+"Project-Id-Version: Js core (1.0)\n"
+"POT-Creation-Date: 2013-04-22 10:20+0100\n"
+"PO-Revision-Date: 2013-04-22 10:32+0100\n"
 "Last-Translator: Michal Moravec - Mishal.cz <mishal@mishal.cz>\n"
 "Language-Team: Sift PHP framework team\n"
-"Language: cs_CZ\n"
+"Language: cs\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -33,7 +33,7 @@ msgid "Cancel"
 msgstr "Zrušit"
 
 msgid "Are you sure?"
-msgstr "Jste si jist(a)?"
+msgstr "Jste si jistý(á)?"
 
 msgid "The server is too busy at the moment."
 msgstr "Server je nyní přiliš zaneprázdněný."
@@ -107,38 +107,3 @@ msgstr "Načítám více záznamů..."
 
 msgid "Searching..."
 msgstr "Hledám..."
-
-#~ msgid "foo"
-#~ msgstr "bar"
-
-#~ msgid "Result not dound, but Jesus is Alive!"
-#~ msgstr "Result not dound, but Jesus is Alive!"
-
-#~ msgid "0"
-#~ msgstr "close"
-
-#~ msgid "1"
-#~ msgstr "Alert"
-
-#~ msgid "2"
-#~ msgstr "Ok"
-
-#~ msgid "3"
-#~ msgstr "Confirmation"
-
-#~ msgid "4"
-#~ msgstr "Cancel"
-
-#~ msgid "5"
-#~ msgstr "The server is too busy at the moment."
-
-#~ msgid "6"
-#~ msgstr ""
-#~ "This action requires to be logged in and you are not logged in. Redirect "
-#~ "to login page?"
-
-#~ msgid "7"
-#~ msgstr "close"
-
-#~ msgid "8"
-#~ msgstr "Result not dound, but Jesus is Alive!"

@@ -1,0 +1,105 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Js core (1.0)\n"
+"POT-Creation-Date: 2013-04-22 10:26+0100\n"
+"PO-Revision-Date: 2013-04-22 10:33+0100\n"
+"Last-Translator: Michal Moravec - Mishal.cz <mishal@mishal.cz>\n"
+"Language-Team: \n"
+"Language: sk\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.5.5\n"
+"X-Poedit-KeywordsList: __\n"
+"X-Poedit-Basepath: .\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"Plural-Forms: nplurals=3; plural=n==1 ? 0 : n>=2 && n<=4 ? 1 : 2;\n"
+"X-Poedit-SearchPath-0: ../../../modules/sfJsApi\n"
+"X-Poedit-SearchPath-1: ../../../web/sf/js/core\n"
+
+msgid "close"
+msgstr ""
+
+msgid "Alert"
+msgstr ""
+
+msgid "Ok"
+msgstr "Ok"
+
+msgid "Confirmation"
+msgstr ""
+
+msgid "Cancel"
+msgstr ""
+
+msgid "Are you sure?"
+msgstr ""
+
+msgid "The server is too busy at the moment."
+msgstr ""
+
+msgid ""
+"This action requires to be logged in and you are not logged in. Redirect to "
+"login page?"
+msgstr ""
+
+msgid ""
+"This action requires to be logged in and you are not logged in. Please login."
+msgstr ""
+
+msgid "Choose time"
+msgstr ""
+
+msgid "Time"
+msgstr ""
+
+msgid "Hours"
+msgstr ""
+
+msgid "Minutes"
+msgstr ""
+
+msgid "Seconds"
+msgstr ""
+
+msgid "Miliseconds"
+msgstr ""
+
+msgid "Timezone"
+msgstr ""
+
+msgid "Now"
+msgstr ""
+
+msgid "Close"
+msgstr ""
+
+msgid "Today"
+msgstr ""
+
+msgid "Next"
+msgstr ""
+
+msgid "Previous"
+msgstr ""
+
+msgid "Empty"
+msgstr ""
+
+msgid "clear"
+msgstr ""
+
+msgid "No matches found."
+msgstr ""
+
+msgid "Please enter %number% more characters."
+msgstr ""
+
+msgid "You can only select %number% item(s)."
+msgstr ""
+
+msgid "Loading more results..."
+msgstr ""
+
+msgid "Searching..."
+msgstr "Hľadám..."

@@ -19,6 +19,9 @@ $siftDataDir = realpath(dirname(__FILE__) . '/../');
 $jsDataDir   = realpath($siftDataDir . '/web/sf/js');
 $siftLibDir  = realpath(dirname(__FILE__) . '/../../lib');
 
+// for which cultures?
+$cultures = array_map('trim', explode("\n", file_get_contents(dirname(__FILE__).'/../../build/cultures.txt')));
+
 require_once $siftLibDir . '/autoload/sfCoreAutoload.class.php';
 sfCoreAutoload::register();
 
@@ -34,7 +37,8 @@ $method = sprintf('compile%s', $what);
 
 $options = array(
   'js_data_dir' => $jsDataDir,
-  'sift_data_dir' => $siftDataDir
+  'sift_data_dir' => $siftDataDir,
+  'cultures' => $cultures
 );
 
 if(!method_exists($compiler, $method))
@@ -116,11 +120,13 @@ class sfJsCompilerCommand {
     // we need to compile translations too
     $source = sfI18nMessageSource::factory('gettext', $options['sift_data_dir'] . '/i18n/catalogues');
 
-    foreach(array('cs_CZ', 'sk_SK', 'en_GB', 'de_DE') as $culture)
+    $jsCatalogueName = 'js_core';
+
+    foreach($options['cultures'] as $culture)
     {
       // we are building gettext -> json format
       $source->setCulture($culture);
-      $source->load('enhanced_form');
+      $source->load($jsCatalogueName);
 
       $_messages = $source->read();
 
