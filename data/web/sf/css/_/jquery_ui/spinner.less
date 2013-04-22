@@ -13,10 +13,8 @@
 	position: relative;
 	display: inline-block;
 	overflow: hidden;
-	padding: 0;
+	padding: 0em;
 	vertical-align: middle;
-  .border-radius(@baseBorderRadius);
-  border: 1px solid @tableBorder;
 }
 
 .ui-spinner-input {
@@ -45,6 +43,7 @@
   .border-bottom-left-radius(0);
   .border-top-left-radius(0);
   text-decoration: none;
+  color: @textColor;
 }
 
 /* more specificity required here to overide default borders */
