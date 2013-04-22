@@ -413,7 +413,7 @@
           culture : culture
         }, $(this).data('spinnerOptions') || {}));
       });
-    });
+    }, null, typeof $.fn.spinner === 'undefined');
   };
 
   /**
