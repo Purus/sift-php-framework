@@ -43,6 +43,7 @@ class sfI18nApplicationExtract extends sfI18nExtract
     $this->extractMenuYamlFiles();
     $this->extractUserProfileYamlFiles();
     $this->extractForms();
+    $this->extractModels();
 
     // parse extracted
     $this->parseAllSeenMessages();
@@ -138,7 +139,9 @@ class sfI18nApplicationExtract extends sfI18nExtract
    */
   protected function extractForms()
   {
-    $files = sfFinder::type('file')->in($this->getOption('app_dir') . '/' .
+    $files = sfFinder::type('file')
+              ->name('*Form*.php')
+              ->in($this->getOption('app_dir') . '/' .
               $this->getOption('lib_dir_name') . '/form');
 
     foreach($files as $file)
@@ -159,6 +162,41 @@ class sfI18nApplicationExtract extends sfI18nExtract
         {
           throw new sfException(
                   sprintf('Error extracting form "%s". Original message was: %s',
+                  $class, $e->getMessage()), $e->getCode());
+        }
+      }
+    }
+  }
+
+  /**
+   * Extract messages from models.
+   * Doctrine is only supported ORM.
+   *
+   */
+  protected function extractModels()
+  {
+    $files = sfFinder::type('file')
+              ->name('*.php')
+              ->in($this->getOption('app_dir') . '/' .
+              $this->getOption('lib_dir_name') . '/model');
+
+    foreach($files as $file)
+    {
+      // which classes are in the file?
+      $classes = sfToolkit::extractClasses($file);
+      foreach($classes as $class)
+      {
+        try
+        {
+          $extractor = new sfI18nModelExtractor(array(
+            'model' => $class
+          ));
+          $this->sortExtracted($extractor->extract());
+        }
+        catch(Exception $e)
+        {
+          throw new sfException(
+                  sprintf('Error extracting model "%s". Original message was: %s',
                   $class, $e->getMessage()), $e->getCode());
         }
       }

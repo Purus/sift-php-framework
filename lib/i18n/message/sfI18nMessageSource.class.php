@@ -251,10 +251,11 @@ abstract class sfI18nMessageSource implements sfII18nMessageSource {
    */
   public function append($message)
   {
-    if (!in_array($message, $this->untranslated))
+    if(!empty($message) && !in_array($message, $this->untranslated))
     {
       $this->untranslated[] = $message;
     }
+
     return $this;
   }
 

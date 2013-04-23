@@ -14,20 +14,7 @@
  * @package Sift
  * @subpackage i18n_extract
  */
-class sfI18nExtractLoggedInUser extends sfUser implements sfSecurityUser {
-
-  public function getId()
-  {
-    return 0;
-  }
-
-  public function addCredential($credential)
-  {
-  }
-
-  public function clearCredentials()
-  {
-  }
+class sfI18nExtractLoggedInUser extends sfI18nExtractUser {
 
   public function hasCredential($credential)
   {
@@ -42,16 +29,6 @@ class sfI18nExtractLoggedInUser extends sfUser implements sfSecurityUser {
   public function isLoggedIn()
   {
     return true;
-  }
-
-  public function removeCredential($credential)
-  {
-    return;
-  }
-
-  public function setAuthenticated($authenticated)
-  {
-    return;
   }
 
 }
