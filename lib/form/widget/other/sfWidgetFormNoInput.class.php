@@ -20,6 +20,7 @@ class sfWidgetFormNoInput extends sfWidgetForm
    *  * Available options:
    *
    *  * tag: To which tag enclose the value? Default is "span"
+   *  * value_renderer: Callback function to call to render the value (can be sfCallback object)
    *
    * @param array $options     An array of options
    * @param array $attributes  An array of default HTML attributes
@@ -29,6 +30,7 @@ class sfWidgetFormNoInput extends sfWidgetForm
   public function configure($options = array(), $attributes = array())
   {
     $this->addOption('tag', 'span');
+    $this->addOption('value_renderer', null);
   }
 
   /**
@@ -44,7 +46,30 @@ class sfWidgetFormNoInput extends sfWidgetForm
     {
       $attributes['class'] .= ' form-no-input';
     }
+
+    if($renderer = $this->getOption('value_renderer'))
+    {
+      if($renderer instanceof sfCallable)
+      {
+        $value = $renderer->call($value);
+      }
+      else
+      {
+        $value = call_user_func($renderer, $value);
+      }
+    }
+
     return $this->encloseInTag($value, $attributes, $this->getOption('tag'));
+  }
+
+  /**
+   * Is this widget labelable?
+   *
+   * @return boolean
+   */
+  public function isLabelable()
+  {
+    return false;
   }
 
 }
