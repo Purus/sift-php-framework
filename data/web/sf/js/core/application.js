@@ -353,8 +353,8 @@
   };
 
   /**
-   * Behavior for confirmation links. You can make links to be confirmed by user
-   * simply by adding "confirm" class to the link. If you provide "data-confirm"
+   * Behavior for confirmation links and buttons. You can make links or buttons to be confirmed by user
+   * simply by adding "confirm" class to the link/button. If you provide "data-confirm"
    * HTML5 attribute the text from this attribute will be shown to the user. When no
    * data-confirm attribute is present default message will be used.
    *
@@ -362,24 +362,43 @@
    */
   Application.setupConfirmLinks = function(context)
   {
-    $('a.confirm', context).click(function(e)
+    $('a.confirm,:button.confirm,:submit.confirm', context).click(function(e, skip)
     {
+      if(skip)
+      {
+        return true;
+      }
+
       var that = $(this);
       var confirm = that.data('confirm') || __('Are you sure?')
       // FIXME: make icons configurable?
       Application.confirm('<i class="icon-exclamation-sign icon-large"></i> ' + confirm, function()
       {
-        // we have a target
-        var target = that.prop('target');
-        if(target)
+        // have have to detect what is the item clicked
+        // this is a link
+        if(that.is('a'))
         {
-          window.open(that.attr('href'), target);
+          // we have a target
+          var target = that.prop('target');
+          if(target)
+          {
+            window.open(that.attr('href'), target);
+          }
+          else
+          {
+            window.location = that.attr('href');
+          }
         }
+        // button clicked
         else
         {
-          window.location = that.attr('href');
+          // have manully trigger the click event once more, but with
+          // skip parameter set to true, see above, which makes this click handler
+          // skip the behavior
+          that.trigger('click', true);
         }
       });
+
       e.preventDefault();
     });
   };
