@@ -88,6 +88,7 @@ class sfJsCompilerCommand {
     $files = array(
        'config.js',
         'cookie.js',
+        'local_storage.js',
         'plugins.js',
         'application.js',
         'api.js',

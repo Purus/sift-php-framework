@@ -20,6 +20,7 @@ dev:
       javascripts:
         - %SF_SIFT_WEB_DIR%/js/core/config.js
         - %SF_SIFT_WEB_DIR%/js/core/cookie.js
+        - %SF_SIFT_WEB_DIR%/js/core/local_storage.js
         - %SF_SIFT_WEB_DIR%/js/core/plugins.js
         - %SF_SIFT_WEB_DIR%/js/core/application.js
         - %SF_SIFT_WEB_DIR%/js/core/api.js
