@@ -22,16 +22,18 @@
  *  echo url_for('my_module/my_action');
  *    => /path/to/my/action
  *  echo url_for('@my_rule');
- *    => /path/to/my/action 
+ *    => /path/to/my/action
  *  echo url_for('@my_rule', true);
  *    => http://myapp.example.com/path/to/my/action
  * </code>
  *
- * @param  string 'module/action' or '@rule' of the action
- * @param  bool return absolute path?
+ * @param string $internal_uri Internal url in the format 'module/action' or '@rule' of the action
+ * @param boolean $absolute Return absolute path?
+ * @param array $getParameters Array of get parameters to append to the url
+ * @param string $protocol
  * @return string routed URL
  */
-function url_for($internal_uri, $absolute = false, $protocol = null)
+function url_for($internal_uri, $absolute = false, $getParameters = array(), $protocol = null)
 {
   static $controller;
 
@@ -40,7 +42,7 @@ function url_for($internal_uri, $absolute = false, $protocol = null)
     $controller = sfContext::getInstance()->getController();
   }
 
-  return $controller->genUrl($internal_uri, $absolute, $protocol);
+  return $controller->genUrl($internal_uri, $absolute, $getParameters, $protocol = null);
 }
 
 /**
@@ -87,11 +89,11 @@ function link_to_print($name = 'print')
  * Creates a <a> link tag of the given name using a routed URL
  * based on the module/action passed as argument and the routing configuration.
  * It's also possible to pass a string instead of a module/action pair to
- * get a link tag that just points without consideration. 
+ * get a link tag that just points without consideration.
  * If null is passed as a name, the link itself will become the name.
  * If an object is passed as a name, the object string representation is used.
- * One of the options serves for for creating javascript confirm alerts where 
- * if you pass 'confirm' => 'Are you sure?', the link will be guarded 
+ * One of the options serves for for creating javascript confirm alerts where
+ * if you pass 'confirm' => 'Are you sure?', the link will be guarded
  * with a JS popup asking that question. If the user accepts, the link is processed,
  * otherwise not.
  *
@@ -99,7 +101,7 @@ function link_to_print($name = 'print')
  * - 'absolute' - if set to true, the helper outputs an absolute URL
  * - 'query_string' - to append a query string (starting by ?) to the routed url
  * - 'confirm' - displays a javascript confirmation alert when the link is clicked
- * - 'popup' - if set to true, the link opens a new browser window 
+ * - 'popup' - if set to true, the link opens a new browser window
  * - 'post' - if set to true, the link submits a POST request instead of GET (caution: do not use inside a form)
  *
  * <b>Note:</b> The 'popup' and 'post' options are not compatible with each other.
@@ -117,7 +119,7 @@ function link_to_print($name = 'print')
  * @param  string name of the link, i.e. string to appear between the <a> tags
  * @param  string 'module/action' or '@rule' of the action
  * @param  array additional HTML compliant <a> tag parameters
- * @return string XHTML compliant <a href> tag
+ * @return string HTML compliant <a href> tag
  * @see    url_for
  */
 function link_to($name = '', $internal_uri = '', $options = array())
@@ -136,19 +138,27 @@ function link_to($name = '', $internal_uri = '', $options = array())
   {
     $absolute = (boolean) $html_options['absolute'];
     unset($html_options['absolute']);
-  }  
+  }
   $protocol = null;
   if(isset($html_options['protocol']))
   {
     $protocol = (boolean) $html_options['protocol'];
     unset($html_options['protocol']);
   }
+  $getParameters = array();
+  if(isset($html_options['get_parameters']))
+  {
+    $protocol = (array) $html_options['get_parameters'];
+    unset($html_options['get_parameters']);
+  }
 
-  $html_options['href'] = url_for($internal_uri, $absolute, $protocol);
+  $html_options['href'] = url_for($internal_uri, $absolute, $getParameters, $protocol);
 
   if(isset($html_options['query_string']))
   {
-    $html_options['href'] .= '?' . $html_options['query_string'];
+    $html_options['href'] .= strpos($html_options['href'], '?') !== false ?
+            ('&' . $html_options['query_string']) : ('?' . $html_options['query_string']);
+
     unset($html_options['query_string']);
   }
 
@@ -183,14 +193,14 @@ function link_to($name = '', $internal_uri = '', $options = array())
  * - 'absolute' - if set to true, the helper outputs an absolute URL
  * - 'query_string' - to append a query string (starting by ?) to the routed url
  * - 'confirm' - displays a javascript confirmation alert when the link is clicked
- * - 'popup' - if set to true, the link opens a new browser window 
+ * - 'popup' - if set to true, the link opens a new browser window
  * - 'post' - if set to true, the link submits a POST request instead of GET (caution: do not use inside a form)
  *
  * <b>Examples:</b>
  * <code>
  *  echo link_to_if($user->isAdministrator(), 'Delete this page', 'my_module/my_action');
  *    => <a href="/path/to/my/action">Delete this page</a>
- *  echo link_to_if(!$user->isAdministrator(), 'Delete this page', 'my_module/my_action'); 
+ *  echo link_to_if(!$user->isAdministrator(), 'Delete this page', 'my_module/my_action');
  *    => <span>Delete this page</span>
  * </code>
  *
@@ -232,14 +242,14 @@ function link_to_if($condition, $name = '', $internal_uri = '', $options = array
  * - 'absolute' - if set to true, the helper outputs an absolute URL
  * - 'query_string' - to append a query string (starting by ?) to the routed url
  * - 'confirm' - displays a javascript confirmation alert when the link is clicked
- * - 'popup' - if set to true, the link opens a new browser window 
+ * - 'popup' - if set to true, the link opens a new browser window
  * - 'post' - if set to true, the link submits a POST request instead of GET (caution: do not use inside a form)
  *
  * <b>Examples:</b>
  * <code>
  *  echo link_to_unless($user->isAdministrator(), 'Delete this page', 'my_module/my_action');
  *    => <span>Delete this page</span>
- *  echo link_to_unless(!$user->isAdministrator(), 'Delete this page', 'my_module/my_action'); 
+ *  echo link_to_unless(!$user->isAdministrator(), 'Delete this page', 'my_module/my_action');
  *    => <a href="/path/to/my/action">Delete this page</a>
  * </code>
  *
@@ -264,7 +274,7 @@ function link_to_unless($condition, $name = '', $url = '', $options = array())
  * - 'absolute' - if set to true, the helper outputs an absolute URL
  * - 'query_string' - to append a query string (starting by ?) to the routed url
  * - 'confirm' - displays a javascript confirmation alert when the button is clicked
- * - 'popup' - if set to true, the button opens a new browser window 
+ * - 'popup' - if set to true, the button opens a new browser window
  * - 'post' - if set to true, the button submits a POST request instead of GET (caution: do not use inside a form)
  *
  * <b>Examples:</b>
@@ -436,8 +446,8 @@ function _convert_options_to_javascript($html_options, $url = 'this.href')
 
 function _confirm_javascript_function($confirm)
 {
-  $function = 'confirm'; 
-  $function = sfCore::getEventDispatcher()->filter(new sfEvent('core.javascript.confirm_function'), 
+  $function = 'confirm';
+  $function = sfCore::getEventDispatcher()->filter(new sfEvent('core.javascript.confirm_function'),
           $function)->getReturnValue();
   return sprintf("%s('" . escape_javascript($confirm) . "')", $function);
 }

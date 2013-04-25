@@ -46,7 +46,7 @@ class sfRouting
         $name = 'default';
       }
     }
-    
+
     if (!isset(self::$instances[$name]))
     {
       self::$instances[$name] = new sfRouting();
@@ -105,10 +105,10 @@ class sfRouting
       // add parameters
       foreach ($names as $name)
       {
-        if ($name == 'module' || $name == 'action') continue;       
+        if ($name == 'module' || $name == 'action') continue;
         $params[] = $name.'='.$request->getParameter($name, isset($defaults[$name]) ? $defaults[$name] : '');
       }
-      
+
       // add * parameters if needed
       if (strpos($url, '*'))
       {
@@ -590,7 +590,7 @@ class sfRouting
             {
               $pass = sfToolkit::stripslashesDeep((array) $pass);
             }
-            
+
             foreach ($pass as $key => $value)
             {
               // we add this parameters if not in conflict with named url element (i.e. ':action')
