@@ -287,3 +287,15 @@ function ie_conditional_comment($condition, $content)
   return sfHtml::ieConditionalComment($condition, $content);
 }
 
+/**
+ * Encodes given $variable to JSON using sfJson::encode() and optionally escapes it.
+ *
+ * @param mixed $variable Variable to encode
+ * @param boolean $escape Escape the value?
+ * @return string
+ */
+function jsonize($variable, $escape = true)
+{
+  $value = sfJson::encode($variable);
+  return $escape ? escape_once($value) : $value;
+}
