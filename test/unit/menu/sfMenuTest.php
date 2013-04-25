@@ -3,7 +3,7 @@
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 require_once($_test_dir.'/unit/sfContextMock.class.php');
 
-$t = new lime_test(56);
+$t = new lime_test(60);
 
 sfLoader::loadHelpers('Tag', 'Url');
 
@@ -253,3 +253,29 @@ $t->is($array['children']['Root 1']['children'], array(
     ),
   ),
 ), '->sortAllByPriority() Items are sorted by priority than by name');
+
+$t->diag('condition');
+
+$menu = new sfMenu('Root');
+
+$child = new sfMenu('child1');
+$child->setCondition('APP_KEY');
+$menu->addChild($child);
+
+$t->is($menu->render(), '', '->render() works ok with items which have conditions');
+
+sfConfig::set('app_key', true);
+$t->is($menu->render(), '<ul><li class="first last">child1</li></ul>', '->render() works ok with items which have conditions');
+
+function check_condition($menu)
+{
+  return true;
+}
+
+$menu->addChild(new sfMenu('child2', null, array('condition' => new sfCallable('check_condition'))));
+
+$t->is($menu->render(), '<ul><li class="first">child1</li><li class="last">child2</li></ul>', '->render() works with condition as sfCallable object');
+
+$menu->addChild(new sfMenu('child3', null, array('condition' => 'check_condition')));
+
+$t->is($menu->render(), '<ul><li class="first">child1</li><li>child2</li><li class="last">child3</li></ul>', '->render() works with classic callable');

@@ -544,7 +544,7 @@ class sfMenu extends sfConfigurable implements ArrayAccess, Countable, IteratorA
   {
     foreach($this->children as $child)
     {
-      if($child->checkUserAccess())
+      if($child->checkUserAccess() && $this->checkCondition())
       {
         return true;
       }
@@ -618,7 +618,8 @@ class sfMenu extends sfConfigurable implements ArrayAccess, Countable, IteratorA
   public function render($options = array())
   {
     $html = '';
-    if($this->checkUserAccess() && $this->hasChildren())
+
+    if($this->checkUserAccess() && $this->hasChildren() && $this->checkCondition())
     {
       $html = '<ul>';
       foreach($this->children as $child)
@@ -627,7 +628,9 @@ class sfMenu extends sfConfigurable implements ArrayAccess, Countable, IteratorA
       }
       $html .= '</ul>';
     }
-    return $html;
+
+    // output valid HTML code
+    return $html == '<ul></ul>' ? '' : $html;
   }
 
   /**
@@ -655,7 +658,7 @@ class sfMenu extends sfConfigurable implements ArrayAccess, Countable, IteratorA
     $html = '';
 
     // can user access this item?
-    if($this->checkUserAccess())
+    if($this->checkUserAccess() && $this->checkCondition())
     {
       $attributes = array();
 
@@ -810,6 +813,56 @@ class sfMenu extends sfConfigurable implements ArrayAccess, Countable, IteratorA
     }
 
     return array_reverse($children);
+  }
+
+  /**
+   * Returns condition
+   *
+   * @return string|null
+   */
+  public function getCondition()
+  {
+    return $this->getOption('condition');
+  }
+
+  /**
+   *
+   * @param string|sfCallable $condition
+   * @return sfMenu
+   */
+  public function setCondition($condition)
+  {
+    $this->setOption('condition', $condition);
+    return $this;
+  }
+
+  /**
+   * Checks if condition to render this menu item is met
+   *
+   * @return boolean
+   */
+  public function checkCondition()
+  {
+    $condition = $this->getCondition();
+
+    // no condition is set
+    if(!$condition)
+    {
+      return true;
+    }
+
+    if($condition instanceof sfCallable)
+    {
+      return (boolean)$condition->call($this);
+    }
+    elseif(sfToolkit::isCallable($condition))
+    {
+      return (boolean)call_user_func($condition, $this);
+    }
+
+    // pass to sfConfig, lower the condition since
+    // all keys in sfConfig are lowercased
+    return (boolean) sfConfig::get(strtolower($condition));
   }
 
   /**
