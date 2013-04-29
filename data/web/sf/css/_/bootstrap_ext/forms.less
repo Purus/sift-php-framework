@@ -8,9 +8,16 @@ span.form-help-contextual {
 }
 
 div.form-help {
-  font-size: 9pt;
-  padding: 0.3em;
-  padding-left: 20px;
+  font-size: @fontSizeSmall;
+  padding: @paddingSmall;
+}
+
+.form-no-input {
+  background-color: @wellBackground;
+  border: 1px solid darken(@wellBackground, 7%);
+  .border-radius(@baseBorderRadius);
+  .box-shadow(inset 0 1px 1px rgba(0,0,0,.05));
+  padding: @paddingSmall;
 }
 
 span.required {
