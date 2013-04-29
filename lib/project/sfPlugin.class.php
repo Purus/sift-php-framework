@@ -111,4 +111,14 @@ abstract class sfPlugin extends sfConfigurable {
     return $this->getName();
   }
 
+  /**
+   * Returns parent object
+   *
+   * @return sfProject|sfApplication
+   */
+  public function getParent()
+  {
+    return $this->project;
+  }
+
 }
