@@ -593,7 +593,7 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess {
         $field = $this->renderField($name, $value, $widgetAttributes, $error);
 
         // don't add a label tag and errors if we embed a form schema
-        $label = $widget instanceof sfWidgetFormSchema ? $this->getFormFormatter()->generateLabelName($name) : $this->getFormFormatter()->generateLabel($name);
+        $label = ($widget instanceof sfWidgetFormSchema || !$widget->isLabelable()) ? $this->getFormFormatter()->generateLabelName($name) : $this->getFormFormatter()->generateLabel($name);
         $error = $widget instanceof sfWidgetFormSchema ? array() : $error;
 
         $widgetName = $this->getFormFormatter()->getWidgetSchema()->generateName($name);

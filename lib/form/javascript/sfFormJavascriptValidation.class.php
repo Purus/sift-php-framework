@@ -413,8 +413,8 @@ class sfFormJavascriptValidation {
       $field_options  = $field->getOptions();
       $field_messages = $field->getMessages();
 
-      $required = $validator->hasOption('required')
-                  && $validator->getOption('required');
+      $required = $form->getWidgetSchema()->getFormFormatter()
+                    ->validatorMarkedFieldAsRequired($validator);
 
       if($required)
       {

@@ -212,6 +212,16 @@ class sfForm implements ArrayAccess, Iterator, Countable
   }
 
   /**
+   * Alias for __
+   *
+   * @see __
+   */
+  public function translate($str, $params = array())
+  {
+    return $this->__($str, $params);
+  }
+
+  /**
    * Sets translation callable to the form formatter.
    * This is an equal method of calling
    *
@@ -323,16 +333,39 @@ class sfForm implements ArrayAccess, Iterator, Countable
    * from all widgets from this form
    *
    * @return array
+   * @link http://icodesnip.com/snippet/php/get-all-symfony-form-errors
    */
   public function getErrors()
   {
     $errors = array();
-    foreach($this as $field)
+
+    // individual widget errors
+    foreach($this as $form_field)
     {
-      /* @var $field sfFormField */
-      if(!$field->hasError()) continue;
-      $errors[$field->getName()] = $field->getError();
+      if($form_field->hasError())
+      {
+        $error_obj = $form_field->getError();
+        if($error_obj instanceof sfValidatorErrorSchema)
+        {
+          foreach($error_obj->getErrors() as $error)
+          {
+            // if a field has more than 1 error, it'll be over-written
+            $errors[] = $error->getMessage();
+          }
+        }
+        else
+        {
+          $errors[] = $error_obj->getMessage();
+        }
+      }
     }
+
+    // global errors
+    foreach($this->getGlobalErrors() as $validator_error)
+    {
+      $errors[] = $validator_error->getMessage();
+    }
+
     return $errors;
   }
 

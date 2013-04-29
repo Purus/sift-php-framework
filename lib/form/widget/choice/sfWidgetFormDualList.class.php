@@ -60,7 +60,6 @@ class sfWidgetFormDualList extends sfWidgetFormChoice {
   {
     parent::configure($options, $attributes);
 
-    $this->addOption('model', null);
     $this->addOption('class', 'dual-list');
     $this->addOption('associated_first', true);
     $this->addOption('label_available', 'Available');
@@ -114,7 +113,7 @@ class sfWidgetFormDualList extends sfWidgetFormChoice {
           </ul>
         </div>
         <div class="%class%-filters input-append">
-          <input type="text" placeholder="%label_filter_placeholder%" />
+          <input type="text" class="ignore" placeholder="%label_filter_placeholder%" />
           <button type="button" class="btn"><i class="icon-remove-sign"></i></button>
         </div>
       </div>
@@ -144,7 +143,7 @@ class sfWidgetFormDualList extends sfWidgetFormChoice {
           </ul>
         </div>
         <div class="%class%-filters input-append">
-          <input class="" type="text" placeholder="%label_filter_placeholder%"  />
+          <input type="text" class="ignore" placeholder="%label_filter_placeholder%"  />
           <button type="button" class="btn"><i class="icon-remove-sign"></i></button>
         </div>
       </div>

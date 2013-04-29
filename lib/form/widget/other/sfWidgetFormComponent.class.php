@@ -77,4 +77,12 @@ class sfWidgetFormComponent extends sfWidgetForm
     return get_component($component[0], $component[1], $variables, $this->getOption('view_name'));
   }
 
+  /**
+   * @see sfWidget
+   */
+  public function isLabelable()
+  {
+    return false;
+  }
+
 }

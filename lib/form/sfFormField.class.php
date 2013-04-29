@@ -172,7 +172,7 @@ class sfFormField
     $this->setupFormatter();
 
     return strtr($this->parent->getWidget()->getFormFormatter()->formatRow(
-            $this->renderLabel($label), $field, $error, $help, null,
+            $this->isLabelable() ? $this->renderLabel($label) : $this->renderLabelName(), $field, $error, $help, null,
             array_merge($this->parent->getWidget()->getAttributes(), $attributes),
             $this->widget), array('%hidden_fields%' => ''));
   }

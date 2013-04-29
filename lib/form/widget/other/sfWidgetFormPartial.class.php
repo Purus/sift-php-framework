@@ -66,4 +66,12 @@ class sfWidgetFormPartial extends sfWidgetForm
     return get_partial($this->getOption('partial'), $variables, $this->getOption('view_name'));
   }
 
+  /**
+   * @see sfWidget
+   */
+  public function isLabelable()
+  {
+    return false;
+  }
+
 }
