@@ -33,6 +33,8 @@ class sfValidatorClass extends sfValidatorString {
     // can be an array
     $this->addOption('extend');
 
+    $this->setMessage('invalid', 'Class "%value%" is invalid.');
+
     if(isset($options['extend']))
     {
       if(!is_array($options['extend']))

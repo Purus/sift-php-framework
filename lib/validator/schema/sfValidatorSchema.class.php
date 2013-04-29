@@ -14,12 +14,13 @@
  * @package    Sift
  * @subpackage validator
  */
-class sfValidatorSchema extends sfValidatorBase implements ArrayAccess {
+class sfValidatorSchema extends sfValidatorBase implements ArrayAccess, Iterator, Countable {
 
   protected
-          $fields = array(),
-          $preValidator = null,
-          $postValidator = null;
+    $fields = array(),
+    $preValidator = null,
+    $postValidator = null,
+    $count = 0;
 
   /**
    * Constructor.
@@ -395,6 +396,65 @@ class sfValidatorSchema extends sfValidatorBase implements ArrayAccess {
       $messages[] = $this->getMessage('allow_extra_fields');
     }
     return $messages;
+  }
+
+  /**
+   * Resets the field array to the beginning (implements the Iterator interface).
+   */
+  public function rewind()
+  {
+    reset($this->fields);
+    $this->count = count(array_keys($this->fields));
+  }
+
+  /**
+   * Gets the key associated with the current field (implements the Iterator interface).
+   *
+   * @return string The key
+   */
+  public function key()
+  {
+    return current(array_keys($this->fields));
+  }
+
+  /**
+   * Returns the current field (implements the Iterator interface).
+   *
+   * @return mixed The escaped value
+   */
+  public function current()
+  {
+    return $this[current(array_keys($this->fields))];
+  }
+
+  /**
+   * Moves to the next field (implements the Iterator interface).
+   */
+  public function next()
+  {
+    $keys = array_keys($this->fields);
+    next($keys);
+    --$this->count;
+  }
+
+  /**
+   * Returns true if the current form field is valid (implements the Iterator interface).
+   *
+   * @return boolean The validity of the current element; true if it is valid
+   */
+  public function valid()
+  {
+    return $this->count > 0;
+  }
+
+  /**
+   * Returns the number of form fields (implements the Countable interface).
+   *
+   * @return integer The number of embedded form fields
+   */
+  public function count()
+  {
+    return count(array_keys($this->fields));
   }
 
 }

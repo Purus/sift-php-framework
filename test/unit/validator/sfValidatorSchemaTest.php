@@ -2,7 +2,7 @@
 
 require_once(dirname(__FILE__) . '/../../bootstrap/unit.php');
 
-$t = new lime_test(84);
+$t = new lime_test(89);
 
 class PreValidator extends sfValidatorBase {
 
@@ -390,3 +390,15 @@ $t->ok($v1->getPreValidator() !== $v->getPreValidator(), '__clone() clones the p
 $t->ok($v1->getPreValidator() == $v->getPreValidator(), '__clone() clones the pre validator');
 $t->ok($v1->getPostValidator() !== $v->getPostValidator(), '__clone() clones the post validator');
 $t->ok($v1->getPostValidator() == $v->getPostValidator(), '__clone() clones the post validator');
+
+$t->diag('Iterator interface');
+
+foreach($v as $field => $validator)
+{
+  $t->isa_ok($field, 'string', 'Iterator returned field as string.');
+  $t->isa_ok($validator, 'sfValidatorString', 'Iterator iterates the object successfully. Returned validator object.');
+}
+
+$t->diag('Countable interface');
+
+$t->is(count($v), 2, 'count() works on the object');
