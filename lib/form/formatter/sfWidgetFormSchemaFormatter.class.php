@@ -64,7 +64,7 @@ abstract class sfWidgetFormSchemaFormatter
    * @param  array  $parameters  Additional parameters to pass back to the callable
    * @return string
    */
-  public function translate($subject, $parameters = array())
+  public function __($subject, $parameters = array())
   {
     if (false === $subject)
     {
@@ -93,6 +93,16 @@ abstract class sfWidgetFormSchemaFormatter
     }
 
     return call_user_func(self::$translationCallable, $subject, $parameters, $catalogue);
+  }
+
+  /**
+   * Alias for __
+   *
+   * @see __
+   */
+  public function translate($subject, $parameters = array())
+  {
+    return $this->__($subject, $parameters);
   }
 
   /**
@@ -195,8 +205,7 @@ abstract class sfWidgetFormSchemaFormatter
     {
       $validator = $this->validatorSchema[$name];
       /* @var $validator sfValidatorBase */
-      if($validator->hasOption('required') &&
-         $validator->getOption('required'))
+      if($this->validatorMarkedFieldAsRequired($validator))
       {
         $is_required = true;
       }
@@ -205,8 +214,7 @@ abstract class sfWidgetFormSchemaFormatter
     {
       $validator = $this->validators[$name];
       /* @var $validator sfValidatorBase */
-      if($validator->hasOption('required') &&
-         $validator->getOption('required'))
+      if($this->validatorMarkedFieldAsRequired($validator))
       {
         $is_required = true;
       }
@@ -251,6 +259,33 @@ abstract class sfWidgetFormSchemaFormatter
     }
 
     return $this->widgetSchema->renderContentTag('label', $labelName, $attributes);
+  }
+
+  /**
+   * Checks if validator has required option set
+   *
+   * @param sfValidatorBase $validator
+   * @return boolean
+   */
+  public function validatorMarkedFieldAsRequired(sfValidatorBase $validator)
+  {
+    if($validator->getOption('required'))
+    {
+      return true;
+    }
+
+    if($validator instanceof sfValidatorAnd || $validator instanceof sfValidatorOr)
+    {
+      foreach($validator->getValidators() as $validator)
+      {
+        if($this->validatorMarkedFieldAsRequired($validator))
+        {
+          return true;
+        }
+      }
+    }
+
+    return false;
   }
 
   /**

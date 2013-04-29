@@ -16,7 +16,7 @@ class sfWidgetFormSchemaFormatterAdvanced extends sfWidgetFormSchemaFormatterDiv
 {
   protected
     $rowFormat                 = '',
-    $helpFormat                = '<div class="form-help"><i class="icon-help"></i> %help%</div>',
+    $helpFormat                = '<div class="form-help"><i class="icon-lightbulb"></i> %help%</div>',
     $errorRowFormat            = '%errors%',
     $errorListFormatInARow     = '<label class="form-error" for="%field_id%" generated="true" role="alert">%errors%</label>',
     $errorRowFormatInARow      = '%error%',

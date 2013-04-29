@@ -26,7 +26,11 @@ class sfWidgetFormSchemaFormatterDiv extends sfWidgetFormSchemaFormatter
   $errorCssClass             = 'form-error';
 
   protected $inlineWidgets = array(
-    'sfWidgetFormInputCheckbox', 'sfWidgetFormNoInput'
+    'sfWidgetFormInputCheckbox', //'sfWidgetFormNoInput'
+  );
+
+  protected $largeWidgets = array(
+    'sfWidgetFormDualList'
   );
 
   /**
@@ -54,8 +58,25 @@ class sfWidgetFormSchemaFormatterDiv extends sfWidgetFormSchemaFormatter
   public function formatRow($label, $field, $errors = array(), $help = '', $hiddenFields = null,
           $widgetAttributes = array(), sfWidgetForm $widget = null)
   {
+    $inline = false;
+    $large = false;
+    foreach($this->largeWidgets as $largeWidget)
+    {
+      if($widget instanceof $largeWidget)
+      {
+        $large= true;
+        break;
+      }
+    }
 
-    $inline = in_array(get_class($widget), $this->inlineWidgets);
+    foreach($this->inlineWidgets as $inlineWidget)
+    {
+      if($widget instanceof $inlineWidget)
+      {
+        $inline = true;
+        break;
+      }
+    }
 
     $html = array();
 
@@ -73,7 +94,14 @@ class sfWidgetFormSchemaFormatterDiv extends sfWidgetFormSchemaFormatter
     else
     {
       $html[] = $label;
+      // render help
+      if($large)
+      {
+        $html[] = $this->formatHelp($help);
+      }
+
       $html[] = $field;
+
     }
 
     if($errors)
@@ -91,7 +119,7 @@ class sfWidgetFormSchemaFormatterDiv extends sfWidgetFormSchemaFormatter
     $html[] = '</div>';
 
     // render help
-    if($help)
+    if(!$large)
     {
       $html[] = $this->formatHelp($help);
     }
