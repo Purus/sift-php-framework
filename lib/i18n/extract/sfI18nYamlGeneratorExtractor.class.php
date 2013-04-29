@@ -202,6 +202,21 @@ class sfI18nYamlGeneratorExtractor extends sfI18nYamlExtractor {
       {
         $this->strings[] = $options['help'];
       }
+
+      if(isset($options['widget']['options']))
+      {
+        foreach($options['widget']['options'] as $optionName => $value)
+        {
+          // this is label option
+          if(strpos($optionName, 'label') !== false)
+          {
+            if(!empty($value))
+            {
+              $this->strings[] = $value;
+            }
+          }
+        }
+      }
     }
   }
 
