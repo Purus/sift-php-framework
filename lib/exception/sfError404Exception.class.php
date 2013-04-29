@@ -40,7 +40,7 @@ class sfError404Exception extends sfException
    *
    * @param Exception An Exception implementation instance
    */
-  public function printStackTrace($exception = null)
+  public function printStackTrace(Exception $exception = null)
   {
     sfContext::getInstance()->getController()->forward(
             sfConfig::get('sf_error_404_module'), 
