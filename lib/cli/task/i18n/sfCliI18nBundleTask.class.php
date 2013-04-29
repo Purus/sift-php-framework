@@ -91,7 +91,7 @@ EOF;
     }
 
     // create a zip archive
-    $this->createArchiveFromDirectory($tmpDir, $zip);
+    $this->createArchiveFromDirectory($tmpDir, $zip, $application);
 
     sfToolkit::clearDirectory($tmpDir);
     $filesystem->remove($tmpDir);

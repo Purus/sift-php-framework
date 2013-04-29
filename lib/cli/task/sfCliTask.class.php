@@ -703,12 +703,13 @@ abstract class sfCliTask {
    *
    * @param string $sourcePath Path of directory to be zip.
    * @param string $outZipPath Path of output zip file.
+   * @param string $dirName Source path directory name in the zip archive
    */
-  public function createArchiveFromDirectory($sourcePath, $outZipPath)
+  public function createArchiveFromDirectory($sourcePath, $outZipPath, $dirName = '')
   {
     $z = new sfZipArchive();
     $z->create($outZipPath);
-    $z->addDir($sourcePath, '');
+    $z->addDir($sourcePath, $dirName);
     return $z->close();
   }
 

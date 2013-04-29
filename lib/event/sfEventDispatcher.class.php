@@ -176,4 +176,15 @@ class sfEventDispatcher {
     return $listeners;
   }
 
+  /**
+   * Clears all listeners
+   *
+   * @return sfEventDispatcher
+   */
+  public function clear()
+  {
+    $this->listeners = array();
+    return $this;
+  }
+
 }

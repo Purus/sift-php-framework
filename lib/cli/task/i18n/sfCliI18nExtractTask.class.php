@@ -87,6 +87,9 @@ EOF;
     // because its setting current connection to the default one
     $this->createContextInstance($this->getFirstApplication());
 
+    // clears events
+    sfCore::getEventDispatcher()->clear();
+
     if($options['connection'])
     {
       $connection = $this->getDatabase($options['connection']);
