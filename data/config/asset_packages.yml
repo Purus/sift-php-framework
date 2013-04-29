@@ -181,3 +181,14 @@ default:
         - %SF_SIFT_WEB_DIR%/css/_/dual_list/dual_list.less
       require:
         - ui
+
+    # Colorbox
+    # http://www.jacklmoore.com/colorbox/
+    colorbox:
+      javascripts:
+        - %SF_SIFT_WEB_DIR%/js/colorbox/jquery.colorbox-min.js
+        - %SF_SIFT_WEB_DIR%/js/colorbox/i18n/jquery.colorbox-%SF_CULTURE{0,2}%.js
+      stylesheets:
+        - %SF_SIFT_WEB_DIR%/css/_/colorbox/colorbox.less
+      require:
+        - jquery
