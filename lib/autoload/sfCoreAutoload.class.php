@@ -794,6 +794,7 @@ class sfCoreAutoload
     'sfvalidatorphone' => 'validator/text/sfValidatorPhone.class.php',
     'sfvalidatorseparatedtextvalues' => 'validator/text/sfValidatorSeparatedTextValues.class.php',
     'sfvalidatorstring' => 'validator/text/sfValidatorString.class.php',
+    'sfvalidatoryaml' => 'validator/text/sfValidatorYaml.class.php',
     'sfoutputescaper' => 'view/escaper/sfOutputEscaper.class.php',
     'sfoutputescaperarraydecorator' => 'view/escaper/sfOutputEscaperArrayDecorator.class.php',
     'sfoutputescapergetterdecorator' => 'view/escaper/sfOutputEscaperGetterDecorator.class.php',
