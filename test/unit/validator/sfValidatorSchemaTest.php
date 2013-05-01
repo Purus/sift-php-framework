@@ -2,7 +2,7 @@
 
 require_once(dirname(__FILE__) . '/../../bootstrap/unit.php');
 
-$t = new lime_test(89);
+$t = new lime_test(92);
 
 class PreValidator extends sfValidatorBase {
 
@@ -191,6 +191,25 @@ catch(sfValidatorErrorSchema $e)
   $t->is(count($e), 1, '->clean() throws an exception with all error messages');
   $t->is($e[0]->getCode(), 's1_not_equal_s2', '->clean() throws an exception with all error messages');
 }
+
+$v = new sfValidatorSchema();
+$v->setOption('allow_extra_fields', true);
+$v->setOption('filter_extra_fields', false);
+
+$v->setPostValidator($callback = new sfValidatorCallback(array('callback' => 'test_callback')));
+$t->ok($v->getPostValidator() == $callback, '->getPostValidator() returns the current post validator');
+
+$validator2 = clone $v;
+
+function test_callback($validator, $values)
+{
+  $values['s1'] = 'modified from callback fooba';
+
+  return $values;
+}
+
+$t->ok($validator2->getPostValidator() == $callback, '->getPostValidator() returns the current post validator');
+$t->is($validator2->clean(array('s1' => "fooba")), array('s1' => 'modified from callback fooba'), 'callback in invoked');
 
 $v = new sfValidatorSchema(array('s1' => $v1, 's2' => $v2));
 $t->is($v->clean(array('s1' => 'foo')), array('s1' => 'foo', 's2' => null), '->clean() returns null values for fields not present in the input array');
