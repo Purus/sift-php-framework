@@ -73,20 +73,22 @@ class sfValidatorNumber extends sfValidatorBase {
    */
   public function getActiveMessages()
   {
-    $messages = array();
+    $messages = parent::getActiveMessages();
+
     if($this->getOption('required'))
     {
       $messages[] = $this->getMessage('required');
     }
-    if($this->getOption('min'))
+    if(!is_null($this->getOption('min')))
     {
       $messages[] = $this->getMessage('min');
     }
-    if($this->getOption('max'))
+    if(!is_null($this->getOption('max')))
     {
       $messages[] = $this->getMessage('max');
     }
-    return $messages;
+
+    return array_unique($messages);
   }
 
 }
