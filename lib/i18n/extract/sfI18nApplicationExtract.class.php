@@ -140,7 +140,7 @@ class sfI18nApplicationExtract extends sfI18nExtract
   protected function extractForms()
   {
     $files = sfFinder::type('file')
-              ->name('*Form*.php')
+              ->name('*Form.class.php')
               ->in($this->getOption('app_dir') . '/' .
               $this->getOption('lib_dir_name') . '/form');
 
