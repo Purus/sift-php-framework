@@ -12,10 +12,8 @@ if(!isset($since))
 }
 
 $since = date('d/m/Y', $since);
-$until = date('d/m/Y');
-
-$cmd = sprintf('git log --since=%s --until=%s --no-merges --format="{%%at} [%%h]%%w(900,0,21) %%B"',
-                $since, $until);
+$cmd = sprintf('git log --since=%s --no-merges --format="{%%at} [%%h]%%w(900,0,21) %%B"',
+                $since);
 
 // where to save the changelog
 $changelogDir = realpath(dirname(__FILE__) . '/../..');
