@@ -13,7 +13,7 @@
  * @package    Sift
  * @subpackage form
  */
-class sfFormFieldGroup implements ArrayAccess {
+class sfFormFieldGroup implements ArrayAccess, Countable {
 
   protected $form,
             $label,
@@ -37,11 +37,17 @@ class sfFormFieldGroup implements ArrayAccess {
     $this->priority = (int)$priority;
   }
 
+  /**
+   * Returns an array of fields
+   *
+   * @return array
+   */
   public function getFields()
   {
     $return = array();
     foreach($this->fields as $fieldName)
     {
+      // skip fields which are not present in the form
       if(!isset($this->form[$fieldName]))
       {
         continue;
@@ -63,17 +69,33 @@ class sfFormFieldGroup implements ArrayAccess {
     return $this;
   }
 
+  /**
+   * Returns group label
+   *
+   * @return string
+   */
   public function getLabel()
   {
     return $this->label;
   }
 
+  /**
+   * Sets group priority
+   *
+   * @param integer $priority
+   * @return sfFormFieldGroup
+   */
   public function setPriority($priority)
   {
     $this->priority = (int)$prority;
     return $this;
   }
 
+  /**
+   * Returns group priority
+   *
+   * @return integer
+   */
   public function getPriority()
   {
     return $this->priority;
@@ -126,6 +148,16 @@ class sfFormFieldGroup implements ArrayAccess {
   public function offsetGet($name)
   {
     return $this->fields[$name];
+  }
+
+  /**
+   * Returns count of the existing fields
+   *
+   * @return integer
+   */
+  public function count()
+  {
+    return count($this->getFields());
   }
 
   /**
