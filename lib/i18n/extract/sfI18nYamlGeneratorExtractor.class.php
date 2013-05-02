@@ -27,6 +27,9 @@ class sfI18nYamlGeneratorExtractor extends sfI18nYamlExtractor {
    * @var array
    */
   protected $defaultOptions = array(
+      'contexts' => array(
+        'list', 'create', 'edit', 'show', 'export', 'quick_edit'
+      ),
       'excluded_strings' => array(
         'list', 'delete', 'create', 'edit', 'save', 'save and add'
       )
@@ -52,153 +55,141 @@ class sfI18nYamlGeneratorExtractor extends sfI18nYamlExtractor {
 
     $params = $config['generator']['param'];
 
-    // titles
-    if(isset($params['list']['title']) && !in_array($params['list']['title'], $this->getOption('excluded_strings')))
-    {
-      $this->strings[] = $params['list']['title'];
-    }
-
-    if(isset($params['edit']['title']) && !in_array($params['edit']['title'], $this->getOption('excluded_strings')))
-    {
-      $this->strings[] = $params['edit']['title'];
-    }
-
-    if(isset($params['create']['title']) && !in_array($params['create']['title'], $this->getOption('excluded_strings')))
-    {
-      $this->strings[] = $params['create']['title'];
-    }
-
-    if(isset($params['show']['title']) && !in_array($params['show']['title'], $this->getOption('excluded_strings')))
-    {
-      $this->strings[] = $params['show']['title'];
-    }
-
-    if(isset($params['export']['title']) && !in_array($params['export']['title'], $this->getOption('excluded_strings')))
-    {
-      $this->strings[] = $params['export']['title'];
-    }
-
+    // context less strings
     // names and help messages
     if(isset($params['fields']))
     {
       $this->getFromFields($params['fields']);
     }
 
-    if(isset($params['list']['fields']))
+    // global title
+    if(isset($params['title']))
     {
-      $this->getFromFields($params['list']['fields']);
+      $this->strings[] = $params['title'];
     }
 
-    if(isset($params['edit']['fields']))
+    // extract all contexts
+    foreach($this->getOption('contexts', array()) as $context)
     {
-      $this->getFromFields($params['edit']['fields']);
-    }
-
-    if(isset($params['create']['fields']))
-    {
-      $this->getFromFields($params['create']['fields']);
-    }
-
-    if(isset($params['show']['fields']))
-    {
-      $this->getFromFields($params['show']['fields']);
-    }
-
-    if(isset($params['list']['batch_actions']))
-    {
-      foreach($params['list']['batch_actions'] as $field => $options)
+      // titles
+      if(isset($params[$context]['title']))
       {
-        // this is a default action, but with custom name
-        if($field[0] == '_' && isset($options['name']) && !empty($options['name']))
+        $this->strings[] = $params[$context]['title'];
+      }
+
+      // fields
+      if(isset($params[$context]['fields']))
+      {
+        $this->getFromFields($params[$context]['fields']);
+      }
+
+      // batch actions (only valid for list context, but leave it here)
+      if(isset($params[$context]['batch_actions']))
+      {
+        $this->getFromActions($params[$context]['batch_actions']);
+      }
+
+      // object actions (only valid for list context, but leave it here)
+      if(isset($params[$context]['object_actions']))
+      {
+        $this->getFromActions($params[$context]['object_actions']);
+      }
+
+      // actions
+      if(isset($params[$context]['actions']))
+      {
+        $this->getFromActions($params[$context]['actions']);
+      }
+
+      // display categories
+      if(isset($params[$context]['display']) && !isset($params[$context]['display'][0]))
+      {
+        foreach(array_keys($params[$context]['display']) as $string)
         {
-          $this->strings[] = $options['name'];
-        }
-        elseif(isset($options['name']) && !in_array($options['name'], $this->getOption('excluded_strings')))
-        {
-          $this->strings[] = $options['name'];
-        }
-        elseif($field[0] != '_')
-        {
-          $this->strings[] = $field;
+          if('NONE' == $string)
+          {
+            continue;
+          }
+          $this->strings[] = $string;
         }
       }
     }
 
-    if(isset($params['list']['object_actions']))
-    {
-      foreach($params['list']['object_actions'] as $field => $options)
-      {
-        // this is a default action, but with custom name
-        if($field[0] == '_' && isset($options['name']) && !empty($options['name']))
-        {
-          $this->strings[] = $options['name'];
-        }
-        elseif(isset($options['name']) && !in_array($options['name'], $this->getOption('excluded_strings')))
-        {
-          $this->strings[] = $options['name'];
-        }
-        // skip action names like _list, _delete
-        elseif($field[0] != '_')
-        {
-          $this->strings[] = $field;
-        }
-      }
-    }
-
-    // edit categories
-    if(isset($params['edit']['display']) && !isset($params['edit']['display'][0]))
-    {
-      foreach(array_keys($params['edit']['display']) as $string)
-      {
-        if('NONE' == $string || in_array($string, $this->getOption('excluded_strings')))
-        {
-          continue;
-        }
-
-        $this->strings[] = $string;
-      }
-    }
-
-    // create categories
-    if(isset($params['create']['display']) && !isset($params['create']['display'][0]))
-    {
-      foreach(array_keys($params['create']['display']) as $string)
-      {
-        if('NONE' == $string || in_array($string, $this->getOption('excluded_strings')))
-        {
-          continue;
-        }
-
-        $this->strings[] = $string;
-      }
-    }
-
-    if(isset($params['show']['display']) && !isset($params['show']['display'][0]))
-    {
-      foreach(array_keys($params['show']['display']) as $string)
-      {
-        if('NONE' == $string || in_array($string, $this->getOption('excluded_strings')))
-        {
-          continue;
-        }
-
-        $this->strings[] = $string;
-      }
-    }
-
-    return array_unique($this->strings);
+    return $this->toExport($this->strings);
   }
 
+  /**
+   * Prepares the strings to export.
+   *
+   * @param array $strings
+   * @return array
+   */
+  protected function toExport($strings)
+  {
+    $strings = array_unique($strings);
+    $result = array();
+    $excluded = $this->getOption('excluded_strings');
+    foreach($strings as $string)
+    {
+      if(in_array($string, $excluded))
+      {
+        continue;
+      }
+
+      $result[] = $string;
+    }
+    return $result;
+  }
+
+
+  /**
+   * Extact strings from array of actions
+   *
+   * @param array $actions
+   */
+  protected function getFromActions($actions)
+  {
+    foreach((array)$actions as $field => $options)
+    {
+      // this is a default action, but with custom name
+      if($field[0] == '_' && isset($options['name']) && !empty($options['name']))
+      {
+        $this->strings[] = $options['name'];
+      }
+      elseif(isset($options['name']))
+      {
+        $this->strings[] = $options['name'];
+      }
+      // skip action names like _list, _delete
+      elseif($field[0] != '_')
+      {
+        $this->strings[] = $field;
+      }
+    }
+  }
+
+  /**
+   * Extract strings from fields definitions
+   * 
+   * @param array $fields
+   */
   protected function getFromFields($fields)
   {
     foreach($fields as $field => $options)
     {
-      if(isset($options['name']) && !in_array($options['name'], $this->getOption('excluded_strings')))
+      // not associative array
+      if(is_numeric($field))
+      {
+        $field = $options;
+        $options = array();
+      }
+
+      if(isset($options['name']))
       {
         $this->strings[] = $options['name'];
       }
 
-      if(isset($options['help']) && !in_array($options['help'], $this->getOption('excluded_strings')))
+      if(isset($options['help']))
       {
         $this->strings[] = $options['help'];
       }
