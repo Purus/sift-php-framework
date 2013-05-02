@@ -11,7 +11,6 @@
  *
  * @package    Sift
  * @subpackage cli_task
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  */
 abstract class sfCliTask {
 
@@ -214,7 +213,7 @@ abstract class sfCliTask {
   /**
    * Add an argument.
    *
-   * This method always use the sfCliCommandArgument class to create an option.
+   * This method always use the sfCliCommandArgument class to create an argument.
    *
    * @see sfCliCommandArgument::__construct()
    */
@@ -231,6 +230,28 @@ abstract class sfCliTask {
   public function getOptions()
   {
     return $this->options;
+  }
+
+  /**
+   * Return an array for argument or option value
+   *
+   * <code>
+   * para=value;second=another;
+   * </code>
+   *
+   * @param string $value
+   * @return array
+   */
+  public function parseArgumentValue($value)
+  {
+    $parts = explode(';', trim($value));
+    $result = array();
+    foreach($parts as $part)
+    {
+      list($name, $value) = explode('=', $part);
+      $result[trim($name)] = trim($value);
+    }
+    return $result;
   }
 
   /**
