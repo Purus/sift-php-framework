@@ -262,6 +262,36 @@ abstract class sfCliBaseTask extends sfCliCommandApplicationTask
   }
 
   /**
+   * Returns an array with following structure:
+   *
+   * * application name (or plugin name)
+   * * directory (directory to the application or plugin)
+   * * isPlugin? (true is the application is a plugin)
+   *
+   * @param type $application
+   * @return array ($applicationName, $dir, $isPlugin)
+   */
+  protected function getApplicationOrPlugin($application)
+  {
+    $isPlugin = false;
+
+    // this is a plugin
+    if(preg_match('|Plugin$|', $application))
+    {
+      $this->checkPluginExists($application);
+      $isPlugin = true;
+      $dir = $this->environment->get('sf_plugins_dir') . '/' . $application;
+    }
+    else
+    {
+      $this->checkAppExists($application);
+      $dir = $this->environment->get('sf_apps_dir') . '/' . $application;
+    }
+
+    return array($application, $dir, $isPlugin);
+  }
+
+  /**
    * Returns the first application in apps.
    *
    * @return string The Application name
