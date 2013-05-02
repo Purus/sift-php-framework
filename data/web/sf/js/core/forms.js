@@ -427,7 +427,14 @@
         // fix for globalize culture format cs-CZ is Sift's cs_CZ
         culture = culture.replace('_', '-');
         $element.spinner($.extend({
-          culture : culture
+          culture : culture,
+          // trigger the change of the element
+          // since the spinner does not care about it
+          // @see: http://api.jqueryui.com/spinner/
+          change: function(event, ui)
+          {
+            $(event.target).trigger('change');
+          }
         }, $element.data('spinnerOptions') || {}));
       });
     }, null, typeof $.fn.spinner === 'undefined');
