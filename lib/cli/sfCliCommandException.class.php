@@ -11,7 +11,6 @@
  *
  * @package    Sift
  * @subpackage exception
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  */
 class sfCliCommandException extends sfException
 {

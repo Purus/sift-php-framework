@@ -11,7 +11,6 @@
  *
  * @package    Sift
  * @subpackage cli
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  */
 class sfCliCommandArgument
 {
