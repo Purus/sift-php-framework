@@ -423,6 +423,16 @@ abstract class sfCliTask {
   }
 
   /**
+   * Returns current logger
+   *
+   * @return sfILogger
+   */
+  public function getLogger()
+  {
+    return $this->logger;
+  }
+
+  /**
    * Logs a message in a section.
    *
    * @param string  $section  The section name
