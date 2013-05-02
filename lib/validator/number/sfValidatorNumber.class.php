@@ -91,4 +91,43 @@ class sfValidatorNumber extends sfValidatorBase {
     return array_unique($messages);
   }
 
+  public function getJavascriptValidationRules()
+  {
+    $rules = parent::getJavascriptValidationRules();
+
+    $rules[sfFormJavascriptValidation::NUMBER] = true;
+
+    if($this->hasOption('max'))
+    {
+      $rules[sfFormJavascriptValidation::MAX] = $this->getOption('max');
+    }
+
+    if($this->hasOption('min'))
+    {
+      $rules[sfFormJavascriptValidation::MIN] = $this->getOption('min');
+    }
+
+    return $rules;
+  }
+
+  public function getJavascriptValidationMessages()
+  {
+    $messages = parent::getJavascriptValidationMessages();
+
+    $messages[sfFormJavascriptValidation::NUMBER] =
+            sfFormJavascriptValidation::fixValidationMessage($this, 'invalid');
+
+    if($this->hasOption('max'))
+    {
+      $messages[sfFormJavascriptValidation::MAX] = sfFormJavascriptValidation::fixValidationMessage($this, 'max');
+    }
+
+    if($this->hasOption('min'))
+    {
+      $messages[sfFormJavascriptValidation::MIN] = sfFormJavascriptValidation::fixValidationMessage($this, 'min');
+    }
+
+    return $messages;
+  }
+
 }
