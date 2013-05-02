@@ -244,7 +244,12 @@ abstract class sfCliTask {
    */
   public function parseArgumentValue($value)
   {
-    $parts = explode(';', trim($value));
+    $value = trim($value);
+    if(empty($value))
+    {
+      return array();
+    }
+    $parts = explode(';', $value);
     $result = array();
     foreach($parts as $part)
     {
