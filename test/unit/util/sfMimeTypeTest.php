@@ -3,7 +3,7 @@
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 require_once(dirname(__FILE__).'/../../../lib/util/sfMimeType.class.php');
 
-$t = new lime_test(43, new lime_output_color());
+$t = new lime_test(46, new lime_output_color());
 
 $t->diag('->fixMimeType()');
 
@@ -18,6 +18,7 @@ $mimeTypes = array(
   'application/x-gzip' => '.gz',
   'application/pdf' => '.pdf',
   'application/vnd.ms-excel' => '.xls',
+  'audio/mpeg' => '.mp3'
 );
 
 foreach($mimeTypes as $mime => $expected)
@@ -75,6 +76,7 @@ $files = array(
   'survey.js' => 'application/javascript',
   'example.json' => 'application/json',
   '560051.rss' => 'application/rss+xml',
+  'my_jsme_stvoreni_k_jeho_obrazu.mp3' => 'audio/mpeg'
 );
 
 $fixtures = dirname(__FILE__) . '/fixtures/mime';
@@ -83,7 +85,6 @@ foreach($files as $file => $expected)
 {
   $t->is(sfMimeType::getTypeFromFile($fixtures . '/' . $file), $expected, sprintf('getTypeFromFile() works ok for "%s"', $file));
 }
-
 
 $t->diag('getTypeFromString()');
 
