@@ -345,17 +345,19 @@ class sfForm implements ArrayAccess, Iterator, Countable
       if($form_field->hasError())
       {
         $error_obj = $form_field->getError();
+        // @var $error_obj sfValidatorError
         if($error_obj instanceof sfValidatorErrorSchema)
         {
           foreach($error_obj->getErrors() as $error)
           {
+            // @var $error sfValidatorError
             // if a field has more than 1 error, it'll be over-written
-            $errors[] = $error->getMessage();
+            $errors[] = $this->translate($error->getMessageFormat(), $error->getArguments());
           }
         }
         else
         {
-          $errors[] = $error_obj->getMessage();
+          $errors[] = $this->translate($error_obj->getMessageFormat(), $error_obj->getArguments());
         }
       }
     }
@@ -363,7 +365,7 @@ class sfForm implements ArrayAccess, Iterator, Countable
     // global errors
     foreach($this->getGlobalErrors() as $validator_error)
     {
-      $errors[] = $validator_error->getMessage();
+      $errors[] = $this->translate($validator_error->getMessageFormat(), $validator_error->getArguments());
     }
 
     return $errors;
