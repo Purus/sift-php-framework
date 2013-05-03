@@ -11,8 +11,6 @@
  *
  * @package    Sift
  * @subpackage user
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @author     Sean Kerr <sean@code-box.org>
  */
 interface sfSecurityUser
 {

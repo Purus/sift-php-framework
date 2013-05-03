@@ -23,8 +23,7 @@
  *
  * @package    Sift
  * @subpackage validator_legacy
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @deprecated 
+ * @deprecated
  */
 class sfCallbackValidator extends sfValidator
 {

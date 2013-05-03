@@ -7,7 +7,6 @@
  */
 
 /**
- *
  * sfImageMirrorImageMagick class.
  *
  * Mirrors a ImageMagick image.
@@ -16,7 +15,6 @@
  *
  * @package Sift
  * @subpackage image
- * @author Stuart Lowes <stuart.lowes@gmail.com>
  */
 class sfImageMirrorImageMagick extends sfImageTransformAbstract
 {

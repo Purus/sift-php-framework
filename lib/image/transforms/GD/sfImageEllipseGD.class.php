@@ -5,9 +5,8 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
- 
+
 /**
- *
  * sfImageEllipseGD class.
  *
  * Draws an Ellipse.
@@ -16,7 +15,6 @@
  *
  * @package Sift
  * @subpackage image
- * @author Stuart Lowes <stuart.lowes@gmail.com>
  */
 class sfImageEllipseGD extends sfImageTransformAbstract
 {

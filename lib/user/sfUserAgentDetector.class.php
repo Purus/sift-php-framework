@@ -14,8 +14,6 @@
  *
  * @package    Sift
  * @subpackage user
- * @author     Thibault Duplessis <thibault.duplessis at gmail dot com>
- * @license    MIT License 
  */
 class sfUserAgentDetector {
 

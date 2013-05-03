@@ -5,7 +5,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
- 
+
 /**
  * sfConfigHandler allows a developer to create a custom formatted configuration
  * file pertaining to any information they like and still have it auto-generate
@@ -13,8 +13,6 @@
  *
  * @package    Sift
  * @subpackage config
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @author     Sean Kerr <sean@code-box.org>
  */
 abstract class sfConfigHandler {
 

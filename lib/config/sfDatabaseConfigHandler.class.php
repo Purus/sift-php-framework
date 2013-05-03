@@ -13,8 +13,6 @@
  *
  * @package    Sift
  * @subpackage config
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @author     Sean Kerr <sean@code-box.org>
  */
 class sfDatabaseConfigHandler extends sfYamlConfigHandler
 {
@@ -48,7 +46,7 @@ class sfDatabaseConfigHandler extends sfYamlConfigHandler
                       "// date: %s\n%s\nreturn array(%s);\n",
                       date('Y/m/d H:i:s'), implode("\n", $includes), implode("\n", $data));
   }
-  
+
   public function evaluate($configFiles)
   {
     list($includes, $data) = $this->parse($configFiles);
@@ -66,7 +64,7 @@ class sfDatabaseConfigHandler extends sfYamlConfigHandler
 
     return $databases;
   }
-  
+
   protected function parse($configFiles)
   {
     // parse the yaml
@@ -123,8 +121,8 @@ class sfDatabaseConfigHandler extends sfYamlConfigHandler
     }
 
     return array($includes, $data);
-  }  
-  
+  }
+
   /**
    * @see sfConfigHandler
    */
@@ -142,5 +140,5 @@ class sfDatabaseConfigHandler extends sfYamlConfigHandler
 
     return $config;
   }
-  
+
 }

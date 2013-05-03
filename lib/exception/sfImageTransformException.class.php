@@ -11,7 +11,6 @@
  *
  * @package Sift
  * @subpackage exception
- * @author   Stuart Lowes <stuart.lowes@gmail.com>
  */
 class sfImageTransformException extends sfException {
 

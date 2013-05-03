@@ -5,13 +5,12 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
- 
+
 /**
  * sfFillInFormFilter fills in forms.
  *
  * @package    Sift
  * @subpackage filter
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  */
 class sfFillInFormFilter extends sfFilter
 {
@@ -30,7 +29,6 @@ class sfFillInFormFilter extends sfFilter
     $request  = $context->getRequest();
 
     // prevents an "sfException - No form found in this page"
-    // @see http://snippets.symfony-project.org/snippet/245
     if(!$request->hasErrors())
     {
       return;

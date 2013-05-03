@@ -11,8 +11,6 @@
  *
  * @package    Sift
  * @subpackage user
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @author     Sean Kerr <sean@code-box.org>
  */
 class sfBasicSecurityUser extends sfUser implements sfSecurityUser {
 
@@ -26,7 +24,7 @@ class sfBasicSecurityUser extends sfUser implements sfSecurityUser {
   protected $authenticated = null;
   protected $timedout = false;
   protected $id = null;
-  
+
   /**
    * Clears all credentials.
    *
@@ -39,7 +37,7 @@ class sfBasicSecurityUser extends sfUser implements sfSecurityUser {
 
   /**
    * Returns an array containing the credentials
-   * 
+   *
    * @return array
    */
   public function getCredentials()
@@ -116,9 +114,7 @@ class sfBasicSecurityUser extends sfUser implements sfSecurityUser {
    *
    * @param  mixed credentials
    * @param  boolean useAnd specify the mode, either AND or OR
-   * @return boolean
-   *
-   * @author Olivier Verdier <Olivier.Verdier@free.fr>
+   * @return boolean   
    */
   public function hasCredential($credentials, $useAnd = true)
   {
@@ -218,14 +214,14 @@ class sfBasicSecurityUser extends sfUser implements sfSecurityUser {
 
   /**
    * Returns the user Id
-   * 
+   *
    * @param string $id
    */
   public function setId($id)
-  {    
+  {
     $this->id = $id;
   }
-  
+
   /**
    * Returns the timestamp of the last user request.
    *

@@ -11,7 +11,6 @@
  *
  * @package    Sift
  * @subpackage filter
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  */
 class sfFlashFilter extends sfFilter
 {

@@ -13,7 +13,7 @@
  *
  * @package Sift
  * @subpackage image
- * @author Stuart Lowes <robin@ngse.co.uk>
+
  */
 class sfImageFillImageMagick extends sfImageTransformAbstract {
 

@@ -23,7 +23,7 @@ class sfCliGenerateModuleTask extends sfCliGeneratorBaseTask
       new sfCliCommandArgument('application', sfCliCommandArgument::REQUIRED, 'The application name'),
       new sfCliCommandArgument('module', sfCliCommandArgument::REQUIRED, 'The module name'),
     ));
-    
+
     $this->addOptions(array(
       new sfCliCommandOption('secured', null, sfCliCommandOption::PARAMETER_NONE, 'Secure the module?', null),
       new sfCliCommandOption('internal', null, sfCliCommandOption::PARAMETER_NONE, 'IS the module internal only? (Not accessible via web)', null),
@@ -36,7 +36,7 @@ class sfCliGenerateModuleTask extends sfCliGeneratorBaseTask
     $this->briefDescription = 'Generates a new module';
 
     $scriptName = $this->environment->get('script_name');
-    
+
     $this->detailedDescription = <<<EOF
 The [generate:module|INFO] task creates the basic directory structure
 for a new module in an existing application:
@@ -77,8 +77,8 @@ EOF;
     }
 
     $this->checkAppExists($app);
-    
-    $moduleDir = $this->environment->get('sf_apps_dir'). '/' . $app. '/' . 
+
+    $moduleDir = $this->environment->get('sf_apps_dir'). '/' . $app. '/' .
                  $this->environment->get('sf_app_module_dir_name') . '/' . $module;
 
     if(is_dir($moduleDir))
@@ -87,10 +87,10 @@ EOF;
     }
 
     $this->logSection($this->getFullName(), sprintf('Creating module "%s".', $module));
-    
+
     $projectName = '';
     $projectAuthor = '';
-    
+
     // load configuration
     if(is_readable($propertyFile = $this->environment->get('sf_config_dir').'/properties.ini'))
     {
@@ -99,20 +99,9 @@ EOF;
       {
         $projectName = $properties['project']['name'];
       }
-      // BC compat
-      elseif(isset($properties['symfony']['name']))
-      {
-        $projectName = $properties['symfony']['name'];
-      }
-      
       if(isset($properties['project']['author']))
       {
         $projectAuthor = $properties['project']['author'];
-      }
-      // BC compat
-      elseif(isset($properties['symfony']['author']))
-      {
-        $projectAuthor = $properties['symfony']['author'];
       }
     }
 
@@ -120,18 +109,18 @@ EOF;
     if(!$projectName)
     {
       // base on directory name
-      $projectName = ucfirst(str_replace('.', '', basename($this->environment->get('sf_root_dir'))));      
+      $projectName = ucfirst(str_replace('.', '', basename($this->environment->get('sf_root_dir'))));
     }
-    
+
     // module credentials
     $credentials = isset($options['credentials']) ? (array)$options['credentials'] : array();
-    
+
     $constants = array(
       'PROJECT_NAME' => $projectName,
       'APP_NAME'     => $app,
       'MODULE_NAME'  => $module,
-      'AUTHOR_NAME'  => $projectAuthor,        
-      'CREDENTIALS'  => 'credentials: ' . sfYamlInline::dump($credentials) 
+      'AUTHOR_NAME'  => $projectAuthor,
+      'CREDENTIALS'  => 'credentials: ' . sfYamlInline::dump($credentials)
     );
 
     if (is_readable($this->environment->get('sf_data_dir').'/skeleton/module'))
@@ -157,27 +146,27 @@ EOF;
     // customize php and yml files
     $finder = sfFinder::type('file')->name('*.php', '*.yml');
     $this->getFilesystem()->replaceTokens($finder->in($moduleDir), '##', '##', $constants);
-    
+
     if(!$options['secured'])
     {
       $this->getFilesystem()->remove($moduleDir . '/config/security.yml');
-      // FIXME: check if there are any files left, if yes, discard the dir!      
-    }  
+      // FIXME: check if there are any files left, if yes, discard the dir!
+    }
 
     $moduleYaml = array();
-    
+
     if($options['internal'])
     {
       $moduleYaml[] = 'all:';
       $moduleYaml[] = '  is_internal: true';
     }
-    
+
     if(count($moduleYaml))
     {
       file_put_contents($moduleDir . '/config/module.yml', join("\n", $moduleYaml));
     }
-    
-    $this->logSection($this->getFullName(), 'Done.');    
+
+    $this->logSection($this->getFullName(), 'Done.');
   }
-  
+
 }

@@ -20,7 +20,6 @@
  *  echo $formatter->format('Hello');
  * </code>
  *
- * @author Xiang Wei Zhuo <weizhuo[at]gmail[dot]com>
  * @package Sift
  * @subpackage i18n
  */

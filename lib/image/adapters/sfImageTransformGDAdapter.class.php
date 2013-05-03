@@ -32,7 +32,6 @@ if(!function_exists('imagecopymergealpha'))
  *
  * @package Sift
  * @subpackage image
- * @author Stuart Lowes <stuart.lowes@gmail.com>
  */
 class sfImageTransformGDAdapter extends sfImageTransformAdapterAbstract
 {
@@ -114,7 +113,7 @@ class sfImageTransformGDAdapter extends sfImageTransformAdapterAbstract
 
   /**
    * Load and sets the resource from a existing file
-   * 
+   *
    * @param string
    * @return boolean
    * @throws sfImageTransformException
@@ -130,7 +129,7 @@ class sfImageTransformGDAdapter extends sfImageTransformAdapterAbstract
       {
         throw new sfImageTransformException(sprintf('Cannot load file "%s" as "%s".', $filename, $mime));
       }
-      
+
       $this->mime_type = $mime;
       $this->setFilename($filename);
 
@@ -183,8 +182,8 @@ class sfImageTransformGDAdapter extends sfImageTransformAdapterAbstract
   public function save()
   {
     $this->__output(true);
-    
-    return true; 
+
+    return true;
   }
 
   /**
@@ -269,7 +268,7 @@ class sfImageTransformGDAdapter extends sfImageTransformAdapterAbstract
     {
 
       $this->holder = $resource;
-      
+
       return true;
     }
 
@@ -499,7 +498,7 @@ class sfImageTransformGDAdapter extends sfImageTransformAdapterAbstract
         imagefill($dest_resource, 0, 0, $index);
 
         // Set the filled background color to be transparent
-        imagecolortransparent($dest_resource, $index);    
+        imagecolortransparent($dest_resource, $index);
       }
       else if ($this->getMIMEType() == 'image/png') // Always make a transparent background color for PNGs that don't have one allocated already
       {
@@ -524,7 +523,7 @@ class sfImageTransformGDAdapter extends sfImageTransformAdapterAbstract
 
   /**
    * Returns color channels array
-   * 
+   *
    * @param integer $x
    * @param integer $y
    * @return array
@@ -538,7 +537,7 @@ class sfImageTransformGDAdapter extends sfImageTransformAdapterAbstract
     $g = $cols['green'];
     $b = $cols['blue'];
     $a = $cols['alpha'];
-    return array($r, $g, $b, $a);    
-  }   
-  
+    return array($r, $g, $b, $a);
+  }
+
 }

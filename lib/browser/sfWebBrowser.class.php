@@ -11,8 +11,6 @@
  *
  * @package    Sift
  * @subpackage browser
- * @author     Francois Zaninotto <francois.zaninotto@symfony-project.com>
- * @author     Tristan Rivoallan <tristan@rivoallan.net>
  */
 class sfWebBrowser {
 
@@ -32,7 +30,7 @@ class sfWebBrowser {
 
   /**
    * Constructs the browser object
-   * 
+   *
    * @param array $defaultHeaders
    * @param string $driverClass
    * @param options $driverOptions
@@ -41,9 +39,9 @@ class sfWebBrowser {
   public function __construct($defaultHeaders = array(), $driverClass = null, $driverOptions = array())
   {
     $driver = false;
-    
+
     if(!$driverClass)
-    {      
+    {
       if(function_exists('curl_init'))
       {
         $driverClass = 'curl';
@@ -57,9 +55,9 @@ class sfWebBrowser {
         $driverClass = 'sockets';
       }
     }
-    
+
     $driverClass = sprintf('sfWebBrowserDriver%s', ucfirst(strtolower($driverClass)));
-    
+
     if(class_exists($driverClass))
     {
       $driver = new $driverClass($driverOptions);
@@ -68,17 +66,17 @@ class sfWebBrowser {
     {
       $driver = new $driver($driverOptions);
     }
-    
+
     if(!$driver)
     {
       throw new InvalidArgumentException(sprintf('Browser driver is missing or class "%s" does not exist.', $driverClass));
     }
-    
+
     if(!$driver instanceof sfIWebBrowserDriver)
     {
       throw new InvalidArgumentException(sprintf('Browser driver "%s" should implement sfIWebBrowserDriver interface.', $driverClass));
     }
-    
+
     $this->defaultHeaders = $this->fixHeaders($defaultHeaders);
     $this->driver = $driver;
   }
@@ -514,7 +512,7 @@ class sfWebBrowser {
 
   /**
    * Transforms an associative array of header names => header values to its HTTP equivalent.
-   * 
+   *
    * @param    array     $headers
    * @return   string
    */
@@ -618,7 +616,7 @@ class sfWebBrowser {
     {
       return $text;
     }
-    
+
     // Decode any content-encoding (gzip or deflate) if needed
     switch(strtolower($this->getResponseHeader('content-encoding')))
     {
@@ -626,12 +624,12 @@ class sfWebBrowser {
       case 'gzip':
         $text = $this->decodeGzip($text);
       break;
-      
+
       // Handle deflate encoding
       case 'deflate':
         $text = $this->decodeDeflate($text);
       break;
-    
+
       default:
       break;
     }
@@ -652,7 +650,7 @@ class sfWebBrowser {
   }
 
   /**
-   * Get a DOMDocument version of the response 
+   * Get a DOMDocument version of the response
    *
    * @return DOMDocument The reponse contents
    */
@@ -673,7 +671,7 @@ class sfWebBrowser {
   }
 
   /**
-   * Get a sfDomCssSelector version of the response 
+   * Get a sfDomCssSelector version of the response
    *
    * @return sfDomCssSelector The response contents
    */
@@ -692,10 +690,10 @@ class sfWebBrowser {
   }
 
   /**
-   * Get a SimpleXML version of the response 
+   * Get a SimpleXML version of the response
    *
    * @return  sfXmlElement                      The reponse contents
-   * @throws  sfWebBrowserInvalidResponseException  when response is not in a valid format 
+   * @throws  sfWebBrowserInvalidResponseException  when response is not in a valid format
    */
   public function getResponseXML()
   {
@@ -720,18 +718,18 @@ class sfWebBrowser {
 
   /**
    * Returns decoded response text from json string
-   * 
-   * @param boolean $toAssoc When true, returned objects will be converted into associative arrays. 
+   *
+   * @param boolean $toAssoc When true, returned objects will be converted into associative arrays.
    * @return array
    */
   public function getResponseDecodedJson($toAssoc = false)
   {
     return sfJson::decode($this->getResponseText(), $toAssoc);
   }
-  
+
   /**
    * Returns true if server response is an error.
-   * 
+   *
    * @return   bool
    */
   public function responseIsError()
@@ -764,7 +762,7 @@ class sfWebBrowser {
 
   /**
    * Decodes gzip-encoded content ("content-encoding: gzip" response header).
-   * 
+   *
    * @param string $gzip_text
    * @return string
    * @throws Exception
@@ -773,7 +771,7 @@ class sfWebBrowser {
   {
     $decoded = @gzinflate(substr($gzip_text, 10));
     if($decoded === false)
-    {      
+    {
       throw new Exception(sprintf('Could not decode GZIPed response from "%s"', $this->getUrlInfoAsUrl()));
     }
     return $decoded;
@@ -781,13 +779,13 @@ class sfWebBrowser {
 
   /**
    * Returns parsed url info as url. (Used for exception info)
-   * 
+   *
    * @return string
    */
   protected function getUrlInfoAsUrl()
   {
     $parsed_url = $this->getUrlInfo();
-    
+
     $scheme = isset($parsed_url['scheme']) ? $parsed_url['scheme'] . '://' : '';
     $host = isset($parsed_url['host']) ? $parsed_url['host'] : '';
     $port = isset($parsed_url['port']) ? ':' . $parsed_url['port'] : '';
@@ -797,15 +795,15 @@ class sfWebBrowser {
     $path = isset($parsed_url['path']) ? $parsed_url['path'] : '';
     $query = isset($parsed_url['query']) ? '?' . $parsed_url['query'] : '';
     $fragment = isset($parsed_url['fragment']) ? '#' . $parsed_url['fragment'] : '';
-    
+
     return $scheme.$user.$pass.$host.$port.$path.$query.$fragment;
   }
-  
+
   /**
    * Decodes deflate-encoded content ("content-encoding: deflate" response header).
-   * 
+   *
    * @param       stream     $deflate_text
-   * @return      string     
+   * @return      string
    */
   protected function decodeDeflate($deflate_text)
   {
@@ -825,8 +823,8 @@ class sfWebBrowser {
 
   /**
    * Returns the response message (the 'Not Found' part in  'HTTP/1.1 404 Not Found')
-   * 
-   * @return   string 
+   *
+   * @return   string
    */
   public function getResponseMessage()
   {
@@ -835,7 +833,7 @@ class sfWebBrowser {
 
   /**
    * Sets response message.
-   * 
+   *
    * @param    string    $message
    */
   public function setResponseMessage($msg)
@@ -845,7 +843,7 @@ class sfWebBrowser {
 
   /**
    * Returns url info
-   * 
+   *
    * @return array
    * @link http://cz1.php.net/parse_url
    */
@@ -856,7 +854,7 @@ class sfWebBrowser {
 
   /**
    * Returns default request headers
-   * 
+   *
    * @return array
    */
   public function getDefaultRequestHeaders()
@@ -866,7 +864,7 @@ class sfWebBrowser {
 
   /**
    * Adds default headers to the supplied headers array.
-   * 
+   *
    * @param       array    $headers
    * @return      array
    */
@@ -894,7 +892,7 @@ class sfWebBrowser {
 
   /**
    * Validates supplied headers and turns all names to lowercase.
-   * 
+   *
    * @param     array     $headers
    * @return    array
    */

@@ -1,7 +1,7 @@
 <?php
 /*
  * This file is part of the Sift PHP framework
- * 
+ *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
@@ -13,8 +13,6 @@
  *
  * @package    Sift
  * @subpackage exception
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @author     Sean Kerr <sean@code-box.org> 
  */
 class sfException extends Exception {
 
@@ -26,7 +24,7 @@ class sfException extends Exception {
   static protected
     $lastException = null;
 
-  
+
   /**
    * Class constructor.
    *
@@ -47,7 +45,7 @@ class sfException extends Exception {
       sfLogger::getInstance()->err('{' . $this->getName() . '} ' . $message);
     }
   }
-  
+
   /**
    * Wraps an Exception.
    *
@@ -196,16 +194,16 @@ class sfException extends Exception {
       {
         $format = 'ajax';
       }
-      
+
       if(is_object($response = sfContext::getInstance()->getResponse()))
       {
         if ($response->getStatusCode() < 300)
         {
           // status code has already been sent, but is included here for the purpose of testing
           $response->setStatusCode(500);
-        } 
+        }
       }
-      
+
     }
 
     $ext = ($format == 'html' ? 'php' : 'txt');
@@ -214,17 +212,17 @@ class sfException extends Exception {
       $ext = 'ajax';
       header('Content-Type: application/json');
     }
-    
+
     ob_start();
     include(sfConfig::get('sf_sift_data_dir') . '/data/exception.' . $ext);
     $content = ob_get_clean();
 
-    $content = sfCore::filterByEventListeners($content, 
-                'application.render_exception', array(             
+    $content = sfCore::filterByEventListeners($content,
+                'application.render_exception', array(
                     'content' => $content,
-                    'exception' => &$exception 
+                    'exception' => &$exception
     ));
-    
+
     echo $content;
 
     // if test, do not exit
@@ -232,7 +230,7 @@ class sfException extends Exception {
     {
       exit(1);
     }
-    
+
   }
 
   /**
@@ -325,7 +323,7 @@ class sfException extends Exception {
    * Formats an array as a string.
    *
    * @param array The argument array
-   * @param boolean 
+   * @param boolean
    * @param string The format string (html or plain)
    *
    * @return string

@@ -11,8 +11,6 @@
  *
  * @package    Sift
  * @subpackage browser
- * @author     Francois Zaninotto <francois.zaninotto@symfony-project.com>
- * @author     Ben Meynell <bmeynell@colorado.edu>
  * @link http://cz1.php.net/curl
  */
 class sfWebBrowserDriverCurl implements sfIWebBrowserDriver {
@@ -23,13 +21,13 @@ class sfWebBrowserDriverCurl implements sfIWebBrowserDriver {
 
   /**
    * Constructs curl driver instance
-   * 
+   *
    * Accepts an option of parameters passed to the PHP curl adapter:
-   * 
+   *
    *  ssl_verify  => [true/false]
    *  verbose     => [true/false]
    *  verbose_log => [true/false]
-   * 
+   *
    * Additional options are passed as curl options, under the form:
    *  userpwd => CURL_USERPWD
    *  timeout => CURL_TIMEOUT
@@ -140,18 +138,18 @@ class sfWebBrowserDriverCurl implements sfIWebBrowserDriver {
       {
         $dir = sfConfig::get('sf_log_dir');
       }
-      
+
       if(!is_dir($dir))
       {
         throw new InvalidArgumentException(sprintf('Log directory "%s" does not exist.', $dir));
       }
-      
-      $log_file = $dir . '/web_browser_curl_verbose.log'; 
-      
-      curl_setopt($this->curl, CURLOPT_VERBOSE, true);      
-      $this->fh = fopen($log_file, 'a+b');      
+
+      $log_file = $dir . '/web_browser_curl_verbose.log';
+
+      curl_setopt($this->curl, CURLOPT_VERBOSE, true);
+      $this->fh = fopen($log_file, 'a+b');
       curl_setopt($this->curl, CURLOPT_STDERR, $this->fh);
-      
+
       unset($curl_options['verbose_log']);
     }
 

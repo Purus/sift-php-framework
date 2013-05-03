@@ -11,8 +11,7 @@
  *
  * @package    Sift
  * @subpackage browser
- * @author     Francois Zaninotto <francois.zaninotto@symfony-project.com>
- * @link  http://cz2.php.net/manual/en/function.fopen.php
+ * @link       http://cz2.php.net/manual/en/function.fopen.php
  */
 class sfWebBrowserDriverFopen implements sfIWebBrowserDriver {
 
@@ -22,7 +21,7 @@ class sfWebBrowserDriverFopen implements sfIWebBrowserDriver {
 
   /**
    * Constructs the driver
-   * 
+   *
    * @param array $options
    */
   public function __construct($options = array())
@@ -79,7 +78,7 @@ class sfWebBrowserDriverFopen implements sfIWebBrowserDriver {
 
   /**
    * Handles PHP runtime error.
-   * 
+   *
    * This handler is used to catch any warnigns sent by fopen($url) and reformat them to something
    * usable.
    *

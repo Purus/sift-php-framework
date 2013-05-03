@@ -11,13 +11,12 @@
  *
  * @package    Sift
  * @subpackage view
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  */
 class sfPartialView extends sfPHPView
 {
   protected
     $partialVars = array();
-  
+
   /**
    * Executes any presentation logic for this view.
    */
@@ -51,7 +50,7 @@ class sfPartialView extends sfPHPView
     $this->partialVars = $partialVars;
     $this->attributeHolder->add($partialVars);
   }
-  
+
   /**
    * Renders the presentation.
    *

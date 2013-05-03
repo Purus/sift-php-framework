@@ -5,12 +5,11 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 /**
- *
  * @package    Sift
  * @subpackage validator_legacy
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @author     Sean Kerr <sean@code-box.org>
+ * @deprecated
  */
 class sfHtmlValidator extends sfValidator
 {

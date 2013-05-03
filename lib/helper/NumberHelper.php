@@ -5,13 +5,12 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
- 
+
 /**
  * NumberHelper.
  *
  * @package    Sift
  * @subpackage helper
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  */
 
 /**

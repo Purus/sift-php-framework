@@ -15,7 +15,6 @@ if(!defined('E_USER_DEPRECATED')) define('E_USER_DEPRECATED', 16384);
  *
  * @package    Sift
  * @subpackage exception
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  */
 class sfPhpErrorException extends sfException {
 
@@ -59,7 +58,7 @@ class sfPhpErrorException extends sfException {
       case E_USER_DEPRECATED:
       case E_NOTICE:
       case E_USER_NOTICE:
-      case E_STRICT:  
+      case E_STRICT:
 
       if(sfConfig::get('sf_logging_enabled'))
       {

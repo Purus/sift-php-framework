@@ -5,40 +5,39 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
- 
+
 /**
  * sfWizardAction class. Usefull for form wizards using steps.
  *
  * @package    Sift
  * @subpackage action
- * @author     Mishal.cz <mishal at mishal dot cz>
  */
 class sfWizardActions extends myActions {
 
   /**
    * Last step of the wizard
-   * @var integer 
+   * @var integer
    */
   public $lastStep     = 1;
-  
+
   /**
    * Firts step of the wizard
    * @var integer
    */
   public $firstStep    = 1;
-  
+
   /**
    * Form name mask "myFormStep%s". All forms of the steps should follow
    * this name mask. First step will be "myFormStep1Form".
-   * 
+   *
    * @var string
-   */  
+   */
   public $formNameMask = 'myFormStep%s';
-  
+
   /**
    * Wizard route
-   * 
-   * @var string 
+   *
+   * @var string
    */
   public $wizardRouteName   = '';
 
@@ -52,8 +51,8 @@ class sfWizardActions extends myActions {
     try
     {
       $this->form = sfFormManager::getForm(sprintf($this->formNameMask, $this->step));
-      // set session namespace where will be save data!      
-      myWizardForm::setStorageNamespace(sfInflector::tableize(get_class($this)), 
+      // set session namespace where will be save data!
+      myWizardForm::setStorageNamespace(sfInflector::tableize(get_class($this)),
               $this->formNameMask);
     }
     catch(sfException $e)
@@ -63,10 +62,10 @@ class sfWizardActions extends myActions {
 
     if($this->step > $this->firstStep
         && !$this->isPreviousStepValidated())
-    {      
+    {
       // FIXME: only works with named route and no other params in the route
       // @route?step=1
-      $route = current(explode('?', sfRouting::getInstance()->getCurrentInternalUri(true)));      
+      $route = current(explode('?', sfRouting::getInstance()->getCurrentInternalUri(true)));
       $validated = 1;
       // get last validated step!
       // range is backward
@@ -85,8 +84,8 @@ class sfWizardActions extends myActions {
 
   /**
    * Is previous step validated?
-   * 
-   * @return boolean 
+   *
+   * @return boolean
    */
   protected function isPreviousStepValidated()
   {
@@ -95,8 +94,8 @@ class sfWizardActions extends myActions {
 
   /**
    * Are we in last step?
-   * 
-   * @return boolean 
+   *
+   * @return boolean
    */
   protected function isLastStep()
   {
@@ -105,7 +104,7 @@ class sfWizardActions extends myActions {
 
   /**
    * Are we in first step?
-   * 
+   *
    * @return boolean
    */
   protected function isFirstStep()
@@ -115,8 +114,8 @@ class sfWizardActions extends myActions {
 
   /**
    * Returns wizard storage namespace
-   * 
-   * @return string 
+   *
+   * @return string
    */
   public function getWizardStorageNamespace()
   {
@@ -125,10 +124,10 @@ class sfWizardActions extends myActions {
 
   /**
    * Stores the $values into user attributes using storage namespace name.
-   * 
+   *
    * @param mixed $values
    * @param boolean $overwrite
-   * @return void 
+   * @return void
    */
   protected function setStepValues($values, $overwrite = false)
   {
@@ -145,9 +144,9 @@ class sfWizardActions extends myActions {
 
   /**
    * Returns step data from $step
-   * 
+   *
    * @param integer $step
-   * @return mixed 
+   * @return mixed
    */
   protected function getStepValues($step)
   {
@@ -176,8 +175,8 @@ class sfWizardActions extends myActions {
 
   /**
    * Redirects to next step
-   * 
-   * @return void 
+   *
+   * @return void
    */
   protected function redirectToNextStep()
   {
@@ -191,8 +190,8 @@ class sfWizardActions extends myActions {
 
   /**
    * Redirects to previous step
-   * 
-   * @return void 
+   *
+   * @return void
    */
   protected function redirectToPreviousStep()
   {
@@ -200,14 +199,14 @@ class sfWizardActions extends myActions {
     {
       return $this->redirect($this->getWizardRouteName().'?step='.($this->step-1));
     }
-    
+
     return $this->redirect($this->getWizardRouteName().'?step=1');
   }
 
   /**
    * Redirects back to currect step.
-   * 
-   * @return void 
+   *
+   * @return void
    */
   protected function redirectAgainToCurrentStep()
   {
@@ -216,8 +215,8 @@ class sfWizardActions extends myActions {
 
   /**
    * Returns wizard route name
-   * 
-   * @return string 
+   *
+   * @return string
    */
   protected function getWizardRouteName()
   {
@@ -226,8 +225,8 @@ class sfWizardActions extends myActions {
 
   /**
    * Returns an array of all data from all steps.
-   * 
-   * @return array 
+   *
+   * @return array
    */
   protected function getAllStepsData()
   {
@@ -242,7 +241,7 @@ class sfWizardActions extends myActions {
 
   /**
    * Cleans up the stored data.
-   * 
+   *
    * @return void
    */
   protected function cleanAllStepsData()

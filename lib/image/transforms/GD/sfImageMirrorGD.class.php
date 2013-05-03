@@ -7,7 +7,6 @@
  */
 
 /**
- *
  * sfImageMirrorGD class.
  *
  * Mirrors a GD image.
@@ -16,7 +15,6 @@
  *
  * @package Sift
  * @subpackage image
- * @author Stuart Lowes <stuart.lowes@gmail.com> 
  */
 class sfImageMirrorGD extends sfImageTransformAbstract
 {

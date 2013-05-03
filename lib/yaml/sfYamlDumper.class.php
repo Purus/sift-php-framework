@@ -11,7 +11,6 @@
  *
  * @package    Sift
  * @subpackage yaml
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com> 
  */
 class sfYamlDumper
 {

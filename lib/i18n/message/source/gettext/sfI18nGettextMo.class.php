@@ -11,7 +11,6 @@
  *
  * @package    Sift
  * @subpackage i18n
- * @author     Michael Wallner <mike@php.net>
  */
 class sfI18nGettextMo extends sfI18nGettext {
 
@@ -25,9 +24,9 @@ class sfI18nGettextMo extends sfI18nGettext {
 
   /**
    * big endianess
-   * 
+   *
    * Whether to write with big endian byte order.
-   * 
+   *
    * @access  public
    * @var     bool
    */
@@ -115,7 +114,7 @@ class sfI18nGettextMo extends sfI18nGettext {
    *
    * @access  private
    * @return  string
-   * @param   array   $params     associative array with offset and length 
+   * @param   array   $params     associative array with offset and length
    *                              of the string
    */
   protected function _readStr($params)

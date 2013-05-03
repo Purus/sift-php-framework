@@ -40,7 +40,7 @@ The [plugin:uninstall|INFO] task uninstalls a plugin:
 
   [{$scriptName} plugin:uninstall sfGuardPlugin|INFO]
 
-The default channel is [symfony|INFO].
+The default channel is [sift|INFO].
 
 You can also uninstall a plugin which has a different channel:
 

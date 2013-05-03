@@ -20,8 +20,7 @@
  *
  * @package    Sift
  * @subpackage view
- * @author     Mike Squire <mike@somosis.co.uk>
- * */
+ */
 class sfOutputEscaperIteratorDecorator extends sfOutputEscaperObjectDecorator implements Iterator, ArrayAccess
 {
   /**

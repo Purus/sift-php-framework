@@ -16,8 +16,7 @@
  *
  * @package    Sift
  * @subpackage storage
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * */
+ */
 class sfNoStorage extends sfStorage
 {
   /**
@@ -89,5 +88,5 @@ class sfNoStorage extends sfStorage
   public function shutdown()
   {
   }
-  
+
 }

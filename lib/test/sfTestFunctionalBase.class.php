@@ -13,7 +13,6 @@ require_once(dirname(__FILE__).'/../vendor/lime/lime.php');
  *
  * @package    Sift
  * @subpackage test
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com> 
  */
 abstract class sfTestFunctionalBase
 {

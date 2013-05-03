@@ -11,7 +11,6 @@
  *
  * @package    Sift
  * @subpackage i18n
- * @author     Michael Wallner <mike@php.net>
  */
 class sfI18nGettextPo extends sfI18nGettext {
 
@@ -46,7 +45,7 @@ class sfI18nGettextPo extends sfI18nGettext {
     {
       return false;
     }
-    
+
     $contents = implode('', $contents);
 
     $pattern =
@@ -119,7 +118,7 @@ class sfI18nGettextPo extends sfI18nGettext {
       }
       fwrite($fh, $meta . "\n");
     }
-    
+
     // write strings
     foreach($this->strings as $o => $t)
     {

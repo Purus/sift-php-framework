@@ -11,33 +11,32 @@
  *
  * @package    Sift
  * @subpackage file
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * */
+ */
 class sfFilesystem
 {
   /**
    * Directory separator constant
    */
   const DS = DIRECTORY_SEPARATOR;
-  
+
   /**
    * Logger instance
-   * 
-   * @var sfLogger 
+   *
+   * @var sfLogger
    */
   protected $logger = null;
-  
+
   /**
    * Formatter instance
-   * 
-   * @var sfCliFormatter 
+   *
+   * @var sfCliFormatter
    */
   protected $formatter = null;
-  
+
   /**
-   * 
+   *
    * Constructor
-   * 
+   *
    * @param sfLogger $logger
    */
   public function __construct(sfLogger $logger = null, sfCliFormatter $formatter = null)
@@ -45,7 +44,7 @@ class sfFilesystem
     $this->logger = $logger;
     $this->formatter = $formatter;
   }
-  
+
   /**
    * Copies a file.
    *
@@ -85,7 +84,7 @@ class sfFilesystem
       $this->logSection('file+', $targetFile);
       copy($originFile, $targetFile);
     }
-    
+
     // fluent interface
     return $this;
   }
@@ -105,7 +104,7 @@ class sfFilesystem
    * Checks if given filename does exist and is a file
    *
    * @param string $filename
-   * @return boolean Returns TRUE if the filename exists and is a regular file, FALSE  otherwise. 
+   * @return boolean Returns TRUE if the filename exists and is a regular file, FALSE  otherwise.
    */
   public function isFile($filename)
   {
@@ -330,7 +329,7 @@ class sfFilesystem
 
     return $content;
   }
-  
+
   /**
    * Executes a shell command.
    *
@@ -401,7 +400,7 @@ class sfFilesystem
     }
 
     return array($output, $err);
-  }  
+  }
 
   /**
    * Replaces tokens in an array of files.
@@ -442,7 +441,7 @@ class sfFilesystem
   {
     if($this->logger)
     {
-      $message = $this->formatter ? $this->formatter->formatSection($section, $message) : $section.' '.$message; 
+      $message = $this->formatter ? $this->formatter->formatSection($section, $message) : $section.' '.$message;
       $this->logger->log($message);
     }
   }
@@ -453,7 +452,7 @@ class sfFilesystem
    *
    * @param string $from directory from that the relative path shall be calculated
    * @param string $to target directory
-   */ 
+   */
   protected function calculateRelativeDir($from, $to)
   {
     $commonLength = 0;
@@ -478,7 +477,7 @@ class sfFilesystem
 
   /**
    * Returns temporary directory
-   * 
+   *
    * @return string
    */
   public static function getTmpDir()
@@ -534,7 +533,7 @@ class sfFilesystem
     {
       $size /= 1024;
       $pos++;
-    }    
+    }
     return round($size, $round) . ' ' . $a[$pos];
   }
 
@@ -579,5 +578,5 @@ class sfFilesystem
   {
     return sfMimeType::getTypeFromFile($file);
   }
-  
+
 }

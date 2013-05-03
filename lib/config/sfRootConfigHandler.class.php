@@ -12,7 +12,6 @@
  *
  * @package    Sift
  * @subpackage config
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  */
 class sfRootConfigHandler extends sfYamlConfigHandler
 {

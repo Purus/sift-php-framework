@@ -5,21 +5,21 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
- 
+
 /**
  * sfPhoneNumberValidator class.
  *
  * This class validates phone numbers.
- * 
+ *
  * @package    Sift
  * @subpackage validator_legacy
- * @author     Mishal.cz <mishal@mishal.cz>
+ * @depracated
  */
 class sfPhoneNumberValidator extends sfValidator {
 
   /**
    * Built in validation rules (support for czech and slovak numbers)
-   * 
+   *
    * @var array
    */
   protected $validationRules = array(

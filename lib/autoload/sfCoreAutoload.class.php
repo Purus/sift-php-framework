@@ -11,7 +11,6 @@
  *
  * @package    Sift
  * @subpackage autoload
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  */
 class sfCoreAutoload
 {
@@ -115,7 +114,7 @@ class sfCoreAutoload
   /**
    * Returns the base directory this autoloader is working on.
    *
-   * @return string The path to the symfony core lib directory
+   * @return string The path to the Sift core lib directory
    */
   public function getBaseDir()
   {
@@ -124,14 +123,14 @@ class sfCoreAutoload
 
   /**
    * Returns an array of class mappings
-   * 
+   *
    * @return array
    */
   public function getClassMap()
   {
     return $this->classes;
   }
-  
+
   /**
    * Rebuilds the association array between class names and paths.
    *
@@ -164,7 +163,7 @@ class sfCoreAutoload
       foreach($_classes as $class)
       {
         $classes .= sprintf("    '%s' => '%s',\n", strtolower($class), substr(str_replace($libDir, '', $file), 1));
-      }       
+      }
     }
 
     $content = preg_replace('/protected \$classes = array *\(.*?\);/s', sprintf("protected \$classes = array(\n%s  );", $classes), file_get_contents(__FILE__));

@@ -5,23 +5,19 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-  
+
 /**
  * Provides string functions for UTF-8 strings
- * 
+ *
  * This class is implemented to provide a UTF-8 version of almost every built-in
- * PHP string function. For more information about UTF-8, please visit
- * http://flourishlib.com/docs/UTF-8.
- * 
- * @copyright  Copyright (c) 2008-2010 Will Bond
- * @author     Will Bond [wb] <will@flourishlib.com>
- * @license    http://flourishlib.com/license
- * 
+ * PHP string function.
+ *
  * @package    Sift
  * @subpackage util
  * @link       http://flourishlib.com/fUTF8
  */
 class sfUtf8 {
+
   // The following constants allow for nice looking callbacks to static methods
   const ascii = 'sfUtf8::ascii';
   const chr = 'sfUtf8::chr';
@@ -66,7 +62,7 @@ class sfUtf8 {
   static private $can_ignore_invalid = NULL;
   /**
    * All lowercase UTF-8 characters mapped to uppercase characters
-   * 
+   *
    * @var array
    */
   static private $lower_to_upper = array(
@@ -185,7 +181,7 @@ class sfUtf8 {
   );
   /**
    * All lowercase UTF-8 characters not properly handled by [http://php.net/mb_strtoupper mb_strtoupper()] mapped to uppercase characters
-   * 
+   *
    * @var array
    */
   static private $mb_lower_to_upper_fix = array(
@@ -528,7 +524,7 @@ class sfUtf8 {
   );
   /**
    * If the [http://php.net/mbstring mbstring] extension is available
-   * 
+   *
    * @var boolean
    */
   static private $mbstring_available = NULL;
@@ -588,12 +584,12 @@ class sfUtf8 {
     }
 
     $string = iconv($inputCharset, 'UTF-8', $string);
-    
+
     return $clean ? self::clean($string) : $string;
   }
 
   /**
-   * Tries to detect charset of the string. 
+   * Tries to detect charset of the string.
    *
    * @param string $string
    * @return string
@@ -615,12 +611,12 @@ class sfUtf8 {
     {
       return 'ISO-8859-1';
     }
-    
+
     if(self::$mbstring_available === null)
     {
       self::checkMbString();
     }
-    
+
     if(self::$mbstring_available)
     {
       return mb_detect_encoding($string, 'ISO-8859-2,WINDOWS-1251,WINDOWS-1252');
@@ -1579,19 +1575,19 @@ class sfUtf8 {
   }
 
   /**
-   * subReplace() replaces a copy of string delimited by the start and 
-   * (optionally) length parameters with the string given in replacement. 
-   * 
+   * subReplace() replaces a copy of string delimited by the start and
+   * (optionally) length parameters with the string given in replacement.
+   *
    * This is utf8 safe workaround for substr_replace
-   * 
-   * @param mixed $string The input string. An array of strings can be provided, in which case the replacements will occur on each string in turn. 
-   *                      In this case, the replacement, start and length parameters may be provided either as scalar values to be applied to each input string in turn, or as arrays, 
+   *
+   * @param mixed $string The input string. An array of strings can be provided, in which case the replacements will occur on each string in turn.
+   *                      In this case, the replacement, start and length parameters may be provided either as scalar values to be applied to each input string in turn, or as arrays,
    *                      in which case the corresponding array element will be used for each input string.
-   * @param mixed $replacement The replacement string. 
-   * @param mixed $start If start is positive, the replacing will begin at the start'th offset into string. 
+   * @param mixed $replacement The replacement string.
+   * @param mixed $start If start is positive, the replacing will begin at the start'th offset into string.
    *                     If start is negative, the replacing will begin at the start'th character from the end of string.
-   * @param mixed $length If given and is positive, it represents the length of the portion of string which is to be replaced. 
-   *                      If it is negative, it represents the number of characters from the end of string at which to stop replacing. If it is not given, then it will default to strlen( string ); i.e. end the replacing at the end of string. Of course, if length is zero then this function will have the effect of inserting replacement into string at the given start offset. 
+   * @param mixed $length If given and is positive, it represents the length of the portion of string which is to be replaced.
+   *                      If it is negative, it represents the number of characters from the end of string at which to stop replacing. If it is not given, then it will default to strlen( string ); i.e. end the replacing at the end of string. Of course, if length is zero then this function will have the effect of inserting replacement into string at the given start offset.
    * @return string
    * @see http://www.php.net/manual/en/ref.mbstring.php#94220
    */
@@ -1601,15 +1597,15 @@ class sfUtf8 {
     {
       foreach($string as $key => $value)
       {
-        $string[$key] = self::subReplace($value, $replacement, 
-                          is_array($start) ? $start[$key] : $start, 
+        $string[$key] = self::subReplace($value, $replacement,
+                          is_array($start) ? $start[$key] : $start,
                           is_array($length) ? $length[$key] : $length);
       }
       return $string;
     }
-    
+
     $string_length = self::len($string);
-    
+
     if($start < 0)
     {
       $start = max(0, $string_length + $start);
@@ -1635,7 +1631,7 @@ class sfUtf8 {
 
     return self::sub($string, 0, $start) . $replacement . self::sub($string, $start + $length, $string_length - $start - $length);
   }
-  
+
   /**
    * Trims whitespace, or any specified characters, from the beginning and end of a string
    *

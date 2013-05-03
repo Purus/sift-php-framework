@@ -7,11 +7,10 @@
  */
 
 /**
- * sfTesterUser implements tests for the symfony user object.
+ * sfTesterUser implements tests for the Sift user object.
  *
  * @package    Sift
  * @subpackage test
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com> 
  */
 class sfTesterUser extends sfTester
 {

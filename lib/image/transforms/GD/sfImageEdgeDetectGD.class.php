@@ -7,14 +7,12 @@
  */
  
 /**
- *
  * sfImageEdgeDetectGD class.
  *
  * Uses edge detection to highlight the edges in the GD image.
  *
  * @package Sift
  * @subpackage image
- * @author Stuart Lowes <stuart.lowes@gmail.com>
  */
 class sfImageEdgeDetectGD extends sfImageTransformAbstract
 {

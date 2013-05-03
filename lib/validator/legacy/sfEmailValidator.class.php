@@ -12,8 +12,7 @@
  *
  * @package    Sift_legacy
  * @subpackage validator
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @author     Sean Kerr <sean@code-box.org>
+ * @deprecated
  */
 class sfEmailValidator extends sfValidator
 {

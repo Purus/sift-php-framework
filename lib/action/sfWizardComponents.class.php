@@ -11,21 +11,20 @@
  *
  * @package    Sift
  * @subpackage action
- * @author     Mishal.cz <mishal at mishal dot cz>
- * */
+ */
 class sfWizardComponents extends myComponents {
 
   /**
    * Storage namespace mask (should be the same in action class.)
-   *  
-   * @var string 
+   *
+   * @var string
    */
   protected $formNameMask = 'myFormStep%s';
-  
+
   /**
-   * Returns storage namespace 
-   * 
-   * @return string 
+   * Returns storage namespace
+   *
+   * @return string
    */
   protected function getWizardStorageNamespace()
   {
@@ -34,9 +33,9 @@ class sfWizardComponents extends myComponents {
 
   /**
    * Returns stored values for the $step
-   * 
+   *
    * @param integer $step
-   * @return array 
+   * @return array
    */
   protected function getStepValues($step)
   {

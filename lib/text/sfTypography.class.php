@@ -9,16 +9,15 @@
 /**
  * sfTypography provides utility class for web typography. Based on the work of:
  * Andreas Heigl (Org_Heigl_Hyphenator version 1).
- * 
+ *
  * @package    Sift
  * @subpackage util
- * @author     Andreas Heigl <andreas@heigl.org>
  * @see http://www.smashingmagazine.com/2011/08/15/mind-your-en-and-em-dashes-typographic-etiquette/
  * @see http://kevin.deldycke.com/2007/03/ultimate-regular-expression-for-html-tag-parsing-with-php/
  */
 class sfTypography {
 
-  const HYPHENATE_QUALITY_HIGHEST = 9;  
+  const HYPHENATE_QUALITY_HIGHEST = 9;
   const HYPHENATE_QUALITY_HIGH = 7;
   const HYPHENATE_QUALITY_NORMAL = 5;
   const HYPHENATE_QUALITY_LOW = 3;
@@ -26,8 +25,8 @@ class sfTypography {
 
   /**
    * Options. Valid options are:
-   * 
-   *  - no_hyphenate_string: The string that marks a word not to hyphenate  
+   *
+   *  - no_hyphenate_string: The string that marks a word not to hyphenate
    *  - hyphen: Default hyphenation-character. Default is Soft-Hyphen-Character (ASCII 173)
    *  - hyphenate_left_min: How many characters need to stay to the left side of a hyphenation. (Default is 2)
    *  - hyphenate_right_min: How many characters need to stay to the right side of a hyphenation.
@@ -37,12 +36,12 @@ class sfTypography {
    *  - hyphenate_longest_pattern: The longest pattern length to use for hyphenating (default is 10).
    *  - custom_hyphen: The String that shall be searched for as a custom hyphen
    *  - customized_marker:  When customizations shall be used, what string shall be prepend to the word that contains customizations.
-   *  - mark_cuszomized: Whether to mark Customized Hyphenations or not 
-   * 
-   * @var array 
+   *  - mark_cuszomized: Whether to mark Customized Hyphenations or not
+   *
+   * @var array
    */
   protected $options = array(
-    'no_hyphenate_string' => null,  
+    'no_hyphenate_string' => null,
     'hyphen' => null,
     'hyphenate_left_min' => 2,
     'hyphenate_right_min' => 2,
@@ -51,15 +50,15 @@ class sfTypography {
     'hyphenate_longest_pattern' => 10,
     'custom_hyphen' => '--',
     'customized_marker' => '<!--cm//-->',
-    'hyphenate_word_min' => 6,  
-    'mark_customized' => false,      
-      
+    'hyphenate_word_min' => 6,
+    'mark_customized' => false,
+
     // general typography
     'reduce_linebreaks' => true,
     'protect_braced_quotes' => true,
 
   );
-  
+
   /**
    * This is the default language to use.
    *
@@ -98,11 +97,11 @@ class sfTypography {
 
   /**
    * Last parsed block element
-   * 
+   *
    * @var string
    */
   protected $lastBlockElement = '';
-  
+
   /**
    * Tags to completly skip when treating text as HTML
    *
@@ -112,12 +111,12 @@ class sfTypography {
 
   /**
    * Text macros to skip when parsing text
-   * 
+   *
    * @var array
    * @see sfTextMacro
    */
   private $skipMacros = array('code');
-  
+
   /**
    * This is the constructor, that initialises the hyphenator for the given
    * language <var>$language</var>
@@ -149,9 +148,9 @@ class sfTypography {
 
     foreach($lang as $_language)
     {
-      $languageFile = sprintf('%s/i18n/typo/%s.dat', 
+      $languageFile = sprintf('%s/i18n/typo/%s.dat',
                         sfConfig::get('sf_sift_data_dir'), $_language);
-      
+
       if(!is_readable($languageFile))
       {
         continue;
@@ -160,15 +159,15 @@ class sfTypography {
       $found = true;
 
       $this->language = $_language;
-      
+
       $data = unserialize(file_get_contents($languageFile));
-      
+
       // extract to object
       $this->patterns       = $data['patterns'];
-      $this->hyphenation    = $data['hyphenation'];      
+      $this->hyphenation    = $data['hyphenation'];
       $this->abbreviations  = $data['abbreviations'];
       $this->conjunctions   = $data['conjunctions'];
-      $this->prepositions   = $data['prepositions'];      
+      $this->prepositions   = $data['prepositions'];
     }
 
     if(!$found)
@@ -180,7 +179,7 @@ class sfTypography {
     {
       $this->options['hyphen'] = chr(194).chr(173);
     }
-    
+
   }
 
   /**
@@ -212,22 +211,22 @@ class sfTypography {
 
   /**
    * Sets options
-   * 
+   *
    * @param array $options
-   * @return sfTypography 
+   * @return sfTypography
    */
   public function setOptions(array $options)
   {
     $this->options = array_merge($this->options, $options);
     return $this;
   }
-  
+
   /**
    * Correct the string for common typography issues
-   * 
+   *
    * @param string $string
    * @param boolean $isHtml Is string html?
-   * @return String 
+   * @return String
    */
   public function correct($string)
   {
@@ -236,24 +235,24 @@ class sfTypography {
     {
       return '';
     }
-    
+
     // standardize newlines to make matching easier
     if(strpos($string, "\r") !== false)
     {
       $string = str_replace(array("\r\n", "\r"), "\n", $string);
     }
-    
+
     // Reduce line breaks.  If there are more than two consecutive linebreaks
     // we'll compress them down to a maximum of two since there's no benefit to more.
     if($this->options['reduce_linebreaks'])
     {
       $string = preg_replace("/\n\n+/", "\n\n", $string);
     }
-    
-    // HTML detection
-    $isHtml = $this->isStringHtml($string);   
 
-    // HTML comment tags don't conform to patterns of normal tags, 
+    // HTML detection
+    $isHtml = $this->isStringHtml($string);
+
+    // HTML comment tags don't conform to patterns of normal tags,
     // so pull them out separately, only if needed
     $html_comments = array();
     if(strpos($string, '<!--') !== false)
@@ -267,26 +266,26 @@ class sfTypography {
         }
       }
     }
-    
+
     // lets do the dirty work
     if($isHtml)
-    { 
-      // match and yank <pre> tags if they exist. 
+    {
+      // match and yank <pre> tags if they exist.
       $string = preg_replace_callback("#<pre.*?>.*?</pre>#si",
               array($this, 'protectCharacters'), $string);
-      
+
       // convert quotes within tags to temporary markers.
       $string = preg_replace_callback("#<.+?>#si", array($this, 'protectCharacters'), $string);
-     
+
       // Do the same with braces if necessary
       if($this->options['protect_braced_quotes'])
       {
         $string = preg_replace_callback("#\{.+?\}#si", array($this, 'protectCharacters'), $string);
       }
-      
+
       // tags we want the parser to completely ignore when splitting the string.
       $inlineElements = 'a|abbr|acronym|b|bdo|big|br|button|cite|code|del|dfn|em|i|img|ins|input|label|map|kbd|q|samp|select|small|span|strong|sub|sup|textarea|tt|var';
-      
+
       // Convert "ignore" tags to temporary marker.  The parser splits out the string at every tag
       // it encounters.  Certain inline tags, like image tags, links, span tags, etc. will be
       // adversely affected if they are split out so we'll convert the opening bracket < temporarily to: {@TAG}
@@ -302,8 +301,8 @@ class sfTypography {
       //    Etc...
       //  }
       $chunks = preg_split('/(<(?:[^<>]+(?:"[^"]*"|\'[^\']*\')?)+>)/', $string, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
-      
-      // Build our finalized string.  
+
+      // Build our finalized string.
       // We cycle through the array, skipping tags, and processing the contained text
       $string = '';
       $process = true;
@@ -312,7 +311,7 @@ class sfTypography {
 
       $blockElements = 'address|blockquote|div|dl|fieldset|form|h\d|hr|noscript|object|ol|p|pre|script|table|ul';
       $skipElements   = 'p|pre|ol|ul|dl|object|table|h\d';
-      
+
       foreach($chunks as $chunk)
       {
         $current_chunk++;
@@ -332,8 +331,8 @@ class sfTypography {
 
           $string .= $chunk;
           continue;
-        } 
-        
+        }
+
         if($process == false)
         {
           $string .= $chunk;
@@ -347,20 +346,20 @@ class sfTypography {
         }
 
         // Convert Newlines into <p> and <br /> tags
-        $string .= $this->formatNewlines($chunk); 
+        $string .= $this->formatNewlines($chunk);
       }
-      
+
       // No opening block level tag? Add it if needed.
       if(!preg_match("/^\s*<(?:" . $blockElements . ")/i", $string))
       {
         $string = preg_replace("/^(.*?)<(" . $blockElements . ")/i", '<p>$1</p><$2', $string);
       }
-      
+
     }
-    
+
     $string = $this->formatCharacters($string, $isHtml);
-    
-      
+
+
     // restore HTML comments
     for($i = 0, $total = count($html_comments); $i < $total; $i++)
     {
@@ -369,7 +368,7 @@ class sfTypography {
       // if '<p>{@HC1}' then replace <p>{@HC1}</p> with the comment, else replace only {@HC1} with the comment
       $string = preg_replace('#(?(?=<p>\{@HC' . $i . '\})<p>\{@HC' . $i . '\}(\s*</p>)|\{@HC' . $i . '\})#s', $html_comments[$i], $string);
     }
-        
+
     if($isHtml)
     {
       // Final clean up
@@ -422,18 +421,18 @@ class sfTypography {
     }
     return trim($string);
   }
-  
+
   /**
    * Corrects the string for typography mistakes and hyphenates the words
-   * 
+   *
    * @param string $string
-   * @return string 
+   * @return string
    */
   public function correctAndHyphenate($string)
   {
     return $this->hyphenate($this->correct($string));
   }
-  
+
   /**
    * This is the static way of correcting a string.
    *
@@ -446,7 +445,7 @@ class sfTypography {
    *
    * @return string The hyphenated string
    */
-  public static function correctStatic($string, 
+  public static function correctStatic($string,
           $options = null, $apllyFilters = null)
   {
     if(null === $options)
@@ -458,7 +457,7 @@ class sfTypography {
     {
       $apllyFilters = array();
     }
-    
+
     if(!isset($options ['language']))
     {
       $options['language'] = self::getDefaultLanguage();
@@ -466,10 +465,10 @@ class sfTypography {
 
     // Get the instance for the language.
     $typo = self::getInstance($options['language']);
-    
+
     unset($options['language']);
     $typo->setOptions($options);
-        
+
     return $typo->correct($string, $apllyFilters);
   }
 
@@ -508,22 +507,22 @@ class sfTypography {
    * (eg. returns or tabstops) and it will fail with texts containing markup
    * in any way.
    *
-   * @param string $string The string to hyphenate   
+   * @param string $string The string to hyphenate
    * @return string The hyphenated string
    */
   public function hyphenate($string)
   {
     $html = $this->isStringHtml($string);
-    
+
     if($html)
     {
       $array = preg_split('/([\s<>])/', $string, -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE);
-    }      
+    }
     else
     {
       $array = preg_split('/([\s])/', $string, -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE);
     }
-    
+
     $size = count($array);
 
     // HTML
@@ -532,20 +531,20 @@ class sfTypography {
       $inTag    = $inSkip = false;
       $skip     = $this->getSkipTags();
       $skipEnd  = $this->getSkipTagsEnd();
-      
+
       for($i = 0; $i < $size; $i++)
       {
         if(!$inTag && sfUtf8::sub($array[$i], 0, 1) == '<')
         {
           $inTag = true;
         }
-        
+
         if(!$inSkip && $i + 2 < $size && in_array($array[$i].$array[$i + 1], $skip))
         {
           $inSkip = true;
         }
-        
-        if(!$inTag && !$inSkip && !((sfUtf8::sub($array[$i], 0, 1) == '&'                 
+
+        if(!$inTag && !$inSkip && !((sfUtf8::sub($array[$i], 0, 1) == '&'
                 && sfUtf8::sub($array[$i], -1, 1) == ';')))
         {
           $array[$i] = $this->hyphenateWord($array[$i]);
@@ -555,7 +554,7 @@ class sfTypography {
         {
           $inTag = false;
         }
-          
+
         if($i + 2 < $size && in_array($array[$i] . $array[$i + 1] . $array[$i + 2], $skipEnd))
         {
           $inSkip = false;
@@ -585,7 +584,7 @@ class sfTypography {
    * @return string the hyphenated word
    */
   public function hyphenateWord($word)
-  {    
+  {
     // If the Word is empty, return an empty string.
     if('' === trim($word))
     {
@@ -613,7 +612,7 @@ class sfTypography {
     {
       return str_replace('&shy;', $this->options['hyphen'], $word);
     }
-        
+
     // Replace a custom hyphenate-string with the hyphen.
     $result = $this->replaceCustomHyphen($word);
     if(false !== $result)
@@ -627,7 +626,7 @@ class sfTypography {
     {
       return $word;
     }
-    
+
     // Hyphenate words containing special strings for further processing, so
     // put a zerowidthspace after it and hyphenate the parts separated by
     // the special string.
@@ -636,10 +635,10 @@ class sfTypography {
     {
       return $result;
     }
-    
+
     // Is it a pre-hyphenated word?
-    // we have this block here twice (once again in doHyphenateWord) 
-    if(isset($this->hyphenation[sfUtf8::lower($word)])) 
+    // we have this block here twice (once again in doHyphenateWord)
+    if(isset($this->hyphenation[sfUtf8::lower($word)]))
     {
       // split word to individual characters
       $chars            = preg_split('//u', $word, -1, PREG_SPLIT_NO_EMPTY);
@@ -680,19 +679,19 @@ class sfTypography {
     {
       return $word;
     }
-    
+
     // If one or more special characters appear before or after a word
     // we take the word in between and hyphenate that asn append and prepend
     // the special characters later on.
     if(preg_match('/([' . $specials . ']*)([^' . $specials . ']+)([' . $specials . ']*)/u', $word, $result))
-    {      
+    {
       $prepend = $result[1];
       $word = $result[2];
       $append = $result[3];
     }
 
     // Is it a pre-hyphenated word?
-    if(isset($this->hyphenation[sfUtf8::lower($word)])) 
+    if(isset($this->hyphenation[sfUtf8::lower($word)]))
     {
       // split word to individual characters
       $chars            = preg_split('//u', $word, -1, PREG_SPLIT_NO_EMPTY);
@@ -709,11 +708,11 @@ class sfTypography {
       // put the word back
       return $prepend . str_replace('-', $this->options['hyphen'], join('', $chars)) . $append;
     }
-    
+
     $result = array();
 
     $positions = $this->getHyphenationPositions($word);
-    
+
     $wl = sfUtf8::len($word);
     $lastOne = 0;
 
@@ -736,10 +735,10 @@ class sfTypography {
         $result[] = $sylable;
       }
     }
-    
+
     $result[] = sfUtf8::sub($word, $lastOne);
     $return = $prepend . trim(implode($this->options['hyphen'], $result)) . $append;
-    
+
     return $return;
   }
 
@@ -764,7 +763,7 @@ class sfTypography {
     {
       $maxl = $wl - $s;
       $window = sfUtf8::sub($w, $s);
-      for($l = $this->options['hyphenate_shortest_pattern']; 
+      for($l = $this->options['hyphenate_shortest_pattern'];
       $l <= $maxl && $l <= $this->options['hyphenate_longest_pattern']; $l++)
       {
         $part = sfUtf8::sub($window, 0, $l);
@@ -812,12 +811,12 @@ class sfTypography {
    */
   private function isNotToBeHyphenated($word)
   {
-    if((null === $this->options['no_hyphenate_string']) || 
+    if((null === $this->options['no_hyphenate_string']) ||
             (0 !== strpos($word, $this->options['no_hyphenate_string'])))
     {
       return false;
     }
-    
+
     $string = str_replace($this->options['no_hyphenate_string'], '', $word);
     $string = str_replace($this->options['custom_hyphen'], '', $string);
     if(null !== $this->options['customized_marker'] && true === $this->options['mark_customized'])
@@ -836,12 +835,12 @@ class sfTypography {
    */
   private function replaceCustomHyphen($word)
   {
-    if((null === $this->options['custom_hyphen']) || 
+    if((null === $this->options['custom_hyphen']) ||
             (false === strpos($word, $this->options['custom_hyphen'])))
     {
       return false;
     }
-    
+
     $string = str_replace($this->options['custom_hyphen'], $this->options['hyphen'], $word);
     if(null !== $this->options['customized_marker'] && true === $this->options['mark_customized'])
     {
@@ -991,7 +990,7 @@ class sfTypography {
   {
     if(is_string($quality))
     {
-      $quality = constant(sprintf('self::HYPHENATE_QUALITY_%s', 
+      $quality = constant(sprintf('self::HYPHENATE_QUALITY_%s',
                   strtoupper($quality)));
     }
     $this->options['hyphenate_quality'] = (int) $quality;
@@ -1014,7 +1013,7 @@ class sfTypography {
     $this->options['custom_hyphen'] = $customHyphen;
     return $this;
   }
-  
+
   /**
    * Get the marker for custom hyphenations
    *
@@ -1023,7 +1022,7 @@ class sfTypography {
   public function getCustomHyphen()
   {
     return (string) $this->options['custom_hyphen'];
-  }  
+  }
 
   /**
    * Set a string that marks a words not to hyphenate
@@ -1094,7 +1093,7 @@ class sfTypography {
 
   /**
    * Returns an array of tags to be skipped
-   * 
+   *
    * @return array
    */
   public function getSkipTags()
@@ -1131,7 +1130,7 @@ class sfTypography {
   {
     return (string) $this->options['customized_marker'];
   }
-  
+
   /**
    * Format Characters
    *
@@ -1145,9 +1144,9 @@ class sfTypography {
    * @return  string
    */
   public function formatCharacters($string, $isHtml = false)
-  {    
+  {
       // build language specific replacements
-      
+
       $table = array(
           // nested smart quotes, opening and closing
           // note that rules for grammar (English) allow only for two levels deep
@@ -1181,32 +1180,32 @@ class sfTypography {
           '/\s?\-\-\s?/' => '&#8212;',
           // více než tři tečky za sebou zredukuje na tři
           '#\.{4,}#' => '...',
-  
+
           // když po ,.;:?! rovnou následuje písmeno, pak za ní udělá mezeru
           // '#([,\.;\:\?\!])([a-zA-Záčďéíňóřšťúůýž]|\{@TAG\})#' => '\\1 \\2',
-          
+
           '/(\w)\.{3}/u' => '$1&hellip;',
           // double space after sentences
           // '/(\W)  /' => '$1&nbsp; ',
           // ampersands, if not a character entity
           '/&(?!#?[a-zA-Z0-9]{2,};)/u' => '&amp;',
-          
+
           // odstraní mezery před interpunkčními znaménky
           '# ([,\.;\:\?\!])#u' => '\\1',
-      
+
           // odstraní opakované vykřičníky nebo otazníky
           '#\!{2,}#u' => '!',
-          '#\?{2,}#u' => '?',          
+          '#\?{2,}#u' => '?',
       );
 
-    
+
 
     // $table['#\.{3}#'] = '&hellip;';
 
     return preg_replace(array_keys($table), $table, $string);
   }
-  
-  
+
+
   /**
    * Protect Characters
    *
@@ -1221,10 +1220,10 @@ class sfTypography {
    */
   function protectCharacters($match)
   {
-    return str_replace(array("'", '"', '--', '  '), 
+    return str_replace(array("'", '"', '--', '  '),
             array('{@SQ}', '{@DQ}', '{@DD}', '{@NBS}'), $match[0]);
   }
-  
+
   /**
    * Format Newlines
    *
@@ -1246,7 +1245,7 @@ class sfTypography {
     {
       return $string;
     }
-    
+
     return $string;
 
     // Convert two consecutive newlines to paragraphs
@@ -1270,25 +1269,25 @@ class sfTypography {
 
     return $string;
   }
-  
+
   /**
    * Does string contain HTML code?
-   * 
+   *
    * @param string $string
-   * @return boolean 
+   * @return boolean
    */
   protected function isStringHtml($string)
   {
     // does string contain html?
-    return preg_match("/([\<])([^\>]{1,})*([\>])/i", $string);    
+    return preg_match("/([\<])([^\>]{1,})*([\>])/i", $string);
   }
-  
+
   /**
    * Puts non-breakable space after one-letter Czech prepositions like 'k', 's', 'v' or 'z'.
-   * 
+   *
    * @param type $string String to be corrected
    * @param array $options Array of options
-   * @return string 
+   * @return string
    */
   public function wrapWords($string, $options = array())
   {
@@ -1301,45 +1300,45 @@ class sfTypography {
 
     $matches = array();
     $replacements = array();
-    
+
     if(count($wordMatches))
     {
-      // matches    
+      // matches
       $matches['words'] = sprintf('@(^|;| |&nbsp;|\(|\n)(%s) @iu', join('|', $wordMatches));
       $replacements['words'] = '$1$2&nbsp;';
     }
-    
-    if(isset($options['numbers']) && $options['numbers'] 
+
+    if(isset($options['numbers']) && $options['numbers']
         || !isset($options['numbers']))
     {
       $matches['numbers'] = '@(\d) (\d)@iu';
-      $replacements['numbers'] = '$1&nbsp;$2';         
+      $replacements['numbers'] = '$1&nbsp;$2';
     }
-    
+
     if(!count($matches))
     {
       return $string;
-    }  
-        
+    }
+
     // we are dealing with HTML code
     if($this->isStringHtml($string))
     {
-      $array = preg_split('/(<.*>|\[.*\])/Us', $string, -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE);      
-      
+      $array = preg_split('/(<.*>|\[.*\])/Us', $string, -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE);
+
       $ignoreTagStack   = array();
       $ignoreMacroStack = array();
-      $skipTagsExpr   = count($this->skipTags) ? '(' . implode('|', $this->skipTags) . ')' : false; 
+      $skipTagsExpr   = count($this->skipTags) ? '(' . implode('|', $this->skipTags) . ')' : false;
       $skipMacrosExpr = count($this->skipMacros) ? '(' . implode('|', $this->skipMacros) . ')' : false;
-      
-      for($i = 0, $stop = count($array); $i < $stop; $i++) 
+
+      for($i = 0, $stop = count($array); $i < $stop; $i++)
       {
         if(!empty($array[$i]) && '<' != $array[$i]{0} && '[' != $array[$i]{0}
-          && ($skipMacrosExpr && empty($ignoreTagStack)) 
+          && ($skipMacrosExpr && empty($ignoreTagStack))
           && ($skipMacrosExpr && empty($ignoreMacroStack)))
         { // If it's not a tag
           $array[$i] = preg_replace($matches, $replacements, $array[$i]);
         }
-        else 
+        else
         {
           $this->pushAndPopElement($array[$i], $ignoreTagStack, $skipTagsExpr, '<', '>');
           $this->pushAndPopElement($array[$i], $ignoreMacroStack, $skipMacrosExpr, '[', ']');
@@ -1352,11 +1351,11 @@ class sfTypography {
       return preg_replace($matches, $replacements, $string);
     }
   }
-  
+
    /**
     * Search for disabled element tags. Push element to stack on tag open and pop
     * on tag close. Assumes first character of $text is tag opening.
-    * 
+    *
     * This has been taken from Wordpress _wptexturize_pushpop_element() function.
     *
     * @param string $text Text to check. First character is assumed to be $opening
@@ -1398,5 +1397,5 @@ class sfTypography {
       }
     }
   }
-  
+
 }

@@ -19,13 +19,10 @@
  * # <b>db_id_col</b>    - [sess_id]   - The database column in which the session id will be stored.
  * # <b>db_data_col</b>  - [sess_data] - The database column in which the session data will be stored.
  * # <b>db_time_col</b>  - [sess_time] - The database column in which the session timestamp will be stored.
- * # <b>session_name</b> - [symfony]   - The name of the session.
+ * # <b>session_name</b> - [sessionId]   - The name of the session.
  *
  * @package    Sift
  * @subpackage storage
- * @author     Mathew Toth <developer@poetryleague.com>
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @author     Sean Kerr <sean@code-box.org>
  */
 class sfPDOSessionStorage extends sfSessionStorage
 {
@@ -212,7 +209,7 @@ class sfPDOSessionStorage extends sfSessionStorage
       }
     }
     catch (PDOException $e)
-    {     
+    {
       throw new sfDatabaseException(sprintf('PDOException was thrown when trying to manipulate session data. Message: %s', $e->getMessage()));
     }
   }

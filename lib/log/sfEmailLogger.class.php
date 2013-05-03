@@ -11,7 +11,6 @@
  *
  * @package    Sift
  * @subpackage log
- * @author     Gordon Franke <gfranke@nevalon.de>
  * @link       http://www.nevalon.de
  */
 class sfEmailLogger extends sfLogger

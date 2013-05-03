@@ -7,7 +7,7 @@
  */
 
 /**
- * sfPluginManager allows you to manage symfony plugins installation and uninstallation.
+ * sfPluginManager allows you to manage Sift plugins installation and uninstallation.
  *
  * @package    Sift
  * @subpackage plugin

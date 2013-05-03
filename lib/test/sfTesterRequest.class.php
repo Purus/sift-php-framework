@@ -6,13 +6,11 @@
  * file that was distributed with this source code.
  */
 
-
 /**
- * sfTesterRequest implements tests for the symfony request object.
+ * sfTesterRequest implements tests for the Sift request object.
  *
  * @package    Sift
  * @subpackage test
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com> 
  */
 class sfTesterRequest extends sfTester
 {

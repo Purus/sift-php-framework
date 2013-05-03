@@ -11,7 +11,6 @@
  *
  * @package    Sift
  * @subpackage response
- * @author     Tristan Rivoallan <trivoallan@clever-age.com>
  */
 class sfConsoleResponse extends sfResponse
 {

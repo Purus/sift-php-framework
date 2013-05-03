@@ -13,8 +13,6 @@
  *
  * @package    Sift
  * @subpackage feed
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @author     Francois Zaninotto <francois.zaninotto@symfony-project.com>
  */
 class sfFeed {
 
@@ -323,7 +321,7 @@ class sfFeed {
     }
 
     echo count($this->getItems());
-    
+
     if(count($updates))
     {
       $updates = array_unique($updates);
@@ -331,7 +329,7 @@ class sfFeed {
       return $updates[count($updates)-1];
       return array_pop($updates);
     }
-    
+
     return false;
   }
 

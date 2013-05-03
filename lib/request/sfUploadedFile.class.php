@@ -5,13 +5,12 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
- 
+
 /**
  * sfUploadedFile represents an uploaded file.
  *
  * @package    Sift
  * @subpackage request
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  */
 class sfUploadedFile implements ArrayAccess
 {
@@ -34,7 +33,7 @@ class sfUploadedFile implements ArrayAccess
   {
     $self = new self($file['name'], $file['type'], $file['tmp_name'], $file['size']);
     if(isset($file['error']))
-    {   
+    {
       $self->error = $file['error'];
     }
     return $self;
@@ -61,9 +60,9 @@ class sfUploadedFile implements ArrayAccess
     $this->size         = $size;
     $this->path         = $path;
     $this->sanitizedName = sfFilesystem::sanitizeFilename($this->originalName);
-    
-    // don't trust what browser said!    
-    $this->type         = $this->isUploaded() ? $this->detectMimeType($tempName) : $this->fixMimeType($type);    
+
+    // don't trust what browser said!
+    $this->type         = $this->isUploaded() ? $this->detectMimeType($tempName) : $this->fixMimeType($type);
   }
 
   /**
@@ -142,7 +141,7 @@ class sfUploadedFile implements ArrayAccess
     chmod($file, $fileMode);
 
     $this->savedName = $file;
-    
+
     return is_null($this->path) ? $file : str_replace($this->path.DIRECTORY_SEPARATOR, '', $file);
   }
 
@@ -153,7 +152,7 @@ class sfUploadedFile implements ArrayAccess
    */
   public function generateFilename()
   {
-    return substr(sha1($this->getOriginalName().rand(11111, 99999)), 0, 8) . 
+    return substr(sha1($this->getOriginalName().rand(11111, 99999)), 0, 8) .
             $this->getExtension($this->getOriginalExtension());
   }
 
@@ -174,7 +173,7 @@ class sfUploadedFile implements ArrayAccess
   /**
    * Returns the error
    *
-   * @return string 
+   * @return string
    */
   public function getError()
   {
@@ -304,7 +303,7 @@ class sfUploadedFile implements ArrayAccess
   {
     return $this->sanitizedName;
   }
-  
+
   /**
    * Returns the mime type of a file.
    *
@@ -318,13 +317,13 @@ class sfUploadedFile implements ArrayAccess
    */
   protected function detectMimeType($file)
   {
-    return sfMimeType::getTypeFromFile($file, 'application/octet-stream', 
+    return sfMimeType::getTypeFromFile($file, 'application/octet-stream',
             $this->originalName);
   }
 
   /**
    * Fixes mime type
-   * 
+   *
    * @param string $mime
    * @return string
    */
@@ -347,7 +346,7 @@ class sfUploadedFile implements ArrayAccess
   }
 
   public function offsetSet($offset, $value)
-  {    
+  {
     throw new sfException('You cannot modify the uploaded file.');
   }
 
@@ -360,7 +359,7 @@ class sfUploadedFile implements ArrayAccess
     }
     return false;
   }
-  
+
   public function offsetUnset($var)
   {
     throw new sfException('You cannot modify the uploaded file.');
@@ -392,18 +391,18 @@ class sfUploadedFile implements ArrayAccess
       break;
 
       default:
-        
+
         if(isset($this->data[$var]))
         {
           return $this->data[$var];
         }
-        
+
       break;
     }
-    
+
     throw new sfException(sprintf('Error in offsetGet(). "%s" is not valid.', $var));
   }
-  
+
   public function __call($method, $arguments)
   {
     $verb   = substr($method, 0, 3);
@@ -417,10 +416,10 @@ class sfUploadedFile implements ArrayAccess
     }
     elseif($verb == 'set')
     {
-      throw new sfException('You cannot modify the uploaded file.'); 
+      throw new sfException('You cannot modify the uploaded file.');
     }
-    
-    throw new sfException(sprintf('Unknown method "%s"', $method));    
+
+    throw new sfException(sprintf('Unknown method "%s"', $method));
   }
 
 }

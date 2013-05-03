@@ -40,7 +40,7 @@ class sfCliLogRotateTask extends sfCliBaseTask
     $this->briefDescription = 'Rotates an application\'s log files';
 
     $scriptName = $this->environment->get('script_name');
-    
+
     $this->detailedDescription = <<<EOF
 The [log:rotate|INFO] task rotates application log files for a given
 environment:
@@ -68,11 +68,10 @@ EOF;
    *
    * @param  string $app       Application name
    * @param  string $env       Enviroment name
-   * @param  string $period    Period 
+   * @param  string $period    Period
    * @param  string $history   History
    * @param  bool   $override  Override
    *
-   * @author Joe Simms
    * @todo Use sfLogManager!
    */
   public function rotate($app, $env, $period = null, $history = null, $override = false)

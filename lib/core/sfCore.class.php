@@ -5,7 +5,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
- 
+
 if(!function_exists('http_build_url'))
 {
   define('HTTP_URL_REPLACE', 1);          // Replace every part of the first URL when there's one of the second URL
@@ -29,7 +29,6 @@ if(!defined('DS')) define('DS', DIRECTORY_SEPARATOR);
  *
  * @package    Sift
  * @subpackage core
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  */
 class sfCore
 {
@@ -37,7 +36,7 @@ class sfCore
    * Framework version
    */
   const VERSION = '1.0.0';
-  
+
   /**
    * Shorthand for carrige return.
    */
@@ -57,23 +56,23 @@ class sfCore
    * Shorthand for path separator.
    */
   const PS = PATH_SEPARATOR;
-  
+
   /**
    *
    * @var boolean
    */
   protected static $bootstrapped = false;
-  
+
   /**
    * Project instance holder
-   * 
-   * @var sfProject 
+   *
+   * @var sfProject
    */
   static protected $project = null;
-  
+
   /**
    * Returns an instance of given application
-   * 
+   *
    * @param string $application Application name
    * @param string $environment Environment
    * @param boolean $debug Turn on debug feature?
@@ -81,13 +80,13 @@ class sfCore
    * @throws RuntimeException If Sift has not been boostrapped yet
    */
   public static function getApplication($application, $environment, $debug = false)
-  {    
+  {
     return self::getProject()->getApplication($application, $environment, $debug);
   }
-  
+
   /**
    * Returns project instance
-   * 
+   *
    * @return sfProject
    * @throws RuntimeException
    */
@@ -99,20 +98,20 @@ class sfCore
     }
     return self::$project;
   }
-  
+
   /**
    * Is Sift bounded to an existing project?
-   * 
+   *
    * @return boolean
    */
   public static function hasProject()
   {
-    return isset(self::$project);    
+    return isset(self::$project);
   }
-  
+
   /**
    * Binds a project
-   * 
+   *
    * @param sfProject $project
    * @return boolean
    */
@@ -125,14 +124,14 @@ class sfCore
   /**
    * Setups (X)html generation for sfHtml and sfWidget classes
    * based on sf_html5 setting
-   * 
+   *
    * @see sfProject
    */
   public static function initHtmlTagConfiguration()
   {
     return self::getProject()->initHtmlTagConfiguration();
-  }  
-  
+  }
+
   /**
    * Returns event dispatcher
    *
@@ -142,10 +141,10 @@ class sfCore
   {
     return self::getProject()->getActiveApplication()->getEventDispatcher();
   }
-  
+
   /**
    * Bootstraps the framework
-   * 
+   *
    * @param string $sf_sift_lib_dir
    * @param string $sf_sift_data_dir
    * @param boolean $test Should be bootstrapped in test mode?
@@ -156,13 +155,13 @@ class sfCore
     {
       return;
     }
-    
+
     if(!defined('SF_ROOT_DIR'))
     {
       throw new sfException('Root directory is not defined. Define SF_ROOT_DIR constant.');
     }
-    
-    $config = array(        
+
+    $config = array(
       'sf_root_dir'       => SF_ROOT_DIR,
       'sf_sift_lib_dir'   => $sf_sift_lib_dir,
       'sf_sift_data_dir'  => $sf_sift_data_dir,
@@ -170,7 +169,7 @@ class sfCore
     );
 
     $projectFile = SF_ROOT_DIR . '/lib/myProject.class.php';
-    
+
     if(is_readable($projectFile))
     {
       require_once $projectFile;
@@ -180,15 +179,15 @@ class sfCore
     {
       $class = 'sfGenericProject';
     }
-    
+
     self::bindProject(new $class($config));
-    
+
     self::$bootstrapped = true;
   }
 
   /**
-   * Displays error page 
-   * 
+   * Displays error page
+   *
    * @param sfException $exception
    * @param string $error
    */
@@ -270,7 +269,7 @@ class sfCore
    *                           and +1 if $version is newer.
    */
   public static function compareVersion($version)
-  {    
+  {
     return version_compare($version, self::getVersion());
   }
 
@@ -283,16 +282,16 @@ class sfCore
   {
     return self::getProject()->getActiveApplication()->getCoreHelpers();
   }
-  
+
   /**
    * Returns current Sift version
-   * 
+   *
    * @return string
    */
   public static function getVersion()
   {
     return self::VERSION;
   }
-  
+
 }
 

@@ -11,7 +11,6 @@
  *
  * @package    Sift
  * @subpackage view
- * @author     Mike Squire <mike@somosis.co.uk>
  */
 abstract class sfOutputEscaperGetterDecorator extends sfOutputEscaper
 {

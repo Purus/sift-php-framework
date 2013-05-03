@@ -7,7 +7,6 @@
  */
 
 /**
- *
  * sfImagePolygonGD class.
  *
  * Draws a polygon.
@@ -16,7 +15,6 @@
  *
  * @package Sift
  * @subpackage image
- * @author Stuart Lowes <stuart.lowes@gmail.com>
  */
 class sfImagePolygonGD extends sfImageTransformAbstract
 {

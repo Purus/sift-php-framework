@@ -12,7 +12,6 @@
  *
  * @package    Sift
  * @subpackage validator
- * @author     Mishal.cz <mishal at mishal dot cz>
  * @link       http://vvv.tobiassjosten.net/symfony/stopping-spam-with-symfony-forms/
  */
 class sfValidatorSpamProtectTimer extends sfValidatorBase {

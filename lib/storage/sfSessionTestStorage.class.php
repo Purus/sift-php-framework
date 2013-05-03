@@ -11,7 +11,6 @@
  *
  * @package    Sift
  * @subpackage storage
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  */
 class sfSessionTestStorage extends sfStorage
 {

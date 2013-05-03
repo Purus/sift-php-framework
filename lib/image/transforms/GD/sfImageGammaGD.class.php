@@ -7,14 +7,12 @@
  */
  
 /**
- *
  * sfImageGammaGD class.
  *
  * Apply a gamma correction to a GD image.
  *
  * @package Sift
  * @subpackage image
- * @author Stuart Lowes <stuart.lowes@gmail.com>
  */
 class sfImageGammaGD extends sfImageTransformAbstract
 {

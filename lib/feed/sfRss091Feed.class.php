@@ -11,8 +11,7 @@
  *
  * @package    Sift
  * @subpackage feed
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * */
+ */
 class sfRss091Feed extends sfRssFeed {
 
   protected $version = '0.91';

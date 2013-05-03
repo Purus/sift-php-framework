@@ -11,7 +11,6 @@
  *
  * @package    Sift
  * @subpackage action
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  */
 abstract class sfComponents extends sfComponent {
 

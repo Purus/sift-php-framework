@@ -13,7 +13,6 @@
  *
  * @package   Sift
  * @subpackage i18n
- * @author    Christian Weiske <cweiske@php.net>
  * @link      http://www.loc.gov/standards/iso639-2/php/code_list.php
  */
 class sfISO639 {

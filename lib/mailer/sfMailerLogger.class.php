@@ -11,7 +11,6 @@
  *
  * @package    Sift
  * @subpackage mailer
- * @author     Mishal.cz <mishal@mishal.cz>
  */
 class sfMailerLogger extends Swift_Plugins_MessageLogger {
 

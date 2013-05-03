@@ -13,7 +13,6 @@
  *
  * @package Sift
  * @subpackage image
- * @author Stuart Lowes <stuart.lowes@gmail.com>
  */
 class sfImageUnsharpMaskImageMagick extends sfImageTransformAbstract
 {

@@ -12,7 +12,6 @@
  * @see        sfOutputEscaper
  * @package    Sift
  * @subpackage view
- * @author     Mike Squire <mike@somosis.co.uk>
  */
 class sfOutputEscaperArrayDecorator extends sfOutputEscaperGetterDecorator implements Iterator, ArrayAccess, Countable
 {

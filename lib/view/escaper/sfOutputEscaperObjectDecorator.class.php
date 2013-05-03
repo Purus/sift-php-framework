@@ -12,8 +12,7 @@
  *
  * @package    Sift
  * @subpackage view
- * @author     Mike Squire <mike@somosis.co.uk>
- * */
+ */
 class sfOutputEscaperObjectDecorator extends sfOutputEscaperGetterDecorator implements Countable
 {
   /**

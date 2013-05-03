@@ -11,7 +11,6 @@
  *
  * @package    Sift
  * @subpackage log
- * @author     Joe Simms
  */
 class sfLogManager
 {
@@ -30,7 +29,6 @@ class sfLogManager
    * @param string History
    * @param boolean Override
    *
-   * @author Joe Simms
    **/
   public static function rotate($app, $env, $period = null, $history = null, $override = false)
   {

@@ -61,7 +61,7 @@ class sfMailerMessage extends Swift_Message {
 
     $charset = isset($config['charset']) ? $config['charset'] : sfConfig::get('sf_charset');
     // setup character set,
-    // use the one set in mail.yml or symfony's default
+    // use the one set in mail.yml or Sift's default
     $this->setCharset($charset);
 
     // set maximum line length

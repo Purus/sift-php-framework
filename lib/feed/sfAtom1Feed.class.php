@@ -10,12 +10,9 @@
  * sfAtom1Feed.
  *
  * Specification: http://www.ietf.org/rfc/rfc4287.txt
- * 
+ *
  * @package    Sift
  * @subpackage feed
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @author     Francois Zaninotto <francois.zaninotto@symfony-project.com>
- * @author     Stefan Koopmanschap <stefan.koopmanschap@symfony-project.com>
  */
 class sfAtom1Feed extends sfFeed {
 
@@ -25,7 +22,7 @@ class sfAtom1Feed extends sfFeed {
   {
     $this->initialize($params);
   }
-  
+
   protected function initContext()
   {
     if(!$this->context)
@@ -96,7 +93,7 @@ class sfAtom1Feed extends sfFeed {
       }
       $url = (string) $itemXml->link['href'];
       $pubdate = strtotime(str_replace(array('UT', 'Z'), '', (string) $itemXml->published));
-      
+
       if(!$pubdate)
       {
         if((string) $itemXml->updated)
@@ -199,7 +196,7 @@ class sfAtom1Feed extends sfFeed {
       $xml[] = '  <link rel="self" href="' . $controller->genUrl($this->getFeedUrl(), true) . '"></link>';
     }
     $xml[] = '  <id>' . $controller->genUrl($this->getLink(), true) . '</id>';
-    
+
     $xml[] = '  <updated>' . gmstrftime('%Y-%m-%dT%H:%M:%SZ', $this->getLatestPostDate()) . '</updated>';
     //$xml[] = '  <updated>' . gmdate(DATE_ATOM, $this->getLatestPostDate()) . '</updated>';
 

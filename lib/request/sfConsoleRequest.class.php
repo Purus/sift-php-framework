@@ -11,8 +11,6 @@
  *
  * @package    Sift
  * @subpackage request
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @author     Sean Kerr <sean@code-box.org>
  */
 class sfConsoleRequest extends sfRequest
 {
@@ -56,7 +54,7 @@ class sfConsoleRequest extends sfRequest
   {
     return false;
   }
-  
+
   public function getHost()
   {
     return false;
@@ -76,5 +74,5 @@ class sfConsoleRequest extends sfRequest
   {
     return false;
   }
-  
+
 }

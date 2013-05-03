@@ -11,7 +11,6 @@
  *
  * @package    Sift
  * @subpackage filter
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  */
 class sfCacheFilter extends sfFilter {
 
@@ -90,7 +89,7 @@ class sfCacheFilter extends sfFilter {
       else
       {
         $inCache = $this->getActionCache($uri);
-        
+
         $this->cache[$uri]['action'] = !$inCache;
       }
     }

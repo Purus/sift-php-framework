@@ -11,7 +11,6 @@
  *
  * @package    Sift
  * @subpackage feed
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  */
 class sfFeedEnclosure {
 
@@ -24,7 +23,7 @@ class sfFeedEnclosure {
   {
     $this->initialize($params);
   }
-  
+
   /**
    * Defines the feed enclosure properties, based on an associative array.
    *

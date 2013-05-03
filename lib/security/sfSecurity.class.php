@@ -13,7 +13,6 @@
  * Based on the sfActionCredentialsGetterPlugin by Ronald B. Cemer.
  * http://www.symfony-project.org/plugins/sfActionCredentialsGetterPlugin
  * 
- * @author Mishal <mishal at mishal dot cz>
  * @package Sift
  * @subpackage security
  */

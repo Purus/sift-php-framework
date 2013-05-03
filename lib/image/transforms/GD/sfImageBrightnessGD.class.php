@@ -5,16 +5,14 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
- 
+
 /**
- *
  * sfImageBrightnessGD class.
  *
  * Sets the brightness of a GD image.
  *
  * @package Sift
  * @subpackage image
- * @author Stuart Lowes <stuart.lowes@gmail.com> 
  */
 class sfImageBrightnessGD extends sfImageTransformAbstract
 {

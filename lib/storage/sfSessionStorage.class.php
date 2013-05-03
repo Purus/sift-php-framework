@@ -7,7 +7,7 @@
  */
 
 /**
- * sfSessionStorage allows you to store persistent symfony data in the user session.
+ * sfSessionStorage allows you to store persistent data in the user session.
  *
  * Available parameters:
  *
@@ -21,8 +21,6 @@
  *
  * @package    Sift
  * @subpackage storage
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @author     Sean Kerr <sean@code-box.org>
  */
 class sfSessionStorage extends sfStorage
 {
@@ -63,7 +61,7 @@ class sfSessionStorage extends sfStorage
     $domain   = $this->getParameter('session_cookie_domain',   $cookieDefaults['domain']);
     $secure   = $this->getParameter('session_cookie_secure',   $cookieDefaults['secure']);
     $httpOnly = $this->getParameter('session_cookie_httponly', isset($cookieDefaults['httponly']) ? $cookieDefaults['httponly'] : false);
-    
+
     if(version_compare(phpversion(), '5.2', '>='))
     {
       session_set_cookie_params($lifetime, $path, $domain, $secure, $httpOnly);
@@ -145,5 +143,5 @@ class sfSessionStorage extends sfStorage
   {
     // don't need a shutdown procedure because read/write do it in real-time
   }
-  
+
 }

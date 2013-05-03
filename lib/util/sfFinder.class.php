@@ -21,7 +21,6 @@
  *
  * @package    Sift
  * @subpackage util
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  */
 class sfFinder {
 

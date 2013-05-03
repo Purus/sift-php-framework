@@ -11,8 +11,6 @@
  *
  * @package    Sift
  * @subpackage action
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @author     Sean Kerr <sean@code-box.org>
  */
 abstract class sfActions extends sfAction {
 
@@ -35,13 +33,13 @@ abstract class sfActions extends sfAction {
 
     if($actionToRun === 'execute')
     {
-      // no action given      
+      // no action given
       throw new sfInitializationException(sprintf('sfAction initialization failed for module "%s". There was no action given.', $this->getModuleName()));
     }
 
     if(!is_callable(array($this, $actionToRun)))
     {
-      // action not found      
+      // action not found
       throw new sfInitializationException(sprintf('sfAction initialization failed for module "%s", action "%s". You must create a "%s" method.', $this->getModuleName(), $this->getActionName(), $actionToRun));
     }
 

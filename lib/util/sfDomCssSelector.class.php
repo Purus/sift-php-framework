@@ -16,7 +16,6 @@
  *
  * @package    Sift
  * @subpackage util
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  */
 class sfDomCssSelector implements Countable, Iterator
 {
@@ -93,7 +92,7 @@ class sfDomCssSelector implements Countable, Iterator
 
     return $nodes;
   }
-  
+
   public function getTexts($selector)
   {
     $texts = array();
@@ -103,7 +102,7 @@ class sfDomCssSelector implements Countable, Iterator
     }
 
     return $texts;
-  }  
+  }
 
   protected function getElementsForNode($selector, $root_node)
   {

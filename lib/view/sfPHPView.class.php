@@ -11,8 +11,6 @@
  *
  * @package    Sift
  * @subpackage view
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @author     Sean Kerr <sean@code-box.org>
  */
 class sfPHPView extends sfView
 {
@@ -84,7 +82,7 @@ class sfPHPView extends sfView
     {
       $timer = sfTimerManager::getTimer('View');
     }
-    
+
     if(sfConfig::get('sf_logging_enabled'))
     {
       sfLogger::getInstance()->log(sprintf('{sfView} Render "%s"', $_sfFile));
@@ -115,13 +113,13 @@ class sfPHPView extends sfView
     {
       $timer->addTime();
     }
-    
+
     return ob_get_clean();
   }
-  
+
   /**
    * Returns an array of variable to be accessible to template
-   * 
+   *
    * @return array
    */
   protected function getVariables()
@@ -129,28 +127,28 @@ class sfPHPView extends sfView
     $attributes = array();
 
     // filter by event system
-    $parameters = sfCore::filterByEventListeners($this->attributeHolder->getAll(), 
+    $parameters = sfCore::filterByEventListeners($this->attributeHolder->getAll(),
             'view.template.variables', array(
             'view' => $this
     ));
 
     if($this->getEscaping())
     {
-      $attributes['sf_data'] = sfOutputEscaper::escape($this->getEscapingMethod(), $parameters);      
+      $attributes['sf_data'] = sfOutputEscaper::escape($this->getEscapingMethod(), $parameters);
       foreach($attributes['sf_data'] as $key => $value)
       {
         $attributes[$key] = $value;
-      }     
+      }
     }
     else
     {
       $attributes = $parameters;
-      $attributes['sf_data'] = sfOutputEscaper::escape(ESC_RAW, $parameters);      
+      $attributes['sf_data'] = sfOutputEscaper::escape(ESC_RAW, $parameters);
     }
 
-    return $attributes;      
+    return $attributes;
   }
-  
+
   /**
    * Retrieves the template engine associated with this view.
    *
@@ -209,7 +207,7 @@ class sfPHPView extends sfView
     $this->attributeHolder->set('sf_content', $content);
 
     // render the decorator template and return the result
-    return $this->renderFile($template);    
+    return $this->renderFile($template);
   }
 
   /**
@@ -294,8 +292,8 @@ class sfPHPView extends sfView
         {
           $retval = sfCore::filterByEventListeners($retval, 'view.cache.filter_content', array(
             'uri' => $key,
-            'new' => true  
-          ));          
+            'new' => true
+          ));
         }
       }
     }

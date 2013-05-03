@@ -7,14 +7,14 @@
  */
 
 /**
- * sfInflector provides method for converting strings to: 
+ * sfInflector provides method for converting strings to:
+ *
  *  * camelize
  *  * underscore
  *  * demodulize ...
  *
  * @package    Sift
  * @subpackage util
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  */
 class sfInflector {
 

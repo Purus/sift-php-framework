@@ -22,7 +22,7 @@
  *
  * @package    Sift
  * @subpackage validator_legacy
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
+ * @deprecated
  */
 class sfFileValidator extends sfValidator
 {

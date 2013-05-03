@@ -5,7 +5,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
- 
+
 /**
  * sfImageOpacityImageMagick class
  *
@@ -13,8 +13,6 @@
  *
  * @package Sift
  * @subpackage image
- * @author Stuard Lowes <stuart.lowes@gmail.com>
- * @author Miloslav Kmet <miloslav.kmet@gmail.com>
  */
 class sfImageOpacityGD extends sfImageTransformAbstract
 {

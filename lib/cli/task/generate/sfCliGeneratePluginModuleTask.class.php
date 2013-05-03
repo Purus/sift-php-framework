@@ -8,10 +8,9 @@
 
 /**
  * Wraps the generate module task to create a plugin module
- * 
+ *
  * @package     Sift
  * @subpackage  cli_task
- * @author      Kris Wallsmith <kris.wallsmith@symfony-project.com>
  */
 class sfCliGeneratePluginModuleTask extends sfCliGeneratorBaseTask {
 
@@ -30,7 +29,7 @@ class sfCliGeneratePluginModuleTask extends sfCliGeneratorBaseTask {
     $this->briefDescription = 'Generates a new module in a plugin';
 
     $scriptName = $this->environment->get('script_name');
-    
+
     $this->detailedDescription = <<<EOF
 The [generate:plugin-module|INFO] task creates the basic directory structure
 for a new module in an existing plugin:

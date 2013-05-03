@@ -3,7 +3,7 @@
 ## Sift PHP framework
 
 Sift is a fork of symfony 1.0 framework with backports from version 1.4.
-symfony is licensed under MIT license. [] 
+symfony is licensed under MIT license. []
 
 Symfony 1.x is originally based on Mojavi3 by Sean Kerr <sean@code-box.org>
 
@@ -11,7 +11,7 @@ Symfony 1.x is originally based on Mojavi3 by Sean Kerr <sean@code-box.org>
 
 Sift I18n component is based on i18n classes from Prado framework which is license
 under modified BSD license. [http://www.pradosoft.com/license/]
- 
+
 ## International Components for Unicode
 
 Sift uses CLDR database from CLDR - Unicode Common Locale Data Repository [http://cldr.unicode.org/]
@@ -25,3 +25,20 @@ which is license under GPLv2.
 ## Hypnenation component
 
 Sift uses hyphenation patterns from hyph-utf8 for TeX. [http://tug.org/tex-hyphen/#introduction]
+
+## Image component
+
+Sift uses code originally written by Stuart Lowes <stuart.lowes@gmail.com> and its contributors.
+
+## Other component
+
+Sift uses code developed by other authors such:
+
+ * Thibault Duplessis <thibault.duplessis at gmail dot com>
+ * Will Bond <will@flourishlib.com>
+ * Jan Kuchař (http://mujserver.net)
+ * Fuel Development Team (http://fuelphp.com)
+ * Alex Gilbert <alex@punkave.com>
+ * Mike Squire <mike@somosis.co.uk>
+ * Dustin Whittle <dustin.whittle@symfony-project.com>
+ * and others ...

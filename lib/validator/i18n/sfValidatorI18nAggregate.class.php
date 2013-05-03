@@ -45,18 +45,14 @@ class sfValidatorI18nAggregate extends sfValidatorAnd {
    */
   public function doClean($value)
   {
-    $cultures = $this->getOption('cultures');
-
-    if($cultures instanceof sfCallable)
-    {
-      $cultures = $cultures->call();
-    }
+    $cultures = $this->getCultures();
 
     $clean = $value;
     $errors = array();
 
     $validators = $this->getValidators();
 
+    $first = true;
     // loop all cultures and validate the value
     foreach($cultures as $culture => $cultureName)
     {
@@ -67,6 +63,16 @@ class sfValidatorI18nAggregate extends sfValidatorAnd {
 
       foreach($validators as $validator)
       {
+        if(!$first)
+        {
+          // dynamically update validator option,
+          // so only the first is required
+          if(!$this->getOption('all_need_to_pass') && $validator->getOption('required'))
+          {
+            $validator->setOption('required', false);
+          }
+        }
+
         try
         {
           $clean[$culture] = $validator->clean(isset($clean[$culture]) ? $clean[$culture] : null);
@@ -75,31 +81,24 @@ class sfValidatorI18nAggregate extends sfValidatorAnd {
         {
           // repack error
           $error = new sfValidatorError($validator, $e->getCode(), array_merge(
-                  $e->getArguments(true), array('culture' => $culture)));
+                  $e->getArguments(true), array('culture_name' => $cultureName, 'culture' => $culture)));
 
           $errors[] = $error;
+
           if($this->getOption('halt_on_error'))
           {
             break;
           }
         }
       }
+
+      $first = false;
     }
 
     // we have some errors
     if(count($errors))
     {
-      if($this->getOption('all_need_to_pass'))
-      {
-        $this->throwError($errors, $value);
-      }
-      // all need to pass is false
-      elseif($this->getOption('halt_on_error')
-        // we have errors
-        && count($errors) === count($cultures))
-      {
-        $this->throwError($errors, $value);
-      }
+      $this->throwError($errors, $value);
     }
 
     return $clean;
@@ -121,6 +120,23 @@ class sfValidatorI18nAggregate extends sfValidatorAnd {
     }
 
     throw new sfValidatorErrorSchema($this, $errors);
+  }
+
+  /**
+   * Returns cultures
+   *
+   * @return array
+   */
+  protected function getCultures()
+  {
+    $cultures = $this->getOption('cultures');
+
+    if($cultures instanceof sfCallable)
+    {
+      $cultures = $cultures->call();
+    }
+
+    return $cultures;
   }
 
 }

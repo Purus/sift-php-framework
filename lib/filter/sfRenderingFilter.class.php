@@ -12,7 +12,6 @@
  *
  * @package    Sift
  * @subpackage filter
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  */
 class sfRenderingFilter extends sfFilter {
 
@@ -33,7 +32,7 @@ class sfRenderingFilter extends sfFilter {
     {
       return;
     }
-      
+
     if(sfConfig::get('sf_logging_enabled'))
     {
       $this->getContext()->getLogger()->info('{sfFilter} render to client');
@@ -41,12 +40,12 @@ class sfRenderingFilter extends sfFilter {
 
     // get response object
     $response = $this->getContext()->getResponse();
-    
+
     // send headers + content
     if(sfView::RENDER_VAR != $this->getContext()->getController()->getRenderMode())
     {
       $response->send();
-    }    
+    }
 
     // log timers information
     if(sfConfig::get('sf_debug') && sfConfig::get('sf_logging_enabled'))

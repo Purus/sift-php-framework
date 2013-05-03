@@ -7,14 +7,12 @@
  */
 
 /**
- *
  * sfImageGaussianBlurGD class.
  *
  * Blurs the image using the Gaussian method.
  *
  * @package Sift
  * @subpackage image
- * @author Stuart Lowes <stuart.lowes@gmail.com>
  */
 class sfImageGaussianBlurGD extends sfImageTransformAbstract
 {

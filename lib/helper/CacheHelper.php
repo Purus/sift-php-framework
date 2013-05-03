@@ -11,8 +11,8 @@
  *
  * @package    Sift
  * @subpackage helper
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  */
+
 
 /* Usage
 
@@ -26,13 +26,12 @@
 */
 function cache($name, $lifeTime = 86400)
 {
-  $context = sfContext::getInstance();
-
   if (!sfConfig::get('sf_cache'))
   {
     return null;
   }
-
+  
+  $context = sfContext::getInstance();
   $request = $context->getRequest();
   $cache   = $context->getViewCacheManager();
 
@@ -60,13 +59,12 @@ function cache($name, $lifeTime = 86400)
 
 function cache_save()
 {
-  $context = sfContext::getInstance();
-
   if (!sfConfig::get('sf_cache'))
   {
     return null;
   }
 
+  $context = sfContext::getInstance();
   $request = $context->getRequest();
 
   if (is_null($request->getAttribute('started', null, 'sift/action/sfAction/cache')))

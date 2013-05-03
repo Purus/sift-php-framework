@@ -7,7 +7,6 @@
  */
 
 /**
- *
  * sfImageResizeSimple class.
  *
  * Resizes image.
@@ -16,7 +15,6 @@
  *
  * @package Sift
  * @subpackage image
- * @author Stuart Lowes <stuart.lowes@gmail.com>
  */
 class sfImageResizeSimpleGD extends sfImageTransformAbstract
 {

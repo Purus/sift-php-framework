@@ -11,7 +11,6 @@
  *
  * @package    Sift
  * @subpackage debug
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  */
 class sfDebug {
 
@@ -32,9 +31,9 @@ class sfDebug {
   }
 
   /**
-   * Returns symfony information as an array.
+   * Returns Sift information as an array.
    *
-   * @return array An array of symfony information
+   * @return array An array of Sift information (version, lib_dir, data_dir)
    */
   public static function frameworkInfoAsArray()
   {
@@ -46,7 +45,7 @@ class sfDebug {
   }
 
   /**
-   * Shortens a file path by replacing symfony directory constants.
+   * Shortens a file path by replacing Sift directory constants.
    *
    * @param  string $file
    *

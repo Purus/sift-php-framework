@@ -143,7 +143,7 @@ class sfPearPluginManager extends sfConfigurable {
    * Installs a plugin.
    *
    * If you don't pass a version, it will install the latest version available
-   * for the current project symfony version.
+   * for the current project Sift version.
    *
    * Available options:
    *

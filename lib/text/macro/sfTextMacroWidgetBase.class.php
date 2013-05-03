@@ -18,15 +18,10 @@ abstract class sfTextMacroWidgetBase implements sfTextMacroWidget {
   /**
    * Display the widget as HTML, if available
    *
-   * @static
-   * @protected
-   * @author oncletom
-   
-   * @since 1.3
-   * @return $html String HTML shortcode equivalent
    * @param $attributes Array
    * @param $value String[optional]
    * @param $class String[optional]
+   * @return $html String HTML shortcode equivalent
    */
   public static function getHtml($attributes, $value = null)
   {

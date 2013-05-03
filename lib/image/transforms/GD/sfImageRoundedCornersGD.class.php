@@ -11,7 +11,6 @@
  *
  * @package Sift
  * @subpackage image
- * @author Christian Schaefer <caefer@ical.ly>
  */
 class sfImageRoundedCornersGD extends sfImageAlphaMaskGD {
 

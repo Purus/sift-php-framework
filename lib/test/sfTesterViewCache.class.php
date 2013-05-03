@@ -7,11 +7,10 @@
  */
 
 /**
- * sfTesterViewCache implements tests for the symfony view cache manager.
+ * sfTesterViewCache implements tests for the Sift view cache manager.
  *
  * @package    Sift
  * @subpackage test
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com> 
  */
 class sfTesterViewCache extends sfTester
 {
@@ -32,7 +31,7 @@ class sfTesterViewCache extends sfTester
    */
   public function initialize()
   {
-    $this->viewCacheManager = $this->browser->getContext()->getViewCacheManager();    
+    $this->viewCacheManager = $this->browser->getContext()->getViewCacheManager();
     $this->routing = sfRouting::getInstance();
     $this->response = $this->browser->getResponse();
   }

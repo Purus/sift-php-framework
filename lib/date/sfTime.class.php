@@ -11,13 +11,12 @@
  *
  * @package Sift
  * @subpackage date
- * @author  Stephen Riesenberg <sjohnr@gmail.com>
  */
 class sfTime {
 
   /**
    * Units of time
-   */  
+   */
   const SECOND = 0;
   const MINUTE = 1;
   const HOUR = 2;
@@ -611,7 +610,7 @@ class sfTime {
    * Returns the timestamp for first day of the week for the given date.
    *
    * @param	timestamp
-   * @param integer|string|sfCulture|sfI18nDateTimFormat First day of week is 0 = sunday or something else? 1 is for Monday, 
+   * @param integer|string|sfCulture|sfI18nDateTimFormat First day of week is 0 = sunday or something else? 1 is for Monday,
    *                or culture string ("cs_CZ") to load the first day automatically
    * @return	timestamp
    */
@@ -622,7 +621,7 @@ class sfTime {
     {
       $ts = sfDateTimeToolkit::now();
     }
-    
+
     if(is_string($firstDay))
     {
       $firstDay = sfCulture::getInstance($firstDay)
@@ -648,7 +647,7 @@ class sfTime {
    * Returns the timestamp for last day of the week for the given date.
    *
    * @param	timestamp
-   * @param integer|string|sfCulture|sfI18nDateTimFormat First day of week is 0 = sunday or something else? 1 is for Monday or string 
+   * @param integer|string|sfCulture|sfI18nDateTimFormat First day of week is 0 = sunday or something else? 1 is for Monday or string
    *                for culture
    * @return	timestamp
    * @see firstDayOfWeek

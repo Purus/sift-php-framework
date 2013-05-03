@@ -9,10 +9,7 @@
 require_once(dirname(__FILE__).'/../vendor/lime/lime.php');
 
 /**
- * sfTestBrowser simulates a browser which can test a symfony application.
- *
- * sfTestFunctional is backward compatible class for symfony 1.0, and 1.1.
- * For new code, you can use the sfTestFunctional class directly.
+ * sfTestBrowser simulates a browser which can test a Sift application.
  *
  * @package    Sift
  * @subpackage test

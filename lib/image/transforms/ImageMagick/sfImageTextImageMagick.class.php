@@ -7,7 +7,6 @@
  */
 
 /**
- *
  * sfImageTextImageMagick class.
  *
  * Adds text to the image.
@@ -16,7 +15,6 @@
  *
  * @package Sift
  * @subpackage image
- * @author Robin Corps <robin@ngse.co.uk>
  */
 class sfImageTextImageMagick extends sfImageTransformAbstract
 {

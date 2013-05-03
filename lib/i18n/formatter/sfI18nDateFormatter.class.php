@@ -8,17 +8,17 @@
 
 /**
  * sfI18nDateFormatter class.
- * 
- * The sfI18nDateFormatter class allows you to format dates and times with 
- * predefined styles in a locale-sensitive manner. Formatting times 
+ *
+ * The sfI18nDateFormatter class allows you to format dates and times with
+ * predefined styles in a locale-sensitive manner. Formatting times
  * with the sfI18nDateFormatter class is similar to formatting dates.
  *
- * Formatting dates with the sfI18nDateFormatter class is a two-step process. 
- * First, you create a formatter with the getDateInstance method. 
- * Second, you invoke the format method, which returns a string containing 
- * the formatted date. 
+ * Formatting dates with the sfI18nDateFormatter class is a two-step process.
+ * First, you create a formatter with the getDateInstance method.
+ * Second, you invoke the format method, which returns a string containing
+ * the formatted date.
  *
- * DateTime values are formatted using standard or custom patterns stored 
+ * DateTime values are formatted using standard or custom patterns stored
  * in the properties of a sfI18nDateTimeFormat.
  *
  * @package Sift
@@ -28,7 +28,7 @@ class sfI18nDateFormatter {
 
   /**
    * A list of tokens and their function call.
-   * @var array 
+   * @var array
    */
   protected $tokens = array(
       'G' => 'Era',
@@ -52,13 +52,13 @@ class sfI18nDateFormatter {
 
   /**
    * A list of methods, to be used by the token function calls.
-   * @var array 
+   * @var array
    */
   protected $methods = array();
 
   /**
    * The sfI18nDateTimeFormat, containing culture specific patterns and names.
-   * @var sfI18nDateTimeFormat   
+   * @var sfI18nDateTimeFormat
    */
   protected $formatInfo;
 
@@ -93,7 +93,6 @@ class sfI18nDateFormatter {
   /**
    * Guesses a date without calling strtotime.
    *
-   * @author Olivier Verdier <Olivier.Verdier@gmail.com>
    * @param mixed  $time    the time as integer or string in strtotime format.
    * @param string $pattern the input pattern; default is sql date or timestamp
    * @return array same array as the getdate function
@@ -109,7 +108,7 @@ class sfI18nDateFormatter {
     {
       $time = $time->getTimestamp();
     }
-    
+
     // if the type is not a php timestamp
     $isString = (string) $time !== (string) (int) $time;
 
@@ -204,7 +203,7 @@ class sfI18nDateFormatter {
    * @param string  $pattern        the pattern
    * @param string  $inputPattern   the input pattern
    * @param string  $charset        the charset
-   * @return string formatted date time. 
+   * @return string formatted date time.
    */
   public function format($time, $pattern = 'F', $inputPattern = null, $charset = 'UTF-8')
   {
@@ -268,7 +267,7 @@ class sfI18nDateFormatter {
    * Gets the pattern from sfI18nDateFormat or some predefined patterns.
    * If the $pattern parameter is an array of 2 element, it will assume
    * that the first element is the date, and second the time
-   * and try to find an appropriate pattern and apply 
+   * and try to find an appropriate pattern and apply
    * sfI18nDateFormatter::formatDateTime
    * See the tutorial documentation for futher details on the patterns.
    *
@@ -373,7 +372,7 @@ class sfI18nDateFormatter {
   /**
    * Tokenizes the pattern. The tokens are delimited by group of
    * similar characters, e.g. 'aabb' will form 2 tokens of 'aa' and 'bb'.
-   * Any substrings, starting and ending with a single quote (') 
+   * Any substrings, starting and ending with a single quote (')
    * will be treated as a single token.
    *
    * @param string $pattern pattern.
@@ -567,7 +566,7 @@ class sfI18nDateFormatter {
   }
 
   /**
-   * Gets the hours in 24 hour format, i.e. [0-23]. 
+   * Gets the hours in 24 hour format, i.e. [0-23].
    * "H" for non-padding, "HH" will always return 2 characters.
    *
    * @param array   $date     getdate format.
@@ -607,7 +606,7 @@ class sfI18nDateFormatter {
   }
 
   /**
-   * Gets the hours in 12 hour format. 
+   * Gets the hours in 12 hour format.
    * "h" for non-padding, "hh" will always return 2 characters.
    *
    * @param array   $date     getdate format.
@@ -682,7 +681,7 @@ class sfI18nDateFormatter {
    * @todo How to get the timezone for a different region?
    * @param array   $date     getdate format.
    * @param string  $pattern  a pattern.
-   * @return string time zone 
+   * @return string time zone
    */
   protected function getTimeZone($date, $pattern = 'z')
   {

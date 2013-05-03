@@ -18,10 +18,6 @@
  *
  * @package    Sift
  * @subpackage util
- * @author     Fabien Potencier <fabien.potencier@gmail.com> php port
- * @author     Richard Clamp <richardc@unixbeard.net> perl version
- * @copyright  2004-2005 Fabien Potencier <fabien.potencier@gmail.com>
- * @copyright  2002 Richard Clamp <richardc@unixbeard.net>
  */
 class sfGlobToRegex {
 

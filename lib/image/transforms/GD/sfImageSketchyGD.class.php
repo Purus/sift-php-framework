@@ -5,16 +5,14 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
- 
+
 /**
- *
  * sfImageSketchyGD class.
  *
  * Embosses the image.
  *
  * @package Sift
  * @subpackage image
- * @author Stuart Lowes <stuart.lowes@gmail.com>
  */
 class sfImageSketchyGD extends sfImageTransformAbstract
 {

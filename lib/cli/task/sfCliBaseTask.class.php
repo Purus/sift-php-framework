@@ -325,10 +325,6 @@ abstract class sfCliBaseTask extends sfCliCommandApplicationTask
       {
         $find = $properties['project'];
       }
-      elseif(isset($properties['symfony']))
-      {
-        $find = $properties['symfony'];
-      }
 
       return isset($find[$property]) ? $find[$property] : $default;
     }

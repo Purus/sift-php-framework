@@ -7,7 +7,6 @@
  */
 
 /**
- *
  * Adds support for icons/images for atom and rss feeds in an unified extensible way.
  * Both (rss and atom) specs are quite limited, but this class should cope with possible enhancements.
  * Note that not everything is used. Atom at the moment only takes favicon (1:1 ratio) and
@@ -16,7 +15,6 @@
  *
  * @package    Sift
  * @subpackage feed
- * @author     Fabian Lange <fabian.lange@web.de>
  */
 class sfFeedImage {
 

@@ -26,11 +26,11 @@ class sfCliGenerateCryptKeyTask extends sfCliBaseTask
     $this->namespace = 'security';
     $this->name = 'generate-crypt-key';
     $this->aliases = array('gencryptkey');
-    
+
     $this->briefDescription = 'Generates crypt key (requires Openssl)';
 
     $scriptName = $this->environment->get('script_name');
-    
+
     $this->detailedDescription = <<<EOF
 The [security:generate-crypt-key|INFO] task generates security key for project or application.
 (Requires Openssl)
@@ -55,10 +55,10 @@ EOF;
     {
       $this->checkAppExists($arguments['application']);
       $app = $arguments['application'];
-    }  
-    
+    }
+
     $this->logSection($this->getFullName(), 'Generating crypt key...');
-    
+
     try
     {
       $command = 'openssl rand -base64 2048';
@@ -69,23 +69,23 @@ EOF;
     {
       throw $e;
     }
-    
+
     // safety check
     if(strlen(base64_decode($newKey)) !== 2048)
     {
       throw new sfException('Generated key has incorrect size, aborting.');
-    }    
+    }
 
     // we are generating key for application
     if($app)
     {
-      $keyFilePath = $this->environment->get('sf_apps_dir') . 
+      $keyFilePath = $this->environment->get('sf_apps_dir') .
                      '/' . $app . '/' . $this->environment->get('sf_config_dir_name')
                      . '/crypt.key';
-    } 
+    }
     else
     {
-      $keyFilePath = $this->environment->get('sf_root_dir') . '/' . 
+      $keyFilePath = $this->environment->get('sf_root_dir') . '/' .
                     $this->environment->get('sf_config_dir_name') . '/crypt.key';
     }
 
@@ -94,18 +94,18 @@ EOF;
     if($keyFileExists)
     {
       $backupFileName = 'crypt.key.' . time() . '.backup';
-      $this->logSection($this->getFullName(), 'Key already exists. Moving old to backup.');    
-      $filesystem->rename($keyFilePath, dirname($keyFilePath).'/'.$backupFileName);    
+      $this->logSection($this->getFullName(), 'Key already exists. Moving old to backup.');
+      $filesystem->rename($keyFilePath, dirname($keyFilePath).'/'.$backupFileName);
     }
-  
+
     $keyFileHandle = fopen($keyFilePath, 'w');
     fwrite($keyFileHandle, $newKey);
     fclose($keyFileHandle);
-    
+
     // change permission of newly created file to read for everyone
-    $filesystem->chmod($keyFilePath, 0444);     
-    
-    $this->logSection($this->getFullName(), 'Done.');  
+    $filesystem->chmod($keyFilePath, 0444);
+
+    $this->logSection($this->getFullName(), 'Done.');
   }
 
   /**
@@ -113,11 +113,10 @@ EOF;
    *
    * @param  string $app       Application name
    * @param  string $env       Enviroment name
-   * @param  string $period    Period 
+   * @param  string $period    Period
    * @param  string $history   History
    * @param  bool   $override  Override
    *
-   * @author Joe Simms
    **/
   public function rotate($app, $env, $period = null, $history = null, $override = false)
   {

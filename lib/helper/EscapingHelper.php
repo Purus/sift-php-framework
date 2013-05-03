@@ -25,7 +25,6 @@
  *
  * @package    Sift
  * @subpackage helper
- * @author     Mike Squire <mike@somosis.co.uk>
  */
 
 /**
@@ -105,4 +104,4 @@ function esc_js_no_entities($value)
                      $value);
 }
 
-define('ESC_JS_NO_ENTITIES', 'esc_js_no_entities'); 
+define('ESC_JS_NO_ENTITIES', 'esc_js_no_entities');

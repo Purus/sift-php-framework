@@ -11,9 +11,6 @@
  *
  * @package    Sift
  * @subpackage database
- * @author     Daniel Swarbrick (daniel@pressure.net.nz)
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @author     Sean Kerr <sean@code-box.org>
  */
 class sfPDODatabase extends sfDatabase {
 

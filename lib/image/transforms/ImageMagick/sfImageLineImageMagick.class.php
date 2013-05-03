@@ -7,14 +7,12 @@
  */
 
 /**
- *
  * sfImageLineImageMagick class.
  *
  * Draws a line on a ImageMagick image.
  *
  * @package Sift
  * @subpackage image
- * @author Stuart Lowes <stuart.lowes@gmail.com>
  */
 class sfImageLineImageMagick extends sfImageTransformAbstract
 {

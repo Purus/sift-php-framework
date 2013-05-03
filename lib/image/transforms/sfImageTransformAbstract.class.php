@@ -7,7 +7,6 @@
  */
 
 /**
- *
  * sfImageTransform class.
  *
  * Abstract class.
@@ -16,8 +15,6 @@
  *
  * @package Sift
  * @subpackage image
- * @author Miloslav Kmet <miloslav.kmet@gmail.com>
- * @author Stuart Lowes <stuart.lowes@gmail.com>
  */
 abstract class sfImageTransformAbstract {
 

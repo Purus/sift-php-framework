@@ -11,7 +11,6 @@
  *
  * @package    Sift
  * @subpackage autoload
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  */
 class sfSimpleAutoload {
 

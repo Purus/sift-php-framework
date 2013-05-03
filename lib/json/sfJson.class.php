@@ -11,7 +11,6 @@
  *
  * @package    Sift
  * @subpackage json
- * @author     Mishal.cz <mishal@mishal.cz>
  */
 class sfJson {
 

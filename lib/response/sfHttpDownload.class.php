@@ -22,9 +22,6 @@
  *
  * @package    Sift
  * @subpackage response
- * @author     Mishal <mishal at mishal dot cz>
- * @author     Michael Wallner <mike@php.net>
- * @author     Nguyen Quoc Bao <quocbao.coder@gmail.com>
  */
 class sfHttpDownload extends sfConfigurable {
 

@@ -5,13 +5,12 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
- 
+
 /**
  * sfCacheConfigHandler allows you to configure cache.
  *
  * @package    Sift
  * @subpackage config
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  */
 class sfCacheConfigHandler extends sfYamlConfigHandler
 {

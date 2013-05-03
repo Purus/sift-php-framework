@@ -11,7 +11,6 @@
  *
  * @package    Sift
  * @subpackage action
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  */
 abstract class sfComponent {
 
@@ -349,7 +348,7 @@ abstract class sfComponent {
 
   /**
    * Returns true if a flash variable of the specified name exists.
-   * 
+   *
    * @param  string The name of the flash variable
    *
    * @return boolean   true if the variable exists, false otherwise

@@ -5,14 +5,14 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 /**
  * sfPostCodeValidator allows you to validate post codes for given countries
  * or using custom regular expression
  *
  * @package    Sift
  * @subpackage validator_legacy
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @author     Sean Kerr <sean@code-box.org>
+ * @deprecated
  */
 class sfPostCodeValidator extends sfValidator {
 

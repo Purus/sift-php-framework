@@ -8,13 +8,12 @@
 
 /**
  * Color utility and conversion
- * 
+ *
  * Represents a color value, and converts between RGB/HSV/XYZ/Lab
- * 
+ *
  * Example:
  * $color = new sfColor(0xFFFFFF);
- * 
- * @author Harold Asbridge <hasbridge@gmail.com>
+ *
  * @see http://www.lateralcode.com/color-manager/
  * @package Sift
  * @subpackage color
@@ -23,7 +22,7 @@ class sfColor {
 
   /**
    * Map of color names
-   * 
+   *
    * @var array
    */
   protected static $namedColors = array(
@@ -82,32 +81,32 @@ class sfColor {
 
   /**
    * Red mask
-   * 
+   *
    * @var integer
    */
   protected static $maskRed = 0xff0000;
 
   /**
    * Green mask
-   * 
-   * @var integer 
+   *
+   * @var integer
    */
   protected static $maskGreen = 0x00ff00;
 
   /**
    * Blue mask
-   * 
-   * @var integer 
+   *
+   * @var integer
    */
   protected static $maskBlue = 0x0000ff;
 
   /**
-   * The web-safe colors do not all have standard names, 
-   * but each can be specified by an RGB triplet: 
-   * each component (red, green, and blue) takes one of the six values 
-   * from the following table (out of the 256 possible values available 
+   * The web-safe colors do not all have standard names,
+   * but each can be specified by an RGB triplet:
+   * each component (red, green, and blue) takes one of the six values
+   * from the following table (out of the 256 possible values available
    * for each component in full 24-bit color).
-   * 
+   *
    * @var array
    * @see http://en.wikipedia.org/wiki/Web_colors#Web-safe_colors
    */
@@ -120,7 +119,7 @@ class sfColor {
 
   /**
    * Initialize object
-   * 
+   *
    * @param int $color An integer color
    */
   public function __construct($color = null)
@@ -156,9 +155,9 @@ class sfColor {
 
   /**
    * Init color from hex value
-   * 
+   *
    * @param string $hexValue
-   * 
+   *
    * @return Color
    */
   public function fromHex($hexValue)
@@ -181,12 +180,12 @@ class sfColor {
 
   /**
    * Init color from integer RGB values
-   * 
+   *
    * @param int $red
    * @param int $green
    * @param int $blue
-   * 
-   * @return Color 
+   *
+   * @return Color
    */
   public function fromRgbInt($red, $green, $blue)
   {
@@ -197,12 +196,12 @@ class sfColor {
 
   /**
    * Init color from integer RGB values
-   * 
+   *
    * @param int $red
    * @param int $green
    * @param int $blue
-   * 
-   * @return sfColor 
+   *
+   * @return sfColor
    */
   public function fromRgbArray($rgb)
   {
@@ -211,11 +210,11 @@ class sfColor {
 
   /**
    * Init color from hex RGB values
-   * 
+   *
    * @param string $red
    * @param string $green
    * @param string $blue
-   * 
+   *
    * @return Color
    */
   public function fromRgbHex($red, $green, $blue)
@@ -225,9 +224,9 @@ class sfColor {
 
   /**
    * Init color from hex RGB values
-   * 
+   *
    * @param string $rgb
-   * 
+   *
    * @return sfColor
    */
   public function fromRgbHexArray($rgb)
@@ -237,9 +236,9 @@ class sfColor {
 
   /**
    * Init color from integer value
-   * 
+   *
    * @param int $intValue
-   * 
+   *
    * @return Color
    */
   public function fromInt($intValue)
@@ -251,7 +250,7 @@ class sfColor {
 
   /**
    * Convert color to hex
-   * 
+   *
    * @return string
    */
   public function toHex()
@@ -261,7 +260,7 @@ class sfColor {
 
   /**
    * Convert color to RGB array (integer values)
-   * 
+   *
    * @return array
    */
   public function toRgbInt()
@@ -275,7 +274,7 @@ class sfColor {
 
   /**
    * Convert color to RGB array (hex values)
-   * 
+   *
    * @return array
    */
   public function toRgbHex()
@@ -284,9 +283,9 @@ class sfColor {
   }
 
   /**
-   * Get Hue/Saturation/Value for the current color 
+   * Get Hue/Saturation/Value for the current color
    * (float values, slow but accurate)
-   * 
+   *
    * @return array
    */
   public function toHsvFloat()
@@ -354,8 +353,8 @@ class sfColor {
   /**
    * Get HSV values for color
    * (integer values from 0-255, fast but less accurate)
-   * 
-   * @return int 
+   *
+   * @return int
    */
   public function toHsvInt()
   {
@@ -407,7 +406,7 @@ class sfColor {
 
   /**
    * Convert color to integer
-   * 
+   *
    * @return int
    */
   public function toInt()
@@ -417,7 +416,7 @@ class sfColor {
 
   /**
    * Alias of toString()
-   * 
+   *
    * @return string
    */
   public function __toString()
@@ -427,7 +426,7 @@ class sfColor {
 
   /**
    * Get color as string
-   * 
+   *
    * @return string
    */
   public function toString()
@@ -442,9 +441,9 @@ class sfColor {
 
   /**
    * Get the distance between this color and the given color
-   * 
-   * @param Color $color 
-   * 
+   *
+   * @param Color $color
+   *
    * @return int
    */
   public function getDistanceRgbFrom(sfColor $color)
@@ -463,9 +462,9 @@ class sfColor {
 
   /**
    * Detect if color is grayscale
-   * 
+   *
    * @param int @threshold
-   * 
+   *
    * @return bool
    */
   public function isGrayscale($threshold = 16)
@@ -482,9 +481,9 @@ class sfColor {
 
   /**
    * Get the closest matching color from the given array of colors
-   * 
+   *
    * @param array $colors array of integers or Color objects
-   * 
+   *
    * @return mixed the array key of the matched color
    */
   public function getClosestMatch(array $colors)
@@ -509,11 +508,11 @@ class sfColor {
 
   /**
    * Mixes two colors together with given alpha
-   * 
+   *
    * @param sfColor $color
    * @param integer $alpha
    * @return sfColor
-   * @throws InvalidArgumentException* 
+   * @throws InvalidArgumentException*
    */
   public function mix(sfColor $color, $alpha = 50)
   {
@@ -530,7 +529,7 @@ class sfColor {
     $color = $color->toRgbInt();
 
     // taken from mootools Color utility class
-    // https://github.com/mootools/mootools-more/blob/master/Source/Utilities/Color.js 
+    // https://github.com/mootools/mootools-more/blob/master/Source/Utilities/Color.js
     $red = round(($red / 100 * (100 - $alpha)) + ($color['red'] / 100 * $alpha));
     $green = round(($green / 100 * (100 - $alpha)) + ($color['green'] / 100 * $alpha));
     $blue = round(($blue / 100 * (100 - $alpha)) + ($color['blue'] / 100 * $alpha));
@@ -590,7 +589,7 @@ class sfColor {
 
   /**
    * Returns color brightness
-   * 
+   *
    * @see http://www.nbdtech.com/Blog/archive/2008/04/27/Calculating-the-Perceived-Brightness-of-a-Color.aspx
    * @return float
    * */
@@ -613,8 +612,8 @@ class sfColor {
 
   /**
    * Makes the color "websafe"
-   * 
-   * @return sfColor 
+   *
+   * @return sfColor
    */
   public function makeWebSafe()
   {
@@ -652,9 +651,9 @@ class sfColor {
 
   /**
    * Clamps the value to range 0 - 255
-   * 
+   *
    * @param integer $colorValue
-   * @return integer 
+   * @return integer
    */
   private function clamp($colorValue)
   {

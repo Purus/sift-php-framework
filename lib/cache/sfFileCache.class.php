@@ -11,8 +11,6 @@
  *
  * @package    Sift
  * @subpackage cache
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @author     Fabien Marty <fab@php.net>
  */
 class sfFileCache extends sfCache {
 
@@ -20,19 +18,19 @@ class sfFileCache extends sfCache {
   const READ_TIMEOUT = 2;
   const READ_LAST_MODIFIED = 4;
   const READ_HASH = 8;
-  
+
   const DEFAULT_NAMESPACE = '';
 
   /**
    * Array of default options. Inherits also default options
    * from sfCache
-   * 
+   *
    * @var array
    */
   protected $defaultOptions = array(
     'cache_dir' => '',
     'file_locking' => true,
-    'write_control' => false, // buggy 
+    'write_control' => false, // buggy
     'read_control' => false, // buggy
     'filename_protection' => false,
     'hashed_directory_level' => 0,
@@ -41,8 +39,8 @@ class sfFileCache extends sfCache {
 
   /**
    * Array of valid options
-   * 
-   * @var array 
+   *
+   * @var array
    */
   protected $validOptions = array(
     'cache_dir', 'file_locking',
@@ -50,12 +48,12 @@ class sfFileCache extends sfCache {
     'filename_protection', 'hashed_directory_level',
     'suffix'
   );
-  
+
   /**
    * Constructor.
    *
    * Available options:
-   * 
+   *
    *   * file_locking: Enable / disable fileLocking (can avoid cache corruption under bad circumstances)
    *   * suffix: Cache suffix - default to ".cache"
    *   * automatic_cleaning_factor:  The automatic cleaning process destroy too old (for the given life time)
@@ -63,11 +61,11 @@ class sfFileCache extends sfCache {
    *          0               => no automatic cache cleaning
    *          1               => systematic cache cleaning
    *          x (integer) > 1 => automatic cleaning randomly 1 times on x cache write
-   *   * hashed_directory_level: Nested directory level 
+   *   * hashed_directory_level: Nested directory level
    *   * write_control: Enable / disable write control (the cache is read just after writing to detect corrupt entries)
    *   * read_control:  Enable / disable read control (If enabled, a control key is embeded in cache file and this key is compared with the one calculated after the reading.)
    *   * filename_protection: Enable / disable filename protection
-   * 
+   *
    * @param array|string $cacheDir Options of the cache root directory
    */
   public function __construct($options = array())
@@ -80,18 +78,18 @@ class sfFileCache extends sfCache {
       {
         unset($options[$optionName]);
         $options[sfInflector::tableize($optionName)] = $optionValue;
-      }      
+      }
     }
-    // BC compatibility, $options is $cache_dir 
+    // BC compatibility, $options is $cache_dir
     elseif(is_string($options))
     {
       $options = array(
-        'cache_dir' => $options          
-      );            
+        'cache_dir' => $options
+      );
     }
-  
+
     parent::__construct($options);
-    
+
     $this->initialize($options);
   }
 
@@ -120,16 +118,16 @@ class sfFileCache extends sfCache {
         unset($options[$optionName]);
         $options[sfInflector::tableize($optionName)] = $optionValue;
       }
-      
+
       $this->setOptions($options);
     }
-    
+
     $this->setupCacheDir($this->getOption('cache_dir'));
   }
 
   /**
    * Sets the suffix for cache files.
-   * 
+   *
    * @param string $suffix The suffix name (with the leading .)
    * @return sfFileCache
    */
@@ -140,7 +138,7 @@ class sfFileCache extends sfCache {
 
   /**
    * Returns cache suffix
-   * 
+   *
    * @return string
    */
   public function getSuffix()
@@ -150,7 +148,7 @@ class sfFileCache extends sfCache {
 
   /**
    * Sets hashed directory level
-   * 
+   *
    * @param integer $level
    * @return sfFileCache
    */
@@ -161,7 +159,7 @@ class sfFileCache extends sfCache {
 
   /**
    * Return hashed_directory_level setting
-   * 
+   *
    * @return integer
    */
   public function getHashedDirectoryLevel()
@@ -191,7 +189,7 @@ class sfFileCache extends sfCache {
   }
 
   /**
-   * 
+   *
    * @return boolean
    */
   public function getFilenameProtection()
@@ -201,7 +199,7 @@ class sfFileCache extends sfCache {
 
   /**
    * Return cache dir
-   * 
+   *
    * @return string
    */
   public function getCacheDir()
@@ -211,7 +209,7 @@ class sfFileCache extends sfCache {
 
   /**
    * Enables / disables file locking.
-   * 
+   *
    * @param boolean $boolean
    * @return sfFileCache
    */
@@ -229,10 +227,10 @@ class sfFileCache extends sfCache {
   {
     return $this->getOption('file_locking');
   }
-  
+
   /**
    * Returns read_control config
-   * 
+   *
    * @return boolean
    */
   public function getReadControl()
@@ -242,7 +240,7 @@ class sfFileCache extends sfCache {
 
   /**
    * Enables / disables read control.
-   * 
+   *
    * @param boolean $readControl
    * @return sfFileCache
    */
@@ -250,10 +248,10 @@ class sfFileCache extends sfCache {
   {
     return $this->setOption('read_control', (boolean)$readControl);
   }
-  
+
   /**
    * Sets the cache root directory.
-   * 
+   *
    * @param string $cacheDir The directory where to put the cache files
    * @return sfFileCache
    */
@@ -266,7 +264,7 @@ class sfFileCache extends sfCache {
 
   /**
    * Setups cache directory. Creates it if it does not exist.
-   * 
+   *
    * @param string $cacheDir
    */
   protected function setupCacheDir($cacheDir)
@@ -287,8 +285,8 @@ class sfFileCache extends sfCache {
   }
 
   /**
-   * Returns cache 
-   * 
+   * Returns cache
+   *
    * @param string $id
    * @param string $namespace
    * @param boolean $doNotTestCacheValidity
@@ -426,7 +424,7 @@ class sfFileCache extends sfCache {
 
   /**
    * Checks if $path is valid
-   * 
+   *
    * @param string $path
    * @return boolean
    */
@@ -449,7 +447,7 @@ class sfFileCache extends sfCache {
     {
       return 0;
     }
-    return $data[self::READ_LAST_MODIFIED];    
+    return $data[self::READ_LAST_MODIFIED];
   }
 
   /**
@@ -478,18 +476,18 @@ class sfFileCache extends sfCache {
       // lock file
       @flock($fp, LOCK_SH);
     }
-    
+
     // return data
     $data = array();
-    
+
     // read timeout information
     $data[self::READ_TIMEOUT] = intval(@stream_get_contents($fp, 12, 0));
-    
+
     if($this->getReadControl())
     {
       $data[self::READ_HASH] = dechex(@stream_get_contents($fp, 24, 32));
     }
-    
+
     if($type != self::READ_TIMEOUT && !$doNotTestCacheValidity && (time() < $data[self::READ_TIMEOUT]))
     {
       if($type & self::READ_LAST_MODIFIED)
@@ -497,7 +495,7 @@ class sfFileCache extends sfCache {
         $data[self::READ_LAST_MODIFIED] = intval(@stream_get_contents($fp, 12, 12));
       }
       if($type & self::READ_DATA)
-      {        
+      {
         fseek($fp, 0, SEEK_END);
         $length = ftell($fp) - 24;
         fseek($fp, 24);
@@ -509,18 +507,18 @@ class sfFileCache extends sfCache {
       $data[self::READ_LAST_MODIFIED] = null;
       $data[self::READ_DATA] = null;
     }
-    
+
     if($this->getFileLocking())
-    {    
+    {
       @flock($fp, LOCK_UN);
     }
-    
+
     @fclose($fp);
-    
+
     if($this->getReadControl())
     {
     }
-    
+
     return $data;
   }
 
@@ -556,7 +554,7 @@ class sfFileCache extends sfCache {
       }
     }
 
-    return $path . $file;   
+    return $path . $file;
   }
 
   /**
@@ -570,7 +568,7 @@ class sfFileCache extends sfCache {
   {
     return @unlink($file) ? true : false;
   }
-  
+
   /**
    * Writes the given data in the cache file.
    *
@@ -602,12 +600,12 @@ class sfFileCache extends sfCache {
 
     @fwrite($fp, str_pad($timeout, 12, 0, STR_PAD_LEFT));
     @fwrite($fp, str_pad(time(), 12, 0, STR_PAD_LEFT));
-    
+
     if($this->getReadControl())
     {
       // @fwrite($fp, $this->hash($data), 32);
     }
-    
+
     @fwrite($fp, $data);
     @fclose($fp);
 

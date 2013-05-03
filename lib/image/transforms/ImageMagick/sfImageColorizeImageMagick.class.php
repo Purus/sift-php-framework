@@ -7,14 +7,12 @@
  */
 
 /**
- *
  * sfImageColorizeImageMagick class.
  *
  * Colorizes a ImageMagick image.
  *
  * @package Sift
  * @subpackage image
- * @author Stuart Lowes <stuart.lowes@gmail.com>
  */
 class sfImageColorizeImageMagick  extends sfImageTransformAbstract
 {

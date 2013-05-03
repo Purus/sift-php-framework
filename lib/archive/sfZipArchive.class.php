@@ -16,8 +16,6 @@
  *
  * @package    Sift
  * @subpackage archive
- * @author     Farzad Ghanei
- * @author     Mishal.cz <mishal@mishal.cz>
  * @link       http://www.php.net/manual/en/function.ziparchive-addfile.php#88266
  */
 class sfZipArchive extends ZipArchive {

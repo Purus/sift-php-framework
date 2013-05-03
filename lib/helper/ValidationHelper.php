@@ -11,7 +11,6 @@
  *
  * @package    Sift
  * @subpackage helper
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @deprecated
  */
 

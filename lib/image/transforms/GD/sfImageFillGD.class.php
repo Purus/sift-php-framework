@@ -7,14 +7,12 @@
  */
 
 /**
- *
  * sfImageFillGD class.
  *
  * Fills the set area with a color or tile image.
  *
  * @package Sift
  * @subpackage image
- * @author Stuart Lowes <stuart.lowes@gmail.com>
  */
 class sfImageFillGD extends sfImageTransformAbstract
 {

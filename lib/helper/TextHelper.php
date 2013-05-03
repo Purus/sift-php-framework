@@ -86,9 +86,9 @@ function simple_format_text($text, $options = array())
  * Options are :all (default), :email_addresses, and :urls.
  *
  * Example:
- *   auto_link("Go to http://www.symfony-project.com and say hello to fabien.potencier@example.com") =>
- *     Go to <a href="http://www.symfony-project.com">http://www.symfony-project.com</a> and
- *     say hello to <a href="mailto:fabien.potencier@example.com">fabien.potencier@example.com</a>
+ *   auto_link("Go to http://www.example.com and say hello to user@example.com") =>
+ *     Go to <a href="http://www.example.com">http://www.example.com</a> and
+ *     say hello to <a href="mailto:user@example.com">user@example.com</a>
  *
  * @param string $text
  * @param string $link One of "all", "email_addresses" or "urls"

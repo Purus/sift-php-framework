@@ -11,7 +11,6 @@
  *
  * @package Sift
  * @subpackage exception
- * @author Stephen Riesenberg <sjohnr@gmail.com>
  */
 class sfDateTimeException extends sfException {
 

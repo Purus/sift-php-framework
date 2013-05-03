@@ -11,6 +11,5 @@
  *
  * @package    Sift
  * @subpackage validator
- * @author     Mishal <mishal at mishal dot cz>
  */
 class sfValidatorLastName extends sfValidatorFirstName {}

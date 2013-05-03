@@ -14,7 +14,6 @@
  *
  * @package    Sift
  * @subpackage request
- * @author     Mishal.cz <mishal at mishal dot cz>
  */
 class sfRequestFiltersHolder extends sfParameterHolder implements ArrayAccess, Countable {
 

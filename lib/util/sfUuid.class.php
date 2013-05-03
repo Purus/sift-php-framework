@@ -29,7 +29,6 @@
  * in the form 8-4-4-4-12 for a total of 36 characters.*
  *
  * @see http://www.php.net/manual/en/function.uniqid.php#94959
- * @author Andrew Moore
  * @package Sift
  * @subpackage util
  */

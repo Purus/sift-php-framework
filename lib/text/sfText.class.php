@@ -48,13 +48,13 @@ class sfText {
    * @param boolean $considerHtml If true, HTML tags would be handled correctly
    * @return string Trimmed string.
    */
-  public static function truncate($text, $length = 100, 
+  public static function truncate($text, $length = 100,
           $ending = '&hellip;', $exact = false, $considerHtml = true)
   {
     // get the charset
-    $charset = sfConfig::get('sf_charset');    
+    $charset = sfConfig::get('sf_charset');
     $ending  = mb_convert_encoding($ending, sfConfig::get('sf_charset'), 'HTML-ENTITIES');
-    
+
     if($considerHtml)
     {
       if(mb_strlen(preg_replace('/<.*?>/', '', $text)) <= $length)
@@ -170,7 +170,7 @@ class sfText {
    * Highlights the +phrase+ where it is found in the +text+ by surrounding it like
    * <strong class="highlight">I'm a highlight phrase</strong>. The highlighter can be specialized by
    * passing +highlighter+ as single-quoted string with \1 where the phrase is supposed to be inserted.
-   * 
+   *
    * @param string $text
    * @param string $phrase
    * @param string $highlighter default <strong class="highlight">\1</strong>
@@ -216,9 +216,9 @@ class sfText {
       return '';
     }
 
-    $excerpt_string = mb_convert_encoding($excerpt_string, 
+    $excerpt_string = mb_convert_encoding($excerpt_string,
             sfConfig::get('sf_charset'), 'HTML-ENTITIES');
-    
+
     $found_pos = sfUtf8::pos(sfUtf8::lower($text), sfUtf8::lower($phrase));
 
     if($found_pos !== false)
@@ -284,9 +284,9 @@ class sfText {
    * Options are :all (default), :email_addresses, and :urls.
    *
    * Example:
-   *   auto_link("Go to http://www.symfony-project.com and say hello to fabien.potencier@example.com") =>
-   *     Go to <a href="http://www.symfony-project.com">http://www.symfony-project.com</a> and
-   *     say hello to <a href="mailto:fabien.potencier@example.com">fabien.potencier@example.com</a>
+   *   auto_link("Go to http://www.example.com and say hello to user.potencier@example.com") =>
+   *     Go to <a href="http://www.example.com">http://www.example.com</a> and
+   *     say hello to <a href="mailto:user@example.com">user@example.com</a>
    *
    * @param string $text
    * @param string $link One of "all", "email_addresses" or "urls"
@@ -315,7 +315,7 @@ class sfText {
 
   /**
    * Turns all email addresses into clickable links.
-   * 
+   *
    * @param <type> $text
    * @return <type>
    */
@@ -326,7 +326,7 @@ class sfText {
 
   /**
    * Turns all website addresses into clickable links.
-   * 
+   *
    * @param string $text
    * @param array $href_options
    * @return string
@@ -334,7 +334,7 @@ class sfText {
   public static function autoLinkUrls($text, $href_options = array())
   {
     sfLoader::loadHelpers('Tag');
-    
+
     $href_options = _tag_options($href_options);
     return preg_replace_callback(
       self::AUTO_LINK_RE,
@@ -353,7 +353,7 @@ class sfText {
 
   /**
    * Turns all links into words, like "<a href="something">else</a>" to "else".
-   * 
+   *
    * @param string $text
    * @return string
    */
@@ -375,18 +375,18 @@ class sfText {
   }
 
   /**
-   * This function will strip tags from a string, split it at a defined maximum length, 
+   * This function will strip tags from a string, split it at a defined maximum length,
    * and insert an ellipsis.
-   * 
+   *
    * The first parameter is the string to ellipsize, the second is the number of characters in the final string. The third parameter is where in the string the ellipsis should appear from 0 - 1, left to right. For example. a value of 1 will place the ellipsis at the right of the string, .5 in the middle, and 0 at the left.
    * An optional forth parameter is the kind of ellipsis. By default, &hellip; will be inserted.
-   * 
+   *
    * @param string $str
    * @param integer $max_length
    * @param flaot $position
    * @param string $ellipsis
    * @return string
-   * @see http://codeigniter.com/user_guide/helpers/text_helper.html 
+   * @see http://codeigniter.com/user_guide/helpers/text_helper.html
    */
   public static function ellipsize($str, $max_length, $position = 1, $ellipsis = '&hellip;')
 	{
@@ -413,6 +413,6 @@ class sfText {
 		}
 
 		return $beg.$ellipsis.$end;
-	}   
-  
+	}
+
 }

@@ -11,9 +11,7 @@
  *
  * @package    Sift
  * @subpackage browser
- * @author     Francois Zaninotto <francois.zaninotto@symfony-project.com>
- * @author     Benjamin Meynell <bmeynell@colorado.edu>
- * @link http://cz1.php.net/fsockopen
+ * @link       http://cz1.php.net/fsockopen
  */
 class sfWebBrowserDriverSockets implements sfIWebBrowserDriver
 {
@@ -23,7 +21,7 @@ class sfWebBrowserDriverSockets implements sfIWebBrowserDriver
 
   /**
    * Constructs the driver
-   * 
+   *
    * @param array $options
    */
   public function __construct($options = array())
@@ -136,9 +134,9 @@ class sfWebBrowserDriverSockets implements sfIWebBrowserDriver
         $response_headers[] = $response_lines[$i];
       }
     }
-    
+
     $browser->setResponseHeaders($response_headers);
-    
+
     // grab status code
     preg_match('@(\d{3})@', $status_line, $status_code);
     if(isset($status_code[1]))

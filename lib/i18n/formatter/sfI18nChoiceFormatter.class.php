@@ -55,13 +55,11 @@
  *   # <tt>&amp;</tt> -- conditional AND.
  *   # <tt>&amp;&amp;</tt> -- condition AND with short circuit.
  *   # <tt>|</tt> -- conditional OR.
- *   # <tt>||</tt> -- conditional OR with short circuit. 
+ *   # <tt>||</tt> -- conditional OR with short circuit.
  *   # <tt>!</tt> -- negation.
  *
  * Additional round brackets can also be used to perform grouping.
  *
- * @author Xiang Wei Zhuo <weizhuo[at]gmail[dot]com>
- 
  * @package Sift
  * @subpackage i18n
  */

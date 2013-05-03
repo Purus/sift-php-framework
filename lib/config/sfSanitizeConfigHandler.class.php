@@ -11,8 +11,7 @@
  *
  * @package    Sift
  * @subpackage config
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * */
+ */
 class sfSanitizeConfigHandler extends sfSimpleYamlConfigHandler {
 
   /**
@@ -51,5 +50,5 @@ class sfSanitizeConfigHandler extends sfSimpleYamlConfigHandler {
     $retval = sprintf($retval, __CLASS__, date('Y/m/d H:i:s'), var_export($myConfig, true));
     return $retval;
   }
-  
+
 }

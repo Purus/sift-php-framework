@@ -8,10 +8,9 @@
 
 /**
  * Generates a single unit test stub script
- * 
+ *
  * @package     Sift
  * @subpackage  cli_task
- * @author      Kris Wallsmith <kris.wallsmith@symfony-project.com>
  */
 class sfCliGenerateTestTask extends sfCliGeneratorBaseTask {
 
@@ -35,7 +34,7 @@ class sfCliGenerateTestTask extends sfCliGeneratorBaseTask {
     $this->briefDescription = 'Generates a single unit test stub script';
 
     $scriptName = $this->environment->get('script_name');
-    
+
     $this->detailedDescription = <<<EOF
 The [generate:test|INFO] task generates an empty unit test script in your
 [test/unit/|COMMENT] directory and reflects the organization of your [lib/|COMMENT] directory:
@@ -98,10 +97,10 @@ EOF;
 
   /**
    * Returns reference of the bootstrap file from the test file.
-   * 
+   *
    * @param string $bootstrapFile
    * @param string $testFile
-   * 
+   *
    * @return string PHP code for referencing the bootstrap file from the test file
    */
   protected function getBootstrapPathPhp($bootstrapFile, $testFile)
@@ -124,11 +123,11 @@ EOF;
 
   /**
    * Returns paths the lib and test directory corresponding to the supplied file path.
-   * 
+   *
    * @param string $path An absolute path
-   * 
+   *
    * @return array The supplied path's lib and test directories
-   * 
+   *
    * @throws InvalidArgumentException If the path is not in the project of any connected plugins' lib directories
    */
   protected function getDirectories($path)
@@ -159,7 +158,7 @@ EOF;
 
   /**
    * Returns true if the supplied class uses the database.
-   * 
+   *
    * @return boolean
    */
   protected function isDatabaseClass(ReflectionClass $r)

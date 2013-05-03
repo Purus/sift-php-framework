@@ -21,7 +21,7 @@ class sfI18nPhpExtractor extends sfConfigurable implements sfII18nExtractor
    */
   protected $defaultOptions = array(
     'functions' => array(
-        '__', 'format_number_choice'
+        '__', 'format_number_choice', 'translate'
     )
   );
 

@@ -13,8 +13,6 @@
  *
  * @package    Sift
  * @subpackage view
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @author     Sean Kerr <sean@code-box.org>
  */
 abstract class sfView
 {
@@ -193,7 +191,7 @@ abstract class sfView
 
   /**
    * Adds helpers to be loaded for this view
-   * 
+   *
    * @param <type> $helpers array
    */
   public function addHelpers($helpers)
@@ -455,7 +453,7 @@ abstract class sfView
   {
     if ($this->template == null)
     {
-      // a template has not been set      
+      // a template has not been set
       throw new sfRenderException('A template has not been set');
     }
 
@@ -598,7 +596,7 @@ abstract class sfView
     {
       return $this->componentSlots[$name];
     }
-    
+
     return null;
   }
 

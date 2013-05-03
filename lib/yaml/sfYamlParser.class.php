@@ -16,7 +16,6 @@ if (!defined('PREG_BAD_UTF8_OFFSET_ERROR'))
  *
  * @package    Sift
  * @subpackage yaml
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  */
 class sfYamlParser
 {

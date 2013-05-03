@@ -15,7 +15,6 @@
  *
  * @package Sift
  * @subpackage image
- * @author Stuart Lowes <stuart.lowes@gmail.com>
  */
 class sfImageCallbackGeneric extends sfImageTransformAbstract
 {

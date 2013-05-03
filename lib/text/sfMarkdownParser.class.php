@@ -8,49 +8,48 @@
 
 /**
  * sfMarkdownParser - parses markdown syntax to HTML.
- * 
+ *
  * Markdown syntax copyrights:
- * 
- * PHP Markdown & Extra Copyright (c) 2004-2009 Michel Fortin  
+ *
+ * PHP Markdown & Extra Copyright (c) 2004-2009 Michel Fortin
  * <http://michelf.com/> All rights reserved.
- * 
- * Copyright (c) 2003-2006 John Gruber <http://daringfireball.net/> 
+ *
+ * Copyright (c) 2003-2006 John Gruber <http://daringfireball.net/>
  *
  * @package    Sift
  * @subpackage text
- * @author     Mishal.cz <mishal@mishal.cz>
- * */
+ */
 class sfMarkdownParser {
 
-  static protected 
+  static protected
       $xhtml = true;
-  
+
   /**
    * Array of options
-   * 
-   * @var array 
+   *
+   * @var array
    */
   protected $options = array(
     'no_entities' => false,
-    'tab_width' => 4,    
-    'no_markup' => false, // Enable to disallow markup or entities.  
-    'charset' => 'utf-8'  
+    'tab_width' => 4,
+    'no_markup' => false, // Enable to disallow markup or entities.
+    'charset' => 'utf-8'
   );
-  
+
   protected $documentGamut = array(
     'stripLinkDefinitions' => 20,
     'runBasicBlockGamut' => 30,
     'doFencedCodeBlocks' => 5,
     // 'stripFootnotes'     => 15, // TODO from MarkdownExtra
     // 'stripAbbreviations' => 25, // TODO from MarkdownExtra
-    // 'appendFootnotes'    => 50, // TODO from MarkdownExtra    
+    // 'appendFootnotes'    => 50, // TODO from MarkdownExtra
   );
-  
+
   /**
    * Transformations that occur *within* block-level
    * These are all the tags like paragraphs, headers, and list items
-   * 
-   * @var array 
+   *
+   * @var array
    */
   protected $spanGamut = array(
     // Process character escapes, code spans, and inline HTML
@@ -68,13 +67,13 @@ class sfMarkdownParser {
     "doItalicsAndBold" => 50,
     "doHardBreaks" => 60,
     // "doFootnotes"        => 5,  // TODO from MarkdownExtra
-    // "doAbbreviations"    => 70, // TODO from MarkdownExtra     
+    // "doAbbreviations"    => 70, // TODO from MarkdownExtra
   );
-  
+
   /**
    * Transformations that form block-level
    * tags like paragraphs, headers, and list items.
-   * 
+   *
    * @var array
    */
   protected $blockGamut = array(
@@ -85,54 +84,54 @@ class sfMarkdownParser {
     'doBlockQuotes' => 60,
     "doFencedCodeBlocks" => 5,
     // "doTables"           => 15,  // TODO from MarkdownExtra
-    // "doDefLists"         => 45,  // TODO from MarkdownExtra     
+    // "doDefLists"         => 45,  // TODO from MarkdownExtra
   );
 
   /**
    *
-   * @var integer 
+   * @var integer
    */
   protected $listLevel = 0;
-  
+
   protected $em_relist = array(
       '' => '(?:(?<!\*)\*(?!\*)|(?<!_)_(?!_))(?=\S|$)(?![\.,:;]\s)',
       '*' => '(?<=\S|^)(?<!\*)\*(?!\*)',
       '_' => '(?<=\S|^)(?<!_)_(?!_)',
   );
-  
+
   protected $strong_relist = array(
       '' => '(?:(?<!\*)\*\*(?!\*)|(?<!_)__(?!_))(?=\S|$)(?![\.,:;]\s)',
       '**' => '(?<=\S|^)(?<!\*)\*\*(?!\*)',
       '__' => '(?<=\S|^)(?<!_)__(?!_)',
   );
-  
+
   protected $em_strong_relist = array(
       '' => '(?:(?<!\*)\*\*\*(?!\*)|(?<!_)___(?!_))(?=\S|$)(?![\.,:;]\s)',
       '***' => '(?<=\S|^)(?<!\*)\*\*\*(?!\*)',
       '___' => '(?<=\S|^)(?<!_)___(?!_)',
   );
-  
+
   protected $em_strong_prepared_relist = array();
-  
+
   /**
-   * 
+   *
    * @var integer
    */
   protected $nestedBracketsDepth = 6;
-  
+
   /**
    * Regex to match balanced [brackets].
    * Needed to insert a maximum bracked depth while converting to PHP.
-   * 
-   * @var string 
+   *
+   * @var string
    */
   protected $nestedBracketsRe;
   protected $nestedUrlParenthesisDepth = 4;
   protected $nestedUrlParenthesisRe;
-  
+
   /**
    * Table of hash values for escaped characters
-   * @var string 
+   * @var string
    */
   protected $escapeChars = '\`*_{}[]()>#+-.!';
   protected $escapeCharsRe;
@@ -142,47 +141,47 @@ class sfMarkdownParser {
    * @var array
    */
   protected $predefinedUrls = array();
-  
+
   /**
    * Predefined titles for reference links and images.
-   * 
-   * @var array 
+   *
+   * @var array
    */
   protected $predefinedTitles = array();
 
   /**
    * Internal hashes used during transformation.
-   * 
+   *
    * @var array
    */
   protected $urls = array();
   protected $titles = array();
   protected $html_hashes = array();
-  
+
   /**
    * Status flag to avoid invalid nesting.
-   * 
+   *
    * @var boolean
    */
   protected $in_anchor = false;
-  
+
   /**
    * Instances holder
-   * 
+   *
    * @var array
    */
   protected static $instances = array();
-  
+
   /**
    * Constructs the parser
-   * 
+   *
    * @param array $options
    */
   function __construct($options = array())
   {
     // merge options
     $this->options = array_merge($this->options, $options);
-    
+
     $this->prepareItalicsAndBold();
 
     $this->nestedBracketsRe =
@@ -203,7 +202,7 @@ class sfMarkdownParser {
 
   /**
    * Returns singleton instance of the class
-   * 
+   *
    * @param array $options Array of options for the parser
    * @return sfMardownParser
    */
@@ -214,12 +213,12 @@ class sfMarkdownParser {
     {
       self::$instances[$key] = new self($options);
     }
-    return self::$instances[$key];    
+    return self::$instances[$key];
   }
-  
+
   /**
    * Called before the transformation process starts to setup parser states.
-   * 
+   *
    */
   protected function setup()
   {
@@ -230,9 +229,9 @@ class sfMarkdownParser {
   }
 
   /**
-   * Called after the transformation process to clear any variable 
+   * Called after the transformation process to clear any variable
    * which may be taking up memory unnecessarly.
-   * 
+   *
    */
   protected function teardown()
   {
@@ -243,7 +242,7 @@ class sfMarkdownParser {
 
   /**
    * Transforms the text to HTML
-   * 
+   *
    * @param string $text
    * @return string
    */
@@ -253,7 +252,7 @@ class sfMarkdownParser {
     {
       return $text;
     }
-    
+
     $this->setup();
 
     // Remove UTF-8 BOM and marker character in input, if present.
@@ -296,7 +295,7 @@ class sfMarkdownParser {
   /**
    * Strips link definitions from text, stores the URLs and titles in
    * hash references.
-   * 
+   *
    * @param string $text
    * @return stirng
    */
@@ -331,7 +330,7 @@ class sfMarkdownParser {
 
   /**
    * Callback method for stripLinkDefinitions()
-   * 
+   *
    * @param array $matches
    * @return string
    */
@@ -354,11 +353,11 @@ class sfMarkdownParser {
    * hard-coded:
    *
    *  *  List "a" is made of tags which can be both inline or block-level.
-   *     These will be treated block-level when the start tag is alone on 
-   *     its line, otherwise they're not matched here and will be taken as 
+   *     These will be treated block-level when the start tag is alone on
+   *     its line, otherwise they're not matched here and will be taken as
    *     inline later.
    *  *  List "b" is made of tags which are always block-level;
-   * 
+   *
    * @param string $text
    * @return string
    */
@@ -387,7 +386,7 @@ class sfMarkdownParser {
         |
         \'[^\']*\'  # text inside single quotes (tolerate ">")
         )*
-      )?  
+      )?
       ';
     $content =
             str_repeat('
@@ -404,7 +403,7 @@ class sfMarkdownParser {
             str_repeat('
             </\2\s*>  # closing nested tag
           )
-          |        
+          |
           <(?!/\2\s*>  # other tags with a different name
           )
         )*', $nested_tags_level);
@@ -429,9 +428,9 @@ class sfMarkdownParser {
       )
       (            # save in $1
 
-        # Match from `\n<tag>` to `</tag>\n`, handling nested tags 
+        # Match from `\n<tag>` to `</tag>\n`, handling nested tags
         # in between.
-          
+
             [ ]{0,' . $less_than_tab . '}
             <(' . $block_tags_b_re . ')# start tag = $2
             ' . $attr . '>      # attributes followed by > and \n
@@ -449,28 +448,28 @@ class sfMarkdownParser {
             </\3>        # the matching end tag
             [ ]*        # trailing spaces/tabs
             (?=\n+|\Z)  # followed by a newline or end of document
-          
-      | # Special case just for <hr />. It was easier to make a special 
+
+      | # Special case just for <hr />. It was easier to make a special
         # case than to make the other regex more complicated.
-      
+
             [ ]{0,' . $less_than_tab . '}
             <(hr)        # start tag = $2
             ' . $attr . '      # attributes
             /?>          # the matching end tag
             [ ]*
             (?=\n{2,}|\Z)    # followed by a blank line or end of document
-      
+
       | # Special case for standalone HTML comments:
-      
+
           [ ]{0,' . $less_than_tab . '}
           (?s:
             <!-- .*? -->
           )
           [ ]*
           (?=\n{2,}|\Z)    # followed by a blank line or end of document
-      
+
       | # PHP and ASP-style processor instructions (<? and <%)
-      
+
           [ ]{0,' . $less_than_tab . '}
           (?s:
             <([?%])      # $2
@@ -479,7 +478,7 @@ class sfMarkdownParser {
           )
           [ ]*
           (?=\n{2,}|\Z)    # followed by a blank line or end of document
-          
+
       )
       )}Sxmi', array(&$this, 'hashHTMLBlocksCallback'), $text);
 
@@ -488,7 +487,7 @@ class sfMarkdownParser {
 
   /**
    * Callback method for hashHTMLBlocks()
-   * 
+   *
    * @param array $matches
    * @return string
    */
@@ -500,19 +499,19 @@ class sfMarkdownParser {
   }
 
   /**
-   * 
-   * Called whenever a tag must be hashed when a function insert an atomic 
+   *
+   * Called whenever a tag must be hashed when a function insert an atomic
    * element in the text stream. Passing $text to through this function gives
    * a unique text-token which will be reverted back when calling unhash.
-   * 
+   *
    * The $boundary argument specify what character should be used to surround
    * the token. By convension, "B" is used for block elements that needs not
    * to be wrapped into paragraph tags at the end, ":" is used for elements
    * that are word separators and "X" is used in the general case.
-   * 
-   * Swap back any tag hash found in $text so we do not have to `unhash` 
+   *
+   * Swap back any tag hash found in $text so we do not have to `unhash`
    * multiple times at the end.
-   * 
+   *
    * @staticvar int $i
    * @param string $text
    * @param string $boundary What character should be used to surround the token?
@@ -531,7 +530,7 @@ class sfMarkdownParser {
 
   /**
    * Shortcut method for hashPart with block-level boundaries.
-   * 
+   *
    * @param string $text
    * @return string
    */
@@ -542,13 +541,13 @@ class sfMarkdownParser {
 
   /**
    * Runs block gamut tranformations.
-   * 
-   * We need to escape raw HTML in Markdown source before doing anything 
-   * else. This need to be done for each block, and not only at the 
+   *
+   * We need to escape raw HTML in Markdown source before doing anything
+   * else. This need to be done for each block, and not only at the
    * begining in the Markdown function since hashed blocks can be part of
-   * list items and could have been indented. Indented blocks would have 
-   * been seen as a code block in a previous pass of hashHTMLBlocks. 
-   * 
+   * list items and could have been indented. Indented blocks would have
+   * been seen as a code block in a previous pass of hashHTMLBlocks.
+   *
    * @param string $text
    * @return string
    */
@@ -561,10 +560,10 @@ class sfMarkdownParser {
    * Runs block gamut tranformations, without hashing HTML blocks. This is
    * useful when HTML blocks are known to be already hashed, like in the first
    * whole-document pass.
-   * 
+   *
    * @param string $text
    * @return string
-   * @throws Exception   
+   * @throws Exception
    */
   protected function runBasicBlockGamut($text)
   {
@@ -573,7 +572,7 @@ class sfMarkdownParser {
       if(!is_callable(array($this, $method)))
       {
         throw new Exception(sprintf('Invalid block gamut "%s".', $method));
-      }      
+      }
       $text = $this->$method($text);
     }
 
@@ -583,7 +582,7 @@ class sfMarkdownParser {
 
   /**
    * Do horizontal rules
-   * 
+   *
    * @param string $text
    * @return string
    */
@@ -604,7 +603,7 @@ class sfMarkdownParser {
 
   /**
    * Runs span gamut tranformations.
-   * 
+   *
    * @param string $text
    * @return string
    * @throws Exception
@@ -616,7 +615,7 @@ class sfMarkdownParser {
       if(!is_callable(array($this, $method)))
       {
         throw new Exception(sprintf('Invalid span gamut "%s".', $method));
-      }      
+      }
       $text = $this->$method($text);
     }
     return $text;
@@ -634,7 +633,7 @@ class sfMarkdownParser {
 
   /**
    * Callback method for doHardBreaks()
-   * 
+   *
    * @param array $matches
    * @return string
    */
@@ -645,7 +644,7 @@ class sfMarkdownParser {
 
   /**
    * Turns Markdown link shortcuts into X)HTML <a> tags.
-   * 
+   *
    * @param string $text
    * @return string
    */
@@ -655,7 +654,7 @@ class sfMarkdownParser {
     {
       return $text;
     }
-      
+
     $this->in_anchor = true;
 
     // First, handle reference-style links: [link text] [id]
@@ -717,7 +716,7 @@ class sfMarkdownParser {
 
   /**
    * Callback method for doAnchors()
-   * 
+   *
    * @param array $matches
    * @return string
    */
@@ -738,9 +737,9 @@ class sfMarkdownParser {
 
     if(isset($this->urls[$link_id]))
     {
-      $result = sprintf('<a href="%s"', 
+      $result = sprintf('<a href="%s"',
                   $this->encodeAttribute($this->urls[$link_id]));
-      
+
       if(isset($this->titles[$link_id]))
       {
         $title = $this->encodeAttribute($this->titles[$link_id]);
@@ -749,7 +748,7 @@ class sfMarkdownParser {
 
       $link_text = $this->runSpanGamut($link_text);
       $result .= sprintf('>%s</a>', $link_text);
-      
+
       $result = $this->hashPart($result);
     }
     else
@@ -761,7 +760,7 @@ class sfMarkdownParser {
 
   /**
    * Callback method for doAnchors()
-   * 
+   *
    * @param array $matches
    * @return string
    */
@@ -788,13 +787,13 @@ class sfMarkdownParser {
 
   /**
    * Turn Markdown image shortcuts into <img> tags.
-   * 
+   *
    * @param string $text
    * @return string
    */
   protected function doImages($text)
   {
-    // First, handle reference-style labeled images: ![alt text][id]    
+    // First, handle reference-style labeled images: ![alt text][id]
     $text = preg_replace_callback('{
       (        # wrap whole match in $1
         !\[
@@ -812,7 +811,7 @@ class sfMarkdownParser {
       }xs', array(&$this, 'doImagesReferenceCallback'), $text);
 
     // Next, handle inline images:  ![alt text](url "optional title")
-    // Don't forget: encode * and _    
+    // Don't forget: encode * and _
     $text = preg_replace_callback('{
       (        # wrap whole match in $1
         !\[
@@ -842,7 +841,7 @@ class sfMarkdownParser {
 
   /**
    * Callback method for doImages()
-   * 
+   *
    * @param array $matches
    * @return string
    */
@@ -855,22 +854,22 @@ class sfMarkdownParser {
     if($link_id == '')
     {
       // for shortcut links like ![this][].
-      $link_id = strtolower($alt_text); 
+      $link_id = strtolower($alt_text);
     }
 
     $alt_text = $this->encodeAttribute($alt_text);
     if(isset($this->urls[$link_id]))
     {
-      $url = $this->encodeAttribute($this->urls[$link_id]);      
+      $url = $this->encodeAttribute($this->urls[$link_id]);
       $result = sprintf('<img src="%s" alt="%s"', $url, $alt_text);
-      
+
       if(isset($this->titles[$link_id]))
       {
         $title = $this->encodeAttribute($this->titles[$link_id]);
         $result .= sprintf(' title="%s"', $title);
       }
-      
-      $result .= self::$xhtml ? ' />' : '>';      
+
+      $result .= self::$xhtml ? ' />' : '>';
       $result = $this->hashPart($result);
     }
     else
@@ -878,13 +877,13 @@ class sfMarkdownParser {
       // If there's no such link ID, leave intact:
       $result = $whole_match;
     }
-    
+
     return $result;
   }
 
   /**
    * Callback method for doImages()
-   * 
+   *
    * @param array $matches
    * @return string
    */
@@ -910,7 +909,7 @@ class sfMarkdownParser {
 
   /**
    * Do headers
-   * 
+   *
    * @param string $text
    * @return string
    */
@@ -919,10 +918,10 @@ class sfMarkdownParser {
     //  setext style headers:
     //  Header 1
     //  ========
-    //  
+    //
     //  Header 2
-    //  --------    
-    $text = preg_replace_callback('{ ^(.+?)[ ]*\n(=+|-+)[ ]*\n+ }mx', 
+    //  --------
+    $text = preg_replace_callback('{ ^(.+?)[ ]*\n(=+|-+)[ ]*\n+ }mx',
             array(&$this, 'doHeadersCallbackSetext'), $text);
 
     // atx-style headers:
@@ -930,7 +929,7 @@ class sfMarkdownParser {
     //  ## Header 2
     //  ## Header 2 with closing hashes ##
     //  ...
-    //  ###### Header 6    
+    //  ###### Header 6
     $text = preg_replace_callback('{
         ^(\#{1,6})  # $1 = string of #\'s
         [ ]*
@@ -945,7 +944,7 @@ class sfMarkdownParser {
 
   /**
    * Callback method for doHeaders()
-   * 
+   *
    * @param array $matches
    * @return string
    */
@@ -964,7 +963,7 @@ class sfMarkdownParser {
 
   /**
    * Callback method for doHeaders()
-   * 
+   *
    * @param array $matches
    * @return string
    */
@@ -977,7 +976,7 @@ class sfMarkdownParser {
 
   /**
    * Form HTML ordered (numbered) and unordered (bulleted) lists.
-   * 
+   *
    * @param string $text
    * @return string
    */
@@ -1046,7 +1045,7 @@ class sfMarkdownParser {
 
   /**
    * Callback method for doLists()
-   * 
+   *
    * @param array $matches
    * @return string
    */
@@ -1070,7 +1069,7 @@ class sfMarkdownParser {
   /**
    * Process the contents of a single ordered or unordered list, splitting it
    * into individual list items.
-   * 
+   *
    * @param type $list_str
    * @param type $marker_any_re
    * @return type
@@ -1080,17 +1079,17 @@ class sfMarkdownParser {
     // The $this->listLevel global keeps track of when we're inside a list.
     // Each time we enter a list, we increment it; when we leave a list,
     // we decrement. If it's zero, we're not in a list anymore.
-    
+
     // We do this because when we're not inside a list, we want to treat
     // something like this:
-    
+
     //  I recommend upgrading to version
     //  8. Oops, now this line is treated
     //  as a sub-list.
-    
+
     // As a single paragraph, despite the fact that the second line starts
     // with a digit-period-space sequence.
-    
+
     // Whereas when we're inside a list (or sub-list), that line will be
     // treated as the start of a sub-list. What a kludge, huh? This is
     // an aspect of Markdown's syntax that's hard to parse perfectly
@@ -1120,7 +1119,7 @@ class sfMarkdownParser {
 
   /**
    * Callback method for processListItems()
-   * 
+   *
    * @param array $matches
    * @return string
    */
@@ -1152,7 +1151,7 @@ class sfMarkdownParser {
 
   /**
    * Process Markdown `<pre><code>` blocks.
-   * 
+   *
    * @param string $text
    * @return string
    */
@@ -1174,16 +1173,16 @@ class sfMarkdownParser {
 
   /**
    * Callback method for doCodeBlocks()
-   * 
+   *
    * @param array $matches
    * @return string
    */
   protected function doCodeBlocksCallback($matches)
   {
     $codeblock = $matches[1];
-    $codeblock = $this->outdent($codeblock);    
+    $codeblock = $this->outdent($codeblock);
     $codeblock = htmlspecialchars($codeblock, ENT_NOQUOTES, $this->options['charset'], false);
-    
+
     // trim leading newlines and trailing newlines
     $codeblock = preg_replace('/\A\n+|\n+\z/', '', $codeblock);
 
@@ -1193,7 +1192,7 @@ class sfMarkdownParser {
 
   /**
    * Create a code span markup for $code. Called from handleSpanToken.
-   * 
+   *
    * @param string $code
    * @return string
    */
@@ -1202,10 +1201,10 @@ class sfMarkdownParser {
     $code = htmlspecialchars(trim($code), ENT_NOQUOTES, $this->options['charset'], false);
     return $this->hashPart(sprintf('<code>%s</code>', $code));
   }
-  
+
   /**
    * Prepare regular expressions for searching emphasis tokens in any context
-   * 
+   *
    */
   protected function prepareItalicsAndBold()
   {
@@ -1229,7 +1228,7 @@ class sfMarkdownParser {
   }
 
   /**
-   * 
+   *
    * @param string $text
    * @return string
    */
@@ -1247,7 +1246,7 @@ class sfMarkdownParser {
       // in current context.
       $token_re = $this->em_strong_prepared_relist["$em$strong"];
 
-      // Each loop iteration search for the next emphasis token. 
+      // Each loop iteration search for the next emphasis token.
       // Each token is then passed to handleSpanToken.
       $parts = preg_split($token_re, $text, 2, PREG_SPLIT_DELIM_CAPTURE);
       $text_stack[0] .= $parts[0];
@@ -1314,7 +1313,7 @@ class sfMarkdownParser {
         }
         else
         {
-          // Reached opening three-char emphasis marker. Push on token 
+          // Reached opening three-char emphasis marker. Push on token
           // stack; will be handled by the special condition above.
           $em = $token{0};
           $strong = "$em$em";
@@ -1403,7 +1402,7 @@ class sfMarkdownParser {
     $bq = $this->runBlockGamut($bq);  # recurse
 
     $bq = preg_replace('/^/m', "  ", $bq);
-    // These leading spaces cause problem with <pre> content, 
+    // These leading spaces cause problem with <pre> content,
     // so we need to fix that:
     $bq = preg_replace_callback('{(\s*<pre>.+?</pre>)}sx', array(&$this, 'doBlockQuotesCallback2'), $bq);
 
@@ -1419,7 +1418,7 @@ class sfMarkdownParser {
 
   /**
    * Formats paragraphs
-   * 
+   *
    * @param type $text
    * @return type
    */
@@ -1471,7 +1470,7 @@ class sfMarkdownParser {
 //          # We can't call Markdown(), because that resets the hash;
 //          # that initialization code should be pulled into its own sub, though.
 //          $div_content = $this->hashHTMLBlocks($div_content);
-//          
+//
 //          # Run document gamut methods on the content.
 //          foreach ($this->documentGamut as $method => $priority) {
 //            $div_content = $this->$method($div_content);
@@ -1492,7 +1491,7 @@ class sfMarkdownParser {
   /**
    * Encode text for a double-quoted HTML attribute. This function
    * is *not* suitable for attributes enclosed in single quotes.
-   * 
+   *
    * @param string $text
    * @return string
    */
@@ -1504,10 +1503,10 @@ class sfMarkdownParser {
   }
 
   /**
-   * Smart processing for ampersands and angle brackets that need to 
+   * Smart processing for ampersands and angle brackets that need to
    * be encoded. Valid character entities are left alone unless the
    * no-entities mode is set.
-   * 
+   *
    * @param string $text
    * @return string
    */
@@ -1521,7 +1520,7 @@ class sfMarkdownParser {
     {
       # Ampersand-encoding based entirely on Nat Irons's Amputator
       # MT plugin: <http://bumppo.net/projects/amputator/>
-      $text = preg_replace('/&(?!#?[xX]?(?:[0-9a-fA-F]+|\w+);)/', '&amp;', $text);      
+      $text = preg_replace('/&(?!#?[xX]?(?:[0-9a-fA-F]+|\w+);)/', '&amp;', $text);
     }
     # Encode remaining <'s
     $text = str_replace('<', '&lt;', $text);
@@ -1531,13 +1530,13 @@ class sfMarkdownParser {
 
   /**
    * Autolinks text
-   * 
+   *
    * @param string $text
    * @return string
    */
   protected function doAutoLinks($text)
   {
-    $text = preg_replace_callback('{<((https?|ftp|dict):[^\'">\s]+)>}i', 
+    $text = preg_replace_callback('{<((https?|ftp|dict):[^\'">\s]+)>}i',
             array(&$this, 'doAutoLinksUrlCallback'), $text);
 
     # Email addresses: <address@domain.foo>
@@ -1565,7 +1564,7 @@ class sfMarkdownParser {
 
   /**
    * Callback for doAutoLinks()
-   * 
+   *
    * @param array $matches
    * @return string
    */
@@ -1577,7 +1576,7 @@ class sfMarkdownParser {
   }
 
   /**
-   * 
+   *
    * @param array $matches
    * @return string
    */
@@ -1590,14 +1589,14 @@ class sfMarkdownParser {
 
   /**
    * Input: an email address, e.g. "foo@example.com"
-   * 
+   *
    * Output: the email address as a mailto link, with each character
    * of the address encoded as either a decimal or hex entity, in
    * the hopes of foiling most address harvesting spam bots.
-   * 
+   *
    * Based by a filter by Matthew Wickline, posted to BBEdit-Talk.
    * With some optimizations by Milian Wolff.
-   * 
+   *
    * @param string $addr
    * @return string
    */
@@ -1606,7 +1605,7 @@ class sfMarkdownParser {
     $addr = sprintf('mailto:%s', $addr);
     $chars = preg_split('/(?<!^)(?!$)/', $addr);
     // Deterministic seed.
-    $seed = (int)abs(crc32($addr) / strlen($addr)); 
+    $seed = (int)abs(crc32($addr) / strlen($addr));
 
     foreach($chars as $key => $char)
     {
@@ -1615,11 +1614,11 @@ class sfMarkdownParser {
       if($ord < 128)
       {
         // Pseudo-random function.
-        $r = ($seed * (1 + $key)) % 100; 
+        $r = ($seed * (1 + $key)) % 100;
         // roughly 10% raw, 45% hex, 45% dec
         // '@' *must* be encoded. I insist.
         if($r > 90 && $char != '@');
-         // do nothing 
+         // do nothing
         else if($r < 45)
           $chars[$key] = '&#x' . dechex($ord) . ';';
         else
@@ -1637,7 +1636,7 @@ class sfMarkdownParser {
   /**
    * Take the string $str and parse it into tokens, hashing embeded HTML,
    * escaped characters and handling code spans.
-   * 
+   *
    * @param string $str
    * @return string
    */
@@ -1668,8 +1667,8 @@ class sfMarkdownParser {
 
     while(1)
     {
-      // Each loop iteration seach for either the next tag, the next 
-      // openning code span marker, or the next escaped character. 
+      // Each loop iteration seach for either the next tag, the next
+      // openning code span marker, or the next escaped character.
       // Each token is then passed to handleSpanToken.
       $parts = preg_split($span_re, $str, 2, PREG_SPLIT_DELIM_CAPTURE);
       // Create token from text preceding tag.
@@ -1693,9 +1692,9 @@ class sfMarkdownParser {
   }
 
   /**
-   * Handle $token provided by parseSpan by determining its nature and 
+   * Handle $token provided by parseSpan by determining its nature and
    * returning the corresponding value that should replace it.
-   * 
+   *
    * @param string $token
    * @param string $str
    * @return string
@@ -1722,7 +1721,7 @@ class sfMarkdownParser {
 
   /**
    * Remove one level of line-leading tabs or spaces
-   * 
+   *
    * @param string $text
    * @return string
    */
@@ -1733,11 +1732,11 @@ class sfMarkdownParser {
 
   /**
    * Replace tabs with the appropriate amount of space.
-   * 
+   *
    * For each line we separate the line in blocks delemited by
-   * tab characters. Then we reconstruct every line by adding the 
+   * tab characters. Then we reconstruct every line by adding the
    * appropriate number of space between each blocks.
-   * 
+   *
    * @param string $text
    * @return string
    */
@@ -1748,7 +1747,7 @@ class sfMarkdownParser {
 
   /**
    * Callback for detab() method.
-   * 
+   *
    * @param array $matches
    * @return string
    */
@@ -1773,7 +1772,7 @@ class sfMarkdownParser {
 
   /**
    * Swap back in all the tags hashed by _HashHTMLBlocks.
-   * 
+   *
    * @param string $text
    * @return string
    */
@@ -1784,7 +1783,7 @@ class sfMarkdownParser {
 
   /**
    * Callback for unhash()
-   * 
+   *
    * @param array $matches
    * @return string
    */
@@ -1795,13 +1794,13 @@ class sfMarkdownParser {
 
   /**
    * Adding the fenced code block syntax to regular Markdown.
-   * 
+   *
    * ~~~
    * Code block
    * ~~~
    *
    * ~~~ php
-   * 
+   *
    * <?php
    * // Code block
    * ~~~
@@ -1809,7 +1808,7 @@ class sfMarkdownParser {
    * @param type $text
    * @return type
    */
-  protected function doFencedCodeBlocks($text) 
+  protected function doFencedCodeBlocks($text)
   {
     $text = preg_replace_callback('{
         (?:\n|\A)
@@ -1831,29 +1830,29 @@ class sfMarkdownParser {
         \1 [ ]* \n
       }xm',
       array(&$this, 'doFencedCodeBlocksCallback'), $text);
-    
+
     return $text;
   }
-  
-  protected function doFencedCodeBlocksCallback($matches) 
+
+  protected function doFencedCodeBlocksCallback($matches)
   {
-    $codeblock = $matches[3];    
+    $codeblock = $matches[3];
     $codeblock = htmlspecialchars($codeblock, ENT_NOQUOTES, $this->options['charset'], false);
-    
+
     $codeblock = preg_replace_callback('/^\n+/',
       array(&$this, 'doFencedCodeBlocksNewlines'), $codeblock);
-    
+
     $class = empty($matches[2]) ? '' : trim($matches[2]);
-    
-    $codeblock = sprintf('<pre><code%s>%s</code></pre>', 
+
+    $codeblock = sprintf('<pre><code%s>%s</code></pre>',
             ($class ? sprintf(' class="%s"', $class) : ''), $codeblock);
-        
+
     return "\n\n".$this->hashBlock($codeblock)."\n\n";
   }
-  
-  protected function doFencedCodeBlocksNewlines($matches) 
+
+  protected function doFencedCodeBlocksNewlines($matches)
   {
     return str_repeat(sprintf('<br%s', self::$xhtml ? ' />' : '>'), strlen($matches[0]));
   }
-  
+
 }

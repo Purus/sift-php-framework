@@ -90,7 +90,7 @@ class sfWebDebugPanelLogs extends sfWebDebugPanel
 
     if (!$constants)
     {
-      foreach (array('sf_app_dir', 'sf_root_dir', 'sf_symfony_lib_dir') as $constant)
+      foreach (array('sf_app_dir', 'sf_root_dir', 'sf_sift_lib_dir') as $constant)
       {
         $constants[realpath(sfConfig::get($constant)).DIRECTORY_SEPARATOR] = $constant.DIRECTORY_SEPARATOR;
       }

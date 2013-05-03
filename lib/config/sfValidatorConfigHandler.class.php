@@ -11,8 +11,6 @@
  *
  * @package    Sift
  * @subpackage config
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @author     Sean Kerr <sean@code-box.org>
  */
 class sfValidatorConfigHandler extends sfYamlConfigHandler
 {
@@ -186,7 +184,7 @@ class sfValidatorConfigHandler extends sfYamlConfigHandler
         {
           // retrieve this validator's info
           $validator =& $validators[$valName];
-          
+
           $validator['parameters'] = $this->replaceConstants($validator['parameters']);
 
           $data[] = sprintf("  \$validators['%s'] = new %s();\n".

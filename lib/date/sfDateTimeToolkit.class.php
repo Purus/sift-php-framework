@@ -11,7 +11,6 @@
  *
  * @package Sift
  * @subpackage date
- * @author  Stephen Riesenberg <sjohnr@gmail.com>
  */
 class sfDateTimeToolkit {
 

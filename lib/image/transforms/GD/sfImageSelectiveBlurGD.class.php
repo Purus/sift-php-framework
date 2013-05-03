@@ -5,16 +5,14 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
- 
+
 /**
- *
  * sfImageSelectureBlurGD class.
  *
  * Blurs the image using the Gaussian method.
  *
  * @package Sift
  * @subpackage image
- * @author Stuart Lowes <stuart.lowes@gmail.com>
  */
 class sfImageSelectiveBlurGD extends sfImageTransformAbstract
 {

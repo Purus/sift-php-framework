@@ -5,7 +5,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
- 
+
 /**
  * Numeric comparisons.
  *
@@ -24,10 +24,6 @@
  *
  * @package    Sift
  * @subpackage util
- * @author     Fabien Potencier <fabien.potencier@gmail.com> php port
- * @author     Richard Clamp <richardc@unixbeard.net> perl version
- * @copyright  2004-2005 Fabien Potencier <fabien.potencier@gmail.com>
- * @copyright  2002 Richard Clamp <richardc@unixbeard.net>
  * @see        http://physics.nist.gov/cuu/Units/binary.html
  */
 class sfNumberCompare

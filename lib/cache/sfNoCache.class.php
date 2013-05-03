@@ -11,7 +11,6 @@
  *
  * @package    Sift
  * @subpackage cache
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  */
 class sfNoCache extends sfCache
 {

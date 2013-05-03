@@ -11,9 +11,7 @@
  *
  * @package    Sift
  * @subpackage validator_legacy
- * @author     Nick Lane <nick.lane@internode.on.net>
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @author     Sean Kerr <sean@code-box.org>
+ * @deprecated
  */
 class sfDateValidator extends sfValidator
 {

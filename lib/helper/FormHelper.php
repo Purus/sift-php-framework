@@ -259,7 +259,6 @@ function select_country_tag($name, $selected = null, $options = array(), $cultur
  * @param mixed $selected
  * @param mixed $options
  * @param string $culture
- * @see   http://oldforum.symfony-project.org/index.php/t/5372/
  * @return string
  */
 function select_currency_tag($name, $selected = null, $options = array(), $culture = null)

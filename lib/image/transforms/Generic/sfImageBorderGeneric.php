@@ -13,8 +13,6 @@
  *
  * @package Sift
  * @subpackage image
- * @author Stuart Lowes <stuart.lowes@gmail.com>
- * @author Miloslav Kmet <miloslav.kmet@gmail.com> 
  */
 class sfImageBorderGeneric extends sfImageTransformAbstract {
 

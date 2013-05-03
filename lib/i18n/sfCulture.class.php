@@ -32,7 +32,6 @@
  *
  * For example, Australian English is "en_AU".
  *
- * @author Xiang Wei Zhuo <weizhuo[at]gmail[dot]com>
  * @package Sift
  * @subpackage i18n
  */
@@ -40,11 +39,11 @@ class sfCulture {
 
   /**
    * Instances holder
-   * 
-   * @var array 
+   *
+   * @var array
    */
   protected static $instances = array();
-    
+
   /**
    * CLDR data filename extension.
    * @var string
@@ -185,9 +184,9 @@ class sfCulture {
   }
 
   /**
-   * Initializes a new instance of the sfCulture class based on the 
+   * Initializes a new instance of the sfCulture class based on the
    * culture specified by name. E.g. <code>new sfCulture('en_AU');</code>
-   * The culture indentifier must be of the form 
+   * The culture indentifier must be of the form
    * "<language>_(country/region/variant)".
    *
    * @param string $culture a culture name, e.g. "en_AU".
@@ -334,7 +333,7 @@ class sfCulture {
    * Use merge=true to return the CLDR including the parent culture.
    * E.g. The currency data for a variant, say "en_AU" contains one
    * entry, the currency for AUD, the other currency data are stored
-   * in the "en" data file. Thus to retrieve all the data regarding 
+   * in the "en" data file. Thus to retrieve all the data regarding
    * currency for "en_AU", you need to use findInfo("Currencies,true);.
    *
    * @param string  $path   the data you want to find.
@@ -418,7 +417,7 @@ class sfCulture {
   }
 
   /**
-   * Gets the culture name in the format 
+   * Gets the culture name in the format
    * "<languagecode2>_(country/regioncode2)".
    *
    * @return string culture name.
@@ -535,7 +534,7 @@ class sfCulture {
   }
 
   /**
-   * Gets a value indicating whether the current sfCulture 
+   * Gets a value indicating whether the current sfCulture
    * represents a neutral culture. Returns true if the culture
    * only contains two characters.
    *
@@ -580,7 +579,7 @@ class sfCulture {
   }
 
   /**
-   * Gets the sfCulture that represents the parent culture of the 
+   * Gets the sfCulture that represents the parent culture of the
    * current sfCulture
    *
    * @return sfCulture parent culture information.
@@ -596,14 +595,14 @@ class sfCulture {
   }
 
   /**
-   * Gets the list of supported cultures filtered by the specified 
+   * Gets the list of supported cultures filtered by the specified
    * culture type. This is an EXPENSIVE function, it needs to traverse
    * a list of CLDR files in the data directory.
    * This function can be called statically.
    *
    * @param int $type culture type, sfCulture::ALL, sfCulture::NEUTRAL
    * or sfCulture::SPECIFIC.
-   * @return array list of culture information available. 
+   * @return array list of culture information available.
    */
   static function getCultures($type = sfCulture::ALL)
   {
@@ -709,7 +708,7 @@ class sfCulture {
    *
    * @param  array $countries An array of countries used to restrict the returned array (null by default, which means all countries)
    *
-   * @return array a list of localized country names. 
+   * @return array a list of localized country names.
    */
   public function getCountries($countries = null)
   {
@@ -812,7 +811,7 @@ class sfCulture {
   /**
    * Gets a list of postcodes regular expressions used for validation
    *
-   * @param array of territories 
+   * @param array of territories
    * @return array list of localized script names.
    */
   public function getPostCodes($countries = null)

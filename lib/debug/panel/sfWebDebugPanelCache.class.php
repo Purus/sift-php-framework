@@ -12,7 +12,6 @@
  *
  * @package    Sift
  * @subpackage debug_panel
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  */
 class sfWebDebugPanelCache extends sfWebDebugPanel
 {
@@ -43,5 +42,5 @@ class sfWebDebugPanelCache extends sfWebDebugPanel
   public function getPanelContent()
   {
   }
-  
+
 }

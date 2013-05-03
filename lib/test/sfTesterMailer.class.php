@@ -1,19 +1,16 @@
 <?php
-
 /*
- * This file is part of the symfony package.
- * (c) Fabien Potencier <fabien.potencier@symfony-project.com>
+ * This file is part of the Sift PHP framework.
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
 
 /**
- * sfTesterMailer implements tests for the symfony mailer object.
+ * sfTesterMailer implements tests for the Sift mailer object.
  *
  * @package    Sift
  * @subpackage test
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com> 
  */
 class sfTesterMailer extends sfTester
 {

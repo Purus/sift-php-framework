@@ -11,7 +11,6 @@
  *
  * @package    Sift
  * @subpackage test
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com> 
  */
 class sfTesterForm extends sfTester
 {

@@ -62,7 +62,7 @@ class sfCliRootCommandApplication extends sfCliCommandApplication
   /**
    * Loads all available tasks.
    *
-   * Looks for tasks in the symfony core, the current project and all project plugins.
+   * Looks for tasks in the Sift core, the current project and all project plugins.
    *
    * @param sfProjectConfiguration $configuration The project configuration
    */

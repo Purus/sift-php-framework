@@ -5,16 +5,14 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
- 
+
 /**
- *
  * sfImageTransformAdapterAbstract class.
  *
  * Adapter abstract class.
  *
  * @package Sift
  * @subpackage image
- * @author Stuart Lowes <stuart.lowes@gmail.com>
  */
 abstract class sfImageTransformAdapterAbstract
 {
@@ -68,9 +66,9 @@ abstract class sfImageTransformAdapterAbstract
   abstract public function __toString();
 
   abstract public function getAdapterName();
-  
+
   abstract public function getRGBFromPixel($x, $y);
-  
+
   /**
    * Sets the image filename
    * @param string
@@ -127,5 +125,5 @@ abstract class sfImageTransformAdapterAbstract
   {
     return $this->quality;
   }
-  
+
 }

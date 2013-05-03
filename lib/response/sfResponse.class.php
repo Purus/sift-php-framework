@@ -5,14 +5,13 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
- 
+
 /**
  * sfResponse provides methods for manipulating client response information such
  * as headers, cookies and content.
  *
  * @package    Sift
  * @subpackage response
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  */
 abstract class sfResponse {
 
@@ -110,14 +109,14 @@ abstract class sfResponse {
     $content = sfCore::filterByEventListeners($content, 'response.filter_content', array(
       'response' => &$this
     ));
-    
+
     if(sfConfig::get('sf_logging_enabled'))
     {
       $this->getContext()->getLogger()->info('{sfResponse} send content (' . strlen($this->content) . ' o)');
     }
     echo $content;
   }
-  
+
   /**
    * Retrieves the parameters from the current response.
    *

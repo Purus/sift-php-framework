@@ -17,7 +17,6 @@
  *
  * @package    Sift
  * @subpackage controller
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  */
 class sfRouting
 {

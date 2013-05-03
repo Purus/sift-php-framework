@@ -36,7 +36,6 @@
  *
  * @package Sift
  * @subpackage image
- * @author Stuart Lowes <stuart.lowes@gmail.com>
  */
 class sfImage {
 
@@ -710,7 +709,7 @@ class sfImage {
   /**
    * Checks if image is grayscale image by picking $toCheck pixels and checking
    * if those pixels colors are grayscale.
-   * 
+   *
    * @see http://www.autoitscript.com/forum/topic/120313-check-if-an-image-is-grayscale-or-not/
    * @param integer $toCheck Number of pixels to check (100 is default)
    * @return boolean true if image is considered as grayscale image, false otherwise
@@ -722,7 +721,7 @@ class sfImage {
     {
       $toCheck = $totalPixels;
     }
-    
+
     $isGrayscale = true;
     $width = $this->getWidth();
     $height = $this->getHeight();

@@ -15,7 +15,6 @@
  *
  * @package    Sift
  * @subpackage mailer
- * @author     Klemens Ullmann <klemens.ullmann-marx@ull.at>
  */
 class sfMailerHtml2TextPlugin implements Swift_Events_SendListener
 { 

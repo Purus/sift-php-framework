@@ -9,9 +9,9 @@
 /**
  * Unit test library.
  *
- * @package    lime
- * @author     Fabien Potencier <fabien.potencier@gmail.com>
- * */
+ * @package Sift
+ * @subpackage lime
+ */
 class lime_test
 {
   const EPSILON = 0.0000000001;
@@ -1132,7 +1132,7 @@ EOF;
       if (0 != $return) // test exited without success
       {
         // something may have gone wrong, we should warn the user so they know
-        // it's a bug in their code and not symfony's
+        // it's a bug in their code and not Sift's
 
         $this->harness->output->echoln(sprintf('Warning: %s returned status %d, results may be inaccurate', $file, $return), 'ERROR');
       }

@@ -11,7 +11,6 @@
  *
  * @package    Sift
  * @subpackage config
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  */
 class sfViewConfigHandler extends sfYamlConfigHandler {
 
@@ -323,7 +322,6 @@ class sfViewConfigHandler extends sfYamlConfigHandler {
    * @param string The view name
    *
    * @return string The PHP statement
-   * @see http://jlcoady.net/symfony/remove-meta-name-title-symfony-pages
    */
   protected function addHtmlHead($viewName = '')
   {

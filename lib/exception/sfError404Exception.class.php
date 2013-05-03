@@ -11,7 +11,6 @@
  *
  * @package    Sift
  * @subpackage exception
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  */
 class sfError404Exception extends sfException
 {
@@ -43,7 +42,7 @@ class sfError404Exception extends sfException
   public function printStackTrace(Exception $exception = null)
   {
     sfContext::getInstance()->getController()->forward(
-            sfConfig::get('sf_error_404_module'), 
+            sfConfig::get('sf_error_404_module'),
             sfConfig::get('sf_error_404_action'));
   }
 }

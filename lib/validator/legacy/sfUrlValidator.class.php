@@ -5,12 +5,13 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 /**
  * sfUrlValidator verifies a parameter contains a value that qualifies as a valid URL.
  *
  * @package    Sift
  * @subpackage validator_legacy
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
+ * @deprecated
  */
 class sfUrlValidator extends sfValidator {
 
@@ -24,7 +25,7 @@ class sfUrlValidator extends sfValidator {
       (:[0-9]+)?                              # a port (optional)
       (/?|/\S+)                               # a /, nothing or a / with something
     $~ix';
- 
+
   /**
    * Executes this validator.
    *
@@ -69,7 +70,7 @@ class sfUrlValidator extends sfValidator {
 
   /**
    * Does regex match
-   * 
+   *
    * @param string $to_validate
    * @return boolean
    */

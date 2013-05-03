@@ -14,7 +14,6 @@
  * message source. In addition, message source can load a particular
  * catalogue.
  *
- * @author Xiang Wei Zhuo <weizhuo[at]gmail[dot]com>
  * @package Sift
  * @subpackage i18n
  */

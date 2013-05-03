@@ -17,7 +17,6 @@
  *
  * See the sfI18nMessageSource::factory() method to instantiate this class.
  *
- * @author Xiang Wei Zhuo <weizhuo[at]gmail[dot]com>
  * @package Sift
  * @subpackage i18n
  */

@@ -11,7 +11,6 @@
  *
  * @package    Sift
  * @subpackage security
- * @author     Dustin Whittle <dustin.whittle@symfony-project.com>
  */
 class sfCrypt {
 

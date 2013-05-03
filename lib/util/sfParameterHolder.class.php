@@ -14,8 +14,6 @@
  *
  * @package    Sift
  * @subpackage util
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @author     Sean Kerr <sean@code-box.org>
  */
 class sfParameterHolder implements Serializable {
 
@@ -24,7 +22,7 @@ class sfParameterHolder implements Serializable {
 
   /**
    * The constructor for sfParameterHolder.
-   * 
+   *
    * The default namespace may be overridden at initialization as follows:
    * <code>
    * <?php
@@ -132,7 +130,7 @@ class sfParameterHolder implements Serializable {
    * Retrieve an array of parameters, within a namespace.
    *
    * This method is limited to a namespace.  Without any argument,
-   * it returns the parameters of the default namespace.  If a 
+   * it returns the parameters of the default namespace.  If a
    * namespace is passed as an argument, only the parameters of the
    * specified namespace are returned.
    *

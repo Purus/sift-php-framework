@@ -5,7 +5,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
- 
+
 /**
  * sfWebRequest class.
  *
@@ -14,8 +14,6 @@
  *
  * @package    Sift
  * @subpackage request
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @author     Sean Kerr <sean@code-box.org>
  */
 class sfWebRequest extends sfRequest implements Serializable {
 
@@ -273,7 +271,7 @@ class sfWebRequest extends sfRequest implements Serializable {
   {
     return strtoupper($method) == $this->getMethod();
   }
-  
+
   public function getGetParameters()
   {
     return $this->getParameters;
@@ -457,7 +455,7 @@ class sfWebRequest extends sfRequest implements Serializable {
 
     return $files;
   }
-  
+
   /**
    * Retrieves a file path.
    *
@@ -765,7 +763,7 @@ class sfWebRequest extends sfRequest implements Serializable {
       unset($host[1]);
     }
 
-    return $protocol . '://' . implode(':', $host);    
+    return $protocol . '://' . implode(':', $host);
   }
 
   /**
@@ -1216,7 +1214,7 @@ class sfWebRequest extends sfRequest implements Serializable {
    * @return string
    */
   public function serialize()
-  {    
+  {
     $vars = get_object_vars($this);
     // we don't serialize context!
     // since it can hold unserializable objects like Doctrine_Connection

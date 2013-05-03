@@ -14,6 +14,5 @@
  * 
  * @package    Sift
  * @subpackage mailer
- * @author     Mishal.cz <mishal@mishal.cz>
  */
 class myMailerMessage extends sfMailerMessage {}

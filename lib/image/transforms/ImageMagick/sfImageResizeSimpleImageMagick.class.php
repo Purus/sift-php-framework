@@ -6,7 +6,6 @@
  * file that was distributed with this source code.
  */
 
-
 /**
  * sfImageResizeSimpleImageMagick class.
  *
@@ -16,7 +15,6 @@
  *
  * @package Sift
  * @subpackage image
- * @author Stuart Lowes <stuart.lowes@gmail.com>
  */
 class sfImageResizeSimpleImageMagick extends sfImageTransformAbstract
 {

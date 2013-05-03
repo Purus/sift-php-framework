@@ -11,7 +11,6 @@
  *
  * @package Sift
  * @subpackage image
- * @author Robin Corps <robin@ngse.co.uk>
  */
 class sfImageTrimImageMagick extends sfImageTransformAbstract
 {

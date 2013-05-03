@@ -11,7 +11,6 @@
  *
  * @package    Sift
  * @subpackage core
- * @author     Dustin Whittle <dustin.whittle@symfony-project.com>
  */
 class sfDimensions {
 

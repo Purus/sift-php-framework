@@ -8,10 +8,9 @@
 
 /**
  * Packages a plugin.
- * 
+ *
  * @package     Sift
  * @subpackage  cli_task
- * @author      Kris Wallsmith <kris.wallsmith@symfony-project.com>
  */
 class sfCliPluginPackageTask extends sfCliPluginBaseTask
 {
@@ -44,7 +43,7 @@ class sfCliPluginPackageTask extends sfCliPluginBaseTask
     $this->briefDescription = 'Create a plugin PEAR package';
 
     $scriptName = $this->environment->get('script_name');
-    
+
     $this->detailedDescription = <<<EOF
 The [plugin:package|INFO] task creates a plugin PEAR package:
 
@@ -82,7 +81,7 @@ EOF;
     $this->pluginDir = $this->commandApplication
                               ->getProject()
                               ->getPlugin($arguments['plugin'])->getRootDir();
-    
+
     $this->interactive = !$options['non-interactive'];
 
     $cleanup = array();
@@ -104,16 +103,16 @@ EOF;
     }
 
     $manager = $this->getPluginManager();
-    
+
     // load xml
-    $xml = simplexml_load_file($this->pluginDir.'/package.xml');    
+    $xml = simplexml_load_file($this->pluginDir.'/package.xml');
     $channel = (string)$xml->channel;
-    
-    try 
+
+    try
     {
       // register the channel
       $manager->getEnvironment()->addChannel($channel);
-      
+
       $package = $manager->packagePlugin($this->pluginDir.'/package.xml', $options);
     }
     catch(sfException $e)
@@ -122,9 +121,9 @@ EOF;
       {
         $cleanup['package_file'] = '.error';
       }
-      
-      $this->cleanup($cleanup);      
-      
+
+      $this->cleanup($cleanup);
+
       throw new sfCliCommandException($e->getMessage());
     }
 
@@ -133,11 +132,11 @@ EOF;
 
   /**
    * Cleanup files.
-   * 
+   *
    * Available options:
-   * 
+   *
    *  * package_file
-   * 
+   *
    * @param array $options
    */
   protected function cleanup(array $options = array())
@@ -165,7 +164,7 @@ EOF;
 
   /**
    * Generates a package.xml file in the plugin directory.
-   * 
+   *
    * @todo Move this into its own task
    */
   protected function generatePackageFile(array $arguments, array $options)
@@ -233,7 +232,7 @@ EOF;
       $validator = new sfValidatorChoice(array('choices' => $choices = array('devel', 'alpha', 'beta', 'stable')), array('required' => 'A valid stability is required.', 'invalid' => '"%value%" is not a valid stability ('.join('|', $choices).').'));
       $tokens['STABILITY'] = $this->askAndValidate('Plugin stability:', $validator, array('value' => $options['plugin-stability']));
     }
-    
+
     if (false !== strpos($template, '##CHANNEL##'))
     {
       $tokens['CHANNEL'] = $this->askAndValidate('Plugin channel:', new sfValidatorCallback(array(
@@ -244,11 +243,11 @@ EOF;
       )), array(
         'value' => $options['plugin-channel'],
       ));
-    }    
+    }
 
     // FIXME: this should be configured somewhere!
     $tokens['SIFT_CHANNEL'] = $this->environment->get('pear-channel', 'pear.lab');
-    
+
     $finder = sfFinder::type('any')->maxdepth(0)
                 ->prune('test')->discard('test', 'package.xml.tmpl')
                 ->prune('nbproject')->discard('nbproject')
@@ -279,11 +278,11 @@ EOF;
 
   /**
    * Returns an XML string for the contents of the supplied directory.
-   * 
+   *
    * @param   string           $directory
    * @param   sfFinder         $finder
    * @param   SimpleXMLElement $baseXml
-   * 
+   *
    * @return  string
    */
   protected function buildContents($directory, sfFinder $finder = null, SimpleXMLElement $baseXml = null)

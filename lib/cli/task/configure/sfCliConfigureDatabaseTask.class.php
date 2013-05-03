@@ -11,7 +11,6 @@
  *
  * @package    Sift
  * @subpackage cli_task
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  */
 class sfCliConfigureDatabaseTask extends sfCliBaseTask {
 
@@ -85,7 +84,7 @@ EOF;
     {
       $tpl = file_get_contents($this->environment->get('sf_sift_data_dir').'/skeleton/project/config/databases.yml');
     }
-    
+
     $config = file_exists($file) ? sfYaml::load($file) : array();
 
     $config[$options['env']][$options['name']] = array(
@@ -98,9 +97,9 @@ EOF;
     );
 
     $contents = $tpl ? sprintf("%s\n%s", $tpl, sfYaml::dump($config, 4)) : sfYaml::dump($config, 4);
-    
+
     file_put_contents($file, $contents);
-    
+
     $this->logSection($this->getFullName(), 'Done.');
   }
 

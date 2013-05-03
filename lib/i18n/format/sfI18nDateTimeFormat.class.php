@@ -8,57 +8,56 @@
 
 /**
  * sfI18nDateTimeFormat class
- * 
- * Defines how DateTime values are formatted and displayed, depending 
- * on the culture.
- * 
- * This class contains information, such as date patterns, time patterns, 
- * and AM/PM designators. 
  *
- * To create a sfI18nDateTimeFormat for a specific culture, create a 
+ * Defines how DateTime values are formatted and displayed, depending
+ * on the culture.
+ *
+ * This class contains information, such as date patterns, time patterns,
+ * and AM/PM designators.
+ *
+ * To create a sfI18nDateTimeFormat for a specific culture, create a
  * sfCulture for that culture and retrieve the sfI18nDateTimeFormat using
  * ->getDateTimeFormat() method call.
- * 
+ *
  * For example:
  * <code>
  * $culture = new sfCulture('en_AU');
  * $dtfi = $culture->getDateTimeFormat();
  * </code>
- * 
- * To create a sfDateTimeFormat for the invariant culture, use 
+ *
+ * To create a sfDateTimeFormat for the invariant culture, use
  * <code>
  * sfDateTimeFormat::getInstance($culture=null);
  * </code>
  * you may pass a sfCulture parameter $culture to get the sfDateTimeFormat
  * for a specific culture.
  *
- * DateTime values are formatted using standard or custom patterns stored in 
+ * DateTime values are formatted using standard or custom patterns stored in
  * the properties of a sfDateTimeFormat.
- * 
- * The standard patterns can be replaced with custom patterns by setting the 
+ *
+ * The standard patterns can be replaced with custom patterns by setting the
  * associated properties of sfI18nDateTimeFormat.
  *
- * The following table lists the standard format characters for each standard 
- * pattern and the associated sfI18nDateTimeFormat property that can be set to 
+ * The following table lists the standard format characters for each standard
+ * pattern and the associated sfI18nDateTimeFormat property that can be set to
  * modify the standard pattern. The format characters are case-sensitive;
  * for example, 'g' and 'G' represent slightly different patterns.
  *
  * <code>
  *  Format Character    Associated Property     Example Format Pattern (en-US)
  *  --------------------------------------------------------------------------
- *  d                   ShortDatePattern        MM/dd/yyyy 
- *  D                   LongDatePattern         dddd, dd MMMM yyyy 
+ *  d                   ShortDatePattern        MM/dd/yyyy
+ *  D                   LongDatePattern         dddd, dd MMMM yyyy
  *  F                   FullDateTimePattern     dddd, dd MMMM yyyy HH:mm:ss
- *  m, M                MonthDayPattern         MMMM dd 
+ *  m, M                MonthDayPattern         MMMM dd
  *  r, R                RFC1123Pattern          ddd, dd MMM yyyy HH':'mm':'ss 'GMT'
- *  s                   SortableDateTimePattern yyyy'-'MM'-'dd'T'HH':'mm':'ss 
- *  t                   ShortTimePattern        HH:mm 
- *  T                   LongTimePattern         HH:mm:ss 
- *  Y                   YearMonthPattern        yyyy MMMM 
+ *  s                   SortableDateTimePattern yyyy'-'MM'-'dd'T'HH':'mm':'ss
+ *  t                   ShortTimePattern        HH:mm
+ *  T                   LongTimePattern         HH:mm:ss
+ *  Y                   YearMonthPattern        yyyy MMMM
  *  --------------------------------------------------------------------------
  * </code>
  *
- * @author Xiang Wei Zhuo <weizhuo[at]gmail[dot]com>
  * @package Sift
  * @subpackage i18n
  */
@@ -114,10 +113,10 @@ class sfI18nDateTimeFormat {
   }
 
   /**
-   * Initializes a new writable instance of the sfI18nDateTimeFormat class 
+   * Initializes a new writable instance of the sfI18nDateTimeFormat class
    * that is dependent on the CLDR data for date time formatting
    * information. <b>N.B.</b>You should not initialize this class directly
-   * unless you know what you are doing. Please use use 
+   * unless you know what you are doing. Please use use
    * sfI18nDateTimeFormat::getInstance() to create an instance.
    *
    * @param array   $data CLDR data for date time formatting.
@@ -148,7 +147,7 @@ class sfI18nDateTimeFormat {
   /**
    * Gets the default sfI18nDateTimeFormat that is culture-independent (invariant).
    *
-   * @return sfI18nDateTimeFormat default sfI18nDateTimeFormat. 
+   * @return sfI18nDateTimeFormat default sfI18nDateTimeFormat.
    */
   public static function getInvariantInfo()
   {
@@ -290,9 +289,9 @@ class sfI18nDateTimeFormat {
   }
 
   /**
-   * A one-dimensional array of type String containing the 
-   * culture-specific abbreviated names of the months. The array 
-   * for InvariantInfo contains "Jan", "Feb", "Mar", "Apr", "May", 
+   * A one-dimensional array of type String containing the
+   * culture-specific abbreviated names of the months. The array
+   * for InvariantInfo contains "Jan", "Feb", "Mar", "Apr", "May",
    * "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", and "Dec".
    *
    * Returns wide names if abbreviated names doesn't exist.
@@ -326,8 +325,8 @@ class sfI18nDateTimeFormat {
   }
 
   /**
-   * A one-dimensional array of type String containing the 
-   * culture-specific full names of the months. The array for 
+   * A one-dimensional array of type String containing the
+   * culture-specific full names of the months. The array for
    * InvariantInfo contains "January", "February", "March", "April",
    * "May", "June", "July", "August", "September", "October", "November",
    * and "December"
@@ -375,7 +374,7 @@ class sfI18nDateTimeFormat {
   /**
    * A string containing the name of the era.
    *
-   * @param int $era era The integer representing the era. 
+   * @param int $era era The integer representing the era.
    * @return string the era name.
    */
   public function getEra($era)
@@ -541,10 +540,10 @@ class sfI18nDateTimeFormat {
   }
 
   /**
-   * Returns a zero-based index for first day of the week, 
-   * as used by the local (Gregorian) calendar. 
+   * Returns a zero-based index for first day of the week,
+   * as used by the local (Gregorian) calendar.
    * e.g. Sunday (returns 0), or Monday (returns 1)
-   * 
+   *
    * @return integer
    */
   public function getFirstDayOfWeek()

@@ -8,10 +8,9 @@
 
 /**
  * Generates a new plugin.
- * 
+ *
  * @package     Sift
  * @subpackage  cli_task
- * @author      Kris Wallsmith <kris.wallsmith@symfony-project.com>
  */
 class sfCliGeneratePluginTask extends sfCliGeneratorBaseTask {
 
@@ -84,7 +83,7 @@ EOF;
     {
       throw new sfCliCommandException(sprintf('The application name "%s" is invalid.', $options['test-application']));
     }
-    
+
     // plugin does not exist
     if($this->checkPluginExists($plugin, false))
     {
@@ -103,7 +102,7 @@ EOF;
     $pluginDir = $this->environment->get('sf_plugins_dir') . '/' . $plugin;
     $testProject = $pluginDir . '/test/fixtures/project';
     $testApp = $testProject . '/apps/' . $options['test-application'];
-    
+
     $constants = array(
       'PLUGIN_NAME' => $plugin,
       'AUTHOR_NAME' => $this->getProjectProperty('author', 'Your name here'),
@@ -112,16 +111,16 @@ EOF;
 
     // plugin
     $finder = sfFinder::type('any')->discard('.sf');
-    
+
     $this->getFilesystem()->mirror($skeletonDir, $pluginDir, $finder);
 
     // Plugin class
-    $this->getFilesystem()->rename($pluginDir . '/lib/Plugin.class.php', 
+    $this->getFilesystem()->rename($pluginDir . '/lib/Plugin.class.php',
                                    $pluginDir . '/lib/' . $plugin . '.class.php');
     // Plugin installer
-    $this->getFilesystem()->rename($pluginDir . '/lib/install/Install.class.php', 
+    $this->getFilesystem()->rename($pluginDir . '/lib/install/Install.class.php',
                                    $pluginDir . '/lib/install/' . $plugin . 'Installer.class.php');
-    
+
     // tokens
     $finder = sfFinder::type('file')->name('*.php', '*.yml', 'package.xml.tmpl');
     $this->getFilesystem()->replaceTokens($finder->in($pluginDir), '##', '##', $constants);
@@ -138,36 +137,36 @@ EOF;
       $this->getFilesystem()->mirror($this->environment->get('sf_sift_data_dir') . '/skeleton/project', $testProject, $finder);
       $this->getFilesystem()->mirror($this->environment->get('sf_sift_data_dir') . '/skeleton/app/app', $testApp, $finder);
 
-      // project sift lib 
+      // project sift lib
       $this->getFilesystem()->remove($testProject.'/config/config.php');
-      
+
       file_put_contents($testProject.'/config/config.php', '<?php
 
 // empty for purpose of functional test, $sf_lib_dir and $sf_data_dir are defined in functional bootstrap
 
     ');
-      
+
       // FIXME: do more cleanup!
       sfToolkit::clearDirectory($testProject . '/' . $this->environment->get('sf_plugins_dir_name'));
       $this->getFilesystem()->remove($testProject . '/' . $this->environment->get('sf_plugins_dir_name'));
-      
+
       // application
       $className = sprintf('my%sApplication', sfInflector::camelize($options['test-application']));
 
       $this->getFilesystem()->rename($testApp.'/lib/application.class.php', $testApp.'/lib/'.$className.'.class.php');
-      $this->getFilesystem()->replaceTokens($testApp.'/lib/'.$className.'.class.php', '##', '##', 
-              array('CLASS_NAME' => $className, 'PROJECT_NAME' => $plugin));      
+      $this->getFilesystem()->replaceTokens($testApp.'/lib/'.$className.'.class.php', '##', '##',
+              array('CLASS_NAME' => $className, 'PROJECT_NAME' => $plugin));
     }
 
     // modules
     foreach($modules as $module)
     {
-      $moduleTask = new sfCliGeneratePluginModuleTask($this->environment, 
+      $moduleTask = new sfCliGeneratePluginModuleTask($this->environment,
                       $this->dispatcher, $this->formatter, $this->logger);
       $moduleTask->setCommandApplication($this->commandApplication);
       $moduleTask->run(array($plugin, $module));
     }
-    
+
   }
 
 }

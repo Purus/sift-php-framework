@@ -11,7 +11,6 @@
  *
  * @package Sift
  * @subpackage image
- * @author Stuart Lowes <stuart.lowes@gmail.com>
  */
 class sfImageTransformImageMagickAdapter extends sfImageTransformAdapterAbstract {
 
@@ -27,7 +26,7 @@ class sfImageTransformImageMagickAdapter extends sfImageTransformAdapterAbstract
   /*
    * Supported MIME types for the sfImageImageMagickAdapter
    * and their associated file extensions
-   * 
+   *
    * @var array
    */
   protected $types = array(
@@ -306,7 +305,7 @@ class sfImageTransformImageMagickAdapter extends sfImageTransformAdapterAbstract
 
   /**
    * Returns color information about pixel with given coordinates
-   * 
+   *
    * @param integer $x
    * @param integer $y
    * @return array

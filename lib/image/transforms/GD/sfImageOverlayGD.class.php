@@ -7,7 +7,6 @@
  */
  
 /**
- *
  * sfImageOverlaysGD class.
  *
  * Overlays GD image on top of another GD image.
@@ -16,7 +15,6 @@
  *
  * @package Sift
  * @subpackage image
- * @author Stuart Lowes <stuart.lowes@gmail.com>
  */
 class sfImageOverlayGD extends sfImageTransformAbstract
 {

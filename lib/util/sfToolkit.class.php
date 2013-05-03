@@ -11,8 +11,6 @@
  *
  * @package    Sift
  * @subpackage util
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @author     Sean Kerr <sean@code-box.org>
  */
 class sfToolkit {
 
@@ -928,7 +926,6 @@ class sfToolkit {
    *
    * @param integer $time Time limit
    * @return boolean
-   * @author Jan Kuchař (http://mujserver.net)
    */
   public static function setTimeLimit($time = 0)
   {
@@ -981,7 +978,6 @@ class sfToolkit {
    *
    * @param   mixed  $var  The value to get
    * @return  mixed
-   * @author  Fuel Development Team
    */
   public static function getValue($var)
   {

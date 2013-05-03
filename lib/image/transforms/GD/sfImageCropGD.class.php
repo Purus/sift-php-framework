@@ -7,7 +7,6 @@
  */
  
 /**
- *
  * sfImageCropGD class.
  *
  * Crops image.
@@ -16,7 +15,6 @@
  *
  * @package Sift
  * @subpackage image
- * @author Stuart Lowes <stuart.lowes@gmail.com> 
  */
 class sfImageCropGD extends sfImageTransformAbstract
 {

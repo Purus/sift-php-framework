@@ -5,9 +5,8 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
- 
+
 /**
- *
  * sfImageTextGD class.
  *
  * Adds text to the image.
@@ -16,7 +15,6 @@
  *
  * @package Sift
  * @subpackage image
- * @author Stuart Lowes <stuart.lowes@gmail.com>
  */
 class sfImageTextGD extends sfImageTransformAbstract {
 
@@ -62,15 +60,15 @@ class sfImageTextGD extends sfImageTransformAbstract {
 
   /**
    * Stroke color
-   * 
-   * @var string 
+   *
+   * @var string
    */
   protected $strokeColor;
 
   /**
    * Stroke border in pixels
-   * 
-   * @var integer 
+   *
+   * @var integer
    */
   protected $strokeBorder = 0;
 
@@ -255,7 +253,7 @@ class sfImageTextGD extends sfImageTransformAbstract {
 
   /**
    * Sets stroke border
-   * 
+   *
    * @param string
    */
   public function setStrokeBorder($strokeBorder)
@@ -298,7 +296,7 @@ class sfImageTextGD extends sfImageTransformAbstract {
     // disable alpha handling to enable font rendering
     imagealphablending($resource, true);
 
-    // 
+    //
     if($strokeBorder = $this->getStrokeBorder())
     {
       $rgb = sscanf($this->getStrokeColor(), '#%2x%2x%2x');

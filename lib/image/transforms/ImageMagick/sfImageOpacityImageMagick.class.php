@@ -13,8 +13,6 @@
  *
  * @package Sift
  * @subpackage image
- * @author Stuard Lowes <stuart.lowes@gmail.com>
- * @author Miloslav Kmet <miloslav.kmet@gmail.com>
  */
 class sfImageOpacityImageMagick extends sfImageTransformAbstract
 {

@@ -11,7 +11,6 @@
  *
  * @package    Sift
  * @subpackage view
- * @author     Dustin Whittle <dustin.whittle@symfony-project.com>
  */
 class sfDimensionsView extends sfPHPView {
 

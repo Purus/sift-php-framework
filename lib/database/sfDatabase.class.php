@@ -12,8 +12,6 @@
  *
  * @package    Sift
  * @subpackage database
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @author     Sean Kerr <sean@code-box.org>
  */
 abstract class sfDatabase {
 
@@ -22,17 +20,16 @@ abstract class sfDatabase {
           $parameterHolder = null,
           $resource = null;
 
-  
   /**
-   * 
+   *
    * @param array $parameters
    */
   public function __construct($parameters = array())
   {
-    $this->initialize($parameters);    
+    $this->initialize($parameters);
   }
 
-  
+
   /**
    * Connects to the database.
    *
@@ -189,10 +186,10 @@ abstract class sfDatabase {
 
   /**
    * Searches the enviroment variables and returns its value. Using:
-   * 
+   *
    * 1) superglobal $_SERVER array
    * 2) getenv() function
-   * 
+   *
    * @param array $matches
    * @return string
    * @see replaceEnvironmentVariablesCallback

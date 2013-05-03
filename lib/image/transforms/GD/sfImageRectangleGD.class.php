@@ -7,7 +7,6 @@
  */
 
 /**
- *
  * sfImageRectangleGD class.
  *
  * Draws a rectangle.
@@ -16,7 +15,6 @@
  *
  * @package Sift
  * @subpackage image
- * @author Stuart Lowes <stuart.lowes@gmail.com>
  */
 class sfImageRectangleGD extends sfImageTransformAbstract
 {

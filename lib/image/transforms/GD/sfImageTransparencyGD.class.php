@@ -7,7 +7,6 @@
  */
 
 /**
- *
  * sfImageTransparencyGD class.
  *
  * Sets the transparency for an image.
@@ -16,7 +15,6 @@
  *
  * @package Sift
  * @subpackage image
- * @author Stuart Lowes <stuart.lowes@gmail.com> 
  */
 class sfImageTransparencyGD extends sfImageTransformAbstract
 {

@@ -7,7 +7,6 @@
  */
 
 /**
- *
  * sfImageRectangleImageMagick class.
  *
  * Draws a rectangle.
@@ -16,7 +15,6 @@
  *
  * @package Sift
  * @subpackage image
- * @author Robin Corps <robin@ngse.co.uk>
  */
 class sfImageRectangleImageMagick extends sfImageTransformAbstract
 {

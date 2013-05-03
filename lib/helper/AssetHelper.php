@@ -556,7 +556,7 @@ function get_title($withGlobal = true)
  * Returns <script> tags for all javascripts configured in view.yml or added to the response object.
  *
  * You can use this helper to decide the location of javascripts in pages.
- * By default, if you don't call this helper, symfony will automatically include javascripts before </head>.
+ * By default, if you don't call this helper, Sift will automatically include javascripts before </head>.
  * Calling this helper disables this behavior.
  *
  * @return string <script> tags
@@ -608,7 +608,7 @@ function include_javascripts()
  * Returns <link> tags for all stylesheets configured in view.yml or added to the response object.
  *
  * You can use this helper to decide the location of stylesheets in pages.
- * By default, if you don't call this helper, symfony will automatically include stylesheets before </head>.
+ * By default, if you don't call this helper, Sift will automatically include stylesheets before </head>.
  * Calling this helper disables this behavior.
  *
  * @return string <link> tags

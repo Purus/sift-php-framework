@@ -7,7 +7,6 @@
  */
  
 /**
- *
  * sfImageGreyscaleGF class.
  *
  * Greyscales a GD image.
@@ -16,7 +15,6 @@
  *
  * @package Sift
  * @subpackage image
- * @author Stuart Lowes <stuart.lowes@gmail.com>
  */
 class sfImageGreyscaleGD extends sfImageTransformAbstract
 {

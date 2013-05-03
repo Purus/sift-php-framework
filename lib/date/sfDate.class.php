@@ -15,7 +15,6 @@
  *
  * @package Sift
  * @subpackage date
- * @author  Stephen Riesenberg <sjohnr@gmail.com>
  */
 class sfDate {
 
@@ -31,92 +30,92 @@ class sfDate {
   const SQL_DATE = 'Y-m-d';
 
   /**
-   * Atom format (example: 2005-08-15T15:52:01+00:00) 
-   * 
+   * Atom format (example: 2005-08-15T15:52:01+00:00)
+   *
    * @link http://php.net/manual/en/class.datetime.php#datetime.constants.types
    */
   const ATOM = DATE_ATOM;
 
   /**
    * HTTP Cookies (example: Monday, 15-Aug-05 15:52:01 UTC)
-   * 
+   *
    * @link http://php.net/manual/en/class.datetime.php#datetime.constants.types
    */
   const COOKIE = DATE_COOKIE;
 
   /**
-   * ISO-8601 (example: 2005-08-15T15:52:01+0000) 
-   * 
+   * ISO-8601 (example: 2005-08-15T15:52:01+0000)
+   *
    * @link http://php.net/manual/en/class.datetime.php#datetime.constants.types
    */
   const DATE_ISO8601 = DATE_ISO8601;
 
   /**
-   * RFC 822 (example: Mon, 15 Aug 05 15:52:01 +0000) 
-   * 
+   * RFC 822 (example: Mon, 15 Aug 05 15:52:01 +0000)
+   *
    * @link http://php.net/manual/en/class.datetime.php#datetime.constants.types
    */
   const DATE_RFC822 = DATE_RFC822;
 
   /**
-   * RFC 850 (example: Monday, 15-Aug-05 15:52:01 UTC) 
-   * 
+   * RFC 850 (example: Monday, 15-Aug-05 15:52:01 UTC)
+   *
    * @link http://php.net/manual/en/class.datetime.php#datetime.constants.types
    */
   const DATE_RFC850 = DATE_RFC850;
 
   /**
-   * RFC 1036 (example: Mon, 15 Aug 05 15:52:01 +0000) 
-   * 
+   * RFC 1036 (example: Mon, 15 Aug 05 15:52:01 +0000)
+   *
    * @link http://php.net/manual/en/class.datetime.php#datetime.constants.types
    */
   const DATE_RFC1036 = DATE_RFC1036;
 
   /**
-   * RFC 1123 (example: Mon, 15 Aug 2005 15:52:01 +0000) 
-   * 
+   * RFC 1123 (example: Mon, 15 Aug 2005 15:52:01 +0000)
+   *
    * @link http://php.net/manual/en/class.datetime.php#datetime.constants.types
    */
   const DATE_RFC1123 = DATE_RFC1123;
 
   /**
-   * RFC 2822 (Mon, 15 Aug 2005 15:52:01 +0000) 
-   * 
+   * RFC 2822 (Mon, 15 Aug 2005 15:52:01 +0000)
+   *
    * @link http://php.net/manual/en/class.datetime.php#datetime.constants.types
    */
   const DATE_RFC2822 = DATE_RFC2822;
 
   /**
    * Same as DATE_ATOM
-   * 
+   *
    * @link http://php.net/manual/en/class.datetime.php#datetime.constants.types
    */
   const DATE_RFC3339 = DATE_RFC3339;
 
   /**
-   * RSS (Mon, 15 Aug 2005 15:52:01 +0000) 
-   * 
+   * RSS (Mon, 15 Aug 2005 15:52:01 +0000)
+   *
    * @link http://php.net/manual/en/class.datetime.php#datetime.constants.types
    */
   const DATE_RSS = DATE_RSS;
 
   /**
-   * World Wide Web Consortium (example: 2005-08-15T15:52:01+00:00) 
-   * 
+   * World Wide Web Consortium (example: 2005-08-15T15:52:01+00:00)
+   *
    * @link http://php.net/manual/en/class.datetime.php#datetime.constants.types
    */
   const W3C = DATE_W3C;
 
   /**
    * The timestamp for this sfDate instance.
-   * 
+   *
    * @var integer
    */
   private $ts = null;
 
   /**
    * The original timestamp for this sfDate instance.
-   * 
+   *
    * @var integer
    */
   private $init = null;
@@ -330,13 +329,13 @@ class sfDate {
 
   /**
    * Converts the object to string
-   * 
+   *
    */
   public function __toString()
   {
     return $this->format(self::DATE_ISO8601);
   }
-  
+
   /**
    * Call any function available in the sfTime library, but without the ts parameter.
    *

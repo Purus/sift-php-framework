@@ -11,7 +11,6 @@
  *
  * @package    Sift
  * @subpackage view
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  */
 class sfPartialMailView extends sfPartialView
 {
@@ -39,7 +38,7 @@ class sfPartialMailView extends sfPartialView
       $this->setDecoratorTemplate(false);
       return;
     }
-    
+
     // where the email layout resides
     $dataDir = sfConfig::get('sf_data_dir') . DIRECTORY_SEPARATOR . 'email';
     if(is_readable($dataDir . DIRECTORY_SEPARATOR . $type . '.php'))
@@ -96,7 +95,7 @@ class sfPartialMailView extends sfPartialView
     // render the decorator template and return the result
     return $this->renderFile($template);
   }
-  
+
   protected function getMailVars()
   {
     $context    = $this->getContext();
@@ -128,7 +127,7 @@ class sfPartialMailView extends sfPartialView
 
     $mailHelpersLoaded = 1;
 
-    sfLoader::loadHelpers(array('Mail'));    
+    sfLoader::loadHelpers(array('Mail'));
   }
 
   /**
@@ -146,7 +145,7 @@ class sfPartialMailView extends sfPartialView
     }
 
     $template = $this->getDirectory().'/'.$this->getTemplate();
-    
+
     // execute pre-render check
     $this->preRenderCheck();
 

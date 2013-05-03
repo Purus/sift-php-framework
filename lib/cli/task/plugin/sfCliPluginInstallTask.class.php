@@ -61,8 +61,8 @@ To force installation of all required dependencies, use the [install_deps|INFO] 
   [{$scriptName} plugin:install --install-deps myGuardPlugin|INFO]
   [{$scriptName} plugin:install -d myGuardPlugin|INFO]
 
-By default, the PEAR channel used is [symfony-plugins|INFO]
-(plugins.symfony-project.org).
+By default, the PEAR channel used is [sift-plugins|INFO]
+(pear.sift.lab).
 
 You can specify another channel with the [channel|COMMENT] option:
 

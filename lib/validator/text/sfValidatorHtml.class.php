@@ -12,8 +12,6 @@
  *
  * @package    Sift
  * @subpackage validator
- * @author     Alex Gilbert <alex@punkave.com>
- * @author     Tom Boutell <tom@punkave.com>
  */
 class sfValidatorHtml extends sfValidatorString
 {
@@ -57,7 +55,6 @@ class sfValidatorHtml extends sfValidatorString
     return $clean;
   }
 
-  // aHtml::simplify uses false to skip things, not null
   protected function getOptionOrFalse($s)
   {
     $option = $this->getOption($s);

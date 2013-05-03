@@ -13,8 +13,6 @@
  *
  * @package    Sift
  * @subpackage request
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @author     Sean Kerr <sean@code-box.org>
  */
 abstract class sfRequest {
 

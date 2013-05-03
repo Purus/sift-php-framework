@@ -13,8 +13,8 @@
  *
  * @package    Sift
  * @subpackage validator_legacy
- * @author     Mishal.cz <mishal@mishal.cz>
- * */
+ * @deprecated
+ */
 class sfSlugValidator extends sfValidator {
 
   public function initialize($context, $parameters = null)
@@ -30,12 +30,12 @@ class sfSlugValidator extends sfValidator {
   }
 
   public function execute(&$value, &$error)
-  {    
+  {
     if(!$this->isValidSlug($value))
     {
-      $error = $this->getParameter('slug_error'); 
+      $error = $this->getParameter('slug_error');
       return false;
-    } 
+    }
     return true;
   }
 
@@ -53,5 +53,5 @@ class sfSlugValidator extends sfValidator {
     }
     return false;
   }
-  
+
 }

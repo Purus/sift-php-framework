@@ -15,9 +15,6 @@
  *
  * @package    Sift
  * @subpackage feed
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @author     Francois Zaninotto <francois.zaninotto@symfony-project.com>
- * @author     Stefan Koopmanschap <stefan.koopmanschap@symfony-project.com>
  */
 class sfRss10Feed extends sfRssFeed {
 

@@ -13,9 +13,6 @@
  *
  * @package Sift
  * @subpackage image
- * @author Stuart Lowes <stuart.lowes@gmail.com>
- * @author Miloslav Kmet <miloslav.kmet@gmail.com>
- * @author Victor Berchet <vberchet-sf@yahoo.com>
  */
 class sfImageResizeGeneric extends sfImageTransformAbstract
 {

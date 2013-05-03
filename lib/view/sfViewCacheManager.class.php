@@ -15,8 +15,7 @@
  *
  * @package    Sift
  * @subpackage view
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * */
+ */
 class sfViewCacheManager {
 
   protected
@@ -82,10 +81,10 @@ class sfViewCacheManager {
     {
       $uri .= false === strpos($uri, '?') ? '?' : '&';
       $uri .= http_build_query($getParameters, null, '&');
-    }    
+    }
     return $uri;
   }
-  
+
   /**
    * Generates namespaces for the cache manager
    *
@@ -120,7 +119,7 @@ class sfViewCacheManager {
     {
       $uri = $this->controller->genUrl($internalUri);
     }
-    
+
     sfConfig::set('sf_url_format', $oldUrlFormat);
 
     // prefix with vary headers
@@ -565,7 +564,7 @@ class sfViewCacheManager {
    * Executes the shutdown procedure.
    */
   public function shutdown()
-  {    
+  {
   }
 
 }

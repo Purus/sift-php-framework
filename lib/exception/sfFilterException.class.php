@@ -12,8 +12,6 @@
  *
  * @package    Sift
  * @subpackage exception
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @author     Sean Kerr <sean@code-box.org>
  */
 class sfFilterException extends sfException
 {

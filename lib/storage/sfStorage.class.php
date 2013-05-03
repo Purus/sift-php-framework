@@ -5,14 +5,12 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
- 
+
 /**
- * sfStorage allows you to customize the way symfony stores its persistent data.
+ * sfStorage allows you to customize the way Sift stores its persistent data.
  *
  * @package    Sift
  * @subpackage storage
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @author     Sean Kerr <sean@code-box.org>
  */
 abstract class sfStorage
 {
@@ -164,5 +162,5 @@ abstract class sfStorage
   {
     return $this->parameterHolder->set($name, $value, $ns);
   }
-  
+
 }

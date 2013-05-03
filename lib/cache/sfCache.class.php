@@ -11,49 +11,47 @@
  *
  * @package    Sift
  * @subpackage cache
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @author     Fabien Marty <fab@php.net>
  */
-abstract class sfCache extends sfConfigurable 
+abstract class sfCache extends sfConfigurable
 {
   /**
    * Delete mode -> only old caches
    */
   const MODE_OLD = 'old';
-  
+
   /**
    * Delete mode -> all caches
    */
   const MODE_ALL = 'all';
-  
+
   /**
    * Default cache namespace
-   * 
+   *
    */
   const DEFAULT_NAMESPACE = '';
-  
+
   /**
    * Array of default options
-   * 
-   * @var array 
+   *
+   * @var array
    */
   protected $defaultOptions = array(
-    'lifetime' => 86400,  
+    'lifetime' => 86400,
     'automatic_cleaning_factor' => 500
   );
 
   /**
    * Valid options for the cache
-   * 
-   * @var array 
+   *
+   * @var array
    */
   protected $validOptions = array(
     'lifetime', 'automatic_cleaning_factor'
   );
-  
+
   /**
    * Constructs the cache
-   * 
+   *
    * @param array $options
    */
   public function __construct($options = array())
@@ -61,14 +59,14 @@ abstract class sfCache extends sfConfigurable
     parent::__construct($options);
     $this->initialize($options);
   }
-  
+
   /**
    * Initializes the cache
-   * 
+   *
    * @param array $options
    */
   public function initialize($options = array())
-  {    
+  {
   }
 
   /**
@@ -132,7 +130,7 @@ abstract class sfCache extends sfConfigurable
    * @return int The last modification time
    */
   abstract public function getLastModified($id, $namespace = self::DEFAULT_NAMESPACE);
-  
+
   /**
    * Sets a new life time.
    *
@@ -141,7 +139,7 @@ abstract class sfCache extends sfConfigurable
    */
   public function setLifeTime($lifeTime)
   {
-    return $this->setOption('lifetime', $lifeTime);   
+    return $this->setOption('lifetime', $lifeTime);
   }
 
   /**
@@ -153,18 +151,18 @@ abstract class sfCache extends sfConfigurable
   {
     return $this->getOption('automatic_cleaning_factor');
   }
-  
+
   /**
    * Returns refresh time for given lifetime
-   * 
+   *
    * @param integer $lifetime life time (in seconds)
    * @return integer
    */
   public function getRefreshTime($lifetime)
   {
-    return time() - $lifetime;    
+    return time() - $lifetime;
   }
-  
+
   /**
    * Returns the current life time.
    *
@@ -174,6 +172,6 @@ abstract class sfCache extends sfConfigurable
   {
     return $this->getOption('lifetime');
   }
-  
-  
+
+
 }

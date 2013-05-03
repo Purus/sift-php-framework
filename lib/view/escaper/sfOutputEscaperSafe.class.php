@@ -5,13 +5,13 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 /**
  * Marks a variable as being safe for output.
  *
  * @package    Sift
  * @subpackage view
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * */
+ */
 class sfOutputEscaperSafe extends ArrayIterator
 {
   protected

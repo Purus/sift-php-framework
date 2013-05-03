@@ -5,14 +5,12 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
- 
+
 /**
  * Utility for printing tables from commandline scripts.
  *
  * @package  Sift
  * @subpackage text
- * @author   Jan Schneider <jan@horde.org>
- * @license  http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  * @link     http://pear.php.net/package/Console_Table
  */
 class sfPlainTextTable {
