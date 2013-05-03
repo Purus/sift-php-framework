@@ -559,11 +559,13 @@ class sfFilesystem
   public static function sanitizeFilename($name)
   {
     $extension = self::getFileExtension($name);
-    $file      = self::getFilename($name);
-    $file      = sfUtf8::lower(sfUtf8::clean($file));
-    $file      = sfUtf8::ascii($file);
-    $file      = str_replace(array(' ', '.', '(', ')'), array('_', '', '', ''), $file);
-    return sprintf('%s.%s', $file, strtolower($extension));
+    $file = self::getFilename($name);
+    $file = sfUtf8::lower(sfUtf8::clean($file));
+    $file = sfUtf8::ascii($file);
+    $file = str_replace(array(' ', '.', '(', ')', '-'), array('_', '', '', '', '_'), $file);
+    $file = preg_replace('/_{2,}/', '_', $file);
+
+    return sprintf('%s%s', $file, $extension ? ('.'. strtolower($extension)) : '');
   }
 
   /**
