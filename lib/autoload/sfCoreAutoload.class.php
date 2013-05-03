@@ -700,6 +700,7 @@ class sfCoreAutoload
     'sffakerenderingfilter' => 'util/sfBrowser.class.php',
     'sfbrowserbase' => 'util/sfBrowserBase.class.php',
     'sfcallable' => 'util/sfCallable.class.php',
+    'sfclassmanipulator' => 'util/sfClassManipulator.class.php',
     'sfcontext' => 'util/sfContext.class.php',
     'sfdomcssselector' => 'util/sfDomCssSelector.class.php',
     'sffinder' => 'util/sfFinder.class.php',
