@@ -174,7 +174,9 @@ class sfFormJavascriptValidation {
     'onkeyup' => false,
     // 'onclick' => false,
     'focus_cleanup' => true,
-    'ignore' => '.ignore'
+    // ignore elements which are marked with class ignore
+    // or hidden inputs
+    'ignore' => '.ignore,input[type="hidden"]'
   );
 
   /**

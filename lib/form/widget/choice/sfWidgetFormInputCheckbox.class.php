@@ -20,6 +20,7 @@ class sfWidgetFormInputCheckbox extends sfWidgetFormInput {
    * Available options:
    *
    *  - value_attribute_value: The "value" attribute value to set for the checkbox
+   *  - unchecked_submitable: Renders hidden field with unchecked state
    *
    * @param array  $options     An array of options
    * @param array  $attributes  An array of default HTML attributes
@@ -45,6 +46,11 @@ class sfWidgetFormInputCheckbox extends sfWidgetFormInput {
 
     $this->setOption('type', 'checkbox');
 
+    // allows to submit the unchecked state of the checkbox
+    // hidden input is rendered before the checkbox which holds the 0 value
+    // when checkbox is checked, it overwrites the hidden input's value
+    $this->addOption('unchecked_submitable', true);
+
     if(isset($attributes['value']))
     {
       $this->setOption('value_attribute_value', $attributes['value']);
@@ -65,6 +71,11 @@ class sfWidgetFormInputCheckbox extends sfWidgetFormInput {
    */
   public function render($name, $value = null, $attributes = array(), $errors = array())
   {
+    if($value === '')
+    {
+      $value = null;
+    }
+
     if(null !== $value && $value !== false)
     {
       $attributes['checked'] = 'checked';
@@ -80,7 +91,19 @@ class sfWidgetFormInputCheckbox extends sfWidgetFormInput {
       $attributes['value'] = $this->getOption('value_attribute_value');
     }
 
-    return parent::render($name, null, $attributes, $errors);
+    $html = parent::render($name, null, $attributes, $errors);
+
+    if($this->getOption('unchecked_submitable'))
+    {
+      $html = $this->renderTag('input', array(
+          'name' => $name,
+          'id' => $this->generateId($name . '_unchecked', $value), // to prevent populating with id of the checkbox
+          'type' => 'hidden',
+          'value' => '' // empty value is send, but validators will fail
+      )) . $html;
+    }
+
+    return $html;
   }
 
 }
