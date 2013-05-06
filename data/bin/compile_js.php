@@ -143,8 +143,7 @@ class sfJsCompilerCommand {
       }
 
       $i18n = $this->getI18n($culture, $options);
-      // FIXME: implement
-      $baseCulture = 'default';
+      $baseCulture = substr($culture, 0, 2);
 
       $content = sprintf(
 '/*
@@ -168,7 +167,7 @@ class sfJsCompilerCommand {
 Globalize.addCultureInfo(\'%s\', \'%s\', %s);
 
 ', $culture, (count($messages) ? sprintf('I18n.addTranslation(%s);', sfJson::encode($messages)) : '// nothing'),
-        $baseCulture, $culture, sfJson::encode($i18n));
+        str_replace('_', '-', $culture), 'default', sfJson::encode($i18n));
 
     $cultureFile = sprintf($options['js_data_dir'].'/core/i18n/%s.js', $culture);
     $cultureMinFile = sprintf($options['js_data_dir'].'/core/i18n/%s.min.js', $culture);

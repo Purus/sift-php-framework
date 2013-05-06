@@ -54,10 +54,12 @@ class sfCultureExportGlobalize extends sfCultureExport {
 
     $data['name'] = $this->cultureInstance->getName();
     $data['englishName'] = $this->cultureInstance->getEnglishName();
-    // FIXME: isRTL is not included in out definition!
+    // FIXME: isRTL is not included in CLDR definition
     $data['isRTL'] = false;
 
     $pattern = $this->numberFormat->getPercentageInstance($this->culture)->getPattern();
+    $currency = $this->numberFormat->getCurrencyInstance();
+    $symbol = $currency->getCurrencySymbol();
 
     $data['numberFormat'] = array(
       ',' => $this->numberFormat->getGroupSeparator(),
@@ -68,9 +70,25 @@ class sfCultureExportGlobalize extends sfCultureExport {
       'groupSizes' => array($pattern['groupSize1']),
       'percent' => array(
         'pattern' => array(
+          '-n%','n%' // what is this?
         ),
         ',' => ' ',
         '.' => ''
+      ),
+      'currency' => array(
+          'pattern' => array(
+            // [negativePattern, positivePattern]
+            //   negativePattern: one of "($n)|-$n|$-n|$n-|(n$)|-n$|n-$|n$-|-n $|-$ n|n $-|$ n-|$ -n|n- $|($ n)|(n $)"
+            //   positivePattern: one of "$n|n$|$ n|n $"
+            // see: http://cldr.unicode.org/translation/number-patterns
+            '($n)', '$n'
+          ),
+          ',' => $currency->getGroupSeparator(),
+          '.' => $currency->getDecimalSeparator(),
+
+          // Symbol -> THIS is nonsense, I should pass the currency code to forma function
+          // not use currency for the culture as default
+          'symbol' => $symbol
       )
     );
 
