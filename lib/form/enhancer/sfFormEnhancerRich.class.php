@@ -62,7 +62,12 @@ class sfFormEnhancerRich extends sfFormEnhancer {
       // this is a floating number validator
       if($validator instanceof sfValidatorNumber)
       {
-        $options['numberFormat'] = $widget instanceof sfWidgetFormPrice ? 'C' : 'n';
+        // FIXME: implement proper validator for jquery validate plugin
+        // for various number formats!
+        if($widget instanceof sfWidgetFormPrice)
+        {
+          $options['numberFormat'] = 'C';
+        }
       }
     }
 
