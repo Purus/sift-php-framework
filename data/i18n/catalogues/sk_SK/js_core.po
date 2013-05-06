@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Js core (1.0)\n"
 "POT-Creation-Date: 2013-04-22 10:26+0100\n"
-"PO-Revision-Date: 2013-04-22 10:33+0100\n"
+"PO-Revision-Date: 2013-05-06 16:23+0100\n"
 "Last-Translator: Michal Moravec - Mishal.cz <mishal@mishal.cz>\n"
 "Language-Team: \n"
 "Language: sk\n"
@@ -18,88 +18,91 @@ msgstr ""
 "X-Poedit-SearchPath-1: ../../../web/sf/js/core\n"
 
 msgid "close"
-msgstr ""
+msgstr "zatvoriť"
 
 msgid "Alert"
-msgstr ""
+msgstr "Upozornenie"
 
 msgid "Ok"
 msgstr "Ok"
 
 msgid "Confirmation"
-msgstr ""
+msgstr "Potvrdenie"
 
 msgid "Cancel"
-msgstr ""
+msgstr "Zrušiť"
 
 msgid "Are you sure?"
-msgstr ""
+msgstr "Ste si istí?"
 
 msgid "The server is too busy at the moment."
-msgstr ""
+msgstr "Server je práve príliš zaneprázdnený."
 
 msgid ""
 "This action requires to be logged in and you are not logged in. Redirect to "
 "login page?"
 msgstr ""
+"Táto akcia si vyžaduje byť prihlásený a nie ste prihlásený. Presmerovať na "
+"prihlasovaciu stránku?"
 
 msgid ""
 "This action requires to be logged in and you are not logged in. Please login."
 msgstr ""
+"Táto akcia si vyžaduje byť prihlásený a nie ste prihlásený. Prihláste sa."
 
 msgid "Choose time"
-msgstr ""
+msgstr "Vyberte čas"
 
 msgid "Time"
-msgstr ""
+msgstr "Čas"
 
 msgid "Hours"
-msgstr ""
+msgstr "Hodiny"
 
 msgid "Minutes"
-msgstr ""
+msgstr "Minúty"
 
 msgid "Seconds"
-msgstr ""
+msgstr "Sekundy"
 
 msgid "Miliseconds"
-msgstr ""
+msgstr "Milisekundy"
 
 msgid "Timezone"
-msgstr ""
+msgstr "Časové pásmo"
 
 msgid "Now"
-msgstr ""
+msgstr "Teraz"
 
 msgid "Close"
-msgstr ""
+msgstr "Zatvor"
 
 msgid "Today"
-msgstr ""
+msgstr "Dnes"
 
 msgid "Next"
-msgstr ""
+msgstr "Ďalšie"
 
 msgid "Previous"
-msgstr ""
+msgstr "Predchádzajúce"
 
 msgid "Empty"
-msgstr ""
+msgstr "Prázdne"
 
 msgid "clear"
-msgstr ""
+msgstr "Vymazať"
 
 msgid "No matches found."
-msgstr ""
+msgstr "Nebola nájdena žiadna zhoda."
 
 msgid "Please enter %number% more characters."
-msgstr ""
+msgstr "Prosím zadajte% number% viac znakov."
 
 msgid "You can only select %number% item(s)."
-msgstr ""
+msgstr "Môžete vybrať len% number% položku (y)."
 
 msgid "Loading more results..."
-msgstr ""
+msgstr "Nahrávam ďalšie výsledky"
 
 msgid "Searching..."
 msgstr "Hľadám..."
