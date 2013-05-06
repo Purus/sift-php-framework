@@ -35,10 +35,10 @@ class sfWidgetFormI18nAggregate extends sfWidgetForm
     $this->addRequiredOption('cultures');
 
     // widget template
-    $this->addOption('widget_template', '<div>%label% %widget%</div>');
+    $this->addOption('widget_template', '<div>%label% %widget%%error%</div>');
 
     // standalone template for first culture
-    $this->addOption('standalone_template', '%label% %widget%');
+    $this->addOption('standalone_template', '<div class="form-i18n-standalone">%label% %widget%%error%</div>');
     // widgets wrapper template
     $this->addOption('widgets_wrapper_template', '<div class="form-i18n-aggregate">%widgets%</div>');
 
@@ -98,7 +98,8 @@ class sfWidgetFormI18nAggregate extends sfWidgetForm
         '%label%'  => $this->renderContentTag('label', $label, array(
           'for' => $this->generateId($widgetName, $widgetValue)
         )),
-        '%widget%' => $widget->render($widgetName, $widgetValue)
+        '%widget%' => $widget->render($widgetName, $widgetValue),
+        '%error%' => $this->getErrorForCulture($name, $errors, $culture)
       );
     }
 
@@ -126,6 +127,35 @@ class sfWidgetFormI18nAggregate extends sfWidgetForm
     }
 
     return join("\n", $html);
+  }
+
+  /**
+   * Returns an an error for the culture
+   *
+   * @param string $name Widget name
+   * @param array $errors
+   * @param string $culture
+   * @return string
+   */
+  protected function getErrorForCulture($name, $errors, $culture)
+  {
+    if(!count($errors))
+    {
+      return '';
+    }
+
+    foreach($errors as $error)
+    {
+      /* @var $error sfValidatorError */
+      $arguments = $error->getArguments(true);
+      if(isset($arguments['culture']) && $arguments['culture'] == $culture)
+      {
+        return $this->getParent()->getFormFormatter()->formatErrorsForRow($error, array(
+          'for' => $this->generateId(sprintf('%s[%s]', $name, $culture), $culture)
+        ));
+      }
+    }
+    return '';
   }
 
   /**

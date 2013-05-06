@@ -29,8 +29,12 @@ class sfWidgetFormSchemaFormatterDiv extends sfWidgetFormSchemaFormatter
     'sfWidgetFormInputCheckbox', //'sfWidgetFormNoInput'
   );
 
+  protected $specialWidgets = array(
+    'sfWidgetFormPartial', 'sfWidgetFormComponent', 'sfWidgetFormDualList'
+  );
+
   protected $largeWidgets = array(
-    'sfWidgetFormDualList'
+    'sfWidgetFormDualList', 'sfWidgetFormI18nAggregate'
   );
 
   /**
@@ -78,6 +82,16 @@ class sfWidgetFormSchemaFormatterDiv extends sfWidgetFormSchemaFormatter
       }
     }
 
+    $special = false;
+    foreach($this->specialWidgets as $inlineWidget)
+    {
+      if($widget instanceof $inlineWidget)
+      {
+        $special = true;
+        break;
+      }
+    }
+
     $html = array();
 
     $html[] = ($inline) ? '<div class="form-row inline">' : '<div class="form-row">';
@@ -89,11 +103,19 @@ class sfWidgetFormSchemaFormatterDiv extends sfWidgetFormSchemaFormatter
     if($inline)
     {
       $html[] = $field;
-      $html[] = $label;
+
+      if(!$special)
+      {
+        $html[] = $label;
+      }
     }
     else
     {
-      $html[] = $label;
+      if(!$special)
+      {
+        $html[] = $label;
+      }
+
       // render help
       if($large)
       {
@@ -110,10 +132,16 @@ class sfWidgetFormSchemaFormatterDiv extends sfWidgetFormSchemaFormatter
       {
         $errors = array($errors);
       }
-      $html[] = strtr($this->getErrorListFormatInARow(), array(
+
+      // we render error only for small widgets
+      // since large widgets are large :)
+      if(!$large)
+      {
+        $html[] = strtr($this->getErrorListFormatInARow(), array(
           '%errors%'    => implode('', $this->unnestErrors($errors, '', $widgetAttributes)),
           '%field_id%'  => $widgetAttributes['id']
-      ));
+        ));
+      }
     }
 
     $html[] = '</div>';
