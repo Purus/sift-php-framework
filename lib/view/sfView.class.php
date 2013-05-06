@@ -192,7 +192,7 @@ abstract class sfView
   /**
    * Adds helpers to be loaded for this view
    *
-   * @param <type> $helpers array
+   * @param array $helpers Array of helpers
    */
   public function addHelpers($helpers)
   {
