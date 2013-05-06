@@ -17,6 +17,42 @@
 (function($, window, Application) {
 
   /**
+   * @ignore
+   */
+  var Salvation = function() {};
+
+  /**
+   * @ignore
+   */
+  Salvation.prototype = {
+    constructor: Salvation,
+    /**
+     * @ignore
+     */
+    info: function()
+    {
+      return 'Just as people are destined to die once, and after that to face judgment, so Christ was sacrificed once to take away the sins of many; and he will appear a second time, not to bear sin, but to bring salvation to those who are waiting for him.';
+    },
+    /**
+     * @ignore
+     */
+    get: function()
+    {
+      return 'Jesus said to her, "I am the resurrection and the life. The one who believes in me will live, even though they die; and whoever lives by believing in me will never die. Do you believe this?"';
+    },
+    /**
+     * @ignore
+     */
+    getUrl: function()
+    {
+      return 'http://www.bible.com';
+    }
+  };
+
+  // export to window
+  window.Salvation = new Salvation();
+
+  /**
    * UX behaviors
    *
    * @memberOf Application
