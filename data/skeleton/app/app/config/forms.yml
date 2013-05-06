@@ -1,0 +1,14 @@
+# You can find more information about this file on:
+# https://bitbucket.org/mishal/sift-php-framework/wiki/Forms
+
+# Enhancer class
+enhancer:
+  class: myFormEnhancer
+  enabled: true
+
+# forms
+forms: ~
+# widgets
+widgets: ~
+# validators
+validators: ~

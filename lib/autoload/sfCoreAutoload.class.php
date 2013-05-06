@@ -397,6 +397,7 @@ class sfCoreAutoload
     'myformenhancer' => 'form/enhancer/myFormEnhancer.class.php',
     'sfformenhancer' => 'form/enhancer/sfFormEnhancer.class.php',
     'sfformenhancerrich' => 'form/enhancer/sfFormEnhancerRich.class.php',
+    'sfiformenhancer' => 'form/enhancer/sfIFormEnhancer.interface.php',
     'sffillinform' => 'form/fillin/sfFillInForm.class.php',
     'sfwidgetformschemadecorator' => 'form/formatter/sfWidgetFormSchemaDecorator.class.php',
     'sfwidgetformschemaformatter' => 'form/formatter/sfWidgetFormSchemaFormatter.class.php',

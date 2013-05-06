@@ -1,0 +1,46 @@
+# You can find more information about this file on:
+# https://bitbucket.org/mishal/sift-php-framework/wiki/Forms
+
+# Enhancer class
+enhancer:
+  class: myFormEnhancer
+  enabled: true
+
+# forms
+forms: ~
+
+# widgets
+widgets:
+
+  # number widgets
+  sfWidgetFormInteger:
+    attributes:
+      data-spinner-options: !!callback: getSpinnerOptions
+      data-culture: %SF_CULTURE%
+
+  sfWidgetFormNumber:
+    attributes:
+      data-spinner-options: !!callback: getSpinnerOptions
+      data-culture: %SF_CULTURE%
+
+  sfWidgetFormPrice:
+    attributes:
+      data-spinner-options: !!callback: getSpinnerOptions
+      data-culture: %SF_CULTURE%
+
+  # date widgets
+  sfWidgetFormDate:
+    attributes:
+      data-datepicker-options: !!callback: getDatePickerOptions
+
+  sfWidgetFormDateTime:
+    attributes:
+      data-datepicker-options: !!callback: getDatePickerOptions
+
+  # selects
+  sfWidgetFormChoice:
+    attributes:
+      data-select-options: !!callback: getSelectOptions
+
+# validators
+validators: ~

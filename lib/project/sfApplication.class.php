@@ -278,7 +278,7 @@ abstract class sfApplication extends sfProject {
     // initialize plugins
     $this->initializePlugins();
 
-    // import text macros configuration
+    // import modudes.yml for current application
     $this->configCache->import(sprintf($sf_app_config_dir_name . '/%s/modules.yml', sfConfig::get('sf_app')), true, true);
 
     // import text macros configuration
@@ -286,6 +286,13 @@ abstract class sfApplication extends sfProject {
 
     // load asset packages
     include($this->configCache->checkConfig($sf_app_config_dir_name . '/asset_packages.yml'));
+
+    // setup form enhancer
+    if($enhancer = $this->getFormEnhancer())
+    {
+      $this->getEventDispatcher()->connect('view.template.variables', array($enhancer,
+          'filterTemplateVariables'));
+    }
 
     // force setting default timezone if not set
     if(function_exists('date_default_timezone_set'))
@@ -404,14 +411,33 @@ abstract class sfApplication extends sfProject {
     $this->addOptions($dimensions);
   }
 
+  /**
+   * Returns form enhancer
+   *
+   * @return sfFormEnhancer|false False when form enhancer is disabled
+   */
   public function getFormEnhancer()
   {
-    if(!$this->formEnhancer)
+    if($this->formEnhancer === null)
     {
       $config = include $this->configCache->checkConfig('config/forms.yml');
-      $this->formEnhancer = new sfFormEnhancerRich($config);
-    }
 
+      // form enhancer is disabled
+      if(isset($config['enhancer']['enabled'])
+          && !$config['enhancer']['enabled'])
+      {
+        $this->formEnhancer = false;
+      }
+      else
+      {
+        $class = 'myFormEnhancer';
+        if(isset($config['enhancer']['class']))
+        {
+          $class = $config['enhancer']['class'];
+        }
+        $this->formEnhancer = sfFormEnhancer::factory($class, $config);
+      }
+    }
     return $this->formEnhancer;
   }
 
