@@ -1719,12 +1719,24 @@ command to generate the output files.
   </mime-type>
   <mime-type type="application/x-fluid">
     <_comment>FLTK Fluid file</_comment>
+    <acronym>FLTK</acronym>
+    <expanded-acronym>Fast Light Toolkit</expanded-acronym>
     <sub-class-of type="text/plain"/>
     <generic-icon name="x-office-document"/>
     <magic priority="50">
       <match type="string" value="# data file for the Fltk" offset="0"/>
     </magic>
     <glob pattern="*.fl"/>
+  </mime-type>
+  <mime-type type="application/font-woff">
+    <_comment>WOFF font</_comment>
+    <acronym>WOFF</acronym>
+    <expanded-acronym>Web Open Font Format</expanded-acronym>
+    <generic-icon name="font-x-generic"/>
+    <magic priority="50">
+      <match type="big32" value="0x774f4646" offset="0"/>
+    </magic>
+    <glob pattern="*.woff"/>
   </mime-type>
   <mime-type type="application/x-font-type1">
     <_comment>Postscript type-1 font</_comment>
@@ -1918,6 +1930,10 @@ command to generate the output files.
   </mime-type>
   <mime-type type="application/x-gettext-translation">
     <_comment>translated messages (machine-readable)</_comment>
+    <magic priority="50">
+      <match type="string" value="\336\22\4\225" offset="0"/>
+      <match type="string" value="\225\4\22\336" offset="0"/>
+    </magic>
     <glob pattern="*.gmo"/>
     <glob pattern="*.mo"/>
   </mime-type>
@@ -2023,6 +2039,14 @@ command to generate the output files.
     <glob pattern="*.h4"/>
     <glob pattern="*.hdf5"/>
     <glob pattern="*.h5"/>
+  </mime-type>
+  <mime-type type="application/x-iff">
+    <_comment>IFF file</_comment>
+    <acronym>IFF</acronym>
+    <expanded-acronym>Interchange File Format</expanded-acronym>
+    <magic priority="40">
+      <match type="string" value="FORM" offset="0"/>
+    </magic>
   </mime-type>
   <mime-type type="application/x-ipod-firmware">
     <_comment>iPod firmware</_comment>
@@ -2340,6 +2364,7 @@ command to generate the output files.
     </magic>
     <glob pattern="*.lha"/>
     <glob pattern="*.lzh"/>
+    <alias type="application/x-lzh-compressed"/>
   </mime-type>
   <mime-type type="application/x-lhz">
     <_comment>LHZ archive</_comment>
@@ -2451,6 +2476,14 @@ command to generate the output files.
   <mime-type type="audio/webm">
     <_comment>WebM audio</_comment>
     <sub-class-of type="video/webm"/>
+  </mime-type>
+  <mime-type type="application/x-mimearchive">
+    <_comment>MHTML web archive</_comment>
+    <acronym>MHTML</acronym>
+    <expanded-acronym>MIME HTML</expanded-acronym>
+    <glob pattern="*.mhtml"/>
+    <glob pattern="*.mht"/>
+    <sub-class-of type="multipart/related"/>
   </mime-type>
   <mime-type type="application/mxf">
     <_comment>MXF video</_comment>
@@ -2897,6 +2930,8 @@ command to generate the output files.
   </mime-type>
   <mime-type type="application/x-rar">
     <_comment>RAR archive</_comment>
+    <acronym>RAR</acronym>
+    <expanded-acronym>Roshal ARchive</expanded-acronym>
     <alias type="application/x-rar-compressed"/>
     <generic-icon name="package-x-generic"/>
     <magic priority="50">
@@ -2935,6 +2970,13 @@ command to generate the output files.
       <match type="string" value="\xed\xab\xee\xdb" offset="0"/>
     </magic>
     <glob pattern="*.rpm"/>
+  </mime-type>
+  <mime-type type="application/x-source-rpm">
+    <_comment>Source RPM package</_comment>
+    <generic-icon name="package-x-generic"/>
+    <sub-class-of type="application/x-rpm"/>
+    <glob pattern="*.src.rpm"/>
+    <glob pattern="*.spm"/>
   </mime-type>
   <mime-type type="application/x-ruby">
     <_comment>Ruby script</_comment>
@@ -3453,23 +3495,27 @@ command to generate the output files.
   </mime-type>
   <mime-type type="audio/x-aifc">
     <_comment>AIFC audio</_comment>
+    <acronym>AIFC</acronym>
+    <expanded-acronym>Audio Interchange File format Compressed</expanded-acronym>
+    <sub-class-of type="application/x-iff"/>
     <magic priority="50">
       <match type="string" value="AIFC" offset="8"/>
     </magic>
+    <glob pattern="*.aifc"/>
+    <glob pattern="*.aiffc"/>
+    <alias type="audio/x-aiffc"/>
   </mime-type>
   <mime-type type="audio/x-aiff">
     <_comment>AIFF/Amiga/Mac audio</_comment>
+    <acronym>AIFF</acronym>
+    <expanded-acronym>Audio Interchange File Format</expanded-acronym>
+    <sub-class-of type="application/x-iff"/>
     <magic priority="50">
       <match type="string" value="AIFF" offset="8"/>
-      <match type="string" value="AIFC" offset="8"/>
       <match type="string" value="8SVX" offset="8"/>
     </magic>
     <glob pattern="*.aiff"/>
     <glob pattern="*.aif"/>
-    <glob pattern="*.aifc"/>
-  </mime-type>
-  <mime-type type="audio/x-aiffc">
-    <_comment>AIFF audio</_comment>
   </mime-type>
   <mime-type type="audio/x-ape">
     <_comment>Monkey's audio</_comment>
@@ -3525,6 +3571,16 @@ command to generate the output files.
     </magic>
     <glob pattern="*.mo3"/>
   </mime-type>
+  <mime-type type="audio/aac">
+    <_comment>AAC audio</_comment>
+    <acronym>AAC</acronym>
+    <expanded-acronym>Advanced Audio Coding</expanded-acronym>
+    <magic priority="50">
+      <match type="string" value="ADIF" offset="0"/>
+      <match type="big16" value="0xFFF0" mask="0xFFF6" offset="0"/>
+    </magic>
+    <glob pattern="*.aac"/>
+  </mime-type>
   <mime-type type="audio/mp4">
     <_comment>MPEG-4 audio</_comment>
     <alias type="audio/x-m4a"/>
@@ -3532,7 +3588,6 @@ command to generate the output files.
       <match type="string" value="ftypM4A" offset="4"/>
     </magic>
     <glob pattern="*.m4a"/>
-    <glob pattern="*.aac"/>
     <glob pattern="*.f4a"/>
   </mime-type>
   <mime-type type="video/mp4">
@@ -3915,6 +3970,25 @@ command to generate the output files.
   </mime-type>
   <mime-type type="image/x-pict">
     <_comment>Macintosh Quickdraw/PICT drawing</_comment>
+    <magic priority="50">
+      <match type="big16" value="0x0011" offset="10">
+        <match type="big16" value="0x02FF" offset="12">
+          <match type="big16" value="0x0C00" offset="14">
+            <match type="big16" value="0xFFFE" offset="16"/>
+          </match>
+        </match>
+      </match>
+    </magic>
+    <magic priority="50">
+      <match type="big16" value="0x0011" offset="522">
+        <match type="big16" value="0x02FF" offset="524">
+          <match type="big16" value="0x0C00" offset="526">
+            <match type="big16" value="0xFFFE" offset="528"/>
+          </match>
+        </match>
+      </match>
+    </magic>
+    <glob pattern="*.pct"/>
     <glob pattern="*.pict"/>
     <glob pattern="*.pict1"/>
     <glob pattern="*.pict2"/>
@@ -4107,7 +4181,7 @@ command to generate the output files.
         <match value="CgBI" type="string" offset="12"/>
       </match>
     </magic>
-    <glob pattern="*.png"/>
+    <glob weight="10" pattern="*.png"/>
   </mime-type>
   <mime-type type="image/rle">
     <_comment>Run Length Encoded bitmap image</_comment>
@@ -4198,12 +4272,13 @@ command to generate the output files.
     <acronym>DICOM</acronym>
     <expanded-acronym>Digital Imaging and Communications in Medicine</expanded-acronym>
     <generic-icon name="image-x-generic"/>
+    <glob pattern="dicomdir"/>
     <glob pattern="*.dcm"/>
     <magic priority="50">
       <match type="string" value="DICM" offset="128"/>
     </magic>
   </mime-type>
-  <mime-type type="application/docbook+xml">
+  <mime-type type="application/x-docbook+xml">
     <_comment>DocBook document</_comment>
     <sub-class-of type="application/xml"/>
     <generic-icon name="x-office-document"/>
@@ -4214,6 +4289,8 @@ command to generate the output files.
       </match>
     </magic>
     <glob pattern="*.docbook"/>
+    <alias type="application/docbook+xml"/>
+    <alias type="application/vnd.oasis.docbook+xml"/>
   </mime-type>
   <mime-type type="image/x-dib">
     <_comment>DIB image</_comment>
@@ -4313,15 +4390,19 @@ command to generate the output files.
       <match type="string" value="icns" offset="0"/>
     </magic>
   </mime-type>
-  <mime-type type="image/x-iff">
-    <_comment>IFF image</_comment>
-    <glob pattern="*.iff"/>
-  </mime-type>
   <mime-type type="image/x-ilbm">
     <_comment>ILBM image</_comment>
-    <acronym>ILBM image</acronym>
+    <acronym>ILBM</acronym>
     <expanded-acronym>InterLeaved BitMap</expanded-acronym>
+    <sub-class-of type="application/x-iff"/>
+    <magic priority="50">
+      <match value="ILBM" type="string" offset="8"/>
+      <match value="PBM " type="string" offset="8"/>
+    </magic>
+    <glob pattern="*.iff"/>
     <glob pattern="*.ilbm"/>
+    <glob pattern="*.lbm"/>
+    <alias type="image/x-iff"/>
   </mime-type>
   <mime-type type="image/x-jng">
     <_comment>JNG image</_comment>
@@ -4472,7 +4553,14 @@ command to generate the output files.
       <match type="string" value="\0\3" offset="1"/>
       <match type="string" value="\0\xa" offset="1"/>
       <match type="string" value="\0\xb" offset="1"/>
-      <match type="string" value="\0\2" offset="1"/> <!-- Same magic as CUR files -->
+    </magic>
+    <magic priority="50">
+      <match type="string" value="\0\2" offset="1">
+        <match type="byte" value="0x08" offset="16"/>
+        <match type="byte" value="0x10" offset="16"/>
+        <match type="byte" value="0x18" offset="16"/>
+        <match type="byte" value="0x20" offset="16"/>
+      </match>
     </magic>
     <glob pattern="*.icb"/>
     <glob pattern="*.tga"/>
@@ -4504,6 +4592,9 @@ command to generate the output files.
     <acronym>EMF</acronym>
     <expanded-acronym>Enhanced MetaFile</expanded-acronym>
     <glob pattern="*.emf"/>
+    <alias type="image/emf"/>
+    <alias type="application/x-emf"/>
+    <alias type="application/emf"/>
     <magic priority="50">
       <match type="little32" offset="0" value="0x00000001">
         <match type="little32" offset="40" value="0x464D4520">
@@ -4532,6 +4623,11 @@ command to generate the output files.
       </match>
     </magic>
     <glob pattern="*.wmf"/>
+    <alias type="image/wmf"/>
+    <alias type="image/x-win-metafile"/>
+    <alias type="application/x-wmf"/>
+    <alias type="application/wmf"/>
+    <alias type="application/x-msmetafile"/>
   </mime-type>
   <mime-type type="image/x-xbitmap">
     <_comment>XBM image</_comment>
@@ -4563,6 +4659,7 @@ command to generate the output files.
       <match type="string" value="/* XPM" offset="0"/>
     </magic>
     <glob pattern="*.xpm"/>
+    <alias type="image/x-xpm"/>
   </mime-type>
   <mime-type type="image/x-xwindowdump">
     <_comment>X window image</_comment>
@@ -4686,6 +4783,7 @@ command to generate the output files.
     <expanded-acronym>vCalendar/iCalendar</expanded-acronym>
     <sub-class-of type="text/plain"/>
     <alias type="text/x-vcalendar"/>
+    <alias type="application/ics"/>
     <magic priority="50">
       <match type="string" value="BEGIN:VCALENDAR" offset="0"/>
       <match type="string" value="begin:vcalendar" offset="0"/>
@@ -5001,6 +5099,7 @@ command to generate the output files.
     <_comment>D source code</_comment>
     <sub-class-of type="text/x-csrc"/>
     <glob pattern="*.d"/>
+    <glob pattern="*.di"/>
   </mime-type>
   <mime-type type="application/xml-dtd">
     <_comment>DTD file</_comment>
@@ -5233,6 +5332,26 @@ command to generate the output files.
     <glob pattern="*.m"/>
     <alias type="text/x-octave"/>
   </mime-type>
+  <mime-type type="text/x-modelica">
+    <_comment>Modelica model</_comment>
+    <sub-class-of type="text/plain"/>
+    <magic priority="10">
+      <match type="string" value="//" offset="0"/>
+    </magic>
+    <magic priority="50">
+      <match type="string" value="function" offset="0"/>
+    </magic>
+    <magic priority="50">
+      <match type="string" value="class" offset="0"/>
+    </magic>
+    <magic priority="50">
+      <match type="string" value="model" offset="0"/>
+    </magic>
+    <magic priority="50">
+      <match type="string" value="record" offset="0"/>
+    </magic>
+    <glob pattern="*.mo"/>
+  </mime-type>
   <mime-type type="text/x-pascal">
     <_comment>Pascal source code</_comment>
     <sub-class-of type="text/plain"/>
@@ -5280,6 +5399,7 @@ command to generate the output files.
       <match type="string" value='/bin/env python' offset="1:16"/>
     </magic>
     <glob pattern="*.py"/>
+    <glob pattern="*.pyx"/>
     <glob pattern="*.wsgi"/>
   </mime-type>
   <mime-type type="text/x-lua">
@@ -5329,10 +5449,11 @@ command to generate the output files.
     <sub-class-of type="text/plain"/>
     <glob pattern="*.etx"/>
   </mime-type>
-  <mime-type type="text/x-sql">
+  <mime-type type="application/sql">
     <_comment>SQL code</_comment>
     <sub-class-of type="text/plain"/>
     <glob pattern="*.sql"/>
+    <alias type="text/x-sql"/>
   </mime-type>
   <mime-type type="text/x-tcl">
     <_comment>Tcl script</_comment>
@@ -5388,6 +5509,15 @@ command to generate the output files.
     <_comment>resource location</_comment>
     <sub-class-of type="text/plain"/>
     <!-- Note: text/uri-list is reserved by the XDND protocol! -->
+  </mime-type>
+  <mime-type type="text/x-uuencode">
+    <_comment>uuencoded file</_comment>
+    <sub-class-of type="text/plain"/>
+    <glob pattern="*.uue"/>
+    <magic priority="50">
+      <match type="string" value="begin " offset="0"/>
+    </magic>
+    <alias type="zz-application/zz-winassoc-uu"/>
   </mime-type>
   <mime-type type="text/x-xmi">
     <_comment>XMI file</_comment>
@@ -5600,6 +5730,9 @@ command to generate the output files.
     <_comment>MNG animation</_comment>
     <acronym>MNG</acronym>
     <expanded-acronym>Multiple-Image Network Graphics</expanded-acronym>
+    <magic priority="50">
+      <match type="string" value="\x8AMNG\x0D\x0A\x1A\x0A" offset="0"/>
+    </magic>
     <glob pattern="*.mng"/>
   </mime-type>
   <mime-type type="video/x-ms-asf">
@@ -5641,8 +5774,12 @@ command to generate the output files.
       <match type="string" value="RIFF" offset="0">
         <match type="string" value="AVI " offset="8"/>
       </match>
+      <match type="string" value="AVF0" offset="0">
+        <match type="string" value="AVI " offset="8"/>
+      </match>
     </magic>
     <glob pattern="*.avi"/>
+    <glob pattern="*.avf"/>
     <glob pattern="*.divx"/>
   </mime-type>
   <mime-type type="video/x-nsv">
@@ -5812,6 +5949,14 @@ command to generate the output files.
     <generic-icon name="text-x-generic"/>
     <glob pattern="*.ccmx"/>
   </mime-type>
+  <mime-type type="application/winhlp">
+    <_comment>WinHelp help file</_comment>
+    <magic priority="50">
+      <match type="little32" value="0x00035f3f" offset="0"/>
+    </magic>
+    <glob pattern="*.hlp"/>
+    <alias type="zz-application/zz-winassoc-hlp" />
+  </mime-type>
 
   <!-- Tree content-types -->
   <mime-type type="x-content/image-dcf">
@@ -5955,6 +6100,15 @@ command to generate the output files.
       <treematch path="autorun.exe" type="file" executable="true" />
       <treematch path="autorun.inf" type="file" />
     </treemagic>
+  </mime-type>
+
+  <mime-type type="application/x-trig">
+    <!-- http://www4.wiwiss.fu-berlin.de/bizer/TriG/ -->
+    <_comment>TriG RDF document</_comment>
+    <acronym>TriG</acronym>
+    <expanded-acronym>TriG RDF Graph Triple Language</expanded-acronym>
+    <sub-class-of type="text/plain"/>
+    <glob pattern="*.trig" />
   </mime-type>
 
 </mime-info>

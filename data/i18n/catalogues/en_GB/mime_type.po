@@ -1,164 +1,340 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2013-05-02 20:43:35\n"
+"Project-Id-Version: shared-mime-info\n"
+"Report-Msgid-Bugs-To: http://bugzilla.freedesktop.org/\n"
+"POT-Creation-Date: 2012-01-09 16:03+0000\n"
+"PO-Revision-Date: 2013-05-06 17:01:17\n"
+"Last-Translator: Michal Moravec - Mishal.cz <mishal@mishal.cz>\n"
+"Language-Team: English (United Kingdom) (http://www.transifex.com/projects/p/freedesktop/language/en_GB/)\n"
+"MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Language: en\n"
-"Project-Id-Version: 1.0\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: en_GB\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 1.5.5\n"
+
+msgid "3D Studio image"
+msgstr "3D Studio image"
+
+msgid "3GPP multimedia file"
+msgstr "3GPP multimedia file"
+
+msgid "3GPP2 multimedia file"
+msgstr "3GPP2 multimedia file"
+
+msgid "7-zip archive"
+msgstr "7-zip archive"
+
+msgid "ACE archive"
+msgstr "ACE archive"
+
+msgid "AIFC audio"
+msgstr "AIFC audio"
+
+msgid "AIFF/Amiga/Mac audio"
+msgstr "AIFF/Amiga/Mac audio"
+
+msgid "AMR audio"
+msgstr "AMR audio"
+
+msgid "AMR-WB audio"
+msgstr "AMR-WB audio"
+
+msgid "ANIM animation"
+msgstr "ANIM animation"
+
+msgid "AR archive"
+msgstr "AR archive"
+
+msgid "ARC archive"
+msgstr "ARC archive"
+
+msgid "ARJ archive"
+msgstr "ARJ archive"
+
+msgid "ASF video"
+msgstr "ASF video"
+
+msgid "ASP page"
+msgstr "ASP page"
 
 msgid "ATK inset"
-msgstr ""
+msgstr "ATK inset"
 
-msgid "electronic book document"
-msgstr ""
+msgid "AVI video"
+msgstr "AVI video"
+
+msgid "AWK script"
+msgstr "AWK script"
+
+msgid "AbiWord document"
+msgstr "AbiWord document"
+
+msgid "Ada source code"
+msgstr "Ada source code"
+
+msgid "Adobe DNG negative"
+msgstr "Adobe DNG negative"
+
+msgid "Adobe FrameMaker MIF document"
+msgstr "Adobe FrameMaker MIF document"
+
+msgid "Adobe FrameMaker document"
+msgstr "Adobe FrameMaker document"
+
+msgid "Adobe FrameMaker font"
+msgstr "Adobe FrameMaker font"
 
 msgid "Adobe Illustrator document"
+msgstr "Adobe Illustrator document"
+
+msgid "Adobe font metrics"
+msgstr "Adobe font metrics"
+
+msgid "Alzip archive"
+msgstr "Alzip archive"
+
+msgid "Amiga SoundTracker audio"
+msgstr "Amiga SoundTracker audio"
+
+msgid "Android package"
 msgstr ""
 
-msgid "Macintosh BinHex-encoded file"
+msgid "Annodex Audio"
+msgstr "Annodex Audio"
+
+msgid "Annodex Video"
+msgstr "Annodex Video"
+
+msgid "Annodex exchange format"
+msgstr "Annodex exchange format"
+
+msgid "AportisDoc document"
+msgstr "AportisDoc document"
+
+msgid "Apple disk image"
+msgstr "Apple disk image"
+
+msgid "Applix Graphics image"
+msgstr "Applix Graphics image"
+
+msgid "Applix Spreadsheets spreadsheet"
+msgstr "Applix Spreadsheets spreadsheet"
+
+msgid "Applix Words document"
+msgstr "Applix Words document"
+
+msgid "Atom syndication feed"
+msgstr "Atom syndication feed"
+
+msgid "AutoCAD image"
+msgstr "AutoCAD image"
+
+msgid "BCPIO document"
+msgstr "BCPIO document"
+
+msgid "BDF font"
+msgstr "BDF font"
+
+msgid "BibTeX document"
+msgstr "BibTeX document"
+
+msgid "BitTorrent seed file"
+msgstr "BitTorrent seed file"
+
+msgid "Blender scene"
+msgstr "Blender scene"
+
+msgid "Blu-ray video disc"
+msgstr "Blu-ray video disc"
+
+msgid "Bzip archive"
+msgstr "Bzip archive"
+
+msgid "C header"
+msgstr "C header"
+
+msgid "C shell script"
+msgstr "C shell script"
+
+msgid "C source code"
+msgstr "C source code"
+
+msgid "C# source code"
+msgstr "C# source code"
+
+msgid "C++ header"
+msgstr "C++ header"
+
+msgid "C++ source code"
+msgstr "C++ source code"
+
+msgid "CCITT G3 fax"
+msgstr "CCITT G3 fax"
+
+msgid "CD Table Of Contents"
+msgstr "CD Table Of Contents"
+
+msgid "CD image cuesheet"
+msgstr "CD image cuesheet"
+
+msgid "CHM document"
+msgstr "CHM document"
+
+msgid "CMU raster image"
+msgstr "CMU raster image"
+
+msgid "CMake source code"
+msgstr "CMake source code"
+
+msgid "COBOL source file"
 msgstr ""
 
-msgid "Mathematica Notebook"
-msgstr ""
+msgid "CPIO archive"
+msgstr "CPIO archive"
 
-msgid "MathML document"
-msgstr ""
+msgid "CPIO archive (gzip-compressed)"
+msgstr "CPIO archive (gzip-compressed)"
 
-msgid "mailbox file"
-msgstr ""
+msgid "CSS stylesheet"
+msgstr "CSS stylesheet"
 
-msgid "Metalink file"
-msgstr ""
+msgid "CSV document"
+msgstr "CSV document"
 
-msgid "unknown"
-msgstr ""
+msgid "Canon CR2 raw image"
+msgstr "Canon CR2 raw image"
 
-msgid "ODA document"
-msgstr ""
-
-msgid "WWF document"
-msgstr ""
-
-msgid "PDF document"
-msgstr ""
-
-msgid "XSPF playlist"
-msgstr ""
-
-msgid "Microsoft Windows theme pack"
-msgstr ""
-
-msgid "AmazonMP3 download file"
-msgstr ""
-
-msgid "GSM 06.10 audio"
-msgstr ""
-
-msgid "iRiver Playlist"
-msgstr ""
-
-msgid "PGP/MIME-encrypted message header"
-msgstr ""
-
-msgid "PGP keys"
-msgstr ""
-
-msgid "detached OpenPGP signature"
-msgstr ""
-
-msgid "PKCS#7 Message or Certificate"
-msgstr ""
-
-msgid "detached S/MIME signature"
-msgstr ""
-
-msgid "PKCS#8 private key"
-msgstr ""
-
-msgid "PKCS#10 certification request"
-msgstr ""
-
-msgid "X.509 certificate"
-msgstr ""
+msgid "Canon CRW raw image"
+msgstr "Canon CRW raw image"
 
 msgid "Certificate revocation list"
-msgstr ""
+msgstr "Certificate revocation list"
 
-msgid "PkiPath certification path"
-msgstr ""
+msgid "ChangeLog document"
+msgstr "ChangeLog document"
 
-msgid "PS document"
-msgstr ""
+msgid "Cisco VPN Settings"
+msgstr "Cisco VPN Settings"
 
-msgid "Plucker document"
-msgstr ""
+msgid "Citrix ICA settings file"
+msgstr "Citrix ICA settings file"
 
-msgid "RELAX NG XML schema"
-msgstr ""
+msgid "Commodore 64 audio"
+msgstr "Commodore 64 audio"
 
-msgid "RTF document"
-msgstr ""
-
-msgid "Sieve mail filter script"
-msgstr ""
-
-msgid "SMIL document"
-msgstr ""
-
-msgid "WPL playlist"
-msgstr ""
-
-msgid "SQLite2 database"
-msgstr ""
-
-msgid "SQLite3 database"
-msgstr ""
-
-msgid "GEDCOM family history"
-msgstr ""
-
-msgid "Flash video"
-msgstr ""
-
-msgid "JavaFX video"
-msgstr ""
-
-msgid "SGF record"
-msgstr ""
-
-msgid "XLIFF translation file"
-msgstr ""
-
-msgid "YAML document"
-msgstr ""
+msgid "Computer Graphics Metafile"
+msgstr "Computer Graphics Metafile"
 
 msgid "Corel Draw drawing"
+msgstr "Corel Draw drawing"
+
+msgid "D source code"
+msgstr "D source code"
+
+msgid "DAR archive"
+msgstr "DAR archive"
+
+msgid "DCL script"
+msgstr "DCL script"
+
+msgid "DER/PEM/Netscape-encoded X.509 certificate"
+msgstr "DER/PEM/Netscape-encoded X.509 certificate"
+
+msgid "DIB image"
+msgstr "DIB image"
+
+msgid "DICOM image"
+msgstr "DICOM image"
+
+msgid "DOS font"
+msgstr "DOS font"
+
+msgid "DOS/Windows executable"
+msgstr "DOS/Windows executable"
+
+msgid "DPX image"
+msgstr "DPX image"
+
+msgid "DSSSL document"
+msgstr "DSSSL document"
+
+msgid "DTD file"
+msgstr "DTD file"
+
+msgid "DV video"
+msgstr "DV video"
+
+msgid "DXF vector image"
+msgstr "DXF vector image"
+
+msgid "Debian package"
+msgstr "Debian package"
+
+msgid "Dia diagram"
+msgstr "Dia diagram"
+
+msgid "Dia shape"
 msgstr ""
 
-msgid "HPGL file"
+msgid "DirectDraw surface"
+msgstr "DirectDraw surface"
+
+msgid "DjVu image"
+msgstr "DjVu image"
+
+msgid "DocBook document"
+msgstr "DocBook document"
+
+msgid "Dolby Digital audio"
+msgstr "Dolby Digital audio"
+
+msgid "Dreamcast ROM"
+msgstr "Dreamcast ROM"
+
+msgid "ECMAScript program"
+msgstr "ECMAScript program"
+
+msgid "EMF image"
+msgstr "EMF image"
+
+msgid "EPS image"
+msgstr "EPS image"
+
+msgid "EPS image (bzip-compressed)"
+msgstr "EPS image (bzip-compressed)"
+
+msgid "EPS image (gzip-compressed)"
+msgstr "EPS image (gzip-compressed)"
+
+msgid "EXR image"
+msgstr "EXR image"
+
+msgid "Egon Animator animation"
+msgstr "Egon Animator animation"
+
+msgid "Eiffel source code"
+msgstr "Eiffel source code"
+
+msgid "Emacs Lisp source code"
+msgstr "Emacs Lisp source code"
+
+msgid "Enlightenment theme"
+msgstr "Enlightenment theme"
+
+msgid "Erlang source code"
+msgstr "Erlang source code"
+
+msgid "Excel 2007 binary spreadsheet"
 msgstr ""
 
-msgid "PCL file"
-msgstr ""
+msgid "Excel 2007 spreadsheet"
+msgstr "Excel 2007 spreadsheet"
 
-msgid "Lotus 1-2-3 spreadsheet"
-msgstr ""
-
-msgid "Lotus Word Pro"
-msgstr ""
-
-msgid "JET database"
-msgstr ""
-
-msgid "Microsoft Cabinet archive"
-msgstr ""
-
-msgid "Excel spreadsheet"
+msgid "Excel 2007 spreadsheet template"
 msgstr ""
 
 msgid "Excel add-in"
-msgstr ""
-
-msgid "Excel 2007 binary spreadsheet"
 msgstr ""
 
 msgid "Excel macro-enabled spreadsheet"
@@ -167,7 +343,796 @@ msgstr ""
 msgid "Excel macro-enabled spreadsheet template"
 msgstr ""
 
-msgid "PowerPoint presentation"
+msgid "Excel spreadsheet"
+msgstr "Excel spreadsheet"
+
+msgid "FITS document"
+msgstr "FITS document"
+
+msgid "FLAC audio"
+msgstr "FLAC audio"
+
+msgid "FLIC animation"
+msgstr "FLIC animation"
+
+msgid "FLTK Fluid file"
+msgstr "FLTK Fluid file"
+
+msgid "FPX image"
+msgstr "FPX image"
+
+msgid "FastTracker II audio"
+msgstr "FastTracker II audio"
+
+msgid "FictionBook document"
+msgstr "FictionBook document"
+
+msgid "Flash video"
+msgstr "Flash video"
+
+msgid "Fortran source code"
+msgstr "Fortran source code"
+
+msgid "Fuji RAF raw image"
+msgstr "Fuji RAF raw image"
+
+msgid "G3 fax image"
+msgstr "G3 fax image"
+
+msgid "GDBM database"
+msgstr "GDBM database"
+
+msgid "GEDCOM family history"
+msgstr "GEDCOM family history"
+
+msgid "GIF image"
+msgstr "GIF image"
+
+msgid "GIMP image"
+msgstr "GIMP image"
+
+msgid "GMC link"
+msgstr "GMC link"
+
+msgid "GNU Oleo spreadsheet"
+msgstr "GNU Oleo spreadsheet"
+
+msgid "GNU mail message"
+msgstr "GNU mail message"
+
+msgid "GNUnet search file"
+msgstr "GNUnet search file"
+
+msgid "GSM 06.10 audio"
+msgstr "GSM 06.10 audio"
+
+msgid "GTKtalog catalog"
+msgstr "GTKtalog catalogue"
+
+msgid "Game Boy Advance ROM"
+msgstr "Game Boy Advance ROM"
+
+msgid "Game Boy ROM"
+msgstr "Game Boy ROM"
+
+msgid "Genesis ROM"
+msgstr "Genesis ROM"
+
+msgid "Glade project"
+msgstr "Glade project"
+
+msgid "GnuCash financial data"
+msgstr "GnuCash financial data"
+
+msgid "Gnumeric spreadsheet"
+msgstr "Gnumeric spreadsheet"
+
+msgid "Gnuplot document"
+msgstr "Gnuplot document"
+
+msgid "Go source code"
+msgstr ""
+
+msgid "Google Video Pointer"
+msgstr "Google Video Pointer"
+
+msgid "Graphite scientific graph"
+msgstr "Graphite scientific graph"
+
+msgid "Graphviz DOT graph"
+msgstr "Graphviz DOT graph"
+
+msgid "Gzip archive"
+msgstr "Gzip archive"
+
+msgid "HD DVD video disc"
+msgstr "HD DVD video disc"
+
+msgid "HDF document"
+msgstr "HDF document"
+
+msgid "HPGL file"
+msgstr "HPGL file"
+
+msgid "HTML document"
+msgstr "HTML document"
+
+msgid "HTTP Live Streaming playlist"
+msgstr ""
+
+msgid "Haansoft Hangul document"
+msgstr "Haansoft Hangul document"
+
+msgid "Haansoft Hangul document template"
+msgstr "Haansoft Hangul document template"
+
+msgid "Haskell source code"
+msgstr "Haskell source code"
+
+msgid "ICC profile"
+msgstr "ICC profile"
+
+msgid "IDL document"
+msgstr "IDL document"
+
+msgid "IEF image"
+msgstr "IEF image"
+
+msgid "ILBM image"
+msgstr "ILBM image"
+
+msgid "ISI video"
+msgstr "ISI video"
+
+msgid "IT 8.7 color calibration file"
+msgstr ""
+
+msgid "Impulse Tracker audio"
+msgstr "Impulse Tracker audio"
+
+msgid "Internet shortcut"
+msgstr "Internet shortcut"
+
+msgid "JAD document"
+msgstr "JAD document"
+
+msgid "JBuilder project"
+msgstr "JBuilder project"
+
+msgid "JET database"
+msgstr "JET database"
+
+msgid "JNG image"
+msgstr "JNG image"
+
+msgid "JNLP file"
+msgstr "JNLP file"
+
+msgid "JPEG image"
+msgstr "JPEG image"
+
+msgid "JPEG-2000 image"
+msgstr "JPEG-2000 image"
+
+msgid "Java JCE keystore"
+msgstr "Java JCE keystore"
+
+msgid "Java archive"
+msgstr "Java archive"
+
+msgid "Java byte code"
+msgstr "Java byte code"
+
+msgid "Java class"
+msgstr "Java class"
+
+msgid "Java keystore"
+msgstr "Java keystore"
+
+msgid "Java source code"
+msgstr "Java source code"
+
+msgid "JavaFX video"
+msgstr "JavaFX video"
+
+msgid "JavaScript program"
+msgstr "JavaScript program"
+
+msgid "KChart chart"
+msgstr "KChart chart"
+
+msgid "KFormula formula"
+msgstr "KFormula formula"
+
+msgid "KIllustrator drawing"
+msgstr "KIllustrator drawing"
+
+msgid "KML geographic compressed data"
+msgstr "KML geographic compressed data"
+
+msgid "KML geographic data"
+msgstr "KML geographic data"
+
+msgid "KPovModeler scene"
+msgstr "KPovModeler scene"
+
+msgid "KPresenter presentation"
+msgstr "KPresenter presentation"
+
+msgid "KSpread spreadsheet"
+msgstr "KSpread spreadsheet"
+
+msgid "KSpread spreadsheet (encrypted)"
+msgstr "KSpread spreadsheet (encrypted)"
+
+msgid "KSysV init package"
+msgstr "KSysV init package"
+
+msgid "KWord document"
+msgstr "KWord document"
+
+msgid "KWord document (encrypted)"
+msgstr "KWord document (encrypted)"
+
+msgid "Karbon14 drawing"
+msgstr "Karbon14 drawing"
+
+msgid "Kexi database file-based project"
+msgstr ""
+
+msgid "Kexi settings for database server connection"
+msgstr "Kexi settings for database server connection"
+
+msgid "Kivio flowchart"
+msgstr "Kivio flowchart"
+
+msgid "Kodak DCR raw image"
+msgstr "Kodak DCR raw image"
+
+msgid "Kodak K25 raw image"
+msgstr "Kodak K25 raw image"
+
+msgid "Kodak KDC raw image"
+msgstr "Kodak KDC raw image"
+
+msgid "Kontour drawing"
+msgstr "Kontour drawing"
+
+msgid "Krita document"
+msgstr "Krita document"
+
+msgid "Kugar document"
+msgstr "Kugar document"
+
+msgid "LDIF address book"
+msgstr "LDIF address book"
+
+msgid "LHA archive"
+msgstr "LHA archive"
+
+msgid "LHS source code"
+msgstr "LHS source code"
+
+msgid "LHZ archive"
+msgstr "LHZ archive"
+
+msgid "LIBGRX font"
+msgstr "LIBGRX font"
+
+msgid "LZMA archive"
+msgstr "LZMA archive"
+
+msgid "LZO archive"
+msgstr "LZO archive"
+
+msgid "LightWave object"
+msgstr "LightWave object"
+
+msgid "LightWave scene"
+msgstr "LightWave scene"
+
+msgid "Lilypond music sheet"
+msgstr "Lilypond music sheet"
+
+msgid "Linux PSF console font"
+msgstr "Linux PSF console font"
+
+msgid "Linux PSF console font (gzip-compressed)"
+msgstr "Linux PSF console font (gzip-compressed)"
+
+msgid "Lotus 1-2-3 spreadsheet"
+msgstr "Lotus 1-2-3 spreadsheet"
+
+msgid "Lotus AmiPro document"
+msgstr "Lotus AmiPro document"
+
+msgid "Lrzip archive"
+msgstr "Lrzip archive"
+
+msgid "Lua script"
+msgstr "Lua script"
+
+msgid "LyX document"
+msgstr "LyX document"
+
+msgid "Lzip archive"
+msgstr "Lzip archive"
+
+msgid "M4 macro"
+msgstr "M4 macro"
+
+msgid "MATLAB script/function"
+msgstr "MATLAB script/function"
+
+msgid "MIDI audio"
+msgstr "MIDI audio"
+
+msgid "MNG animation"
+msgstr "MNG animation"
+
+msgid "MP2 audio"
+msgstr "MP2 audio"
+
+msgid "MP3 ShoutCast playlist"
+msgstr "MP3 ShoutCast playlist"
+
+msgid "MP3 audio"
+msgstr "MP3 audio"
+
+msgid "MP3 audio (streamed)"
+msgstr "MP3 audio (streamed)"
+
+msgid "MPEG video"
+msgstr "MPEG video"
+
+msgid "MPEG video (streamed)"
+msgstr ""
+
+msgid "MPEG-2 transport stream"
+msgstr ""
+
+msgid "MPEG-4 audio"
+msgstr "MPEG-4 audio"
+
+msgid "MPEG-4 audio book"
+msgstr "MPEG-4 audio book"
+
+msgid "MPEG-4 video"
+msgstr "MPEG-4 video"
+
+msgid "MPSub subtitles"
+msgstr "MPSub subtitles"
+
+msgid "MRML playlist"
+msgstr "MRML playlist"
+
+msgid "MSX ROM"
+msgstr "MSX ROM"
+
+msgid "MXF video"
+msgstr "MXF video"
+
+msgid "MacOS X icon"
+msgstr "MacOS X icon"
+
+msgid "MacPaint Bitmap image"
+msgstr "MacPaint Bitmap image"
+
+msgid "Macintosh AppleDouble-encoded file"
+msgstr "Macintosh AppleDouble-encoded file"
+
+msgid "Macintosh BinHex-encoded file"
+msgstr "Macintosh BinHex-encoded file"
+
+msgid "Macintosh MacBinary file"
+msgstr "Macintosh MacBinary file"
+
+msgid "Macintosh Quickdraw/PICT drawing"
+msgstr "Macintosh Quickdraw/PICT drawing"
+
+msgid "MagicPoint presentation"
+msgstr "MagicPoint presentation"
+
+msgid "Makefile"
+msgstr "Makefile"
+
+msgid "Managed Object Format"
+msgstr "Managed Object Format"
+
+msgid "Markaby script"
+msgstr "Markaby script"
+
+msgid "Markdown document"
+msgstr ""
+
+msgid "MathML document"
+msgstr "MathML document"
+
+msgid "Mathematica Notebook"
+msgstr "Mathematica Notebook"
+
+msgid "Matroska audio"
+msgstr "Matroska audio"
+
+msgid "Matroska stream"
+msgstr "Matroska stream"
+
+msgid "Matroska video"
+msgstr "Matroska video"
+
+msgid "Metalink file"
+msgstr "Metalink file"
+
+msgid "MicroDVD subtitles"
+msgstr "MicroDVD subtitles"
+
+msgid "Microsoft ASX playlist"
+msgstr "Microsoft ASX playlist"
+
+msgid "Microsoft Cabinet archive"
+msgstr "Microsoft Cabinet archive"
+
+msgid "Microsoft Document Imaging format"
+msgstr "Microsoft Document Imaging format"
+
+msgid "Microsoft Visio document"
+msgstr ""
+
+msgid "Microsoft Windows theme pack"
+msgstr "Microsoft Windows theme pack"
+
+msgid "Microsoft Works document"
+msgstr "Microsoft Works document"
+
+msgid "Microsoft icon"
+msgstr "Microsoft icon"
+
+msgid "MiniPSF audio"
+msgstr "MiniPSF audio"
+
+msgid "Minolta MRW raw image"
+msgstr "Minolta MRW raw image"
+
+msgid "Mobipocket e-book"
+msgstr ""
+
+msgid "Monkey's audio"
+msgstr "Monkey's audio"
+
+msgid "Mozilla bookmarks"
+msgstr "Mozilla bookmarks"
+
+msgid "Mup publication"
+msgstr "Mup publication"
+
+msgid "Musepack audio"
+msgstr "Musepack audio"
+
+msgid "NES ROM"
+msgstr "NES ROM"
+
+msgid "NFO document"
+msgstr "NFO document"
+
+msgid "NIFF image"
+msgstr "NIFF image"
+
+msgid "Nautilus link"
+msgstr "Nautilus link"
+
+msgid "Network Packet Capture"
+msgstr ""
+
+msgid "NewzBin usenet index"
+msgstr ""
+
+msgid "Nikon NEF raw image"
+msgstr "Nikon NEF raw image"
+
+msgid "Nintendo DS ROM"
+msgstr "Nintendo DS ROM"
+
+msgid "Nintendo64 ROM"
+msgstr "Nintendo64 ROM"
+
+msgid "NullSoft video"
+msgstr "NullSoft video"
+
+msgid "OCL file"
+msgstr "OCL file"
+
+msgid "OCaml source code"
+msgstr "OCaml source code"
+
+msgid "ODA document"
+msgstr "ODA document"
+
+msgid "ODB database"
+msgstr "ODB database"
+
+msgid "ODC chart"
+msgstr "ODC chart"
+
+msgid "ODC template"
+msgstr "ODC template"
+
+msgid "ODF formula"
+msgstr "ODF formula"
+
+msgid "ODF template"
+msgstr "ODF template"
+
+msgid "ODG drawing"
+msgstr "ODG drawing"
+
+msgid "ODG drawing (Flat XML)"
+msgstr "ODG drawing (Flat XML)"
+
+msgid "ODG template"
+msgstr "ODG template"
+
+msgid "ODI image"
+msgstr "ODI image"
+
+msgid "ODM document"
+msgstr "ODM document"
+
+msgid "ODP presentation"
+msgstr "ODP presentation"
+
+msgid "ODP presentation (Flat XML)"
+msgstr "ODP presentation (Flat XML)"
+
+msgid "ODP template"
+msgstr "ODP template"
+
+msgid "ODS spreadsheet"
+msgstr "ODS spreadsheet"
+
+msgid "ODS spreadsheet (Flat XML)"
+msgstr "ODS spreadsheet (Flat XML)"
+
+msgid "ODS template"
+msgstr "ODS template"
+
+msgid "ODT document"
+msgstr "ODT document"
+
+msgid "ODT document (Flat XML)"
+msgstr "ODT document (Flat XML)"
+
+msgid "ODT template"
+msgstr "ODT template"
+
+msgid "OGM video"
+msgstr "OGM video"
+
+msgid "OLE2 compound document storage"
+msgstr "OLE2 compound document storage"
+
+msgid "OOC source code"
+msgstr ""
+
+msgid "OPML syndication feed"
+msgstr "OPML syndication feed"
+
+msgid "OTH template"
+msgstr "OTH template"
+
+msgid "Objective-C source code"
+msgstr "Objective-C source code"
+
+msgid "Office drawing"
+msgstr "Office drawing"
+
+msgid "Ogg Audio"
+msgstr "Ogg Audio"
+
+msgid "Ogg FLAC audio"
+msgstr "Ogg FLAC audio"
+
+msgid "Ogg Speex audio"
+msgstr "Ogg Speex audio"
+
+msgid "Ogg Theora video"
+msgstr "Ogg Theora video"
+
+msgid "Ogg Video"
+msgstr "Ogg Video"
+
+msgid "Ogg Vorbis audio"
+msgstr "Ogg Vorbis audio"
+
+msgid "Ogg multimedia file"
+msgstr "Ogg multimedia file"
+
+msgid "Olympus ORF raw image"
+msgstr "Olympus ORF raw image"
+
+msgid "OpenOffice Calc spreadsheet"
+msgstr "OpenOffice Calc spreadsheet"
+
+msgid "OpenOffice Calc template"
+msgstr "OpenOffice Calc template"
+
+msgid "OpenOffice Draw drawing"
+msgstr "OpenOffice Draw drawing"
+
+msgid "OpenOffice Draw template"
+msgstr "OpenOffice Draw template"
+
+msgid "OpenOffice Impress presentation"
+msgstr "OpenOffice Impress presentation"
+
+msgid "OpenOffice Impress template"
+msgstr "OpenOffice Impress template"
+
+msgid "OpenOffice Math formula"
+msgstr "OpenOffice Math formula"
+
+msgid "OpenOffice Writer document"
+msgstr "OpenOffice Writer document"
+
+msgid "OpenOffice Writer global document"
+msgstr "OpenOffice Writer global document"
+
+msgid "OpenOffice Writer template"
+msgstr "OpenOffice Writer template"
+
+msgid "OpenOffice.org extension"
+msgstr "OpenOffice.org extension"
+
+msgid "OpenRaster archiving image"
+msgstr ""
+
+msgid "OpenType font"
+msgstr "OpenType font"
+
+msgid "PAK archive"
+msgstr "PAK archive"
+
+msgid "PBM image"
+msgstr "PBM image"
+
+msgid "PCD image"
+msgstr "PCD image"
+
+msgid "PCF font"
+msgstr "PCF font"
+
+msgid "PCL file"
+msgstr "PCL file"
+
+msgid "PCM audio"
+msgstr "PCM audio"
+
+msgid "PCX image"
+msgstr "PCX image"
+
+msgid "PDF document"
+msgstr "PDF document"
+
+msgid "PDF document (XZ-compressed)"
+msgstr ""
+
+msgid "PDF document (bzip-compressed)"
+msgstr "PDF document (bzip-compressed)"
+
+msgid "PDF document (gzip-compressed)"
+msgstr "PDF document (gzip-compressed)"
+
+msgid "PEF executable"
+msgstr "PEF executable"
+
+msgid "PGM image"
+msgstr "PGM image"
+
+msgid "PGN chess game notation"
+msgstr "PGN chess game notation"
+
+msgid "PGP keys"
+msgstr "PGP keys"
+
+msgid "PGP/MIME-encrypted message header"
+msgstr "PGP/MIME-encrypted message header"
+
+msgid "PHP script"
+msgstr "PHP script"
+
+msgid "PKCS#10 certification request"
+msgstr "PKCS#10 certification request"
+
+msgid "PKCS#12 certificate bundle"
+msgstr "PKCS#12 certificate bundle"
+
+msgid "PKCS#7 certificate bundle"
+msgstr "PKCS#7 certificate bundle"
+
+msgid "PKCS#8 private key"
+msgstr "PKCS#8 private key"
+
+msgid "PNG image"
+msgstr "PNG image"
+
+msgid "PNM image"
+msgstr "PNM image"
+
+msgid "PPM image"
+msgstr "PPM image"
+
+msgid "PS document"
+msgstr "PS document"
+
+msgid "PSF audio"
+msgstr "PSF audio"
+
+msgid "PSFlib audio library"
+msgstr "PSFlib audio library"
+
+msgid "Pack200 Java archive"
+msgstr "Pack200 Java archive"
+
+msgid "Palm OS database"
+msgstr "Palm OS database"
+
+msgid "Panasonic raw image"
+msgstr "Panasonic raw image"
+
+msgid "Panasonic raw2 image"
+msgstr "Panasonic raw2 image"
+
+msgid "Parchive archive"
+msgstr "Parchive archive"
+
+msgid "Pascal source code"
+msgstr "Pascal source code"
+
+msgid "Pathetic Writer document"
+msgstr "Pathetic Writer document"
+
+msgid "Pentax PEF raw image"
+msgstr "Pentax PEF raw image"
+
+msgid "Perl script"
+msgstr "Perl script"
+
+msgid "Photoshop image"
+msgstr "Photoshop image"
+
+msgid "Picture CD"
+msgstr "Picture CD"
+
+msgid "PkiPath certification path"
+msgstr "PkiPath certification path"
+
+msgid "PlanPerfect spreadsheet"
+msgstr "PlanPerfect spreadsheet"
+
+msgid "Plucker document"
+msgstr "Plucker document"
+
+msgid "Pocket Word document"
+msgstr "Pocket Word document"
+
+msgid "PostScript document (bzip-compressed)"
+msgstr "PostScript document (bzip-compressed)"
+
+msgid "PostScript document (gzip-compressed)"
+msgstr "PostScript document (gzip-compressed)"
+
+msgid "Postscript type-1 font"
+msgstr "Postscript type-1 font"
+
+msgid "PowerPoint 2007 presentation"
+msgstr "PowerPoint 2007 presentation"
+
+msgid "PowerPoint 2007 presentation template"
+msgstr ""
+
+msgid "PowerPoint 2007 show"
+msgstr "PowerPoint 2007 show"
+
+msgid "PowerPoint 2007 slide"
 msgstr ""
 
 msgid "PowerPoint add-in"
@@ -176,11 +1141,491 @@ msgstr ""
 msgid "PowerPoint macro-enabled presentation"
 msgstr ""
 
+msgid "PowerPoint macro-enabled presentation template"
+msgstr ""
+
 msgid "PowerPoint macro-enabled slide"
 msgstr ""
 
-msgid "PowerPoint macro-enabled presentation template"
+msgid "PowerPoint presentation"
+msgstr "PowerPoint presentation"
+
+msgid "Python bytecode"
+msgstr "Python bytecode"
+
+msgid "Python script"
+msgstr "Python script"
+
+msgid "Qt Designer file"
+msgstr "Qt Designer file"
+
+msgid "Qt MOC file"
+msgstr "Qt MOC file"
+
+msgid "Qt Markup Language file"
 msgstr ""
+
+msgid "Quattro Pro spreadsheet"
+msgstr "Quattro Pro spreadsheet"
+
+msgid "QuickTime image"
+msgstr "QuickTime image"
+
+msgid "QuickTime metalink playlist"
+msgstr "QuickTime metalink playlist"
+
+msgid "QuickTime video"
+msgstr "QuickTime video"
+
+msgid "Quicken document"
+msgstr "Quicken document"
+
+msgid "RAR archive"
+msgstr "RAR archive"
+
+msgid "RDF file"
+msgstr "RDF file"
+
+msgid "README document"
+msgstr "README document"
+
+msgid "RELAX NG XML schema"
+msgstr "RELAX NG XML schema"
+
+msgid "RGB image"
+msgstr "RGB image"
+
+msgid "RIFF audio"
+msgstr "RIFF audio"
+
+msgid "RPM package"
+msgstr "RPM package"
+
+msgid "RPM spec file"
+msgstr "RPM spec file"
+
+msgid "RSS summary"
+msgstr "RSS summary"
+
+msgid "RTF document"
+msgstr "RTF document"
+
+msgid "RealAudio document"
+msgstr "RealAudio document"
+
+msgid "RealMedia Metafile"
+msgstr "RealMedia Metafile"
+
+msgid "RealMedia document"
+msgstr "RealMedia document"
+
+msgid "RealPix document"
+msgstr "RealPix document"
+
+msgid "RealText document"
+msgstr "RealText document"
+
+msgid "RealVideo document"
+msgstr "RealVideo document"
+
+msgid "Ruby script"
+msgstr "Ruby script"
+
+msgid "Run Length Encoded bitmap image"
+msgstr "Run Length Encoded bitmap image"
+
+msgid "SAMI subtitles"
+msgstr "SAMI subtitles"
+
+msgid "SC/Xspread spreadsheet"
+msgstr "SC/Xspread spreadsheet"
+
+msgid "SDP multicast stream file"
+msgstr "SDP multicast stream file"
+
+msgid "SGF record"
+msgstr "SGF record"
+
+msgid "SGI image"
+msgstr "SGI image"
+
+msgid "SGI video"
+msgstr "SGI video"
+
+msgid "SGML document"
+msgstr "SGML document"
+
+msgid "SIS package"
+msgstr "SIS package"
+
+msgid "SISX package"
+msgstr "SISX package"
+
+msgid "SMAF audio"
+msgstr "SMAF audio"
+
+msgid "SMIL document"
+msgstr "SMIL document"
+
+msgid "SPSS Data File"
+msgstr "SPSS Data File"
+
+msgid "SPSS Portable Data File"
+msgstr "SPSS Portable Data File"
+
+msgid "SQL code"
+msgstr "SQL code"
+
+msgid "SQLite2 database"
+msgstr "SQLite2 database"
+
+msgid "SQLite3 database"
+msgstr "SQLite3 database"
+
+msgid "SSA subtitles"
+msgstr "SSA subtitles"
+
+msgid "SV4 CPIO archive"
+msgstr "SV4 CPIO archive"
+
+msgid "SV4 CPIO archive (with CRC)"
+msgstr "SV4 CPIO archive (with CRC)"
+
+msgid "SVG image"
+msgstr "SVG image"
+
+msgid "Scala source code"
+msgstr ""
+
+msgid "Scheme source code"
+msgstr "Scheme source code"
+
+msgid "Scream Tracker 3 audio"
+msgstr "Scream Tracker 3 audio"
+
+msgid "Scream Tracker audio"
+msgstr "Scream Tracker audio"
+
+msgid "Scream Tracker instrument"
+msgstr "Scream Tracker instrument"
+
+msgid "Sega Master System/Game Gear ROM"
+msgstr "Sega Master System/Game Gear ROM"
+
+msgid "Setext document"
+msgstr "Setext document"
+
+msgid "Shockwave Flash file"
+msgstr "Shockwave Flash file"
+
+msgid "Shorten audio"
+msgstr "Shorten audio"
+
+msgid "Siag spreadsheet"
+msgstr "Siag spreadsheet"
+
+msgid "Sieve mail filter script"
+msgstr "Sieve mail filter script"
+
+msgid "Sigma X3F raw image"
+msgstr "Sigma X3F raw image"
+
+msgid "Skencil document"
+msgstr "Skencil document"
+
+msgid "Sony ARW raw image"
+msgstr "Sony ARW raw image"
+
+msgid "Sony SR2 raw image"
+msgstr "Sony SR2 raw image"
+
+msgid "Sony SRF raw image"
+msgstr "Sony SRF raw image"
+
+msgid "Speedo font"
+msgstr "Speedo font"
+
+msgid "Speex audio"
+msgstr "Speex audio"
+
+msgid "Stampede package"
+msgstr "Stampede package"
+
+msgid "StarCalc spreadsheet"
+msgstr "StarCalc spreadsheet"
+
+msgid "StarChart chart"
+msgstr "StarChart chart"
+
+msgid "StarDraw drawing"
+msgstr "StarDraw drawing"
+
+msgid "StarImpress presentation"
+msgstr "StarImpress presentation"
+
+msgid "StarMail email"
+msgstr "StarMail email"
+
+msgid "StarMath formula"
+msgstr "StarMath formula"
+
+msgid "StarWriter document"
+msgstr "StarWriter document"
+
+msgid "StuffIt archive"
+msgstr "StuffIt archive"
+
+msgid "SubRip subtitles"
+msgstr "SubRip subtitles"
+
+msgid "SubViewer subtitles"
+msgstr "SubViewer subtitles"
+
+msgid "Sun raster image"
+msgstr "Sun raster image"
+
+msgid "SunOS News font"
+msgstr "SunOS News font"
+
+msgid "Super NES ROM"
+msgstr "Super NES ROM"
+
+msgid "Super Video CD"
+msgstr "Super Video CD"
+
+msgid "SystemVerilog header"
+msgstr "SystemVerilog header"
+
+msgid "SystemVerilog source code"
+msgstr "SystemVerilog source code"
+
+msgid "T602 document"
+msgstr "T602 document"
+
+msgid "TGA image"
+msgstr "TGA image"
+
+msgid "TGIF document"
+msgstr "TGIF document"
+
+msgid "TIFF image"
+msgstr "TIFF image"
+
+msgid "TNEF message"
+msgstr "TNEF message"
+
+msgid "TSV document"
+msgstr "TSV document"
+
+msgid "Tar archive"
+msgstr "Tar archive"
+
+msgid "Tar archive (LZMA-compressed)"
+msgstr "Tar archive (LZMA-compressed)"
+
+msgid "Tar archive (LZO-compressed)"
+msgstr "Tar archive (LZO-compressed)"
+
+msgid "Tar archive (XZ-compressed)"
+msgstr "Tar archive (XZ-compressed)"
+
+msgid "Tar archive (bzip-compressed)"
+msgstr "Tar archive (bzip-compressed)"
+
+msgid "Tar archive (compressed)"
+msgstr "Tar archive (compressed)"
+
+msgid "Tar archive (gzip-compressed)"
+msgstr "Tar archive (gzip-compressed)"
+
+msgid "Tar archive (lrzip-compressed)"
+msgstr "Tar archive (lrzip-compressed)"
+
+msgid "Tcl script"
+msgstr "Tcl script"
+
+msgid "TeX DVI document"
+msgstr "TeX DVI document"
+
+msgid "TeX DVI document (bzip-compressed)"
+msgstr "TeX DVI document (bzip-compressed)"
+
+msgid "TeX DVI document (gzip-compressed)"
+msgstr "TeX DVI document (gzip-compressed)"
+
+msgid "TeX document"
+msgstr "TeX document"
+
+msgid "TeX font"
+msgstr "TeX font"
+
+msgid "TeX font metrics"
+msgstr "TeX font metrics"
+
+msgid "TeXInfo document"
+msgstr "TeXInfo document"
+
+msgid "ToutDoux document"
+msgstr "ToutDoux document"
+
+msgid "Troff ME input document"
+msgstr "Troff ME input document"
+
+msgid "Troff MM input document"
+msgstr "Troff MM input document"
+
+msgid "Troff MS input document"
+msgstr "Troff MS input document"
+
+msgid "Troff document"
+msgstr "Troff document"
+
+msgid "Troff document (with manpage macros)"
+msgstr "Troff document (with manpage macros)"
+
+msgid "TrueAudio audio"
+msgstr "TrueAudio audio"
+
+msgid "TrueType XML font"
+msgstr "TrueType XML font"
+
+msgid "TrueType font"
+msgstr "TrueType font"
+
+msgid "UFRaw ID image"
+msgstr "UFRaw ID image"
+
+msgid "ULAW (Sun) audio"
+msgstr "ULAW (Sun) audio"
+
+msgid "UNIX software"
+msgstr "UNIX software"
+
+msgid "UNIX-compressed file"
+msgstr "UNIX-compressed file"
+
+msgid "Unidata NetCDF document"
+msgstr "Unidata NetCDF document"
+
+msgid "Usenet news message"
+msgstr "Usenet news message"
+
+msgid "Ustar archive"
+msgstr "Ustar archive"
+
+msgid "V font"
+msgstr "V font"
+
+msgid "VCS/ICS calendar"
+msgstr "VCS/ICS calendar"
+
+msgid "VHDL source code"
+msgstr "VHDL source code"
+
+msgid "VOC audio"
+msgstr "VOC audio"
+
+msgid "VRML document"
+msgstr "VRML document"
+
+msgid "Vala source code"
+msgstr "Vala source code"
+
+msgid "Verilog source code"
+msgstr "Verilog source code"
+
+msgid "Video CD"
+msgstr "Video CD"
+
+msgid "Vivo video"
+msgstr "Vivo video"
+
+msgid "WAIS source code"
+msgstr "WAIS source code"
+
+msgid "WAV audio"
+msgstr "WAV audio"
+
+msgid "WBMP image"
+msgstr "WBMP image"
+
+msgid "WMF image"
+msgstr "WMF image"
+
+msgid "WML document"
+msgstr "WML document"
+
+msgid "WMLScript program"
+msgstr "WMLScript program"
+
+msgid "WPL playlist"
+msgstr "WPL playlist"
+
+msgid "WRI document"
+msgstr "WRI document"
+
+msgid "WWF document"
+msgstr ""
+
+msgid "WavPack audio"
+msgstr "WavPack audio"
+
+msgid "WavPack audio correction file"
+msgstr "WavPack audio correction file"
+
+msgid "Wavelet video"
+msgstr "Wavelet video"
+
+msgid "Web application cache manifest"
+msgstr ""
+
+msgid "WebM audio"
+msgstr "WebM audio"
+
+msgid "WebM video"
+msgstr "WebM video"
+
+msgid "WebVTT subtitles"
+msgstr ""
+
+msgid "Windows BMP image"
+msgstr "Windows BMP image"
+
+msgid "Windows Imaging Format Disk Image"
+msgstr ""
+
+msgid "Windows Installer package"
+msgstr "Windows Installer package"
+
+msgid "Windows Media Station file"
+msgstr "Windows Media Station file"
+
+msgid "Windows Media audio"
+msgstr "Windows Media audio"
+
+msgid "Windows Media video"
+msgstr "Windows Media video"
+
+msgid "Windows Registry extract"
+msgstr "Windows Registry extract"
+
+msgid "Windows animated cursor"
+msgstr "Windows animated cursor"
+
+msgid "Windows cursor"
+msgstr "Windows cursor"
+
+msgid "Windows software"
+msgstr "Windows software"
+
+msgid "Word 2007 document"
+msgstr "Word 2007 document"
+
+msgid "Word 2007 document template"
+msgstr ""
+
+msgid "Word document"
+msgstr "Word document"
 
 msgid "Word macro-enabled document"
 msgstr ""
@@ -188,874 +1633,370 @@ msgstr ""
 msgid "Word macro-enabled document template"
 msgstr ""
 
-msgid "XPS document"
-msgstr ""
-
-msgid "Microsoft Works document"
-msgstr ""
-
-msgid "Microsoft Visio document"
-msgstr ""
-
-msgid "Word document"
-msgstr ""
-
 msgid "Word template"
+msgstr "Word template"
+
+msgid "WordPerfect document"
+msgstr "WordPerfect document"
+
+msgid "WordPerfect/Drawperfect image"
+msgstr "WordPerfect/Drawperfect image"
+
+msgid "X window image"
+msgstr "X window image"
+
+msgid "X-Motif UIL table"
+msgstr "X-Motif UIL table"
+
+msgid "X.509 certificate"
+msgstr "X.509 certificate"
+
+msgid "X11 cursor"
+msgstr "X11 cursor"
+
+msgid "XBEL bookmarks"
+msgstr "XBEL bookmarks"
+
+msgid "XBM image"
+msgstr "XBM image"
+
+msgid "XFig image"
+msgstr "XFig image"
+
+msgid "XHTML page"
+msgstr "XHTML page"
+
+msgid "XLIFF translation file"
+msgstr "XLIFF translation file"
+
+msgid "XMCD CD database"
+msgstr "XMCD CD database"
+
+msgid "XMF audio"
+msgstr "XMF audio"
+
+msgid "XMI file"
+msgstr "XMI file"
+
+msgid "XML document"
+msgstr "XML document"
+
+msgid "XML entities document"
+msgstr "XML entities document"
+
+msgid "XPInstall installer module"
+msgstr "XPInstall installer module"
+
+msgid "XPM image"
+msgstr "XPM image"
+
+msgid "XPS document"
+msgstr "XPS document"
+
+msgid "XSL FO file"
+msgstr "XSL FO file"
+
+msgid "XSLT stylesheet"
+msgstr "XSLT stylesheet"
+
+msgid "XSPF playlist"
+msgstr "XSPF playlist"
+
+msgid "XUL interface document"
+msgstr "XUL interface document"
+
+msgid "XZ archive"
+msgstr "XZ archive"
+
+msgid "Xbase document"
+msgstr "Xbase document"
+
+msgid "YAML document"
+msgstr "YAML document"
+
+msgid "Zip archive"
+msgstr "Zip archive"
+
+msgid "Zoo archive"
+msgstr "Zoo archive"
+
+msgid "application log"
+msgstr "application log"
+
+msgid "audio CD"
+msgstr "audio CD"
+
+msgid "audio DVD"
+msgstr "audio DVD"
+
+msgid "author credits"
+msgstr "author credits"
+
+msgid "author list"
+msgstr "author list"
+
+msgid "backup file"
+msgstr "backup file"
+
+msgid "blank Blu-ray disc"
+msgstr "blank Blu-ray disc"
+
+msgid "blank CD disc"
+msgstr "blank CD disc"
+
+msgid "blank DVD disc"
+msgstr "blank DVD disc"
+
+msgid "blank HD DVD disc"
+msgstr "blank HD DVD disc"
+
+msgid "block device"
+msgstr "block device"
+
+msgid "character device"
+msgstr "character device"
+
+msgid "comic book archive"
+msgstr "comic book archive"
+
+msgid "compound document"
+msgstr "compound document"
+
+msgid "compound documents"
+msgstr "compound documents"
+
+msgid "compressed GIMP image"
+msgstr "compressed GIMP image"
+
+msgid "compressed SVG image"
+msgstr "compressed SVG image"
+
+msgid "compressed Tracker audio"
+msgstr "compressed Tracker audio"
+
+msgid "desktop configuration file"
+msgstr "desktop configuration file"
+
+msgid "detached OpenPGP signature"
+msgstr "detached OpenPGP signature"
+
+msgid "detached S/MIME signature"
+msgstr "detached S/MIME signature"
+
+msgid "differences between files"
+msgstr "differences between files"
+
+msgid "digital photos"
+msgstr "digital photos"
+
+msgid "digital raw image"
+msgstr "digital raw image"
+
+msgid "e-book reader"
+msgstr ""
+
+msgid "eMusic download package"
+msgstr "eMusic download package"
+
+msgid "electronic book document"
+msgstr "electronic book document"
+
+msgid "electronic business card"
+msgstr "electronic business card"
+
+msgid "email headers"
+msgstr "email headers"
+
+msgid "email message"
+msgstr "email message"
+
+msgid "empty document"
+msgstr "empty document"
+
+msgid "encrypted message"
+msgstr "encrypted message"
+
+msgid "enriched text document"
+msgstr "enriched text document"
+
+msgid "executable"
+msgstr "executable"
+
+msgid "folder"
+msgstr "folder"
+
+msgid "generic font file"
+msgstr "generic font file"
+
+msgid "help page"
+msgstr "help page"
+
+msgid "iMelody ringtone"
+msgstr "iMelody ringtone"
+
+msgid "iPod firmware"
+msgstr "iPod firmware"
+
+msgid "iRiver Playlist"
+msgstr "iRiver Playlist"
+
+msgid "installation instructions"
+msgstr "installation instructions"
+
+msgid "iptables configuration file"
+msgstr "iptables configuration file"
+
+msgid "libtool shared library"
+msgstr "libtool shared library"
+
+msgid "license terms"
+msgstr "licence terms"
+
+msgid "mail delivery report"
+msgstr "mail delivery report"
+
+msgid "mail disposition report"
+msgstr "mail disposition report"
+
+msgid "mail system report"
+msgstr "mail system report"
+
+msgid "mailbox file"
+msgstr "mailbox file"
+
+msgid "manual page (compressed)"
+msgstr "manual page (compressed)"
+
+msgid "message catalog"
+msgstr "message catalogue"
+
+msgid "message digest"
+msgstr "message digest"
+
+msgid "message in several formats"
+msgstr "message in several formats"
+
+msgid "mount point"
+msgstr "mount point"
+
+msgid "object code"
+msgstr "object code"
+
+msgid "packed font file"
+msgstr "packed font file"
+
+msgid "partial email message"
+msgstr "partial email message"
+
+msgid "pipe"
+msgstr "pipe"
+
+msgid "plain text document"
+msgstr "plain text document"
+
+msgid "portable audio player"
+msgstr "portable audio player"
+
+msgid "profiler results"
+msgstr "profiler results"
+
+msgid "program crash data"
+msgstr "program crash data"
+
+msgid "raw CD image"
+msgstr "raw CD image"
+
+msgid "reference to remote file"
+msgstr "reference to remote file"
+
+msgid "rejected patch"
+msgstr "rejected patch"
+
+msgid "resource location"
+msgstr "resource location"
+
+msgid "rich text document"
+msgstr "rich text document"
+
+msgid "shared library"
+msgstr "shared library"
+
+msgid "shell archive"
+msgstr "shell archive"
+
+msgid "shell script"
+msgstr "shell script"
+
+msgid "shortcut to Kexi project on database server"
+msgstr ""
+
+msgid "signed message"
+msgstr "signed message"
+
+msgid "socket"
+msgstr "socket"
+
+msgid "software"
+msgstr "software"
+
+msgid "spreadsheet interchange document"
+msgstr "spreadsheet interchange document"
+
+msgid "stream of data (server push)"
+msgstr "stream of data (server push)"
+
+msgid "symbolic link"
+msgstr "symbolic link"
+
+msgid "theme"
+msgstr "theme"
+
+msgid "translated messages (machine-readable)"
+msgstr "translated messages (machine-readable)"
+
+msgid "translation file"
+msgstr "translation file"
+
+msgid "translation template"
+msgstr "translation template"
+
+msgid "txt2tags document"
+msgstr "txt2tags document"
+
+msgid "unknown"
+msgstr "unknown"
+
+msgid "video DVD"
+msgstr "video DVD"
+
+msgid "AmazonMP3 download file"
+msgstr ""
+
+msgid "PKCS#7 Message or Certificate"
+msgstr ""
+
+msgid "Lotus Word Pro"
 msgstr ""
 
 msgid "GML document"
 msgstr ""
 
-msgid "GNUnet search file"
-msgstr ""
-
-msgid "TNEF message"
-msgstr ""
-
-msgid "StarCalc spreadsheet"
-msgstr ""
-
-msgid "StarChart chart"
-msgstr ""
-
-msgid "StarDraw drawing"
-msgstr ""
-
-msgid "StarImpress presentation"
-msgstr ""
-
-msgid "StarMail email"
-msgstr ""
-
-msgid "StarMath formula"
-msgstr ""
-
-msgid "StarWriter document"
-msgstr ""
-
-msgid "OpenOffice Calc spreadsheet"
-msgstr ""
-
-msgid "OpenOffice Calc template"
-msgstr ""
-
-msgid "OpenOffice Draw drawing"
-msgstr ""
-
-msgid "OpenOffice Draw template"
-msgstr ""
-
-msgid "OpenOffice Impress presentation"
-msgstr ""
-
-msgid "OpenOffice Impress template"
-msgstr ""
-
-msgid "OpenOffice Math formula"
-msgstr ""
-
-msgid "OpenOffice Writer document"
-msgstr ""
-
-msgid "OpenOffice Writer global document"
-msgstr ""
-
-msgid "OpenOffice Writer template"
-msgstr ""
-
-msgid "ODT document"
-msgstr ""
-
-msgid "ODT document (Flat XML)"
-msgstr ""
-
-msgid "ODT template"
-msgstr ""
-
-msgid "OTH template"
-msgstr ""
-
-msgid "ODM document"
-msgstr ""
-
-msgid "ODG drawing"
-msgstr ""
-
-msgid "ODG drawing (Flat XML)"
-msgstr ""
-
-msgid "ODG template"
-msgstr ""
-
-msgid "ODP presentation"
-msgstr ""
-
-msgid "ODP presentation (Flat XML)"
-msgstr ""
-
-msgid "ODP template"
-msgstr ""
-
-msgid "ODS spreadsheet"
-msgstr ""
-
-msgid "ODS spreadsheet (Flat XML)"
-msgstr ""
-
-msgid "ODS template"
-msgstr ""
-
-msgid "ODC chart"
-msgstr ""
-
-msgid "ODC template"
-msgstr ""
-
-msgid "ODF formula"
-msgstr ""
-
-msgid "ODF template"
-msgstr ""
-
-msgid "ODB database"
-msgstr ""
-
-msgid "ODI image"
-msgstr ""
-
-msgid "OpenOffice.org extension"
-msgstr ""
-
-msgid "Android package"
-msgstr ""
-
-msgid "SIS package"
-msgstr ""
-
-msgid "SISX package"
-msgstr ""
-
-msgid "Network Packet Capture"
-msgstr ""
-
-msgid "WordPerfect document"
-msgstr ""
-
-msgid "SPSS Portable Data File"
-msgstr ""
-
-msgid "SPSS Data File"
-msgstr ""
-
-msgid "XBEL bookmarks"
-msgstr ""
-
-msgid "7-zip archive"
-msgstr ""
-
-msgid "AbiWord document"
-msgstr ""
-
-msgid "CD image cuesheet"
-msgstr ""
-
-msgid "Lotus AmiPro document"
-msgstr ""
-
-msgid "AportisDoc document"
-msgstr ""
-
-msgid "Applix Spreadsheets spreadsheet"
-msgstr ""
-
-msgid "Applix Words document"
-msgstr ""
-
-msgid "ARC archive"
-msgstr ""
-
-msgid "AR archive"
-msgstr ""
-
-msgid "ARJ archive"
-msgstr ""
-
-msgid "ASP page"
-msgstr ""
-
-msgid "AWK script"
-msgstr ""
-
-msgid "BCPIO document"
-msgstr ""
-
-msgid "BitTorrent seed file"
-msgstr ""
-
-msgid "Blender scene"
-msgstr ""
-
-msgid "TeX DVI document (bzip-compressed)"
-msgstr ""
-
-msgid "Bzip archive"
-msgstr ""
-
-msgid "Tar archive (bzip-compressed)"
-msgstr ""
-
-msgid "PDF document (bzip-compressed)"
-msgstr ""
-
-msgid "PostScript document (bzip-compressed)"
-msgstr ""
-
-msgid "comic book archive"
-msgstr ""
-
-msgid "Lrzip archive"
-msgstr ""
-
-msgid "Tar archive (lrzip-compressed)"
-msgstr ""
-
-msgid "Apple disk image"
-msgstr ""
-
-msgid "raw CD image"
-msgstr ""
-
-msgid "CD Table Of Contents"
-msgstr ""
-
-msgid "PGN chess game notation"
-msgstr ""
-
-msgid "CHM document"
-msgstr ""
-
-msgid "Java byte code"
-msgstr ""
-
-msgid "UNIX-compressed file"
-msgstr ""
-
-msgid "Tar archive (gzip-compressed)"
-msgstr ""
-
-msgid "program crash data"
-msgstr ""
-
-msgid "CPIO archive"
-msgstr ""
-
-msgid "CPIO archive (gzip-compressed)"
-msgstr ""
-
-msgid "C shell script"
-msgstr ""
-
-msgid "Xbase document"
-msgstr ""
-
-msgid "ECMAScript program"
-msgstr ""
-
-msgid "Dreamcast ROM"
-msgstr ""
-
-msgid "Nintendo DS ROM"
-msgstr ""
-
-msgid "Debian package"
-msgstr ""
-
-msgid "Qt Designer file"
-msgstr ""
-
-msgid "Qt Markup Language file"
-msgstr ""
-
-msgid "desktop configuration file"
-msgstr ""
-
-msgid "FictionBook document"
-msgstr ""
-
-msgid "Dia diagram"
-msgstr ""
-
-msgid "Dia shape"
-msgstr ""
-
-msgid "TeX DVI document"
-msgstr ""
-
-msgid "Enlightenment theme"
-msgstr ""
-
-msgid "Egon Animator animation"
-msgstr ""
-
-msgid "executable"
-msgstr ""
-
-msgid "FLTK Fluid file"
-msgstr ""
-
-msgid "Postscript type-1 font"
-msgstr ""
-
-msgid "Adobe font metrics"
-msgstr ""
-
-msgid "BDF font"
-msgstr ""
-
-msgid "DOS font"
-msgstr ""
-
-msgid "Adobe FrameMaker font"
-msgstr ""
-
-msgid "LIBGRX font"
-msgstr ""
-
-msgid "Linux PSF console font"
-msgstr ""
-
-msgid "Linux PSF console font (gzip-compressed)"
-msgstr ""
-
-msgid "PCF font"
-msgstr ""
-
-msgid "OpenType font"
-msgstr ""
-
-msgid "Speedo font"
-msgstr ""
-
-msgid "SunOS News font"
-msgstr ""
-
-msgid "TeX font"
-msgstr ""
-
-msgid "TeX font metrics"
-msgstr ""
-
-msgid "TrueType font"
-msgstr ""
-
-msgid "TrueType XML font"
-msgstr ""
-
-msgid "V font"
-msgstr ""
-
-msgid "Adobe FrameMaker document"
-msgstr ""
-
-msgid "Game Boy ROM"
-msgstr ""
-
-msgid "Game Boy Advance ROM"
-msgstr ""
-
-msgid "GDBM database"
-msgstr ""
-
-msgid "Genesis ROM"
-msgstr ""
-
-msgid "translated messages (machine-readable)"
+msgid "WOFF font"
 msgstr ""
 
 msgid "GTK+ Builder"
 msgstr ""
 
-msgid "Glade project"
+msgid "IFF file"
 msgstr ""
 
-msgid "GMC link"
-msgstr ""
-
-msgid "GnuCash financial data"
-msgstr ""
-
-msgid "Gnumeric spreadsheet"
-msgstr ""
-
-msgid "Gnuplot document"
-msgstr ""
-
-msgid "Graphite scientific graph"
-msgstr ""
-
-msgid "GTKtalog catalog"
-msgstr ""
-
-msgid "TeX DVI document (gzip-compressed)"
-msgstr ""
-
-msgid "Gzip archive"
-msgstr ""
-
-msgid "PDF document (gzip-compressed)"
-msgstr ""
-
-msgid "PostScript document (gzip-compressed)"
-msgstr ""
-
-msgid "HDF document"
-msgstr ""
-
-msgid "iPod firmware"
-msgstr ""
-
-msgid "Java archive"
-msgstr ""
-
-msgid "Java class"
-msgstr ""
-
-msgid "JNLP file"
-msgstr ""
-
-msgid "Java keystore"
-msgstr ""
-
-msgid "Java JCE keystore"
-msgstr ""
-
-msgid "Pack200 Java archive"
-msgstr ""
-
-msgid "JavaScript program"
-msgstr ""
-
-msgid "JBuilder project"
-msgstr ""
-
-msgid "Karbon14 drawing"
-msgstr ""
-
-msgid "KChart chart"
-msgstr ""
-
-msgid "Kexi settings for database server connection"
-msgstr ""
-
-msgid "shortcut to Kexi project on database server"
-msgstr ""
-
-msgid "Kexi database file-based project"
-msgstr ""
-
-msgid "KFormula formula"
-msgstr ""
-
-msgid "KIllustrator drawing"
-msgstr ""
-
-msgid "Kivio flowchart"
-msgstr ""
-
-msgid "Kontour drawing"
-msgstr ""
-
-msgid "KPovModeler scene"
-msgstr ""
-
-msgid "KPresenter presentation"
-msgstr ""
-
-msgid "Krita document"
-msgstr ""
-
-msgid "KSpread spreadsheet"
-msgstr ""
-
-msgid "KSpread spreadsheet (encrypted)"
-msgstr ""
-
-msgid "KSysV init package"
-msgstr ""
-
-msgid "Kugar document"
-msgstr ""
-
-msgid "KWord document"
-msgstr ""
-
-msgid "KWord document (encrypted)"
-msgstr ""
-
-msgid "LHA archive"
-msgstr ""
-
-msgid "LHZ archive"
-msgstr ""
-
-msgid "message catalog"
-msgstr ""
-
-msgid "LyX document"
-msgstr ""
-
-msgid "Lzip archive"
-msgstr ""
-
-msgid "LZMA archive"
-msgstr ""
-
-msgid "Tar archive (LZMA-compressed)"
-msgstr ""
-
-msgid "LZO archive"
-msgstr ""
-
-msgid "MagicPoint presentation"
-msgstr ""
-
-msgid "Macintosh MacBinary file"
-msgstr ""
-
-msgid "Matroska stream"
-msgstr ""
-
-msgid "Matroska video"
-msgstr ""
-
-msgid "Matroska audio"
-msgstr ""
-
-msgid "WebM video"
-msgstr ""
-
-msgid "WebM audio"
-msgstr ""
-
-msgid "MXF video"
-msgstr ""
-
-msgid "OCL file"
-msgstr ""
-
-msgid "COBOL source file"
-msgstr ""
-
-msgid "Mobipocket e-book"
-msgstr ""
-
-msgid "Adobe FrameMaker MIF document"
-msgstr ""
-
-msgid "Mozilla bookmarks"
-msgstr ""
-
-msgid "DOS/Windows executable"
-msgstr ""
-
-msgid "Internet shortcut"
-msgstr ""
-
-msgid "WRI document"
-msgstr ""
-
-msgid "MSX ROM"
-msgstr ""
-
-msgid "M4 macro"
-msgstr ""
-
-msgid "Nintendo64 ROM"
-msgstr ""
-
-msgid "Nautilus link"
-msgstr ""
-
-msgid "NES ROM"
-msgstr ""
-
-msgid "Unidata NetCDF document"
-msgstr ""
-
-msgid "NewzBin usenet index"
-msgstr ""
-
-msgid "object code"
-msgstr ""
-
-msgid "Annodex exchange format"
-msgstr ""
-
-msgid "Annodex Video"
-msgstr ""
-
-msgid "Annodex Audio"
-msgstr ""
-
-msgid "Ogg multimedia file"
-msgstr ""
-
-msgid "Ogg Audio"
-msgstr ""
-
-msgid "Ogg Video"
-msgstr ""
-
-msgid "Ogg Vorbis audio"
-msgstr ""
-
-msgid "Ogg FLAC audio"
-msgstr ""
-
-msgid "Ogg Speex audio"
-msgstr ""
-
-msgid "Speex audio"
-msgstr ""
-
-msgid "Ogg Theora video"
-msgstr ""
-
-msgid "OGM video"
-msgstr ""
-
-msgid "OLE2 compound document storage"
-msgstr ""
-
-msgid "Windows Installer package"
-msgstr ""
-
-msgid "GNU Oleo spreadsheet"
-msgstr ""
-
-msgid "PAK archive"
-msgstr ""
-
-msgid "Palm OS database"
-msgstr ""
-
-msgid "Parchive archive"
-msgstr ""
-
-msgid "PEF executable"
-msgstr ""
-
-msgid "Perl script"
-msgstr ""
-
-msgid "PHP script"
-msgstr ""
-
-msgid "PKCS#7 certificate bundle"
-msgstr ""
-
-msgid "PKCS#12 certificate bundle"
-msgstr ""
-
-msgid "PlanPerfect spreadsheet"
-msgstr ""
-
-msgid "Pocket Word document"
-msgstr ""
-
-msgid "profiler results"
-msgstr ""
-
-msgid "Pathetic Writer document"
-msgstr ""
-
-msgid "Python bytecode"
+msgid "MHTML web archive"
 msgstr ""
 
 msgid "QtiPlot document"
 msgstr ""
 
-msgid "Quattro Pro spreadsheet"
-msgstr ""
-
-msgid "QuickTime metalink playlist"
-msgstr ""
-
-msgid "Quicken document"
-msgstr ""
-
-msgid "RAR archive"
-msgstr ""
-
-msgid "DAR archive"
-msgstr ""
-
-msgid "Alzip archive"
-msgstr ""
-
-msgid "rejected patch"
-msgstr ""
-
-msgid "RPM package"
-msgstr ""
-
-msgid "Ruby script"
-msgstr ""
-
-msgid "Markaby script"
-msgstr ""
-
-msgid "SC/Xspread spreadsheet"
-msgstr ""
-
-msgid "shell archive"
-msgstr ""
-
-msgid "libtool shared library"
-msgstr ""
-
-msgid "shared library"
-msgstr ""
-
-msgid "shell script"
-msgstr ""
-
-msgid "Shockwave Flash file"
-msgstr ""
-
-msgid "Shorten audio"
-msgstr ""
-
-msgid "Siag spreadsheet"
-msgstr ""
-
-msgid "Skencil document"
-msgstr ""
-
-msgid "Stampede package"
-msgstr ""
-
-msgid "Sega Master System/Game Gear ROM"
-msgstr ""
-
-msgid "Super NES ROM"
-msgstr ""
-
-msgid "StuffIt archive"
-msgstr ""
-
-msgid "SubRip subtitles"
-msgstr ""
-
-msgid "WebVTT subtitles"
-msgstr ""
-
-msgid "SAMI subtitles"
-msgstr ""
-
-msgid "MicroDVD subtitles"
-msgstr ""
-
-msgid "MPSub subtitles"
-msgstr ""
-
-msgid "SSA subtitles"
-msgstr ""
-
-msgid "SubViewer subtitles"
-msgstr ""
-
-msgid "iMelody ringtone"
-msgstr ""
-
-msgid "SMAF audio"
-msgstr ""
-
-msgid "MRML playlist"
-msgstr ""
-
-msgid "XMF audio"
-msgstr ""
-
-msgid "SV4 CPIO archive"
-msgstr ""
-
-msgid "SV4 CPIO archive (with CRC)"
-msgstr ""
-
-msgid "Tar archive"
-msgstr ""
-
-msgid "Tar archive (compressed)"
-msgstr ""
-
-msgid "generic font file"
-msgstr ""
-
-msgid "packed font file"
-msgstr ""
-
-msgid "TGIF document"
-msgstr ""
-
-msgid "theme"
-msgstr ""
-
-msgid "ToutDoux document"
-msgstr ""
-
-msgid "backup file"
-msgstr ""
-
-msgid "Troff document"
-msgstr ""
-
-msgid "Troff document (with manpage macros)"
-msgstr ""
-
-msgid "manual page (compressed)"
-msgstr ""
-
-msgid "Tar archive (LZO-compressed)"
-msgstr ""
-
-msgid "XZ archive"
-msgstr ""
-
-msgid "Tar archive (XZ-compressed)"
-msgstr ""
-
-msgid "PDF document (XZ-compressed)"
-msgstr ""
-
-msgid "Ustar archive"
-msgstr ""
-
-msgid "WAIS source code"
-msgstr ""
-
-msgid "WordPerfect/Drawperfect image"
-msgstr ""
-
-msgid "DER/PEM/Netscape-encoded X.509 certificate"
-msgstr ""
-
-msgid "empty document"
-msgstr ""
-
-msgid "Zoo archive"
-msgstr ""
-
-msgid "XHTML page"
-msgstr ""
-
-msgid "Zip archive"
-msgstr ""
-
-msgid "Windows Imaging Format Disk Image"
-msgstr ""
-
-msgid "Dolby Digital audio"
+msgid "Source RPM package"
 msgstr ""
 
 msgid "DTS audio"
@@ -1064,936 +2005,24 @@ msgstr ""
 msgid "DTSHD audio"
 msgstr ""
 
-msgid "AMR audio"
-msgstr ""
-
-msgid "AMR-WB audio"
-msgstr ""
-
-msgid "ULAW (Sun) audio"
-msgstr ""
-
-msgid "Commodore 64 audio"
-msgstr ""
-
-msgid "PCM audio"
-msgstr ""
-
-msgid "AIFC audio"
-msgstr ""
-
-msgid "AIFF/Amiga/Mac audio"
-msgstr ""
-
-msgid "AIFF audio"
-msgstr ""
-
-msgid "Monkey's audio"
-msgstr ""
-
-msgid "Impulse Tracker audio"
-msgstr ""
-
-msgid "FLAC audio"
-msgstr ""
-
-msgid "WavPack audio"
-msgstr ""
-
-msgid "WavPack audio correction file"
-msgstr ""
-
-msgid "MIDI audio"
-msgstr ""
-
-msgid "compressed Tracker audio"
-msgstr ""
-
-msgid "MPEG-4 audio"
-msgstr ""
-
-msgid "MPEG-4 video"
-msgstr ""
-
-msgid "MPEG-4 audio book"
-msgstr ""
-
-msgid "3GPP multimedia file"
-msgstr ""
-
-msgid "3GPP2 multimedia file"
-msgstr ""
-
-msgid "Amiga SoundTracker audio"
-msgstr ""
-
-msgid "MP2 audio"
-msgstr ""
-
-msgid "MP3 audio"
-msgstr ""
-
-msgid "MP3 audio (streamed)"
-msgstr ""
-
-msgid "HTTP Live Streaming playlist"
-msgstr ""
-
-msgid "Microsoft ASX playlist"
-msgstr ""
-
-msgid "PSF audio"
-msgstr ""
-
-msgid "MiniPSF audio"
-msgstr ""
-
-msgid "PSFlib audio library"
-msgstr ""
-
-msgid "Windows Media audio"
-msgstr ""
-
-msgid "Musepack audio"
-msgstr ""
-
-msgid "RealAudio document"
-msgstr ""
-
-msgid "RealMedia Metafile"
-msgstr ""
-
-msgid "RealVideo document"
-msgstr ""
-
-msgid "RealMedia document"
-msgstr ""
-
-msgid "RealPix document"
-msgstr ""
-
-msgid "RealText document"
-msgstr ""
-
-msgid "RIFF audio"
-msgstr ""
-
-msgid "Scream Tracker 3 audio"
-msgstr ""
-
-msgid "MP3 ShoutCast playlist"
-msgstr ""
-
-msgid "Scream Tracker audio"
-msgstr ""
-
-msgid "VOC audio"
-msgstr ""
-
-msgid "WAV audio"
-msgstr ""
-
-msgid "Scream Tracker instrument"
-msgstr ""
-
-msgid "FastTracker II audio"
-msgstr ""
-
-msgid "TrueAudio audio"
-msgstr ""
-
-msgid "Windows BMP image"
-msgstr ""
-
-msgid "WBMP image"
-msgstr ""
-
-msgid "Computer Graphics Metafile"
-msgstr ""
-
-msgid "CCITT G3 fax"
-msgstr ""
-
-msgid "G3 fax image"
-msgstr ""
-
-msgid "GIF image"
-msgstr ""
-
-msgid "IEF image"
-msgstr ""
-
-msgid "JPEG image"
-msgstr ""
-
-msgid "JPEG-2000 image"
-msgstr ""
-
-msgid "OpenRaster archiving image"
-msgstr ""
-
-msgid "DirectDraw surface"
-msgstr ""
-
-msgid "X11 cursor"
-msgstr ""
-
-msgid "EXR image"
-msgstr ""
-
-msgid "Macintosh Quickdraw/PICT drawing"
-msgstr ""
-
-msgid "UFRaw ID image"
-msgstr ""
-
-msgid "digital raw image"
-msgstr ""
-
-msgid "Adobe DNG negative"
-msgstr ""
-
-msgid "Canon CRW raw image"
-msgstr ""
-
-msgid "Canon CR2 raw image"
-msgstr ""
-
-msgid "Fuji RAF raw image"
-msgstr ""
-
-msgid "Kodak DCR raw image"
-msgstr ""
-
-msgid "Kodak K25 raw image"
-msgstr ""
-
-msgid "Kodak KDC raw image"
-msgstr ""
-
-msgid "Minolta MRW raw image"
-msgstr ""
-
-msgid "Nikon NEF raw image"
-msgstr ""
-
-msgid "Olympus ORF raw image"
-msgstr ""
-
-msgid "Panasonic raw image"
-msgstr ""
-
-msgid "Panasonic raw2 image"
-msgstr ""
-
-msgid "Pentax PEF raw image"
-msgstr ""
-
-msgid "Sigma X3F raw image"
-msgstr ""
-
-msgid "Sony SRF raw image"
-msgstr ""
-
-msgid "Sony SR2 raw image"
-msgstr ""
-
-msgid "Sony ARW raw image"
-msgstr ""
-
-msgid "PNG image"
+msgid "AAC audio"
 msgstr ""
 
 msgid "Apple optimised PNG image"
 msgstr ""
 
-msgid "Run Length Encoded bitmap image"
+msgid "Modelica model"
 msgstr ""
 
-msgid "SVG image"
-msgstr ""
-
-msgid "compressed SVG image"
-msgstr ""
-
-msgid "TIFF image"
-msgstr ""
-
-msgid "AutoCAD image"
-msgstr ""
-
-msgid "DXF vector image"
-msgstr ""
-
-msgid "Microsoft Document Imaging format"
-msgstr ""
-
-msgid "3D Studio image"
-msgstr ""
-
-msgid "Applix Graphics image"
-msgstr ""
-
-msgid "EPS image (bzip-compressed)"
-msgstr ""
-
-msgid "CMU raster image"
-msgstr ""
-
-msgid "compressed GIMP image"
-msgstr ""
-
-msgid "DICOM image"
-msgstr ""
-
-msgid "DocBook document"
-msgstr ""
-
-msgid "DIB image"
-msgstr ""
-
-msgid "DjVu image"
-msgstr ""
-
-msgid "DPX image"
-msgstr ""
-
-msgid "EPS image"
-msgstr ""
-
-msgid "FITS document"
-msgstr ""
-
-msgid "FPX image"
-msgstr ""
-
-msgid "EPS image (gzip-compressed)"
-msgstr ""
-
-msgid "Microsoft icon"
-msgstr ""
-
-msgid "MacOS X icon"
-msgstr ""
-
-msgid "IFF image"
-msgstr ""
-
-msgid "ILBM image"
-msgstr ""
-
-msgid "JNG image"
-msgstr ""
-
-msgid "LightWave object"
-msgstr ""
-
-msgid "LightWave scene"
-msgstr ""
-
-msgid "MacPaint Bitmap image"
-msgstr ""
-
-msgid "Office drawing"
-msgstr ""
-
-msgid "NIFF image"
-msgstr ""
-
-msgid "PCX image"
-msgstr ""
-
-msgid "PCD image"
-msgstr ""
-
-msgid "PNM image"
-msgstr ""
-
-msgid "PBM image"
-msgstr ""
-
-msgid "PGM image"
-msgstr ""
-
-msgid "PPM image"
-msgstr ""
-
-msgid "Photoshop image"
-msgstr ""
-
-msgid "RGB image"
-msgstr ""
-
-msgid "SGI image"
-msgstr ""
-
-msgid "Sun raster image"
-msgstr ""
-
-msgid "TGA image"
-msgstr ""
-
-msgid "Windows cursor"
-msgstr ""
-
-msgid "Windows animated cursor"
-msgstr ""
-
-msgid "EMF image"
-msgstr ""
-
-msgid "WMF image"
-msgstr ""
-
-msgid "XBM image"
-msgstr ""
-
-msgid "GIMP image"
-msgstr ""
-
-msgid "XFig image"
-msgstr ""
-
-msgid "XPM image"
-msgstr ""
-
-msgid "X window image"
-msgstr ""
-
-msgid "block device"
-msgstr ""
-
-msgid "character device"
-msgstr ""
-
-msgid "folder"
-msgstr ""
-
-msgid "pipe"
-msgstr ""
-
-msgid "mount point"
-msgstr ""
-
-msgid "socket"
-msgstr ""
-
-msgid "symbolic link"
-msgstr ""
-
-msgid "mail delivery report"
-msgstr ""
-
-msgid "mail disposition report"
-msgstr ""
-
-msgid "reference to remote file"
-msgstr ""
-
-msgid "Usenet news message"
-msgstr ""
-
-msgid "partial email message"
-msgstr ""
-
-msgid "email message"
-msgstr ""
-
-msgid "GNU mail message"
-msgstr ""
-
-msgid "VRML document"
-msgstr ""
-
-msgid "message in several formats"
-msgstr ""
-
-msgid "Macintosh AppleDouble-encoded file"
-msgstr ""
-
-msgid "message digest"
-msgstr ""
-
-msgid "encrypted message"
-msgstr ""
-
-msgid "compound documents"
-msgstr ""
-
-msgid "compound document"
-msgstr ""
-
-msgid "mail system report"
-msgstr ""
-
-msgid "signed message"
-msgstr ""
-
-msgid "stream of data (server push)"
-msgstr ""
-
-msgid "VCS/ICS calendar"
-msgstr ""
-
-msgid "CSS stylesheet"
-msgstr ""
-
-msgid "electronic business card"
-msgstr ""
-
-msgid "txt2tags document"
-msgstr ""
-
-msgid "Verilog source code"
-msgstr ""
-
-msgid "SystemVerilog header"
-msgstr ""
-
-msgid "SystemVerilog source code"
-msgstr ""
-
-msgid "VHDL source code"
-msgstr ""
-
-msgid "enriched text document"
-msgstr ""
-
-msgid "help page"
-msgstr ""
-
-msgid "plain text document"
-msgstr ""
-
-msgid "RDF file"
-msgstr ""
-
-msgid "email headers"
-msgstr ""
-
-msgid "rich text document"
-msgstr ""
-
-msgid "RSS summary"
-msgstr ""
-
-msgid "Atom syndication feed"
-msgstr ""
-
-msgid "OPML syndication feed"
-msgstr ""
-
-msgid "SGML document"
-msgstr ""
-
-msgid "spreadsheet interchange document"
-msgstr ""
-
-msgid "TSV document"
-msgstr ""
-
-msgid "Graphviz DOT graph"
-msgstr ""
-
-msgid "JAD document"
-msgstr ""
-
-msgid "WML document"
-msgstr ""
-
-msgid "WMLScript program"
-msgstr ""
-
-msgid "ACE archive"
-msgstr ""
-
-msgid "Ada source code"
-msgstr ""
-
-msgid "author list"
-msgstr ""
-
-msgid "BibTeX document"
-msgstr ""
-
-msgid "C++ header"
-msgstr ""
-
-msgid "C++ source code"
-msgstr ""
-
-msgid "ChangeLog document"
-msgstr ""
-
-msgid "C header"
-msgstr ""
-
-msgid "CMake source code"
-msgstr ""
-
-msgid "CSV document"
-msgstr ""
-
-msgid "license terms"
-msgstr ""
-
-msgid "author credits"
-msgstr ""
-
-msgid "C source code"
-msgstr ""
-
-msgid "C# source code"
-msgstr ""
-
-msgid "Vala source code"
-msgstr ""
-
-msgid "OOC source code"
-msgstr ""
-
-msgid "DCL script"
-msgstr ""
-
-msgid "DSSSL document"
-msgstr ""
-
-msgid "D source code"
-msgstr ""
-
-msgid "DTD file"
-msgstr ""
-
-msgid "Eiffel source code"
-msgstr ""
-
-msgid "Emacs Lisp source code"
-msgstr ""
-
-msgid "Erlang source code"
-msgstr ""
-
-msgid "Fortran source code"
-msgstr ""
-
-msgid "translation file"
-msgstr ""
-
-msgid "translation template"
-msgstr ""
-
-msgid "HTML document"
-msgstr ""
-
-msgid "Web application cache manifest"
-msgstr ""
-
-msgid "Google Video Pointer"
-msgstr ""
-
-msgid "Haskell source code"
-msgstr ""
-
-msgid "IDL document"
-msgstr ""
-
-msgid "installation instructions"
-msgstr ""
-
-msgid "Java source code"
-msgstr ""
-
-msgid "LDIF address book"
-msgstr ""
-
-msgid "Lilypond music sheet"
-msgstr ""
-
-msgid "LHS source code"
-msgstr ""
-
-msgid "application log"
-msgstr ""
-
-msgid "Makefile"
-msgstr ""
-
-msgid "Markdown document"
-msgstr ""
-
-msgid "Qt MOC file"
-msgstr ""
-
-msgid "Windows Registry extract"
-msgstr ""
-
-msgid "Managed Object Format"
-msgstr ""
-
-msgid "Mup publication"
-msgstr ""
-
-msgid "Objective-C source code"
-msgstr ""
-
-msgid "OCaml source code"
-msgstr ""
-
-msgid "MATLAB script/function"
-msgstr ""
-
-msgid "Pascal source code"
-msgstr ""
-
-msgid "differences between files"
-msgstr ""
-
-msgid "Go source code"
-msgstr ""
-
-msgid "Python script"
-msgstr ""
-
-msgid "Lua script"
-msgstr ""
-
-msgid "README document"
-msgstr ""
-
-msgid "NFO document"
-msgstr ""
-
-msgid "RPM spec file"
-msgstr ""
-
-msgid "Scala source code"
-msgstr ""
-
-msgid "Scheme source code"
-msgstr ""
-
-msgid "Setext document"
-msgstr ""
-
-msgid "SQL code"
-msgstr ""
-
-msgid "Tcl script"
-msgstr ""
-
-msgid "TeX document"
-msgstr ""
-
-msgid "TeXInfo document"
-msgstr ""
-
-msgid "Troff ME input document"
-msgstr ""
-
-msgid "Troff MM input document"
-msgstr ""
-
-msgid "Troff MS input document"
-msgstr ""
-
-msgid "X-Motif UIL table"
-msgstr ""
-
-msgid "resource location"
-msgstr ""
-
-msgid "XMI file"
-msgstr ""
-
-msgid "XSL FO file"
-msgstr ""
-
-msgid "iptables configuration file"
-msgstr ""
-
-msgid "XSLT stylesheet"
-msgstr ""
-
-msgid "XMCD CD database"
-msgstr ""
-
-msgid "XML document"
-msgstr ""
-
-msgid "XML entities document"
-msgstr ""
-
-msgid "DV video"
-msgstr ""
-
-msgid "ISI video"
-msgstr ""
-
-msgid "MPEG-2 transport stream"
-msgstr ""
-
-msgid "MPEG video"
-msgstr ""
-
-msgid "MPEG video (streamed)"
-msgstr ""
-
-msgid "QuickTime video"
-msgstr ""
-
-msgid "QuickTime image"
-msgstr ""
-
-msgid "Vivo video"
-msgstr ""
-
-msgid "Wavelet video"
-msgstr ""
-
-msgid "ANIM animation"
-msgstr ""
-
-msgid "FLIC animation"
-msgstr ""
-
-msgid "Haansoft Hangul document"
-msgstr ""
-
-msgid "Haansoft Hangul document template"
-msgstr ""
-
-msgid "MNG animation"
-msgstr ""
-
-msgid "ASF video"
-msgstr ""
-
-msgid "Windows Media Station file"
-msgstr ""
-
-msgid "Windows Media video"
-msgstr ""
-
-msgid "AVI video"
-msgstr ""
-
-msgid "NullSoft video"
-msgstr ""
-
-msgid "SDP multicast stream file"
-msgstr ""
-
-msgid "SGI video"
-msgstr ""
-
-msgid "eMusic download package"
-msgstr ""
-
-msgid "KML geographic data"
-msgstr ""
-
-msgid "KML geographic compressed data"
-msgstr ""
-
-msgid "Citrix ICA settings file"
-msgstr ""
-
-msgid "XUL interface document"
-msgstr ""
-
-msgid "XPInstall installer module"
-msgstr ""
-
-msgid "Word 2007 document"
-msgstr ""
-
-msgid "Word 2007 document template"
-msgstr ""
-
-msgid "PowerPoint 2007 presentation"
-msgstr ""
-
-msgid "PowerPoint 2007 slide"
-msgstr ""
-
-msgid "PowerPoint 2007 show"
-msgstr ""
-
-msgid "PowerPoint 2007 presentation template"
-msgstr ""
-
-msgid "Excel 2007 spreadsheet"
-msgstr ""
-
-msgid "Excel 2007 spreadsheet template"
-msgstr ""
-
-msgid "T602 document"
-msgstr ""
-
-msgid "Cisco VPN Settings"
-msgstr ""
-
-msgid "ICC profile"
-msgstr ""
-
-msgid "IT 8.7 color calibration file"
+msgid "uuencoded file"
 msgstr ""
 
 msgid "CCMX color correction file"
 msgstr ""
 
-msgid "digital photos"
+msgid "WinHelp help file"
 msgstr ""
 
-msgid "Video CD"
-msgstr ""
-
-msgid "Super Video CD"
-msgstr ""
-
-msgid "video DVD"
-msgstr ""
-
-msgid "audio CD"
-msgstr ""
-
-msgid "blank CD disc"
-msgstr ""
-
-msgid "blank DVD disc"
-msgstr ""
-
-msgid "blank Blu-ray disc"
-msgstr ""
-
-msgid "blank HD DVD disc"
-msgstr ""
-
-msgid "audio DVD"
-msgstr ""
-
-msgid "Blu-ray video disc"
-msgstr ""
-
-msgid "HD DVD video disc"
-msgstr ""
-
-msgid "e-book reader"
-msgstr ""
-
-msgid "Picture CD"
-msgstr ""
-
-msgid "portable audio player"
-msgstr ""
-
-msgid "software"
-msgstr ""
-
-msgid "UNIX software"
-msgstr ""
-
-msgid "Windows software"
+msgid "TriG RDF document"
 msgstr ""
 

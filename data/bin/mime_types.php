@@ -139,7 +139,8 @@ foreach($cultures as $culture)
   $old = array();
   if(count($existing))
   {
-    $old = array_diff(array_keys(current($existing)), $messages);
+    $existing = current($existing);
+    $old = array_diff(array_keys($existing), $messages);
   }
 
   foreach($messages as $message)
@@ -160,4 +161,3 @@ foreach($cultures as $culture)
 
 file_put_contents($siftDataDir.'/data/mime_types.dat', serialize($types));
 print 'done.' . "\n";
-
