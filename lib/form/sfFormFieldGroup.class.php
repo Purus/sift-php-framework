@@ -177,7 +177,7 @@ class sfFormFieldGroup implements ArrayAccess, Countable {
     {
       sfForm::setToStringException($e);
 
-      // we return a simple Exception message in case the form framework is used out of symfony.
+      // we return a simple Exception message in case the form framework is used out of Sift framework.
       return 'Exception: '.$e->getMessage();
     }
   }

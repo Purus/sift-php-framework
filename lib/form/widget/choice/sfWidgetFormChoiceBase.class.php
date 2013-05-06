@@ -11,7 +11,6 @@
  *
  * @package    Sift
  * @subpackage form_widget
- * @author     Bernhard Schussek <bernhard.schussek@symfony-project.com>
  */
 abstract class sfWidgetFormChoiceBase extends sfWidgetForm
 {

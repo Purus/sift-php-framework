@@ -114,7 +114,7 @@ class sfForm implements ArrayAccess, Iterator, Countable
     {
       self::setToStringException($e);
 
-      // we return a simple Exception message in case the form framework is used out of symfony.
+      // we return a simple Exception message in case the form framework is used out of Sift framework.
       return 'Exception: '.$e->getMessage();
     }
   }
