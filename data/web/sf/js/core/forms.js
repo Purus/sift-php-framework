@@ -610,7 +610,7 @@
      * Array of options for Select2
      */
     var options = {
-      width: 'element',
+      width: 'resolve',
       formatNoMatches: function () { return __('No matches found.'); },
       formatInputTooShort: function (input, min) { return __('Please enter %number% more characters.', { '%number%' : min - input.length}); },
       formatSelectionTooBig: function (limit) { return __('You can only select %number% item(s).', { '%number%': limit }); },
@@ -619,9 +619,9 @@
     };
 
     // is select multiple?
-    if($element.prop('multiple'))
+    if(!$element.prop('multiple'))
     {
-      options.closeOnSelect = false;
+      options.allowClear = true;
     }
 
     return options;
@@ -635,7 +635,15 @@
    */
   Application.setupSelects = function(context)
   {
-    var selects = $('select.rich', context);
+    if(context === window.document)
+    {
+      var selects = $('form select.rich', context);
+    }
+    else
+    {
+      var selects = $('select.rich', context);
+    }
+
     if(!selects.length)
     {
       return;
@@ -646,10 +654,38 @@
       selects.each(function()
       {
         var $element = $(this);
+
         var options = $.extend({}, Application.getSelectOptions($element), $element.data('selectOptions') || {});
+
+        // we have to deal with focus events and error labels!
+        // this is defined in the javascript validation
+        $element.on('myfocus.from_error_label', function(e, errorLabel)
+        {
+          // open it programatically
+          $(this).select2('open');
+        });
+
+        // no placeholder specified
+        if(!options.placeholder)
+        {
+          // if the first option empty
+          var $firstOption = $element.find('option:first');
+          // This is a workaround the placeholder
+          if($firstOption.val() === '')
+          {
+            options.placeholder = $firstOption.text();
+            // remove text, so select2 works ok
+            // remove selected attribute
+            $firstOption.removeAttr('selected').removeAttr('value')
+                        .text('');
+          }
+        }
+
+        // make it rich!
         $element.select2(options);
+
       });
-    }, null, typeof $.fn.select2 === 'undefined');
+    }, null, typeof window.Select2 === 'undefined');
 
   };
 
