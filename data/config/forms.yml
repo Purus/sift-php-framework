@@ -16,17 +16,17 @@ widgets:
   sfWidgetFormInteger:
     attributes:
       data-spinner-options: !!callback: getSpinnerOptions
-      data-culture: %SF_CULTURE%
+      data-culture: %SF_CULTURE{slugify}%
 
   sfWidgetFormNumber:
     attributes:
       data-spinner-options: !!callback: getSpinnerOptions
-      data-culture: %SF_CULTURE%
+      data-culture: %SF_CULTURE{slugify}%
 
   sfWidgetFormPrice:
     attributes:
       data-spinner-options: !!callback: getSpinnerOptions
-      data-culture: %SF_CULTURE%
+      data-culture: %SF_CULTURE{slugify}%
 
   # date widgets
   sfWidgetFormDate:
