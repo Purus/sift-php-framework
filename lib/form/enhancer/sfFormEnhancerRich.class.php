@@ -37,6 +37,18 @@ class sfFormEnhancerRich extends sfFormEnhancer {
   }
 
   /**
+   * Enhances i18n aggregate widget
+   *
+   * @param sfWidgetFormI18nAggregate $widget
+   * @param sfValidatorBase|null $validator
+   */
+  public function enhanceWidgetI18nAggregate(sfWidgetFormI18nAggregate $widget, $validator)
+  {
+    // enhances child widget
+    self::enhanceWidget($widget->getOption('widget'));
+  }
+
+  /**
    * Returns spinner options for the widget
    *
    * @param sfWidget $widget
