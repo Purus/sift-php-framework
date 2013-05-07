@@ -139,4 +139,20 @@ class sfValidatorI18nAggregate extends sfValidatorAnd {
     return $cultures;
   }
 
+  /**
+   * @see sfValidatorBase
+   */
+  public function getJavascriptValidationRules()
+  {
+    return array();
+  }
+
+  /**
+   * @see sfValidatorBase
+   */
+  public function getJavascriptValidationMessages()
+  {
+    return array();
+  }
+
 }
