@@ -997,6 +997,36 @@ class sfForm implements ArrayAccess, Iterator, Countable
   }
 
   /**
+   * Switch the widget for the given field name. Preserves help and labels
+   * for previous widget.
+   *
+   * @param string       $name   The field name
+   * @param sfWidgetForm $widget The widget
+   * @param boolean      $throwException Throw exception if given field name does not exist?
+   *
+   * @return sfForm The current form instance
+   * @throws InvalidArgumentException If given widget does not exist
+   */
+  public function switchWidget($name, sfWidgetForm $widget, $throwException = true)
+  {
+    if(!isset($this->widgetSchema[$name]) && $throwException)
+    {
+      throw new InvalidArgumentException(sprintf('The widget "%s" does not exist.', $name));
+    }
+
+    $help = $this->widgetSchema->getHelp($name);
+    $label = $this->widgetSchema->getLabel($name);
+
+    $this->widgetSchema[$name] = $widget;
+
+    // put it back
+    $this->setHelp($name, $help);
+    $this->setLabel($name, $label);
+
+    return $this;
+  }
+
+  /**
    * Sets label for the field.
    * Is is a shortcut method for $this->widgetSchema->setLabel()
    *
