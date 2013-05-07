@@ -578,7 +578,7 @@
         $element.trigger('blur');
       });
 
-    });
+    }, null, typeof window.CKEDITOR === 'undefined');
   };
 
   /**
@@ -615,16 +615,36 @@
       formatInputTooShort: function (input, min) { return __('Please enter %number% more characters.', { '%number%' : min - input.length}); },
       formatSelectionTooBig: function (limit) { return __('You can only select %number% item(s).', { '%number%': limit }); },
       formatLoadMore: function (pageNumber) { return __('Loading more results...'); },
-      formatSearching: function () { return __('Searching...'); }
+      formatSearching: function () { return __('Searching...'); },
+      minimumResultsForSearch: 4
     };
 
-    // is select multiple?
-    if(!$element.prop('multiple'))
-    {
-      options.allowClear = true;
-    }
-
     return options;
+  };
+
+  /**
+   * Callback to format results for Select2 options
+   *
+   * @param {Object} object One of the result objects returned from the query function
+   * @param {jQuery Object} container jQuery wrapper of the node that should contain the representation of the result
+   * @param {Object} query The query object used to request this set of results
+   * @returns {String} Html string, a DOM element, or a jQuery object that represents the result
+   * @see http://ivaynberg.github.io/select2/#documentation
+   */
+  Application.selectFormatResultCallback = function(object, container, query)
+  {
+    var text = object.text;
+    if(!object.id)
+    {
+      return '<strong class="tree-optgroup"'> + text + '</strong>';
+    }
+    var match = text.match(/^\s+/);
+    // there is some space before the name
+    if(!match)
+    {
+      return '<strong>' + text + '</strong>';
+    }
+    return '<span class="tree-level-' + match.length + '">' + text + '</span>';
   };
 
   /**
@@ -678,7 +698,20 @@
             // remove selected attribute
             $firstOption.removeAttr('selected').removeAttr('value')
                         .text('');
+
+            // is select multiple?
+            if(typeof options.allowClear === 'undefined'
+                && !$element.prop('multiple'))
+            {
+              options.allowClear = true;
+            }
           }
+        }
+
+        // detect tree selections
+        if($element.hasClass('tree') && !options.formatResult)
+        {
+          options.formatResult = Application.selectFormatResultCallback;
         }
 
         // make it rich!
