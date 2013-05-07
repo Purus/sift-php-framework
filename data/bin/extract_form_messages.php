@@ -196,7 +196,9 @@ foreach($widgets as $file)
     }
 
     // those which have empty_label
-    if(!$reflection->isSubclassOfOrIsEqual(array('sfWidgetFormFilterInput',
+    if(!$reflection->isSubclassOfOrIsEqual(array(
+                                                 'sfWidgetFormChoice',
+                                                 'sfWidgetFormFilterInput',
                                                  'sfWidgetFormFilterDate',
                                                  'sfWidgetFormInputFileEditable',
                                                  'sfWidgetFormDualList')))
@@ -224,7 +226,7 @@ foreach($widgets as $file)
         )
       );
     }
-    elseif($reflection->isSubclassOfOrIsEqual(array('sfWidgetFormDualList')))
+    elseif($reflection->isSubclassOfOrIsEqual(array('sfWidgetFormDualList', 'sfWidgetFormChoice')))
     {
       $arguments = array(
         array(
@@ -265,6 +267,25 @@ foreach($widgets as $file)
         if($label = $widget->getOption('label_'.$name))
         {
           $messages[] = $label;
+        }
+      }
+    }
+
+    if($reflection->isSubclassOfOrIsEqual(array('sfWidgetFormChoice')))
+    {
+      if($widget->getOption('translate_choices'))
+      {
+        $choices = $widget->getChoices();
+
+        if(count($choices))
+        {
+          foreach($choices as $choice)
+          {
+            if(!empty($choice))
+            {
+              $messages[] = $choice;
+            }
+          }
         }
       }
     }

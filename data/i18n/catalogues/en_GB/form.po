@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "PO-Revision-Date: 2013-05-07 13:13:22\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Language: de\n"
+"Language: en\n"
 "Project-Id-Version: 1.0\n"
 
 msgid "This value is required."
@@ -128,13 +128,16 @@ msgstr ""
 msgid "\"%value%\" must be greater than %min%."
 msgstr ""
 
-msgid "This session has expired. Please reload the page and try again."
+msgid "Class \"%value%\" is invalid."
 msgstr ""
 
 msgid "Value is too long (%max_length% characters max)."
 msgstr ""
 
 msgid "Value is too short (%min_length% characters min)."
+msgstr ""
+
+msgid "This session has expired. Please reload the page and try again."
 msgstr ""
 
 msgid "\"%value%\" is invalid URL."
@@ -185,7 +188,16 @@ msgstr ""
 msgid "\"%value%\" is invalid phone number."
 msgstr ""
 
+msgid "The value is invalid YAML string."
+msgstr ""
+
+msgid "The YAML string is invalid type. Should be \"%type%\"."
+msgstr ""
+
 msgid "Available"
+msgstr ""
+
+msgid "Selected"
 msgstr ""
 
 msgid "Select all"
@@ -207,18 +219,6 @@ msgid "from %from% to %to%"
 msgstr ""
 
 msgid "remove the current file"
-msgstr ""
-
-msgid "Selected"
-msgstr ""
-
-msgid "Class \"%value%\" is invalid."
-msgstr ""
-
-msgid "The value is invalid YAML string."
-msgstr ""
-
-msgid "The YAML string is invalid type. Should be \"%type%\"."
 msgstr ""
 
 msgid "append"

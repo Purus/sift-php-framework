@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2013-04-22 09:22+0100\n"
+"PO-Revision-Date: 2013-05-07 13:14+0100\n"
 "Project-Id-Version: 1.0\n"
 "POT-Creation-Date: \n"
 "Last-Translator: Michal Moravec - Mishal.cz <mishal@mishal.cz>\n"
@@ -229,3 +229,30 @@ msgstr "Filtr"
 
 msgid "Selected"
 msgstr "Vybráno"
+
+msgid "Class \"%value%\" is invalid."
+msgstr "Třída \"%value%\" není platná."
+
+msgid "The value is invalid YAML string."
+msgstr "Tato hodnota není platný YAML řetězec."
+
+msgid "The YAML string is invalid type. Should be \"%type%\"."
+msgstr "YAML řetězec není platného typu. Mělo by být \"%type%\"."
+
+msgid "append"
+msgstr "zařadit"
+
+msgid "prepend"
+msgstr "předřadit"
+
+msgid "replace"
+msgstr "nahradit"
+
+msgid "no"
+msgstr "ne"
+
+msgid "yes"
+msgstr "ano"
+
+msgid "Selected title mode is invalid."
+msgstr "Vybraný mód titulku není platný."

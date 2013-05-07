@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2013-05-06 16:21+0100\n"
+"PO-Revision-Date: 2013-05-07 13:14+0100\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Language: sk\n"
 "Project-Id-Version: 1.0\n"
@@ -231,3 +231,30 @@ msgstr "Filter"
 
 msgid "Selected"
 msgstr "Vybraný"
+
+msgid "Class \"%value%\" is invalid."
+msgstr "Trieda \"%value%\" nie je platná."
+
+msgid "The value is invalid YAML string."
+msgstr "Táto hodnota nie je neplatný YAML reťazec."
+
+msgid "The YAML string is invalid type. Should be \"%type%\"."
+msgstr "Reťazec YAML je neplatného typu. Malo by být \"%type%\"."
+
+msgid "append"
+msgstr "pridať"
+
+msgid "prepend"
+msgstr "predradiť"
+
+msgid "replace"
+msgstr "nahradiť"
+
+msgid "no"
+msgstr "nie"
+
+msgid "yes"
+msgstr "áno"
+
+msgid "Selected title mode is invalid."
+msgstr "Vybraný mód titulku nie je platný."
