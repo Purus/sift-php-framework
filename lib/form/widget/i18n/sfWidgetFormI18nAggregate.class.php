@@ -56,11 +56,25 @@ class sfWidgetFormI18nAggregate extends sfWidgetForm
   public function render($name, $value = null, $attributes = array(), $errors = array())
   {
     $widget = $this->getOption('widget');
+
+    if(!$widget || !$widget instanceof sfWidgetForm)
+    {
+      throw new InvalidArgumentException('Widget is missing or is not a valid widget');
+    }
+
+    // we need to set parent, so the translation work
+    $widget->setParent($this->getParent());
+
     $cultures = $this->getOption('cultures');
 
     if($cultures instanceof sfCallable)
     {
       $cultures = $cultures->call();
+    }
+
+    if(!count($cultures))
+    {
+      throw new InvalidArgumentException('Cultures are invalid.');
     }
 
     if(!is_array($value))
