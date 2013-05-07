@@ -371,7 +371,16 @@ class sfLoader {
     $files[] = $appDir.DS.$globalConfigPath;
 
     // generated modules
-    $files[] = sfConfig::get('sf_cache_dir').DS.$configPath;
+    if(strpos($configPath, sfConfig::get('sf_app_module_dir_name')) !== false)
+    {
+      // strip modules from the path which looks like:
+      // moduleName/config/foo.yml
+      // we need to convert it to: autoModuleName/config/foo.yml
+      $generateConfig =
+              'auto' . ucfirst(str_replace(sfConfig::get('sf_app_module_dir_name') . DS, '', $configPath));
+      // generated modules
+      $files[] = sfConfig::get('sf_module_cache_dir').DS.$generateConfig;
+    }
 
     // plugins, but local
     foreach(sfConfig::get('sf_plugins', array()) as $plugin)
