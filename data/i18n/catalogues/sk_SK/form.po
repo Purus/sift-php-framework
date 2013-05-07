@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2013-05-07 13:14+0100\n"
+"PO-Revision-Date: 2013-05-07 13:34+0100\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Language: sk\n"
 "Project-Id-Version: 1.0\n"
@@ -258,3 +258,6 @@ msgstr "áno"
 
 msgid "Selected title mode is invalid."
 msgstr "Vybraný mód titulku nie je platný."
+
+msgid "This value is invalid CSS class."
+msgstr "Táto hodnota nie je platná CSS trieda."

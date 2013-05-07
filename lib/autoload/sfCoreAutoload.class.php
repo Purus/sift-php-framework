@@ -766,6 +766,7 @@ class sfCoreAutoload
     'sfvalidatorcsrftoken' => 'validator/other/sfValidatorCSRFToken.class.php',
     'sfvalidatorcallback' => 'validator/other/sfValidatorCallback.class.php',
     'sfvalidatorclass' => 'validator/other/sfValidatorClass.class.php',
+    'sfvalidatorcssclassname' => 'validator/other/sfValidatorCssClassName.class.php',
     'sfvalidatordefault' => 'validator/other/sfValidatorDefault.class.php',
     'sfvalidatorfromdescription' => 'validator/other/sfValidatorFromDescription.class.php',
     'sfvalidatorfdtoken' => 'validator/other/sfValidatorFromDescription.class.php',
