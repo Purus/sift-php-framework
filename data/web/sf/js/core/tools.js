@@ -141,7 +141,28 @@
         return pars;
       },
       // export to public API
-      parseUri: parseUri
+      parseUri: parseUri,
+
+      /**
+       * Returns an object from its name. Supports namespaced
+       * object names like "Application.foo.function".
+       * Usefull for avoiding eval() in the javascript.
+       *
+       * @param {String} strObjName Object name
+       * @returns {Object|Function|undefined}
+       * @link http://stackoverflow.com/a/4981700/515871
+       * @name getObject
+       * @memberOf Tools
+       */
+      getObject: function(strObjName)
+      {
+        var parts = strObjName.split('.');
+        for(var i = 0, len = parts.length, obj = window; i < len; ++i)
+        {
+          obj = obj[parts[i]];
+        }
+        return obj;
+      }
     };
 
   }();
