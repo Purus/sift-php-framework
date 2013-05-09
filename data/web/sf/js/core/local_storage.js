@@ -21,7 +21,6 @@
  * @class
  * @name LocalStorage
  * @requires Cookie
- * @link
  */
 (function(window) {
 
