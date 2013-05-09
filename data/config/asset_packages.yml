@@ -192,3 +192,14 @@ default:
         - %SF_SIFT_WEB_DIR%/css/_/colorbox/colorbox.less
       require:
         - jquery
+
+    # Dynatree
+    tree:
+      javascripts:
+        - %SF_SIFT_WEB_DIR%/js/dynatree/jquery.dynatree.min.js
+        - %SF_SIFT_WEB_DIR%/js/core/tree.js
+      stylesheets:
+        - %SF_SIFT_WEB_DIR%/css/_/dynatree/dynatree.less
+      require:
+        - core
+        - ui
