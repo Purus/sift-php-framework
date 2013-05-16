@@ -5,30 +5,33 @@ AddOutputFilterByType DEFLATE application/json
 
   RewriteEngine On
   RewriteBase /
-  
+
   # redirect index.php to /
   # also handles the redirect of "index.php/foo/bar" to "/foo/bar"
   RewriteCond %{THE_REQUEST} ^[^/]+/index\.php/?(.*)(\?[^\ ]*)?\ HTTP/ [NC]
-  RewriteRule index\.php(.*)?$ $1 [NC,R=301,L,QSA] 
+  RewriteRule index\.php(.*)?$ $1 [NC,R=301,L,QSA]
 
   # checks if the file exists
   # if this is an existing file or directory, stop url rewriting
   RewriteCond %{REQUEST_FILENAME} -f [OR]
   RewriteCond %{REQUEST_FILENAME} -d
   RewriteRule .* - [L]
-    
+
   # redirect to domain with www prefix to domain without the prefix
   RewriteCond %{HTTP_HOST}//s%{HTTPS} ^www\.(.*)//((s)on|s.*)$ [NC]
   RewriteRule ^ http%3://%1%{REQUEST_URI} [L,R=301]
 
+  # minifier for javascripts and CSS stylesheets
+  RewriteRule ^min/([0-9]+)/([a-z]=.*) /min/index.php?$2&v=$1 [L,NE]
+
   # redirect to urls with slash appended
-  # url like: /foo will be redirected to /foo/ 
+  # url like: /foo will be redirected to /foo/
   RewriteCond %{REQUEST_URI}//s%{HTTPS} ^/[^\.]+[^/]//((s)on|s.*)$
   RewriteRule ^(.*)$ http%3://%{HTTP_HOST}/$1/ [R=301,L]
-  
+
   # front web controller
   RewriteRule ^(.*)$ /index.php [B,QSA,L]
-  
+
 </IfModule>
 
 # big crash from our front web controller
