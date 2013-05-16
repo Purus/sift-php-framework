@@ -30,8 +30,8 @@ $cacheEnabled = true;
 // driver configuration
 // extensions to driver name
 $minifierDriver = array(
-  'js' => 'Simple',
-  'css' => 'Dummy'
+  'js' => 'JsSimple',
+  'css' => 'CssSimple'
 );
 
 $minifierOptions = array(

@@ -41,7 +41,7 @@ abstract class sfMinifier extends sfConfigurable implements sfIMinifier {
     }
     else
     {
-      throw new InvalidArgumentException(sprintf('Driver "%s" does not exists.', $driver));
+      throw new InvalidArgumentException(sprintf('Driver "%s" does not exist.', $driver));
     }
 
     if(!$driverObj instanceof sfIMinifier)

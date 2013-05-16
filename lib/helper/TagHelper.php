@@ -207,12 +207,12 @@ function body_tag($options = array())
  */
 function start_javascript($cacheKey = null, $cacheLifeTime = null)
 {
-  if($cacheKey)
+  if(!is_null($cacheKey))
   {
     sfContext::getInstance()->getRequest()->setAttribute('key', $cacheKey, 'minimize_script');
   }
 
-  if($cacheLifeTime)
+  if(!is_null($cacheLifeTime))
   {
     sfContext::getInstance()->getRequest()->setAttribute('lifetime', $cacheLifeTime, 'minimize_script');
   }
@@ -228,6 +228,9 @@ function start_javascript($cacheKey = null, $cacheLifeTime = null)
 function end_javascript()
 {
   ob_end_flush();
+
+  // cleanup request attributes
+  sfContext::getInstance()->getRequest()->getAttributeHolder()->removeNamespace('minimize_script');
 }
 
 /**
@@ -259,14 +262,20 @@ function _compress_javascript($buffer)
     $lifetime = $request->getAttribute('lifetime', 3600, 'minimize_script');
     $cache = $context->getViewCacheManager()->getCache();
 
-    if(!$key = $request->getAttribute('lifetime', null, 'minimize_script'))
-    {
-      $key = md5($context->getModuleName() . $context->getActionName() . $buffer);
-    }
+    $key = $request->getAttribute('key', null, 'minimize_script');
 
-    if($cache->has($key, 'minimize_javascript'))
+    // skip cache
+    if($key !== false)
     {
-      return $cache->get($key, 'minimize_javascript');
+      if(!$key)
+      {
+        $key = md5($context->getModuleName() . $context->getActionName() . $buffer);
+      }
+
+      if($cache->has($key, 'minimize_javascript'))
+      {
+        return $cache->get($key, 'minimize_javascript');
+      }
     }
   }
 
@@ -277,7 +286,7 @@ function _compress_javascript($buffer)
   {
     // create minifier instance
     $minifier = sfMinifier::factory(
-                  sfConfig::get('sf_minifier_driver', 'simple'),
+                  sfConfig::get('sf_minifier_driver', 'JsSimple'),
                   sfConfig::get('sf_minifier_options', array())
                 );
   }
@@ -285,7 +294,7 @@ function _compress_javascript($buffer)
   // minify the buffer
   $result = $minifier->processString($buffer);
 
-  if(sfConfig::get('sf_cache'))
+  if(sfConfig::get('sf_cache') && $key)
   {
     $cache->set($key, 'minimize_javascript', $result, $lifetime);
   }

@@ -7,13 +7,13 @@
  */
 
 /**
- * Simple minifier which strips only comments and tabs, spaces, newlines...
+ * Simple minifier which compresses CSS in a simple manner.
  *
  * @package    Sift
  * @subpackage minifier
  * @see http://castlesblog.com/2010/august/14/php-javascript-css-minification
  */
-class sfMinifierDriverSimple extends sfMinifier {
+class sfMinifierDriverCssSimple extends sfMinifier {
 
   /**
    * Processes the file
@@ -46,12 +46,13 @@ class sfMinifierDriverSimple extends sfMinifier {
   protected function compress($buffer)
   {
     // remove comments
-    $buffer = preg_replace("/((?:\/\*(?:[^*]|(?:\*+[^*\/]))*\*+\/)|(?:\/\/.*))/", "", $buffer);
+    $buffer = preg_replace('!/\*[^*]*\*+([^/][^*]*\*+)*/!', '', $buffer);
     // remove tabs, spaces, newlines, etc.
-    $buffer = str_replace(array("\r\n","\r","\t","\n",'  ','    ','     '), '', $buffer);
-    // remove other spaces before/after )
-    $buffer = preg_replace(array('(( )+\))','(\)( )+)'), ')', $buffer);
-    // put the newsline at the end
+    $buffer = str_replace(array("\r\n","\r","\n","\t",'  ','    ','     '), '', $buffer);
+    // remove other spaces before/after ;
+    $buffer = preg_replace(array('(( )+{)','({( )+)'), '{', $buffer);
+    $buffer = preg_replace(array('(( )+})','(}( )+)','(;( )*})'), '}', $buffer);
+    $buffer = preg_replace(array('(;( )+)','(( )+;)'), ';', $buffer);
     return $buffer . "\n";
   }
 
