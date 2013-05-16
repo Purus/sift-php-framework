@@ -46,9 +46,9 @@ function cdata_section($content)
 
 /**
  * Escape carrier returns and single and double quotes for Javascript segments.
- * 
+ *
  * @param type $javascript
- * @return string 
+ * @return string
  */
 function escape_javascript($javascript)
 {
@@ -65,12 +65,12 @@ function escape_javascript($javascript)
  */
 function javascript_tag($content)
 {
-  return content_tag('script', javascript_cdata_section(_compress_javascript($content)), array('type' => 'text/javascript'));    
+  return content_tag('script', javascript_cdata_section(_compress_javascript($content)), array('type' => 'text/javascript'));
 }
 
 /**
  * Returns CDATA section (for usage in javascript_tag())
- * 
+ *
  * @param string $content
  * @return string
  */
@@ -103,9 +103,9 @@ function fix_double_escape($escaped)
 
 /**
  * Converts options for usage in tag
- * 
+ *
  * @param type $options
- * @return string 
+ * @return string
  */
 function _tag_options($options = array())
 {
@@ -119,8 +119,8 @@ function _tag_options($options = array())
 }
 
 /**
- * Converts string attributes to array 
- * 
+ * Converts string attributes to array
+ *
  * @param type $string
  * @return type array
  */
@@ -132,7 +132,7 @@ function _parse_attributes($string)
 /**
  * Returns option with name in given array of options. Also unsets the option
  * from the array
- * 
+ *
  * @param array $options
  * @param string $name
  * @param mixed $default
@@ -189,17 +189,41 @@ function body_tag($options = array())
 }
 
 /**
- * Starts output buffering using _compress_javascript()
- * 
+ * Starts output buffering using _compress_javascript(). Script must be ended with
+ * end_javascript()
+ *
+ * @example
+ *
+ *   <script type="text/javascript">
+ *   <?php start_javascript(); ?>
+ *
+ *   var myObject = {};
+ *
+ *   <?php end_javascript(); ?>
+ *   </script>
+ *
+ * @param stirng $cacheKey Key for cache (if null, will be generated automatically)
+ * @param integer $cacheLigeTime Cache lifetime if cache is enabled
  */
-function start_javascript()
+function start_javascript($cacheKey = null, $cacheLifeTime = null)
 {
+  if($cacheKey)
+  {
+    sfContext::getInstance()->getRequest()->setAttribute('key', $cacheKey, 'minimize_script');
+  }
+
+  if($cacheLifeTime)
+  {
+    sfContext::getInstance()->getRequest()->setAttribute('lifetime', $cacheLifeTime, 'minimize_script');
+  }
+
+  // start the buffer
   ob_start('_compress_javascript');
 }
 
 /**
  * Ends buffering and flushes the buffer
- * 
+ *
  */
 function end_javascript()
 {
@@ -207,66 +231,74 @@ function end_javascript()
 }
 
 /**
- * Compresses javascript using jsMin from sf_javascript_minimizer_path
- * which is in sf_web_dir/min/lib/JSMin.php as default
- * 
- * @staticvar type $jsMinFound
- * @param type $buffer
- * @return string 
+ * Compresses javascript using sfMinifier. Looks for settings:
+ *
+ *  * sf_minifier_driver: simple
+ *  * sf_minifier_options array()
+ *
+ * @staticvar sfMinifier $minifier
+ * @param string $buffer Buffer
+ * @return string
+ * @see start_javascript()
  */
 function _compress_javascript($buffer)
 {
-  static $jsMinFound;
-  
-  // do not compress when cache enabled
-  // or minimize library not found in previous run
-  if(!sfConfig::get('sf_minimize_javascript', true) || 
-          (isset($jsMinFound) && !$jsMinFound))
+  // do not compress when compression is disabled
+  if(!sfConfig::get('sf_minimize_javascript', true))
   {
     return $buffer;
-  }
-  
-  if(!isset($jsMinFound))
-  {
-    $minimizerPath = sfConfig::get('sf_javascript_minimizer_path', 
-            sfConfig::get('sf_web_dir') . DIRECTORY_SEPARATOR . '/min/lib/JSMin.php');
-    $jsMinFound = @include_once $minimizerPath;
   }
 
-  if(!$jsMinFound)
+  // cache is enabled we will look for cached version of the buffer
+  if(sfConfig::get('sf_cache'))
   {
-    if(sfConfig::get('sf_logging_enabled'))
+    $context = sfContext::getInstance();
+    $request = $context->getRequest();
+
+    // cache lifetime
+    $lifetime = $request->getAttribute('lifetime', 3600, 'minimize_script');
+    $cache = $context->getViewCacheManager()->getCache();
+
+    if(!$key = $request->getAttribute('lifetime', null, 'minimize_script'))
     {
-      sfLogger::getInstance()->info('Javascript compression library is not present. Cannot minimize inline scripts.');
+      $key = md5($context->getModuleName() . $context->getActionName() . $buffer);
     }
-    return $buffer;
-  }
-  
-  try
-  {
-    $t1     = microtime(true);
-    $result = JSMin::minify($buffer);
-    $t2     = microtime(true);
-    $result .= "\n// packed in: " . sprintf('%.4f', ($t2 - $t1)) . 's';
-    return $result;
-  }
-  catch(Exception $e)
-  {
-    if(sfConfig::get('sf_logging_enabled'))
+
+    if($cache->has($key, 'minimize_javascript'))
     {
-      sfContext::getInstance()->getLogger()->err('Error while minimizing inline script: ' . $e->getMessage());
+      return $cache->get($key, 'minimize_javascript');
     }
-    
-    return $buffer;
   }
+
+  // minifier holder
+  static $minifier;
+
+  if(!isset($minifier))
+  {
+    // create minifier instance
+    $minifier = sfMinifier::factory(
+                  sfConfig::get('sf_minifier_driver', 'simple'),
+                  sfConfig::get('sf_minifier_options', array())
+                );
+  }
+
+  // minify the buffer
+  $result = $minifier->processString($buffer);
+
+  if(sfConfig::get('sf_cache'))
+  {
+    $cache->set($key, 'minimize_javascript', $result, $lifetime);
+  }
+
+  return $result;
 }
 
 /**
  * Alias for sfConfig::get() method.
- * 
+ *
  * @param string $name
  * @param mixed $default
- * @return mixed 
+ * @return mixed
  */
 function config_get($name, $default = null)
 {

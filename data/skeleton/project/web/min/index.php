@@ -177,8 +177,20 @@ else
   while(list(, $element) = each($elements))
   {
     $path = realpath($base . '/' . $element);
-    $contents[] = $minifier->processFile($path);
+
+    // check if its worth the work
+    // is this minified version?
+    if(strpos($element, '.min.js') !== false
+      || strpos($element, '.minified.js') !== false)
+    {
+      $contents[] = file_get_contents($path);
+    }
+    else
+    {
+      $contents[] = $minifier->processFile($path);
+    }
   }
+
   $contents = join("\n", $contents);
 
   // Send Content-Type

@@ -45,13 +45,14 @@ class sfMinifierDriverSimple extends sfMinifier {
    */
   protected function compress($buffer)
   {
-    /* remove comments */
+    // remove comments
     $buffer = preg_replace("/((?:\/\*(?:[^*]|(?:\*+[^*\/]))*\*+\/)|(?:\/\/.*))/", "", $buffer);
-    /* remove tabs, spaces, newlines, etc. */
+    // remove tabs, spaces, newlines, etc.
     $buffer = str_replace(array("\r\n","\r","\t","\n",'  ','    ','     '), '', $buffer);
-    /* remove other spaces before/after ) */
+    // remove other spaces before/after )
     $buffer = preg_replace(array('(( )+\))','(\)( )+)'), ')', $buffer);
-    return $buffer;
+    // put the newsline at the end
+    return $buffer . "\n";
   }
 
 }
