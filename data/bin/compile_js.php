@@ -86,7 +86,8 @@ class sfJsCompilerCommand {
 //              ->in($options['js_data_dir'] . '/core');
 
     $files = array(
-       'config.js',
+        'exception.js',
+        'config.js',
         'cookie.js',
         'local_storage.js',
         'plugins.js',

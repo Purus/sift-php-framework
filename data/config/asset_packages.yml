@@ -18,6 +18,7 @@ dev:
 
     core:
       javascripts:
+        - %SF_SIFT_WEB_DIR%/js/core/exception.js
         - %SF_SIFT_WEB_DIR%/js/core/config.js
         - %SF_SIFT_WEB_DIR%/js/core/cookie.js
         - %SF_SIFT_WEB_DIR%/js/core/local_storage.js
@@ -197,9 +198,16 @@ default:
     tree:
       javascripts:
         - %SF_SIFT_WEB_DIR%/js/dynatree/jquery.dynatree.min.js
+        - %SF_SIFT_WEB_DIR%/js/core/tree_manager.js
         - %SF_SIFT_WEB_DIR%/js/core/tree.js
       stylesheets:
         - %SF_SIFT_WEB_DIR%/css/_/dynatree/dynatree.less
       require:
         - core
         - ui
+
+    # Javascript template
+    template:
+      javascripts:
+        - %SF_SIFT_WEB_DIR%/js/handlebars/handlebars.js
+        - %SF_SIFT_WEB_DIR%/js/core/template.js
