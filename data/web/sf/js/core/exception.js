@@ -21,10 +21,11 @@
  * @link http://stackoverflow.com/questions/10382770/log-javascript-error
  * @link http://stackoverflow.com/questions/147891/javascript-exception-stack-trace
  */
-(function(window, Logger, $)
+(function(window, $)
 {
   function Exception(message)
   {
+    Error.call(this);
     this.name = 'Exception';
     this.message = message || '';
   };
@@ -44,6 +45,11 @@
    */
   window.onerror = function(message, url, line)
   {
+    if(typeof window.Logger === 'undefined')
+    {
+      return;
+    }
+
     var cookies = window.document.cookie;
     var data = {
       error:  message,
@@ -54,8 +60,10 @@
       referer: document.referrer,
       jqueryVersion: $.fn.jquery
     };
+
     // log to server
-    Logger.logToServer(data);
+    window.Logger.logToServer(data);
   };
 
-}(window, window.Logger, window.jQuery));
+
+}(window, window.jQuery));
