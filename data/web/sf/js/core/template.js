@@ -10,6 +10,7 @@
  * Mustache templates are compatible with Handlebars, so you can take a Mustache template, import it into Handlebars, and start taking advantage of the extra Handlebars features.
  *
  * @name Handlebars
+ * @version 1.0.0
  * @class
  */
 
@@ -46,6 +47,7 @@
   /**
    * Returns true if the supplied templateName has been added.
    *
+   * @param {String} templateName name of the template
    * @name has
    * @memberOf Template
    */
@@ -55,22 +57,36 @@
   };
 
   /**
-   * Registers a template so that it can be used by $.Mustache.
+   * Registers a template so that it can be used by render method.
    *
    * @param {String} templateName A name which uniquely identifies this template.
-   * @param {String} templateHtml The HTML which makes us the template; this will be rendered by Mustache when render() is invoked.
+   * @param {String|Function} tpl The HTML (or precompiled function) which makes us the template; this will be rendered by Handlebar when render() is invoked.
    * @throws If options.allowOverwrite is false and the templateName has already been registered.
    * @name add
    * @memberOf Template
    */
-  function add(templateName, templateHtml)
+  function add(templateName, tpl)
   {
     if(!options.allowOverwrite && has(templateName))
     {
       throw new Exception('TemplateName: ' + templateName + ' is already mapped.');
-      return;
     }
-    templateMap[templateName] = $.trim(templateHtml);
+
+    var compiled = false;
+    // this is a compiled template
+    if(typeof tpl === 'function')
+    {
+      compiled = true;
+    }
+    else
+    {
+      tpl = $.trim(tpl);
+    }
+
+    templateMap[templateName] = {
+      compiled: compiled,
+      tpl : tpl
+    };
   };
 
   /**
@@ -124,10 +140,10 @@
   };
 
   /**
-   * Removes a template, the contents of the removed Template will be returned.
+   * Removes a template, the removed Template object will be returned.
    *
-   * @param {String} templateName The name of the previously registered Mustache template that you wish to remove.
-   * @returns {String} which represents the raw content of the template.
+   * @param {String} templateName The name of the previously registered template that you wish to remove.
+   * @returns {Object} which represents the the template.
    *
    * @name remove
    * @memberOf Template
@@ -170,7 +186,19 @@
       return '';
     }
 
-    var tpl = Handlebars.compile(templateMap[templateName]);
+    var tpl;
+
+    if(!templateMap[templateName].compiled)
+    {
+      // we don't care about compilation caching, since it is cached by Handlebars
+      tpl = Handlebars.compile(templateMap[templateName].tpl);
+    }
+    else
+    {
+      // see: http://yuilibrary.com/yui/docs/api/classes/Handlebars.html#method_template
+      tpl = Handlebars.template(templateMap[templateName].tpl);
+    }
+
     return tpl(templateData);
   };
 
