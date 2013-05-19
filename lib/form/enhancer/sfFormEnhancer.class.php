@@ -263,6 +263,11 @@ class sfFormEnhancer extends sfConfigurable implements sfIFormEnhancer {
       {
         list($object, $method) = explode('->', $matches[1]);
       }
+      // static method call myClass::method
+      elseif(strpos($matches[1], '::') !== false)
+      {
+        list($object, $method) = explode('::', $matches[1]);
+      }
       else
       {
         $object = '$this';
@@ -288,6 +293,11 @@ class sfFormEnhancer extends sfConfigurable implements sfIFormEnhancer {
 
           $callback = array($this, $method);
           break;
+
+        default:
+
+          $callback = array($object, $method);
+          break;
       }
 
       if($callback && !is_callable($callback, false, $callableName))
@@ -296,7 +306,7 @@ class sfFormEnhancer extends sfConfigurable implements sfIFormEnhancer {
       }
 
       $value = call_user_func_array($callback, array(
-        $widget, $validator
+        $widget, $validator, $this
       ));
     }
 
