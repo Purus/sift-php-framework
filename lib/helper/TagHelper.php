@@ -58,18 +58,25 @@ function escape_javascript($javascript)
 }
 
 /**
- * Returns a JavaScript tag with the '$content' inside.
- * Example:
+ * Returns a javascript tag with the $content inside it.
+ *
+ * @example
  *   <?php echo javascript_tag("alert('All is good')") ?>
  *   => <script type="text/javascript">alert('All is good')</script>
+ * @param string $content
+ * @return string
  */
 function javascript_tag($content)
 {
-  return content_tag('script', javascript_cdata_section(_compress_javascript($content)), array('type' => 'text/javascript'));
+  return content_tag('script',
+          sfHtml::isXhtml() ?
+            javascript_cdata_section(_compress_javascript($content)) :
+            "\n" . _compress_javascript($content) . "\n",
+          array('type' => 'text/javascript'));
 }
 
 /**
- * Returns CDATA section (for usage in javascript_tag())
+ * Returns CDATA section (for usage in javascript_tag()). When using XHML.
  *
  * @param string $content
  * @return string
@@ -279,6 +286,26 @@ function _compress_javascript($buffer)
     }
   }
 
+  // minify the buffer
+  $result = minify_javascript($buffer);
+
+  if(sfConfig::get('sf_cache') && $key)
+  {
+    $cache->set($key, 'minimize_javascript', $result, $lifetime);
+  }
+
+  return $result;
+}
+
+/**
+ * Minifies javascript. Does not care about caching. Use with caution.
+ *
+ * @staticvar sfIMinifier $minifier
+ * @param string $js Javascript code to minify
+ * @return string Minified javascript code
+ */
+function minify_javascript($js)
+{
   // minifier holder
   static $minifier;
 
@@ -291,15 +318,8 @@ function _compress_javascript($buffer)
                 );
   }
 
-  // minify the buffer
-  $result = $minifier->processString($buffer);
-
-  if(sfConfig::get('sf_cache') && $key)
-  {
-    $cache->set($key, 'minimize_javascript', $result, $lifetime);
-  }
-
-  return $result;
+  // minify the javascript
+  return $minifier->processString($js);
 }
 
 /**

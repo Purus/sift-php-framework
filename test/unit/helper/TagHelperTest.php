@@ -5,7 +5,7 @@ require_once($_test_dir.'/unit/sfContextMock.class.php');
 
 sfLoader::loadHelpers(array('Helper', 'Tag'));
 
-$t = new lime_test(21, new lime_output_color());
+$t = new lime_test(23, new lime_output_color());
 
 $context = new sfContext();
 
@@ -55,3 +55,19 @@ $t->is(escape_once("This a &gt; \"text\" to 'escape'"), "This a &gt; &quot;text&
 // fix_double_escape()
 $t->diag('fix_double_escape()');
 $t->is(fix_double_escape(htmlspecialchars(htmlspecialchars('This a > text to "escape"'), ENT_QUOTES, 'UTF-8'), ENT_QUOTES, 'UTF-8'), 'This a &gt; text to &quot;escape&quot;', 'fix_double_escape() fixes double escaped strings');
+
+$t->diag('javascript_tag');
+
+$t->is(javascript_tag('alert("Jesus is Lord");'), '<script type="text/javascript">
+//<![CDATA[
+alert("Jesus is Lord");
+
+//]]>
+</script>', 'javascript_tag() wraps the content in CDATA section');
+
+sfHtml::setXhtml(false);
+
+$t->is(javascript_tag('alert("Jesus is Lord");'), '<script type="text/javascript">
+alert("Jesus is Lord");
+
+</script>', 'javascript_tag() does not wrap the content if sfHtml::isXhtml() returns false.');
