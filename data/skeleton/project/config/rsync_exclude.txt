@@ -3,6 +3,7 @@
 /log/*
 /web/*_dev.php
 /web/cache/minify/*
+/web/cache/js/*
 /web/cache/images/*
 /web/cache/css/*
 /web/cache/preview/*

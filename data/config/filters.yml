@@ -51,3 +51,5 @@ asset_packager:
   class: sfAssetPackagerFilter
   param:
     condition: %SF_PACKAGE_ASSETS%
+    path_aliases:
+       /sf: %SF_SIFT_DATA_DIR%/web

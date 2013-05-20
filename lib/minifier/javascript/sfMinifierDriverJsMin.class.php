@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of the Sift PHP framework.
  *
@@ -6,14 +7,17 @@
  * file that was distributed with this source code.
  */
 
+// load vendor library
+require_once dirname(__FILE__).'/../../vendor/js_min/JsMin.php';
+
 /**
- * Simple minifier which strips only comments and tabs, spaces, newlines...
+ * Minifies javascript using modified JsMin from minify project.
  *
  * @package    Sift
  * @subpackage minifier
- * @see http://castlesblog.com/2010/august/14/php-javascript-css-minification
+ * @see https://github.com/mrclay/minify
  */
-class sfMinifierDriverJsSimple extends sfMinifier {
+class sfMinifierDriverJsMin extends sfMinifier {
 
   /**
    * Processes the file
@@ -38,21 +42,14 @@ class sfMinifierDriverJsSimple extends sfMinifier {
   }
 
   /**
-   * Compresses the string
+   * Compresses the string using JsMin
    *
-   * @param string $buffer
+   * @param string $string
    * @return string
    */
-  protected function compress($buffer)
+  protected function compress($string)
   {
-    // remove comments
-    $buffer = preg_replace("/((?:\/\*(?:[^*]|(?:\*+[^*\/]))*\*+\/)|(?:\/\/.*))/", "", $buffer);
-    // remove tabs, spaces, newlines, etc.
-    $buffer = str_replace(array("\r\n","\r","\t","\n",'  ','    ','     '), '', $buffer);
-    // remove other spaces before/after )
-    $buffer = preg_replace(array('(( )+\))','(\)( )+)'), ')', $buffer);
-    // put the newsline at the end
-    return $buffer . "\n";
+    return JsMin::minify($string);
   }
 
 }

@@ -75,7 +75,7 @@ function end_template()
       $compiled = _compile_template($template);
 
       // create a call to Template (see core/template.js for more info about the API)
-      $script = sprintf("\nTemplate.add('%s', %s)\n", $id, $compiled);
+      $script = sprintf("\nTemplate.add('%s', %s);\n", $id, $compiled);
 
       $result = content_tag('script', $script, array(
         'type' => 'text/javascript'
@@ -100,7 +100,7 @@ function end_template()
         // compile template
         $compiled = _compile_template($template);
         // create a call to Template (see core/template.js for more info about the API)
-        $script = sprintf("\nTemplate.add('%s', %s)\n", $id, $compiled);
+        $script = sprintf("\nTemplate.add('%s', %s);\n", $id, $compiled);
         sfJavascriptTemplateCompiler::writeCache($cacheFile, $script);
       }
 
@@ -111,6 +111,7 @@ function end_template()
   else
   {
     $result = content_tag('script', $template, array(
+        'id' => $request->getAttribute('id', '', 'template_javascript'),
         'type' => $request->getAttribute('type', '', 'template_javascript')
     )) . "\n";
   }
@@ -169,7 +170,7 @@ function _compile_template($buffer)
   $result = compile_javascript_template($buffer, isset($options['compile_options']) ?
           (array)$options['compile_options'] : array());
 
-  if(sfConfig::get('sf_javascript_templates.mininize_enabled', true))
+  if(sfConfig::get('sf_javascript_minify.enabled'))
   {
     $result = minify_javascript($result);
   }

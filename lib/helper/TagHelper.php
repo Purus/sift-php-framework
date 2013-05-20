@@ -253,8 +253,8 @@ function end_javascript()
  */
 function _compress_javascript($buffer)
 {
-  // do not compress when compression is disabled
-  if(!sfConfig::get('sf_minimize_javascript', true))
+  // do not compress when minify is disabled
+  if(!sfConfig::get('sf_javascript_minify.enabled', true))
   {
     return $buffer;
   }
@@ -313,8 +313,8 @@ function minify_javascript($js)
   {
     // create minifier instance
     $minifier = sfMinifier::factory(
-                  sfConfig::get('sf_minifier_driver', 'JsSimple'),
-                  sfConfig::get('sf_minifier_options', array())
+                  sfConfig::get('sf_javascript_minify.driver', 'JsSimple'),
+                  sfConfig::get('sf_javascript_minify.driver_options', array())
                 );
   }
 

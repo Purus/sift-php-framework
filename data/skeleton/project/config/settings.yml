@@ -8,3 +8,21 @@ all:
     crypt_key: %SF_CONFIG_DIR%/crypt.key
     crypt_mode: ecb
     crypt_algorithm: tripledes
+
+    # javascript minification
+    javascript_minify:
+      enabled: true
+      # minifier driver
+      driver: jsMin
+      # array of driver options
+      driver_options: []
+
+    # javascript templates
+    javascript_templates:
+      # enable precompilation
+      precompile_enabled: false
+      # template compiler driver
+      driver: handlebars
+      driver_options:
+        # path to handlbars binary
+        handlebars_bin: /usr/local/bin/handlebars

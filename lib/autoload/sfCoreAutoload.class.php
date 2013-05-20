@@ -605,7 +605,7 @@ class sfCoreAutoload
     'sfminifierdrivercsssimple' => 'minifier/css/sfMinifierDriverCssSimple.class.php',
     'sfminifierdrivergoogleclosure' => 'minifier/javascript/sfMinifierDriverGoogleClosure.class.php',
     'sfminifierdrivergoogleclosureapi' => 'minifier/javascript/sfMinifierDriverGoogleClosureApi.class.php',
-    'sfminifierdriverjssimple' => 'minifier/javascript/sfMinifierDriverJsSimple.class.php',
+    'sfminifierdriverjsmin' => 'minifier/javascript/sfMinifierDriverJsMin.class.php',
     'sfminifierdriveruglifyapi' => 'minifier/javascript/sfMinifierDriverUglifyApi.class.php',
     'sfiminifier' => 'minifier/sfIMinifier.interface.php',
     'sfminifier' => 'minifier/sfMinifier.class.php',

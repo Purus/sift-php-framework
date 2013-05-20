@@ -16,6 +16,13 @@
 class sfAssetPackagerFilter extends sfFilter {
 
   /**
+   * Cache holder of path aliases
+   *
+   * @var array
+   */
+  protected $pathAliases;
+
+  /**
    * Executes the filter
    *
    * @param sfFilterChain $filterChain
@@ -40,7 +47,6 @@ class sfAssetPackagerFilter extends sfFilter {
   /**
    * Handles javascript files
    *
-   * @todo Implement caching
    */
   protected function handleJavascripts()
   {
@@ -49,12 +55,14 @@ class sfAssetPackagerFilter extends sfFilter {
     $request = $context->getRequest();
     $invalid = $valid = $already_seen = array();
     $baseDomain = sfConfig::get('sf_base_domain');
-
     $lastModified = 0;
+    $lastModifiedPreserved = array();
 
     foreach(array('first', '', 'last') as $position)
     {
+      $valid[$position] = array();
       $invalid[$position] = array();
+      $preserved[$position] = array();
 
       foreach($response->getJavascripts($position) as $files => $options)
       {
@@ -62,48 +70,51 @@ class sfAssetPackagerFilter extends sfFilter {
         {
           $files = array($files);
         }
+
         foreach($files as $file)
         {
-          $file = javascript_path($file);
+          // generated script
+          if(!isset($options['generated']) && !$options['generated'])
+          {
+            $file = javascript_path($file);
+          }
+
           if(isset($already_seen[$file]))
           {
             continue;
           }
 
           $already_seen[$file] = true;
-          $url = $this->parseUrl($file);
 
-          // javascript generated with application should have attribute "generated: true"
-          if((isset($options['generated']) && $options['generated']))
+          // can be packaged?
+          if(!$this->canBePackaged($file, $options, $baseDomain))
           {
-            unset($options['generated']);
-            $invalid[$position][] = $file;
-          }
-          elseif((isset($url['host']) && $url['host'] != $request->getHost() && $url['host'] != $baseDomain)
-             || preg_match('|^/sf|', $file)
-             || preg_match('/\.php/i', $file)) // dynamically generated scripts
-          {
-            $invalid[$position][] = $file;
+            $invalid[$position][$file] = $options;
           }
           else
           {
-            if($baseDomain)
+            $file = $this->stripBaseDomain($file, $baseDomain);
+            $filePath = $this->getFilePath($file);
+
+            if(!is_readable($filePath))
             {
-              $file = preg_replace(sprintf('~(https?://)+%s~', $baseDomain), '', $file);
-            }
-
-            $filePath = sfConfig::get('sf_web_dir') . DIRECTORY_SEPARATOR . $file;
-
-            if(sfConfig::get('sf_logging_enabled')
-                    && !is_readable($filePath))
-            {
-
-              sfContext::getInstance()->getLogger()->err(sprintf('{sfAssetPackagerFilter} File "%s" is not readable or does not exist.', $file));
+              $this->log(sprintf('File "%s" is not readable or does not exist.', $file));
+              // mark as invalid
+              $invalid[$position][$file] = $options;
               continue;
             }
 
-            $lastModified = max($lastModified, filemtime($filePath));
-            $valid[] = $file;
+            // we have some options, dont touch it
+            if(count($options))
+            {
+              $preserved[$position][$file] = $options;
+              $lastModifiedPreserved[$position][$file] = filemtime($filePath);
+            }
+            else
+            {
+              $valid[$position][] = $file;
+              $lastModified = max($lastModified, filemtime($filePath));
+            }
           }
         }
       }
@@ -112,18 +123,10 @@ class sfAssetPackagerFilter extends sfFilter {
     // remove all scripts from response
     $response->clearJavascripts();
 
-    foreach($invalid as $position => $scripts)
-    {
-      foreach($scripts as $script)
-      {
-        $response->addJavascript($script, $position);
-      }
-    }
+    $root = $request->getRelativeUrlRoot();
 
     if(count($valid))
     {
-      $root = $request->getRelativeUrlRoot();
-
       if($baseDomain)
       {
         $path = sprintf('http'.($request->isSecure() ? 's' : '') . '://' . $baseDomain .
@@ -134,18 +137,53 @@ class sfAssetPackagerFilter extends sfFilter {
         $path = sprintf('%s/min/%s/f=', $root, $lastModified);
       }
 
-      foreach($this->makeChunks($valid, $path) as $javascripts)
+      foreach($valid as $position => $scripts)
       {
-        // make chunks that are
-        $response->addJavascript(sprintf('%s/min/%s/f=%s', $root, $lastModified, join(',', $javascripts)));
+        foreach($this->makeChunks($scripts, $path) as $javascripts)
+        {
+          if(!count($javascripts))
+          {
+            continue;
+          }
+          $response->addJavascript(sprintf('%s/min/%s/f=%s', $root, $lastModified, join(',', $javascripts)), $position);
+        }
       }
     }
+
+    foreach($invalid as $position => $scripts)
+    {
+      foreach($scripts as $script => $options)
+      {
+        $response->addJavascript($script, $position, $options);
+      }
+    }
+
+    foreach($preserved as $position => $allScripts)
+    {
+      if(!count($allScripts))
+      {
+        continue;
+      }
+
+      // put the preserved back to response
+      foreach($allScripts as $script => $options)
+      {
+        $path = sprintf('%s/min/%s/f=%s', $root, $lastModifiedPreserved[$position][$script], $script);
+
+        if($baseDomain)
+        {
+          $path = 'http'.($request->isSecure() ? 's' : '') . '://' . $baseDomain . $path;
+        }
+
+        $response->addJavascript($path, $position, $options);
+      }
+    }
+
   }
 
   /**
+   * Handles stylesheets
    *
-   *
-   * @todo Implement caching
    */
   protected function handleStylesheets()
   {
@@ -172,33 +210,47 @@ class sfAssetPackagerFilter extends sfFilter {
 
         foreach($files as $file)
         {
-          $file = stylesheet_path($file);
+          if(isset($options['generated']))
+          {
+            $file = _dynamic_path($file);
+          }
+          else
+          {
+            // less support
+            if(isset($options['less']) || preg_match('/\.less$/i', $file))
+            {
+              $file = sfLessCompiler::getInstance()->compileStylesheetIfNeeded(
+                      stylesheet_path($file)
+              );
+              unset($options['less']);
+            }
+            else
+            {
+              $file = stylesheet_path($file);
+            }
+          }
+
           if(isset($already_seen[$file]))
           {
             continue;
           }
 
           $already_seen[$file] = true;
-          $url = $this->parseUrl($file);
 
-          if((isset($url['host']) && $url['host'] != $request->getHost() && $url['host'] != $baseDomain)
-             || preg_match('|^/sf|', $file))
+          if(!$this->canBePackaged($file))
           {
             $invalid[$position][$file] = $options;
           }
           else
           {
-            if($baseDomain)
-            {
-              $file = preg_replace(sprintf('~(https?://)+%s~', $baseDomain), '', $file);
-            }
+            $file = $this->stripBaseDomain($file, $baseDomain);
+            $filePath = $this->getFilePath($file);
 
-            $filePath = sfConfig::get('sf_web_dir') . DIRECTORY_SEPARATOR . $file;
-
-            if(sfConfig::get('sf_logging_enabled')
-                    && !is_readable($filePath))
+            if(!is_readable($filePath))
             {
-              sfContext::getInstance()->getLogger()->err(sprintf('{sfAssetPackagerFilter} File "%s" is not readable or does not exist.', $file));
+              $invalid[$position][$file] = $options;
+
+              $this->log(sprintf('File "%s" is not readable or does not exist.', $file));
               continue;
             }
 
@@ -209,25 +261,23 @@ class sfAssetPackagerFilter extends sfFilter {
             else
             {
               // we assume when no media set, use for all except print!
-              // FIXME: make configurable
-              $media = 'screen,projection,tv';
+              $media = $this->getParameter('default_stylesheet_media', 'screen,projection,tv');
             }
 
-            // we preserve stylesheets with ids!
-            // this is used by myThemePlugin to switch it on fly with jquery
-            if(isset($options['id']))
+            // we preserve stylesheets with ids or ie conditions!
+            if(isset($options['id']) || isset($options['ie_condition']))
             {
-              $preserved[$file] = $options;
-              $lastModifiedPreserved[$file] = filemtime($filePath);
+              $preserved[$position][$file] = $options;
+              $lastModifiedPreserved[$position][$file] = filemtime($filePath);
             }
             else
             {
-              $valid[$media][] = $file;
-              if(!isset($lastModified[$media]))
+              $valid[$position][$media][] = $file;
+              if(!isset($lastModified[$position][$media]))
               {
-                $lastModified[$media] = 0;
+                $lastModified[$position][$media] = 0;
               }
-              $lastModified[$media] = max($lastModified[$media], filemtime($filePath));
+              $lastModified[$position][$media] = max($lastModified[$position][$media], filemtime($filePath));
             }
           }
         }
@@ -246,47 +296,55 @@ class sfAssetPackagerFilter extends sfFilter {
       }
     }
 
-    foreach($valid as $media => $stylesheets)
+    foreach($valid as $position => $allStylesheets)
     {
-      if(count($stylesheets))
+      foreach($allStylesheets as $media => $stylesheets)
       {
+        if(!count($stylesheets))
+        {
+          continue;
+        }
+
         if($baseDomain)
         {
           $path = sprintf('http'.($request->isSecure() ? 's' : '') . '://' .
-                  $baseDomain . $relativeUrlRoot . '/min/%s/f=', $lastModified[$media]);
+                  $baseDomain . $relativeUrlRoot . '/min/%s/f=', $lastModified[$position][$media]);
         }
         else
         {
-          $path = sprintf('%s/min/%s/f=', $relativeUrlRoot, $lastModified[$media]);
+          $path = sprintf('%s/min/%s/f=', $relativeUrlRoot, $lastModified[$position][$media]);
         }
 
         foreach($this->makeChunks($stylesheets, $path) as $chunk)
         {
-          $response->addStylesheet(sprintf($path.'%s', join(',', $chunk)), '', array('media' => $media));
+          $response->addStylesheet(sprintf('%s%s', $path, join(',', $chunk)), $position, array('media' => $media));
         }
       }
     }
 
-    // put the preserved back to response
-    foreach($preserved as $script => $options)
+    foreach($preserved as $position => $allStylesheets)
     {
-      $path = sprintf('%s/min/%s/f=%s', $relativeUrlRoot, $lastModifiedPreserved[$script], $script);
-
-      if($baseDomain)
+      // put the preserved back to response
+      foreach($allStylesheets as $stylesheet => $options)
       {
-        $path = 'http'.($request->isSecure() ? 's' : '') . '://' . $baseDomain . $path;
+        $path = sprintf('%s/min/%s/f=%s', $relativeUrlRoot, $lastModifiedPreserved[$position][$stylesheet], $stylesheet);
+
+        if($baseDomain)
+        {
+          $path = 'http'.($request->isSecure() ? 's' : '') . '://' . $baseDomain . $path;
+        }
+
+        $response->addStylesheet($path, $position, $options);
       }
-
-      $response->addStylesheet($path, '', $options);
     }
-
   }
 
   /**
    * Make chunks of array to length limit of 2083 chars
    *
-   * @param type $array
-   * @return type array
+   * @param array $array Array to ochunk
+   * @param string $path Path
+   * @return array
    */
   protected function makeChunks($array, $path)
   {
@@ -312,6 +370,13 @@ class sfAssetPackagerFilter extends sfFilter {
     return $chunks;
   }
 
+  /**
+   * Parses url. Handles protocol less urls.
+   *
+   * @param string $url
+   * @return array
+   * @see parse_url
+   */
   protected function parseUrl($url)
   {
     // this is a protocol less url
@@ -320,6 +385,114 @@ class sfAssetPackagerFilter extends sfFilter {
       $url = sprintf('http:%s', $url);
     }
     return parse_url($url);
+  }
+
+  /**
+   * Returns path to a file on the disk. Does not check if file exists.
+   *
+   * @param string $file Web path to a file
+   * @return string Path to a file on the disk
+   */
+  protected function getFilePath($file)
+  {
+    $filePath = sfConfig::get('sf_web_dir') . DIRECTORY_SEPARATOR . $file;
+    $relativeUrlRoot = $this->getContext()->getRequest()->getRelativeUrlRoot();
+
+    // check path aliases
+    foreach($this->getPathAliases() as $alias => $path)
+    {
+      if(!$path)
+      {
+        continue;
+      }
+
+      if(preg_match(sprintf('#^%s%s#', $relativeUrlRoot, preg_quote($alias, '#')), $file))
+      {
+        $filePath = $path . '/' . ltrim($file, '/');
+        break;
+      }
+    }
+
+    return $filePath;
+  }
+
+  /**
+   * Returns an array of path aliases
+   *
+   * @return array
+   */
+  protected function getPathAliases()
+  {
+    if(!$this->pathAliases)
+    {
+      $aliases = $this->getParameter('path_aliases', array());
+      $aliases = sfCore::filterByEventListeners($aliases, 'filter.asset_packager.path_aliases');
+      $this->pathAliases = $aliases;
+    }
+
+    return $this->pathAliases;
+  }
+
+  /**
+   * Strips base domain from the file web path
+   *
+   * @param string $file Path to a file (accesed from web)
+   * @param string $baseDomain Base domain
+   * @return string
+   */
+  protected function stripBaseDomain($file, $baseDomain)
+  {
+    if(empty($baseDomain))
+    {
+      return $file;
+    }
+
+    return preg_replace(sprintf('~(https?://)+%s~', $baseDomain), '', $file);
+  }
+
+  /**
+   * Can the $file be packaged?
+   *
+   * @param string $file
+   * @param array $options Options for the asset
+   * @param string $baseDomain Base domain
+   * @return boolean
+   */
+  protected function canBePackaged($file, $options = array(), $baseDomain = '')
+  {
+    // generated?
+    if(isset($options['generated']) && $options['generated'])
+    {
+      return false;
+    }
+
+    $request = $this->getContext()->getRequest();
+
+    $url = $this->parseUrl($file);
+    // this file is not possible to minify
+    // its either:
+    // * generated by the application
+    // * from different host
+    if((isset($url['host']) && $url['host'] != $request->getHost() && $url['host'] != $baseDomain))
+    {
+      return false;
+    }
+
+    return true;
+  }
+
+  /**
+   * Logs a message to logger instance (only if enabled via configuration)
+   *
+   * @param string $message Message to log
+   * @param string $priority Priority of the log entry
+   */
+  protected function log($message, $priority = sfLogger::ERR)
+  {
+    if(sfConfig::get('sf_logging_enabled'))
+    {
+      sfLogger::getInstance()->log(sprintf('{sfAssesPackager} %s', $message), $priority);
+    }
   }
 
 }

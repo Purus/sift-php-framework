@@ -94,10 +94,16 @@ class sfFilterConfigHandler extends sfYamlConfigHandler
         $includes[] = sprintf("require_once('%s');\n", $file);
       }
 
+      // replace constants for all parameters
+      if(isset($keys['param']))
+      {
+        $keys['param'] = $this->replaceConstants($keys['param']);
+      }
+
       $condition = true;
       if (isset($keys['param']['condition']))
       {
-        $condition = $this->replaceConstants($keys['param']['condition']);
+        $condition = $keys['param']['condition'];
         unset($keys['param']['condition']);
       }
 

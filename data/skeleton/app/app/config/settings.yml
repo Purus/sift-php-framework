@@ -4,6 +4,7 @@
 prod:
   .settings:
     no_script_name:         ##NO_SCRIPT_NAME##
+    package_assets:         true
 
 dev:
   .settings:
@@ -12,6 +13,7 @@ dev:
     cache:                  false
     no_script_name:         false
     etag:                   false
+    package_assets:         false
 
 test:
   .settings:
@@ -22,29 +24,29 @@ test:
     etag:                   false
 
 all:
-  
+
   .settings:
 
     # Helpers included in all templates by default
     standard_helpers: [Partial, Cache, Form, I18N]
-    
+
     # Ajax timeout in miliseconds
     ajax_timeout: 1800
-    
+
     # URL suffix
-    # Default suffix for generated URLs. If set to a single dot (.), 
+    # Default suffix for generated URLs. If set to a single dot (.),
     # no suffix is added. Possible values: /, .html, .php, and so on.
     suffix: .
-    
+
     # Base domain
     # this is used by _compute_public_path
     # for generating absolute urls for subdomains
-    # leave empty to be disabled    
+    # leave empty to be disabled
     #base_domain: domain.cz
-    
+
     # We use HTML5
     html5: true
-    
+
     # Form security secret (CSRF protection)
     csrf_secret: ##CSRF_SECRET##
 

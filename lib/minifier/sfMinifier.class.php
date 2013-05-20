@@ -134,7 +134,7 @@ abstract class sfMinifier extends sfConfigurable implements sfIMinifier {
    */
   protected function replaceFile($file, $content)
   {
-    if(!file_put_contents($file, $content))
+    if(file_put_contents($file, $content) === false)
     {
       throw new RuntimeException(sprintf('Unable to replace file "%s" with optimized contents', $file));
     }
