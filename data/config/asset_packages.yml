@@ -33,6 +33,12 @@ dev:
         - %SF_SIFT_WEB_DIR%/js/core/logger.js
         - %SF_SIFT_WEB_DIR%/js/core/tools.js
 
+    # Javascript template
+    template:
+      javascripts:
+        - %SF_SIFT_WEB_DIR%/js/handlebars/handlebars.js
+        - %SF_SIFT_WEB_DIR%/js/core/template.js
+
 default:
 
   # packages map
