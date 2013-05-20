@@ -21,41 +21,10 @@
  */
 
 // turn off reporting
+// Prevent hack attempts
 error_reporting(0);
 ini_set('display_errors', 'Off');
 
-// configurable settings
-$cacheEnabled = true;
-
-// driver configuration
-// extensions to driver name
-$minifierDriver = array(
-  'js' => 'JsSimple',
-  'css' => 'CssSimple'
-);
-
-$minifierOptions = array(
-  'js' => array(),
-  'css' => array()
-);
-
-// allowed extension without dot
-$allowedExtensions = array(
-  'js', 'css'
-);
-
-// extensions to mime map
-$mimeMap = array(
-  'js' => 'text/javascript',
-  'css' => 'text/css',
-);
-
-// web root
-$webRootDir = realpath(dirname(__FILE__) . '/../');
-// cache directory
-$cachedir = dirname(__FILE__) . '/../cache/minify';
-
-// Determine the directory and type we should use
 if(!isset($_GET['f']))
 {
   header('HTTP/1.0 503 Not Implemented');
@@ -63,17 +32,61 @@ if(!isset($_GET['f']))
   exit;
 };
 
+// load configuration
+$config = require_once dirname(__FILE__) .'/config.php';
+
+// cache configuration
+$cacheEnabled = $config['cache_enabled'];
+// cache directory
+$cachedir = $config['cache_dir'];
+// driver configuration
+$minifierDriverMap = $config['minifier_driver_map'];
+// web root
+$webRootDir = $config['web_root_dir'];
+// path aliases
+$aliases = $config['path_aliases'];
+// allowed extension without dot
+$allowedExtensions = $config['allowed_extensions'];
+// extensions to mime map
+$mimeMap = $config['mime_map'];
+
 // version
 $v = isset($_GET['v']) ? intval($_GET['v']) : 1;
-
 $elements = explode(',', $_GET['f']);
 
+$type = false;
+// collection of files to load
+$files = array();
 // Determine last modification date of the files
 $lastmodified = 0;
 while(list(, $element) = each($elements))
 {
-  $base = $webRootDir;
-  $path = realpath($base . '/' . $element);
+  $base = false;
+  foreach($aliases as $alias => $path)
+  {
+    // is this a file from sift directory?
+    if(preg_match('#^'.preg_quote($alias, '#').'#', $element))
+    {
+      $base = $path;
+      break;
+    }
+  }
+
+  if(!$base)
+  {
+    $base = $webRootDir;
+  }
+
+  $path = realpath($base . DIRECTORY_SEPARATOR . ltrim(str_replace('/', DIRECTORY_SEPARATOR, $element), '/'));
+
+  if(!$path || !file_exists($path))
+  {
+    header('HTTP/1.0 404 Not Found');
+    // Header for FastCGI
+    header('Status: 404 Not Found');
+    exit;
+  }
+
   $basename = basename($element);
 
   $extension = '';
@@ -91,15 +104,21 @@ while(list(, $element) = each($elements))
     exit;
   }
 
-  if(substr($path, 0, strlen($base)) != $base || !file_exists($path))
+  $lastmodified = max($lastmodified, filemtime($path));
+
+  // mixing of types is not allowed  
+  if($type && $extension !== $type)
   {
-    header('HTTP/1.0 404 Not Found');
+    header('HTTP/1.0 503 Not Implemented');
+    echo '/* Repent and turn to Jesus! */';
     exit;
   }
 
-  $lastmodified = max($lastmodified, filemtime($path));
-
   $type = $extension;
+  $mimeType = $mimeMap[$type];
+
+  // add to stack
+  $files[] = $path;
 }
 
 // Send Etag hash
@@ -114,6 +133,7 @@ if(isset($_SERVER['HTTP_IF_NONE_MATCH']) &&
   // Return visit and no modifications, so do not send anything
   header('HTTP/1.0 304 Not Modified');
   header('Content-Length: 0');
+  exit;
 }
 else
 {
@@ -140,7 +160,6 @@ else
       }
     }
 
-    $mimeType = $mimeMap[$type];
     // Try the cache first to see if the combined files were already generated
     $cachefile = $hash . '.' . $type . ($encoding != 'none' ? '.' . $encoding : '');
 
@@ -162,32 +181,36 @@ else
     }
   }
 
-  // Load Sift lib and data dirs definition
-  require_once $webRootDir . '/../config/config.php';
   require_once $sf_sift_lib_dir . '/autoload/sfCoreAutoload.class.php';
   // register core classes
   sfCoreAutoload::register();
 
-  // create minifier instance for this type
-  $minifier = sfMinifier::factory($minifierDriver[$type], $minifierOptions[$type]);
+  list($driver, $driverOptions) = $minifierDriverMap[$type];
+
+  try
+  {
+    // create minifier instance for this type
+    $minifier = sfMinifier::factory($driver, $driverOptions);
+  }
+  catch(Exception $e)
+  {
+    $minifier = false;
+  }
 
   // Get contents of the files
   $contents = array();
-  reset($elements);
-  while(list(, $element) = each($elements))
+  foreach($files as $element)
   {
-    $path = realpath($base . '/' . $element);
-
     // check if its worth the work
     // is this minified version?
     if(strpos($element, '.min.js') !== false
-      || strpos($element, '.minified.js') !== false)
+      || strpos($element, '.minified.js') !== false || !$minifier)
     {
-      $contents[] = file_get_contents($path);
+      $contents[] = file_get_contents($element);
     }
     else
     {
-      $contents[] = $minifier->processFile($path);
+      $contents[] = $minifier->processFile($element);
     }
   }
 
