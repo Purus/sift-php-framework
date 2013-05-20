@@ -104,6 +104,14 @@ function end_template()
         sfJavascriptTemplateCompiler::writeCache($cacheFile, $script);
       }
 
+      if(sfConfig::get('sf_logging_enabled'))
+      {
+        sfLogger::getInstance()->info(
+                sprintf('{TemplateHelper} Adding compiled template "%s"("%s") to response.',
+                        $id,
+                        $cacheWebFile));
+      }
+
       // include the template to response
       sfContext::getInstance()->getResponse()->addJavascript($cacheWebFile);
     }
@@ -166,6 +174,11 @@ function _compile_template($buffer)
     }
   }
 
+  if(sfConfig::get('sf_logging_enabled'))
+  {
+    sfLogger::getInstance()->info('{TemplateHelper} Compiling javascript template.');
+  }
+
   // compile the template
   $result = compile_javascript_template($buffer, isset($options['compile_options']) ?
           (array)$options['compile_options'] : array());
@@ -205,5 +218,17 @@ function compile_javascript_template($string, $options = array())
                 );
   }
 
-  return $compiler->compile($string, $options);
+  if(sfConfig::get('sf_web_debug'))
+  {
+    $timer = sfTimerManager::getTimer('Compile javascript template');
+  }
+
+  $return = $compiler->compile($string, $options);
+
+  if(sfConfig::get('sf_web_debug'))
+  {
+    $timer->addTime();
+  }
+
+  return $return;
 }
