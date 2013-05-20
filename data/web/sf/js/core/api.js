@@ -29,7 +29,7 @@ var JsAPI = JsAPI || {};
  *
  * @type {Object}
  */
-JsAPI.packageConfig = {
+JsAPI.packageConfig = JsAPI.packageConfig || {
   dependencies: [],
   packages: []
 };

@@ -8,6 +8,13 @@
 /**
  * Main application class, provides various methods for application specific tasks.
  *
+ * Application provides a behaviors feature and custom events for setup and loaded events.
+ *
+ * @example
+ *
+ * $(window).bind('setup' function(){});
+ * $(window).bind('loaded' function(){});
+ *
  * @class
  * @static
  * @name Application
@@ -107,8 +114,17 @@
     if(Application.jsEnabled)
     {
       // Execute all of them.
-      $.each(Application.behaviors, function() {
-        this(context);
+      $.each(Application.behaviors, function(index)
+      {
+        if(typeof this !== 'function')
+        {
+          Logger.log('Application behavior is not a function.', index);
+          Logger.varDump(this);
+        }
+        else
+        {
+          this(context);
+        }
       });
     }
   };
@@ -649,10 +665,17 @@
         var domain = Config.get('cookie_domain');
         var path   = Config.get('cookie_path');
         Cookie.set('has_js', 1, '', path, domain);
+
         // detect timezone
         Application.detectTimezone();
+
+        // @see: http://stackoverflow.com/questions/4098504/running-a-function-just-before-document-ready-triggers
+        $(window).trigger('setup');
+
         // attach behaviours
         Application.attachBehaviors(this);
+
+        $(window).trigger('loaded');
       });
     };
 

@@ -313,10 +313,10 @@
     });
   };
 
-  // register template from the DOM
-  $(document).ready(function()
+  // this is a custom event which is
+  // triggered before attaching application behaviors
+  $(window).bind('setup', function()
   {
-    // add templates from DOM
     Template.addFromDom();
   });
 
