@@ -211,7 +211,14 @@
       var rows = $list.children('li');
       var cache = rows.map(function()
       {
-        return $(this).text().toLowerCase();
+        // support for truncated values
+        var $element = $(this);
+        var title = $element.prop('title');
+        if(title)
+        {
+          return title.toLowerCase();
+        }
+        return $element.text().toLowerCase();
       });
 
       var term = $.trim($input.val().toLowerCase());
@@ -700,14 +707,10 @@
       var iLast = Math.min(iFirst + this.options.batchSize, itemsCount);
       var timerId = 'setup_items' + (isAssociated ? '_associated' : '_available');
 
-      // Cancel previous batch processing if we're working on the first batch:
-      if(iFirst === 0)
+      // nothing to do
+      if(itemsCount === 0)
       {
-        if(typeof this.timers[timerId] !== 'undefined')
-        {
-          clearTimeout(this.timers[timerId]);
-          delete this.timers[timerId];
-        }
+        return;
       }
 
       if(typeof this.button === 'undefined')
@@ -745,7 +748,7 @@
       var that = this;
       if(iLast < $items.length)
       {
-        this.timers[timerId] = setTimeout(function()
+        this.timers[timerId] = window.setTimeout(function()
         {
           // recursive call
           that._setupItems(iLast, $items, isAssociated);
