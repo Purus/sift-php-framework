@@ -176,7 +176,12 @@ class sfValidatorFile extends sfValidatorBase {
       throw new sfValidatorError($this, 'max_size', array('max_size' => $this->getOption('max_size'), 'size' => (int) $value['size']));
     }
 
-    $mimeType = $this->getMimeType((string) $value['tmp_name'], (string) $value['type']);
+    $tempName = (string) $value['tmp_name'];
+    $mimeType = null;
+    if($tempName)
+    {
+      $mimeType = $this->getMimeType($tempName, (string) $value['type']);
+    }
 
     // check mime type
     if($this->hasOption('mime_types'))
