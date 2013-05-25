@@ -315,7 +315,7 @@
           click: function()
           {
             $(this).dialog('close');
-            $('#application-dialog').remove();
+            $('#application-dialog').dialog('destroy').remove();
           }
         }
         ]
@@ -370,7 +370,7 @@
             var that = $(this);
             var callback = $(this).data('callback');
             that.dialog('close');
-            that.removeData('callback').remove();
+            that.removeData('callback').dialog('destroy').remove();
             if($.isFunction(callback))
             {
               callback.apply();
@@ -382,7 +382,7 @@
           'class': 'btn',
           click: function()
           {
-            $(this).dialog('close');
+            $(this).dialog('close').dialog('destroy').remove();
             applicationDialog.remove();
           }
         }
