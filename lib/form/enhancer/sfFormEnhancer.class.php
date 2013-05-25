@@ -103,11 +103,11 @@ class sfFormEnhancer extends sfConfigurable implements sfIFormEnhancer {
         if(isset($embeddedForms[$field->getName()]))
         {
           $form = $embeddedForms[$field->getName()];
-          $this->enhanceFormFields($field, get_class($form), $form->getEmbeddedForms());
+          $this->enhanceFormFields($form, $form->getFormFieldSchema(), get_class($form), $form->getEmbeddedForms());
         }
         else
         {
-          $this->enhanceFormFields($field, $formClass);
+          $this->enhanceFormFields($form, $field, $formClass);
         }
       }
 
