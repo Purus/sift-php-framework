@@ -156,7 +156,7 @@ class sfI18nYamlGeneratorExtractor extends sfI18nYamlExtractor {
       {
         $this->strings[] = $options['name'];
       }
-      elseif(isset($options['name']))
+      elseif(isset($options['name']) && !empty($options['name']))
       {
         $this->strings[] = $options['name'];
       }
@@ -170,7 +170,7 @@ class sfI18nYamlGeneratorExtractor extends sfI18nYamlExtractor {
 
   /**
    * Extract strings from fields definitions
-   * 
+   *
    * @param array $fields
    */
   protected function getFromFields($fields)
@@ -184,12 +184,22 @@ class sfI18nYamlGeneratorExtractor extends sfI18nYamlExtractor {
         $options = array();
       }
 
-      if(isset($options['name']))
+      if(isset($options['name']) && !empty($options['name']))
       {
         $this->strings[] = $options['name'];
       }
+      // name is missing will use the $field as name
+      else
+      {
+        $name = sfUtf8::ucfirst(str_replace(
+                array('_id', '_'), array('', ' '), $field));
+        if(!empty($name))
+        {
+          $this->strings[] = $name;
+        }
+      }
 
-      if(isset($options['help']))
+      if(isset($options['help']) && !empty($options['help']))
       {
         $this->strings[] = $options['help'];
       }
