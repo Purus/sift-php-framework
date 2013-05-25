@@ -33,14 +33,14 @@ class sfWidgetFormDate extends sfWidgetFormInputText
    */
   public function __construct($options = array(), $attributes = array())
   {
-    $this->addRequiredOption('culture');
+    $this->addOption('culture');
 
     // default pattern
     $this->addOption('format_pattern', isset($options['format_pattern']) ? $options['format_pattern'] : 'd');
 
     parent::__construct($options, $attributes);
 
-    $this->dateFormatter = new sfI18nDateFormatter($this->getOption('culture'));
+    $this->dateFormatter = new sfI18nDateFormatter($this->getCulture());
     $pattern = $this->dateFormatter->getInputPattern($this->getOption('format_pattern'));
 
     $this->addOption('input_pattern', $pattern);

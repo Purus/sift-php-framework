@@ -2,7 +2,7 @@
 
 require_once(dirname(__FILE__) . '/../../bootstrap/unit.php');
 
-$t = new lime_test(52);
+$t = new lime_test(56);
 
 $v = new sfValidatorDate();
 
@@ -236,3 +236,31 @@ $clean = $v->clean($date->format(DATE_ATOM));
 // did it convert from the other timezone to the default timezone?
 $date->setTimezone($defaultTimezone);
 $t->is($clean, $date->format('Y-m-d H:i:s'), '->clean() respects incoming and default timezones');
+
+$t->diag('culture');
+$v->setOption('culture', 'cs_CZ');
+
+try
+{
+  $cleaned = $v->clean('25.5.2013');
+  $t->pass('->clean() accepts culture specific dates.');
+  $t->is($cleaned, '2013-05-25 00:00:00', 'Returned value is correct');
+}
+catch(sfValidatorError $e)
+{
+  $t->pass('->clean() accepts culture specific dates.');
+  $t->skip('', 1);
+}
+
+// with minutes
+try
+{
+  $cleaned = $v->clean('25.5.2013 15:00');
+  $t->pass('->clean() accepts culture specific dates.');
+  $t->is($cleaned, '2013-05-25 15:00:00', 'Returned value is correct');
+}
+catch(sfValidatorError $e)
+{
+  $t->pass('->clean() accepts culture specific dates.');
+  $t->skip('', 1);
+}

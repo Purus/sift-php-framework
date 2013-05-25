@@ -12,24 +12,8 @@
  * @package    Sift
  * @subpackage form_widget
  */
-class sfWidgetFormPrice extends sfWidgetFormNumber
+class sfWidgetFormPrice extends sfWidgetFormI18nNumber
 {
-
-  /**
-   * Configures the current widget.
-   *
-   * @param array $options     An array of options
-   * @param array $attributes  An array of default HTML attributes
-   *
-   * @see sfWidgetForm
-   */
-  public function __construct($options = array(), $attributes = array())
-  {
-    $this->addRequiredOption('culture');
-
-    parent::__construct($options, $attributes);
-  }
-
   /**
    * Configures the current widget.
    *
@@ -41,8 +25,19 @@ class sfWidgetFormPrice extends sfWidgetFormNumber
   protected function configure($options = array(), $attributes = array())
   {
     parent::configure($options, $attributes);
-
     $this->setAttribute('class', 'price');
+  }
+
+  /**
+   * @see sfWidgetForm
+   */
+  public function render($name, $value = null, $attributes = array(), $errors = array())
+  {
+    if(is_numeric($value))
+    {
+      $value += 0;
+    }
+    return parent::render($name, $value, $attributes, $errors);
   }
 
 }

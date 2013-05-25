@@ -559,8 +559,8 @@ class sfI18n extends sfConfigurable {
    */
   public function getTimestamp($date, $culture = null)
   {
-    list($d, $m, $y) = $this->getDate($date, $culture);
-    list($hour, $minute) = $this->getTime($date, $culture);
+    list($d, $m, $y) = self::getDate($date, $culture);
+    list($hour, $minute) = self::getTime($date, $culture);
     return mktime($hour, $minute, 0, $m, $d, $y);
   }
 
@@ -571,14 +571,14 @@ class sfI18n extends sfConfigurable {
    * @param string $culture
    * @return int|null
    */
-  public function getDate($date, $culture = null)
+  public static function getDate($date, $culture = null)
   {
     if(!$date)
     {
       return 0;
     }
 
-    $dateFormatInfo = sfI18nDateTimeFormat::getInstance($culture ? $culture : $this->getCulture());
+    $dateFormatInfo = sfI18nDateTimeFormat::getInstance($culture);
     $dateFormat = $dateFormatInfo->getShortDatePattern();
 
     // We construct the regexp based on date format
@@ -621,14 +621,14 @@ class sfI18n extends sfConfigurable {
    *
    * @return array   An array with the hour and minute
    */
-  public function getTime($time, $culture = null)
+  public static function getTime($time, $culture = null)
   {
     if(!$time)
     {
-      return 0;
+      return;
     }
 
-    $timeFormatInfo = sfI18nDateTimeFormat::getInstance($culture ? $culture : $this->getCulture());
+    $timeFormatInfo = sfI18nDateTimeFormat::getInstance($culture);
     $timeFormat = $timeFormatInfo->getShortTimePattern();
 
     // We construct the regexp based on time format
@@ -639,6 +639,7 @@ class sfI18n extends sfConfigurable {
       'h' => strpos($timeFormat, 'H') !== false ? strpos($timeFormat, 'H') : strpos($timeFormat, 'h'),
       'm' => strpos($timeFormat, 'm')
     );
+
     $tmp = array_flip($a);
     ksort($tmp);
     $i = 0;

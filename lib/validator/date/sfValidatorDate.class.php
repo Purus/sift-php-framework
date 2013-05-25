@@ -47,6 +47,7 @@ class sfValidatorDate extends sfValidatorBase
     $this->addMessage('max', 'The date must be before %max%.');
     $this->addMessage('min', 'The date must be after %min%.');
 
+    $this->addOption('culture', null);
     $this->addOption('date_format', null);
     $this->addOption('with_time', false);
     $this->addOption('date_output', 'Y-m-d');
@@ -80,6 +81,14 @@ class sfValidatorDate extends sfValidatorBase
     if (is_array($value))
     {
       $value = $this->convertDateArrayToString($value);
+    }
+    else
+    {
+      // we have to handle culture specific formatting
+      if($newValue = $this->getValidDate($value, $this->getCulture()))
+      {
+        $value = $newValue;
+      }
     }
 
     // convert timestamp to date number format
@@ -157,6 +166,42 @@ class sfValidatorDate extends sfValidatorBase
     $format = $this->getOption('with_time') ? $this->getOption('datetime_output') : $this->getOption('date_output');
 
     return isset($date) ? $date->format($format) : date($format, $cleanTime);
+  }
+
+  /**
+   * Converts the given date into a Unix timestamp.
+   *
+   * Returns null if the date is invalid
+   *
+   * @param $value    Date to convert
+   * @param $culture  Language culture to use
+   */
+  protected function getValidDate($value, $culture)
+  {
+    // Use the language culture date format
+    $result = sfI18n::getDate($value, $culture);
+
+    if($result === null)
+    {
+      return;
+    }
+
+    $time = sfI18n::getTime($value, $culture);
+    list($d, $m, $y) = $result;
+
+    // Make sure the date is a valid gregorian calendar date also
+    if ($result === null || !checkdate($m, $d, $y))
+    {
+      return null;
+    }
+
+    $hour = $min = 0;
+    if($time)
+    {
+      list($hour, $min) = $time;
+    }
+
+    return strtotime(sprintf('%s-%s-%s %s:%s', $y, $m, $d, $hour, $min));
   }
 
   /**

@@ -15,6 +15,12 @@
 class sfValidatorNumber extends sfValidatorBase {
 
   /**
+   * Float pattern regular expression
+   *
+   */
+  const FLOAT_PATTERN = '/^[+-]?(\d*\.\d+([eE]?[+-]?\d+)?|\d+[eE][+-]?\d+)$/';
+
+  /**
    * Configures the current validator.
    *
    * Available options:
@@ -65,7 +71,20 @@ class sfValidatorNumber extends sfValidatorBase {
       throw new sfValidatorError($this, 'min', array('value' => $value, 'min' => $this->getOption('min')));
     }
 
+    // FIXME: convert to string, since php float values are a bit pain?
+    // BUT! converting to string will cause tests to fail
     return $clean;
+  }
+
+  /**
+   * Checks if given value is float.
+   *
+   * @param mixed $val
+   * @return boolean
+   */
+  protected function isFloat($val)
+  {
+    return (!is_bool($val) && (is_float($val) || preg_match(self::FLOAT_PATTERN, trim($val))));
   }
 
   /**
