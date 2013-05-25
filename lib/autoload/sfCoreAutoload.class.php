@@ -723,6 +723,7 @@ class sfCoreAutoload
     'sfhtml' => 'util/sfHtml.class.php',
     'sfinflector' => 'util/sfInflector.class.php',
     'sfintegerencoder' => 'util/sfIntegerEncoder.class.php',
+    'sfmath' => 'util/sfMath.class.php',
     'sfmimetype' => 'util/sfMimeType.class.php',
     'sfnumbercompare' => 'util/sfNumberCompare.class.php',
     'sfparameterholder' => 'util/sfParameterHolder.class.php',
