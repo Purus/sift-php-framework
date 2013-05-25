@@ -25,6 +25,7 @@ class sfWidgetFormDualList extends sfWidgetFormChoice {
    * Available options:
    *
    *  * choices:                  An array of possible choices (required)
+   *  * truncate:                 Truncate the choice text? Integer (of false to disable)
    *  * class:                    The main class of the widget
    *  * class_select:             The class for the two select tags
    *  * label_available:          The label for available
@@ -70,6 +71,9 @@ class sfWidgetFormDualList extends sfWidgetFormChoice {
     $this->addOption('label_filter_placeholder', 'Filter');
 
     $this->addOption('asset_package', 'dual_list');
+
+    // truncate the choice text?
+    $this->addOption('truncate', 30);
 
     // javascript options which will be exported as data-dual-list-options
     // attribute for the div.dual-list (can be configured via option)
@@ -266,10 +270,10 @@ EOF
   /**
    * Renders an item
    *
-   * @param type $key
-   * @param type $value
-   * @param type $name
-   * @return type
+   * @param string $key
+   * @param string $value
+   * @param string $name
+   * @return string
    */
   protected function renderItem($key, $item, $name, $associated = false)
   {
@@ -284,12 +288,16 @@ EOF
       $checkboxAttributes['checked'] = 'checked';
     }
 
+    $truncate = $this->getOption('truncate');
+    $value = (string)$item['value'];
+
     return $this->renderContentTag('li',
               $this->renderTag('input', $checkboxAttributes) . "\n" .
-              (string)$item['value'], array(
+              ($truncate ? sfText::truncate($value, $truncate) : $value), array(
                 // FIXME: make this configurable and export to javascript options
                 // for sorting
-                'data-position' => $item['position']
+                'data-position' => $item['position'],
+                'title' => $value
               )
           );
   }

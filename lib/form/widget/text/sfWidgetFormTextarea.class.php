@@ -24,6 +24,7 @@ class sfWidgetFormTextarea extends sfWidgetForm {
    */
   protected function configure($options = array(), $attributes = array())
   {
+    $this->addOption('rich', false);
     $this->setAttribute('rows', 4);
     $this->setAttribute('cols', 30);
   }

@@ -90,6 +90,25 @@ abstract class sfWidget {
   abstract public function render($name, $value = null, $attributes = array(), $errors = array());
 
   /**
+   * Renders the widget for usage in javascript template. The value of the name
+   * attribute will be replaced with {{name}}, value with {{value}}
+   *
+   * @return string
+   */
+  public function renderForJavascriptTemplate()
+  {
+    return str_replace(
+      array(
+        'TEMPLATENAMEPLACEHOLDER',
+        'TEMPLATEVALUEPLACEHOLDER',
+        'TEMPLATEIDPLACEHOLDER'),
+      array('{{name}}', '{{value}}', '{{id}}'),
+      $this->render('TEMPLATENAMEPLACEHOLDER', 'TEMPLATEVALUEPLACEHOLDER', array(
+        'id' => 'TEMPLATEIDPLACEHOLDER'
+    )));
+  }
+
+  /**
    * Adds a required option.
    *
    * @param string $name  The option name

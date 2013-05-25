@@ -674,7 +674,7 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess {
 
     if('[%s]' == substr($format, -4) && preg_match('/^(.+?)\[(.+)?\]$/', $name, $match))
     {
-      $name = sprintf('%s[%s][%s]', substr($format, 0, -4), $match[1], $match[2]);
+      $name = sprintf('%s[%s][%s]', substr($format, 0, -4), $match[1], isset($match[2]) ? $match[2] : '');
     }
     else if(false !== $format)
     {
@@ -898,6 +898,25 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess {
       $formFormatter = clone $formFormatter;
       $formFormatter->setWidgetSchema($this);
     }
+  }
+
+  /**
+   * Renders the widget for usage in javascript template. The value of the name
+   * attribute will be replaced with {{name}}, value with {{value}}
+   *
+   * @return string
+   */
+  public function renderForJavascriptTemplate()
+  {
+    return str_replace(
+      array(
+        'TEMPLATENAMEPLACEHOLDER',
+        'TEMPLATEVALUEPLACEHOLDER',
+        'TEMPLATEIDPLACEHOLDER'),
+      array('{{name}}', '{{value}}', '{{id}}'),
+      $this->render('TEMPLATENAMEPLACEHOLDER', array('TEMPLATEVALUEPLACEHOLDER'), array(
+        'id' => 'TEMPLATEIDPLACEHOLDER'
+    )));
   }
 
 }

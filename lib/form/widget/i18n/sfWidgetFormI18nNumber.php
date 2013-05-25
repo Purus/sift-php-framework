@@ -48,7 +48,6 @@ class sfWidgetFormI18nNumber extends sfWidgetFormInput
     {
       // trim zeros
       $value += 0;
-
       $numberFormat = new sfI18nNumberFormatter($this->getCulture());
       $value = $numberFormat->format($value);
     }

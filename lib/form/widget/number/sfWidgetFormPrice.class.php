@@ -25,6 +25,7 @@ class sfWidgetFormPrice extends sfWidgetFormI18nNumber
   protected function configure($options = array(), $attributes = array())
   {
     parent::configure($options, $attributes);
+
     $this->setAttribute('class', 'price');
   }
 

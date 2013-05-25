@@ -368,4 +368,28 @@ abstract class sfWidgetForm extends sfWidget
       return $result;
     }
   }
+
+  /**
+   * Returns culture as passed from options or current user culture
+   * or culture from "sf_i18n_default_culture" setting or "en" as fallback
+   *
+   * @return string
+   */
+  protected function getCulture()
+  {
+    if($culture = $this->getOption('culture'))
+    {
+      return $culture;
+    }
+
+    try
+    {
+      return sfContext::getInstance()->getUser()->getCulture();
+    }
+    catch(Exception $e)
+    {
+      return sfCulture::getInstance()->getName(sfConfig::get('sf_i18n_default_culture', 'en'));
+    }
+  }
+
 }

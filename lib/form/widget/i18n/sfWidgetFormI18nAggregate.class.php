@@ -23,6 +23,7 @@ class sfWidgetFormI18nAggregate extends sfWidgetForm
    *  * widget_template:          Template for the widget
    *  * standalone_template:      Template for the first widget
    *  * widgets_wrapper_template: Widgets wrapper template
+   *  * wrapper_template:         Wraps whole widget (%widget% placeholder)
    *  * flag_template:            Flag template (will be added to the label of the widget of add_flag is true)
    *  * add_flag:                 Add flag to the label?
    *
@@ -41,6 +42,9 @@ class sfWidgetFormI18nAggregate extends sfWidgetForm
     $this->addOption('standalone_template', '<div class="form-i18n-standalone">%label% %widget%%error%</div>');
     // widgets wrapper template
     $this->addOption('widgets_wrapper_template', '<div class="form-i18n-aggregate">%widgets%</div>');
+
+    // wrapper template, this wraps whole widget
+    $this->addOption('wrapper_template', '%widget%');
 
     // flag template
     $this->addOption('flag_template', '<span class="flag flag-%culture%"></span>');
@@ -84,6 +88,9 @@ class sfWidgetFormI18nAggregate extends sfWidgetForm
 
     $widgets = array();
 
+    // id attribute
+    $id = isset($attributes['id']) ? $attributes['id'] : $name;
+
     // render the widget for each culture
     foreach($cultures as $culture => $cultureName)
     {
@@ -91,6 +98,11 @@ class sfWidgetFormI18nAggregate extends sfWidgetForm
       {
         $culture = $cultureName;
         $cultureName = false;
+      }
+
+      if(isset($attributes['id']))
+      {
+        $attributes['id'] = sprintf('%s_%s', $id, $culture);
       }
 
       $widgetName = sprintf('%s[%s]', $name, $culture);
@@ -110,9 +122,9 @@ class sfWidgetFormI18nAggregate extends sfWidgetForm
 
       $widgets[$culture] = array(
         '%label%'  => $this->renderContentTag('label', $label, array(
-          'for' => $this->generateId($widgetName, $widgetValue)
+          'for' => $this->generateId(isset($attributes['id']) ? $attributes['id'] : $widgetName, $widgetValue)
         )),
-        '%widget%' => $widget->render($widgetName, $widgetValue),
+        '%widget%' => $widget->render($widgetName, $widgetValue, $attributes),
         '%error%' => $this->getErrorForCulture($name, $errors, $culture)
       );
     }
@@ -140,7 +152,7 @@ class sfWidgetFormI18nAggregate extends sfWidgetForm
       unset($widgetsHtml);
     }
 
-    return join("\n", $html);
+    return strtr($this->getOption('wrapper_template'), array('%widget%' => join("\n", $html)));
   }
 
   /**
