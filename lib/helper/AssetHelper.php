@@ -436,9 +436,19 @@ function image_tag($source, $options = array())
   return tag('img', $options);
 }
 
+/**
+ * Computes public path for given $source
+ *
+ * @param string $source Source
+ * @param string $dir Directory
+ * @param string $ext Default extension
+ * @param boolean $absolute Absolute path?
+ * @return string
+ */
 function _compute_public_path($source, $dir, $ext, $absolute = false)
 {
-  if(strpos($source, '://'))
+  // absolute url or absolute url without protocol?
+  if(strpos($source, '://') || strpos($source, '//') === 0)
   {
     return $source;
   }
