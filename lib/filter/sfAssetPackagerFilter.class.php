@@ -74,7 +74,7 @@ class sfAssetPackagerFilter extends sfFilter {
         foreach($files as $file)
         {
           // generated script
-          if(!isset($options['generated']) && !$options['generated'])
+          if(!isset($options['generated']) || !$options['generated'])
           {
             $file = javascript_path($file);
           }
