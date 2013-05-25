@@ -111,7 +111,11 @@
    */
   Application.getTimePickerOptions = function(culture)
   {
-    var cultureData = Globalize.culture(culture ? culture : Config.get('culture'));
+    culture = culture || Config.get('culture');
+    culture = culture.replace('_', '-');
+
+    var cultureData = Globalize.culture(culture);
+
     return {
       timeOnlyTitle: __('Choose time'),
       timeText: __('Time'),
@@ -144,7 +148,10 @@
    */
   Application.getDatePickerOptions = function(culture)
   {
-    var cultureData = Globalize.culture(culture ? culture : Config.get('culture'));
+    culture = culture || Config.get('culture');
+    culture = culture.replace('_', '-');
+
+    var cultureData = Globalize.culture(culture);
     return {
       firstDay: cultureData.calendar.firstDay,
       monthNames: cultureData.calendar.months.names,
@@ -174,7 +181,11 @@
    */
   Application.getDateTimePickerOptions = function(culture)
   {
-    var cultureData = Globalize.culture(culture ? culture : Config.get('culture'));
+    culture = culture || Config.get('culture');
+    culture = culture.replace('_', '-');
+
+    var cultureData = Globalize.culture(culture);
+
     return $.extend({}, Application.getDatePickerOptions(), {
       timeOnlyTitle: __('Choose time'),
       timeText: __('Time'),
@@ -300,13 +311,13 @@
 
     if(options.minDate)
     {
-      try { options.minDate =  eval('(' + options.minDate + ')'); }
+      try { options.minDate = new Date(options.minDate); }
       catch(e) {}
     }
 
     if(options.maxDate)
     {
-      try { options.maxDate =  eval('(' + options.maxDate + ')'); }
+      try { options.maxDate = new Date(options.maxDate); }
       catch(e) {}
     }
 
@@ -330,29 +341,29 @@
    */
   Application.getDateTimeWidgetOptions = function($element)
   {
-    var options = $.extend({}, Application.getDateTimePickerOptions(), $element.data('datetimepickerOptions') || {});
+    var options = $.extend({}, Application.getDateTimePickerOptions(), $element.data('datepickerOptions') || {});
 
     if(options.minDate)
     {
-      try { options.minDate =  eval('(' + options.minDate + ')'); }
+      try { options.minDate = new Date(options.minDate); }
       catch(e) {}
     }
 
     if(options.maxDate)
     {
-      try { options.maxDate =  eval('(' + options.maxDate + ')'); }
+      try { options.maxDate =  new Date(options.maxDate); }
       catch(e) {}
     }
 
     if(options.minDateTime)
     {
-      try { options.minDateTime =  eval('(' + options.minDateTime + ')'); }
+      try { options.minDateTime = new Date(options.minDateTime); }
       catch(e) {}
     }
 
     if(options.maxDateTime)
     {
-      try { options.maxDateTime =  eval('(' + options.maxDateTime + ')'); }
+      try { options.maxDateTime = new Date(options.maxDateTime); }
       catch(e) {}
     }
 
@@ -394,6 +405,8 @@
    */
   Application.setupNumberWidgets = function(context)
   {
+    return;
+
     var numberInputs = $('input.number,input.integer,input.price', context);
 
     if(!numberInputs.length)
@@ -426,7 +439,8 @@
         var culture = $element.data('culture') ? $element.data('culture') : Config.get('culture');
         // fix for globalize culture format cs-CZ is Sift's cs_CZ
         culture = culture.replace('_', '-');
-        $element.spinner($.extend({
+
+        var options = $.extend({
           culture : culture,
           // trigger the change of the element
           // since the spinner does not care about it
@@ -435,7 +449,11 @@
           {
             $(event.target).trigger('change');
           }
-        }, $element.data('spinnerOptions') || {}));
+        }, $element.data('spinnerOptions') || {});
+
+        console.log(options);
+
+        $element.spinner(options);
       });
     }, null, typeof $.fn.spinner === 'undefined');
   };
@@ -458,7 +476,31 @@
       emptytext: __('Empty')
     };
 
-    var type = $element.data('type');
+    var type = $element.data('type') || 'text';
+
+    switch(type)
+    {
+      case 'text':
+        /**
+         * Callback function for displaying the value, only used for text input, which gets validated on the server side
+         *
+         * @param {String} value Current value to be displayed
+         * @param {Object} response Server response (if display called after ajax submit)
+         * @see http://vitalets.github.io/x-editable/docs.html
+         */
+        options.display = function(value, response)
+        {
+          var $element = $(this);
+          if(response && typeof response.text !== 'undefined')
+          {
+            $element.text(response.text);
+          }
+          else
+          {
+            $element.text(value);
+          }
+        };
+    }
 
     // we have to decide what options:
     // see: http://vitalets.github.com/x-editable/docs.html
