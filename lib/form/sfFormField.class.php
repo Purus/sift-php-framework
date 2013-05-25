@@ -137,6 +137,23 @@ class sfFormField
   }
 
   /**
+   * Renders the widget for javascript template
+   *
+   * @return string
+   */
+  public function renderForJavascriptTemplate()
+  {
+    if($this->parent)
+    {
+      return $this->parent[$this->name]->getWidget()->renderForJavascriptTemplate();
+    }
+    else
+    {
+      return $this->widget->renderFormJavascriptTemplate();
+    }
+  }
+
+  /**
    * Returns a formatted row.
    *
    * The formatted row will use the parent widget schema formatter.
