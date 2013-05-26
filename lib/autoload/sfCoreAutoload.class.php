@@ -251,7 +251,6 @@ class sfCoreAutoload
     'sfclipluginlistchannelstask' => 'cli/task/plugin/sfCliPluginListChannelsTask.class.php',
     'sfclipluginlisttask' => 'cli/task/plugin/sfCliPluginListTask.class.php',
     'sfclipluginpackagetask' => 'cli/task/plugin/sfCliPluginPackageTask.class.php',
-    'sfclipluginpublishassetstask' => 'cli/task/plugin/sfCliPluginPublishAssetsTask.class.php',
     'sfclipluginremovechanneltask' => 'cli/task/plugin/sfCliPluginRemoveChannelTask.class.php',
     'sfclipluginruninstallertask' => 'cli/task/plugin/sfCliPluginRunInstallerTask.class.php',
     'sfclipluginuninstalltask' => 'cli/task/plugin/sfCliPluginUninstallTask.class.php',
