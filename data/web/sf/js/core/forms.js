@@ -476,7 +476,27 @@
       emptytext: __('Empty')
     };
 
-    var type = $element.data('type') || 'text';
+    // we have to get what type of editable
+    // is assigned to the element:
+    // 1: data-type
+    // 2: data-editable-options, key: type
+    // 3: fallback to editable default: text
+    var type = false;
+    var data;
+    if(data = $element.data('editable-options'))
+    {
+      if(typeof data.type !== 'undefined')
+      {
+        type = data.type;
+      }
+    }
+
+    if(!type && $element.data('type'))
+    {
+      type = $element.data('type');
+    }
+
+    var type = type || 'text';
 
     switch(type)
     {
