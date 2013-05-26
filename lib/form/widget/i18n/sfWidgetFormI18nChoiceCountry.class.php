@@ -37,17 +37,16 @@ class sfWidgetFormI18nChoiceCountry extends sfWidgetFormChoice
     $this->addOption('countries');
     $this->addOption('add_empty', false);
 
-    // populate choices with all countries
-    $culture = isset($options['culture']) ? $options['culture'] : 'en';
-
-    $countries = sfCulture::getInstance($culture)->getCountries(isset($options['countries']) ? $options['countries'] : null);
+    $countries = sfCulture::getInstance($this->getCulture())->getCountries(isset($options['countries']) ?
+            $options['countries'] : null);
 
     $addEmpty = isset($options['add_empty']) ? $options['add_empty'] : false;
-    if (false !== $addEmpty)
+    if(false !== $addEmpty)
     {
       $countries = array_merge(array('' => true === $addEmpty ? '' : $addEmpty), $countries);
     }
 
     $this->setOption('choices', $countries);
   }
+
 }

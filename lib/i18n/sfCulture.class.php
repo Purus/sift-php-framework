@@ -712,6 +712,18 @@ class sfCulture {
    */
   public function getCountries($countries = null)
   {
+    // handle special cases
+    if($countries == 'eu_only')
+    {
+      // europo
+      // http://isvat.appspot.com/
+      $countries = array(
+        'AT', 'BE', 'BG', 'CY', 'CZ', 'DE', 'DK', 'EE', 'ES', 'FI', 'FR',
+        'GB', 'GR', 'HU', 'IE', 'IT', 'LT', 'LU', 'LV', 'MT', 'NL', 'PL',
+        'PT', 'RO', 'SE', 'SI', 'SK'
+      );
+    }
+
     $allCountries = $this->findInfo('countries', true);
 
     // restrict countries to a sub-set

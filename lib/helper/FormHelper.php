@@ -225,26 +225,7 @@ function select_country_tag($name, $selected = null, $options = array(), $cultur
   }
 
   $c = sfCulture::getInstance($culture);
-  $countries = $c->getCountries();
-
-  $eu_only = _get_option($options, 'eu_only');
-
-  if($eu_only)
-  {
-    // http://isvat.appspot.com/
-    $options['countries'] = array(
-        'AT', 'BE', 'BG', 'CY', 'CZ', 'DE', 'DK', 'EE', 'ES', 'FI', 'FR',
-        'GB', 'GR', 'HU', 'IE', 'IT', 'LT', 'LU', 'LV', 'MT', 'NL', 'PL',
-        'PT', 'RO', 'SE', 'SI', 'SK'
-    );
-  }
-
-  if($country_option = _get_option($options, 'countries'))
-  {
-    $countries = array_intersect_key($countries, array_flip($country_option));
-  }
-
-  $c->sortArray($countries);
+  $countries = $c->getCountries(_get_option($options, 'countries'));
 
   $option_tags = options_for_select($countries, $selected, $options);
   unset($options['include_blank'], $options['include_custom']);
