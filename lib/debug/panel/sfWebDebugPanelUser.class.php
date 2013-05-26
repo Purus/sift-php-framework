@@ -80,6 +80,18 @@ class sfWebDebugPanelUser extends sfWebDebugPanel {
         $html[] = '<ul>';
         foreach($attributes as $attributeName => $attribute)
         {
+          if(is_object($attribute))
+          {
+            if(method_exists($attribute, '__toString'))
+            {
+              $attribute = $attribute->__toString();
+            }
+            else
+            {
+              $attribute = sprintf('object [%s]', get_class($attribute));
+            }
+          }
+
           $html[] = sprintf('<li>%s: %s</li>', $attributeName, is_array($attribute) ? var_export($attribute, true) : $attribute);
         }
         $html[] = '</ul>';
