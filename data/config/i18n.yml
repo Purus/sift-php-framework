@@ -10,8 +10,8 @@ default:
     source_type: gettext
     debug: %SF_DEBUG%
     cache: true
-    untranslated_prefix: "[T]"
-    untranslated_suffix: "[/T]"
+    untranslated_prefix: '{'
+    untranslated_suffix: '}'
     # what language is used as source language
     source_culture: en_GB
     # source which will be registered upon i18n creation
