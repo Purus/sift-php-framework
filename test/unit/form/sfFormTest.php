@@ -3,7 +3,7 @@
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 require_once($_test_dir.'/unit/sfCoreMock.class.php');
 
-$t = new lime_test(175);
+$t = new lime_test(179);
 
 // disable aria support
 sfWidgetForm::setAria(false);
@@ -236,6 +236,27 @@ $t->ok($schema['first_name'] == $validators['first_name'], '->setValidators() se
 $t->ok($schema['last_name'] == $validators['last_name'], '->setValidators() sets field validators');
 $f->setValidator('name', $v3 = new sfValidatorPass());
 $t->ok($f->getValidator('name') == $v3, '->setValidator() sets a validator for a field');
+
+$t->diag('setValidatorOption()');
+$f->setValidator('name', new sfValidatorString());
+$f->setValidatorOption('name', 'required', false);
+$t->ok($f->getValidator('name')->getOption('required') == false, '->setValidatorOption() sets a validator for a field');
+
+$v4 = new sfValidatorString(array('required' => true));
+$v6 = new sfValidatorString(array('required' => true));
+$v8 = new sfValidatorNumber(array('min' => 150));
+
+$f->setValidator('name', new sfValidatorAnd(array(
+    $v4,
+    new sfValidatorAnd(array($v6, $v8))
+)));
+
+$f->setValidatorOption('name', 'required', false);
+$t->ok($v4->getOption('required') == false, '->setValidatorOption() sets a validator for a field');
+$t->ok($v6->getOption('required') == false, '->setValidatorOption() sets a validator for a field');
+
+$f->setValidatorOption('name', 'min', 300);
+$t->ok($v8->getOption('min') == 300, '->setValidatorOption() sets a validator for a field');
 
 // ->setWidgets() ->setWidgetSchema() ->getWidgetSchema() ->getWidget() ->setWidget()
 $t->diag('->setWidgets() ->setWidgetSchema() ->getWidgetSchema()');
@@ -518,7 +539,7 @@ $output = <<<EOF
 EOF;
 
 $f->setName('');
-        
+
 $t->is($f->render(array('first_name' => array('class' => 'foo'))), fix_linebreaks($output), '->render() renders the form as HTML');
 $t->is((string) $f['id'], '<input type="hidden" name="id" value="3" id="id" />', '->offsetGet() returns a sfFormField');
 $t->is((string) $f['first_name'], '<input type="text" name="first_name" value="Fabien" id="first_name" />', '->offsetGet() returns a sfFormField');
@@ -986,7 +1007,7 @@ $t->diag('->__call()');
 
 $f = new FormTest();
 
-try 
+try
 {
   $f->getFooBar();
   $t->fail('calling of undefined method throws an exception');
@@ -997,20 +1018,20 @@ catch(sfException $e)
 }
 
 function myListener(sfEvent $event)
-{  
+{
   if($event['method'] == 'getFooBar')
   {
     $event->setProcessed(true);
     $event->setReturnValue('foobar2');
     return true;
   }
-  
+
   return false;
 }
 
 sfCore::getEventDispatcher()->connect('form.method_not_found', 'myListener');
 
-try 
+try
 {
   $result = $f->getFooBar();
   $t->pass('calling of undefined method does not throw an exception if listener is set');
@@ -1018,7 +1039,7 @@ try
 }
 catch(sfException $e)
 {
-  $t->fail('calling of undefined method does not throw an exception if listener is set');  
+  $t->fail('calling of undefined method does not throw an exception if listener is set');
   $t->fail('method listener returns correct value');
 }
 
@@ -1028,7 +1049,7 @@ $t->isa_ok($f->addGroup('test_group', 'My label', array('a')), 'FormTest', 'addG
 
 $t->isa_ok($f->getGroup('test_group'), 'sfFormFieldGroup', 'getGroup() returns group');
 
-try 
+try
 {
   $f->getGroup('non_foobar');
   $t->fail('getGroup() throws an exception when this group does not exist');

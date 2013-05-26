@@ -928,6 +928,45 @@ class sfForm implements ArrayAccess, Iterator, Countable
   }
 
   /**
+   * Sets validator's option for given field name to newValue.
+   * If deep option is true sets also the value in subvalidators.
+   *
+   * @param string $name The field name
+   * @param string $option The option name
+   * @param mixed $newValue New value
+   * @param boolean $deep Go deep in subvalidators?
+   * @return sfForm
+   */
+  public function setValidatorOption($name, $option, $newValue, $deep = true)
+  {
+    $this->__setValidatorOption($this->getValidator($name), $option, $newValue, $deep);
+    return $this;
+  }
+
+  /**
+   * Sets validator $option to $value.
+   *
+   * @param sfValidatorBase $validator
+   * @param string $option The option name
+   * @param mixed $value The value
+   * @param boolean $deep Go deep in subvalidators?
+   */
+  protected function __setValidatorOption(sfValidatorBase $validator, $option, $value, $deep = true)
+  {
+    if($validator->hasOption($option))
+    {
+      $validator->setOption($option, $value);
+    }
+    if($deep && method_exists($validator, 'getValidators'))
+    {
+      foreach($validator->getValidators() as $subValidator)
+      {
+        $this->__setValidatorOption($subValidator, $option, $value, $deep);
+      }
+    }
+  }
+
+  /**
    * Checks if given field has any validator assigned
    *
    * @param string $name The field name
