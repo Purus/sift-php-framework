@@ -303,7 +303,12 @@ class sfMenu extends sfConfigurable implements ArrayAccess, Countable, IteratorA
       return false;
     }
 
-    return $user->hasCredential($this->getCredentials());
+    if($this->hasCredentials())
+    {
+      return $user->hasCredential($this->getCredentials());
+    }
+
+    return true;
   }
 
   /**
