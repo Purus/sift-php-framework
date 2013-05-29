@@ -41,6 +41,7 @@ class sfI18nApplicationExtract extends sfI18nExtract
     $this->extractPhpFiles();
     $this->extractModules();
     $this->extractMenuYamlFiles();
+    $this->extractDashboardWidgetsYamlFiles();
     $this->extractUserProfileYamlFiles();
     $this->extractForms();
     $this->extractModels();
@@ -94,6 +95,24 @@ class sfI18nApplicationExtract extends sfI18nExtract
     $menuExtractor = new sfI18nYamlMenuExtractor();
     // menu yaml files
     $menuFiles = sfFinder::type('file')->name('menu.yml')->in($this->getOption('app_dir').'/'.
+                  $this->getOption('config_dir_name'));
+    foreach($menuFiles as $file)
+    {
+      $extracted = $menuExtractor->extract(file_get_contents($file));
+      $this->sortExtracted($extracted);
+    }
+  }
+
+  /**
+   * Extracts strings from dashboard_widgets.yml yaml files
+   *
+   * @todo This should be provided by the plugin, not in the core
+   */
+  protected function extractDashboardWidgetsYamlFiles()
+  {
+    $menuExtractor = new sfI18nYamlDasboardWidgetsExtractor();
+    // menu yaml files
+    $menuFiles = sfFinder::type('file')->name('dashboard_widgets.yml')->in($this->getOption('app_dir').'/'.
                   $this->getOption('config_dir_name'));
     foreach($menuFiles as $file)
     {

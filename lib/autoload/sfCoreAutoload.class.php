@@ -488,6 +488,7 @@ class sfCoreAutoload
     'sfi18nmoduleextract' => 'i18n/extract/sfI18nModuleExtract.class.php',
     'sfi18nphpextractor' => 'i18n/extract/sfI18nPhpExtractor.class.php',
     'sfi18nplaintextextractor' => 'i18n/extract/sfI18nPlainTextExtractor.class.php',
+    'sfi18nyamldasboardwidgetsextractor' => 'i18n/extract/sfI18nYamlDashboardWidgetsExtractor.class.php',
     'sfi18nyamlextractor' => 'i18n/extract/sfI18nYamlExtractor.class.php',
     'sfi18nyamlgeneratorextractor' => 'i18n/extract/sfI18nYamlGeneratorExtractor.class.php',
     'sfi18nyamlmenuextractor' => 'i18n/extract/sfI18nYamlMenuExtractor.class.php',
