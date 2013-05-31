@@ -1022,7 +1022,6 @@ function get_javascripts_for_form(sfForm $form)
 function use_javascripts_for_form(sfForm $form)
 {
   $response = sfContext::getInstance()->getResponse();
-
   foreach($form->getJavascripts() as $file => $options)
   {
     if(is_numeric($file))
@@ -1030,6 +1029,7 @@ function use_javascripts_for_form(sfForm $form)
       // File names as values without options are also supported
       $file = $options;
     }
+
  	  if(!is_array($options))
     {
       $options = array();
@@ -1038,6 +1038,7 @@ function use_javascripts_for_form(sfForm $form)
  	  $position = '';
  	  if(isset($options['position']))
     {
+      $position = $options['position'];
       unset($options['position']);
     }
 
