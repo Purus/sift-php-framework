@@ -218,6 +218,11 @@ class sfI18nYamlGeneratorExtractor extends sfI18nYamlExtractor {
           }
         }
       }
+
+      if(isset($options['editable']['title']))
+      {
+        $this->strings[] = $options['editable']['title'];
+      }
     }
   }
 
