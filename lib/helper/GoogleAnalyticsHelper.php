@@ -140,7 +140,7 @@ function google_analytics_base_configuration($options = array())
   
   foreach($setupScripts as $script)
   {
-    $return .= javascript_include_tag($script);
+    $return .= "\n" . javascript_include_tag($script);
   }        
   
   return $return;
