@@ -96,12 +96,14 @@ class sfValidatorInteger extends sfValidatorBase {
 
     if($this->hasOption('max'))
     {
-      $messages[sfFormJavascriptValidation::MAX] = $this->getMessage('max');
+      $messages[sfFormJavascriptValidation::MAX] =
+          sfFormJavascriptValidation::fixValidationMessage($this, 'max');
     }
 
     if($this->hasOption('min'))
     {
-      $messages[sfFormJavascriptValidation::MIN] = $this->getMessage('min');
+      $messages[sfFormJavascriptValidation::MIN] =
+          sfFormJavascriptValidation::fixValidationMessage($this, 'min');
     }
 
     return $messages;
