@@ -8,7 +8,7 @@
  */
 
 // load vendor library
-require_once dirname(__FILE__).'/../../vendor/js_min/JsMin.php';
+require_once dirname(__FILE__).'/../../vendor/js_min/JSMin.php';
 
 /**
  * Minifies javascript using modified JsMin from minify project.
