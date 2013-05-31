@@ -29,7 +29,3 @@ function admin_app_url()
   return 'http://' . $url . $script;
 }
 
-function apply_filters($tag, $data, $arguments = array())
-{
-  return sfCore::applyFilters($tag, $data, $arguments);
-}
