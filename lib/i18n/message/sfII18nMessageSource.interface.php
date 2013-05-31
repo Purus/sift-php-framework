@@ -88,7 +88,7 @@ interface sfII18nMessageSource {
    * @param string the catalogue of the translation.
    * @return boolean true if translation was updated, false otherwise.
    */
-  public function update($text, $target, $comments, $catalogue = 'messages');
+  public function update($text, $target, $comments = '', $catalogue = 'messages');
 
   /**
    * Returns a list of catalogue as key and all it variants as value.
