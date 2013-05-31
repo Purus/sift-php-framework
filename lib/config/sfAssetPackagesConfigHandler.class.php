@@ -51,13 +51,29 @@ class sfAssetPackagesConfigHandler extends sfSimpleYamlConfigHandler {
 
     // default values
     $default = isset($myConfig['default']) ? $myConfig['default'] : array();
+    $all     = isset($myConfig['all']) ? $myConfig['all'] : array();
     $env     = isset($myConfig[sfConfig::get('sf_environment')]) && is_array($myConfig[sfConfig::get('sf_environment')]) ?
                 $myConfig[sfConfig::get('sf_environment')] : array();
 
     // result config, we will take default values
-    $config = array();
+    $config = $default;
 
-    foreach($default['packages'] as $package => $assetGroups)
+    // take "all" key
+    if(isset($all['packages']))
+    {
+      foreach($all['packages'] as $package => $assetGroups)
+      {
+        // overwrite
+        foreach($assetGroups as $group => $assets)
+        {
+          $config['packages'][$package][$group] = $assets;
+        }
+      }
+    }
+
+    // loop all packages and check if there is any specifics for
+    // the environment
+    foreach($config['packages'] as $package => $assetGroups)
     {
       foreach($assetGroups as $group => $assets)
       {
