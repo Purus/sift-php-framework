@@ -9,6 +9,7 @@ dev:
       javascripts:
         - %SF_SIFT_WEB_DIR%/js/jquery/jquery-1.9.1.min.js: { position: first }
         - //code.jquery.com/jquery-migrate-1.2.1.min.js: { position: first }
+        - only_dev_hooks.js
 
     validation:
       javascripts:

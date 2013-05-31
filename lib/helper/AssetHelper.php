@@ -821,29 +821,25 @@ function get_javascript_configuration($options = array(), $app = null)
 /**
  * Use jquery library
  *
- * @param string $position
- * @return void
  */
-function use_jquery($position = 'first')
+function use_jquery()
 {
-  use_package_javascript('jquery', $position);
-  use_package_stylesheet('jquery', $position);
+  use_package('jquery');
 }
 
 /**
  * Use Jquery UI
  *
- * @param string $position
  */
-function use_jquery_ui($position = '')
+function use_jquery_ui()
 {
-  use_package_javascript('ui', $position);
-  use_package_stylesheet('ui', $position);
+  use_package('ui');
 }
 
 /**
- * Use asset package
+ * Use asset package. Accepts more arguments
  *
+ * @param $name Package name
  */
 function use_package()
 {
@@ -851,41 +847,37 @@ function use_package()
   {
     foreach(sfAssetPackage::getJavascripts($name) as $javascript)
     {
-      use_javascript($javascript);
+      $options = array();
+      if(is_array($javascript))
+      {
+        $options = (array)current($javascript);
+        $javascript = key($javascript);
+      }
+      $position = '';
+      if(isset($options['position']))
+      {
+        $position = $options['position'];
+        unset($options['position']);
+      }
+      use_javascript($javascript, $position, $options);
     }
 
     foreach(sfAssetPackage::getStylesheets($name) as $stylesheet)
     {
-      use_stylesheet($stylesheet);
+      $options = array();
+      if(is_array($stylesheet))
+      {
+        $options = (array)current($stylesheet);
+        $stylesheet = key($stylesheet);
+      }
+      $position = '';
+      if(isset($options['position']))
+      {
+        $position = $options['position'];
+        unset($options['position']);
+      }
+      use_stylesheet($stylesheet, $position, $options);
     }
-  }
-}
-
-/**
- * Use package stylesheets
- *
- * @param string $name Package name (should be configured in asset_packages.yml)
- * @param string $position Position
- */
-function use_package_stylesheet($name, $position = '')
-{
-  foreach(sfAssetPackage::getStylesheets($name) as $stylesheet)
-  {
-    use_stylesheet($stylesheet, $position);
-  }
-}
-
-/**
- * Use package stylesheets
- *
- * @param string $name Package name (should be configured in asset_packages.yml)
- * @param string $position Position
- */
-function use_package_javascript($name, $position = '')
-{
-  foreach(sfAssetPackage::getJavascripts($name) as $js)
-  {
-    use_javascript($js, $position);
   }
 }
 
@@ -899,81 +891,19 @@ function use_package_javascript($name, $position = '')
 function use_jquery_plugin()
 {
   use_jquery();
-
   foreach(func_get_args() as $name)
   {
-    use_package_javascript($name);
-    use_package_stylesheet($name);
-  }
-}
-
-/**
- * Use jquery plugin stylesheets
- *
- * @param string $name Plugin name (should be configured in asset_packages.yml)
- * @param string $position Position
- */
-function use_jquery_plugin_stylesheet($name, $position = '')
-{
-  foreach(sfAssetPackage::getStylesheets($name) as $stylesheet)
-  {
-    use_stylesheet($stylesheet, $position);
-  }
-}
-
-/**
- * Use jquery plugin javascripts
- *
- * @param string $name Plugin name
- * @param string $position Position
- */
-function use_jquery_plugin_javascript($name, $position = '')
-{
-  use_jquery();
-
-  foreach(sfAssetPackage::getJavascripts($name) as $javascript)
-  {
-    use_javascript($javascript, $position);
+    use_package($name);
   }
 }
 
 /**
  * Includes jquery
  *
- * @param string $position
- * @return void
  */
-function include_jquery($position = 'first')
+function include_jquery()
 {
-  return use_jquery($position);
-}
-
-/**
- * Use fancybox stylesheet(s)
- *
- * @param string $position
- */
-function use_fancybox_stylesheet($position = '')
-{
-  use_jquery_plugin_stylesheet('fancybox', $position);
-}
-
-/**
- * Use easing stylesheet(s)
- *
- */
-function use_jquery_easing()
-{
-  use_jquery_plugin('easing');
-}
-
-/**
- * Use jquery mousewheel package
- *
- */
-function use_jquery_mousewheel()
-{
-  use_jquery_plugin('mousewheel');
+  return use_jquery();
 }
 
 /**
@@ -981,29 +911,7 @@ function use_jquery_mousewheel()
  */
 function use_jquery_validation()
 {
-  use_jquery_plugin('validation');
-}
-
-/**
- * Includes fancybox javascript to response
- *
- */
-function use_fancybox_javascript($options = array())
-{
-  $options = _parse_attributes($options);
-
-  use_jquery_plugin_javascript('fancybox');
-
-  if(($easing = _get_option($options, 'easing')) && $easing)
-  {
-    use_jquery_easing();
-  }
-
-  if($mousewheel = _get_option($options, 'mousewheel') && $mousewheel)
-  {
-    use_jquery_mousewheel();
-  }
-
+  use_package('validation');
 }
 
 /**
@@ -1061,4 +969,18 @@ function use_dynamic_stylesheet($css, $position = '', $options = array())
 function _dynamic_path($uri, $absolute = false)
 {
   return url_for($uri, $absolute);
+}
+
+/**
+ * Applies filter $tag to given $data.
+ *
+ * @param string $tag
+ * @param mixed $data
+ * @param array $arguments Array of additional arguments
+ * @return mixed
+ * @see sfCore::applyFilters()
+ */
+function apply_filters($tag, $data, $arguments = array())
+{
+  return sfCore::applyFilters($tag, $data, $arguments);
 }
