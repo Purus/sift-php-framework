@@ -5,7 +5,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
- 
+
 /**
  * sfSanitizer sanitizes string using HTML Purifier
  *
@@ -41,7 +41,7 @@ class sfSanitizer {
       require_once sfConfig::get('sf_sift_lib_dir') . '/vendor/htmlpurifier/HTMLPurifier.includes.php';
 
       // Load the HTML Purifier auto loader
-      require_once sfConfig::get('sf_sift_lib_dir') . '/vendor/htmlpurifier/HTMLPurifier.auto.php';
+      spl_autoload_register(array('HTMLPurifier_Bootstrap', 'autoload'));
 
       // Create a new configuration object
       $config = HTMLPurifier_Config::createDefault();
@@ -67,7 +67,7 @@ class sfSanitizer {
   /**
    * Sanitizes the $string using $type configuration configured in
    * sanitize.yml
-   * 
+   *
    * @param string|array $string
    * @param string $type
    * @return string
