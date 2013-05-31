@@ -586,7 +586,7 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess {
           {
             $classes[] = $attributes['class'];
           }
-          $attributes['class'] = trim(implode(' ', array_merge(explode(' ', ($this->widget ? $this->widget->getAttribute('class') : '')
+          $attributes['class'] = trim(implode(' ', array_merge(explode(' ', ($this->parent ? $this->parent->getAttribute('class') : '')
                                   ), $classes)));
         }
 
