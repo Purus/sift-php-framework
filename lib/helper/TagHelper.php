@@ -71,7 +71,7 @@ function javascript_tag($content)
   return content_tag('script',
           sfHtml::isXhtml() ?
             javascript_cdata_section(_compress_javascript($content)) :
-            "\n" . _compress_javascript($content) . "\n",
+            ("\n" . _compress_javascript($content) . "\n"),
           array('type' => 'text/javascript'));
 }
 
