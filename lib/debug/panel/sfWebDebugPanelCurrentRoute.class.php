@@ -23,7 +23,7 @@ class sfWebDebugPanelCurrentRoute extends sfWebDebugPanel {
     $module = sfContext::getInstance()->getModuleName();
     $action = sfContext::getInstance()->getActionName();
 
-    $route  = sfRouting::getInstance()->getCurrentInternalUri(true);
+    $route  = htmlspecialchars(sfRouting::getInstance()->getCurrentInternalUri(true));
 
     return $module && $action ?
             sprintf('<span title="Current module/action: %s/%s, Route: %s">%s/%s </span>',
