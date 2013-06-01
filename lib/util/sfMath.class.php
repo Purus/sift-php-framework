@@ -184,6 +184,12 @@ class sfMath {
    */
   public static function clean($number)
   {
+    // don't clean numbers without dot
+    if(strpos($number, '.') === false)
+    {
+      return $number;
+    }
+
     //remove zeros from end of number ie. 140.00000 becomes 140.
     $clean = rtrim($number, '0');
      //remove zeros from front of number ie. 0.33 becomes .33

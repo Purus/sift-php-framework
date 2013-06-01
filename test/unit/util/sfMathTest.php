@@ -2,7 +2,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(44, new lime_output_color());
+$t = new lime_test(45, new lime_output_color());
 
 $calculation = sfMath::add('0.1', '0.2', 1);
 $t->is_deeply($calculation, '0.3', 'add() works ok with precision is specified');
@@ -106,6 +106,7 @@ $t->diag('clean');
 $t->is_deeply(sfMath::clean('1.00000'), '1', 'clean() works ok');
 $t->is_deeply(sfMath::clean('1.000001'), '1.000001', 'clean() works ok');
 $t->is_deeply(sfMath::clean('0001.001000'), '1.001', 'clean() works ok');
+$t->is_deeply(sfMath::clean('1000'), '1000', 'clean() works ok');
 
 $t->diag('round');
 
