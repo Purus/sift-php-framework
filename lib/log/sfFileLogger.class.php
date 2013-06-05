@@ -16,24 +16,26 @@ class sfFileLogger extends sfLogger
 {
   /**
    * Default options
-   * 
-   * @var array 
+   *
+   * @var array
    */
   protected $defaultOptions = array(
     'type' => 'Sift',
     'format' => '%time% %type% [%priority%] %message%%EOL%',
-    'time_format' => '%b %d %H:%M:%S',  
+    'time_format' => '%b %d %H:%M:%S',
     'dir_mode' => 0777,
-    'file_mode' => 0666
+    'file_mode' => 0666,
+    'date_format' => 'Y_m_d',
+    'date_prefix' => '_'
   );
-  
+
   /**
    * File pointer
-   * 
-   * @var resource 
+   *
+   * @var resource
    */
   protected $fp;
-  
+
   /**
    * Initializes the file logger.
    *
@@ -42,13 +44,21 @@ class sfFileLogger extends sfLogger
   public function initialize($options = array())
   {
     $file = $this->getOption('file');
-    
+
     if(!$file)
     {
       throw new sfConfigurationException('You must provide a "file" parameter for this logger.');
     }
 
-    $dir = dirname($this->getOption('file'));    
+    if($dateFormat = $this->getOption('date_format'))
+    {
+      $filePrefix = substr($file, 0, strrpos($file, '.'));
+      $fileSuffix = substr($file, strrpos($file, '.'), strlen($file));
+      $file = $filePrefix . $this->getOption('date_prefix') . date($dateFormat) . $fileSuffix;
+    }
+
+    $dir = dirname($file);
+
     if(!is_dir($dir))
     {
       mkdir($dir, $this->getOption('dir_mode'), true);
@@ -66,7 +76,7 @@ class sfFileLogger extends sfLogger
       chmod($file, $this->getOption('file_mode'));
     }
 
-    return parent::initialize($options);    
+    return parent::initialize($options);
   }
 
   /**
@@ -89,7 +99,7 @@ class sfFileLogger extends sfLogger
     )));
     flock($this->fp, LOCK_UN);
   }
-  
+
   /**
    * Executes the shutdown method.
    */
@@ -100,5 +110,5 @@ class sfFileLogger extends sfLogger
       fclose($this->fp);
     }
   }
-  
+
 }

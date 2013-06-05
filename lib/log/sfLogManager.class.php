@@ -12,51 +12,107 @@
  * @package    Sift
  * @subpackage log
  */
-class sfLogManager
+class sfLogManager extends sfConfigurable
 {
-  /** the default period to rotate logs in days */
-  const DEF_PERIOD    = 7;
 
-  /** the default number of log historys to store, one history is created for every period */
-  const DEF_HISTORY   = 10;
+  /**
+   * Default options
+   *
+   * @var array
+   */
+  protected $defaultOptions = array(
+    // The default period to rotate logs in days
+    'period' => 7,
+    // The default number of log histories to store, one history is created for every period
+    'history' => 10,
+    // Separator of application name and environment in the file name
+    'app_env_separator' => '_',
+    // directory mode
+    'dir_mode' => 0777,
+    // date format for rotated logs
+    'date_format' => 'Y_m_d',
+    'override' => false,
+    'date_prefix' => '_',
+    // log application while rotating logs?
+    'lock' => true
+  );
+
+  /**
+   * Directory where do the logs live
+   *
+   * @var string
+   */
+  protected $logDir;
+
+  /**
+   * Constructs the manager
+   *
+   * @param string $logDir Log directory
+   * @param array $options Array of options
+   * @throws InvalidArgumentException If log directory does not exist
+   */
+  public function __construct($logDir, $options = array())
+  {
+    if(!is_dir($logDir))
+    {
+      throw new InvalidArgumentException(sprintf('Directory "%s" does not exist.', $logDir));
+    }
+
+    $this->logDir = $logDir;
+
+    parent::__construct($options);
+  }
 
   /**
    * Rotates log file.
    *
    * @param string Application name
    * @param string Enviroment name
-   * @param string Period 
+   * @param string Period
    * @param string History
    * @param boolean Override
-   *
-   **/
-  public static function rotate($app, $env, $period = null, $history = null, $override = false)
+   */
+  public function rotate($app, $env, $period = null, $history = null, $override = false)
   {
-    $logfile = $app.'_'.$env;
-    $logdir = sfConfig::get('sf_log_dir');
-
-    // set history and period values if not passed to default values
-    $period = isset($period) ? $period : self::DEF_PERIOD;
-    $history = isset($history) ? $history : self::DEF_HISTORY;
-
-    // get todays date
-    $today = date('Ymd');
-
-    // check history folder exists
-    if (!is_dir($logdir.'/history'))
+    if(is_null($period))
     {
-      mkdir($logdir.'/history', 0777);
+      $period = $this->getOption('period');
     }
 
+    if(is_null($history))
+    {
+      $history = $this->getOption('history');
+    }
+
+    // get todays date
+    $today = date($this->getOption('date_format'));
+
+
+    $logFile = sprintf('%s%s%s', $app, $this->getOption('app_env_separator'), $env);
+
+    // check history folder exists
+    if(!is_dir($this->logDir.'/history'))
+    {
+      mkdir($this->logDir.'/history', $this->getOption('dir_mode'), true);
+    }
+
+    $name = sprintf('%s%s*.log', $logFile, $this->getOption('date_separator'));
+
     // determine date of last rotation
-    $logs = sfFinder::type('file')->ignore_version_control()->maxdepth(1)->name($logfile.'_*.log')->in($logdir.'/history/');
+    $logs = sfFinder::type('file')
+              ->ignore_version_control()
+              ->maxdepth(1)->name($name)
+              ->in($this->logDir.'/history/');
+
+    usort($logs, array($this, 'sort'));
+
     $recentlog = is_array($logs) ? array_pop($logs) : null;
 
-    if ($recentlog)
+    if($recentlog)
     {
       // calculate date to rotate logs on
       $last_rotated_on = filemtime($recentlog);
-      $rotate_on = date('Ymd', strtotime('+ '.$period.' days', $last_rotated_on));
+      $rotate_on = date($this->getOption('date_format'), strtotime('+ '.$period.' days', $last_rotated_on));
     }
     else
     {
@@ -64,48 +120,121 @@ class sfLogManager
       $rotate_on = null;
     }
 
-    $src_log = $logdir.'/'.$logfile.'.log';
-    $dest_log = $logdir.'/history/'.$logfile.'_'.$today.'.log';
-
     // if rotate log on date doesn't exist, or that date is today, then rotate the log
     if (!$rotate_on || ($rotate_on == $today) || $override)
     {
-      // create a lock file
-      $lockFile = sfConfig::get('sf_root_dir').'/'.$app.'_'.$env.'-cli.lck';
-      touch($lockFile);
-      chmod($lockFile, 0777);
-
-      // if log file exists rotate it
-      if (file_exists($src_log))
+      if($this->getOption('lock') && ($dataDir = sfConfig::get('sf_data_dir')))
       {
-        // check if the log file has already been rotated today
-        if (file_exists($dest_log))
+        $lockFile = $dataDir .'/'.$app.'_'.$env.'.lck';
+        touch($lockFile);
+        chmod($lockFile, 0777);
+      }
+
+      // find all logs for the application
+      $allLogs = sfFinder::type('file')
+                  ->ignore_version_control()
+                  ->maxdepth(0)->name($name)
+                  ->in($this->logDir);
+
+      // loop all logs and move them to history
+      foreach($allLogs as $logFile)
+      {
+        $target = $this->logDir . '/history/'. basename($logFile);
+
+        // we have a date information in the filename
+        if(!preg_match($this->getRegex($this->getOption('date_format')), $logFile))
+        {
+          $target = $this->logDir.'/history/'.$this->generateFileName(basename($logFile),
+              $this->getOption('date_prefix'), $today);
+        }
+
+        if(file_exists($target))
         {
           // append log to existing rotated log
-          $handle = fopen($dest_log, 'a');
-          $append = file_get_contents($src_log);
+          $handle = fopen($target, 'a');
+          $append = file_get_contents($logFile);
           fwrite($handle, $append);
+          fclose($handle);
         }
         else
         {
           // copy log
-          copy($src_log, $dest_log);
+          $fileMTime = filemtime($logFile);
+          copy($logFile, $target);
+          touch($target, $fileMTime);
         }
 
-        // remove the log file
-        unlink($src_log);
+        unlink($logFile);
+      }
 
-        // get all log history files for this application and environment
-        $new_logs = sfFinder::type('file')->ignore_version_control()->maxdepth(1)->name($logfile.'_*.log')->in($logdir.'/history/');
+      // get all log history files for this application and environment
+      $new_logs = sfFinder::type('file')
+          ->ignore_version_control()
+          ->maxdepth(0)
+          ->name($name)
+          ->in($this->logDir.'/history');
 
-        // if the number of logs in history exceeds history then remove the oldest log
-        if (count($new_logs) > $history)
+      // sort by filemtime
+      usort($new_logs, array($this, 'sort'));
+
+      // if the number of logs in history exceeds history then remove the oldest log
+      if(count($new_logs) > $history)
+      {
+        // how many to delete?
+        for($i = 0, $diff = count($new_logs) - $history; $i < $diff; $i++)
         {
-          unlink($new_logs[0]);
+          unlink($new_logs[$i]);
         }
       }
 
-      unlink($lockFile);
+      if($this->getOption('lock') && $dataDir)
+      {
+        @unlink($lockFile);
+      }
     }
   }
+
+  /**
+   * Sort files based on their modification time
+   *
+   * @param string $a Path to a file A
+   * @param string $b Path to a file B
+   * @return int
+   */
+  protected function sort($a, $b)
+  {
+    $mTimeA = filemtime($a);
+    $mTimeB = filemtime($b);
+
+    if($mTimeA == $mTimeB)
+    {
+      return 0;
+    }
+
+    return $mTimeA > $mTimeB ? 1 : -1;
+  }
+
+  /**
+   * Returns a regular expression for given $dateFormat
+   * @param string $dateFormat
+   * @return string
+   */
+  protected function getRegex($dateFormat)
+  {
+    return sfDateFormatRegexGenerator::getInstance()->generateRegex($dateFormat);
+  }
+
+  /**
+   * Generates file name with date appended
+   * @param string $file
+   * @param type $dateFormat
+   * @return string
+   */
+  protected function generateFileName($file, $datePrefix, $date)
+  {
+    $filePrefix = substr($file, 0, strrpos($file, '.'));
+    $fileSuffix = substr($file, strrpos($file, '.'), strlen($file));
+    return $filePrefix . $datePrefix . ($date) . $fileSuffix;
+  }
+
 }

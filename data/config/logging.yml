@@ -3,7 +3,7 @@
 default:
   enabled: true
   level:   debug
-  rotate:  false
+  rotate:  true
   period:  7
   history: 10
   purge:   true
@@ -16,6 +16,8 @@ default:
       class: sfFileLogger
       param:
         file: %SF_LOG_DIR%/%SF_APP%_%SF_ENVIRONMENT%.log
+        # there is new log file for every day in month
+        date_format: Y_m_d
 #
 #prod:
 #  enabled: true
