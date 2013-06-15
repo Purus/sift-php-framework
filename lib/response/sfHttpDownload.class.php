@@ -202,14 +202,14 @@ class sfHttpDownload extends sfConfigurable {
       $this->limitSpeed($options['speed_limit']);
     }
 
-    if(isset($options['content_disposition']))
-    {
-      $this->setContentDisposition($options['content_disposition']);
-    }
-    
     if(isset($options['filename']))
     {
       $this->setFilename($options['filename']);
+    }
+    
+    if(isset($options['content_disposition']))
+    {
+      $this->setContentDisposition($options['content_disposition']);
     }
 
     if(isset($options['use_resume']))
