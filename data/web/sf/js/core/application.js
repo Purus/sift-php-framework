@@ -423,8 +423,7 @@
 
       var that = $(this);
       var confirm = that.data('confirm') || __('Are you sure?')
-      // FIXME: make icons configurable?
-      Application.confirm('<i class="icon-exclamation-sign icon-large"></i> ' + confirm, function()
+      Application.confirm(confirm, function()
       {
         // have have to detect what is the item clicked
         // this is a link
