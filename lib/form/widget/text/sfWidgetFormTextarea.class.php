@@ -43,6 +43,20 @@ class sfWidgetFormTextarea extends sfWidgetForm {
    */
   public function render($name, $value = null, $attributes = array(), $errors = array())
   {
+    if($rich = $this->getOption('rich'))
+    {
+      $class = 'rich';
+      if(isset($attributes['class']))
+      {
+        $attributes['class'] = join(' ', array_unique(array_merge(
+            explode(' ', $attributes['class']), array($class))));
+      }
+      else
+      {
+        $attributes['class'] = $class;
+      }
+    }
+
     return $this->renderContentTag('textarea', self::escapeOnce($value), array_merge(array('name' => $name), $attributes));
   }
 
