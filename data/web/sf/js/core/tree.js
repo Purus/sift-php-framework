@@ -11,6 +11,7 @@
  * @name Dynatree
  * @requires jQuery
  * @requires jQueryUI
+ * @requires Tools
  * @class
  * @link https://code.google.com/p/dynatree/
  */
@@ -29,6 +30,11 @@
   if(typeof $.ui.dynatree === 'undefined')
   {
     throw 'Dynatree is required.'
+  }
+
+  if(typeof $.fn.treeManager === 'undefined')
+  {
+    throw 'TreeManager is required.'
   }
 
   /**
@@ -85,6 +91,24 @@
   };
 
   /**
+   * Prepares the state of the tree for Dynatree usage
+   *
+   * @param {jQuery Object} $tree Object
+   */
+  Application.prepareTreeWidget = function($tree)
+  {
+    $tree.find('input[type="checkbox"],input:radio').each(function()
+    {
+      var that = $(this);
+      if(that.prop('checked'))
+      {
+        // assing classes for the parent li element
+        that.parents('li:first').addClass('selected').addClass('expanded');
+      }
+    });
+  };
+
+  /**
    * Return an array of options for Dynatree. Creates default options and
    * merges them with options passes as "data-tree-options" attribute of the DOM element.
    *
@@ -109,7 +133,10 @@
       selectionVisible: true,
       checkbox: false,
       // Set focus to first child, when expanding or lazy-loading.
-      autoFocus: false
+      autoFocus: false,
+
+      // tree manager extensions
+      url: null
     };
 
     // we know that the tree is a widget
@@ -136,13 +163,48 @@
 
     // extend the default options
     // with data-tree-options from element
-    options = $.extend(options, $element.data('treeOptions') || {});
+    var options = $.extend({}, options, $element.data('treeOptions') || {});
 
     // additional checks
     if(options.checkbox)
     {
       options.onClick = treeOnClickHandler;
       options.onSelect = treeOnSelectHandler;
+    }
+
+    // drag and drop feature
+    if(options.dnd)
+    {
+      // callbacks need to be functions
+      if(typeof options.dnd.onDragStart === 'string')
+      {
+        options.dnd.onDragStart = Tools.getObject(options.dnd.onDragStart);
+      }
+
+      if(typeof options.dnd.onDragStop === 'string')
+      {
+        options.dnd.onDragStop = Tools.getObject(options.dnd.onDragStop);
+      }
+
+      if(typeof options.dnd.onDragOver === 'string')
+      {
+        options.dnd.onDragOver = Tools.getObject(options.dnd.onDragOver);
+      }
+
+      if(typeof options.dnd.onDragEnter === 'string')
+      {
+        options.dnd.onDragEnter = Tools.getObject(options.dnd.onDragEnter);
+      }
+
+      if(typeof options.dnd.onDragLeave === 'string')
+      {
+        options.dnd.onDragLeave = Tools.getObject(options.dnd.onDragLeave);
+      }
+
+      if(typeof options.dnd.onDrop === 'string')
+      {
+        options.dnd.onDrop = Tools.getObject(options.dnd.onDrop);
+      }
     }
 
     return options;
@@ -171,20 +233,11 @@
     tree.each(function()
     {
       var $tree = $(this);
-
-      $tree.find('input[type="checkbox"],input:radio').each(function()
-      {
-        var that = $(this);
-        if(that.prop('checked'))
-        {
-          // assing classes for the parent li element
-          that.parents('li:first').addClass('selected').addClass('expanded');
-        }
-      });
-
+      // prepare tree for dynatree usage
+      Application.prepareTreeWidget($tree);
       var options = Application.getTreeWidgetOptions($tree);
-
-      $tree.dynatree(options);
+      // tree manager
+      $tree.treeManager(options);
     });
 
   };
