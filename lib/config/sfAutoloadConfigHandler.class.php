@@ -106,7 +106,7 @@ class sfAutoloadConfigHandler extends sfYamlConfigHandler {
           $finder->prune($entry['exclude'])->discard($entry['exclude']);
         }
 
-        if($matches = glob($path, GLOB_BRACE | GLOB_NOSORT | GLOB_ONLYDIR))
+        if($matches = sfGlob::find($path, GLOB_BRACE | GLOB_NOSORT | GLOB_ONLYDIR))
         {
           foreach($finder->in($matches) as $file)
           {
