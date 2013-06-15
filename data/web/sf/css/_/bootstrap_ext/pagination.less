@@ -1,24 +1,139 @@
 
 .pager {
   text-align: right;
-
   a {
     text-decoration: none;
   }
-
   a:hover {
     text-decoration: underline;
   }
-
-}
-
-// todo
-// What styles?
-.pager-sliding {
-
 }
 
 .pager-info {
   margin: @baseLineHeight/2 0;
   font-size: @fontSizeSmall;
+}
+
+// Space out pager from surrounding content
+.pager {
+  margin: @baseLineHeight 0;
+  color: @pagerColor;
+}
+
+.pager ul {
+  // Allow for text-based alignment
+  display: inline-block;
+  .ie7-inline-block();
+  // Reset default ul styles
+  margin-left: 0;
+  margin-bottom: 0;
+  // Visuals
+  .border-radius(@baseBorderRadius);
+  .box-shadow(0 1px 2px rgba(0,0,0,.05));
+}
+.pager ul > li {
+  display: inline; // Remove list-style and block-level defaults
+}
+.pager ul > li > a,
+.pager ul > li > span {
+  float: left; // Collapse white-space
+  padding: 4px 12px;
+  line-height: @baseLineHeight;
+  text-decoration: none;
+  background-color: @pagerBackground;
+  border: 1px solid @pagerBorder;
+  border-left-width: 0;
+  color: @pagerColor;
+  .border-radius(0);
+}
+.pager ul > li > a:hover,
+.pager ul > li > a:focus,
+.pager ul > .active > a,
+.pager ul > .active > span {
+  background-color: @pagerActiveBackground;
+  color: @pagerActiveColor;
+}
+.pager ul > .active > a,
+.pager ul > .active > span {
+  color: @pagerColor;
+  cursor: default;
+}
+.pager ul > .disabled > span,
+.pager ul > .disabled > a,
+.pager ul > .disabled > a:hover,
+.pager ul > .disabled > a:focus {
+  color: @pagerColor;
+  background-color: transparent;
+  cursor: default;
+}
+.pager ul > li:first-child > a,
+.pager ul > li:first-child > span {
+  border-left-width: 1px;
+  .border-left-radius(@baseBorderRadius);
+}
+.pager ul > li:last-child > a,
+.pager ul > li:last-child > span {
+  .border-right-radius(@baseBorderRadius);
+}
+
+
+// Alignment
+// --------------------------------------------------
+
+.pager-centered {
+  text-align: center;
+}
+.pager-right {
+  text-align: right;
+}
+
+
+// Sizing
+// --------------------------------------------------
+
+// Large
+.pager-large {
+  ul > li > a,
+  ul > li > span {
+    padding: @paddingLarge;
+    font-size: @fontSizeLarge;
+  }
+  ul > li:first-child > a,
+  ul > li:first-child > span {
+    .border-left-radius(@borderRadiusLarge);
+  }
+  ul > li:last-child > a,
+  ul > li:last-child > span {
+    .border-right-radius(@borderRadiusLarge);
+  }
+}
+
+// Small and mini
+.pager-mini,
+.pager-small {
+  ul > li:first-child > a,
+  ul > li:first-child > span {
+    .border-left-radius(@borderRadiusSmall);
+  }
+  ul > li:last-child > a,
+  ul > li:last-child > span {
+    .border-right-radius(@borderRadiusSmall);
+  }
+}
+
+// Small
+.pager-small {
+  ul > li > a,
+  ul > li > span {
+    padding: @paddingSmall;
+    font-size: @fontSizeSmall;
+  }
+}
+// Mini
+.pager-mini {
+  ul > li > a,
+  ul > li > span {
+    padding: @paddingMini;
+    font-size: @fontSizeMini;
+  }
 }
