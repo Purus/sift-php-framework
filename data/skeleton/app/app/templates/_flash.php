@@ -25,12 +25,13 @@
 
 <?php if($sf_request->hasErrors()): ?>
   <div class="request-error alert alert-block alert-error">
+    <button type="button" class="close" data-dismiss="alert" aria-label="<?php echo __('close', array(), '%SF_SIFT_DATA_DIR%/i18n/catalogues/flash'); ?>">×</button>
     <p>
       <strong><?php echo __('There are errors in the form, please fix them and submit again.', array(), '%SF_SIFT_DATA_DIR%/i18n/catalogues/flash'); ?></strong>
     </p>  
     <ul>
     <?php foreach($sf_request->getErrors() as $error): ?>
-      <li><?php echo $error; ?></li>
+      <li><?php echo __($error); ?></li>
     <?php endforeach; ?>
     </ul>
   </div>
