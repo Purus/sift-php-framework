@@ -4,13 +4,15 @@
 default:
   http_metas:
     content-type: text/html
-
+    # IE mode, but fails WC3 validator
+    X-UA-Compatible: IE=Edge,chrome=1
   metas:
     #description:  Meta description
     #keywords:     Meta keywords
     robots:       index, follow
     # responsive design
     viewport:     width=device-width, initial-scale=1.0
+
     # Google site verification
     #google-site-verification:
 
