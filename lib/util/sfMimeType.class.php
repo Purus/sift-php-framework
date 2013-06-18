@@ -186,7 +186,7 @@ class sfMimeType {
     // invalid files and its content types
     // @link http://stackoverflow.com/questions/7416936/finfo-returns-wrong-mime-type-on-some-js-files-text-x-c
     // @link http://stackoverflow.com/questions/5226289/php-doesnt-return-the-correct-mime-type
-    if(preg_match('/\.(js|css|json|php|docx|xlsx)$/i', $originalFileName))
+    if(preg_match('/\.(js|css|json|php|docx|xlsx|wmv)$/i', $originalFileName))
     {
       $mimeType = $mimeType2;
     }

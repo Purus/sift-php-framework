@@ -3,7 +3,7 @@
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 require_once(dirname(__FILE__).'/../../../lib/util/sfMimeType.class.php');
 
-$t = new lime_test(46, new lime_output_color());
+$t = new lime_test(48, new lime_output_color());
 
 $t->diag('->fixMimeType()');
 
@@ -76,7 +76,8 @@ $files = array(
   'survey.js' => 'application/javascript',
   'example.json' => 'application/json',
   '560051.rss' => 'application/rss+xml',
-  'my_jsme_stvoreni_k_jeho_obrazu.mp3' => 'audio/mpeg'
+  'my_jsme_stvoreni_k_jeho_obrazu.mp3' => 'audio/mpeg',
+  'video.wmv' => 'video/x-ms-wmv',
 );
 
 $fixtures = dirname(__FILE__) . '/fixtures/mime';
