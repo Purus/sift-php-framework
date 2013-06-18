@@ -218,3 +218,15 @@ default:
       javascripts:
         - %SF_SIFT_WEB_DIR%/js/handlebars/handlebars.min.js
         - %SF_SIFT_WEB_DIR%/js/core/template.min.js
+
+    # File uploader
+    file_upload:
+      javascripts:
+        - %SF_SIFT_WEB_DIR%/js/file_uploader/jquery.fileupload.all.min.js
+        - %SF_SIFT_WEB_DIR%/js/file_uploader/file_uploader.min.js
+        - %SF_SIFT_WEB_DIR%/js/file_uploader/i18n/%SF_CULTURE%.min.js
+      stylesheets:
+        - %SF_SIFT_WEB_DIR%/css/_/file_uploader/file_uploader.less
+      # Note: requires only widget from the UI
+      require:
+        - ui

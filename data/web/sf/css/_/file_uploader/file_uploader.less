@@ -1,0 +1,93 @@
+/**
+ * This file is part of the Sift package.
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+/**
+ * File uploader styles
+ *
+ * @package    Sift
+ * @subpackage less
+ */
+
+@import "_mixins";
+@import "_variables";
+
+.file-uploader-wrapper {
+  display: inline-block;
+  position: relative;
+  overflow: hidden;
+}
+
+.file-uploader-button {}
+
+.file-uploader-progress {
+  height: 5px;
+  width: 100%;
+  background: @gray;
+}
+
+.file-uploader-item.in-progress .file-uploader-progress {
+  background: @gray url("@{sf_sift_web_dir}/images/file_uploader/progress_bar.gif") top left repeat-x;
+}
+
+.file-uploader-progress .bar {
+  height: 5px;
+  background: @black;
+}
+
+.file-uploader-hidden {
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin: 0;
+  opacity: 0;
+  filter: alpha(opacity=0);
+  transform: translate(-300px, 0) scale(4);
+  font-size: 23px;
+  direction: ltr;
+  cursor: pointer;
+}
+
+.file-uploader-queue .file-uploader-item { padding:0.3em; }
+
+.file-uploader-queue .file-uploader-item .file-upload-cancel { float: right; }
+.file-uploader-queue .file-uploader-item.in-progress {
+  cursor: progress;
+}
+
+.file-uploader-drop-zone {
+  border: 2px dotted @black;
+  padding: 0.2em;
+  min-height:10em;
+  text-align: center;
+  vertical-align: middle;
+  line-height: 10em;
+  font-size: 90%;
+}
+
+.file-uploader-drop-zone.unsupported { display:none; }
+.file-uploader-drop-zone.hover {
+  font-size: 100%;
+  background: @green;
+}
+
+.file-uploader-filename {
+  font-weight: bold;
+}
+
+.file-uploader-state.success {
+  color: @successText;
+}
+
+.file-uploader-state.error {
+  color: @errorText;
+}
+
+.file-uploader-info { display:inline-block; }
+
+.file-uploader-cancel {
+  float: right;
+}
