@@ -2,7 +2,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(45, new lime_output_color());
+$t = new lime_test(46, new lime_output_color());
 
 $calculation = sfMath::add('0.1', '0.2', 1);
 $t->is_deeply($calculation, '0.3', 'add() works ok with precision is specified');
@@ -138,3 +138,27 @@ $t->diag('real world examples');
 
 $calculation = sfMath::round(sfMath::multiply(sfMath::divide('10900', '1.21'), '1.21'), 2);
 $t->is_deeply($calculation, '10900.00', 'multiply() works ok');
+
+
+class myValue {
+
+  public $amount;
+
+  public function __construct($amount)
+  {
+    $this->amount = $amount;
+  }
+
+  public function __toString()
+  {
+    return (string)$this->amount;
+  }
+
+}
+
+$t->diag('working with objects');
+
+$value = new myValue(100);
+$calculation = sfMath::multiply($value, '2');
+
+$t->is_deeply($calculation, '200', 'multiply() works ok for objects');
