@@ -685,7 +685,7 @@
     /**
      * Setup item events
      *
-     * @param {jQuery Object $item
+     * @param {jQuery Object} $item
      */
     setupItemEvents: function($item)
     {
@@ -797,7 +797,9 @@
   };
 
   /**
+   * Dual list
    *
+   * @memberOf jQuery.fn
    * @param {Object} option
    * @returns {Mixed}
    */

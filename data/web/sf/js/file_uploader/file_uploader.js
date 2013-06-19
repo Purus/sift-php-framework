@@ -6,19 +6,15 @@
  */
 
 /**
- * @class
- * @name FileUpload
+ * jQuery File Upload plugin
+ *
+ * @memberOf jQuery.fn
+ * @function
+ * @name fileupload
+ * @param {Object} options Array of options
  * @link https://github.com/blueimp/jQuery-File-Upload
  */
 
-/**
- * File uploader using jQuery File Upload Plugin
- *
- * @class
- * @name FileUploader
- * @requires jQuery
- * @requires FileUpload
- */
 (function($, window) {
 
   // check required plugin
@@ -151,11 +147,11 @@
   /**
    * FileUpload constructor
    *
-   * @param {DOM element} element
-   * @param {Object} options
+   * @param {DOM element} element DOM element
+   * @param {Object} options Array of options
    * @class
-   * @name FileUpload
-   * @version 1.0
+   * @name FileUploader
+   * @requires jQuery.fn.fileupload
    */
   var FileUploader = function(element, options)
   {
@@ -256,7 +252,7 @@
     /**
      * Version
      */
-    version: '1.0.0',
+    version: '1.0.1',
 
     /**
      * Setups the drop zone
@@ -525,7 +521,16 @@
         }
         else
         {
-          state = this.options.messages.error;
+          if(typeof data.jqXHR.responseJSON !== 'undefined' &&
+             typeof data.jqXHR.responseJSON.files[data.index] !== 'undefined'
+            && data.jqXHR.responseJSON.files[data.index].error)
+          {
+            state = data.jqXHR.responseJSON.files[data.index].error;
+          }
+          else
+          {
+            state = this.options.messages.error;
+          }
         }
       }
       else
@@ -561,8 +566,9 @@
   };
 
   /**
-   * jQuery plugin fileUpload
+   * jQuery fileUploader plugin
    *
+   * @memberOf jQuery.fn
    * @param {Object} option
    * @returns {Mixed}
    */
@@ -584,9 +590,7 @@
     });
   };
 
-  /**
-   * Default options for the plugin
-   */
+  // default options
   $.fn.fileUploader.defaults = {
 
     // i18n messages. Culture translations are located in i18n folder
@@ -641,7 +645,7 @@
     maxNumberOfFiles: undefined,
     // The maximum allowed file size in bytes.
     // Note: This option has only an effect for browsers supporting the File API.
-    maxFileSize: 10000000, // max upload size 10 MB is default
+    maxFileSize: 200000000, // max upload size 200 MB is default
     // Only available on Firefox and Chrome
     // maxChunkSize: 10000000, // 10 MB
     maxChunkSize: 0,

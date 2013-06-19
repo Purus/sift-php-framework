@@ -16,7 +16,19 @@
 print "Generating Sift Javascript API docs \n";
 
 $targetDir  = realpath(dirname(__FILE__) . '/../../../sift_docs.git/js_api');
-$libDir     = realpath(dirname(__FILE__) . '/../../data/web/sf/js/core');
+
+// which directories should be documented?
+$dirs = array();
+$dirs[] = realpath(dirname(__FILE__) . '/../../data/web/sf/js/core');
+$dirs[] = realpath(dirname(__FILE__) . '/../../data/web/sf/js/file_uploader');
+$dirs[] = realpath(dirname(__FILE__) . '/../../data/web/sf/js/dual_list');
+
+$exclude = array();
+
+// exclude minified scripts
+$exclude[] = 'min.js';
+$exclude[] = 'globalize.js';
+$exclude[] = 'jquery.fileupload';
 
 // THIS IS JSDOC3 version, which does not work ok for Sift!
 //$jsDocCmd = "C:/DOCUME~1/michal/DATAAP~1/npm/node_modules/jsdoc/jsdoc.cmd";
@@ -28,20 +40,23 @@ $libDir     = realpath(dirname(__FILE__) . '/../../data/web/sf/js/core');
 //passthru($cmd);
 
 $jsDocDir = 'D:/data/tools/jsdoc-toolkit/';
-// $templateDir = $jsDocDir . '/templates/OrgaChem-JsDoc2-Template-Bootstrap';
 $templateDir = $jsDocDir . '/templates/JSDoc-Bootstrap-Theme-master';
 
-$cwd = getcwd();
+$excludes = array();
+foreach($exclude as $x)
+{
+  $excludes[] = sprintf('--exclude="%s"', $x);
+}
 
-chdir(dirname($libDir));
-
-$cmd = sprintf('java -jar %s %s/app/run.js %s -a -t=%s -d=%s -r=2 --exclude="min.js" --exclude="globalize.js"',
+$cmd = sprintf('java -jar %s %s/app/run.js %s -a -t=%s -d=%s -r=2 %s',
         $jsDocDir . '/jsrun.jar',
         $jsDocDir,
-        basename($libDir),
+        join(' ', $dirs),
         $templateDir,
-        $targetDir);
+        $targetDir,
+        join(' ', $excludes)
+);
 
 passthru($cmd);
-chdir($cwd);
+
 echo "Done.\n";

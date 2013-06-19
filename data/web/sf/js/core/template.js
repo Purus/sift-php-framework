@@ -276,7 +276,6 @@
    * @param {String} templateName The name of the template you wish to render, Note that the template must have been previously loaded and / or added.
    * @param {Object} templateData One or more JavaScript objects which will be used to render the template.
    * @param {Object} options Array of rendering options
-   * @class
    * @memberOf jQuery.fn
    * @requires Template
    */

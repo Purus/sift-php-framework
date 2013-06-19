@@ -466,6 +466,10 @@
    */
   Application.getEditableOptions = function($element)
   {
+    /**
+     * Default editable options
+     *
+     */
     var options = {
       // where is the widget placed?
       // https://github.com/twitter/bootstrap/issues/1411
@@ -507,6 +511,7 @@
          * @param {String} value Current value to be displayed
          * @param {Object} response Server response (if display called after ajax submit)
          * @see http://vitalets.github.io/x-editable/docs.html
+         * @ignore
          */
         options.display = function(value, response)
         {

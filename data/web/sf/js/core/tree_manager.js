@@ -8,7 +8,7 @@
 /**
  * Tree manager is a javascript tree manager
  *
- * @name Dynatree
+ * @name TreeManager
  * @requires jQuery
  * @requires jQueryUI
  * @requires Tools
@@ -123,7 +123,13 @@
     }
   };
 
-  // jQuery plugin definition
+  /**
+   * Tree manager jquery plugin
+   *
+   * @param {String} option
+   * @returns {Mixed}
+   * @memberOf jQuery.fn
+   */
   $.fn.treeManager = function(option)
   {
     return this.each(function()

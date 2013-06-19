@@ -34,7 +34,6 @@
    * This utility function works like removeClass()
    * but removes classes that matches given pattern
    *
-   * @class removeMatchedClasses
    * @memberOf jQuery.fn
    */
   $.fn.removeMatchedClasses = function(pattern)
@@ -64,7 +63,6 @@
    * @returns {jQuery} If data was provided, or array of values if not
    * @see http://stackoverflow.com/questions/1489486/jquery-plugin-to-serialize-a-form-and-also-restore-populate-the-form/1490431#1490431
    * @memberOf jQuery.fn
-   * @class values
    */
   $.fn.values = function(data) {
 
@@ -108,7 +106,6 @@
    * @see http://css-tricks.com/equal-height-blocks-in-rows/
    * @version 1.0
    * @memberOf jQuery.fn
-   * @class equalHeights
    */
   $.fn.equalHeights = function()
   {
