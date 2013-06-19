@@ -91,13 +91,6 @@ default:
       javascripts:
         - %SF_SIFT_WEB_DIR%/js/json/json.js
 
-    # https://github.com/adamayres/jqueryplugins/wiki/Ajax-Cache-Response-jQuery-Plugin
-    cache_response:
-      javascripts:
-        - %SF_SIFT_WEB_DIR%/js/cache_response/jquery.ajax-cache-response.min.js
-      require:
-        - jquery
-
     # jQuery UI
     ui:
       javascripts:

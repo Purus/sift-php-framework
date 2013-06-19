@@ -86,21 +86,22 @@ class sfJsCompilerCommand {
 //              ->in($options['js_data_dir'] . '/core');
 
     $files = array(
-        'exception.js',
-        'config.js',
-        'cookie.js',
-        'local_storage.js',
-        'plugins.js',
-        'application.js',
-        'api.js',
-        'forms.js',
-        'bootstrap.js',
-        'i18n.js',
-        'globalize.js',
-        'logger.js',
-        'tools.js'
+      'exception.js',
+      'config.js',
+      'cookie.js',
+      'local_storage.js',
+      'request_storage.js',
+      'cache_response.js',
+      'plugins.js',
+      'application.js',
+      'api.js',
+      'forms.js',
+      'bootstrap.js',
+      'i18n.js',
+      'globalize.js',
+      'logger.js',
+      'tools.js'
     );
-
 
     $tmpFile = tempnam(sys_get_temp_dir(), 'core_compile');
 
