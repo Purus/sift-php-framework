@@ -786,10 +786,11 @@ class sfI18nNumberFormat {
     {
       return $this->pattern['symbol'];
     }
-    else
+    elseif(isset($this->data['currencies'][$currency][0]))
     {
       return $this->data['currencies'][$currency][0];
     }
+    return $currency;
   }
 
   /**

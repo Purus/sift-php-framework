@@ -21,6 +21,8 @@
  *
  *  // create a number format for the french language locale.
  *  $fr = new sfI18nNumberFormatter('fr');
+ *  // or
+ *  $fr = sfI18nNumberFormatter::getInstance('fr');
  *
  *  // create a number format base on a sfI18nNumberFormat instance $numberFormat.
  *  $format = new sfI18nNumberFormatter($numberFormat);
@@ -50,6 +52,13 @@
 class sfI18nNumberFormatter {
 
   /**
+   * Instances holder
+   *
+   * @var array
+   */
+  protected static $instances = array();
+
+  /**
    * The DateTimeFormatInfo, containing culture specific patterns and names.
    * @var DateTimeFormatInfo
    */
@@ -64,7 +73,7 @@ class sfI18nNumberFormatter {
    * @param null|sfI18nCulture|sfI18nNumberFormat|string
    * @return sfI18nNumberFormatter
    */
-  function __construct($formatInfo = null)
+  public function __construct($formatInfo = null)
   {
     if(is_null($formatInfo))
     {
@@ -85,6 +94,22 @@ class sfI18nNumberFormatter {
   }
 
   /**
+   * Returns an instance of the formatter
+   *
+   * @param string $culture The culture
+   * @return sfI18nNumberFormatter
+   */
+  public static function getInstance($culture)
+  {
+    if(!isset(self::$instances[$culture]))
+    {
+      self::$instances[$culture] = new sfI18nNumberFormatter($culture);
+    }
+
+    return self::$instances[$culture];
+  }
+
+  /**
    * Formats the number for a certain pattern. The valid patterns are
    * 'c', 'd', 'e', 'p' or a custom pattern, such as "#.000" for
    * 3 decimal places.
@@ -97,7 +122,7 @@ class sfI18nNumberFormatter {
    * "USD" represents the US Dollar and "EUR" represents the Euro currency.
    * @return string formatted number string
    */
-  function format($number, $pattern = 'd', $currency = 'USD', $charset = 'UTF-8')
+  public function format($number, $pattern = 'd', $currency = 'USD', $charset = 'UTF-8')
   {
     $this->setPattern($pattern);
 
