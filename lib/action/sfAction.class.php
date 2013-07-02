@@ -632,9 +632,14 @@ abstract class sfAction extends sfComponent
     $response->setContent('');
 
     // set content type only if there is no content type set
-    if(!$response->getHttpHeader('Content-type'))
+    if(!$response->getHttpHeader('Content-Type'))
     {
       $response->setContentType('application/json');
+    }
+
+    if(!$response->getHttpHeader('X-Content-Type-Options'))
+    {
+      $this->getResponse()->setHttpHeader('X-Content-Type-Options', 'nosniff');
     }
 
     return $this->renderText($data);
