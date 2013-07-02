@@ -89,6 +89,7 @@ check(function_exists('utf8_decode'), 'The utf8_decode() is available', 'Install
 check(extension_loaded('gd') && function_exists('gd_info'), 'GD graphics library is installed', 'Install GD graphics library', true);
 check(extension_loaded('mcrypt') && function_exists('mcrypt_module_open'), 'MCrypt module is installed', 'Install Mcrypt module', true);
 check(extension_loaded('intl') && class_exists('Collator'), 'Intl module is installed', 'Install intl module (Locale comparison methods like sorting may not work ok.)', false);
+check(extension_loaded('bcmath'), 'Bcmath module is installed', 'Install bcmtac module.', false);
 
 $accelerator =
   (function_exists('apc_store') && ini_get('apc.enabled'))
