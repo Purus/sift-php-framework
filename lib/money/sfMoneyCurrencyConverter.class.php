@@ -142,18 +142,19 @@ class sfMoneyCurrencyConverter implements sfIMoneyCurrencyValue {
    * Returns an amount
    *
    * @param integer $scale Scale of the amount
+   * @param string $roundingMode Rounding mode
    * @return float
    */
-  public function getAmount($scale = null)
+  public function getAmount($scale = null, $roundingMode = sfRounding::HALF_EVEN)
   {
-    $result = sfMath::multiply($this->money->getAmount(), $this->conversionRate, 100);
+    $result = sfMath::multiply($this->money->getAmount(), $this->conversionRate, sfMoneyCurrencyValue::$calculationPrecision);
 
-    if(is_null($scale))
+    if(!is_null($scale))
     {
-      $scale = $this->targetCurrency->getScale();
+      return sfRounding::round($result, $scale, $roundingMode);
     }
 
-    return $scale == 0 ? sfMath::ceil($result, $scale) : sfMath::round($result, $scale);
+    return $result;
   }
 
   /**

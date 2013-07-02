@@ -14,7 +14,7 @@
  */
 interface sfIMoneyCurrencyValue
 {
-  public function getAmount($scale = null);
+  public function getAmount($scale = null, $roundingMode = sfRounding::HALF_EVEN);
   public function getCurrency();
   public function isInSameCurrency(sfIMoneyCurrencyValue $value);
 

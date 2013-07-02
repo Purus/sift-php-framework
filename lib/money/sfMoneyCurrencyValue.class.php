@@ -16,6 +16,13 @@
 class sfMoneyCurrencyValue implements sfIMoneyCurrencyValue {
 
   /**
+   * Precision used in the calculations
+   *
+   * @var integer
+   */
+  public static $calculationPrecision = 10;
+
+  /**
    * @var float
    */
   protected $amount;
@@ -70,7 +77,7 @@ class sfMoneyCurrencyValue implements sfIMoneyCurrencyValue {
     $this->assertSameCurrency($money);
 
     return new sfMoneyCurrencyValue(
-      sfMath::add($this->amount, $money->getAmount(), 10),
+      sfMath::add($this->amount, $money->getAmount(), self::$calculationPrecision),
       $this->getCurrency()
     );
   }
@@ -87,7 +94,7 @@ class sfMoneyCurrencyValue implements sfIMoneyCurrencyValue {
     $this->assertSameCurrency($money);
 
     return new sfMoneyCurrencyValue(
-      sfMath::substract($this->amount, $money->getAmount(), 10),
+      sfMath::substract($this->amount, $money->getAmount(), self::$calculationPrecision),
       $this->getCurrency()
     );
   }
@@ -101,7 +108,7 @@ class sfMoneyCurrencyValue implements sfIMoneyCurrencyValue {
   public function multiply($multiplier)
   {
     return new sfMoneyCurrencyValue(
-      sfMath::multiply($this->amount, $multiplier, 10),
+      sfMath::multiply($this->amount, $multiplier, self::$calculationPrecision),
       $this->getCurrency()
     );
   }
@@ -115,7 +122,7 @@ class sfMoneyCurrencyValue implements sfIMoneyCurrencyValue {
   public function power($exponent)
   {
     return new sfMoneyCurrencyValue(
-      sfMath::power($this->amount, $exponent, 10),
+      sfMath::power($this->amount, $exponent, self::$calculationPrecision),
       $this->getCurrency()
     );
   }
@@ -129,7 +136,7 @@ class sfMoneyCurrencyValue implements sfIMoneyCurrencyValue {
   public function divide($divider)
   {
     return new sfMoneyCurrencyValue(
-      sfMath::divide($this->amount, $divider, 10),
+      sfMath::divide($this->amount, $divider, self::$calculationPrecision),
       $this->getCurrency()
     );
   }
@@ -138,11 +145,12 @@ class sfMoneyCurrencyValue implements sfIMoneyCurrencyValue {
    * Returns the amount
    *
    * @param integer $scale Scale of the amount?
+   * @param string $roundingMode Mode of rounding
    * @return string
    */
-  public function getAmount($scale = null)
+  public function getAmount($scale = null, $roundingMode = sfRounding::HALF_EVEN)
   {
-    return sfMath::clean(is_null($scale) ? $this->amount : sfMath::round($this->amount, $scale));
+    return sfMath::clean(is_null($scale) ? $this->amount : sfRounding::round($this->amount, $scale, $roundingMode));
   }
 
   /**
@@ -291,12 +299,14 @@ class sfMoneyCurrencyValue implements sfIMoneyCurrencyValue {
    *
    * @param string $format Format
    * @param string $culture
+   * @param integer $scale Precision
+   * @param string $roundingMode Rounding mode
    * @return string
    */
-  public function format($format = 'c', $culture = null)
+  public function format($format = 'c', $culture = null, $scale = null, $roundingMode = sfRounding::HALF_EVEN)
   {
     return sfI18nNumberFormatter::getInstance($culture ? $culture : sfConfig::get('sf_culture'))
-              ->format($this->getAmount(), $format, (string)$this->getCurrency());
+              ->format($this->getAmount($scale, $roundingMode), $format, (string)$this->getCurrency());
   }
 
 }

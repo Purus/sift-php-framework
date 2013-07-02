@@ -52,7 +52,7 @@ $t->is($convertGbpToUsd->getAmount(), '15', 'getAmount() works ok');
 $convert = new sfMoneyCurrencyConverter('0.038783', 'CZK', 'EUR');
 $convert->setMoney($m11);
 
-$t->is($convert->getAmount(), '1.00', 'getAmount() returns converted amount in EUR');
+$t->is($convert->getAmount(2), '1.00', 'getAmount() returns converted amount in EUR');
 
 $t->diag('createFromIso');
 

@@ -64,8 +64,6 @@ class sfMoneyCurrency {
   {
     $name = strtoupper($name);
 
-    var_dump($name);
-
     if(!in_array($name, self::$validCurrencies))
     {
       throw new InvalidArgumentException(sprintf('Invalid currency "%s" given.', $name));
