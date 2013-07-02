@@ -88,22 +88,24 @@ class sfFeedItem {
     $this->description = $description;
   }
 
-  public function getDescription()
+  public function getDescription($maxLength = null)
   {
     if($this->description)
     {
-      return $this->description;
+      $description = $this->description;
     }
     else if($this->content)
     {
-      $description = strip_tags($this->content);
-      $description_max_length = sfConfig::get('app_feed_item_max_length', 100);
-      if(strlen($description) > $description_max_length)
+      try
       {
-        $description = substr($description, 0, $description_max_length - strlen($description)) . '[...]';
+        $description = sfHtml2Text::convert(sfText::stripLinks($this->content));
       }
-      return $description;
+      catch(Exception $e)
+      {
+      }
     }
+
+    return $maxLength ? sfText::truncate($description, $maxLength) : $description;
   }
 
   public function setContent($content)
