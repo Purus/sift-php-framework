@@ -313,7 +313,7 @@ function minify_javascript($js)
   {
     // create minifier instance
     $minifier = sfMinifier::factory(
-                  sfConfig::get('sf_javascript_minify.driver', 'JsSimple'),
+                  sfConfig::get('sf_javascript_minify.driver', 'JsMin'),
                   sfConfig::get('sf_javascript_minify.driver_options', array())
                 );
   }
