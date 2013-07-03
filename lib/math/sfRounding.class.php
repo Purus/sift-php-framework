@@ -71,10 +71,11 @@ class sfRounding {
    * @param integer $precision
    * @param string $mode
    * @param string $nearest Nearest (used only if mode is NEAREST)
+   * @param string $nearestMode Mode for nearest rounding (used only if mode is NEAREST)
    * @return string
    * @throws InvalidArgumentException If rounding mode is invalid
    */
-  public static function round($value, $precision = 0, $mode = self::HALF_UP, $nearest = null)
+  public static function round($value, $precision = 0, $mode = self::HALF_UP, $nearest = null, $nearestMode = self::HALF_UP)
   {
     switch($mode)
     {
@@ -110,7 +111,7 @@ class sfRounding {
         return sfMath::roundHalfOdd($value, $precision);
 
       case self::NEAREST:
-        return self::roundToNearest($value, $nearest, $precision, $mode);
+        return self::roundToNearest($value, $nearest, $precision, $nearestMode);
     }
 
     $r = new sfReflectionClass('sfRounding');
