@@ -7,7 +7,7 @@
  */
 
 /**
- * sfFlashFilter setups i18n for currect response (stylesheets, javascripts)
+ * sfI18nFilter sets the culture based on the current dimension
  *
  * @package Sift
  * @subpackage filter
@@ -21,73 +21,89 @@ class sfI18nFilter extends sfFilter {
    */
   public function execute($filterChain)
   {
-    $context = $this->getContext();
-    $response = $context->getResponse();
-
-    if(sfConfig::get('sf_i18n') && $this->isFirstCall()
-      && preg_match('|text/html|', $response->getContentType()))
+    // execute only if i18n is enabled
+    if(sfConfig::get('sf_i18n') && $this->isFirstCall())
     {
-      $found = false;
+      $culture = false;
       $dimension = sfConfig::get('sf_dimension', array());
-      $routing_defaults = sfConfig::get('sf_routing_defaults', array());
-
-      $culture_dimension = isset($dimension['culture']) ? $dimension['culture'] : isset($routing_defaults['sf_culture']) ?
-                      $routing_defaults['sf_culture'] : sfConfig::get('sf_i18n_default_culture');
-
-      // enabled cultures
       $cultures = sfConfig::get('sf_i18n_enabled_cultures', array());
-      foreach($cultures as $culture)
+      $routingDefaults = sfConfig::get('sf_routing_defaults', array());
+
+      $cultureDimension = isset($dimension['culture']) ? $dimension['culture'] :
+                           (isset($routingDefaults['sf_culture']) ? $routingDefaults['sf_culture'] :
+                           sfConfig::get('sf_i18n_default_culture'));
+
+      if(count($dimension))
       {
-        if($culture_dimension == $culture || $culture_dimension == substr($culture, 0, 2))
+        foreach($cultures as $_culture)
         {
-          $found = $culture;
-          break;
+          if($cultureDimension == $_culture
+            || $cultureDimension == substr($_culture, 0, 2))
+          {
+            $culture = $_culture;
+            break;
+          }
         }
       }
 
-      if($found)
+      if($culture)
       {
-        if($context->getUser()->getCulture() != $found)
+        $context = $this->getContext();
+        $user = $context->getUser();
+        $response = $context->getResponse();
+
+        if($user->getCulture() != $culture)
         {
-          $this->log(sprintf('Applying detected requested lang to session: %s', $found));
+          $user->setCulture($culture);
         }
 
-        sfConfig::set('sf_current_culture', $culture);
-
-        if(!sfConfig::get('sf_html5', false))
+        // we are generating html
+        if(preg_match('|text/html|', $response->getContentType()))
         {
-          $response->addMeta('language', $culture, true);
-        }
-
-        if($this->getParameter('add_stylesheet'))
-        {
-          if(sfConfig::get('sf_i18n_default_culture') != $culture)
+          // meta language is not valid in HTML5
+          if(!sfConfig::get('sf_html5', false))
           {
-            $stylesheet = substr($culture, 0, 2);
-            $this->log(sprintf('Adding custom culture stylesheet "%s.css"', $stylesheet));
-            $response->addStylesheet($stylesheet, 'last');
+            $response->addMeta('language', $culture, true);
           }
 
-          // adds javascript
-          $javascript = sprintf('i18n/%s.js', $culture);
-          $response->addJavascript($javascript, 'last');
+          if(sfConfig::get('sf_i18n_default_culture') != $culture)
+          {
+            if($this->getParameter('add_stylesheet'))
+            {
+              $response->addStylesheet($culture, 'last');
+            }
+
+            if($this->getParameter('add_javascript'))
+            {
+              $response->addJavascript(sprintf('i18n/%s.js', $culture), 'last');
+            }
+          }
         }
       }
     }
 
     $filterChain->execute();
 
-    $content = $this->getContext()->getResponse()->getContent();
+    if(sfConfig::get('sf_i18n_learning_mode'))
+    {
+      $this->addTranslationToolbox();
+    }
 
-    if(sfConfig::get('sf_i18n_learning_mode') &&
-      (false !== ($pos = strpos($content, '</body>'))))
+  }
+
+  /**
+   * Adds a toolbox for web based translation
+   *
+   */
+  protected function addTranslationToolbox()
+  {
+    $response = $this->getContext()->getResponse();
+    $content = $response->getContent();
+
+    if((false !== strpos($content, '</body>')))
     {
       sfLoader::loadHelpers(array('Tag', 'Url', 'Partial'));
-
-      $html = get_component('sfI18n', 'translationTool', array(
-
-      ));
-
+      $html = get_component('sfI18n', 'translationTool');
       // add web debug information to response content
       $newContent = str_ireplace('</body>', $html . '</body>', $content);
       if($content == $newContent)
@@ -95,14 +111,6 @@ class sfI18nFilter extends sfFilter {
         $newContent .= $html;
       }
       $response->setContent($newContent);
-    }
-  }
-
-  protected function log($message, $level = sfLogger::DEBUG)
-  {
-    if(sfConfig::get('sf_logging_enabled'))
-    {
-      sfContext::getInstance()->getLogger()->log(sprintf('{sfI18nFilter} %s', $message), $level);
     }
   }
 

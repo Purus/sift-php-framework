@@ -10,7 +10,11 @@ i18n:
   class: sfI18nFilter
   param:
     # add stylesheet for other languages?
+    # stylesheet path: culture.css
     add_stylesheet: false
+    # add javascript for other languages?
+    # javascript path: i18n/culture.js
+    add_javascript: false
     condition: %SF_I18N%
 
 web_debug:
