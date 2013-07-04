@@ -103,8 +103,6 @@ class sfUser {
       }
     }
 
-    sfConfig::set('sf_culture', $culture);
-
     $this->setCulture($culture);
   }
 
@@ -159,6 +157,8 @@ class sfUser {
         'culture' => $culture)));
 
     $this->culture = $culture;
+
+    sfConfig::set('sf_culture', $culture);
 
     // add the culture in the routing default parameters
     sfConfig::set('sf_routing_defaults', array_merge((array) sfConfig::get('sf_routing_defaults'), array('sf_culture' => $culture)));
