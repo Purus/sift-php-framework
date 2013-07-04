@@ -37,8 +37,8 @@ $result = $min->getResults();
 $t->ok(!empty($result['optimizedContent']), 'getResults() returns optimized result');
 
 $t->diag('Simple');
-$min = sfMinifier::factory('Simple');
-$t->isa_ok($min, 'sfMinifierDriverSimple', 'factory() works ok');
+$min = sfMinifier::factory('JsMin');
+$t->isa_ok($min, 'sfMinifierDriverJsMin', 'factory() works ok');
 $min->processFile(dirname(__FILE__).'/fixtures/foo.js');
 $result = $min->getResults();
 $t->ok(!empty($result['optimizedContent']), 'getResults() returns optimized result');
