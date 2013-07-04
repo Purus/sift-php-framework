@@ -1,6 +1,12 @@
 # compress application generated output, this is handled by apache
 AddOutputFilterByType DEFLATE application/json
 
+<FilesMatch "\.(ttf|otf|eot|woff)$">
+  <IfModule mod_headers.c>
+    Header set Access-Control-Allow-Origin "*"
+  </IfModule>
+</FilesMatch>
+
 <IfModule mod_rewrite.c>
 
   RewriteEngine On
