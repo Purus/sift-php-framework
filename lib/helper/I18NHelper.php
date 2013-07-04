@@ -39,7 +39,7 @@ function format_number_choice($text, $args = array(), $number, $catalogue = 'mes
 }
 
 /**
- * Formats country ISO code to
+ * Formats country ISO code
  *
  * @param string $country_iso
  * @param string $culture
@@ -62,10 +62,42 @@ function format_country($country_iso, $culture = null)
  */
 function format_language($language_iso, $culture = null)
 {
+  $language_iso = substr($language_iso, 0, 2);
+
   $languages = sfCulture::getInstance($culture === null ?
                   sfContext::getInstance()->getUser()->getCulture() : $culture)
                 ->getLanguages();
   return isset($languages[$language_iso]) ? $languages[$language_iso] : '';
+}
+
+/**
+ * Format the currency ISO to name
+ *
+ * @param string $currency_iso Currency ISO code
+ * @param string $culture
+ * @return string The currency name
+ */
+function get_currency_name($currency_iso, $culture = null)
+{
+  return sfCulture::getInstance($culture === null ?
+          sfContext::getInstance()->getUser()->getCulture() : $culture)
+          ->getCurrency($currency_iso);
+}
+
+/**
+ * Returns currency symbol for given $culture
+ *
+ * @param string $currency_iso Currency ISO code
+ * @param string $culture
+ * @return string The symbol or $currency_iso when symbol is not set
+ */
+function get_currency_symbol($currency_iso, $culture = null)
+{
+  $symbol = sfCulture::getInstance($culture === null ?
+          sfContext::getInstance()->getUser()->getCulture() : $culture)
+          ->getCurrencySymbol($currency_iso);
+
+  return $symbol ? $symbol : $currency_iso;
 }
 
 /**

@@ -669,8 +669,8 @@ class sfCulture {
    * Get the currency name in the current culture for the given code.
    *
    * @param  string $code A valid currency code
-   *
    * @return string The currency name in the current culture
+   * @throws InvalidArgumentException If the currency does not exist
    */
   public function getCurrency($code)
   {
@@ -682,6 +682,25 @@ class sfCulture {
     }
 
     return $currencies[$code][1];
+  }
+
+  /**
+   * Get the currency symbol in the current culture for the given code.
+   *
+   * @param string $code A valid currency code
+   * @return string|null The currency name in the current culture
+   * @throws InvalidArgumentException If the currency does not exist
+   */
+  public function getCurrencySymbol($code)
+  {
+    $currencies = $this->findInfo('currencies', true);
+
+    if(!isset($currencies[$code]))
+    {
+      throw new InvalidArgumentException(sprintf('The currency %s does not exist.', $code));
+    }
+
+    return $currencies[$code][0];
   }
 
   /**
