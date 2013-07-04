@@ -2,7 +2,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(10, new lime_output_color());
+$t = new lime_test(12, new lime_output_color());
 
 $t->is_deeply(sfRounding::round(10), '10', 'method is called.');
 $t->is_deeply(sfRounding::round('10.25', 1, sfRounding::NONE), '10.25', 'method NONE is called.');
@@ -13,6 +13,7 @@ $t->is_deeply(sfRounding::round('10.25', 1, sfRounding::HALF_UP), '10.3', 'metho
 $t->is_deeply(sfRounding::round('10.25', 1, sfRounding::HALF_EVEN), '10.2', 'method HALF_EVEN is called.');
 $t->is_deeply(sfRounding::round('10.25', 1, sfRounding::HALF_ODD), '10.3', 'method HALF_ODD is called.');
 $t->is_deeply(sfRounding::round('10.25', 1, sfRounding::NEAREST, '10'), '10.3', 'method HALF_ODD is called.');
+$t->is_deeply(sfRounding::round('10.25', 1, sfRounding::NEAREST, '50', sfRounding::UP), '10.5', 'method HALF_ODD is called.');
 
 try
 {
