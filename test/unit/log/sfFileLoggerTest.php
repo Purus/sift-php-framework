@@ -5,6 +5,7 @@ require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 $t = new lime_test(7);
 
 $file = sys_get_temp_dir().DIRECTORY_SEPARATOR.'sf_log_file.txt';
+
 if(file_exists($file))
 {
   unlink($file);
@@ -24,7 +25,7 @@ catch (sfConfigurationException $e)
 
 // ->log()
 $t->diag('->log()');
-$logger = new sfFileLogger(array('file' => $file));
+$logger = new sfFileLogger(array('file' => $file, 'date_format' => ''));
 $logger->log('foo');
 $lines = explode("\n", file_get_contents($file));
 $t->like($lines[0], '/foo/', '->log() logs a message to the file');
@@ -47,7 +48,7 @@ $logger->shutdown();
 unlink($file);
 
 
-$logger = new TestLogger(array('file' => $file));
+$logger = new TestLogger(array('file' => $file, 'date_format' => ''));
 $logger->log('foo');
 $t->is(file_get_contents($file), strftime($logger->getTimeFormat()).' Sift [info] foo'.PHP_EOL, '->initialize() can take a format option');
 
@@ -55,7 +56,7 @@ $t->is(file_get_contents($file), strftime($logger->getTimeFormat()).' Sift [info
 $logger->shutdown();
 unlink($file);
 
-$logger = new TestLogger(array('file' => $file, 'format' => '%message%'));
+$logger = new TestLogger(array('file' => $file, 'format' => '%message%', 'date_format' => ''));
 $logger->log('foo');
 $t->is(file_get_contents($file), 'foo', '->initialize() can take a format option');
 $logger->shutdown();
@@ -65,7 +66,7 @@ $t->diag('option: time_format');
 
 unlink($file);
 
-$logger = new TestLogger(array('file' => $file, 'time_format' => '%Y %m %d'));
+$logger = new TestLogger(array('file' => $file, 'time_format' => '%Y %m %d', 'date_format' => ''));
 $logger->log('foo');
 
 $t->is(file_get_contents($file), strftime($logger->getTimeFormat()).' Sift [info] foo'.PHP_EOL, '->initialize() can take a format option');
@@ -76,7 +77,7 @@ $t->diag('option: type');
 // close pointer
 $logger->shutdown();
 unlink($file);
-$logger = new TestLogger(array('file' => $file, 'type' => 'foo'));
+$logger = new TestLogger(array('file' => $file, 'type' => 'foo', 'date_format' => ''));
 $logger->log('foo');
 $t->is(file_get_contents($file), strftime($logger->getTimeFormat()).' foo [info] foo'.PHP_EOL, '->initialize() can take a format option');
 
@@ -84,4 +85,4 @@ $t->is(file_get_contents($file), strftime($logger->getTimeFormat()).' foo [info]
 $t->diag('->shutdown()');
 $logger->shutdown();
 
-// unlink($file);
+unlink($file);
