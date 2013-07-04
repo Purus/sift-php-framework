@@ -52,7 +52,7 @@ class sfText {
           $ending = '&hellip;', $exact = false, $considerHtml = true)
   {
     // get the charset
-    $charset = sfConfig::get('sf_charset');
+    $charset = sfConfig::get('sf_charset', 'UTF-8');
     $ending  = mb_convert_encoding($ending, sfConfig::get('sf_charset'), 'HTML-ENTITIES');
 
     if($considerHtml)
