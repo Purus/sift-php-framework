@@ -61,7 +61,6 @@ $t->diag('javascript_tag');
 $t->is(javascript_tag('alert("Jesus is Lord");'), '<script type="text/javascript">
 //<![CDATA[
 alert("Jesus is Lord");
-
 //]]>
 </script>', 'javascript_tag() wraps the content in CDATA section');
 
@@ -69,5 +68,4 @@ sfHtml::setXhtml(false);
 
 $t->is(javascript_tag('alert("Jesus is Lord");'), '<script type="text/javascript">
 alert("Jesus is Lord");
-
 </script>', 'javascript_tag() does not wrap the content if sfHtml::isXhtml() returns false.');

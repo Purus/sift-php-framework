@@ -254,7 +254,7 @@ function end_javascript()
 function _compress_javascript($buffer)
 {
   // do not compress when minify is disabled
-  if(!sfConfig::get('sf_javascript_minify.enabled', true))
+  if(!sfConfig::get('sf_javascript_minify.enabled'))
   {
     return $buffer;
   }
