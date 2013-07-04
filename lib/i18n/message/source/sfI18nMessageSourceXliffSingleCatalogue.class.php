@@ -68,7 +68,7 @@ class sfI18nMessageSourceXliffSingleCatalogue extends sfI18nMessageSourceXliff {
    * @param string the catalogue of the translation.
    * @return boolean true if translation was updated, false otherwise.
    */
-  public function update($text, $target, $comments = '', $catalogue = null)
+  public function update($text, $target, $comments = '', $catalogue = 'messages')
   {
     return parent::update($text, $target, $comments, $this->catalogue);
   }

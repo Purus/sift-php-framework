@@ -356,7 +356,7 @@ class sfI18nMessageSourceXliff extends sfI18nMessageSource {
    * @param string the catalogue to save to.
    * @return boolean true if translation was updated, false otherwise.
    */
-  public function update($text, $target, $comments, $catalogue = 'messages')
+  public function update($text, $target, $comments = '', $catalogue = 'messages')
   {
     $variants = $this->getVariants($catalogue);
     if($variants)
