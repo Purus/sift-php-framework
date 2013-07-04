@@ -50,5 +50,6 @@ $item_params = array(
 $item = new sfFeedItem();
 $item->initialize($item_params);
 $t->is($item->getDescription(), strip_tags($item_params['content']), 'getDescription() gets the stripped item content when no description is defined');
-sfConfig::set('app_feed_item_max_length', 5);
-$t->is($item->getDescription(), 'hey, [...]', 'getDescription() gets the stripped item content truncated to a maximaum size when no description is defined');
+
+
+$t->is($item->getDescription(10), 'hey,[...]', 'getDescription() gets the stripped item content truncated to a maximaum size when no description is defined');

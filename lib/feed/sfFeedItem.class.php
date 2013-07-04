@@ -88,7 +88,7 @@ class sfFeedItem {
     $this->description = $description;
   }
 
-  public function getDescription($maxLength = null)
+  public function getDescription($maxLength = null, $ending = '[...]')
   {
     if($this->description)
     {
@@ -105,7 +105,8 @@ class sfFeedItem {
       }
     }
 
-    return $maxLength ? sfText::truncate($description, $maxLength) : $description;
+    return !is_null($maxLength) ? sfText::truncate($description, $maxLength, $ending, false, false) :
+      $description;
   }
 
   public function setContent($content)
