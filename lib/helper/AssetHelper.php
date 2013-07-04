@@ -256,9 +256,22 @@ function stylesheet_tag()
       if(isset($sourceOptions['less'])
               || preg_match('/\.less$/i', $source))
       {
-        $source = sfLessCompiler::getInstance()->compileStylesheetIfNeeded(
-                stylesheet_path($source)
-        );
+        $source = stylesheet_path($source);
+
+        // is base domain is affecting the path, we need to take care of it
+        if($baseDomain = sfConfig::get('sf_base_domain'))
+        {
+          $source = preg_replace(sprintf('~https?://%s%s~', $baseDomain,
+              sfContext::getInstance()->getRequest()->getRelativeUrlRoot()), '', $source);
+        }
+
+        $source = sfLessCompiler::getInstance()->compileStylesheetIfNeeded($source);
+
+        if($baseDomain)
+        {
+          $source = stylesheet_path($source);
+        }
+
         unset($sourceOptions['less']);
       }
       else
@@ -477,9 +490,10 @@ function _compute_public_path($source, $dir, $ext, $absolute = false)
     $source = $sf_relative_url_root . $source;
   }
 
-  $baseDomain = sfConfig::get('sf_base_domain');
   $host = $request->getHost();
-  if($baseDomain && $baseDomain != $host)
+
+  $baseDomain = sfConfig::get('sf_base_domain');
+  if($baseDomain && $baseDomain != $request->getHost())
   {
     $absolute = true;
     $host = $baseDomain;

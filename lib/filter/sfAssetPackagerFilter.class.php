@@ -219,9 +219,22 @@ class sfAssetPackagerFilter extends sfFilter {
             // less support
             if(isset($options['less']) || preg_match('/\.less$/i', $file))
             {
-              $file = sfLessCompiler::getInstance()->compileStylesheetIfNeeded(
-                      stylesheet_path($file)
-              );
+              $file = stylesheet_path($file);
+
+              // is base domain is affecting the path, we need to take care of it
+              if($baseDomain = sfConfig::get('sf_base_domain'))
+              {
+                $file = preg_replace(sprintf('~https?://%s%s~', $baseDomain,
+                    sfContext::getInstance()->getRequest()->getRelativeUrlRoot()), '', $file);
+              }
+
+              $file = sfLessCompiler::getInstance()->compileStylesheetIfNeeded($file);
+
+              if($baseDomain)
+              {
+                $file = stylesheet_path($file);
+              }
+
               unset($options['less']);
             }
             else
