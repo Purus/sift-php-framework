@@ -73,6 +73,7 @@ $output = <<<EOF
 <label for="test_password" class="required" id="test_password_label">Password <span class="required"><span>*</span></span></label>
 <input type="password" name="test[password]" aria-labelledby="test_password_label" aria-required="true" id="test_password" />
 </div>
+
 </div>
 
 EOF;
