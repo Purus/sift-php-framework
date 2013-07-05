@@ -15,6 +15,13 @@
 class sfI18nApplicationExtract extends sfI18nExtract
 {
   /**
+   * Regular expression to match module and catalogue from domain
+   *
+   * @var string
+   */
+  public static $moduleCatalogueRegexp = '/^([a-zA-Z_-]+)\/([a-zA-Z_-]+)$/';
+
+  /**
    * Array of required options
    *
    * @var array
@@ -294,6 +301,8 @@ class sfI18nApplicationExtract extends sfI18nExtract
 
       $domain = $this->replaceConstants($domain);
 
+      var_dump($domain);
+
       // we have global application catalogue
       if($domain == self::UNKNOWN_DOMAIN ||
               (strpos($domain, '/') === false && $domain == $this->catalogueName))
@@ -331,9 +340,9 @@ class sfI18nApplicationExtract extends sfI18nExtract
       }
       else
       {
-        if(preg_match('/^([a-zA-Z]+)\/([a-zA-Z]+)$/', $domain, $matches))
+        if(preg_match(self::$moduleCatalogueRegexp, $domain, $matches))
         {
-          $module    = $matches[1];
+          $module = $matches[1];
           $catalogue = $matches[2];
           // FIXME: can be from plugin!
           $key = $this->getOption('app_dir') . '/' . $this->getOption('module_dir_name') .
