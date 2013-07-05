@@ -264,15 +264,15 @@ class sfI18n extends sfConfigurable {
     {
       $moduleName = $matches[1];
       $catalogue  = $matches[2];
-      $directory  = sfLoader::getI18NDir($moduleName);
-      $hash       = sprintf('%s_%s', $directory, $catalogue);
+      $directory  = sfLoader::getI18NDirs($moduleName);
+      $hash       = sprintf('%s_%s', join('', $directory), $catalogue);
     }
     // we have any module
     elseif($moduleName = $this->context->getModuleName())
     {
-      $directory = sfLoader::getI18NDir($moduleName);
+      $directory = sfLoader::getI18NDirs($moduleName);
       // current module is taken
-      $hash = sprintf('%s_%s', $directory, $catalogue);
+      $hash = sprintf('%s_%s', join('', $directory), $catalogue);
     }
 
     // nothing found, unknown directory
@@ -283,7 +283,30 @@ class sfI18n extends sfConfigurable {
 
     if(!isset($this->sources[$hash]))
     {
-      $source = $this->createMessageSource($this->getOption('source_type'), $directory);
+      // we have directories
+      if(is_array($directory))
+      {
+        // we will create the aggregate source only if there are more sources
+        if(count($directory) > 1)
+        {
+          $sources = array();
+          foreach($directory as $dir)
+          {
+            $sources[] = $this->createMessageSource($this->getOption('source_type'), $dir);
+          }
+          // we have to create aggregate source
+          $source = new sfI18nMessageSourceAggregate($sources);
+        }
+        else
+        {
+          $source = $this->createMessageSource($this->getOption('source_type'), $directory[0]);
+        }
+      }
+      else
+      {
+        $source = $this->createMessageSource($this->getOption('source_type'), $directory);
+      }
+
       $this->sources[$hash] = array(
         'source'    => &$source,
         'formatter' => $this->createMessageFormatter($source)

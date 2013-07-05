@@ -243,6 +243,43 @@ class sfLoader {
   }
 
   /**
+   * Gets the i18n directories to use for a given module.
+   *
+   * @param string $moduleName The module name
+   *
+   * @return array An array of i18n directories
+   */
+  public static function getI18NDirs($moduleName)
+  {
+    $dirs = array();
+
+    $suffix = $moduleName . DS . sfConfig::get('sf_app_module_i18n_dir_name');
+
+    // application
+    if(is_dir($dir = sfConfig::get('sf_app_module_dir') . DS . $suffix))
+    {
+      $dirs[] = $dir;
+    }
+
+    $moduleDirName = sfConfig::get('sf_app_module_dir_name');
+
+    foreach(sfConfig::get('sf_plugins', array()) as $plugin)
+    {
+      if(is_dir($dir = sfConfig::get('sf_plugins_dir') . DS . $plugin . DS . $moduleDirName . DS . $suffix))
+      {
+        $dirs[] = $dir;
+      }
+    }
+
+    if(is_dir($dir = sfConfig::get('sf_sift_data_dir') . DS . $moduleDirName . DS . $suffix))
+    {
+      $dirs[] = $dir;
+    }
+
+    return $dirs;
+  }
+
+  /**
    * Gets directories where template files are stored for a generator class and a specific theme.
    *
    * @param string The generator class name

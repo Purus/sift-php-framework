@@ -512,6 +512,7 @@ class sfCoreAutoload
     'sfi18ngettext' => 'i18n/message/source/gettext/sfI18nGettext.class.php',
     'sfi18ngettextmo' => 'i18n/message/source/gettext/sfI18nGettextMo.class.php',
     'sfi18ngettextpo' => 'i18n/message/source/gettext/sfI18nGettextPo.class.php',
+    'sfi18nmessagesourceaggregate' => 'i18n/message/source/sfI18nMessageSourceAggregate.class.php',
     'sfi18nmessagesourcegettext' => 'i18n/message/source/sfI18nMessageSourceGettext.class.php',
     'sfi18nmessagesourcegettextsinglecatalogue' => 'i18n/message/source/sfI18nMessageSourceGettextSingleCatalogue.class.php',
     'sfi18nmessagesourcexliff' => 'i18n/message/source/sfI18nMessageSourceXliff.class.php',
