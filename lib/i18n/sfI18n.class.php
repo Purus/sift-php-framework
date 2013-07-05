@@ -15,6 +15,13 @@
 class sfI18n extends sfConfigurable {
 
   /**
+   * Regular expression to match module and catalogue from domain
+   *
+   * @var string
+   */
+  public static $moduleCatalogueRegexp = '/^([a-zA-Z_-]+)\/([a-zA-Z_-]+)$/';
+
+  /**
    * Array of sfII18nMessageSources
    *
    * @var array
@@ -253,7 +260,7 @@ class sfI18n extends sfConfigurable {
     }
     // we have module/catalogue pair
     elseif(strpos($catalogue, '/') !== false
-        && preg_match('/^([a-zA-Z]+)\/([a-zA-Z]+)$/i', $catalogue, $matches))
+        && preg_match(self::$moduleCatalogueRegexp, $catalogue, $matches))
     {
       $moduleName = $matches[1];
       $catalogue  = $matches[2];

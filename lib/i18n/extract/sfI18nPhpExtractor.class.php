@@ -40,15 +40,7 @@ class sfI18nPhpExtractor extends sfConfigurable implements sfII18nExtractor
 
     foreach($functions as $function)
     {
-      $toBeTranslated = $function['args'][0];
-      if(isset($function['args'][2]))
-      {
-        $domain = $function['args'][2];
-      }
-      else
-      {
-        $domain = sfI18nExtract::UNKNOWN_DOMAIN;
-      }
+      list($domain, $toBeTranslated) = $this->getDomainAndString($function);
 
       if(!isset($strings[$domain]))
       {
@@ -65,6 +57,38 @@ class sfI18nPhpExtractor extends sfConfigurable implements sfII18nExtractor
     }
 
     return $strings;
+  }
+
+  /**
+   * Returns domain and string to be translated from the extracted function
+   *
+   * @param array $function
+   * @return array ($domain, $stringToBeTranslated)
+   */
+  protected function getDomainAndString($function)
+  {
+    $domain = sfI18nExtract::UNKNOWN_DOMAIN;
+
+    $toBeTranslated = $function['args'][0];
+    // format_number_choice has the catalogue parameter as 4th parameter
+    if($function['name'] == 'format_number_choice')
+    {
+      if(isset($function['args'][3]))
+      {
+        $domain = $function['args'][3];
+      }
+    }
+    else
+    {
+      if(isset($function['args'][2]))
+      {
+        $domain = $function['args'][2];
+      }
+    }
+
+    return array(
+      $domain, $toBeTranslated
+    );
   }
 
   /**

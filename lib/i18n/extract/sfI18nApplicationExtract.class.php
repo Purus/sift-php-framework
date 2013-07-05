@@ -15,13 +15,6 @@
 class sfI18nApplicationExtract extends sfI18nExtract
 {
   /**
-   * Regular expression to match module and catalogue from domain
-   *
-   * @var string
-   */
-  public static $moduleCatalogueRegexp = '/^([a-zA-Z_-]+)\/([a-zA-Z_-]+)$/';
-
-  /**
    * Array of required options
    *
    * @var array
@@ -340,7 +333,7 @@ class sfI18nApplicationExtract extends sfI18nExtract
       }
       else
       {
-        if(preg_match(self::$moduleCatalogueRegexp, $domain, $matches))
+        if(preg_match(sfI18n::$moduleCatalogueRegexp, $domain, $matches))
         {
           $module = $matches[1];
           $catalogue = $matches[2];
