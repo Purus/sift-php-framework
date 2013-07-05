@@ -39,6 +39,7 @@ class sfI18nApplicationExtract extends sfI18nExtract
   public function extract()
   {
     $this->extractPhpFiles();
+    $this->extractPhpTemplates();
     $this->extractModules();
     $this->extractMenuYamlFiles();
     $this->extractDashboardWidgetsYamlFiles();
@@ -60,6 +61,18 @@ class sfI18nApplicationExtract extends sfI18nExtract
             ->not_name('form') // we are extracting forms separatelly
             ->in($this->getOption('app_dir').'/'.$this->getOption('lib_dir_name'));
     $extracted = $this->extractFromPhpFiles($directories);
+    $this->sortExtracted($extracted);
+  }
+
+  /**
+   * Extracts php templates belonging to the application
+   *
+   */
+  protected function extractPhpTemplates()
+  {
+    $extracted = $this->extractFromPhpFiles(array(
+      $this->getOption('app_dir').'/'.$this->getOption('template_dir_name')
+    ));
     $this->sortExtracted($extracted);
   }
 
