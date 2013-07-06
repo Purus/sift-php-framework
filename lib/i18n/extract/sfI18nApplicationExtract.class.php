@@ -294,8 +294,6 @@ class sfI18nApplicationExtract extends sfI18nExtract
 
       $domain = $this->replaceConstants($domain);
 
-      var_dump($domain);
-
       // we have global application catalogue
       if($domain == self::UNKNOWN_DOMAIN ||
               (strpos($domain, '/') === false && $domain == $this->catalogueName))

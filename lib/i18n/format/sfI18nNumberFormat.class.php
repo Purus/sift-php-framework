@@ -147,13 +147,6 @@ class sfI18nNumberFormat {
   {
     if(is_int($type))
     {
-      if(!isset($this->data['numberPatterns'][$type]))
-      {
-              var_dump($type);
-      var_dump($this->data);
-      exit;
-      }
-
       $this->pattern = $this->parsePattern($this->data['numberPatterns'][$type]);
     }
     else
