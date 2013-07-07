@@ -66,6 +66,13 @@
 class sfI18nChoiceFormatter {
 
   /**
+   * Instance holder
+   *
+   * @var sfI18nChoiceFormatter
+   */
+  protected static $instance;
+
+  /**
    * The pattern to validate a set notation
    * @var string
    */
@@ -84,20 +91,35 @@ class sfI18nChoiceFormatter {
   protected $inf;
 
   /**
+   * Get instance of the choice formatter
+   *
+   * @return sfI18nChoiceFormatter
+   */
+  public static function getInstance()
+  {
+    if(!isset(self::$instance))
+    {
+      self::$instance = new sfI18nChoiceFormatter();
+    }
+    return self::$instance;
+  }
+
+  /**
    * Constructor.
    */
-  function __construct()
+  public function __construct()
   {
     $this->inf = -log(0);
   }
 
   /**
    * Determine if the given number belongs to a given set
+   *
    * @param float the number to test.
    * @param string the set, in set notation.
    * @return boolean true if number is in the set, false otherwise.
    */
-  function isValid($number, $set)
+  public function isValid($number, $set)
   {
     $n = preg_match_all($this->validate, $set, $matches, PREG_SET_ORDER);
 
@@ -174,7 +196,7 @@ class sfI18nChoiceFormatter {
    * @param string the string containing the choices
    * @return array array($sets, $strings)
    */
-  function parse($string)
+  public function parse($string)
   {
     $n = preg_match_all($this->parse, $string, $matches, PREG_OFFSET_CAPTURE);
     $sets = array();

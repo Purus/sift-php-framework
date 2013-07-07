@@ -23,12 +23,10 @@
  * @return string
  * @throws sfException If choice cannot be formatted
  */
-function format_number_choice($text, $args = array(), $number, $catalogue = 'messages')
+function format_number_choice($text, $args, $number, $catalogue = 'messages')
 {
   $translated = __($text, $args, $catalogue);
-
-  $choice = new sfI18nChoiceFormatter();
-  $retval = $choice->format($translated, $number);
+  $retval = sfI18nChoiceFormatter::getInstance()->format($translated, $number);
 
   if($retval === false)
   {
