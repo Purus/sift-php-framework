@@ -1,5 +1,30 @@
-# compress application generated output, this is handled by apache
-AddOutputFilterByType DEFLATE application/json
+# ----------------------------------------
+# Apache configuration
+# ----------------------------------------
+<IfModule mod_deflate.c>
+  # compress application generated output, this is handled by apache
+  AddOutputFilterByType DEFLATE application/json
+  # Compress compressible fonts
+  AddOutputFilterByType DEFLATE font/ttf font/otf image/svg+xml
+</IfModule>
+
+<IfModule mod_mime.c>
+  # Add correct content-type for fonts
+  AddType application/vnd.ms-fontobject .eot
+  AddType font/ttf .ttf
+  AddType font/otf .otf
+  AddType font/x-woff .woff
+  AddType image/svg+xml .svg
+</IfModule>
+
+<IfModule mod_expires.c>
+  # Add a far future Expires header for fonts
+  ExpiresByType application/vnd.ms-fontobject "access plus 1 year"
+  ExpiresByType font/ttf "access plus 1 year"
+  ExpiresByType font/otf "access plus 1 year"
+  ExpiresByType font/x-woff "access plus 1 year"
+  ExpiresByType image/svg+xml "access plus 1 year"
+</IfModule>
 
 <FilesMatch "\.(ttf|otf|eot|woff)$">
   <IfModule mod_headers.c>
@@ -12,6 +37,10 @@ AddOutputFilterByType DEFLATE application/json
   RewriteEngine On
   RewriteBase /
 
+  # redirect to domain with www prefix to domain without the prefix
+  RewriteCond %{HTTP_HOST}//s%{HTTPS} ^www\.(.*)//((s)on|s.*)$ [NC]
+  RewriteRule ^ http%3://%1%{REQUEST_URI} [L,R=301]
+
   # redirect index.php to /
   # also handles the redirect of "index.php/foo/bar" to "/foo/bar"
   RewriteCond %{THE_REQUEST} ^[^/]+/index\.php/?(.*)(\?[^\ ]*)?\ HTTP/ [NC]
@@ -22,10 +51,6 @@ AddOutputFilterByType DEFLATE application/json
   RewriteCond %{REQUEST_FILENAME} -f [OR]
   RewriteCond %{REQUEST_FILENAME} -d
   RewriteRule .* - [L]
-
-  # redirect to domain with www prefix to domain without the prefix
-  RewriteCond %{HTTP_HOST}//s%{HTTPS} ^www\.(.*)//((s)on|s.*)$ [NC]
-  RewriteRule ^ http%3://%1%{REQUEST_URI} [L,R=301]
 
   # minifier for javascripts and CSS stylesheets
   RewriteRule ^min/([0-9]+)/([a-z]=.*) /min/index.php?$2&v=$1 [L,NE]
