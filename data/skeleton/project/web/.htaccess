@@ -54,6 +54,8 @@
 
   # minifier for javascripts and CSS stylesheets
   RewriteRule ^min/([0-9]+)/([a-z]=.*) /min/index.php?$2&v=$1 [L,NE]
+  # resizer for images
+  RewriteRule ^(.*\.\d+x\d+\.(jpg|jpeg|gif|png)) /resize/index.php?img=$1 [L,NE]
 
   # redirect to urls with slash appended
   # url like: /foo will be redirected to /foo/
