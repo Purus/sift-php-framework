@@ -1,7 +1,8 @@
 # You can find more information about this file on:
 # https://bitbucket.org/mishal/sift-php-framework/wiki/I18n
 all:
-  default_culture:  cs_CZ
+  default_culture: cs_CZ
+  enabled_cultures: [cs_CZ]
   param:
     sources:
       application:
