@@ -404,37 +404,6 @@ abstract class sfCliBaseTask extends sfCliCommandApplicationTask
   }
 
   /**
-   * Reloads tasks.
-   *
-   * Useful when you install plugins with tasks and if you want to use them with the runTask() method.
-   */
-  protected function reloadTasks()
-  {
-    if (null === $this->commandApplication)
-    {
-      return;
-    }
-
-    $this->configuration = $this->createConfiguration(null, null);
-
-    $this->commandApplication->clearTasks();
-    $this->commandApplication->loadTasks($this->configuration);
-
-    $disabledPluginsRegex = sprintf('#^(%s)#', implode('|', array_diff($this->configuration->getAllPluginPaths(), $this->configuration->getPluginPaths())));
-    $tasks = array();
-    foreach (get_declared_classes() as $class)
-    {
-      $r = new Reflectionclass($class);
-      if ($r->isSubclassOf('sfCliTask') && !$r->isAbstract() && !preg_match($disabledPluginsRegex, $r->getFileName()))
-      {
-        $tasks[] = new $class($this->dispatcher, $this->formatter);
-      }
-    }
-
-    $this->commandApplication->registerTasks($tasks);
-  }
-
-  /**
    * Returns path to php executable.
    *
    * @return string Path to php executable
