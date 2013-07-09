@@ -210,6 +210,44 @@ class sfLoader {
   }
 
   /**
+   * Gets the decorator directories.
+   *
+   * @return array An array of the decorator directories
+   */
+  public static function getDecoratorDirs()
+  {
+    $dimensionDirs = sfConfig::get('sf_dimension_dirs', array());
+    $dirs = array();
+    if(is_array($dimensionDirs))
+    {
+      $templateDir = sfConfig::get('sf_app_template_dir');
+      foreach($dimensionDirs as $dir)
+      {
+        $dirs[] = $templateDir . DS . $dir;
+      }
+    }
+    $dirs[] = sfConfig::get('sf_app_template_dir');
+    return $dirs;
+  }
+
+  /**
+   * Gets the decorator directory for a given template.
+   *
+   * @param string $template The template file
+   * @return string A template directory
+   */
+  public static function getDecoratorDir($template)
+  {
+    foreach(self::getDecoratorDirs() as $dir)
+    {
+      if(is_readable($dir.'/'.$template))
+      {
+        return $dir;
+      }
+    }
+  }
+
+  /**
    * Gets the i18n directory to use for a given module.
    *
    * @param string The module name

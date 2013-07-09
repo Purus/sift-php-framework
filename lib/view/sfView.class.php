@@ -312,12 +312,12 @@ abstract class sfView
     $this->viewName   = $viewName;
 
     $this->context = $context;
+
+    sfOutputEscaper::markClassesAsSafe(array('sfForm', 'sfFormField', 'sfFormFieldSchema'));
+
     $this->attributeHolder = new sfParameterHolder();
     $this->parameterHolder = new sfParameterHolder();
-
     $this->parameterHolder->add(sfConfig::get('mod_'.strtolower($moduleName).'_view_param', array()));
-
-    $this->decoratorDirectory = sfConfig::get('sf_app_template_dir');
 
     // include view configuration
     $this->configure();
@@ -531,7 +531,22 @@ abstract class sfView
    */
   public function setDecoratorTemplate($template)
   {
-    if (sfToolkit::isPathAbsolute($template))
+    if(false === $template)
+    {
+      $this->setDecorator(false);
+      return;
+    }
+    elseif(null === $template)
+    {
+      return;
+    }
+
+    if(strpos($template, '.') === false)
+    {
+      $template .= $this->getExtension();
+    }
+
+    if(sfToolkit::isPathAbsolute($template))
     {
       $this->decoratorDirectory = dirname($template);
       $this->decoratorTemplate  = basename($template);
@@ -539,11 +554,7 @@ abstract class sfView
     else
     {
       $this->decoratorTemplate = $template;
-    }
-
-    if (!strpos($this->decoratorTemplate, '.'))
-    {
-      $this->decoratorTemplate .= $this->getExtension();
+      $this->decoratorDirectory = sfLoader::getDecoratorDir($template);
     }
 
     // set decorator status
@@ -617,6 +628,7 @@ abstract class sfView
     }
     else
     {
+      $this->directory = sfLoader::getTemplateDir($this->moduleName, $template);
       $this->template = $template;
     }
   }

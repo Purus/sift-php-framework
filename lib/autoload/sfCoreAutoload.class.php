@@ -842,7 +842,6 @@ class sfCoreAutoload
     'sfoutputescaperobjectdecorator' => 'view/escaper/sfOutputEscaperObjectDecorator.class.php',
     'sfoutputescapersafe' => 'view/escaper/sfOutputEscaperSafe.class.php',
     'sfjavascripttemplatecompilerdriverhandlebars' => 'view/javascript_template/sfJavascriptTemplateCompilerDriverHandlebars.class.php',
-    'sfdimensionsview' => 'view/sfDimensionsView.class.php',
     'sfijavascripttemplatecompiler' => 'view/sfIJavascriptTemplateCompiler.interface.php',
     'sfjavascriptpartialview' => 'view/sfJavascriptPartialView.class.php',
     'sfjavascripttemplatecompiler' => 'view/sfJavascriptTemplateCompiler.class.php',
