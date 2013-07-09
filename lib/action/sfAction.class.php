@@ -721,16 +721,24 @@ abstract class sfAction extends sfComponent
   }
 
   /**
-   * Setup layout to minimal (only if found)
+   * Setup layout to $layout. The layout will be set only if the layout template does exist
+   * in the decorator directory(ies).
    *
+   * @param string $layout Layout.
    */
-  protected function setupLayout($layout = null)
+  protected function setupLayout($layout = 'minimal')
   {
-    if(is_null($layout))
+    $extension = '.php';
+    if($class = sfConfig::get('mod_'.strtolower($this->getModuleName()).'_view_class'))
     {
-      $layout = 'minimal';
+      $reflection = new sfReflectionClass(sprintf('%sView', $class));
+      if(!$reflection->isAbstract())
+      {
+        $view = $reflection->newInstance();
+        $extension = $view->getExtension();
+      }
     }
-    if(is_readable(sfConfig::get('sf_app_template_dir') . DIRECTORY_SEPARATOR . sprintf('%s.php', $layout)))
+    if(sfLoader::getDecoratorDir($layout . $extension))
     {
       $this->setLayout($layout);
     }
@@ -867,7 +875,7 @@ abstract class sfAction extends sfComponent
   /**
    * Download a file using its absolute path
    *
-   * @param string g$pathOrData
+   * @param string $file Absolute path to a file
    * @param array $options array of options
    */
   protected function downloadFile($file, array $options = array())
