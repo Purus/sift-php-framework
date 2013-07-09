@@ -330,7 +330,7 @@ class sfContext {
   }
 
   /**
-   * Retrieve the curretn view instance for this context.
+   * Retrieve the current view instance for this context.
    *
    * @return sfView The currently view instance, if one is set,
    *                otherwise null.
