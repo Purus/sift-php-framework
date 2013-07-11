@@ -415,4 +415,15 @@ class sfText {
 		return $beg.$ellipsis.$end;
 	}
 
+  /**
+   * Does the given $string contain HTML?
+   *
+   * @param string $string
+   * @return boolean
+   */
+  public static function isHtml($string)
+  {
+    return preg_match("/<[^<]+>/", $string) != 0;
+  }
+
 }
