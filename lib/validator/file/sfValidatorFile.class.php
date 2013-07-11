@@ -240,6 +240,9 @@ class sfValidatorFile extends sfValidatorBase {
             (is_array($value) && isset($value['error']) && UPLOAD_ERR_NO_FILE === $value['error']);
   }
 
+  /**
+   * @see sfValidatorBase
+   */
   public function getActiveMessages()
   {
     return array_merge(parent::getActiveMessages(), array(
@@ -252,9 +255,13 @@ class sfValidatorFile extends sfValidatorBase {
     ));
   }
 
+  /**
+   * @see sfValidatorBase
+   */
   public function getJavascriptValidationRules()
   {
     $rules = parent::getJavascriptValidationRules();
+
     if($maxSize = $this->getOption('max_size'))
     {
       $rules[sfFormJavascriptValidation::FILE_SIZE] = $maxSize;
@@ -262,37 +269,11 @@ class sfValidatorFile extends sfValidatorBase {
 
     if($mime_types = $this->getOption('mime_types'))
     {
-      $mimeTypes = is_array($mime_types) ?
-              $mime_types :
-              $this->getMimeTypesFromCategory($mime_types);
-
-      $extensions = array();
-      foreach($mimeTypes as $mime)
-      {
-        $extensions[sfMimeType::getExtensionFromType($mime, 'unknown', false)] = true;
-      }
-
-      // fix extensions
-      $extensions = $this->fixFileExtensions($extensions);
-
-      // unset in case there is unknown
-      unset($extensions['unknown']);
-      $extensions = join('|', array_keys($extensions));
-
-      $rules[sfFormJavascriptValidation::FILE_EXTENSION] = $extensions;
+      $mimeTypes = is_array($mime_types) ? $mime_types : $this->getMimeTypesFromCategory($mime_types);
+      $rules[sfFormJavascriptValidation::FILE_EXTENSION] = join(',', $mimeTypes);
     }
 
     return $rules;
-  }
-
-  protected function fixFileExtensions($extensions)
-  {
-    if(isset($extensions['jpg']))
-    {
-      $extensions['jpeg'] = true;
-    }
-
-    return $extensions;
   }
 
 }
