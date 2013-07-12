@@ -1,7 +1,10 @@
-
+// FIXME: move to global variables
 @colorboxZIndex: 10001;
 @colorboxContentBackground: #fff;
 @colorboxTextColor; #fff;
+
+@import '_mixins.less';
+@import '_variables.less';
 
 #colorbox {
   position: absolute;
@@ -9,7 +12,7 @@
   left: 0;
   z-index: @colorboxZIndex;
   overflow: hidden;
-  .box-shadow(10px 5px 10px rgba(0,0,0,0.8));
+  .box-shadow(10px 5px 10px rgba(0,0,0,0.2));
 }
 
 #cboxOverlay {
@@ -22,7 +25,6 @@
   width: 100%;
   height: 100%;
   background: @black;
-  #gradient > .vertical(@black, @grayDark);
 }
 
 #cboxWrapper {
@@ -48,13 +50,12 @@
   margin: 0;
   position: absolute;
   top: 0;
-  left: 0;
-  text-align: center;
+  left: 0.5em;
   width: 70%;
   color: inherit;
   z-index: @colorboxZIndex+1;
   line-height: @baseLineHeight * 2;
-  font-weight: bold;
+  font-weight: normal;
 }
 
 #cboxLoadingOverlay {
@@ -79,9 +80,66 @@
 #cboxNext,
 #cboxClose,
 #cboxSlideshow {
-  .btn;
+
   position: absolute;
-  width: 2em;
+
+  // Copied from buttons.less
+  display: inline-block;
+  .ie7-inline-block();
+  padding: 4px 12px;
+  margin-bottom: 0; // For input.btn
+  font-size: @baseFontSize;
+  line-height: @baseLineHeight;
+  *line-height: @baseLineHeight;
+  text-align: center;
+  vertical-align: middle;
+  cursor: pointer;
+  .buttonBackground(@btnBackground, @btnBackgroundHighlight, @white);
+  color: @btnColor;
+  border: 1px solid @btnBorder;
+  *border: 0; // Remove the border to prevent IE7's black border on input:focus
+  border-bottom-color: darken(@btnBorder, 10%);
+  .border-radius(@baseBorderRadius);
+  .ie7-restore-left-whitespace(); // Give IE7 some love
+  .box-shadow(~"inset 0 1px 0 rgba(255,255,255,.2), 0 1px 2px rgba(0,0,0,.05)");
+
+  // Hover state
+  &:hover {
+    color: lighten(@btnColor, 20%);
+    text-decoration: none;
+    // background-color: darken(@white, 10%);
+    // *background-color: darken(@white, 15%); /* Buttons in IE7 don't get borders, so darken on hover */
+    // background-position: 0 -15px;
+
+    // transition is only when going to hover, otherwise the background
+    // behind the gradient (there for IE<=9 fallback) gets mismatched
+    .transition(background-position .1s linear);
+  }
+
+  // Focus state for keyboard and accessibility
+  &:focus {
+    .tab-focus();
+  }
+
+  // Active state
+  &.active,
+  &:active {
+    background-color: darken(@btnBackground, 10%);
+    background-color: darken(@btnBackground, 15%) e("\9");
+    background-image: none;
+    outline: 0;
+    .box-shadow(~"inset 0 2px 4px rgba(0,0,0,.15), 0 1px 2px rgba(0,0,0,.05)");
+  }
+
+  // Disabled state
+  &.disabled,
+  &[disabled] {
+    cursor: default;
+    background-color: darken(@white, 10%);
+    background-image: none;
+    .opacity(65);
+    .box-shadow(none);
+  }
 }
 
 #cboxPrevious {
@@ -90,22 +148,21 @@
 }
 
 #cboxNext {
-  left: 5em;
+  right: 0.5em;
   bottom: 4px;
 }
 
 #cboxClose {
   top: 4px;
   right: 4px;
-  width: 1em;
 }
 
 #cboxCurrent {
   position: absolute;
-  top: 0;
-  left: 4px;
-  font-size: 150%;
+  bottom: 0;
+  right: 50%;
   line-height: @baseLineHeight * 2;
+  font-size: @fontSizeSmall;
 }
 
 #cboxSlideshow {
@@ -140,6 +197,7 @@
 }
 
 // Unused styles
+/*
 #cboxTopLeft {}
 #cboxTopRight {}
 #cboxBottomRight {}
@@ -148,3 +206,4 @@
 #cboxBottomLeft {}
 #cboxTopCenter {}
 #cboxBottomCenter {}
+*/
