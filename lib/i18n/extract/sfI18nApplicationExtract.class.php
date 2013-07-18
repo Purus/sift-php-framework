@@ -53,14 +53,28 @@ class sfI18nApplicationExtract extends sfI18nExtract
 
   /**
    * Extracts strings from php files belonging to the application.
+   * Skips extraction of forms.
    *
    */
   protected function extractPhpFiles()
   {
-    $directories = sfFinder::type('dir')
-            ->not_name('form') // we are extracting forms separatelly
-            ->in($this->getOption('app_dir').'/'.$this->getOption('lib_dir_name'));
-    $extracted = $this->extractFromPhpFiles($directories);
+    $files = sfFinder::type('file')
+              // skip forms
+              ->not_name('*Form.class.php')
+              ->in($this->getOption('app_dir').'/'.$this->getOption('lib_dir_name'));
+
+    $extracted = array();
+    foreach($files as $file)
+    {
+      $phpExtractor = new sfI18nPhpExtractor();
+      $e = $phpExtractor->extract(file_get_contents($file));
+      if(!count($e))
+      {
+        continue;
+      }
+      $extracted = array_merge_recursive($extracted, $e);
+    }
+
     $this->sortExtracted($extracted);
   }
 
