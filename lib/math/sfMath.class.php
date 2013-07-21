@@ -198,9 +198,15 @@ class sfMath {
     $clean = rtrim($number, '0');
     // remove zeros from front of number ie. 0.33 becomes .33
     $clean = ltrim($clean, '0');
+
+    // everything has been cleaned
+    if($clean == '.')
+    {
+      $clean = '.0';
+    }
+
     // remove decimal point if an integer ie. 140. becomes 140
     $clean = rtrim($clean, '.');
-
     return $clean[0] == '.' ? '0'. $clean : $clean;
   }
 
