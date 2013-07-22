@@ -2,7 +2,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(75, new lime_output_color());
+$t = new lime_test(87, new lime_output_color());
 
 // __construct()
 $t->diag('__construct()');
@@ -55,7 +55,7 @@ $t->is(sfI18nNumberFormat::getScientificInstance()->getPattern(), sfI18nNumberFo
 
 // setters/getters
 foreach (array(
-  'DecimalDigits', 'DecimalSeparator', 'GroupSeparator', 
+  'DecimalDigits', 'DecimalSeparator', 'GroupSeparator',
   'CurrencySymbol', 'NegativeInfinitySymbol', 'PositiveInfinitySymbol',
   'NegativeSign', 'PositiveSign', 'NaNSymbol', 'PercentSymbol', 'PerMilleSymbol',
 ) as $method)
@@ -122,4 +122,49 @@ foreach ($tests as $culture => $fixtures)
     $getter = 'get'.$method;
     $t->is($n->$getter(), $result, sprintf('->%s() returns "%s" for culture "%s"', $getter, $result, $culture));
   }
+}
+
+
+$t->diag('->getNumber()');
+$t->is(sfI18nNumberFormat::getNumber('1,5', 'cs_CZ'), '1.5', 'getNumber() works for czech locale');
+
+$t->is(sfI18nNumberFormat::getNumber('1 000,5', 'cs_CZ'), '1000.5', 'getNumber() works for czech locale');
+$t->is(sfI18nNumberFormat::getNumber('1000,5', 'cs_CZ'), '1000.5', 'getNumber() works for czech locale');
+$t->is(sfI18nNumberFormat::getNumber('0,0', 'cs_CZ'), '0.0', 'getNumber() works for czech locale');
+
+try
+{
+  sfI18nNumberFormat::getNumber('1000.5', 'cs_CZ');
+  $t->fail('When trying invalid value for given culture the exception is thrown');
+}
+catch(Exception $e)
+{
+  $t->pass('When trying invalid value for given culture the exception is thrown');
+}
+
+$t->is(sfI18nNumberFormat::getNumber('0,0', 'sk_SK'), '0.0', 'getNumber() works for slovak locale');
+$t->is(sfI18nNumberFormat::getNumber('1000,5', 'sk_SK'), '1000.5', 'getNumber() works for slovak locale');
+
+try
+{
+  sfI18nNumberFormat::getNumber('1000.5', 'sk_SK');
+  $t->fail('When trying invalid value for given culture the exception is thrown');
+}
+catch(Exception $e)
+{
+  $t->pass('When trying invalid value for given culture the exception is thrown');
+}
+
+$t->is(sfI18nNumberFormat::getNumber('1000.5', 'en'), '1000.5', 'getNumber() works for english locale');
+$t->is(sfI18nNumberFormat::getNumber('0', 'en'), '0', 'getNumber() works for english locale');
+$t->is(sfI18nNumberFormat::getNumber('0.0', 'en'), '0.0', 'getNumber() works for english locale');
+
+try
+{
+  sfI18nNumberFormat::getNumber('1000,5', 'en');
+  $t->fail('When trying invalid value for given culture the exception is thrown');
+}
+catch(Exception $e)
+{
+  $t->pass('When trying invalid value for given culture the exception is thrown');
 }
