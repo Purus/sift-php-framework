@@ -2,7 +2,7 @@
 
 require_once(dirname(__FILE__) . '/../../bootstrap/unit.php');
 
-$t = new lime_test(13);
+$t = new lime_test(15);
 
 $v = new sfValidatorNumber();
 
@@ -78,3 +78,16 @@ catch(sfValidatorError $e)
 }
 
 $v->setOption('min', null);
+
+
+class myValidator extends sfValidatorNumber {
+
+  public function isFloat($value)
+  {
+    return parent::isFloat($value);
+  }
+}
+
+$v = new myValidator();
+$t->is($v->isFloat('0.0'), true, 'isFloat() works ok for 0.0');
+$t->is($v->isFloat('0'), false, 'isFloat() works ok for 0');
