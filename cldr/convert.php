@@ -26,6 +26,7 @@ $buildCultures = array(
 );
 
 require_once  $sift_dir . '/utf8/sfUtf8.class.php';
+require_once  $sift_dir . '/i18n/iso/sfISO4217.class.php';
 
 $files = glob($cldr_dir . '/main/*.xml');
 
@@ -47,9 +48,6 @@ $weekDayMap = array(
   'fri' => 5,
   'sat' => 6,
 );
-
-// invalid currencies
-$invalidCurrencies = array('CSK', 'XXX');
 
 foreach($files as $file)
 {
@@ -176,7 +174,7 @@ foreach($files as $file)
     $key    = (string)$a->type;
     $name   = (string)current($currency->xpath('displayName'));
 
-    if(in_array($key, $invalidCurrencies)) continue;
+    if(!sfISO4217::isValidCode($key)) continue;
 
     if($locale == 'root')
     {
