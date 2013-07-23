@@ -214,9 +214,15 @@ class sfCulture {
    * Gets the default directory for the CLDR data.
    *
    * @return string directory containing the CLDR data.
+   * @throws LogicException If the "sf_sift_data_dir" configuration value is missing
    */
   protected static function dataDir()
   {
+    if(!($dataDir = sfConfig::get('sf_sift_data_dir')))
+    {
+      throw new LogicException('Missing "sf_sift_data_dir" configuration value. Please check the configuration.');
+    }
+
     return sfConfig::get('sf_sift_data_dir') . '/i18n/cldr/';
   }
 
