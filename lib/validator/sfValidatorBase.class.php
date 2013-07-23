@@ -564,14 +564,7 @@ abstract class sfValidatorBase {
       return $culture;
     }
 
-    try
-    {
-      return sfContext::getInstance()->getUser()->getCulture();
-    }
-    catch(Exception $e)
-    {
-      return sfCulture::getInstance()->getName(sfConfig::get('sf_i18n_default_culture', 'en'));
-    }
+    return sfConfig::get('sf_culture', sfConfig::get('sf_i18n_default_culture', 'en'));
   }
 
   /**
