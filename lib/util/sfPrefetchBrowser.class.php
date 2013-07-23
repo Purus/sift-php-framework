@@ -5,7 +5,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
- 
+
 /**
  * sfBrowser simulates a browser which can surf a application.
  *
@@ -24,11 +24,10 @@ class sfPrefetchBrowser extends sfBrowser
    */
   protected function doCall()
   {
-    // do not recycle 
-    $this->context = sfContext::getInstance();
-    
+    $this->context = $this->getContext(true);
+
     $this->resetCurrentException();
-    
+
     // dispatch our request
     ob_start();
     $this->context->getController()->dispatch();
@@ -45,17 +44,14 @@ class sfPrefetchBrowser extends sfBrowser
     }
   }
 
-
   /**
-   * Shutdown function to clean up and remove sessions
+   * Shutdown function to clean up
    *
    * @return void
    */
   public function shutdown()
   {
-    parent::shutdown();
-    // we remove all session data
-    // sfToolkit::clearDirectory(sfConfig::get('sf_test_cache_dir').'/sessions');
+    $this->checkCurrentExceptionIsEmpty();
   }
 
 }

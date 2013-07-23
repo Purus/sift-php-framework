@@ -25,7 +25,9 @@ class sfCliProjectPrefetchTask extends sfCliBaseTask {
 
     $this->addOptions(array(
         new sfCliCommandOption('hostname', 'h', sfCliCommandOption::PARAMETER_OPTIONAL | sfCliCommandOption::IS_ARRAY, 'Hostname'),
-        new sfCliCommandOption('remote-addr', 'r', sfCliCommandOption::PARAMETER_OPTIONAL, 'Remote address', '127.0.0.1')
+        new sfCliCommandOption('remote-addr', 'r', sfCliCommandOption::PARAMETER_OPTIONAL, 'Remote address', '127.0.0.1'),
+        new sfCliCommandOption('routes', 'rt', sfCliCommandOption::PARAMETER_OPTIONAL | sfCliCommandOption::IS_ARRAY, 'Routes'),
+        new sfCliCommandOption('urls', 'u', sfCliCommandOption::PARAMETER_OPTIONAL | sfCliCommandOption::IS_ARRAY, 'Urls'),
     ));
 
     $this->namespace = 'project';
@@ -84,7 +86,19 @@ EOF;
 
     $sf_sift_lib_dir = $this->environment->get('sf_sift_lib_dir');
     $sf_sift_data_dir = $this->environment->get('sf_sift_data_dir');
-    
+
+    // we have a routes to prefetch
+    if(count($options['routes']))
+    {
+      $routes = $options['routes'];
+    }
+    else
+    {
+      $routes = array('@homepage');
+    }
+
+    $routes = sfToolkit::varExport($routes);
+
     foreach($options['hostname'] as $hostname)
     {
       $testFile = tempnam(sys_get_temp_dir(), 'prefetch');
@@ -94,21 +108,26 @@ EOF;
 
 define('SF_ROOT_DIR', '$rootDir');
 require_once(SF_ROOT_DIR.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'config.php');
-require_once \$sf_sift_lib_dir.'/autoload/sfCoreAutoload.class.php';    
+require_once \$sf_sift_lib_dir.'/autoload/sfCoreAutoload.class.php';
 sfCoreAutoload::register();
 
 sfCore::bootstrap(\$sf_sift_lib_dir, \$sf_sift_data_dir);
 
-// hackish way of doing things :)
 \$_SERVER['SERVER_NAME'] = '$hostname';
-  
+\$_SERVER['SCRIPT_NAME'] = '';
+
 sfContext::createInstance(
   sfCore::getApplication('$application', 'prod', false)
 );
 
-\$uris = array('/');
+\$routes = $routes;
+
+foreach(\$routes as \$route)
+{
+  \$uris[] = sfContext::getInstance()->getController()->genUrl(\$route);
+}
+
 \$browser = new sfPrefetchBrowser('$hostname', '$remoteAddress');
-  
 foreach(\$uris as \$uri)
 {
   \$browser->get(\$uri);
@@ -130,6 +149,11 @@ EOF
       else
       {
         $this->logSection($this->getFullName(), 'Error prefetching app.', null, 'ERROR');
+        $confirmed = $this->askConfirmation('Display the result?');
+        if($confirmed)
+        {
+          echo $result;
+        }
       }
     }
   }
