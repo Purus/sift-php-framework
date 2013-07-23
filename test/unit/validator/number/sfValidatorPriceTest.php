@@ -2,7 +2,7 @@
 
 require_once(dirname(__FILE__).'/../../../bootstrap/unit.php');
 
-$t = new lime_test(21, new lime_output_color());
+$t = new lime_test(23, new lime_output_color());
 
 $v = new sfValidatorPrice();
 
@@ -116,4 +116,16 @@ try
 catch  (sfValidatorError $e)
 {
   $t->pass('->clean() throws a sfValidatorError if the value is empty');
+}
+
+try
+{
+  $value = $v->clean('0.0');
+  $t->pass('->clean() throws a sfValidatorError if the value is empty');
+  $t->is_deeply($value, 0.0, 'Value is ok');
+}
+catch(sfValidatorError $e)
+{
+  $t->fail('->clean() throws a sfValidatorError if the value is empty');
+  $t->skip('', 1);
 }
