@@ -89,21 +89,6 @@ EOF;
     $this->logSection($this->getFullName(), sprintf('Creating module "%s".', $module));
 
     $projectName = '';
-    $projectAuthor = '';
-
-    // load configuration
-    if(is_readable($propertyFile = $this->environment->get('sf_config_dir').'/properties.ini'))
-    {
-      $properties = parse_ini_file($propertyFile, true);
-      if(isset($properties['project']['name']))
-      {
-        $projectName = $properties['project']['name'];
-      }
-      if(isset($properties['project']['author']))
-      {
-        $projectAuthor = $properties['project']['author'];
-      }
-    }
 
     // fallback for projectName
     if(!$projectName)
@@ -119,7 +104,7 @@ EOF;
       'PROJECT_NAME' => $projectName,
       'APP_NAME'     => $app,
       'MODULE_NAME'  => $module,
-      'AUTHOR_NAME'  => $projectAuthor,
+      'AUTHOR_NAME'  => $this->getProjectProperty('author', 'Your name here'),
       'CREDENTIALS'  => 'credentials: ' . sfYamlInline::dump($credentials)
     );
 

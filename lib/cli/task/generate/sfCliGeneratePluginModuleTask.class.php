@@ -24,6 +24,12 @@ class sfCliGeneratePluginModuleTask extends sfCliGeneratorBaseTask {
         new sfCliCommandArgument('module', sfCliCommandArgument::REQUIRED, 'The module name'),
     ));
 
+    $this->addOptions(array(
+      new sfCliCommandOption('secured', null, sfCliCommandOption::PARAMETER_NONE, 'Secure the module?', null),
+      new sfCliCommandOption('internal', null, sfCliCommandOption::PARAMETER_NONE, 'IS the module internal only? (Not accessible via web)', null),
+      new sfCliCommandOption('credentials', null, sfCliCommandOption::PARAMETER_OPTIONAL, 'User credentials for accessing the module', ''),
+    ));
+    
     $this->namespace = 'generate';
     $this->name = 'plugin-module';
     $this->briefDescription = 'Generates a new module in a plugin';
@@ -81,10 +87,14 @@ EOF;
       $skeletonDir = $this->environment->get('sf_sift_data_dir') . '/skeleton/plugin_module';
     }
 
+    // module credentials
+    $credentials = isset($options['credentials']) ? (array)$options['credentials'] : array();
+    
     $constants = array(
       'PLUGIN_NAME' => $plugin,
       'MODULE_NAME' => $module,
       'AUTHOR_NAME' => $this->getProjectProperty('author', 'Your name here'),
+      'CREDENTIALS'  => 'credentials: ' . sfYamlInline::dump($credentials)
     );
 
     // create basic module structure
@@ -97,6 +107,25 @@ EOF;
     // customize php and yml files
     $finder = sfFinder::type('file')->name('*.php', '*.yml');
     $this->getFilesystem()->replaceTokens($finder->in($moduleDir), '##', '##', $constants);
+
+    if(!$options['secured'])
+    {
+      $this->getFilesystem()->remove($moduleDir . '/config/security.yml');
+      // FIXME: check if there are any files left, if yes, discard the dir!
+    }
+
+    $moduleYaml = array();
+
+    if($options['internal'])
+    {
+      $moduleYaml[] = 'all:';
+      $moduleYaml[] = '  is_internal: true';
+    }
+
+    if(count($moduleYaml))
+    {
+      file_put_contents($moduleDir . '/config/module.yml', join("\n", $moduleYaml));
+    }
 
     if(file_exists($testDir . '/fixtures/project/app'))
     {
