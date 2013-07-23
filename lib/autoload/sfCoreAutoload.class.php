@@ -772,6 +772,7 @@ class sfCoreAutoload
     'sfvalidatorimage' => 'validator/file/sfValidatorImage.class.php',
     'sfvalidatori18naggregate' => 'validator/i18n/sfValidatorI18nAggregate.class.php',
     'sfvalidatori18nchoicecountry' => 'validator/i18n/sfValidatorI18nChoiceCountry.class.php',
+    'sfvalidatori18nchoicecurrency' => 'validator/i18n/sfValidatorI18nChoiceCurrency.class.php',
     'sfvalidatori18nchoiceenabledlanguages' => 'validator/i18n/sfValidatorI18nChoiceEnabledLanguages.class.php',
     'sfvalidatori18nchoicelanguage' => 'validator/i18n/sfValidatorI18nChoiceLanguage.class.php',
     'sfvalidatori18nchoicetimezone' => 'validator/i18n/sfValidatorI18nChoiceTimezone.class.php',
