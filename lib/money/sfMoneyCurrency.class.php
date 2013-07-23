@@ -64,7 +64,7 @@ class sfMoneyCurrency {
   {
     $name = strtoupper($name);
 
-    if(!in_array($name, self::$validCurrencies))
+    if(!self::isValid($name))
     {
       throw new InvalidArgumentException(sprintf('Invalid currency "%s" given.', $name));
     }
@@ -87,6 +87,17 @@ class sfMoneyCurrency {
     }
 
     return new self($name);
+  }
+
+  /**
+   * Check if the given $currency is valid.
+   *
+   * @param string $currency The currency ISO code
+   * @return boolean True if is valid, false otherwise
+   */
+  public static function isValid($currency)
+  {
+    return in_array($currency, self::$validCurrencies);
   }
 
   /**

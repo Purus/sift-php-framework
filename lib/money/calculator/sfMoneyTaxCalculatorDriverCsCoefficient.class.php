@@ -32,7 +32,7 @@ class sfMoneyTaxCalculatorDriverCsCoefficient extends sfMoneyTaxCalculator {
    * @param string $priceWithTax The price with tax
    * @param string $tax The tax percentage
    */
-  public function getTaxAmount(sfMoneyCurrencyValue $priceWithTax, $tax, $scale = null, $roundingMode = sfRounding::NONE)
+  public function getTaxAmount(sfIMoneyCurrencyValue $priceWithTax, $tax, $scale = null, $roundingMode = sfRounding::NONE)
   {
     if(isset($this->coefficients[$tax]))
     {
