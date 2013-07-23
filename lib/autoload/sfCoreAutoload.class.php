@@ -508,6 +508,7 @@ class sfCoreAutoload
     'sfi18nchoiceformatter' => 'i18n/formatter/sfI18nChoiceFormatter.class.php',
     'sfi18ndateformatter' => 'i18n/formatter/sfI18nDateFormatter.class.php',
     'sfi18nnumberformatter' => 'i18n/formatter/sfI18nNumberFormatter.class.php',
+    'sfiso4217' => 'i18n/iso/sfISO4217.class.php',
     'sfiso639' => 'i18n/iso/sfISO639.class.php',
     'sfi18nmessageformatter' => 'i18n/message/formatter/sfI18nMessageFormatter.class.php',
     'sfi18nmessagesource' => 'i18n/message/sfI18nMessageSource.class.php',
