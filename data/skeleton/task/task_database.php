@@ -14,7 +14,7 @@ class ##TASK_CLASS_NAME## extends sfCliBaseTask
     // ));
 
     $this->addOptions(array(
-      new sfCliCommandOption('application', null, sfCliCommandOption::PARAMETER_REQUIRED, 'The application name'),
+      new sfCliCommandOption('application', null, sfCliCommandOption::PARAMETER_REQUIRED, 'The application name', true),
       new sfCliCommandOption('env', null, sfCliCommandOption::PARAMETER_REQUIRED, 'The environment', 'dev'),
       new sfCliCommandOption('connection', null, sfCliCommandOption::PARAMETER_REQUIRED, 'The connection name', '##DEFAULT_CONNECTION##'),
       // add your own options here
