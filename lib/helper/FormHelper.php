@@ -1003,6 +1003,11 @@ function get_javascripts_for_form(sfForm $form)
     {
       // File names as values without options are also supported
       $file = $options;
+      if(is_array($file))
+      {
+        $options = current($file);
+        $file = key($file);
+      }
     }
  	  if(!is_array($options))
     {
@@ -1028,6 +1033,11 @@ function use_javascripts_for_form(sfForm $form)
     {
       // File names as values without options are also supported
       $file = $options;
+      if(is_array($file))
+      {
+        $options = current($file);
+        $file = key($file);
+      }
     }
 
  	  if(!is_array($options))
