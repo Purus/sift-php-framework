@@ -9,6 +9,7 @@ all:
   # Custom configuration file
   #customConfig: ''
 
+  entities: false
   language: %SF_CULTURE{0,2}%
   uiColor:  '#ffffff'
   disableNativeSpellChecker: false
