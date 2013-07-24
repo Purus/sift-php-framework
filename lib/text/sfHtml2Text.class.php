@@ -231,7 +231,7 @@ class sfHtml2Text {
       {
         break;
       }
-		$nextNode = $nextNode->previousSibling;
+    $nextNode = $nextNode->previousSibling;
     }
     $nextName = null;
     if($nextNode instanceof DOMElement && $nextNode != null) 
