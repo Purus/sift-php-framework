@@ -90,14 +90,15 @@ var CKBUILDER_CONFIG = {
 		'menu' : 1,
 		'popup' : 1,
 		'fakeobjects' : 1,
-		'richcombo' : 1,
 		'listblock' : 1,
 		'menubutton' : 1,
 		'placeholder' : 1,
 		'floating-tools' : 1,
 		'stylesheetparser' : 1,
 		'tableresize' : 1,
-		'onchange' : 1
+		'onchange' : 1,
+		'indentlist' : 1,
+		'mediaembed' : 1
 	},
 	languages : {
 		'cs' : 1,
