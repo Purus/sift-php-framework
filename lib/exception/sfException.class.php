@@ -40,9 +40,16 @@ class sfException extends Exception {
 
     parent::__construct($message, $code);
 
-    if(sfConfig::get('sf_logging_enabled') && $this->getName() != 'sfStopException')
+    if(sfConfig::get('sf_logging_enabled') && !($this instanceof sfStopException))
     {
-      sfLogger::getInstance()->err('{' . $this->getName() . '} ' . $message);
+      $name = get_class($this);
+      // log the current uri
+      if(class_exists('sfContext', false) && sfContext::hasInstance())
+      {
+        sfLogger::getInstance()->err(sprintf('{%s} Request URI: %s, method: %s',
+            $name, sfContext::getInstance()->getRequest()->getUri(), sfContext::getInstance()->getRequest()->getMethod()));
+      }
+      sfLogger::getInstance()->err(sprintf('{%s} %s %s', $name, $message, join(' --- ', $this->getTraces($this))));
     }
   }
 
@@ -89,7 +96,7 @@ class sfException extends Exception {
    */
   static public function clearLastException()
   {
-  	self::$lastException = null;
+    self::$lastException = null;
   }
 
   /**
@@ -159,7 +166,10 @@ class sfException extends Exception {
     // send an error 500 if not in debug mode
     if(!sfConfig::get('sf_debug'))
     {
-      // error_log($exception->getMessage());
+      if(sfToolkit::isCallable('error_log'))
+      {
+        error_log($exception->getMessage());
+      }
       sfCore::displayErrorPage($exception);
       return;
     }
