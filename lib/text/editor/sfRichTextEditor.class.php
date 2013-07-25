@@ -54,7 +54,16 @@ abstract class sfRichTextEditor extends sfConfigurable implements sfIRichTextEdi
   public function __construct($options = array())
   {
     $options = sfToolkit::arrayDeepMerge($this->loadOptions(), $options);
+
     parent::__construct($options);
+
+    if(sfCore::isBootstrapped())
+    {
+      // allow modifications by event system hooks
+      sfCore::dispatchEvent('rich_text_editor.load_options', array(
+        'editor' => $this
+      ));
+    }
   }
 
   /**
@@ -67,9 +76,7 @@ abstract class sfRichTextEditor extends sfConfigurable implements sfIRichTextEdi
   {
     $config = include sfConfigCache::getInstance()->checkConfig('config/rich_editor.yml');
     array_walk_recursive($config, create_function('&$config', '$config = sfToolkit::replaceConstantsWithModifiers($config);'));
-    return sfCore::filterByEventListeners($config, 'rich_text_editor.load_options', array(
-      'editor' => $this
-    ));
+    return $config;
   }
 
   /**

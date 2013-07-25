@@ -110,6 +110,16 @@ class sfCore
   }
 
   /**
+   * Is bootstapped to the project?
+   *
+   * @return boolean
+   */
+  public static function isBootstrapped()
+  {
+    return self::$bootstrapped;
+  }
+
+  /**
    * Binds a project
    *
    * @param sfProject $project
