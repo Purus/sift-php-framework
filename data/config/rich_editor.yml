@@ -23,10 +23,11 @@ all:
 
   # Toolbar groups definition
   toolbar:
-    -
-      name: tools
-      items:
-        - Maximize
+    # Maximize does not work properly in FF
+    #-
+    #  name: tools
+    #  items:
+    #    - Maximize
     -
       name: paragraph
       items:
