@@ -21,5 +21,24 @@ class sfJavascriptPartialView extends sfPartialView
     parent::configure();
     // disable escaping
     $this->setEscaping(false);
+
+    sfLoader::loadHelpers('Tag');
   }
+
+  /**
+   * Renders the presentation.
+   *
+   * @param  string $_sfFile  Filename
+   *
+   * @return string File content
+   */
+  public function render($templateVars = array())
+  {
+    ob_start();
+    start_javascript();
+    echo parent::render($templateVars);
+    end_javascript();
+    return ob_get_clean();
+  }
+
 }
