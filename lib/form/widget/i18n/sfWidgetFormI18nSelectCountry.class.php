@@ -33,12 +33,12 @@ class sfWidgetFormI18nSelectCountry extends sfWidgetFormSelect {
   {
     parent::configure($options, $attributes);
 
-    $this->addRequiredOption('culture');
+    $this->addOption('culture', $this->getCulture());
     $this->addOption('countries');
     $this->addOption('add_empty', false);
 
     // populate choices with all countries
-    $culture = isset($options['culture']) ? $options['culture'] : 'en';
+    $culture = $this->getOption('culture');
 
     $countries = sfCulture::getInstance($culture)->getCountries(isset($options['countries']) ? $options['countries'] : null);
 
