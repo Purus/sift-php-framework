@@ -30,25 +30,14 @@ class sfValidatorI18nChoiceCountry extends sfValidatorChoice
   {
     parent::configure($options, $messages);
 
-    // culture is deprecated
     $this->addOption('culture');
     $this->addOption('countries');
 
     // populate choices with all countries
-    $countries = array_keys(sfCulture::getInstance()->getCountries());
-
-    // restrict countries to a sub-set
-    if (isset($options['countries']))
-    {
-      if ($problems = array_diff($options['countries'], $countries))
-      {
-        throw new InvalidArgumentException(sprintf('The following countries do not exist: %s.', implode(', ', $problems)));
-      }
-
-      $countries = $options['countries'];
-    }
-
-    sort($countries);
+    $countries = array_keys(sfCulture::getInstance($this->getCulture())->getCountries(
+      isset($options['countries']) ?
+            $options['countries'] : null
+    ));
 
     $this->setOption('choices', $countries);
   }
