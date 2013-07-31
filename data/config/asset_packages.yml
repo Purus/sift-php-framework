@@ -23,14 +23,17 @@ dev:
         - %SF_SIFT_WEB_DIR%/js/core/config.js
         - %SF_SIFT_WEB_DIR%/js/core/cookie.js
         - %SF_SIFT_WEB_DIR%/js/core/local_storage.js
+        - %SF_SIFT_WEB_DIR%/js/core/request_storage.js
+        - %SF_SIFT_WEB_DIR%/js/core/cache_response.js
+        - %SF_SIFT_WEB_DIR%/js/core/globalize.js
+        - %SF_SIFT_WEB_DIR%/js/core/i18n.js
+        - %SF_SIFT_WEB_DIR%/js/core/i18n/%SF_CULTURE%.js
         - %SF_SIFT_WEB_DIR%/js/core/plugins.js
+        - %SF_SIFT_WEB_DIR%/js/core/load_mask.js
         - %SF_SIFT_WEB_DIR%/js/core/application.js
         - %SF_SIFT_WEB_DIR%/js/core/api.js
         - %SF_SIFT_WEB_DIR%/js/core/forms.js
         - %SF_SIFT_WEB_DIR%/js/core/bootstrap.js
-        - %SF_SIFT_WEB_DIR%/js/core/i18n.js
-        - %SF_SIFT_WEB_DIR%/js/core/globalize.js
-        - %SF_SIFT_WEB_DIR%/js/core/i18n/%SF_CULTURE%.js
         - %SF_SIFT_WEB_DIR%/js/core/logger.js
         - %SF_SIFT_WEB_DIR%/js/core/tools.js
 

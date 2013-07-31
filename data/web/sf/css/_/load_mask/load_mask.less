@@ -1,0 +1,40 @@
+/**
+ * This file is part of the Sift package.
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+/**
+ * LoadMask styles
+ *
+ * @package    Sift
+ * @subpackage less
+ */
+
+.load-masked {
+  overflow: hidden !important;
+  .load-mask {
+    position: absolute;
+    z-index: @indexDropdown;
+    top: 0;
+    left: 0;
+    .opacity(50);
+    background-color: @grayLighter;
+    width: 100%;
+    height: 100%;
+    .load-mask-msg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      display: inline-block;
+      min-height: 20px;
+      padding-left: 20px;
+      background: url("@{sf_sift_web_dir}/images/loader.gif") center left no-repeat;
+    }
+  }
+}
+
+.load-masked-relative {
+  position: relative !important;
+}

@@ -92,13 +92,14 @@ class sfJsCompilerCommand {
       'local_storage.js',
       'request_storage.js',
       'cache_response.js',
+      'globalize.js',
+      'i18n.js',
       'plugins.js',
+      'load_mask.js',
       'application.js',
       'api.js',
       'forms.js',
       'bootstrap.js',
-      'i18n.js',
-      'globalize.js',
       'logger.js',
       'tools.js'
     );
