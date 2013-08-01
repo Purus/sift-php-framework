@@ -516,15 +516,15 @@ abstract class sfProject extends sfConfigurable {
       return false;
     }
 
-    if($this instanceof sfProject)
+    if($this instanceof sfApplication)
     {
-      $cacheFile = $this->getOption('sf_root_cache_dir') .
+      $cacheFile = $this->getOption('sf_cache_dir') . DS .
+                   $this->getOption('sf_config_dir_name') .
                    DS . 'config_plugins.yml.php';
     }
     else
     {
-      $cacheFile = $this->getOption('sf_cache_dir') . DS .
-                   $this->getOption('sf_config_dir_name') .
+      $cacheFile = $this->getOption('sf_root_cache_dir') .
                    DS . 'config_plugins.yml.php';
     }
 
