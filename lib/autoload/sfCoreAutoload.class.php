@@ -345,7 +345,6 @@ class sfCoreAutoload
     'sftimer' => 'debug/sfTimer.class.php',
     'sftimermanager' => 'debug/sfTimerManager.class.php',
     'sfwebdebug' => 'debug/sfWebDebug.class.php',
-    'sffluentdom' => 'dom/sfFluentDom.class.php',
     'sfevent' => 'event/sfEvent.class.php',
     'sfeventdispatcher' => 'event/sfEventDispatcher.class.php',
     'sfactionexception' => 'exception/sfActionException.class.php',
