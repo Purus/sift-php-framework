@@ -122,7 +122,7 @@ class sfFormField
    *
    * @return string The rendered widget
    */
-  function render($attributes = array())
+  public function render($attributes = array())
   {
     $attributes = $this->prepareAttributes($attributes);
 
