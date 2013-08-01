@@ -7,15 +7,15 @@
  */
 
 /**
- * Converts CLDR i18n data for Sitf usage.
+ * Converts CLDR i18n data for Sift usage.
  *
  * @package    Sift
  * @subpackage cli
  */
 
-$sift_dir  = dirname(__FILE__) . '/../lib';
-$cldr_dir  = dirname(__FILE__) . '/common';
-$i18n_dir  = dirname(__FILE__) . '/../data/i18n/cldr';
+$sift_dir  = dirname(__FILE__) . '/../../lib';
+$cldr_dir  = dirname(__FILE__) . '/../../build/cldr/common';
+$i18n_dir  = dirname(__FILE__) . '/../../data/i18n/cldr';
 
 $buildCultures = array(
   'cs', 'cs_CZ',  // czech
@@ -25,15 +25,13 @@ $buildCultures = array(
   'fr', 'fr_FR', // french
 );
 
-require_once  $sift_dir . '/utf8/sfUtf8.class.php';
-require_once  $sift_dir . '/i18n/iso/sfISO4217.class.php';
+require_once $sift_dir . '/autoload/sfCoreAutoload.class.php';
+sfCoreAutoload::register();
 
 $files = glob($cldr_dir . '/main/*.xml');
 
 // supported zones by current php version
-$supportedZones   = timezone_identifiers_list();
-// list of invalid countries
-$invalidCountries = array('YU');
+$supportedZones = timezone_identifiers_list();
 // invalid!
 $invalidLocales = array('th', 'th_TH');
 
@@ -174,7 +172,11 @@ foreach($files as $file)
     $key    = (string)$a->type;
     $name   = (string)current($currency->xpath('displayName'));
 
-    if(!sfISO4217::isValidCode($key)) continue;
+    if(!sfISO4217::isValidCode($key))
+    {
+      printf("Skipping invalid currency %s\n", $key);
+      continue;
+    }
 
     if($locale == 'root')
     {
@@ -546,8 +548,9 @@ foreach($files as $file)
       {
         $a  = $postCode->attributes();
         $countryId = (string)$a->territoryId;
-        if(in_array($countryId, $invalidCountries))
+        if(!sfISO3166::isValidCode($countryId))
         {
+          printf("Skipiping invalid country code %s\n", $countryId);
           continue;
         }
         $data['postCodes'][$countryId] = (string)$postCode;
@@ -578,14 +581,11 @@ foreach($files as $file)
       }
 
       ksort($data['timeZones']);
-
     }
-
 
   }  // calendars loop
 
-
   file_put_contents($i18n_dir . '/' . $locale . '.dat', serialize($data));
-
 }
 
+echo "Done.\n";
