@@ -86,7 +86,7 @@ echo ('Done.') . "\n";
 class TexParser {
 
   public $patterns = array();
-  public $hyphens = array();
+  public $hyphenation = array();
 
   /**
    * This method parses a TEX-Hyphenation file and creates the appropriate
