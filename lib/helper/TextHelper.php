@@ -231,7 +231,7 @@ function hyphenate_text($text, $options = array())
 {
   if(sfConfig::get('sf_logging_enabled'))
   {
-    sfContext::getInstance()->getLogger()->warning('hyphenate_text() is deprecated. Use typography_text() instead');    
+    sfLogger::getInstance()->warning('hyphenate_text() is deprecated. Use typography_text() instead');    
   }
   
   return typography_text($text, $options);

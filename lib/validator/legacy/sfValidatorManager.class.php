@@ -40,7 +40,7 @@ class sfValidatorManager {
   {
     if(sfConfig::get('sf_logging_enabled'))
     {
-      sfContext::getInstance()->getLogger()->info('{sfValidator} validation execution');
+      sfLogger::getInstance()->info('{sfValidator} validation execution');
     }
 
     $retval = true;

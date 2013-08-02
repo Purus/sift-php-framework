@@ -30,7 +30,7 @@ class sfFilterChain
     {
       if (sfConfig::get('sf_logging_enabled'))
       {
-        sfContext::getInstance()->getLogger()->info(sprintf('{sfFilter} executing filter "%s"', get_class($this->chain[$this->index])));
+        sfLogger::getInstance()->info(sprintf('{sfFilter} executing filter "%s"', get_class($this->chain[$this->index])));
       }
 
       // execute the next filter

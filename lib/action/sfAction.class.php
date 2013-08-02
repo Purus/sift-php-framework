@@ -842,7 +842,7 @@ abstract class sfAction extends sfComponent
   {
     if(sfConfig::get('sf_logging_enabled'))
     {
-      sfContext::getInstance()->getLogger()->err('{sfAction} getMailBody() is deprecated. Use $mail_message->setBodyFromPartial() instead.');
+      sfLogger::getInstance()->err('{sfAction} getMailBody() is deprecated. Use $mail_message->setBodyFromPartial() instead.');
     }
 
     // validate email type

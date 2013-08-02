@@ -145,7 +145,7 @@ abstract class sfRequest {
    *
    * @return boolean true, if initialization completes successfully, otherwise false
    *
-   * @throws <b>sfInitializationException</b> If an error occurs while initializing this Request
+   * @throws sfInitializationException If an error occurs while initializing this Request
    */
   public function initialize($context, $parameters = array(), $attributes = array())
   {
@@ -173,10 +173,8 @@ abstract class sfRequest {
    * Retrieves a new sfRequest implementation instance.
    *
    * @param string A sfRequest implementation name
-   *
    * @return sfRequest A sfRequest implementation instance
-   *
-   * @throws <b>sfFactoryException</b> If a request implementation instance cannot be created
+   * @throws sfFactoryException If a request implementation instance cannot be created
    */
   public static function newInstance($class)
   {
@@ -186,10 +184,7 @@ abstract class sfRequest {
     if(!($object instanceof sfRequest))
     {
       // the class name is of the wrong type
-      $error = 'Class "%s" is not of the type sfRequest';
-      $error = sprintf($error, $class);
-
-      throw new sfFactoryException($error);
+      throw new sfFactoryException(sprintf('Class "%s" is not of the type sfRequest', $class));
     }
 
     return $object;
@@ -202,14 +197,13 @@ abstract class sfRequest {
    *
    * @return string An error message, if the error was removed, otherwise null
    */
-  public function & removeError($name)
+  public function &removeError($name)
   {
     $retval = null;
 
     if(isset($this->errors[$name]))
     {
-      $retval = & $this->errors[$name];
-
+      $retval = &$this->errors[$name];
       unset($this->errors[$name]);
     }
 
@@ -227,7 +221,7 @@ abstract class sfRequest {
   {
     if(sfConfig::get('sf_logging_enabled'))
     {
-      $this->getContext()->getLogger()->info('{sfRequest} error in form for parameter "' . $name . '" (with message "' . $message . '")');
+      sfLogger::getInstance()->info('{sfRequest} error in form for parameter "' . $name . '" (with message "' . $message . '")');
     }
 
     $this->errors[$name] = $message;

@@ -52,7 +52,7 @@ class sfGoogleAnalytics {
     if(strlen($name.$value) > 64
         && sfConfig::get('sf_logging_enabled'))
     {
-      sfContext::getInstance()->getLogger()->warning(sprintf('{sfGoogleAnalytics} Tracking variable "%s" with value "" exceeded limit.', $name, $value));
+      sfLogger::getInstance()->warning(sprintf('{sfGoogleAnalytics} Tracking variable "%s" with value "" exceeded limit.', $name, $value));
     }
 
     $i = count($variables)-1;
@@ -120,14 +120,14 @@ class sfGoogleAnalytics {
     
     if(sfConfig::get('sf_logging_enabled'))
     {
-      sfContext::getInstance()->getLogger()->err('Cookie: '. var_export($cookie, true));
+      sfLogger::getInstance()->err('Cookie: '. var_export($cookie, true));
     }
     
     $visitorId = self::getVisitorId($guidHeader, $ua, $userAgent, $cookie);
 
     if(sfConfig::get('sf_logging_enabled'))
     {
-      sfContext::getInstance()->getLogger()->err('Visitor ID: '. $visitorId);
+      sfLogger::getInstance()->err('Visitor ID: '. $visitorId);
     }
     
     if($mobile)
@@ -173,7 +173,7 @@ class sfGoogleAnalytics {
     
     if(sfConfig::get('sf_logging_enabled'))
     {
-      sfContext::getInstance()->getLogger()->err('Calling uri: '. $uri); 
+      sfLogger::getInstance()->err('Calling uri: '. $uri); 
     }
     
     return $browser->get($uri, array(), $headers);

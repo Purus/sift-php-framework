@@ -912,7 +912,7 @@ class sfHttpDownload extends sfConfigurable {
   {
     if(sfConfig::get('sf_logging_enabled'))
     {
-      sfContext::getInstance()->getLogger()->info(sprintf('{sfHttpDownload} %s', $message));
+      sfLogger::getInstance()->info(sprintf('{sfHttpDownload} %s', $message));
     }
   }
 

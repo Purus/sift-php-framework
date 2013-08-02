@@ -41,7 +41,7 @@ class sfMailerLogger extends Swift_Plugins_MessageLogger {
     {
       return;
     }
-    sfContext::getInstance()->getLogger()->info(sprintf('{sfMailer} %s', $entry));
+    sfLogger::getInstance()->info(sprintf('{sfMailer} %s', $entry));
   }
 
   /**

@@ -419,7 +419,7 @@ function _get_cache_key(& $vars = array())
   {
     if (sfConfig::get('sf_logging_enabled'))
     {
-      sfContext::getInstance()->getLogger()->info('{PartialHelper} Generate cache key');
+      sfLogger::getInstance()->info('{PartialHelper} Generate cache key');
     }
     $vars['sf_cache_key'] = md5(serialize($vars));
   }

@@ -738,7 +738,7 @@ class sfWebResponse extends sfResponse
     {
       if(sfConfig::get('sf_logging_enabled'))
       {
-        sfContext::getInstance()->getLogger()->notice(
+        sfLogger::getInstance()->notice(
                 sprintf('{SEO} Page title is too long (%s chars, maximum is %s). Please consider shorter title.', $length, $max));
       }
 
@@ -749,7 +749,7 @@ class sfWebResponse extends sfResponse
         $length = mb_strlen($title, sfConfig::get('sf_charset'));
         if(sfConfig::get('sf_logging_enabled'))
         {
-          sfContext::getInstance()->getLogger()->info(sprintf('{SEO} Page title has been auto trimmed to %s chars (maximum is %s).', $length, $max));
+          sfLogger::getInstance()->info(sprintf('{SEO} Page title has been auto trimmed to %s chars (maximum is %s).', $length, $max));
         }
       }
     }
@@ -974,7 +974,7 @@ class sfWebResponse extends sfResponse
   {
     if(sfConfig::get('sf_logging_enabled'))
     {
-      sfContext::getInstance()->getLogger()->err('{myWebResponse} resetBodyClass is deprecated. Use clearBodyClasses() instead.');
+      sfLogger::getInstance()->err('{myWebResponse} resetBodyClass is deprecated. Use clearBodyClasses() instead.');
     }
     $this->clearBodyClasses();
   }

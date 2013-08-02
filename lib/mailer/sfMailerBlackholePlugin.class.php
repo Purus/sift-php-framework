@@ -24,7 +24,7 @@ class sfMailerBlackholePlugin implements Swift_Events_SendListener {
 
     if(sfConfig::get('sf_logging_enabled'))
     {
-      sfContext::getInstance()->getLogger()->info(
+      sfLogger::getInstance()->info(
               '{sfMailer} Delivery canceled.'
       );
     }
