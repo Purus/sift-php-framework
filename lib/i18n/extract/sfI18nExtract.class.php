@@ -41,7 +41,6 @@ abstract class sfI18nExtract extends sfConfigurable {
    */
   protected $defaultOptions = array(
     'source_type'     => 'gettext',
-
     'config_dir_name' => 'config',
     'module_dir_name' => 'modules',
     'action_dir_name' => 'actions',

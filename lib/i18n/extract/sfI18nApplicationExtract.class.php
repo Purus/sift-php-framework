@@ -29,7 +29,10 @@ class sfI18nApplicationExtract extends sfI18nExtract
    * @var array
    */
   protected $defaultOptions = array(
-    'source_driver' => 'gettext'
+    'source_driver' => 'gettext',
+    'context' => 'application',
+    'plugin' => '',
+    'ignore_errors' => true
   );
 
   /**
@@ -38,17 +41,37 @@ class sfI18nApplicationExtract extends sfI18nExtract
    */
   public function extract()
   {
+    $errors = array();
+
     $this->extractPhpFiles();
     $this->extractPhpTemplates();
     $this->extractModules();
     $this->extractMenuYamlFiles();
     $this->extractDashboardWidgetsYamlFiles();
     $this->extractUserProfileYamlFiles();
-    $this->extractForms();
+
+    try
+    {
+      $this->extractForms();
+    }
+    catch(Exception $e)
+    {
+      if($this->getOption('ignore_errors'))
+      {
+        $errors[] = $e;
+      }
+      else
+      {
+        throw $e;
+      }
+    }
+
     $this->extractModels();
 
     // parse extracted
     $this->parseAllSeenMessages();
+
+    return $errors;
   }
 
   /**
@@ -75,7 +98,7 @@ class sfI18nApplicationExtract extends sfI18nExtract
       $extracted = array_merge_recursive($extracted, $e);
     }
 
-    $this->sortExtracted($extracted);
+    $this->sortExtracted($extracted, $this->getOption('context'));
   }
 
   /**
@@ -87,7 +110,7 @@ class sfI18nApplicationExtract extends sfI18nExtract
     $extracted = $this->extractFromPhpFiles(array(
       $this->getOption('app_dir').'/'.$this->getOption('template_dir_name')
     ));
-    $this->sortExtracted($extracted);
+    $this->sortExtracted($extracted, $this->getOption('context'));
   }
 
   /**
@@ -126,7 +149,7 @@ class sfI18nApplicationExtract extends sfI18nExtract
     foreach($menuFiles as $file)
     {
       $extracted = $menuExtractor->extract(file_get_contents($file));
-      $this->sortExtracted($extracted);
+      $this->sortExtracted($extracted, $this->getOption('context'));
     }
   }
 
@@ -144,7 +167,7 @@ class sfI18nApplicationExtract extends sfI18nExtract
     foreach($menuFiles as $file)
     {
       $extracted = $menuExtractor->extract(file_get_contents($file));
-      $this->sortExtracted($extracted);
+      $this->sortExtracted($extracted, $this->getOption('context'));
     }
   }
 
@@ -175,7 +198,7 @@ class sfI18nApplicationExtract extends sfI18nExtract
       }
 
       $extracted = $menuExtractor->extract(file_get_contents($file));
-      $this->sortExtracted($extracted);
+      $this->sortExtracted($extracted, $this->getOption('context'));
     }
   }
 
@@ -202,7 +225,7 @@ class sfI18nApplicationExtract extends sfI18nExtract
             'form' => $class,
             'culture' => $this->getOption('culture')
           ));
-          $this->sortExtracted($extractor->extract());
+          $this->sortExtracted($extractor->extract(), $this->getOption('context'));
         }
         catch(Exception $e)
         {
@@ -237,7 +260,7 @@ class sfI18nApplicationExtract extends sfI18nExtract
           $extractor = new sfI18nModelExtractor(array(
             'model' => $class
           ));
-          $this->sortExtracted($extractor->extract());
+          $this->sortExtracted($extractor->extract(), $this->getOption('context'));
         }
         catch(Exception $e)
         {
@@ -301,21 +324,28 @@ class sfI18nApplicationExtract extends sfI18nExtract
       {
         continue;
       }
-      elseif(strpos($domain, '%SF_PLUGINS_DIR%') !== false)
+      elseif($context === 'application' && strpos($domain, '%SF_PLUGINS_DIR%') !== false)
       {
         continue;
+      }
+
+      $isPluginCatalogue = false;
+      if($context == 'plugin' && $this->getOption('plugin'))
+      {
+        $isPluginCatalogue = strpos(str_replace(DIRECTORY_SEPARATOR, '/', $domain), $this->getOption('plugin')) !== false;
       }
 
       $domain = $this->replaceConstants($domain);
 
       // we have global application catalogue
       if($domain == self::UNKNOWN_DOMAIN ||
-              (strpos($domain, '/') === false && $domain == $this->catalogueName))
+              (strpos($domain, '/') === false && $domain == $this->catalogueName)
+              || $isPluginCatalogue)
       {
-
         switch($context)
         {
           case 'application':
+          case 'plugin':
              $key = $this->getOption('app_dir') . '/' . $this->getOption('i18n_dir_name')
                   . '/'. $this->catalogueName;
           break;
@@ -325,7 +355,6 @@ class sfI18nApplicationExtract extends sfI18nExtract
                   . '/'. $module . '/' . $this->getOption('i18n_dir_name') . '/' . $this->catalogueName;
           break;
         }
-
       }
       // simple catalogue name
       elseif(strpos($domain, '/') === false)
@@ -333,6 +362,7 @@ class sfI18nApplicationExtract extends sfI18nExtract
         switch($context)
         {
           case 'application':
+          case 'plugin':
               $key =  $this->getOption('app_dir') . '/' . $this->getOption('i18n_dir_name')
                   . '/'. $domain;
           break;

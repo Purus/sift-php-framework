@@ -29,6 +29,7 @@ class sfCliI18nExtractTask extends sfCliI18nBaseTask
       new sfCliCommandOption('auto-save', null, sfCliCommandOption::PARAMETER_NONE, 'Save the new strings'),
       new sfCliCommandOption('auto-delete', null, sfCliCommandOption::PARAMETER_NONE, 'Delete old strings'),
       new sfCliCommandOption('connection', null, sfCliCommandOption::PARAMETER_OPTIONAL, 'Connection name', 'mock'),
+      new sfCliCommandOption('ignore-errors', null, sfCliCommandOption::PARAMETER_OPTIONAL, 'Ignore errors', false),
     ));
 
     $this->namespace = 'i18n';
@@ -97,13 +98,17 @@ EOF;
     }
 
     $extract = new sfI18nApplicationExtract(array(
+        'sf_sift_data_dir' => $this->environment->get('sf_sift_data_dir'),
+        'sf_plugins_dir' => $this->environment->get('sf_plugins_dir'),
+        'context' => $isPlugin ? 'plugin' : 'application',
+        'plugin' => $isPlugin ? $application : '',
         'app_dir' => $dir,
         'root_dir' => $this->environment->get('sf_root_dir'),
-        'culture' => $culture
+        'culture' => $culture,
+        'ignore_errors' => $options['ignore-errors']
     ));
 
-    // do the extraction
-    $extract->extract();
+    $errors = $extract->extract();
 
     $this->logSection($this->getFullName(), sprintf('Found "%d" new i18n strings', $extract->getNewMessagesCount()));
     $this->logSection($this->getFullName(), sprintf('Found "%d" old i18n strings', $extract->getOldMessagesCount()));
@@ -160,10 +165,19 @@ EOF;
       }
     }
 
-    if ($options['auto-delete'])
+    if($options['auto-delete'])
     {
       $this->logSection($this->getFullName(), 'Deleting old i18n strings');
       $extract->deleteOldMessages();
+    }
+
+    if($options['ignore-errors'] && count($errors))
+    {
+      $this->logSection($this->getFullName(), 'Error catched while extracting.');
+      foreach($errors as $error)
+      {
+        $this->logBlock(sprintf("%s\n", $error->getMessage()), 'ERROR');
+      }
     }
 
   }
