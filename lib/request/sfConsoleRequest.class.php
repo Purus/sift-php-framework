@@ -75,4 +75,8 @@ class sfConsoleRequest extends sfRequest
     return false;
   }
 
+  public function getUri()
+  {
+  }
+
 }
