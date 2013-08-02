@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2013-05-07 13:33:31\n"
+"PO-Revision-Date: 2013-08-02 10:29:05\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Language: de\n"
 "Project-Id-Version: 1.0\n"
@@ -240,5 +240,17 @@ msgid "Selected title mode is invalid."
 msgstr ""
 
 msgid "This value is invalid CSS class."
+msgstr ""
+
+msgid "Number has a wrong format: %value%"
+msgstr ""
+
+msgid "\"%value%\" is not a valid price."
+msgstr ""
+
+msgid "The value is invalid slug."
+msgstr ""
+
+msgid "Password is too weak."
 msgstr ""
 
