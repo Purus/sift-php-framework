@@ -599,6 +599,7 @@ class sfCoreAutoload
     'sfip2countrydrivergeoip' => 'ip2country/driver/sfIp2CountryDriverGeoIp.class.php',
     'sfip2country' => 'ip2country/sfIp2Country.class.php',
     'sfiip2country' => 'ip2country/sfIp2Country.interface.php',
+    'sfijsonserializable' => 'json/sfIJsonSerializable.interface.php',
     'sfjson' => 'json/sfJson.class.php',
     'sfjsonexpression' => 'json/sfJsonExpression.class.php',
     'sflesscompiler' => 'less/sfLessCompiler.class.php',

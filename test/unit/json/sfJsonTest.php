@@ -4,8 +4,7 @@ require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 require_once(dirname(__FILE__).'/../../../lib/json/sfJson.class.php');
 require_once(dirname(__FILE__).'/../../../lib/json/sfJsonExpression.class.php');
 
-
-$t = new lime_test(7, new lime_output_color());
+$t = new lime_test(8, new lime_output_color());
 
 $string = 'Toto je string';
 $encodedString = '"Toto je string"';
@@ -50,3 +49,17 @@ $t->diag('sfJsonExpression');
 
 $e = new sfJsonExpression('function() {}');
 $t->is($e->__toString(), 'function() {}', '__toString() method returns expression string');
+
+
+class FooBar implements sfIJsonSerializable {
+
+  public function jsonSerialize()
+  {
+    return array('bar');
+  }
+
+}
+
+$foobar = new FooBar();
+
+$t->is(sfJson::encode($foobar), '["bar"]', 'sfJson can serialize objects which implements sfIJsonSerializable interface');
