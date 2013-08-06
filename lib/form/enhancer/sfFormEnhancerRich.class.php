@@ -45,25 +45,25 @@ class sfFormEnhancerRich extends sfFormEnhancer {
   public function enhanceWidgetI18nAggregate(sfWidgetFormI18nAggregate $widget, $validator)
   {
     // enhances child widget
-    self::enhanceWidget($widget->getOption('widget'));
+    $this->enhanceWidget($widget->getOption('widget'));
   }
 
   public function enhanceWidgetFilterDate(sfWidgetFormFilterDate $widget, $validator)
   {
-    self::enhanceWidget($widget->getOption('to'));
-    self::enhanceWidget($widget->getOption('from'));
+    $this->enhanceWidget($widget->getOption('to'));
+    $this->enhanceWidget($widget->getOption('from'));
   }
 
   public function enhanceWidgetFilterDateTime(sfWidgetFormFilterDateTime $widget, $validator)
   {
-    self::enhanceWidget($widget->getOption('to'));
-    self::enhanceWidget($widget->getOption('from'));
+    $this->enhanceWidget($widget->getOption('to'));
+    $this->enhanceWidget($widget->getOption('from'));
   }
 
   public function enhanceWidgetDateRange(sfWidgetFormDateRange $widget, $validator)
   {
-    self::enhanceWidget($widget->getOption('to'));
-    self::enhanceWidget($widget->getOption('from'));
+    $this->enhanceWidget($widget->getOption('to'));
+    $this->enhanceWidget($widget->getOption('from'));
   }
 
   /**
