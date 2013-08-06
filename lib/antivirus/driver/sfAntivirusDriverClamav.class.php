@@ -7,10 +7,10 @@
  */
 
 /**
- * Antivirus driver for Clamav antivirus. Supportes socket or binary executable.
+ * Antivirus driver for Clamav antivirus. Binary executable implementation.
  *
  * @package Sift
- * @subpackage antivir
+ * @subpackage antivirus
  * @link http://phpmaster.com/zf-clamav/
  * @link http://sourceforge.net/p/clamwin/discussion/363174/thread/a5c5aeaa
  */

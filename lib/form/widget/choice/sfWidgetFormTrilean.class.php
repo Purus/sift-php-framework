@@ -10,7 +10,7 @@
  * sfWidgetFormTrilean represents a select tag for values: yes, no and null.
  *
  * @package Sift
- * @subpackage widget
+ * @subpackage form_widget
  */
 class sfWidgetFormTrilean extends sfWidgetFormChoice {
 

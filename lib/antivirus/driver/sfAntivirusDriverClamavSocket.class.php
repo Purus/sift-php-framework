@@ -10,7 +10,7 @@
  * Antivirus driver for Clamav antivirus. Sockets implementation.
  *
  * @package Sift
- * @subpackage antivir
+ * @subpackage antivirus
  * @link http://www.jejik.com/articles/2009/07/scanning_files_with_clamav_from_cakephp/
  * @link http://www.clamav.net/doc/latest/html/node28.html
  */

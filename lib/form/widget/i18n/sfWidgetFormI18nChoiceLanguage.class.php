@@ -10,7 +10,7 @@
  * sfWidgetFormI18nChoiceLanguage represents a language choice widget.
  *
  * @package    Sift
- * @subpackage widget
+ * @subpackage form_widget
  */
 class sfWidgetFormI18nChoiceLanguage extends sfWidgetFormChoice
 {

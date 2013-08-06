@@ -10,7 +10,7 @@
  * Launches functional tests.
  *
  * @package Sift
- * @subpackage task
+ * @subpackage cli_task
  */
 class sfCliTestFunctionalTask extends sfCliTestBaseTask
 {
