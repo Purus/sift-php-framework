@@ -1,10 +1,8 @@
 <?php
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
-require_once(dirname(__FILE__).'/../../../lib/json/sfJson.class.php');
-require_once(dirname(__FILE__).'/../../../lib/json/sfJsonExpression.class.php');
 
-$t = new lime_test(8, new lime_output_color());
+$t = new lime_test(11, new lime_output_color());
 
 $string = 'Toto je string';
 $encodedString = '"Toto je string"';
@@ -39,18 +37,6 @@ $array = array(
 
 $t->is(sfJson::encode($array, true), '{"valid":true,"callback":function() { alert("this is my message"); $(\'#foobar\').show(\'fast\'); }}', 'encode() encodes array with javascript expressions objects correctly');
 
-$t->diag('decode()');
-
-$json = '{"Organization": "PHP Documentation Team"}';
-$t->isa_ok(sfJson::decode($json), 'stdClass', 'encode() decodes object correctly');
-
-
-$t->diag('sfJsonExpression');
-
-$e = new sfJsonExpression('function() {}');
-$t->is($e->__toString(), 'function() {}', '__toString() method returns expression string');
-
-
 class FooBar implements sfIJsonSerializable {
 
   public function jsonSerialize()
@@ -60,6 +46,47 @@ class FooBar implements sfIJsonSerializable {
 
 }
 
-$foobar = new FooBar();
+class Dummy implements sfIJsonSerializable {
 
-$t->is(sfJson::encode($foobar), '["bar"]', 'sfJson can serialize objects which implements sfIJsonSerializable interface');
+  public function jsonSerialize()
+  {
+    return array('dummy' => 'yes');
+  }
+}
+
+class DummyExpression implements sfIJsonSerializable {
+
+  public function jsonSerialize()
+  {
+    return new sfJsonExpression('function() { alert("Jesus is Lord"); }');
+  }
+}
+
+$foobar = new FooBar();
+$dummy = new Dummy();
+
+$t->is(sfJson::encode($foobar), '["bar"]', 'encode() can serialize objects which implement sfIJsonSerializable interface');
+$t->is(sfJson::encode(array($foobar, $dummy)), '[["bar"],{"dummy":"yes"}]', 'encode() can serialize more elements which implement sfIJsonSerializable');
+
+class myCollection extends sfCollection {}
+
+$obj = new myCollection();
+$obj->append($foobar);
+$obj->append($dummy);
+
+$t->is(sfJson::encode($obj), '{"0":["bar"],"1":{"dummy":"yes"}}', 'encode() can serialize a collection with more elements which implement sfIJsonSerializable');
+
+$obj = new myCollection();
+$obj->append(new DummyExpression());
+$obj->append($dummy);
+
+$t->is(sfJson::encode($obj), '{"0":function() { alert("Jesus is Lord"); },"1":{"dummy":"yes"}}', 'encode() can serialize a collection with more elements which implement sfIJsonSerializable and returns sfJsonExpression');
+
+$t->diag('decode()');
+
+$json = '{"Organization": "PHP Documentation Team"}';
+$t->isa_ok(sfJson::decode($json), 'stdClass', 'encode() decodes object correctly');
+
+$t->diag('sfJsonExpression');
+$e = new sfJsonExpression('function() {}');
+$t->is($e->__toString(), 'function() {}', '__toString() method returns expression string');

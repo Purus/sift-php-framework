@@ -7,7 +7,7 @@
  */
 
 /**
- * sfJson class for encoding to and decoding from JSON. 
+ * sfJson class for encoding to and decoding from JSON.
  *
  * @package    Sift
  * @subpackage json
@@ -16,35 +16,37 @@ class sfJson {
 
   /**
    * Returns the JSON representation of a value
-   * 
-   * This function only works with UTF-8 encoded data. 
-   * 
-   * @param mixed $valueToEncode
+   *
+   * This function only works with UTF-8 encoded data.
+   *
+   * @param mixed|sfIJsonSerializable $valueToEncode
    * @param boolean $fixExpression Fix javascript expressions?
-   * @param int $bitmask Bitmask consisting of JSON_HEX_QUOT, JSON_HEX_TAG, 
-   *                     JSON_HEX_AMP, JSON_HEX_APOS, JSON_NUMERIC_CHECK, 
-   *                     JSON_PRETTY_PRINT, JSON_UNESCAPED_SLASHES, 
-   *                     JSON_FORCE_OBJECT, JSON_UNESCAPED_UNICODE. 
+   * @param int $bitmask Bitmask consisting of JSON_HEX_QUOT, JSON_HEX_TAG,
+   *                     JSON_HEX_AMP, JSON_HEX_APOS, JSON_NUMERIC_CHECK,
+   *                     JSON_PRETTY_PRINT, JSON_UNESCAPED_SLASHES,
+   *                     JSON_FORCE_OBJECT, JSON_UNESCAPED_UNICODE.
    * @return string
    */
-  public static function encode($valueToEncode, $fixExpressions = true, 
+  public static function encode($valueToEncode, $fixExpressions = true,
           $bitmask = 0)
   {
+    $valueToEncode = self::_recursiveJsonSerializableFinder($valueToEncode);
+
     // Pre-encoding look for function calls and replacing by tmp ids
     $javascriptExpressions = array();
 
     if($fixExpressions)
     {
-      $valueToEncode = self::_recursiveJsonExprFinder($valueToEncode, $javascriptExpressions); 
+      $valueToEncode = self::_recursiveJsonExprFinder($valueToEncode, $javascriptExpressions);
     }
-    
-    if(version_compare(phpversion(), '5.3', '>'))
+
+    if(version_compare(PHP_VERSION, '5.3', '>'))
     {
-      $encodedResult = json_encode($valueToEncode, $bitmask); 
+      $encodedResult = json_encode($valueToEncode, $bitmask);
     }
     else
     {
-      $encodedResult = json_encode($valueToEncode); 
+      $encodedResult = json_encode($valueToEncode);
     }
 
     $error = self::getLastError();
@@ -52,11 +54,11 @@ class sfJson {
     {
       throw new sfException(sprintf('JSON error occured: %s', $error));
     }
-    
-    if($fixExpressions && count($javascriptExpressions) > 0) 
+
+    if($fixExpressions && count($javascriptExpressions) > 0)
     {
       $count = count($javascriptExpressions);
-      for($i = 0; $i < $count; $i++) 
+      for($i = 0; $i < $count; $i++)
       {
         $magicKey = $javascriptExpressions[$i]['magicKey'];
         $value    = $javascriptExpressions[$i]['value'];
@@ -67,10 +69,33 @@ class sfJson {
         $encodedResult);
       }
     }
-    
+
     return $encodedResult;
-  }   
-  
+  }
+
+  /**
+   * Find all occurences of objects which implements sfIJsonSerializable interface and
+   * call their jsonSerialize method
+   *
+   * @param mixed $value
+   */
+  protected static function _recursiveJsonSerializableFinder(&$value)
+  {
+    if(is_array($value) || $value instanceof Traversable)
+    {
+      foreach($value as $k => $v)
+      {
+        $value[$k] = self::_recursiveJsonSerializableFinder($v);
+      }
+    }
+    elseif($value instanceof sfIJsonSerializable)
+    {
+      $value = $value->jsonSerialize();
+    }
+
+    return $value;
+  }
+
   /**
    * Check & Replace function calls for tmp ids in the valueToEncode
    *
@@ -84,44 +109,43 @@ class sfJson {
    * @see encode
    * @param mixed $valueToCheck a string - object property to be encoded
    * @return void
-   * @see Zend_Json_Encode
    */
   protected static function _recursiveJsonExprFinder(
-      &$value, array &$javascriptExpressions, $currentKey = null) 
+      &$value, array &$javascriptExpressions, $currentKey = null)
   {
     if((is_string($value) && strpos($value, 'function(') === 0)
        || $value instanceof sfJsonExpression)
-    {          
+    {
       $magicKey = '____' . $currentKey . '_' . (count($javascriptExpressions));
       $javascriptExpressions[] = array(
           'magicKey' => $magicKey,
           'value'    => is_object($value) ? $value->__toString() : $value
       );
       $value = $magicKey;
-    }     
-    elseif(is_array($value)) 
+    }
+    elseif(is_array($value) || $value instanceof Traversable)
     {
-      foreach ($value as $k => $v) 
+      foreach($value as $k => $v)
       {
         $value[$k] = self::_recursiveJsonExprFinder($value[$k], $javascriptExpressions, $k);
       }
-    } 
-    elseif(is_object($value)) 
+    }
+    elseif(is_object($value))
     {
-      foreach ($value as $k => $v) 
+      foreach($value as $k => $v)
       {
         $value->$k = self::_recursiveJsonExprFinder($value->$k, $javascriptExpressions, $k);
       }
     }
     return $value;
   }
-  
+
   /**
    * Decodes given JSON input. This function only works with UTF-8 encoded data.
-   * 
-   * @param string $json The json string being decoded. 
-   * @param boolean $toAssoc  When true, returned objects will be converted into associative arrays. 
-   * @return mixed 
+   *
+   * @param string $json The json string being decoded.
+   * @param boolean $toAssoc  When true, returned objects will be converted into associative arrays.
+   * @return mixed
    */
   public static function decode($json, $toAssoc = false)
   {
@@ -131,12 +155,12 @@ class sfJson {
     {
       throw new sfException(sprintf('JSON error occured: %s', $error));
     }
-    return $result;  
+    return $result;
   }
-  
+
   /**
-   * Returns the last error (if any) occurred during the last JSON encoding/decoding. 
-   * 
+   * Returns the last error (if any) occurred during the last JSON encoding/decoding.
+   *
    * @return mixed Returns false if no result occured, string with message otherwise
    */
   public static function getLastError()
@@ -145,33 +169,33 @@ class sfJson {
     {
       return false;
     }
-    
+
     switch(json_last_error())
     {
       case JSON_ERROR_NONE:
         $error = false;
       break;
-    
+
       case JSON_ERROR_DEPTH:
-        $errro = 'Maximum stack depth exceeded';
+        $error = 'Maximum stack depth exceeded';
       break;
-    
+
       case JSON_ERROR_STATE_MISMATCH:
         $error = 'Underflow or the modes mismatch';
       break;
-    
+
       case JSON_ERROR_CTRL_CHAR:
         $error = 'Unexpected control character found';
       break;
-    
+
       case JSON_ERROR_SYNTAX:
         $error  = 'Syntax error, malformed JSON';
       break;
-    
+
       case JSON_ERROR_UTF8:
-        $error = 'Malformed UTF-8 characters, possibly incorrectly encoded';        
+        $error = 'Malformed UTF-8 characters, possibly incorrectly encoded';
       break;
-    
+
       default:
         $error = 'Unknown error';
       break;
@@ -179,5 +203,5 @@ class sfJson {
 
     return $error;
   }
-  
+
 }
