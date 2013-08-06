@@ -10,7 +10,7 @@
  * sfFormEnhancerRich enhances forms with builtin features from jQueryUI
  *
  * @package    Sift
- * @subpackage form
+ * @subpackage form_enhancer
  */
 class sfFormEnhancerRich extends sfFormEnhancer {
 
@@ -48,6 +48,24 @@ class sfFormEnhancerRich extends sfFormEnhancer {
     self::enhanceWidget($widget->getOption('widget'));
   }
 
+  public function enhanceWidgetFilterDate(sfWidgetFormFilterDate $widget, $validator)
+  {
+    self::enhanceWidget($widget->getOption('to'));
+    self::enhanceWidget($widget->getOption('from'));
+  }
+
+  public function enhanceWidgetFilterDateTime(sfWidgetFormFilterDateTime $widget, $validator)
+  {
+    self::enhanceWidget($widget->getOption('to'));
+    self::enhanceWidget($widget->getOption('from'));
+  }
+
+  public function enhanceWidgetDateRange(sfWidgetFormDateRange $widget, $validator)
+  {
+    self::enhanceWidget($widget->getOption('to'));
+    self::enhanceWidget($widget->getOption('from'));
+  }
+
   /**
    * Returns spinner options for the widget
    *
@@ -70,17 +88,6 @@ class sfFormEnhancerRich extends sfFormEnhancer {
       {
         $options['min'] = $min;
       }
-
-      // this is a floating number validator
-      if($validator instanceof sfValidatorNumber)
-      {
-        // FIXME: implement proper validator for jquery validate plugin
-        // for various number formats!
-        if($widget instanceof sfWidgetFormPrice)
-        {
-          $options['numberFormat'] = 'C';
-        }
-      }
     }
 
     if($step = $widget->getOption('step'))
@@ -100,9 +107,19 @@ class sfFormEnhancerRich extends sfFormEnhancer {
    */
   public function getDatePickerOptions(sfWidget $widget, $validator = null)
   {
+    list($dateFormat, $timeFormat) = self::convertDateFormat(
+                                        $widget->getOption('input_pattern'),
+                                        $widget->getOption('format_pattern')
+                                      );
+
     $options = array(
-      'dateFormat' => $this->convertDateFormat($widget->getOption('input_pattern'))
+      'dateFormat' => $dateFormat
     );
+
+    if($widget instanceof sfWidgetFormDateTime)
+    {
+      $options['timeFormat'] = $timeFormat;
+    }
 
     if($validator)
     {
@@ -112,12 +129,14 @@ class sfFormEnhancerRich extends sfFormEnhancer {
 
           if($min = $validator->getOption('min'))
           {
-            $options['minDate'] = sprintf('new Date(%s * 1000)', strtotime($min));
+            // export as miliseconds so the javascript date can be succesfully created
+            $options['minDate'] = strtotime($min) * 1000;
           }
 
           if($max = $validator->getOption('max'))
           {
-            $options['maxDate'] = sprintf('new Date(%s * 1000)', strtotime($max));
+            // export as miliseconds so the javascript date can be succesfully created
+            $options['maxDate'] = strtotime($max) * 1000;
           }
 
         break;
@@ -158,52 +177,32 @@ class sfFormEnhancerRich extends sfFormEnhancer {
   }
 
   /**
-   * Converts dateformat from I18n format to jquery UI datepicker format
+   * Converts dateformat from I18n format to jQuery UI datepicker format
    *
    * @param string $format
    * @link http://api.jqueryui.com/datepicker/#utility-formatDate
+   * @link http://snipplr.com/view/41329/
+   * @link http://trac.symfony-project.org/wiki/formatDateHowTo
+   * @todo Implement more accurate conversion
+   * @return array($dateFormat, $timeFormat)
    */
   public static function convertDateFormat($format)
   {
-    static $dateReplacements, $timeReplacements;
+    $knownFormats = array(
+      // input pattern: d
+      // 25.5.2013 	d.M.yyyy
+      'd.M.yyyy' => array('d.m.yy', ''),
+      // input pattern g
+      // 25.5.2013 10:15 d.M.yyyy H:mm
+      'd.M.yyyy H:mm' => array('d.m.yy', 'H:mm'),
+    );
 
-    if(!$dateReplacements)
+    if(isset($knownFormats[$format]))
     {
-      $dateReplacements = array(
-        'EEEE' => 'DD',
-        'EE' => 'D',
-        'yyyy' => 'yy',
-        'Y' => 'yy',
-        'yy' => 'y',
-        'MMMM' => 'MM',
-        'MMM' => 'M',
-        'MM' => 'dd',
-        'y' => 'yy',
-        'M' => 'm',
-        'dd' => 'd',
-      );
+      return $knownFormats[$format];
     }
 
-    if(!$timeReplacements)
-    {
-      $timeReplacements = array(
-        'HH:mm:ss' => 'HH:mm:ss',
-        'HH' => 'HH',
-        'H' => 'H',
-        'hh' => 'hh',
-        'h' => 'l',
-      );
-    }
-
-    $dateFormat = strtr($format, $dateReplacements);
-    $dateFormat = strtr($dateFormat, array_combine(
-            array_keys($timeReplacements), array_fill(0, count($timeReplacements), '')));
-
-    $timeFormat = strtr($format, $timeReplacements);
-    $timeFormat = strtr($timeFormat, array_combine(
-            array_keys($dateReplacements), array_fill(0, count($dateReplacements), '')));
-
-    return array(trim($dateFormat), trim($timeFormat));
+    return array($format, $format);
   }
 
 }

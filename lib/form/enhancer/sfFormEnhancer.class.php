@@ -10,7 +10,7 @@
  * sfFormEnhancer enhances form widgets and validators with configured attributes.
  *
  * @package    Sift
- * @subpackage form
+ * @subpackage form_enhancer
  */
 class sfFormEnhancer extends sfConfigurable implements sfIFormEnhancer {
 
@@ -25,11 +25,11 @@ class sfFormEnhancer extends sfConfigurable implements sfIFormEnhancer {
    * Rturns an instance of form enhancer
    *
    * @param string $class
-   * @param array $options
+   * @param array $options Array of options
    * @return sfIFormEnhancer
    * @throws InvalidArgumentException If enhancer is invalid
    */
-  public static function factory($class, $options)
+  public static function factory($class, $options = array())
   {
     $enhancerClass = sprintf('sfFormEnhancer%s', ucfirst($class));
 
@@ -102,8 +102,8 @@ class sfFormEnhancer extends sfConfigurable implements sfIFormEnhancer {
       {
         if(isset($embeddedForms[$field->getName()]))
         {
-          $form = $embeddedForms[$field->getName()];
-          $this->enhanceFormFields($form, $form->getFormFieldSchema(), get_class($form), $form->getEmbeddedForms());
+          $embededForm = $embeddedForms[$field->getName()];
+          $this->enhanceFormFields($embededForm, $form->getFormFieldSchema(), get_class($embededForm), $embededForm->getEmbeddedForms());
         }
         else
         {

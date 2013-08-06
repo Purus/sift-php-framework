@@ -1,6 +1,6 @@
 <?php
 
-require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
+require_once(dirname(__FILE__).'/../../../bootstrap/unit.php');
 require_once($_test_dir.'/unit/sfCoreMock.class.php');
 $t = new lime_test(7);
 
@@ -19,7 +19,7 @@ class sfFormEnhancerTest extends sfFormEnhancer
 
 class sfFormExtraEnhancerTest extends sfFormEnhancer
 {
-  public function enhanceWidget(sfWidget $widget)
+  public function enhanceWidget(sfWidget $widget, sfValidatorBase $validator = null)
   {
     switch(get_class($widget))
     {
@@ -55,7 +55,6 @@ class myTimeForm extends sfForm {
   public function configure()
   {
     $this->setWidget('time', new sfWidgetFormInputText(array()));
-
   }
 
 }

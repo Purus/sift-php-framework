@@ -10,6 +10,6 @@
  * myFormEnhancer allows extensions of form enhancing.
  *
  * @package    Sift
- * @subpackage form
+ * @subpackage form_enhancer
  */
 class myFormEnhancer extends sfFormEnhancerRich {}

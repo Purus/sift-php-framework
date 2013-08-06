@@ -10,7 +10,7 @@
  * sfIFormEnhancer interface
  *
  * @package    Sift
- * @subpackage form
+ * @subpackage form_enhancer
  */
 interface sfIFormEnhancer {
 
@@ -24,9 +24,8 @@ interface sfIFormEnhancer {
   /**
    * Enhances any forms before they're passed to the template.
    *
-   * @param  sfEvent $event
-   * @param  array   $variables Array of variables passed to the template
-   *
+   * @param sfEvent $event
+   * @param array $variables Array of variables passed to the template
    * @return array Variables
    */
   public function filterTemplateVariables(sfEvent $event, array $variables);
