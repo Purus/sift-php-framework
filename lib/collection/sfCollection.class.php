@@ -9,11 +9,11 @@
 /**
  * sfCollection is a object collection
  *
- * @package    Sift
+ * @package Sift
  * @subpackage collection
  * @link http://offshootinc.com/blog/2011/04/01/reusable-sorting-for-collection-objects-in-php/
  */
-abstract class sfCollection extends ArrayObject {
+abstract class sfCollection extends ArrayObject implements sfIArrayAccessByReference {
 
   /**
    * Type (class, interface, PHP type)
@@ -209,14 +209,16 @@ abstract class sfCollection extends ArrayObject {
       {
         if(!($item instanceof $this->itemType))
         {
-          throw new InvalidArgumentException(sprintf('Cannot add item to the collection. The item must be "%s" object.', $this->itemType));
+          throw new InvalidArgumentException(
+              sprintf('Cannot add item to the collection. The item must be "%s" object. Instance of "%s" given.',
+                  $this->itemType, is_object($item) ? get_class($item) : gettype($item)));
         }
       }
       else
       {
         if(!call_user_func($this->checkCallback, $item))
         {
-          throw new InvalidArgumentException(sprintf('Cannot add item to the collection. Item must be "%s" type.', $this->itemType));
+          throw new InvalidArgumentException(sprintf('Cannot add item to the collection. Item must be "%s" type. "%s" given.', $this->itemType, gettype($item)));
         }
       }
     }
@@ -298,6 +300,33 @@ abstract class sfCollection extends ArrayObject {
     {
       throw new InvalidStateException(sprintf('Cannot modify a frozen object "%s".', get_class($this)));
     }
+  }
+
+  /**
+   * Sets a value by reference
+   *
+   * @param mixed $offset Offset
+   * @param mixed $value Value
+   * @return mixed $value
+   */
+  public function &offsetSetByReference($offset, &$value)
+  {
+    parent::offsetSet($offset, $value);
+    // should return in case called within an assignment chain
+    return $value;
+  }
+
+  /**
+   * @see sfIArrayAccessByReference::offsetGetByReference
+   */
+  public function &offsetGetByReference($offset)
+  {
+    $ret = null;
+    if($this->offsetExists($offset))
+    {
+      $ret = parent::offsetGet($offset);
+    }
+    return $ret;
   }
 
 }
