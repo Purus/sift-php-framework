@@ -10,7 +10,7 @@
  * sfFormJavascriptValidation class provides javascript validation for forms
  *
  * @package Sift
- * @subpackage form
+ * @subpackage form_javascript
  */
 class sfFormJavascriptValidation {
 

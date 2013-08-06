@@ -10,7 +10,7 @@
  * sfWidgetFormSchemaDecorator wraps a form schema widget inside a given HTML snippet.
  *
  * @package    Sift
- * @subpackage form
+ * @subpackage form_formatter
  */
 class sfWidgetFormSchemaDecorator extends sfWidgetFormSchema
 {

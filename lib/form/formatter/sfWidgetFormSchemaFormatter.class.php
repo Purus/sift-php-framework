@@ -10,7 +10,7 @@
  * sfWidgetFormSchemaFormatter allows to format a form schema with HTML formats.
  *
  * @package    Sift
- * @subpackage form
+ * @subpackage form_formatter
  */
 abstract class sfWidgetFormSchemaFormatter
 {

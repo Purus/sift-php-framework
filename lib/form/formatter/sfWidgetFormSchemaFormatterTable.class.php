@@ -10,7 +10,7 @@
  * Table formatter
  *
  * @package    Sift
- * @subpackage form
+ * @subpackage form_formatter
  */
 class sfWidgetFormSchemaFormatterTable extends sfWidgetFormSchemaFormatter
 {

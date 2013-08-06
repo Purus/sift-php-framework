@@ -10,7 +10,7 @@
  * sfWidgetFormSchemaFormatterUnorderedList class
  *
  * @package    Sift
- * @subpackage form
+ * @subpackage form_formatter
  */
 class sfWidgetFormSchemaFormatterUnorderedList extends sfWidgetFormSchemaFormatter
 {

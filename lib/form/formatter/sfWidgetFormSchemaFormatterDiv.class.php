@@ -10,7 +10,7 @@
  * sfWidgetFormSchemaFormatterDiv forms the form using div layout.
  *
  * @package    Sift
- * @subpackage form
+ * @subpackage form_formatter
  */
 class sfWidgetFormSchemaFormatterDiv extends sfWidgetFormSchemaFormatter
 {

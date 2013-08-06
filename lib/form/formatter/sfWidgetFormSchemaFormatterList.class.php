@@ -10,7 +10,7 @@
  * List formatter
  *
  * @package    Sift
- * @subpackage form
+ * @subpackage form_formatter
  */
 class sfWidgetFormSchemaFormatterList extends sfWidgetFormSchemaFormatter
 {

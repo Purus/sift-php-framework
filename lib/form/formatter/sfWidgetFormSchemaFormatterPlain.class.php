@@ -10,7 +10,7 @@
  * sfWidgetFormSchemaFormatterPlain forms the form using plain layout.
  *
  * @package    Sift
- * @subpackage form
+ * @subpackage form_formatter
  */
 class sfWidgetFormSchemaFormatterPlain extends sfWidgetFormSchemaFormatter
 {
