@@ -399,16 +399,15 @@
   };
 
   /**
-   * Setups widget for number inputs
+   * Setups widget for number inputs (only those with integer)
+   *
    * @param {DOM element} [context] Context
    * @requires Config
    */
   Application.setupNumberWidgets = function(context)
   {
-    return;
-
-    var numberInputs = $('input.number,input.integer,input.price', context);
-
+    var numberInputs = $('input.integer', context);
+    
     if(!numberInputs.length)
     {
       return;
@@ -451,9 +450,8 @@
           }
         }, $element.data('spinnerOptions') || {});
 
-        console.log(options);
-
         $element.spinner(options);
+
       });
     }, null, typeof $.fn.spinner === 'undefined');
   };
