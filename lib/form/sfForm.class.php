@@ -1201,13 +1201,14 @@ class sfForm implements ArrayAccess, Iterator, Countable
   }
 
   /**
-   * Returns an array of rules and messages for validation
+   * Final javascript validation
    *
-   * @return array
+   * @param sfFormJavascriptValidationRulesCollection $rules Validation rules
+   * @param sfFormJavascriptValidationMessagesCollection $messages Validation messages
    */
-  public function getJavascriptFinalValidation()
+  public function getJavascriptFinalValidation(sfFormJavascriptValidationRulesCollection &$rules,
+      sfFormJavascriptValidationMessagesCollection &$messages)
   {
-    return array(array(), array());
   }
 
   /**
