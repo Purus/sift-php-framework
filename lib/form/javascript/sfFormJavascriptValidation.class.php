@@ -7,41 +7,127 @@
  */
 
 /**
- * sfFormJavascriptValidation class
+ * sfFormJavascriptValidation class provides javascript validation for forms
  *
- * @package    Sift
+ * @package Sift
  * @subpackage form
  */
 class sfFormJavascriptValidation {
 
+  /**
+   * Required
+   */
   const REQUIRED = 'required';
+
+  /**
+   * Remote
+   */
   const REMOTE   = 'remote';
+
+  /**
+   * Min length
+   */
   const MIN_LENGTH = 'minlength';
+
+  /**
+   * Max length
+   */
   const MAX_LENGTH = 'maxlength';
+
+  /**
+   * Range length
+   */
   const RANGE_LENGTH = 'rangelength';
+
+  /**
+   * Minimum
+   */
   const MIN = 'min';
+
+  /**
+   * Maximum
+   */
   const MAX = 'max';
+
+  /**
+   * Range
+   */
   const RANGE = 'range';
+
+  /**
+   * Email
+   */
   const EMAIL = 'email';
+
+  /**
+   * Url
+   */
   const URL   = 'url';
 
+  /**
+   * File extension
+   */
   const FILE_EXTENSION = 'accept';
+
+  /**
+   * Number
+   */
   const NUMBER = 'number';
+
+  /**
+   * Equal to
+   */
   const EQUAL_TO = 'equalTo';
+
+  /**
+   * Digits
+   *
+   */
   const DIGITS = 'digits';
 
+  /**
+   * Credit card
+   */
   const CREDIT_CARD = 'creditcard';
 
-  // these are in additional_methods.js
+  /**
+   * Min words
+   */
   const MIN_WORDS   = 'minWords';
+
+  /**
+   * Max words
+   */
   const MAX_WORDS   = 'maxWords';
+
+  /**
+   * Range words
+   */
   const RANGE_WORDS = 'rangeWords';
+
+  /**
+   * File size
+   */
   const FILE_SIZE   = 'fileSize';
 
-  // custom methods
+  /**
+   * Custom callback
+   */
   const CUSTOM_CALLBACK = 'customCallback';
+
+  /**
+   * Not equal to
+   */
   const NOT_EQUAL_TO = 'notEqualTo';
+
+  /**
+   * Regex pattern
+   */
   const REGEX_PATTERN = 'regexPattern';
+
+  /**
+   * Regex negative pattern
+   */
   const REGEX_PATTERN_NEGATIVE = 'regexPatternNegative';
 
   /**
@@ -348,8 +434,8 @@ class sfFormJavascriptValidation {
   public static function getValidationRulesAndMessagesForForm(sfForm $form,
           $embededFormName = null, sfForm $parentForm = null)
   {
-    $rules = array();
-    $messages = array();
+    $rules = new sfFormJavascriptValidationRulesCollection();
+    $messages = new sfFormJavascriptValidationMessagesCollection();
 
     // loop all fields
     foreach($form->getValidatorSchema()->getFields() as $field_name => $validator)
@@ -386,7 +472,7 @@ class sfFormJavascriptValidation {
         $r = $validator->getJavascriptValidationRules();
         if($r && count($r))
         {
-          $rules[$field_name] = $r;
+          $rules->append(new sfFormJavascriptValidationFieldRules($_fieldName, $field_name, $r));
         }
         $skipToNext = true;
       }
@@ -397,7 +483,7 @@ class sfFormJavascriptValidation {
         $m = $validator->getJavascriptValidationMessages();
         if($m && count($m))
         {
-          $messages[$field_name] = $m;
+          $messages->append(new sfFormJavascriptValidationFieldMessages($_fieldName, $field_name, $m));
         }
         $skipToNext = true;
       }
@@ -409,31 +495,10 @@ class sfFormJavascriptValidation {
       }
 
       // continue to next field
-      if($skipToNext) continue;
-
-      // get the validator options associated with the validator
-      $field_options  = $field->getOptions();
-      $field_messages = $field->getMessages();
-
-      $required = $form->getWidgetSchema()->getFormFormatter()
-                    ->validatorMarkedFieldAsRequired($validator);
-
-      if($required)
+      if($skipToNext)
       {
-        $rules[$field_name]['required'] = true;
-        $messages[$field_name]['required'] = $field_messages['required'];
+        continue;
       }
-
-    }
-
-    try
-    {
-      list($formRules, $formMessages) = $form->getJavascriptFinalValidation();
-      $rules = sfToolkit::arrayDeepMerge($rules, $formRules);
-      $messages = sfToolkit::arrayDeepMerge($messages, $formMessages);
-    }
-    catch(sfException $e)
-    {
     }
 
     $embeded = $form->getEmbeddedForms();
@@ -448,40 +513,42 @@ class sfFormJavascriptValidation {
           $embededFormName = sprintf('[%s][%s]', $embededFormName, $name);
           list($r, $m) = self::getValidationRulesAndMessagesForForm($embededForm2,
                     $embededFormName, $parentForm ? $parentForm : $form);
+          $rules->merge($r);
 
-          $rules    = array_merge($rules, $r);
-          $messages = array_merge($messages, $m);
+          $messages->merge($m);
         }
       }
       else
       {
         list($r, $m) = self::getValidationRulesAndMessagesForForm($embededForm,
                   $embededFormName, $parentForm ? $parentForm : $form);
-        $rules    = array_merge($rules, $r);
-        $messages = array_merge($messages, $m);
+        $rules->merge($r);
+        $messages->merge($m);
       }
-
     }
 
+    // translation of messages
     foreach($messages as $field_name => $_field_messages)
     {
       foreach($_field_messages as $index => $message)
       {
-        // we have something special! handle messages with placeholders
-        // carefully, fixed message is already translated
-        if($message instanceof sfFormJavascriptFixedValidationMessage)
+        if($message->hasParameters())
         {
-          $message = sprintf("function(parameters, element) { return '%s'.replace('%%value%%', jQuery(element).val(), 'g'); }",
+          $msg = new sfJsonExpression(sprintf("function(parameters, element) { return '%s'.replace('%%value%%', jQuery(element).val(), 'g'); }",
                         $form->__($message->getMessage(), $message->getParameters())
-                     );
+                     ));
         }
         else
         {
-          $message = $form->__($message);
+          $msg = $form->__($message->getMessage());
         }
-        $messages[$field_name][$index] = (string)$message;
+
+        $message->setMessage($message);
       }
     }
+
+    // let the form do that it wants with the rules and messages
+    $form->getJavascriptFinalValidation($rules, $messages);
 
     return array(
       $rules, $messages
@@ -515,7 +582,6 @@ class sfFormJavascriptValidation {
       return $message;
     }
 
-    $params = array();
     foreach($matches[0] as $match)
     {
       $option = str_replace('%', '', $match);
@@ -528,7 +594,7 @@ class sfFormJavascriptValidation {
       $params[$match] = $validator->getOption($option);
     }
 
-    return new sfFormJavascriptFixedValidationMessage($message, $params);
+    return new sfFormJavascriptValidationMessage($message, $params);
   }
 
   /**
