@@ -63,7 +63,7 @@ class sfJson {
         $magicKey = $javascriptExpressions[$i]['magicKey'];
         $value    = $javascriptExpressions[$i]['value'];
         $encodedResult = str_replace(
-        //instead of replacing "key:magicKey", we replace directly magicKey by value because "key" never changes.
+        // instead of replacing "key:magicKey", we replace directly magicKey by value because "key" never changes.
         '"' . $magicKey . '"',
         $value,
         $encodedResult);
@@ -81,16 +81,28 @@ class sfJson {
    */
   protected static function _recursiveJsonSerializableFinder(&$value)
   {
-    if(is_array($value) || $value instanceof Traversable)
-    {
-      foreach($value as $k => $v)
-      {
-        $value[$k] = self::_recursiveJsonSerializableFinder($v);
-      }
-    }
-    elseif($value instanceof sfIJsonSerializable)
+    if($value instanceof sfIJsonSerializable)
     {
       $value = $value->jsonSerialize();
+    }
+    elseif(is_array($value) || $value instanceof Traversable)
+    {
+      // fixes issues with ArrayAccess, ArrayObject under php < 5.3.4
+      if($value instanceof sfIArrayAccessByReference)
+      {
+        foreach($value as $k => $v)
+        {
+          $_v = self::_recursiveJsonSerializableFinder($value->offsetGetByReference($k));
+          $value->offsetSetByReference($k, $_v);
+        }
+      }
+      else
+      {
+        foreach($value as $k => $v)
+        {
+          $value[$k] = self::_recursiveJsonSerializableFinder($v);
+        }
+      }
     }
 
     return $value;
@@ -125,9 +137,21 @@ class sfJson {
     }
     elseif(is_array($value) || $value instanceof Traversable)
     {
-      foreach($value as $k => $v)
+      // fixes issues with ArrayAccess, ArrayObject under php < 5.3.4
+      if($value instanceof sfIArrayAccessByReference)
       {
-        $value[$k] = self::_recursiveJsonExprFinder($value[$k], $javascriptExpressions, $k);
+        foreach($value as $k => $v)
+        {
+          $_v = self::_recursiveJsonExprFinder($value->offsetGetByReference($k), $javascriptExpressions, $k);
+          $value->offsetSetByReference($k, $_v);
+        }
+      }
+      else
+      {
+        foreach($value as $k => $v)
+        {
+          $value[$k] = self::_recursiveJsonExprFinder($value[$k], $javascriptExpressions, $k);
+        }
       }
     }
     elseif(is_object($value))
