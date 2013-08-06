@@ -21,7 +21,7 @@ class sfCliProjectFreezeTask extends sfCliBaseTask
   {
     $this->namespace = 'project';
     $this->name = 'freeze';
-    $this->briefDescription = 'Freeze the project do current Sift release';
+    $this->briefDescription = 'Freeze the project to current Sift release';
 
     $scriptName = $this->environment->get('script_name');
     
