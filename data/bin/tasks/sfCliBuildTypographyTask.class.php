@@ -38,18 +38,18 @@ EOF;
   protected function execute($arguments = array(), $options = array())
   {
     // load tex parser
-    require_once dirname(__FILE__) . '/lib/sfTexParser.class.php';
+    require_once dirname(__FILE__) . '/lib/sfTexHyphenationParser.class.php';
 
-    $this->buildTypoData();
+    $this->build();
 
     $this->logSection($this->getFullName(), 'Done.');
   }
 
-  protected function buildTypoData()
+  protected function build()
   {
     $dataSourceDir = $this->environment->get('build_data_dir') . '/typo';
     $i18nDir = $this->environment->get('i18n_data_dir') . '/typo';
-    
+
     $files = glob($dataSourceDir . '/*.tex');
 
     // invalid!
@@ -110,7 +110,7 @@ EOF;
 
       file_put_contents($i18nDir . '/' . $locale . '.dat', serialize($data));
     }
-    
+
   }
 
 }

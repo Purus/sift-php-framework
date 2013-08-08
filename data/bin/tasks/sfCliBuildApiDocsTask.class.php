@@ -45,7 +45,7 @@ EOF;
   protected function build()
   {
     $targetDir  = realpath($this->environment->get('project_root_dir') . '/../sift_docs.git/api');
-    $libDir     = $this->environment->get('sf_sift_lib_dir');    
+    $libDir     = $this->environment->get('sf_sift_lib_dir');
     $excludeDir = realpath($this->environment->get('sf_sift_lib_dir'). '/vendor').'/*';
 
     $title  = 'API docs ~ Sift PHP framework';

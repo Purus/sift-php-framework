@@ -21,20 +21,22 @@ class sfCliBuildReleaseTask extends sfCliBaseBuildTask {
    */
   protected function configure()
   {
+    $this->addArguments(array(
+      new sfCliCommandArgument('version', sfCliCommandArgument::REQUIRED,  'The release version'),
+      new sfCliCommandArgument('stability', sfCliCommandArgument::REQUIRED, 'The release stability'),
+    ));
+
     $this->addOptions(array(
-      new sfCliCommandOption('release-version', 'r', sfCliCommandOption::PARAMETER_REQUIRED, 'The release version'),
-      new sfCliCommandOption('stability', 's', sfCliCommandOption::PARAMETER_REQUIRED, 'The release stability'),
       new sfCliCommandOption('non-interactive', null, sfCliCommandOption::PARAMETER_NONE, 'Skip interactive prompts'),
       new sfCliCommandOption('nocompress', null, sfCliCommandOption::PARAMETER_NONE, 'Do not compress the package'),
-      new sfCliCommandOption('skip-tests', 'st', sfCliCommandOption::PARAMETER_NONE, 'Skip tests')
+      new sfCliCommandOption('skip-tests', 'st', sfCliCommandOption::PARAMETER_NONE, 'Skip tests'),
+      new sfCliCommandOption('exclude-ip-database', null, sfCliCommandOption::PARAMETER_NONE, 'Exclude ip2country database')
     ));
 
     $this->aliases = array();
     $this->namespace = '';
     $this->name = 'release';
     $this->briefDescription = 'Builds a release for distribution';
-
-    $scriptName = $this->environment->get('script_name');
 
     $this->detailedDescription = <<<EOF
 The [release|INFO] task builds a release for distribution using PEAR channel
@@ -49,8 +51,8 @@ EOF;
   {
     $this->interactive = !$options['non-interactive'];
 
-    $stability = $options['stability'];    
-    $version = $options['release-version'];
+    $stability = $arguments['stability'];
+    $version = $arguments['version'];
 
     // FIXME: some troubles with this
     /*
@@ -66,7 +68,7 @@ EOF;
       // $version = $version . '.'.$stability;
     }
     */
-    
+
     $this->version = $version;
     $this->stability = $stability;
 
@@ -86,7 +88,7 @@ EOF;
       $this->logSection($this->getFullName(), 'Skipped tests.');
     }
 
-    $this->build();
+    $this->build($arguments, $options);
   }
 
   protected function runTests()
@@ -113,7 +115,7 @@ EOF;
     return $h->run();
   }
 
-  protected function build()
+  protected function build($arguments, $options)
   {
     $packageXml = $this->environment->get('project_root_dir').'/package.xml';
 
@@ -129,22 +131,49 @@ EOF;
 
     // add class files
     $finder = sfFinder::type('file')->ignore_version_control()->relative();
+
     $xml_classes = '';
-    $dirs = array('lib' => 'php', 'data' => 'data');
-    $skip = array(
-      'sift', 'sift.bat', 'update_core_autoloader.php', 'release.php', 'build_docs.php', 'changelog.php'
+
+    $dirs = array(
+      'lib' => 'php',
+      'data' => 'data'
+    );
+
+    // skip files
+    $skipFiles = array(
+      'sift', 'sift.bat', 'build.php'
+    );
+
+    if($options['exclude-ip-database'])
+    {
+      $skipFiles[] = 'ip2country.db';
+    }
+
+    // exclude directories
+    $skipDirs = array(
+      'data/bin/tasks'
     );
 
     foreach($dirs as $dir => $role)
     {
       $class_files = $finder->in($dir);
+
       foreach($class_files as $file)
       {
+        foreach($skipDirs as $skipDir)
+        {
+          if(strpos($dir . '/' . str_replace(DIRECTORY_SEPARATOR, '/', $file), $skipDir) !== false)
+          {
+            continue 2;
+          }
+        }
+
         // skip files
-        if(in_array(basename($file), $skip))
+        if(in_array(basename($file), $skipFiles))
         {
           continue;
         }
+
         $xml_classes .= '<file role="' . $role . '" baseinstalldir="Sift" install-as="' . $file . '" name="' . $dir . '/' . $file . '" />' . "\n";
       }
     }
