@@ -4,7 +4,7 @@ require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
 sfLoader::loadHelpers(array('Helper', 'Tag', 'Text'));
 
-$t = new lime_test(47, new lime_output_color());
+$t = new lime_test(49, new lime_output_color());
 
 sfConfig::set('sf_charset', 'utf-8');
 
@@ -99,7 +99,7 @@ $t->is(strip_links_text("<a href='almost'>on my mind</a>"), "on my mind", 'text_
 
 // auto_linking()
 $t->diag('auto_linking()');
-$email_raw = 'fabien.potencier@symfony-project.com';
+$email_raw = 'foo@example.com';
 $email_result = '<a href="mailto:'.$email_raw.'">'.$email_raw.'</a>';
 $link_raw = 'http://www.google.com';
 $link_result = '<a href="'.$link_raw.'">'.$link_raw.'</a>';
@@ -116,4 +116,9 @@ $t->is(auto_link_text('Go to '.$link2_raw, 'urls'), 'Go to '.$link2_result, 'aut
 $t->is(auto_link_text('Go to '.$link2_raw, 'email_addresses'), 'Go to '.$link2_raw, 'auto_linking() converts URLs to links');
 $t->is(auto_link_text('<p>Link '.$link2_raw.'</p>'), '<p>Link '.$link2_result.'</p>', 'auto_linking() converts URLs to links');
 $t->is(auto_link_text('<p>'.$link2_raw.' Link</p>'), '<p>'.$link2_result.' Link</p>', 'auto_linking() converts URLs to links');
-$t->is(auto_link_text('<p>http://www.google.com/?q=symfony Link</p>'), '<p><a href="http://www.google.com/?q=symfony">http://www.google.com/?q=symfony</a> Link</p>', 'auto_linking() converts URLs to links');
+$t->is(auto_link_text('<p>http://www.google.com/?q=jesus+saves Link</p>'), '<p><a href="http://www.google.com/?q=jesus+saves">http://www.google.com/?q=jesus+saves</a> Link</p>', 'auto_linking() converts URLs to links');
+
+$t->diag('format_phone_number()');
+
+$t->is(format_phone_number('+420606123456'), '+420 606123456', 'format_phone_number() works without culture specific');
+$t->is(format_phone_number('+420606123456', 'cs'), '+420 606 123 456', 'format_phone_number() works for culture');

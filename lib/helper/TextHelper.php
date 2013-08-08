@@ -156,30 +156,13 @@ function format_address($address)
 /**
  * Formats phone number
  *
- * @param string $phone_number
+ * @param string $phoneNumber
+ * @param string $culture $culture
  * @return string Formatted phone number
  */
-function format_phone_number($phone_number)
+function format_phone_number($phoneNumber, $culture = null)
 {
-  $phone_number = preg_replace("[^0-9+]", '', $phone_number);
-  $length = strlen($phone_number);
-  if($length == 9 && $phone_number[0] != '+')
-  {
-    $phone_number = sprintf('%s %s %s',
-                    substr($phone_number, 0, 3),
-                    substr($phone_number, 3, 3),
-                    substr($phone_number, 6, 3));
-  }
-  // we have number like this: +420774868002
-  else if($length == 13 && $phone_number[0] == '+')
-  {
-    $phone_number = sprintf('%s %s %s %s',
-                    substr($phone_number, 0, 4),
-                    substr($phone_number, 4, 3),
-                    substr($phone_number, 7, 3),
-                    substr($phone_number, 10, 3));
-  }
-  return $phone_number;
+  return sfI18nPhoneNumberFormatter::getInstance()->format($phoneNumber, $culture);
 }
 
 /**
