@@ -5,8 +5,8 @@ require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 $t = new lime_test(88, new lime_output_color());
 
 $t->diag('i18n data');
-$en = unserialize(file_get_contents(dirname(__FILE__).'/../../../data/i18n/cldr/en.dat'));
-$root = unserialize(file_get_contents(dirname(__FILE__).'/../../../data/i18n/cldr/root.dat'));
+$en = unserialize(file_get_contents(dirname(__FILE__).'/../../../data/i18n/cultures/en.dat'));
+$root = unserialize(file_get_contents(dirname(__FILE__).'/../../../data/i18n/cultures/root.dat'));
 // merge with root
 $en   = sfToolkit::arrayDeepMerge($root, $en);
 

@@ -273,6 +273,17 @@ class sfISO3166 {
   );
 
   /**
+   * Countries which are in EU
+   *
+   * @var array
+   */
+  protected static $euCountries = array(
+    'AT', 'BE', 'BG', 'CY', 'CZ', 'DE', 'DK', 'EE', 'ES', 'FI', 'FR',
+    'GB', 'GR', 'HU', 'IE', 'IT', 'LT', 'LU', 'LV', 'MT', 'NL', 'PL',
+    'PT', 'RO', 'SE', 'SI', 'SK'
+  );
+
+  /**
    * Validate the country code.
    *
    * @param string $currency The 2 letter country code
@@ -291,6 +302,27 @@ class sfISO3166 {
   public static function getCountryCodes()
   {
     return self::$countries;
+  }
+
+  /**
+   * Return an array of EU countries
+   *
+   * @return array
+   */
+  public static function getEuropeanUnionCountries()
+  {
+    return self::$euCountries;
+  }
+
+  /**
+   * Is given country in EU?
+   *
+   * @param string $country
+   * @return boolean
+   */
+  public static function isInEuropeanUnion($country)
+  {
+    return in_array($country, self::getEuropeanUnionCountries());
   }
 
 }

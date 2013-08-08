@@ -45,7 +45,8 @@ class sfCulture {
   protected static $instances = array();
 
   /**
-   * CLDR data filename extension.
+   * Data filename extension.
+   *
    * @var string
    */
   protected $dataFileExt = '.dat';
@@ -63,45 +64,51 @@ class sfCulture {
   protected $culture;
 
   /**
-   * Directory where the CLDR data is stored.
+   * Directory where the culture data is stored.
+   *
    * @var string
    */
   protected $dataDir;
 
   /**
-   * A list of CLDR date files loaded.
+   * A list of data files which are loaded.
+   *
    * @var array
    */
   protected $dataFiles = array();
 
   /**
    * The current date time format info.
+   *
    * @var sfI18nDateTimeFormat
    */
   protected $dateTimeFormat;
 
   /**
    * The current number format info.
+   *
    * @var sfI18nNumberFormat
    */
   protected $numberFormat;
 
   /**
    * A list of properties that are accessable/writable.
+   *
    * @var array
    */
   protected $properties = array();
 
   /**
    * Culture type, all.
+   *
    * @see getCultures()
    * @var int
    */
-
   const ALL = 0;
 
   /**
    * Culture type, neutral.
+   *
    * @see getCultures()
    * @var int
    */
@@ -114,6 +121,11 @@ class sfCulture {
    * @var int
    */
   const SPECIFIC = 2;
+
+  /**
+   * Culture validation regular expression
+   *
+   */
   const CULTURE_VALIDATE_REGEXP = '/^[a-z]{2}(_[A-Z]{2,5}){0,2}$/';
 
   /**
@@ -223,7 +235,7 @@ class sfCulture {
       throw new LogicException('Missing "sf_sift_data_dir" configuration value. Please check the configuration.');
     }
 
-    return sfConfig::get('sf_sift_data_dir') . '/i18n/cldr/';
+    return sfConfig::get('sf_sift_data_dir') . '/i18n/cultures/';
   }
 
   /**
@@ -737,18 +749,7 @@ class sfCulture {
    */
   public function getCountries($countries = null)
   {
-    // handle special cases
-    if($countries == 'eu_only')
-    {
-      // europo
-      // http://isvat.appspot.com/
-      $countries = array(
-        'AT', 'BE', 'BG', 'CY', 'CZ', 'DE', 'DK', 'EE', 'ES', 'FI', 'FR',
-        'GB', 'GR', 'HU', 'IE', 'IT', 'LT', 'LU', 'LV', 'MT', 'NL', 'PL',
-        'PT', 'RO', 'SE', 'SI', 'SK'
-      );
-    }
-
+    $countries = $this->getCountryCodes($countries);
     $allCountries = $this->findInfo('countries', true);
 
     // restrict countries to a sub-set
@@ -848,11 +849,13 @@ class sfCulture {
   /**
    * Gets a list of postcodes regular expressions used for validation
    *
-   * @param array of territories
-   * @return array list of localized script names.
+   * @param array $countries Array of countries
+   * @return array
    */
   public function getPostCodes($countries = null)
   {
+    $countries = $this->getCountryCodes($countries);
+    
     $allPostCodes = $this->findInfo('postCodes', true);
 
     if($countries != null)
@@ -871,6 +874,36 @@ class sfCulture {
     ksort($allPostCodes);
 
     return $allPostCodes;
+  }
+
+  /**
+   * Gets a list of phone numbers regular expressions used for validation
+   *
+   * @param array $countries Array of countries
+   * @return array
+   */
+  public function getPhoneNumbers($countries = null)
+  {
+    $countries = $this->getCountryCodes($countries);
+    
+    $allPhoneNumbers = $this->findInfo('phoneNumbers', true);
+
+    if($countries != null)
+    {
+      // all countries are in uppercase
+      $countries = array_map('strtoupper', $countries);
+
+      if($problems = array_diff($countries, array_keys($allPhoneNumbers)))
+      {
+        throw new InvalidArgumentException(sprintf('The following phoneNumbers do not exist: %s.', implode(', ', $problems)));
+      }
+
+      $allPhoneNumbers = array_intersect_key($allPhoneNumbers, array_flip($countries));
+    }
+
+    ksort($allPhoneNumbers);
+
+    return $allPhoneNumbers;
   }
 
   /**
@@ -896,4 +929,21 @@ class sfCulture {
     setlocale(LC_COLLATE, $oldLocale);
   }
 
+  /**
+   * Get country codes. Handle special case like "eu_only" for Eu only countries
+   *
+   * @param string|array $countries
+   * @return array
+   */
+  protected function getCountryCodes($countries)
+  {
+    // handle special cases
+    if(is_string($countries) && strtolower($countries) == 'eu_only')
+    {
+      $countries = sfISO3166::getEuropeanUnionCountries();
+    }
+    
+    return $countries;
+  }
+  
 }

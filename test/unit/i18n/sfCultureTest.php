@@ -2,7 +2,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(52, new lime_output_color());
+$t = new lime_test(60, new lime_output_color());
 
 // __construct()
 $t->diag('__construct()');
@@ -184,3 +184,34 @@ $c->setNumberFormat('.');
 $t->is($c->getNumberFormat(), '.', '->setNumberFormat() sets the sfNumberFormatInfo instance');
 $c->NumberFormat = '#';
 $t->is($c->getNumberFormat(), '#', '->setNumberFormat() is equivalent to ->NumberFormat = ');
+
+// ->getPhoneNumbers()
+$t->diag('->getPhoneNumbers()');
+
+$t->isa_ok($c->getPhoneNumbers(), 'array', '->getPhoneNumbers() returns array');
+$t->ok(count($c->getPhoneNumbers()) > 0, '->getPhoneNumbers() returns non empty array');
+
+if(!count($c->getPhoneNumbers()))
+{
+  $t->skip('Cannot test array structure, phone number info is empty', 3);
+}
+else
+{
+  $first = current($c->getPhoneNumbers());
+  $t->ok(isset($first['code']), 'code information is present in the phone info');
+  $t->ok(isset($first['iprefix']), 'international prefix is present in the phone info');
+  $t->ok(isset($first['patterns']) && is_array($first['patterns']), 'patterns are present in the phone info');
+}
+
+$t->isa_ok($c->getPhoneNumbers(array('CZ', 'SK')), 'array', '->getPhoneNumbers() returns array with specific countries');
+$t->is(count($c->getPhoneNumbers(array('CZ', 'SK'))), 2, '->getPhoneNumbers() returns array with specific countries');
+
+try
+{
+  $c->getPhoneNumbers(array('BV', 'SK'));
+  $t->fail('->getPhoneNumbers() throws an exception if phone data does not exist for the country');
+}
+catch(Exception $e)
+{
+  $t->pass('->getPhoneNumbers() throws an exception if phone data does not exist for the country');
+}
