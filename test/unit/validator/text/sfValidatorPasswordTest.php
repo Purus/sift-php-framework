@@ -2,9 +2,11 @@
 
 require_once(dirname(__FILE__) . '/../../../bootstrap/unit.php');
 
-$t = new lime_test(18);
+$t = new lime_test(33);
 
-$v = new sfValidatorPassword();
+$v = new sfValidatorPassword(array(
+  'min_length' => 0
+));
 
 // ->clean()
 $t->diag('->clean()');
@@ -96,11 +98,24 @@ $t->diag('->getPasswordStrength()');
 $t->isa_ok(sfValidatorPassword::getPasswordStrength('test'), 'integer', 'getPasswordStrength() returns an integer value');
 
 $passwords = array(
-  '123456*', 'ahoj*', 'foo123ž>', 'abcdeFg'
+  '123456', '1234^56', 'ahoj*', 'foo123>', 'abcdeFg', 'secret1password', 'RaNd$mPJ1~', 'agent007', 'žitonapoliČºÀ'
 );
 
 foreach($passwords as $password)
 {
   $strength = sfValidatorPassword::getPasswordStrength($password);
-  $t->ok($strength >= 0 && $strength <= 100, 'getPasswordStrength() returns value greater than zero and lower than 100');
+  $t->ok($strength >= 0 && $strength <= 100, sprintf('getPasswordStrength() returns value greater than zero and lower than 100 for "%s" (%s)', $password, $strength));
+}
+
+$t->diag('self::hasOrderedCharacters()');
+
+$expected = array(
+  true, true, false, true, true, false, false, false, false
+);
+
+$t->isa_ok(sfValidatorPassword::hasOrderedCharacters('foooooo'), 'boolean', 'hasOrderedCharacters() returns boolean');
+
+foreach($passwords as $i => $password)
+{
+  $t->is_deeply(sfValidatorPassword::hasOrderedCharacters($password), $expected[$i], sprintf('hasOrderedCharacters() returns expected result for "%s" (%s)', $password, $expected[$i] ? 'yes' : 'no'));
 }

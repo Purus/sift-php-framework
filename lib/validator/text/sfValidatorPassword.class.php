@@ -29,6 +29,8 @@ class sfValidatorPassword extends sfValidatorString {
 
     $this->addMessage('strength_error', 'Password is too weak.');
 
+    $this->setOption('min_length', 8);
+
     // check password strength
     $this->addOption('strength_check', false);
     // minimal password strength (a number between 0 and 100)
@@ -62,11 +64,16 @@ class sfValidatorPassword extends sfValidatorString {
   public static function getPasswordStrength($password)
   {
     $strength = 0;
-    $password_length = function_exists('mb_strlen') ? mb_strlen($password, self::getCharset()) : strlen($password);
+    $password_length = self::getStringLength($password);
+
+    if($password_length > 9)
+    {
+      $strength += 10;
+    }
 
     for($i = 2; $i <= 4; $i++)
     {
-      $temp = str_split($password, $i);
+      $temp = self::splitString($password, $i);
       $strength -= (ceil($password_length / $i) - count(array_unique($temp)));
     }
 
@@ -86,17 +93,18 @@ class sfValidatorPassword extends sfValidatorString {
 
     if(self::hasOrderedCharacters($password))
     {
-      $strength -= 10;
+      $strength -= 20;
     }
 
+    // symbols
     preg_match_all('~[!@#$%^&*()_+{}:"<>?\|\[\];\',./`\~]~', $password, $symbols);
-
     if(!empty($symbols))
     {
       $symbols = count($symbols[0]);
-      if($symbols >= 1)
+      if($symbols > 0)
       {
-        $strength += 5;
+        // each symbol is + 7 points
+        $strength += $symbols * 7;
       }
     }
     else
@@ -104,33 +112,49 @@ class sfValidatorPassword extends sfValidatorString {
       $symbols = 0;
     }
 
-    preg_match_all('/[a-z]/', $password, $lowercase_characters);
-    preg_match_all('/[A-Z]/', $password, $uppercase_characters);
+    preg_match_all('/[a-z]/u', $password, $lowercaseCharacters);
+    preg_match_all('/[A-Z]/u', $password, $uppercaseCharacters);
+    // Extended Latin A, parts OF Latin-1 Supplement
+    preg_match_all('/([\x{0100}-\x{017F}\x{00C0}-\x{00CF}\x{00E0}-\x{00FF}])/u', $password, $utf8Characters);
 
-    if(!empty($lowercase_characters))
+    if(!empty($lowercaseCharacters))
     {
-      $lowercase_characters = count($lowercase_characters[0]);
+      $lowercaseCharacters = count($lowercaseCharacters[0]);
     }
     else
     {
-      $lowercase_characters = 0;
+      $lowercaseCharacters = 0;
     }
 
-    if(!empty($uppercase_characters))
+    if(!empty($uppercaseCharacters))
     {
-      $uppercase_characters = count($uppercase_characters[0]);
+      $uppercaseCharacters = count($uppercaseCharacters[0]);
     }
     else
     {
-      $uppercase_characters = 0;
+      $uppercaseCharacters = 0;
     }
 
-    if(($lowercase_characters > 0) && ($uppercase_characters > 0))
+    if(!empty($utf8Characters))
+    {
+      $utf8Characters = count($utf8Characters[0]);
+    }
+    else
+    {
+      $utf8Characters = 0;
+    }
+
+    if(($lowercaseCharacters > 0) && ($uppercaseCharacters > 0))
     {
       $strength += 10;
     }
 
-    $characters = $lowercase_characters + $uppercase_characters;
+    if($utf8Characters > 0)
+    {
+      $strength += 10 * $utf8Characters;
+    }
+
+    $characters = $lowercaseCharacters + $uppercaseCharacters + $utf8Characters;
 
     if(($numbers > 0) && ($symbols > 0))
     {
@@ -177,23 +201,69 @@ class sfValidatorPassword extends sfValidatorString {
    * @return boolean
    * @see http://stackoverflow.com/questions/12124803/check-a-string-for-alphabetically-ordered-characters
    */
-  protected static function hasOrderedCharacters($string, $number = 4)
+  public static function hasOrderedCharacters($string, $number = 3)
   {
-    $i = 0;
-    $j = function_exists('mb_strlen') ? mb_strlen($string, self::getCharset()) : strlen($string);
-    $chars = array();
-    foreach(str_split($string, 1) as $m)
+    $len = self::getStringLength($string);
+    $count = 0;
+    $last = 0;
+    for($i = 0; $i < $len; $i++)
     {
-      $chars[] = chr((ord($m[0]) + $j--) % 256) . chr((ord($m[0]) + $i++) % 256);
+      $current = ord($string[$i]);
+      if($current == $last + 1)
+      {
+        $count++;
+        if($count >= $number)
+        {
+          return true;
+        }
+      }
+      else
+      {
+        $count = 1;
+      }
+      $last = $current;
     }
-    $str = implode('', $chars);
-    return preg_match('#(.)(.\1){' . ($number - 1) . '}#', $str);
+    return false;
+  }
+
+  /**
+   * Return string length
+   *
+   * @param string $string
+   * @return integer
+   */
+  protected static function getStringLength($string)
+  {
+    return function_exists('mb_strlen') ? mb_strlen($string, self::getCharset()) : strlen($string);
+  }
+
+  /**
+   * Split string (UTF-8 safe)
+   *
+   * @param string $string
+   * @param integer $length
+   * @return array
+   */
+  protected static function splitString($string, $length = 0)
+  {
+    if($length > 0)
+    {
+      $ret = array();
+      $len = self::getStringLength($string);
+      for($i = 0; $i < $len; $i += $length)
+      {
+        $ret[] = function_exists('mb_substr') ? mb_substr($string, $i, $length, self::getCharset()) :
+          substr($string, $i, $length);
+      }
+      return $ret;
+    }
+    return preg_split("//u", $string, -1, PREG_SPLIT_NO_EMPTY);
   }
 
   /**
    * @see sfValidatorBase
    */
-  public function getJavascriptValidation()
+  public function getJavascriptValidationRules()
   {
     $rules = array();
 
@@ -203,7 +273,7 @@ class sfValidatorPassword extends sfValidatorString {
     $maxLength = $this->hasOption('max_length') ?
             $this->getOption('max_length') : 0;
 
-    if($this->hasOption('required') && $this->getOption('required'))
+    if($this->getOption('required'))
     {
       $rules[sfFormJavascriptValidation::REQUIRED] = true;
     }
@@ -219,13 +289,21 @@ class sfValidatorPassword extends sfValidatorString {
       $rules[sfFormJavascriptValidation::MAX_LENGTH] = $maxLength;
     }
 
+    // strength check is enabled
+    if($this->getOption('strength_check'))
+    {
+      $rules[sfFormJavascriptValidation::PASSWORD_STRENGTH] = array(
+        'minStrength' => $this->getOption('min_strength')
+      );
+    }
+
     return $rules;
   }
 
   /**
    * @see sfValidatorBase
    */
-  public function getJavascriptValidationMessage()
+  public function getJavascriptValidationMessages()
   {
     $messages = array();
 
@@ -235,7 +313,7 @@ class sfValidatorPassword extends sfValidatorString {
     $maxLength = $this->hasOption('max_length') ?
             $this->getOption('max_length') : 0;
 
-    if($this->hasOption('required') && $this->getOption('required'))
+    if($this->getOption('required'))
     {
       $messages[sfFormJavascriptValidation::REQUIRED] =
               sfFormJavascriptValidation::fixValidationMessage($this, 'required');
@@ -251,6 +329,13 @@ class sfValidatorPassword extends sfValidatorString {
     {
       $messages[sfFormJavascriptValidation::MAX_LENGTH] =
               sfFormJavascriptValidation::fixValidationMessage($this, 'max_length');
+    }
+
+    // strength check is enabled
+    if($this->getOption('strength_check'))
+    {
+      $messages[sfFormJavascriptValidation::PASSWORD_STRENGTH] =
+          sfFormJavascriptValidation::fixValidationMessage($this, 'strength_error');
     }
 
     return $messages;
@@ -273,6 +358,10 @@ class sfValidatorPassword extends sfValidatorString {
     if($this->getOption('max_length') > 0)
     {
       $messages[] = $this->getMessage('max_length');
+    }
+    if($this->getOption('strength_check'))
+    {
+      $messages[] = $this->getMessage('strength_error');
     }
     return $messages;
   }

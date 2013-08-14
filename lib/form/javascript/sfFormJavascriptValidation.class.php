@@ -131,6 +131,11 @@ class sfFormJavascriptValidation {
   const REGEX_PATTERN_NEGATIVE = 'regexPatternNegative';
 
   /**
+   * Password strength
+   */
+  const PASSWORD_STRENGTH = 'passwordStrength';
+
+  /**
    * Array of all valid options for jQuery validate plugin
    *
    * @var array

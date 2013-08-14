@@ -209,3 +209,34 @@ ul.checkbox-list {
   // for rendering errors
   position: relative;
 }
+
+.password-strength-meter {
+  position: relative;
+  height: 10px;
+  .password-strength-meter-bar {
+    position: absolute;
+    height: 8px;
+    top: 1px;
+    background: @black;
+
+    &.weak {
+      background: @red;
+    }
+
+    &.quite-good {
+      background: @yellow;
+    }
+
+    &.good {
+      background: @green;
+    }
+
+    &.strong, &.superb {
+      background: @green;
+    }
+
+  }
+
+
+
+}

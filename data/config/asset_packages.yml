@@ -15,6 +15,7 @@ dev:
         - %SF_SIFT_WEB_DIR%/js/validate/jquery.validate.js
         - %SF_SIFT_WEB_DIR%/js/validate/additional-methods.min.js
         - %SF_SIFT_WEB_DIR%/js/validate/jquery.validate.custom_callback.js
+        - %SF_SIFT_WEB_DIR%/js/validate/jquery.validate.password_strength.js
         - %SF_SIFT_WEB_DIR%/js/validate/localization/messages_%SF_CULTURE{0,2}%.js
 
     core:
@@ -114,6 +115,7 @@ default:
         - %SF_SIFT_WEB_DIR%/js/validate/jquery.validate.min.js
         - %SF_SIFT_WEB_DIR%/js/validate/additional-methods.min.js
         - %SF_SIFT_WEB_DIR%/js/validate/jquery.validate.custom_callback.min.js
+        - %SF_SIFT_WEB_DIR%/js/validate/jquery.validate.password_strength.min.js
         - %SF_SIFT_WEB_DIR%/js/validate/localization/messages_%SF_CULTURE{0,2}%.js
       require:
         - jquery

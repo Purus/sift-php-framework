@@ -20,6 +20,7 @@ class sfWidgetFormInputPassword extends sfWidgetFormInput {
    * Available options:
    *
    *  * always_render_empty: true if you want the input value to be always empty when rendering (true by default)
+   *  * strength_meter: true will render the widget with strength meter attached
    *
    * @param array $options     An array of options
    * @param array $attributes  An array of default HTML attributes
@@ -32,6 +33,7 @@ class sfWidgetFormInputPassword extends sfWidgetFormInput {
 
     $this->addOption('always_render_empty', true);
 
+    $this->addOption('strength_meter', false);
     $this->setOption('type', 'password');
   }
 
@@ -49,7 +51,25 @@ class sfWidgetFormInputPassword extends sfWidgetFormInput {
    */
   public function render($name, $value = null, $attributes = array(), $errors = array())
   {
-    return parent::render($name, $this->getOption('always_render_empty') ? null : $value, $attributes, $errors);
+    $meter = '';
+    if($this->getOption('strength_meter'))
+    {
+      $meter = $this->getStrengthMeterHtml();
+    }
+
+    $html = parent::render($name, $this->getOption('always_render_empty') ? null : $value, $attributes, $errors);
+
+    return $html . ($meter ? ("\n" . $meter) : '');
+  }
+
+  /**
+   * Return strength meter HTML code
+   *
+   * @return string
+   */
+  protected function getStrengthMeterHtml()
+  {
+    return '<div class="password-strength-meter"><div class="password-strength-meter-bar"></div></div>';
   }
 
 }
