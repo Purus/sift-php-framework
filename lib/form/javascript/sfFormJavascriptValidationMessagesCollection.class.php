@@ -22,6 +22,23 @@ class sfFormJavascriptValidationMessagesCollection extends sfCollection implemen
   protected $itemType = 'sfFormJavascriptValidationFieldMessages';
 
   /**
+   * Offset get the messages with the given $name.
+   *
+   * @param string $name
+   * @return sfFormJavascriptValidationFieldMessages|null
+   */
+  public function offsetGet($name)
+  {
+    foreach($this as $messages)
+    {
+      if($messages->getFieldName() == $name)
+      {
+        return $messages;
+      }
+    }
+  }
+
+  /**
    * Return data which should be serialized to JSON
    *
    * @return array

@@ -95,6 +95,11 @@ class sfFormJavascriptValidationFieldMessages implements ArrayAccess {
 
   public function offsetSet($name, $value)
   {
+    if(!$value instanceof sfFormJavascriptValidationMessage)
+    {
+      $value = new sfFormJavascriptValidationMessage($value);
+    }
+
     return $this->messages[$name] = $value;
   }
 
