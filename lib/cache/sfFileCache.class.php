@@ -442,6 +442,12 @@ class sfFileCache extends sfCache {
   public function getLastModified($id, $namespace = self::DEFAULT_NAMESPACE)
   {
     $path = $this->getFilePath($id, $namespace);
+
+    if(!file_exists($path))
+    {
+      return 0;
+    }
+
     $data = $this->read($path, self::READ_TIMEOUT | self::READ_LAST_MODIFIED);
     if($data[self::READ_TIMEOUT] < time())
     {
