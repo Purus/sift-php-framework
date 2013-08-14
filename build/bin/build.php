@@ -30,15 +30,15 @@ $environment = new sfCliTaskEnvironment(array(
 
   'sf_sift_lib_dir'  => $sf_sift_lib_dir,
   'sf_sift_data_dir' => $sf_sift_data_dir,
-  'sf_sift_test_dir' => realpath(dirname(__FILE__).'/../../test/'),
+  'sf_sift_test_dir' => realpath(dirname(__FILE__).'/../../../test/'),
   'script_name'      => sprintf('./%s', basename($_SERVER['PHP_SELF'])),
 
-  'project_root_dir' => realpath(dirname(__FILE__) . '/../../'),
+  'project_root_dir' => realpath(dirname(__FILE__) . '/../../../'),
   'root_dir'         => getcwd(),
   'build_task_dir'   => dirname(__FILE__) . '/tasks',
   'i18n_data_dir'    => realpath($sf_sift_data_dir . '/i18n'),
   // where are build data?
-  'build_data_dir'   => realpath(dirname(__FILE__) . '/../../build')
+  'build_data_dir'   => realpath(dirname(__FILE__) . '/..')
 ));
 
 try
