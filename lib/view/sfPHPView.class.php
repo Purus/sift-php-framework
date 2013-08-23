@@ -15,11 +15,11 @@
 class sfPHPView extends sfView
 {
   /**
-   * Executes any presentation logic for this view.
+   * Helpers loaded?
+   *
+   * @var boolean
    */
-  public function execute()
-  {
-  }
+  private static $helpersLoaded = false;
 
   /**
    * Returns variables that will be accessible to the template.
@@ -52,31 +52,27 @@ class sfPHPView extends sfView
   /**
    * Load core, standard and other helpers to be use in the template.
    *
+   * @return void
    */
   protected function loadHelpers()
   {
-    static $helpersLoaded = 0;
-
-    if($helpersLoaded)
+    if(self::$helpersLoaded)
     {
       return;
     }
 
-    $helpersLoaded    = 1;
-    $core_helpers     = sfCore::getCoreHelpers();
-    $standard_helpers = sfConfig::get('sf_standard_helpers');
-    $helpers = array_unique(array_merge($core_helpers, $standard_helpers, $this->helpers));
+    $helpers = array_unique(array_merge(sfCore::getCoreHelpers(), sfConfig::get('sf_standard_helpers', array()), $this->helpers));
     sfLoader::loadHelpers($helpers);
+    self::$helpersLoaded = true;
   }
 
   /**
    * Renders the presentation.
    *
-   * @param  string $_sfFile  Filename
-   *
+   * @param string $file Filename
    * @return string File content
    */
-  protected function renderFile($_sfFile)
+  protected function renderFile($file)
   {
     if(sfConfig::get('sf_debug'))
     {
@@ -85,8 +81,9 @@ class sfPHPView extends sfView
 
     if(sfConfig::get('sf_logging_enabled'))
     {
-      sfLogger::getInstance()->log(sprintf('{sfView} Render "%s"', $_sfFile));
+      sfLogger::getInstance()->log(sprintf('{sfView} Render "%s"', $file));
     }
+
 
     $this->loadHelpers();
 
@@ -100,9 +97,9 @@ class sfPHPView extends sfView
 
     try
     {
-      require($_sfFile);
+      require($file);
     }
-    catch (Exception $e)
+    catch(Exception $e)
     {
       // need to end output buffering before throwing the exception #7596
       ob_end_clean();
@@ -170,7 +167,8 @@ class sfPHPView extends sfView
   {
     // store our current view
     $actionStackEntry = $this->getContext()->getActionStack()->getLastEntry();
-    if (!$actionStackEntry->getViewInstance())
+
+    if(!$actionStackEntry->getViewInstance())
     {
       $actionStackEntry->setViewInstance($this);
     }
@@ -180,7 +178,7 @@ class sfPHPView extends sfView
     require(sfConfigCache::getInstance()->checkConfig(sfConfig::get('sf_app_module_dir_name').'/'.$viewConfigFile));
 
     // set template directory
-    if (!$this->directory)
+    if(!$this->directory)
     {
       $this->setDirectory(sfLoader::getTemplateDir($this->moduleName, $this->getTemplate()));
     }
@@ -198,9 +196,9 @@ class sfPHPView extends sfView
   {
     $template = $this->getDecoratorDirectory().'/'.$this->getDecoratorTemplate();
 
-    if (sfConfig::get('sf_logging_enabled'))
+    if(sfConfig::get('sf_logging_enabled'))
     {
-      $this->getContext()->getLogger()->info('{sfView} decorate content with "'.$template.'"');
+      sfLogger::getInstance()->info('{sfView} Decorate content with "'.$template.'"');
     }
 
     // set the decorator content as an attribute
@@ -211,38 +209,35 @@ class sfPHPView extends sfView
   }
 
   /**
-   * Renders the presentation.
-   *
-   * When the controller render mode is sfView::RENDER_CLIENT, this method will
-   * render the presentation directly to the client and null will be returned.
-   *
-   * @return string A string representing the rendered presentation, if
-   *                the controller render mode is sfView::RENDER_VAR, otherwise null
+   * @see sfView
    */
-  public function render($templateVars = null)
+  public function render($templateVars = array())
   {
     $context = $this->getContext();
-
     // get the render mode
     $mode = $context->getController()->getRenderMode();
 
-    if ($mode == sfView::RENDER_NONE)
+    if($mode == sfView::RENDER_NONE)
     {
       return null;
     }
 
+    $uri = null;
     $retval = null;
     $response = $context->getResponse();
-    if (sfConfig::get('sf_cache'))
+    if(sfConfig::get('sf_cache'))
     {
-      $key   = $response->getParameterHolder()->remove('current_key', 'sift/cache/current');
-      $cache = $response->getParameter($key, null, 'sift/cache');
-      if ($cache !== null)
+      $viewCache = $this->context->getViewCacheManager();
+      $uri = $viewCache->getCurrentCacheKey();
+      $vars = array();
+
+      if(null !== $uri)
       {
-        $cache  = unserialize($cache);
-        $retval = $cache['content'];
-        $vars   = $cache['vars'];
-        $response->mergeProperties($cache['response']);
+        list($retval, $decoratorTemplate) = $viewCache->getActionCache($uri);
+        if(null !== $retval)
+        {
+          $this->setDecoratorTemplate($decoratorTemplate);
+        }
       }
     }
 
@@ -278,36 +273,16 @@ class sfPHPView extends sfView
       $template = $this->getDirectory().'/'.$this->getTemplate();
       $retval = $this->renderFile($template);
 
-      if (sfConfig::get('sf_cache') && $key !== null)
+      if(sfConfig::get('sf_cache') && $uri !== null)
       {
-        $cache = array(
-          'content'   => $retval,
-          'vars'      => $templateVars,
-          'view_name' => $this->viewName,
-          'response'  => $context->getResponse(),
-        );
-        $response->setParameter($key, serialize($cache), 'sift/cache');
-
-        if(sfConfig::get('sf_web_debug'))
-        {
-          $retval = sfCore::filterByEventListeners($retval, 'view.cache.filter_content', array(
-            'uri' => $key,
-            'new' => true
-          ));
-        }
+        $viewCache->setActionCache($uri, $retval, $this->isDecorator() ? $this->getDecoratorDirectory().'/'.$this->getDecoratorTemplate() : false);
       }
     }
-
+    
     // now render decorator template, if one exists
-    if ($this->isDecorator())
+    if($this->isDecorator())
     {
       $retval = $this->decorate($retval);
-    }
-
-    // render to client
-    if ($mode == sfView::RENDER_CLIENT)
-    {
-      $context->getResponse()->setContent($retval);
     }
 
     return $retval;

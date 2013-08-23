@@ -1,6 +1,6 @@
 all:
-  
   .settings:
-    
     enabled_modules:        [autoloadPlugin]
     autoloading_functions:  [[myAutoload, autoload]]
+    # Determines which events are logged. The default value is E_PARSE | E_COMPILE_ERROR | E_ERROR | E_CORE_ERROR | E_USER_ERROR = 341
+    error_reporting:        <?php echo (E_PARSE | E_COMPILE_ERROR | E_ERROR | E_CORE_ERROR | E_USER_ERROR)."\n" ?>

@@ -209,12 +209,7 @@ abstract class sfApplication extends sfProject {
          */
         function __($text, $args = array(), $catalogue = 'messages')
         {
-          static $i18n;
-          if(!isset($i18n))
-          {
-            $i18n = sfContext::getInstance()->getI18N();
-          }
-          return $i18n->__($text, $args, $catalogue);
+          return sfContext::getInstance()->getI18N()->__($text, $args, $catalogue);
         }
       }
 

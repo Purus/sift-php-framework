@@ -8,33 +8,89 @@
 
 /**
  * sfRequest provides methods for manipulating client request information such
- * as attributes, errors and parameters. It is also possible to manipulate the
+ * as attributes and parameters. It is also possible to manipulate the
  * request method originally sent by the user.
  *
  * @package    Sift
  * @subpackage request
  */
-abstract class sfRequest {
-
-  const GET    = 'GET';
-  const POST   = 'POST';
-  const PUT    = 'PUT';
-  const DELETE = 'DELETE';
-  const HEAD   = 'HEAD';
+abstract class sfRequest implements Serializable, sfIService {
 
   /**
-   * Skip validation and execution for any request method.
+   * GET
+   */
+  const GET = 'GET';
+
+  /**
+   * POST
+   */
+  const POST = 'POST';
+
+  /**
+   * PUT
+   */
+  const PUT = 'PUT';
+
+  /**
+   * DELETE
+   */
+  const DELETE = 'DELETE';
+
+  /**
+   * HEAD
    *
    */
-  const NONE = 1;
+  const HEAD = 'HEAD';
 
-  protected
-    $errors = array(),
-    $context = null,
-    $method = null,
-    $parameterHolder = null,
-    $config = null,
-    $attributeHolder = null;
+  /**
+   * Protected namespace. Request parameters which are
+   * prefixed with _sf_ should be there
+   * 
+   */
+  const PROTECTED_NAMESPACE = 'sift/request/protected';
+
+  /**
+   * Request content
+   *
+   * @var string
+   */
+  protected $content;
+
+  /**
+   * Request method
+   * @var string
+   */
+  protected $method;
+
+  /**
+   * Parameter holder
+   *
+   * @var sfParameterHolder
+   */
+  protected $parameterHolder;
+
+  /**
+   * Attribute holder
+   *
+   * @var sfParameterHolder
+   */
+  protected $attributeHolder;
+
+  /**
+   * Constructor
+   *
+   * @param array $parameters Array of parameters
+   * @param array $attributes Array of attributes
+   */
+  public function __construct($parameters = array(), $attributes = array())
+  {
+    // initialize parameter and attribute holders
+    $this->parameterHolder = new sfParameterHolder();
+    $this->attributeHolder = new sfParameterHolder();
+
+    $this->parameterHolder->add($parameters);
+    $this->attributeHolder->add($attributes);
+  }
 
   /**
    * Extracts parameter values from the request.
@@ -45,10 +101,9 @@ abstract class sfRequest {
    *               a specified parameter doesn't exist an empty string will
    *               be returned for its value
    */
-  public function & extractParameters($names)
+  public function &extractParameters($names)
   {
     $array = array();
-
     $parameters = & $this->parameterHolder->getAll();
     foreach($parameters as $key => &$value)
     {
@@ -57,57 +112,11 @@ abstract class sfRequest {
         $array[$key] = & $value;
       }
     }
-
     return $array;
   }
 
   /**
-   * Retrieves an error message.
-   *
-   * @param string An error name
-   *
-   * @return string An error message, if the error exists, otherwise null
-   */
-  public function getError($name)
-  {
-    $retval = null;
-
-    if(isset($this->errors[$name]))
-    {
-      $retval = $this->errors[$name];
-    }
-
-    return $retval;
-  }
-
-  /**
-   * Retrieves an array of error names.
-   *
-   * @return array An indexed array of error names
-   */
-  public function getErrorNames()
-  {
-    return array_keys($this->errors);
-  }
-
-  /**
-   * Retrieves an array of errors.
-   *
-   * @return array An associative array of errors
-   */
-  public function getErrors()
-  {
-    return $this->errors;
-  }
-
-  /**
-   * Retrieves this request's method.
-   *
-   * @return int One of the following constants:
-   *             - sfRequest::GET
-   *             - sfRequest::POST
-   *             - sfRequest::PUT
-   *             - sfRequest::HEAD
+   * @see sfIRequest
    */
   public function getMethod()
   {
@@ -115,157 +124,36 @@ abstract class sfRequest {
   }
 
   /**
-   * Indicates whether or not an error exists.
-   *
-   * @param string An error name
-   *
-   * @return boolean true, if the error exists, otherwise false
-   */
-  public function hasError($name)
-  {
-    return array_key_exists($name, $this->errors);
-  }
-
-  /**
-   * Indicates whether or not any errors exist.
-   *
-   * @return boolean true, if any error exist, otherwise false
-   */
-  public function hasErrors()
-  {
-    return (count($this->errors) > 0);
-  }
-
-  /**
-   * Initializes this sfRequest.
-   *
-   * @param sfContext A sfContext instance
-   * @param array   An associative array of initialization parameters
-   * @param array   An associative array of initialization attributes
-   *
-   * @return boolean true, if initialization completes successfully, otherwise false
-   *
-   * @throws sfInitializationException If an error occurs while initializing this Request
-   */
-  public function initialize($context, $parameters = array(), $attributes = array())
-  {
-    $this->context = $context;
-
-    // initialize parameter and attribute holders
-    $this->parameterHolder = new sfParameterHolder();
-    $this->attributeHolder = new sfParameterHolder();
-
-    $this->parameterHolder->add($parameters);
-    $this->attributeHolder->add($attributes);
-  }
-
-  /**
-   * Retrieves the current application context.
-   *
-   * @return sfContext Current application context
-   */
-  public function getContext()
-  {
-    return $this->context;
-  }
-
-  /**
-   * Retrieves a new sfRequest implementation instance.
-   *
-   * @param string A sfRequest implementation name
-   * @return sfRequest A sfRequest implementation instance
-   * @throws sfFactoryException If a request implementation instance cannot be created
-   */
-  public static function newInstance($class)
-  {
-    // the class exists
-    $object = new $class();
-
-    if(!($object instanceof sfRequest))
-    {
-      // the class name is of the wrong type
-      throw new sfFactoryException(sprintf('Class "%s" is not of the type sfRequest', $class));
-    }
-
-    return $object;
-  }
-
-  /**
-   * Removes an error.
-   *
-   * @param string An error name
-   *
-   * @return string An error message, if the error was removed, otherwise null
-   */
-  public function &removeError($name)
-  {
-    $retval = null;
-
-    if(isset($this->errors[$name]))
-    {
-      $retval = &$this->errors[$name];
-      unset($this->errors[$name]);
-    }
-
-    return $retval;
-  }
-
-  /**
-   * Sets an error.
-   *
-   * @param string An error name
-   * @param string An error message
-   *
-   */
-  public function setError($name, $message)
-  {
-    if(sfConfig::get('sf_logging_enabled'))
-    {
-      sfLogger::getInstance()->info('{sfRequest} error in form for parameter "' . $name . '" (with message "' . $message . '")');
-    }
-
-    $this->errors[$name] = $message;
-  }
-
-  /**
-   * Sets an array of errors
-   *
-   * If an existing error name matches any of the keys in the supplied
-   * array, the associated message will be overridden.
-   *
-   * @param array An associative array of errors and their associated messages
-   *
-   */
-  public function setErrors($errors)
-  {
-    $this->errors = array_merge($this->errors, $errors);
-  }
-
-  /**
-   * Sets the request method.
-   *
-   * @param int One of the following constants:
-   *
-   * - sfRequest::GET
-   * - sfRequest::POST
-   * - sfRequest::PUT
-   * - sfRequest::DELETE
-   * - sfRequest::HEAD
-   *
-   * @return void
-   *
-   * @throws sfException - If the specified request method is invalid
+   * @see sfIRequest
    */
   public function setMethod($methodCode)
   {
-    $available_methods = array(self::GET, self::POST, self::PUT, self::DELETE, self::HEAD, self::NONE);
+    $available_methods = array(self::GET, self::POST, self::PUT, self::DELETE, self::HEAD);
     if(in_array($methodCode, $available_methods))
     {
       $this->method = $methodCode;
-      return;
+      return $this;
     }
-    // invalid method type
-    throw new sfException(sprintf('Invalid request method: %s',  $methodCode));
+    else
+    {
+      // invalid method type
+      throw new sfException(sprintf('Invalid request method: %s', $methodCode));
+    }
+  }
+
+  /**
+   * @see sfIRequest
+   */
+  public function getContent()
+  {
+    if(null === $this->content)
+    {
+      if(0 === strlen(trim($this->content = file_get_contents('php://input'))))
+      {
+        $this->content = false;
+      }
+    }
+    return $this->content;
   }
 
   /**
@@ -525,12 +413,6 @@ abstract class sfRequest {
   }
 
   /**
-   * Executes the shutdown procedure.
-   *
-   */
-  abstract function shutdown();
-
-  /**
    * Calls methods defined via sfEventDispatcher.
    *
    * @param string $method The method name
@@ -554,6 +436,90 @@ abstract class sfRequest {
     }
 
     return $event->getReturnValue();
+  }
+
+  /**
+   * Returns true if the request parameter exists (implements the ArrayAccess interface).
+   *
+   * @param  string $name The name of the request parameter
+   * @return Boolean true if the request parameter exists, false otherwise
+   */
+  public function offsetExists($name)
+  {
+    return $this->hasParameter($name);
+  }
+
+  /**
+   * Returns the request parameter associated with the name (implements the ArrayAccess interface).
+   *
+   * @param  string $name  The offset of the value to get
+   * @return mixed The request parameter if exists, null otherwise
+   */
+  public function offsetGet($name)
+  {
+    return $this->getParameter($name, false);
+  }
+
+  /**
+   * Sets the request parameter associated with the offset (implements the ArrayAccess interface).
+   *
+   * @param string $offset The parameter name
+   * @param string $value The parameter value
+   */
+  public function offsetSet($offset, $value)
+  {
+    $this->setParameter($offset, $value);
+  }
+
+  /**
+   * Removes a request parameter.
+   *
+   * @param string $offset The parameter name
+   */
+  public function offsetUnset($offset)
+  {
+    $this->getParameterHolder()->remove($offset);
+  }
+
+  /**
+   * Serializes the request
+   *
+   * @return string
+   */
+  public function serialize()
+  {
+    $vars = get_object_vars($this);
+    // we don't serialize context!    
+    unset($vars['context']);
+    return (string) @serialize($vars);
+  }
+
+  /**
+   * Unserializes the request
+   *
+   * @param string $serialized
+   * @return void
+   */
+  public function unserialize($serialized)
+  {
+    $vars = unserialize($serialized);
+    foreach($vars as $var => $value)
+    {
+      $this->$var = $value;
+    }
+    if(sfContext::hasInstance())
+    {
+      $this->context = sfContext::getInstance();
+    }
+  }
+
+  /**
+   * Clone the object
+   */
+  public function __clone()
+  {
+    $this->parameterHolder = clone $this->parameterHolder;
+    $this->attributeHolder = clone $this->attributeHolder;
   }
 
 }

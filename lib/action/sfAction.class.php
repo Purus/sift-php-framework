@@ -124,7 +124,7 @@ abstract class sfAction extends sfComponent
   {
     if (sfConfig::get('sf_logging_enabled'))
     {
-      $this->getContext()->getLogger()->info('{sfAction} forward to action "'.$module.'/'.$action.'"');
+      sfLogger::getInstance()->info('{sfAction} forward to action "'.$module.'/'.$action.'"');
     }
 
     $this->getController()->forward($module, $action);
@@ -231,7 +231,7 @@ abstract class sfAction extends sfComponent
 
     if (sfConfig::get('sf_logging_enabled'))
     {
-      $this->getContext()->getLogger()->info('{sfAction} redirect to "'.$url.'"');
+      sfLogger::getInstance()->info('{sfAction} redirect to "'.$url.'"');
     }
 
     $this->getController()->redirect($url, 0, $statusCode);
@@ -255,60 +255,6 @@ abstract class sfAction extends sfComponent
     $this->getResponse()->setContent($this->getResponse()->getContent().$text);
 
     return sfView::NONE;
-  }
-
-  /**
-   * Retrieves the default view to be executed when a given request is not served by this action.
-   *
-   * @return string A string containing the view name associated with this action
-   */
-  public function getDefaultView()
-  {
-    return sfView::INPUT;
-  }
-
-  /**
-   * Retrieves the request methods on which this action will process validation and execution.
-   *
-   * @return int One of the following values:
-   *
-   * - sfRequest::GET
-   * - sfRequest::POST
-   * - sfRequest::PUT
-   * - sfRequest::DELETE
-   * - sfRequest::HEAD
-   * - sfRequest::NONE
-   *
-   * @see sfRequest
-   */
-  public function getRequestMethods()
-  {
-    return sfRequest::GET
-           | sfRequest::POST
-           | sfRequest::PUT
-           | sfRequest::DELETE
-           | sfRequest::HEAD
-           | sfRequest::NONE;
-  }
-
-  /**
-   * Executes any post-validation error application logic.
-   *
-   * @return string A string containing the view name associated with this action
-   */
-  public function handleError()
-  {
-    return sfView::ERROR;
-  }
-
-  /**
-   * Validates manually files and parameters.
-   *
-   * @return bool true, if validation completes successfully, otherwise false.
-   */
-  public function validate()
-  {
-    return true;
   }
 
   /**
@@ -389,7 +335,7 @@ abstract class sfAction extends sfComponent
   {
     if (sfConfig::get('sf_logging_enabled'))
     {
-      $this->getContext()->getLogger()->info('{sfAction} change template to "'.$name.'"');
+      sfLogger::getInstance()->info('{sfAction} change template to "'.$name.'"');
     }
 
     $this->getResponse()->setParameter($this->getModuleName().'_'.$this->getActionName().'_template', $name, 'sift/action/view');
@@ -421,11 +367,11 @@ abstract class sfAction extends sfComponent
    */
   public function setLayout($name)
   {
-    if (sfConfig::get('sf_logging_enabled'))
+    if(sfConfig::get('sf_logging_enabled'))
     {
-      $this->getContext()->getLogger()->info('{sfAction} change layout to "'.$name.'"');
+      sfLogger::getInstance()->info('{sfAction} Change layout to "'.$name.'"');
     }
-
+    
     $this->getResponse()->setParameter($this->getModuleName().'_'.$this->getActionName().'_layout', $name, 'sift/action/view');
   }
 

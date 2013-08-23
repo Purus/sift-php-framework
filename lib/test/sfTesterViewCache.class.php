@@ -95,6 +95,7 @@ class sfTesterViewCache extends sfTester
     else
     {
       $this->tester->pass('cache is configured properly');
+      $this->tester->diag(sprintf('cache %s layout', $with_layout ? 'with' : 'without'));
 
       // check page is cached
       $ret = $this->tester->is($cacheManager->has($uri), $boolean, sprintf('"%s" %s in cache', $type, $boolean ? 'is' : 'is not'));
@@ -106,7 +107,7 @@ class sfTesterViewCache extends sfTester
         {
           $this->tester->fail('content in cache is ok');
         }
-        else if ($with_layout)
+        else if($with_layout)
         {
           $response = unserialize($cacheManager->get($uri));
           $content = $response->getContent();

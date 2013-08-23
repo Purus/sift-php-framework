@@ -53,7 +53,7 @@ class firstTestFilter extends sfFilter
 {
   public $response = null;
 
-  public function execute($filterChain)
+  public function execute(sfFilterChain $filterChain)
   {
     $response = $this->response;
 
@@ -70,7 +70,7 @@ class lastTestFilter extends sfFilter
 {
   public $response = null;
 
-  public function execute($filterChain)
+  public function execute(sfFilterChain $filterChain)
   {
     $response = $this->response;
 
@@ -101,8 +101,7 @@ class lastTestFilter extends sfFilter
 
 $context = sfContext::getInstance();
 $context->request = new myRequest();
-$response = new sfWebResponse();
-$response->initialize($context);
+$response = new sfWebResponse($context);
 $context->response = $response;
 
 $selector = execute_filter_chain($context, $t);
@@ -156,7 +155,7 @@ function check_javascripts_included($t, $selector)
 
 function execute_filter_chain($context, $t)
 {
-  $filterChain = new sfFilterChain();
+  $filterChain = new sfFilterChain($context);
 
   $filter = new lastTestFilter();
   $filter->response = $context->response;

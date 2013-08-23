@@ -87,6 +87,7 @@ class sfI18n extends sfConfigurable {
    *
    * @param sfContext $context Context instance
    * @param array $options
+   * @inject context
    */
   public function __construct(sfContext $context, $options = array())
   {

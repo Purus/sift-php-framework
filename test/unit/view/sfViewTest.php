@@ -15,8 +15,7 @@ class myView extends sfView
 }
 
 $context = new sfContext();
-$view = new myView();
-$view->initialize($context, '', '', '');
+$view = new myView($context, '', '', '');
 
 // ->getContext()
 $t->diag('->getContext()');

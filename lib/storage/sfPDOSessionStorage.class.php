@@ -9,28 +9,55 @@
 /**
  * Provides support for session storage using a PDO database abstraction layer.
  *
- * <b>Required parameters:</b>
- *
- * # <b>db_table</b> - [none] - The database table in which session data will be stored.
- *
- * <b>Optional parameters:</b>
- *
- * # <b>database</b>     - [default]   - The database connection to use (see databases.yml).
- * # <b>db_id_col</b>    - [sess_id]   - The database column in which the session id will be stored.
- * # <b>db_data_col</b>  - [sess_data] - The database column in which the session data will be stored.
- * # <b>db_time_col</b>  - [sess_time] - The database column in which the session timestamp will be stored.
- * # <b>session_name</b> - [sessionId]   - The name of the session.
+ * # database     - [default]   - The database connection to use (see databases.yml).
+ * # db_table     - [session]   - The database table in which session data will be stored.
+ * # db_id_col    - [sess_id]   - The database column in which the session id will be stored.
+ * # db_data_col  - [sess_data] - The database column in which the session data will be stored.
+ * # db_time_col  - [sess_time] - The database column in which the session timestamp will be stored.
  *
  * @package    Sift
  * @subpackage storage
  */
-class sfPDOSessionStorage extends sfSessionStorage
-{
+class sfPDOSessionStorage extends sfSessionStorage {
+
+  /**
+   * Default options
+   *
+   * @var array
+   */
+  protected $defaultOptions = array(
+    'db_id_col'   => 'id',
+    'db_data_col' => 'blob_data',
+    'db_time_col' => 'expire',
+    'database'   => 'default',
+    'db_table' => 'session'
+  );
+
   /**
    * PDO connection
-   * @var Connection
+   *
+   * @var sfPdo
    */
   protected $db;
+
+  /**
+   * Database manager instance
+   *
+   * @var sfDatabaseManager
+   */
+  protected $manager;
+
+  /**
+   * Constructs the storage
+   *
+   * @param sfDatabaseManager $manager The database manager
+   * @param array $options Array of options
+   */
+  public function __construct(sfDatabaseManager $manager, $options = array())
+  {
+    $this->manager = $manager;
+    parent::__construct($options);
+  }
 
   /**
    * Initializes this Storage instance.
@@ -42,37 +69,26 @@ class sfPDOSessionStorage extends sfSessionStorage
    *
    * @throws InitializationException If an error occurs while initializing this Storage
    */
-  public function initialize($context, $parameters = null)
+  public function setup()
   {
-    // disable auto_start
-    $parameters['auto_start'] = false;
-
-    // initialize the parent
-    parent::initialize($context, $parameters);
-
-    if (!$this->getParameterHolder()->has('db_table'))
-    {
-      // missing required 'db_table' parameter
-      throw new sfInitializationException('Factory configuration file is missing required "db_table" parameter for the Storage category');
-    }
-
     // use this object as the session handler
-    session_set_save_handler(array($this, 'sessionOpen'),
-                             array($this, 'sessionClose'),
-                             array($this, 'sessionRead'),
-                             array($this, 'sessionWrite'),
-                             array($this, 'sessionDestroy'),
-                             array($this, 'sessionGC'));
+    session_set_save_handler(
+        array($this, 'sessionOpen'),
+        array($this, 'sessionClose'),
+        array($this, 'sessionRead'),
+        array($this, 'sessionWrite'),
+        array($this, 'sessionDestroy'),
+        array($this, 'sessionGC'));
 
-    // start our session
-    session_start();
+    parent::setup();
+
   }
 
   /**
-  * Closes a session.
-  *
-  * @return boolean true, if the session was closed, otherwise false
-  */
+   * Closes a session.
+   *
+   * @return boolean true, if the session was closed, otherwise false
+   */
   public function sessionClose()
   {
     // do nothing
@@ -91,11 +107,11 @@ class sfPDOSessionStorage extends sfSessionStorage
   public function sessionDestroy($id)
   {
     // get table/column
-    $db_table  = $this->getParameterHolder()->get('db_table');
-    $db_id_col = $this->getParameterHolder()->get('db_id_col', 'sess_id');
+    $db_table = $this->getOption('db_table');
+    $db_id_col = $this->getOption('db_id_col');
 
     // delete the record associated with this id
-    $sql = 'DELETE FROM '.$db_table.' WHERE '.$db_id_col.'= ?';
+    $sql = 'DELETE FROM ' . $db_table . ' WHERE ' . $db_id_col . '= ?';
 
     try
     {
@@ -103,7 +119,7 @@ class sfPDOSessionStorage extends sfSessionStorage
       $stmt->bindParam(1, $id, PDO::PARAM_STR); // setString(1, $id);
       $stmt->execute();
     }
-    catch (PDOException $e)
+    catch(PDOException $e)
     {
       throw new sfDatabaseException(sprintf('PDOException was thrown when trying to manipulate session data. Message: %s', $e->getMessage()));
     }
@@ -124,18 +140,18 @@ class sfPDOSessionStorage extends sfSessionStorage
     $time = time() - $lifetime;
 
     // get table/column
-    $db_table    = $this->getParameterHolder()->get('db_table');
-    $db_time_col = $this->getParameterHolder()->get('db_time_col', 'sess_time');
+    $db_table = $this->getOption('db_table');
+    $db_time_col = $this->getOption('db_time_col');
 
     // delete the record associated with this id
-    $sql = 'DELETE FROM '.$db_table.' WHERE '.$db_time_col.' < '.$time;
+    $sql = 'DELETE FROM ' . $db_table . ' WHERE ' . $db_time_col . ' < ' . $time;
 
     try
     {
       $this->db->query($sql);
       return true;
     }
-    catch (PDOException $e)
+    catch(PDOException $e)
     {
       throw new sfDatabaseException(sprintf('PDOException was thrown when trying to manipulate session data. Message: %s', $e->getMessage()));
     }
@@ -144,22 +160,19 @@ class sfPDOSessionStorage extends sfSessionStorage
   /**
    * Opens a session.
    *
-   * @param string
-   * @param string
+   * @param string $path
+   * @param string $name
    *
    * @return boolean true, if the session was opened, otherwise an exception is thrown
-   *
    * @throws sfDatabaseException If a connection with the database does not exist or cannot be created
    */
   public function sessionOpen($path, $name)
   {
-    // what database are we using?
-    $database = $this->getParameterHolder()->get('database', 'default');
+    $this->db = $this->manager->getDatabase($this->getOption('database'))->getConnection();
 
-    $this->db = $this->getContext()->getDatabaseConnection($database);
-    if ($this->db == null || !$this->db instanceof PDO)
+    if($this->db == null || !$this->db instanceof PDO)
     {
-      throw new sfDatabaseException('PDO dabatase connection doesn\'t exist. Unable to open session.');
+      throw new sfDatabaseException(sprintf('PDO dabatase connection "%s" doesn\'t exist. Unable to open session.', $database));
     }
 
     return true;
@@ -177,27 +190,27 @@ class sfPDOSessionStorage extends sfSessionStorage
   public function sessionRead($id)
   {
     // get table/columns
-    $db_table    = $this->getParameterHolder()->get('db_table');
-    $db_data_col = $this->getParameterHolder()->get('db_data_col', 'sess_data');
-    $db_id_col   = $this->getParameterHolder()->get('db_id_col', 'sess_id');
-    $db_time_col = $this->getParameterHolder()->get('db_time_col', 'sess_time');
+    $db_table = $this->getOption('db_table');
+    $db_data_col = $this->getOption('db_data_col');
+    $db_id_col = $this->getOption('db_id_col');
+    $db_time_col = $this->getOption('db_time_col');
 
     try
     {
-      $sql = 'SELECT '.$db_data_col.' FROM '.$db_table.' WHERE '.$db_id_col.'=?';
+      $sql = 'SELECT ' . $db_data_col . ' FROM ' . $db_table . ' WHERE ' . $db_id_col . '=?';
 
       $stmt = $this->db->prepare($sql);
       $stmt->bindParam(1, $id, PDO::PARAM_STR, 255);
 
       $stmt->execute();
-      if ($data = $stmt->fetchColumn())
+      if($data = $stmt->fetchColumn())
       {
         return $data;
       }
       else
       {
         // session does not exist, create it
-        $sql = 'INSERT INTO '.$db_table.'('.$db_id_col.', '.$db_data_col.', '.$db_time_col.') VALUES (?, ?, ?)';
+        $sql = 'INSERT INTO ' . $db_table . '(' . $db_id_col . ', ' . $db_data_col . ', ' . $db_time_col . ') VALUES (?, ?, ?)';
 
         $stmt = $this->db->prepare($sql);
         $stmt->bindParam(1, $id, PDO::PARAM_STR); // setString(1, $id);
@@ -208,7 +221,7 @@ class sfPDOSessionStorage extends sfSessionStorage
         return '';
       }
     }
-    catch (PDOException $e)
+    catch(PDOException $e)
     {
       throw new sfDatabaseException(sprintf('PDOException was thrown when trying to manipulate session data. Message: %s', $e->getMessage()));
     }
@@ -227,12 +240,12 @@ class sfPDOSessionStorage extends sfSessionStorage
   public function sessionWrite($id, $data)
   {
     // get table/column
-    $db_table    = $this->getParameterHolder()->get('db_table');
-    $db_data_col = $this->getParameterHolder()->get('db_data_col', 'sess_data');
-    $db_id_col   = $this->getParameterHolder()->get('db_id_col', 'sess_id');
-    $db_time_col = $this->getParameterHolder()->get('db_time_col', 'sess_time');
+    $db_table = $this->getOption('db_table');
+    $db_data_col = $this->getOption('db_data_col');
+    $db_id_col = $this->getOption('db_id_col');
+    $db_time_col = $this->getOption('db_time_col');
 
-    $sql = 'UPDATE '.$db_table.' SET '.$db_data_col.' = ?, '.$db_time_col.' = '.time().' WHERE '.$db_id_col.'= ?';
+    $sql = 'UPDATE ' . $db_table . ' SET ' . $db_data_col . ' = ?, ' . $db_time_col . ' = ' . time() . ' WHERE ' . $db_id_col . '= ?';
 
     try
     {
@@ -242,12 +255,32 @@ class sfPDOSessionStorage extends sfSessionStorage
       $stmt->execute();
       return true;
     }
-    catch (PDOException $e)
+    catch(PDOException $e)
     {
       throw new sfDatabaseException(sprintf('PDOException was thrown when trying to manipulate session data. Message: %s', $e->getMessage()));
     }
 
     return false;
+  }
+
+  /**
+   * Regenerates id that represents this storage.
+   *
+   * @param boolean $destroy Destroy session when regenerating?
+   * @return boolean True if session regenerated, false if error
+   */
+  public function regenerate($destroy = false)
+  {
+    if(self::$sessionIdRegenerated)
+    {
+      return;
+    }
+
+    $currentId = session_id();
+    parent::regenerate($destroy);
+    $newId = session_id();
+    $this->sessionRead($newId);
+    return $this->sessionWrite($newId, $this->sessionRead($currentId));
   }
 
   /**
@@ -257,4 +290,5 @@ class sfPDOSessionStorage extends sfSessionStorage
   public function shutdown()
   {
   }
+
 }

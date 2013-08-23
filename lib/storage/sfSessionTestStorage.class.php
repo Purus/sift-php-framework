@@ -12,10 +12,19 @@
  * @package    Sift
  * @subpackage storage
  */
-class sfSessionTestStorage extends sfStorage
-{
+class sfSessionTestStorage extends sfStorage {
+
+  /**
+   * Array of required options
+   *
+   * @var array
+   */
+  protected $requiredOptions = array(
+    'session_path'
+  );
+
   protected
-    $sessionId   = null,
+    $sessionId = null,
     $sessionData = array(),
     $sessionPath = null;
 
@@ -29,24 +38,23 @@ class sfSessionTestStorage extends sfStorage
    *
    * @throws sfInitializationException If an error occurs while initializing this Storage
    */
-  public function initialize($context, $parameters = null)
+  public function setup()
   {
     // initialize parent
-    parent::initialize($context, $parameters);
+    parent::setup();
 
-    $this->sessionPath = sfConfig::get('sf_test_cache_dir').DIRECTORY_SEPARATOR.'sessions';
+    $this->sessionPath = $this->getOption('session_path').'/sessions';
 
-    if (array_key_exists('session_id', $_SERVER))
+    if(array_key_exists('session_id', $_SERVER))
     {
       $this->sessionId = $_SERVER['session_id'];
-
       // we read session data from temp file
-      $file = $this->sessionPath.DIRECTORY_SEPARATOR.$this->sessionId.'.session';
+      $file = $this->sessionPath . '/' . $this->sessionId . '.session';
       $this->sessionData = file_exists($file) ? unserialize(file_get_contents($file)) : array();
     }
     else
     {
-      $this->sessionId   = md5(uniqid(rand(), true));
+      $this->sessionId = md5(uniqid(rand(), true));
       $this->sessionData = array();
     }
   }
@@ -62,42 +70,26 @@ class sfSessionTestStorage extends sfStorage
   }
 
   /**
-   * Reads data from this storage.
-   *
-   * The preferred format for a key is directory style so naming conflicts can be avoided.
-   *
-   * @param string A unique key identifying your data
-   *
-   * @return mixed Data associated with the key
+   * @see sfIStorage
    */
-  public function & read($key)
+  public function read($key)
   {
-    $retval = null;
-
-    if (isset($this->sessionData[$key]))
+    if(isset($this->sessionData[$key]))
     {
-      $retval =& $this->sessionData[$key];
+      return $this->sessionData[$key];
     }
-
-    return $retval;
   }
 
   /**
-   * Removes data from this storage.
-   *
-   * The preferred format for a key is directory style so naming conflicts can be avoided.
-   *
-   * @param string A unique key identifying your data
-   *
-   * @return mixed Data associated with the key
+   * @see sfIStorage
    */
-  public function & remove($key)
+  public function remove($key)
   {
     $retval = null;
 
-    if (isset($this->sessionData[$key]))
+    if(isset($this->sessionData[$key]))
     {
-      $retval =& $this->sessionData[$key];
+      $retval = $this->sessionData[$key];
       unset($this->sessionData[$key]);
     }
 
@@ -105,17 +97,11 @@ class sfSessionTestStorage extends sfStorage
   }
 
   /**
-   * Writes data to this storage.
-   *
-   * The preferred format for a key is directory style so naming conflicts can be avoided
-   *
-   * @param string A unique key identifying your data
-   * @param mixed  Data associated with your key
-   *
+   * @see sfIStorage
    */
-  public function write($key, &$data)
+  public function write($key, $data)
   {
-    $this->sessionData[$key] =& $data;
+    $this->sessionData[$key] = $data;
   }
 
   /**
@@ -127,22 +113,30 @@ class sfSessionTestStorage extends sfStorage
   }
 
   /**
-   * Executes the shutdown procedure.
-   *
+   * @see sfIStorage
+   */
+  public function regenerate($destroy = false)
+  {
+    return true;
+  }
+
+  /**
+   * @see sfIService
    */
   public function shutdown()
   {
-    if ($this->sessionId)
+    if($this->sessionId)
     {
       $current_umask = umask(0000);
-      if (!is_dir($this->sessionPath))
+      if(!is_dir($this->sessionPath))
       {
         mkdir($this->sessionPath, 0777, true);
       }
       umask($current_umask);
-      file_put_contents($this->sessionPath.DIRECTORY_SEPARATOR.$this->sessionId.'.session', serialize($this->sessionData));
-      $this->sessionId   = '';
+      file_put_contents($this->sessionPath . '/' . $this->sessionId . '.session', serialize($this->sessionData));
+      $this->sessionId = '';
       $this->sessionData = array();
     }
   }
+
 }

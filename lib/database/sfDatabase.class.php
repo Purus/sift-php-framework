@@ -13,22 +13,23 @@
  * @package    Sift
  * @subpackage database
  */
-abstract class sfDatabase {
+abstract class sfDatabase implements sfIService {
 
   protected
-          $connection = null,
-          $parameterHolder = null,
-          $resource = null;
+    $connection = null,
+    $parameterHolder = null,
+    $resource = null;
 
   /**
+   * Constructor
    *
    * @param array $parameters
    */
   public function __construct($parameters = array())
   {
+    $this->parameterHolder = new sfParameterHolder();
     $this->initialize($parameters);
   }
-
 
   /**
    * Connects to the database.
@@ -90,7 +91,12 @@ abstract class sfDatabase {
       $value = $this->replaceEnvironmentVariables($value);
     }
 
-    $this->parameterHolder = new sfParameterHolder();
+    if(!$this->parameterHolder)
+    {
+      $this->parameterHolder = new sfParameterHolder();
+    }
+
+    $this->parameterHolder->clear();
     $this->parameterHolder->add($parameters);
   }
 
@@ -209,14 +215,5 @@ abstract class sfDatabase {
       }
     }
   }
-
-  /**
-   * Executes the shutdown procedure.
-   *
-   * @return void
-   *
-   * @throws sfDatabaseException If an error occurs while shutting down this database
-   */
-  abstract function shutdown();
 
 }

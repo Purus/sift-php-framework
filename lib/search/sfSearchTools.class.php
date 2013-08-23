@@ -33,6 +33,7 @@ class sfSearchTools {
   public static function highlight($text, sfSearchQueryExpression $expression)
   {
     $keywords = $expression->collectWords();
+    $phrases = array();
     foreach($keywords as $k)
     {
       // strip wildcards
@@ -42,19 +43,9 @@ class sfSearchTools {
       {
         continue;
       }
-
-      $k = preg_quote($k);
-      @preg_match_all("/$k+/i", $text, $matches);
-      if(is_array($matches[0]) && count($matches[0]) >= 1)
-      {
-        foreach($matches[0] as $match)
-        {
-          $text = str_replace($match, '<span class="search-highlighted">'.$match.'</span>', $text);
-        }
-      }
+      $phrases[] = trim($k);
     }
-
-    return $text;    
+    return count($phrases) ? sfText::highlight($text, $phrases, '<span class="search-highlighted">\1</span>') : $text;
   }
   
   /**

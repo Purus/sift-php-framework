@@ -1,8 +1,5 @@
 ## Sift PHP framework
 
-Originally a fork of symfony 1.0 framework. The first version of [symfony](http://www.symfony-project.com/) was 
-released in October 2005 by project founder Fabien Potencier.  
-
 ### Features
 
   * MVC architecture   
@@ -48,6 +45,9 @@ released in October 2005 by project founder Fabien Potencier.
      * Debug toolbar
      * Debugging tools (sfDebug class, loggers)
   * and much more ... 
+
+Originally a fork of symfony 1.0 framework. The first version of [symfony](http://www.symfony-project.com/) was 
+released in October 2005 by project founder Fabien Potencier.  
 
 ### Requirements
 

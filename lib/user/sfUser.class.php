@@ -15,12 +15,11 @@
  * @package    Sift
  * @subpackage user
  */
-class sfUser {
+class sfUser implements sfIService {
 
   /**
    * Attributes namespace
    */
-
   const ATTRIBUTE_NAMESPACE = 'sift/user/sfUser/attributes';
 
   /**
@@ -55,26 +54,21 @@ class sfUser {
   protected $culture;
 
   /**
-   * Context instance
+   * Service container
    *
-   * @var sfContext
+   * @var sfServiceContainer
    */
-  protected $context;
+  protected $serviceContainer;
 
   /**
-   * Initialize this User.
+   * Construct the user
    *
-   * @param sfContext A Context instance.
-   * @param array   An associative array of initialization parameters.
-   *
-   * @return bool true, if initialization completes successfully, otherwise
-   *              false.
-   *
-   * @throws sfInitializationException If an error occurs while initializing this User.
+   * @param sfServiceContainer $serviceContainer
+   * @param array $parameters An associative array of initialization parameters.
    */
-  public function initialize($context, $parameters = array())
+  public function __construct(sfServiceContainer $serviceContainer, $parameters = array())
   {
-    $this->context = $context;
+    $this->serviceContainer = $serviceContainer;
 
     $this->parameterHolder = new sfParameterHolder();
     $this->parameterHolder->add($parameters);
@@ -82,7 +76,7 @@ class sfUser {
     $this->attributeHolder = new sfParameterHolder(self::ATTRIBUTE_NAMESPACE);
 
     // read attributes from storage
-    $attributes = $context->getStorage()->read(self::ATTRIBUTE_NAMESPACE);
+    $attributes = $this->serviceContainer->get('storage')->read(self::ATTRIBUTE_NAMESPACE);
     if(is_array($attributes))
     {
       foreach($attributes as $namespace => $values)
@@ -95,48 +89,15 @@ class sfUser {
     // otherwise
     //  - use the culture defined in the user session
     //  - use the default culture set in i18n.yml
-    if(!($culture = $context->getRequest()->getParameter('sf_culture')))
+    if(!($culture = $this->serviceContainer->get('request')->getParameter('sf_culture')))
     {
-      if(null === ($culture = $context->getStorage()->read(self::CULTURE_NAMESPACE)))
+      if(null === ($culture = $this->serviceContainer->get('storage')->read(self::CULTURE_NAMESPACE)))
       {
         $culture = sfConfig::get('sf_i18n_default_culture', 'en');
       }
     }
 
     $this->setCulture($culture);
-  }
-
-  /**
-   * Retrieve a new sfUser implementation instance.
-   *
-   * @param string A sfUser implementation name
-   *
-   * @return User A sfUser implementation instance.
-   *
-   * @throws sfFactoryException If a user implementation instance cannot
-   */
-  public static function newInstance($class)
-  {
-    // the class exists
-    $object = new $class();
-
-    if(!($object instanceof sfUser))
-    {
-      // the class name is of the wrong type
-      throw new sfFactoryException(sprintf('Class "%s" is not of the type sfUser', $class));
-    }
-
-    return $object;
-  }
-
-  /**
-   * Retrieve the current application context.
-   *
-   * @return sfContext A sfContext instance.
-   */
-  public function getContext()
-  {
-    return $this->context;
   }
 
   /**
@@ -152,7 +113,7 @@ class sfUser {
     }
 
     // dispatch event
-    $this->context->getEventDispatcher()->notify(new sfEvent('user.change_culture', array(
+    $this->serviceContainer->get('event_dispatcher')->notify(new sfEvent('user.change_culture', array(
         'previous' => $this->culture,
         'culture' => $culture)));
 
@@ -181,7 +142,7 @@ class sfUser {
    */
   public function getIp()
   {
-    return $this->context->getRequest()->getIp();
+    return $this->serviceContainer->get('request')->getIp();
   }
 
   /**
@@ -202,7 +163,7 @@ class sfUser {
    */
   public function getIpForwardedFor()
   {
-    return $this->context->getRequest()->getIpForwardedFor();
+    return $this->serviceContainer->get('request')->getIpForwardedFor();
   }
 
   /**
@@ -212,7 +173,7 @@ class sfUser {
    */
   public function getHostname()
   {
-    return $this->context->getRequest()->getHostname();
+    return $this->serviceContainer->get('request')->getHostname();
   }
 
   /**
@@ -222,7 +183,7 @@ class sfUser {
    */
   public function getUserAgent()
   {
-    return $this->context->getRequest()->getUserAgent();
+    return $this->serviceContainer->get('request')->getUserAgent();
   }
 
   /**
@@ -291,8 +252,7 @@ class sfUser {
   public function setTimezone($timezone)
   {
     date_default_timezone_set($timezone);
-    $this->context->getEventDispatcher()->notify(
-            new sfEvent('user.change_timezone', array('method' => 'setTimezone', 'timezone' => $timezone)));
+    $this->serviceContainer->get('event_dispatcher')->notify(new sfEvent('user.change_timezone', array('method' => 'setTimezone', 'timezone' => $timezone)));
   }
 
   /**
@@ -377,17 +337,14 @@ class sfUser {
    */
   public function shutdown()
   {
-    $storage = $this->getContext()->getStorage();
-
+    $storage = $this->serviceContainer->get('storage');
     $attributes = array();
     foreach($this->attributeHolder->getNamespaces() as $namespace)
     {
       $attributes[$namespace] = $this->attributeHolder->getAll($namespace);
     }
-
     // write attributes to the storage
     $storage->write(self::ATTRIBUTE_NAMESPACE, $attributes);
-
     // write culture to the storage
     $storage->write(self::CULTURE_NAMESPACE, $this->culture);
   }
@@ -404,7 +361,7 @@ class sfUser {
    */
   public function __call($method, $arguments)
   {
-    $event = $this->context->getEventDispatcher()->notifyUntil(
+    $event = $this->serviceContainer->get('event_dispatcher')->notifyUntil(
             new sfEvent('user.method_not_found', array(
         'user' => $this,
         'method' => $method,

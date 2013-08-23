@@ -1,24 +1,22 @@
 # You can find more information about this file on:
 # https://bitbucket.org/mishal/sift-php-framework/wiki/Factories
 
+# cli environment
 cli:
-#  controller:
-#    class: sfConsoleController
-#  request:
-#    class: sfConsoleRequest
-#  response:
-#    class: sfConsoleResponse
   storage:
-    class: sfSessionTestStorage
+    class: sfNoStorage
 
+# test environment
 test:
   storage:
     class: sfSessionTestStorage
+    arguments: [{ session_path : %SF_TEST_CACHE_DIR% }]
 
+# default
 default:
-  
   controller:
     class: sfFrontWebController
+    arguments: ["$context"]
 
   request:
     class: sfWebRequest
@@ -28,17 +26,34 @@ default:
 
   user:
     class: myUser
+    arguments: ["@service_container"]
 
+  # session storage
   storage:
     class: sfSessionStorage
-    param:
-      session_name: sessionID
 
+  database_manager:
+    class: sfDatabaseManager
+
+  # view cache
   view_cache:
     class: sfFileCache
-    param:
-      automatic_cleaning_factor: 0
-      cache_dir: %SF_TEMPLATE_CACHE_DIR%
+    arguments: [{ automatic_cleaning_factor: 0, cache_dir: %SF_TEMPLATE_CACHE_DIR% }]
+
+  view_cache_manager:
+    class: sfViewCacheManager
+    arguments: ["$context", "@view_cache", { cache_key_use_vary_headers: true, cache_key_use_host_name: true} ]
 
   i18n:
     class: sfI18n
+    arguments: ["$context", %SF_I18N_PARAM%]
+
+  # event dispatcher
+  event_dispatcher:
+    class: sfEventDispatcher
+
+  # antivirus service
+  antivirus:
+    class: sfAntivirus
+    constructor: factory
+    arguments: [ clamavSocket, {}]

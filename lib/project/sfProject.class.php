@@ -66,6 +66,13 @@ abstract class sfProject extends sfConfigurable {
   protected $dispatcher;
 
   /**
+   * Service container
+   *
+   * @var sfServiceContainer
+   */
+  protected $serviceContainer;
+
+  /**
    * Array of required options
    *
    * @var array
@@ -97,6 +104,7 @@ abstract class sfProject extends sfConfigurable {
   public function __construct($options = array(), sfEventDispatcher $dispatcher = null)
   {
     $this->dispatcher = is_null($dispatcher) ? new sfEventDispatcher() : $dispatcher;
+    // $this->serviceContaner = sfServiceContainer::getInstance();
 
     parent::__construct($options);
 

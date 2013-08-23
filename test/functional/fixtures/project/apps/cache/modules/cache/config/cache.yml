@@ -53,3 +53,7 @@ imageNoLayoutCacheWithLayout:
 
 imageNoLayoutCacheNoLayout:
   with_layout: false
+
+xml:
+  enabled: true
+  with_layout: true

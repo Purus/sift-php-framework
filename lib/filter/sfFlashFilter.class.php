@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of the Sift PHP framework.
  *
@@ -12,32 +13,32 @@
  * @package    Sift
  * @subpackage filter
  */
-class sfFlashFilter extends sfFilter
-{
+class sfFlashFilter extends sfFilter {
+
   /**
    * Executes this filter.
    *
    * @param sfFilterChain A sfFilterChain instance.
    */
-  public function execute($filterChain)
+  public function execute(sfFilterChain $filterChain)
   {
     $context = $this->getContext();
     $userAttributeHolder = $context->getUser()->getAttributeHolder();
 
     // execute this filter only once
-    if ($this->isFirstCall())
+    if($this->isFirstCall())
     {
       // flag current flash to be removed after the execution filter
       $names = $userAttributeHolder->getNames(sfUser::FLASH_NAMESPACE);
-      if ($names)
+      if($names)
       {
-        if (sfConfig::get('sf_logging_enabled'))
-        {
-          $context->getLogger()->info('{sfFilter} flag old flash messages ("'.implode('", "', $names).'")');
-        }
-        foreach ($names as $name)
+        foreach($names as $name)
         {
           $userAttributeHolder->set($name, true, 'sift/flash/remove');
+        }
+        if(sfConfig::get('sf_logging_enabled'))
+        {
+          sfLogger::getInstance()->info('{sfFilter} Flagged old flash messages ("' . implode('", "', $names) . '")');
         }
       }
     }
@@ -47,17 +48,18 @@ class sfFlashFilter extends sfFilter
 
     // remove flash that are tagged to be removed
     $names = $userAttributeHolder->getNames('sift/flash/remove');
-    if ($names)
+    if($names)
     {
-      if (sfConfig::get('sf_logging_enabled'))
-      {
-        $context->getLogger()->info('{sfFilter} remove old flash messages ("'.implode('", "', $names).'")');
-      }
-      foreach ($names as $name)
+      foreach($names as $name)
       {
         $userAttributeHolder->remove($name, sfUser::FLASH_NAMESPACE);
         $userAttributeHolder->remove($name, 'sift/flash/remove');
       }
+      if(sfConfig::get('sf_logging_enabled'))
+      {
+        sfLogger::getInstance()->info('{sfFilter} Removed old flash messages ("' . implode('", "', $names) . '")');
+      }
     }
   }
+
 }

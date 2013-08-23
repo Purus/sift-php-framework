@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of the Sift PHP framework.
  *
@@ -14,8 +15,8 @@
  * @package    Sift
  * @subpackage controller
  */
-class sfFrontWebController extends sfWebController
-{
+class sfFrontWebController extends sfWebController {
+
   /**
    * Dispatches a request.
    *
@@ -29,11 +30,11 @@ class sfFrontWebController extends sfWebController
       sfFilter::$filterCalled = array();
 
       // determine our module and action
-      $request    = $this->context->getRequest();
+      $request = $this->context->getRequest();
       $moduleName = $request->getParameter('module');
       $actionName = $request->getParameter('action');
 
-      if (empty($moduleName) || empty($actionName))
+      if(empty($moduleName) || empty($actionName))
       {
         throw new sfError404Exception(sprintf('Empty module and/or action after parsing the URL "%s" (%s/%s).', $request->getPathInfo(), $moduleName, $actionName));
       }
@@ -41,14 +42,15 @@ class sfFrontWebController extends sfWebController
       // make the first request
       $this->forward($moduleName, $actionName);
     }
-    catch (sfException $e)
+    catch(sfException $e)
     {
       $e->printStackTrace();
     }
     // FIXME: better stacktrace for wrapper exception since it does not link to proper line of file
-    catch (Exception $e)
+    catch(Exception $e)
     {
       sfException::createFromException($e)->printStackTrace();
     }
   }
+
 }

@@ -12,18 +12,99 @@
  * @package    Sift
  * @subpackage user
  */
-class sfBasicSecurityUser extends sfUser implements sfSecurityUser {
+class sfBasicSecurityUser extends sfUser implements sfISecurityUser, sfIService {
 
+  /**
+   * Last request namespace
+   */
   const LAST_REQUEST_NAMESPACE = 'sift/user/sfUser/lastRequest';
+
+  /**
+   * Auth namespace
+   */
   const AUTH_NAMESPACE = 'sift/user/sfUser/authenticated';
+
+  /**
+   * Credentials namespace
+   */
   const CREDENTIAL_NAMESPACE = 'sift/user/sfUser/credentials';
+
+  /**
+   * Id namespace
+   */
   const ID_NAMESPACE = 'sift/user/sfUser/id';
 
+  /**
+   * Last request time
+   * @var integer
+   */
   protected $lastRequest = null;
+
+  /**
+   * Credentials
+   *
+   * @var array
+   */
   protected $credentials = null;
+
+  /**
+   * Authenticated flag
+   *
+   * @var boolean
+   */
   protected $authenticated = null;
+
+  /**
+   * Timed out flag
+   *
+   * @var boolean
+   */
   protected $timedout = false;
+
+  /**
+   * User id
+   *
+   * @var integer
+   */
   protected $id = null;
+
+  /**
+   * @see sfUser
+   */
+  public function __construct(sfServiceContainer $serviceContainer, $parameters = array())
+  {
+    parent::__construct($serviceContainer, $parameters);
+
+    // read data from storage
+    $storage = $this->serviceContainer->get('storage');
+
+    $this->authenticated = $storage->read(self::AUTH_NAMESPACE);
+    $this->credentials = $storage->read(self::CREDENTIAL_NAMESPACE);
+    $this->lastRequest = $storage->read(self::LAST_REQUEST_NAMESPACE);
+    $this->id = $storage->read(self::ID_NAMESPACE);
+
+    if($this->authenticated == null)
+    {
+      $this->authenticated = false;
+      $this->credentials = array();
+    }
+    else
+    {
+      // Automatic logout logged in user if no request within [sf_timeout] setting
+      if(null !== $this->lastRequest && (time() - $this->lastRequest) > sfConfig::get('sf_timeout'))
+      {
+        if(sfConfig::get('sf_logging_enabled'))
+        {
+          sfLogger::getInstance()->info('{sfUser} Automatic user logout due to timeout.');
+        }
+        $this->setTimedOut();
+        $this->setAuthenticated(false);
+        $this->setId(null);
+      }
+    }
+
+    $this->lastRequest = time();
+  }
 
   /**
    * Clears all credentials.
@@ -60,9 +141,8 @@ class sfBasicSecurityUser extends sfUser implements sfSecurityUser {
         {
           if(sfConfig::get('sf_logging_enabled'))
           {
-            $this->getContext()->getLogger()->info('{sfUser} remove credential "' . $credential . '"');
+            sfLogger::getInstance()->info('{sfUser} remove credential "' . $credential . '"');
           }
-
           unset($this->credentials[$key]);
           return;
         }
@@ -97,7 +177,7 @@ class sfBasicSecurityUser extends sfUser implements sfSecurityUser {
 
     if(sfConfig::get('sf_logging_enabled'))
     {
-      $this->getContext()->getLogger()->info('{sfUser} add credential(s) "' . implode(', ', $credentials) . '"');
+      sfLogger::getInstance()->info('{sfUser} add credential(s) "' . implode(', ', $credentials) . '"');
     }
 
     foreach($credentials as $aCredential)
@@ -180,7 +260,7 @@ class sfBasicSecurityUser extends sfUser implements sfSecurityUser {
   {
     if(sfConfig::get('sf_logging_enabled'))
     {
-      $this->getContext()->getLogger()->info('{sfUser} user is ' . ($authenticated === true ? '' : 'not ') . 'authenticated');
+      sfLogger::getInstance()->info('{sfUser} user is ' . ($authenticated === true ? '' : 'not ') . 'authenticated');
     }
 
     if($authenticated === true)
@@ -232,45 +312,9 @@ class sfBasicSecurityUser extends sfUser implements sfSecurityUser {
     return $this->lastRequest;
   }
 
-  public function initialize($context, $parameters = null)
-  {
-    // initialize parent
-    parent::initialize($context, $parameters);
-
-    // read data from storage
-    $storage = $this->getContext()->getStorage();
-
-    $this->authenticated = $storage->read(self::AUTH_NAMESPACE);
-    $this->credentials = $storage->read(self::CREDENTIAL_NAMESPACE);
-    $this->lastRequest = $storage->read(self::LAST_REQUEST_NAMESPACE);
-    $this->id = $storage->read(self::ID_NAMESPACE);
-
-    if($this->authenticated == null)
-    {
-      $this->authenticated = false;
-      $this->credentials = array();
-    }
-    else
-    {
-      // Automatic logout logged in user if no request within [sf_timeout] setting
-      if(null !== $this->lastRequest && (time() - $this->lastRequest) > sfConfig::get('sf_timeout'))
-      {
-        if(sfConfig::get('sf_logging_enabled'))
-        {
-          $this->getContext()->getLogger()->info('{sfUser} automatic user logout due to timeout');
-        }
-        $this->setTimedOut();
-        $this->setAuthenticated(false);
-        $this->setId(null);
-      }
-    }
-
-    $this->lastRequest = time();
-  }
-
   public function shutdown()
   {
-    $storage = $this->getContext()->getStorage();
+    $storage = $this->serviceContainer->get('storage');
 
     // write the last request time to the storage
     $storage->write(self::LAST_REQUEST_NAMESPACE, $this->lastRequest);

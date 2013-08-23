@@ -6,13 +6,16 @@ require_once dirname(__FILE__) . '/../sfCoreMock.class.php';
 
 $t = new lime_test(9, new lime_output_color());
 
-// initialize objects
-$dispatcher = new sfEventDispatcher();
-
 $sessionPath = sys_get_temp_dir() . '/sessions_' . rand(11111, 99999);
 $storage = new sfSessionTestStorage(array('session_path' => $sessionPath));
-$user = new sfUser();
-$user->initialize(sfContext::getInstance());
+
+$seviceContainer = sfServiceContainer::getInstance();
+$seviceContainer->set('storage', $storage);
+$seviceContainer->set('request', new sfWebRequest());
+$seviceContainer->set('event_dispatcher', new sfEventDispatcher());
+
+$user = new sfUser($seviceContainer);
+
 $user->setCulture('en');
 
 $request = sfContext::getInstance()->getRequest();

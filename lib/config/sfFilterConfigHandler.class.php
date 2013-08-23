@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of the Sift PHP framework.
  *
@@ -12,8 +13,8 @@
  * @package    Sift
  * @subpackage config
  */
-class sfFilterConfigHandler extends sfYamlConfigHandler
-{
+class sfFilterConfigHandler extends sfYamlConfigHandler {
+
   /**
    * Executes this configuration handler
    *
@@ -27,67 +28,41 @@ class sfFilterConfigHandler extends sfYamlConfigHandler
   public function execute($configFiles)
   {
     // parse the yaml
-    $config = $this->parseYaml($configFiles[0]);
-    foreach (array_slice($configFiles, 1) as $i => $configFile)
-    {
-      // we get the order of the new file and merge with the previous configurations
-      $previous = $config;
-
-      $config = array();
-      foreach ($this->parseYaml($configFile) as $key => $value)
-      {
-        $value = (array) $value;
-        $config[$key] = isset($previous[$key]) ? sfToolkit::arrayDeepMerge($previous[$key], $value) : $value;
-      }
-
-      // check that every key in previous array is still present (to avoid problem when upgrading)
-      foreach (array_keys($previous) as $key)
-      {
-        if(!isset($config[$key]))
-        {
-          throw new sfConfigurationException(sprintf('The filter name "%s" is defined in "%s" but not present in "%s" file. To disable a filter, add a "enabled" key with a false value', $key, $configFiles[$i], $configFile));
-        }
-      }
-    }
+    $config = self::getConfiguration($configFiles);
 
     // init our data and includes arrays
-    $data     = array();
+    $data = array();
     $includes = array();
 
     $execution = false;
     $rendering = false;
 
     // let's do our fancy work
-    foreach ($config as $category => $keys)
+    foreach($config as $category => $keys)
     {
-      if (isset($keys['enabled']) && !$keys['enabled'])
+      if(isset($keys['enabled']) && !$keys['enabled'])
       {
         continue;
       }
 
-      if (!isset($keys['class']))
+      if(!isset($keys['class']))
       {
         // missing class key
-        $error = 'Configuration file "%s" specifies category "%s" with missing class key';
-        $error = sprintf($error, $configFiles[0], $category);
-
-        throw new sfParseException($error);
+        throw new sfParseException(sprintf('Configuration file "%s" specifies category "%s" with missing class key', $configFiles[0], $category));
       }
 
       $class = $keys['class'];
 
-      if (isset($keys['file']))
+      if(isset($keys['file']))
       {
         // we have a file to include
         $file = $this->replaceConstants($keys['file']);
         $file = $this->replacePath($file);
 
-        if (!is_readable($file))
+        if(!is_readable($file))
         {
           // filter file doesn't exist
-          $error = sprintf('Configuration file "%s" specifies class "%s" with nonexistent or unreadable file "%s"', $configFiles[0], $class, $file);
-
-          throw new sfParseException($error);
+          throw new sfParseException(sprintf('Configuration file "%s" specifies class "%s" with nonexistent or unreadable file "%s"', $configFiles[0], $class, $file));
         }
 
         // append our data
@@ -101,22 +76,22 @@ class sfFilterConfigHandler extends sfYamlConfigHandler
       }
 
       $condition = true;
-      if (isset($keys['param']['condition']))
+      if(isset($keys['param']['condition']))
       {
-        $condition = $keys['param']['condition'];
+        $condition = sfToolkit::replaceConstants($keys['param']['condition']);
         unset($keys['param']['condition']);
       }
 
       $type = isset($keys['param']['type']) ? $keys['param']['type'] : null;
       unset($keys['param']['type']);
 
-      if ($condition)
+      if($condition)
       {
         // parse parameters
-        $parameters = isset($keys['param']) ? var_export($keys['param'], true) : 'null';
+        $parameters = isset($keys['param']) ? $this->varExport($keys['param']) : 'null';
 
         // append new data
-        if ('security' == $type)
+        if('security' == $type)
         {
           $data[] = $this->addSecurityFilter($category, $class, $parameters);
         }
@@ -125,37 +100,32 @@ class sfFilterConfigHandler extends sfYamlConfigHandler
           $data[] = $this->addFilter($category, $class, $parameters);
         }
 
-        if ('rendering' == $type)
+        if('rendering' == $type)
         {
           $rendering = true;
         }
 
-        if ('execution' == $type)
+        if('execution' == $type)
         {
           $execution = true;
         }
       }
     }
 
-    if (!$rendering)
+    if(!$rendering)
     {
-      $error = sprintf('Configuration file "%s" must register a filter of type "rendering"', $configFiles[0]);
-
-      throw new sfParseException($error);
+      throw new sfParseException(sprintf('Configuration file "%s" must register a filter of type "rendering"', $configFiles[0]));
     }
 
-    if (!$execution)
+    if(!$execution)
     {
-      $error = sprintf('Configuration file "%s" must register a filter of type "execution"', $configFiles[0]);
-
-      throw new sfParseException($error);
+      throw new sfParseException(sprintf('Configuration file "%s" must register a filter of type "execution"', $configFiles[0]));
     }
 
     // compile data
-    $retval = sprintf("<?php\n".
-                      "// auto-generated by sfFilterConfigHandler\n".
-                      "// date: %s%s\n%s\n\n", date('Y/m/d H:i:s'),
-                      implode("\n", $includes), implode("\n", $data));
+    $retval = sprintf("<?php\n" .
+        "// auto-generated by sfFilterConfigHandler\n" .
+        "// date: %s%s\n%s\n\n", date('Y/m/d H:i:s'), implode("\n", $includes), implode("\n", $data));
 
     return $retval;
   }
@@ -171,11 +141,15 @@ class sfFilterConfigHandler extends sfYamlConfigHandler
    */
   protected function addFilter($category, $class, $parameters)
   {
-    return sprintf("\nlist(\$class, \$parameters) = (array) sfConfig::get('sf_%s_filter', array('%s', %s));\n".
-                      "\$filter = new \$class();\n".
-                      "\$filter->initialize(\$this->context, \$parameters);\n".
-                      "\$filterChain->register(\$filter);",
-                      $category, $class, $parameters);
+    $code = array();
+    $code[] = sprintf('$filter = sfDependencyInjectionContainer::create(\'%s\');', $class);    
+    $code[] = 'if(!($filter instanceof sfIFilter))';
+    $code[] = '{';
+    $code[] = sprintf('  throw new LogicException(sprintf(\'The filter "%%s" does not implement sfIFilter interface.\', get_class($filter), \'%s\'));', $class);
+    $code[] = '}';
+    $code[] = sprintf('$filter->initialize($this->context, %s);', $parameters);
+    $code[] = '$this->register($filter);';
+    return join("\n", $code) . "\n";
   }
 
   /**
@@ -189,18 +163,58 @@ class sfFilterConfigHandler extends sfYamlConfigHandler
    */
   protected function addSecurityFilter($category, $class, $parameters)
   {
-    return <<<EOF
+    return $this->addFilter($category, $class, $parameters);
+    
+    $code = array();
+    $code[] = sprintf('$filter = sfDependencyInjectionContainer::create(\'%s\');', $class);
+    $code[] = 'if($actionInstance->isSecure() && !in_array(\'sfISecurityUser\', class_implements($this->getContext()->getUser())))';
+    $code[] = '{';
+    $code[] = '  throw new LogicException(\'Security is enabled, but your sfUser implementation does not implement sfSecurityUser interface.\');';
+    $code[] = '}';
+    $code[] = sprintf('$filter->initialize($this->context, %s);', $parameters);
+    $code[] = '$this->register($filter);';
 
-// does this action require security?
-if (\$actionInstance->isSecure())
-{
-  if (!in_array('sfSecurityUser', class_implements(\$this->context->getUser())))
-  {
-    \$error = 'Security is enabled, but your sfUser implementation does not implement sfSecurityUser interface';
-    throw new sfSecurityException(\$error);
+    return join("\n", $code) . "\n";
   }
-  {$this->addFilter($category, $class, $parameters)}
-}
-EOF;
+
+  /**
+   * @see sfConfigHandler
+   */
+  static public function getConfiguration(array $configFiles)
+  {
+    $config = self::parseYaml($configFiles[0]);
+    foreach(array_slice($configFiles, 1) as $i => $configFile)
+    {
+      // we get the order of the new file and merge with the previous configurations
+      $previous = $config;
+
+      $config = array();
+      foreach (self::parseYaml($configFile) as $key => $value)
+      {
+        $value = (array) $value;
+        $config[$key] = isset($previous[$key]) ? sfToolkit::arrayDeepMerge($previous[$key], $value) : $value;
+      }
+
+      // check that every key in previous array is still present (to avoid problem when upgrading)
+      foreach (array_keys($previous) as $key)
+      {
+        if (!isset($config[$key]))
+        {
+          throw new sfConfigurationException(sprintf('The filter name "%s" is defined in "%s" but not present in "%s" file. To disable a filter, add a "enabled" key with a false value.', $key, $configFiles[$i], $configFile));
+        }
+      }
+    }
+
+    $config = self::replaceConstants($config);
+
+    foreach ($config as $category => $keys)
+    {
+      if (isset($keys['file']))
+      {
+        $config[$category]['file'] = self::replacePath($keys['file']);
+      }
+    }
+
+    return $config;
   }
 }

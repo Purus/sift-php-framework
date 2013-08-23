@@ -28,6 +28,7 @@ security:
   param:
     type:      security
     condition: %SF_USE_SECURITY%
+    foo: bar
 
 # generally, you will want to insert your own filters here
 

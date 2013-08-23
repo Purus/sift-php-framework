@@ -19,7 +19,7 @@ class sfWebDebugFilter extends sfFilter {
    *
    * @param sfFilterChain A sfFilterChain instance
    */
-  public function execute($filterChain)
+  public function execute(sfFilterChain $filterChain)
   {
     // execute next filter
     $filterChain->execute();
@@ -47,10 +47,11 @@ class sfWebDebugFilter extends sfFilter {
       return;
     }
 
-    $newContent = sfCore::filterByEventListeners($content, 'web_debug.filter_content', array(
-      'response'  => &$response,
-      'context'   => &$context,
-      'controller' => &$controller,
+    $newContent = sfCore::filterByEventListeners($content,
+      'web_debug.filter_content', array(
+      'response'  => $response,
+      'context'   => $context,
+      'controller' => $controller,
     ));
 
     if($content != $newContent)

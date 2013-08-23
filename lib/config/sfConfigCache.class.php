@@ -393,6 +393,12 @@ class sfConfigCache {
    */
   public static function writeCacheFile($cache, &$data)
   {
+    // strip comments (not in debug mode)
+    if(!sfConfig::get('sf_debug'))
+    {
+      $data = sfToolkit::stripComments($data);
+    }
+
     $current_umask = umask(0000);
     if(!is_dir(dirname($cache)))
     {

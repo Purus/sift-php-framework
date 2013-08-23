@@ -9,7 +9,7 @@
 /**
  * Javascript view (extension .pjs), used for generating javascript
  *
- * @package    Sift
+ * @package Sift
  * @subpackage view
  */
 class sfJavascriptView extends sfPHPView

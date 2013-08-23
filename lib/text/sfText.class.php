@@ -172,34 +172,45 @@ class sfText {
    * passing +highlighter+ as single-quoted string with \1 where the phrase is supposed to be inserted.
    *
    * @param string $text
-   * @param string $phrase
+   * @param string|array $phrase Phrase to highlight in the text
    * @param string $highlighter default <strong class="highlight">\1</strong>
    * @return string string
    */
   public static function highlight($text, $phrase, $highlighter = '<strong class="highlight">\1</strong>')
   {
-    if($text == '')
+    if(empty($text))
     {
       return '';
     }
-    elseif($phrase == '')
+
+    // FIXME: cannot highlight HTML text
+    if(self::isHtml($text))
     {
       return $text;
     }
 
+    if(!is_array($phrase))
+    {
+      $phrase = array($phrase);
+    }
+    
     $highlighter = sprintf('\\1%s\\3', str_replace('\1', '\\2', $highlighter));
-    return preg_replace('/(^|\s|,!|;)(' . preg_quote($phrase, '/') . ')(\s|,|!|&|$)/i', $highlighter, $text);
-  }
 
-  public static function highlightText($text, $phrase, $highlighter = '<strong class="highlight">\1</strong>')
-  {
-    trigger_error('Deprecated usage of sfText::highlightText() use sfText::highlight instead', E_USER_NOTICE);
-    return self::highlight($text, $phrase, $highlighter);
+    foreach($phrase as $p)
+    {
+      if(empty($p))
+      {
+        continue;
+      }
+      $text = preg_replace('/(^|\s|,!|;)(' . preg_quote($p, '/') . ')(\s|,|!|&|$)/i', $highlighter, $text);
+    }
+
+    return $text;
   }
 
   /**
    * Extracts an excerpt from the +text+ surrounding the +phrase+ with a number of characters on each side determined
-   * by +radius+. If the phrase isn't found, nil is returned. Ex:
+   * by +radius+. If the phrase isn't found, null is returned. Ex:
    *
    * sfText::excerpt("hello my world", "my", 3) => "...lo my wo..."
    *

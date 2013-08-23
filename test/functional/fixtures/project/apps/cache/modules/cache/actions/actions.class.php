@@ -1,13 +1,5 @@
 <?php
 
-/**
- * cache actions.
- *
- * @package    project
- * @subpackage cache
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: actions.class.php 31928 2011-01-29 16:02:51Z Kris.Wallsmith $
- */
 class cacheActions extends sfActions
 {
   public function executeIndex()
@@ -16,6 +8,11 @@ class cacheActions extends sfActions
 
   public function executePage()
   {
+  }
+
+  public function executeXml()
+  {
+    return $this->renderXml('<shop>My demo shop</shop>');
   }
 
   public function executeList()
@@ -56,7 +53,7 @@ class cacheActions extends sfActions
   public function executeAction()
   {
     $response = $this->getResponse();
-    $response->setHttpHeader('symfony', 'foo');
+    $response->setHttpHeader('X-Jesus-is', 'Lord');
     $response->setContentType('text/plain');
     $response->setTitle('My title');
     $response->addMeta('meta1', 'bar');
@@ -101,4 +98,9 @@ class cacheActions extends sfActions
     $this->getResponse()->setHttpHeader('Last-Modified', $this->getResponse()->getDate(sfConfig::get('LAST_MODIFIED')));
     $this->setTemplate('action');
   }
+  
+  public function executePartialViews()
+  {  
+  }
+  
 }

@@ -81,7 +81,7 @@ function auto_discovery_link_tag($type = 'rss', $url, $tag_options = array())
  * </code>
  *
  * <b>Note:</b> The asset name can be supplied as a...
- * - full path, like "/my_js/myscript.css"
+ * - full path, like "/my_js/myscript.js"
  * - file name, like "myscript.js", that gets expanded to "/js/myscript.js"
  * - file name without extension, like "myscript", that gets expanded to "/js/myscript.js"
  *
@@ -657,7 +657,6 @@ function get_stylesheets()
       foreach($files as $file)
       {
         $tag = stylesheet_tag($file, $options);
-
         if(isset($already_seen[$tag]))
         {
           continue;
@@ -668,6 +667,7 @@ function get_stylesheets()
       }
     }
   }
+
   return $html;
 }
 
@@ -819,7 +819,6 @@ function get_javascript_configuration($options = array(), $app = null)
       'ajax_timeout' => sfConfig::get('sf_ajax_timeout')
   );
 
-  use_jquery();
   use_package('core');
 
   $config = array_merge($default, $options);

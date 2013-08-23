@@ -1,15 +1,8 @@
 prod:
   .settings:
-    no_script_name:          false
-
-dev:
-  .settings:
-    # E_ALL | E_STRICT = 4095
-    error_reporting:        4095
-    web_debug:              true
-    cache:                  true
     no_script_name:         false
-    etag:                   false
+    cache:                  true
+    error_reporting:        4095
 
 test:
   .settings:
@@ -18,4 +11,4 @@ test:
     web_debug:              false
     cache:                  true
     no_script_name:         false
-    etag:                   false
+    etag:                   true

@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of the Sift PHP framework.
  *
@@ -12,26 +13,38 @@
  * @package    Sift
  * @subpackage event
  */
-class sfEventDispatcher {
+class sfEventDispatcher implements sfIService {
 
-  protected
-    $listeners = array();
+  /**
+   * Listeners
+   *
+   * @var array
+   */
+  protected $listeners = array();
+
+  /**
+   * Default priority
+   *
+   */
+  const DEFAULT_PRIORITY = 10;
 
   /**
    * Connects a listener to a given event name.
    *
    * @param string  $name      An event name
    * @param mixed   $listener  A PHP callable
-   * @param integer $priority  Priority  
+   * @param integer $priority  Priority
    *
    * @return sfEventDispatcher
    */
-  public function connect($name, $listener, $priority = 10)
+  public function connect($name, $listener, $priority = self::DEFAULT_PRIORITY)
   {
     if(!isset($this->listeners[$name]))
     {
       $this->listeners[$name] = array();
     }
+
+    $priority = (int)$priority;
 
     if(!isset($this->listeners[$name][$priority]))
     {
@@ -39,7 +52,7 @@ class sfEventDispatcher {
     }
 
     $this->listeners[$name][$priority][] = $listener;
-    
+
     return $this;
   }
 
@@ -65,7 +78,7 @@ class sfEventDispatcher {
         if($listener === $callable)
         {
           unset($this->listeners[$name][$priority][$index]);
-          return true;          
+          return true;
         }
       }
     }
@@ -90,7 +103,7 @@ class sfEventDispatcher {
         {
           throw new sfException(sprintf('Invalid callable "%s" listens to "%s"', $callableName, $event->getName()));
         }
-        call_user_func($listener, $event);        
+        call_user_func($listener, $event);
       }
     }
     return $event;
@@ -185,6 +198,14 @@ class sfEventDispatcher {
   {
     $this->listeners = array();
     return $this;
+  }
+
+  /**
+   * Shutdown
+   */
+  public function shutdown()
+  {
+    $this->clear();
   }
 
 }

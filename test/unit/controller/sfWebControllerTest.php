@@ -7,9 +7,9 @@ require_once($_test_dir.'/unit/sfCoreMock.class.php');
 $t = new lime_test(18, new lime_output_color());
 
 sfConfig::set('sf_max_forwards', 10);
+
 $context = new sfContext();
-$controller = sfController::newInstance('sfFrontWebController');
-$controller->initialize($context, null);
+$controller = new sfFrontWebController($context);
 
 $tests = array(
   'module/action' => array(

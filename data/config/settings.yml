@@ -49,13 +49,6 @@ default:
     #validator_email_check_mx: true
     #validator_email_strict_pattern: true
 
-    # DEPRECATED
-    # Validation settings, used for error generation by the Validation helper
-    #validation_error_prefix:    ' &darr;&nbsp;'
-    #validation_error_suffix:    ' &nbsp;&darr;'
-    #validation_error_class:     form_error
-    #validation_error_id_prefix: error_for_
-
     # Cache settings
     cache:                  false       # Enable the template cache
     etag:                   true        # Enable etag handling
@@ -84,10 +77,8 @@ default:
     charset:                utf-8
 
     # Miscellaneous
-    strip_comments:         true       # Remove comments in core framework classes as defined in the core_compile.yml
     autoloading_functions:  ~          # Functions called when a class is requested and this it is not already loaded. Expects an array of callables. Used by the framework bridges.
     timeout:                1800       # Session timeout, in seconds
-    max_forwards:           5
     path_info_array:        SERVER
     path_info_key:          PATH_INFO
     url_format:             PATH

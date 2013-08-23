@@ -13,81 +13,50 @@
  * @package    Sift
  * @subpackage response
  */
-abstract class sfResponse {
-
-  protected
-  $parameterHolder = null,
-  $context = null,
-  $content = '';
+abstract class sfResponse implements Serializable, sfIService {
 
   /**
-   * Initializes this sfResponse.
+   * Parameter holder
    *
-   * @param sfContext A sfContext instance
-   *
-   * @return boolean true, if initialization completes successfully, otherwise false
-   *
-   * @throws sfInitializationException If an error occurs while initializing this Response
+   * @var sfParameterHolder
    */
-  public function initialize($context, $parameters = array())
-  {
-    $this->context = $context;
+  protected $parameterHolder;
 
+  /**
+   * Context holder
+   *
+   * @var sfContext
+   */
+  protected $context;
+
+  /**
+   * Content
+   *
+   * @var string
+   */
+  protected $content = '';
+
+  /**
+   * Constructor
+   *
+   * @param array $parameters
+   */
+  public function __construct($parameters = array())
+  {
     $this->parameterHolder = new sfParameterHolder();
     $this->parameterHolder->add($parameters);
-  }
-
-  /**
-   * Sets the context for the current response.
-   *
-   * @param sfContext  A sfContext instance
-   */
-  public function setContext($context)
-  {
-    $this->context = $context;
-  }
-
-  /**
-   * Retrieves the current application context.
-   *
-   * @return sfContext The application context
-   */
-  public function getContext()
-  {
-    return $this->context;
-  }
-
-  /**
-   * Retrieves a new sfResponse implementation instance.
-   *
-   * @param string A sfResponse implementation name
-   *
-   * @return sfResponse A sfResponse implementation instance
-   *
-   * @throws sfFactoryException If a request implementation instance cannot be created
-   */
-  public static function newInstance($class)
-  {
-    // the class exists
-    $object = new $class();
-
-    if(!($object instanceof sfResponse))
-    {
-      // the class name is of the wrong type
-      throw new sfFactoryException(sprintf('Class "%s" is not of the type sfResponse', $class));
-    }
-
-    return $object;
   }
 
   /**
    * Sets the response content
    *
    * @param string Content
+   * @return sfResponse
    */
   public function setContent($content)
   {
     $this->content = $content;
+    return $this;
   }
 
   /**
@@ -106,14 +75,23 @@ abstract class sfResponse {
   public function sendContent()
   {
     $content = $this->getContent();
+
     $content = sfCore::filterByEventListeners($content, 'response.filter_content', array(
-      'response' => &$this
+      'response' => $this
     ));
 
     if(sfConfig::get('sf_logging_enabled'))
     {
-      $this->getContext()->getLogger()->info('{sfResponse} send content (' . strlen($this->content) . ' o)');
+      $length = function_exists('mb_strlen') ? mb_strlen($this->content) : strlen($this->content);
+
+      if($length > 255)
+      {
+        $length = round($length / 1000).' kB';
+      }
+      
+      sfLogger::getInstance()->info(sprintf('{sfResponse} Sending content (%s)', $length));
     }
+
     echo $content;
   }
 
@@ -167,12 +145,6 @@ abstract class sfResponse {
   }
 
   /**
-   * Executes the shutdown procedure.
-   *
-   */
-  abstract function shutdown();
-
-  /**
    * Calls methods defined via sfEventDispatcher.
    *
    * @param string $method The method name
@@ -196,6 +168,26 @@ abstract class sfResponse {
     }
 
     return $event->getReturnValue();
+  }
+
+  /**
+   * Serializes the current instance.
+   *
+   * @return array Objects instance
+   */
+  public function serialize()
+  {
+    return serialize(array($this->content, $this->parameterHolder));
+  }
+
+  /**
+   * Unserializes a sfResponse instance.
+   *
+   * @param string $serialized  A serialized sfResponse instance
+   */
+  public function unserialize($serialized)
+  {
+    list($this->content, $this->parameterHolder) = unserialize($serialized);
   }
 
 }

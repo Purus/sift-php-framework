@@ -12,27 +12,6 @@
  * @package    Sift
  * @subpackage filter
  */
-abstract class sfSecurityFilter extends sfFilter
+abstract class sfSecurityFilter extends sfFilter implements sfISecurityFilter
 {
-  /**
-   * Returns a new instance of a sfSecurityFilter.
-   *
-   * @param string The security class name
-   *
-   * @return sfSecurityFilter A sfSecurityFilter implementation instance
-   */
-  public static function newInstance($class)
-  {
-    // the class exists
-    $object = new $class();
-
-    if(!($object instanceof sfSecurityFilter))
-    {
-      // the class name is of the wrong type
-      throw new sfFactoryException(sprintf('Class "%s" is not of the type sfSecurityFilter', $class));
-    }
-
-    return $object;
-  }
-  
 }

@@ -22,7 +22,7 @@ class sfRenderingFilter extends sfFilter {
    * @throws sfInitializeException If an error occurs during view initialization
    * @throws sfViewException       If an error occurs while executing the view
    */
-  public function execute($filterChain)
+  public function execute(sfFilterChain $filterChain)
   {
     // execute next filter
     $filterChain->execute();
@@ -30,13 +30,10 @@ class sfRenderingFilter extends sfFilter {
     // this is a fix for double response
     if(!$this->isFirstCall())
     {
-      return;
+      //return;
     }
 
-    if(sfConfig::get('sf_logging_enabled'))
-    {
-      $this->getContext()->getLogger()->info('{sfFilter} render to client');
-    }
+
 
     // get response object
     $response = $this->getContext()->getResponse();
@@ -44,17 +41,12 @@ class sfRenderingFilter extends sfFilter {
     // send headers + content
     if(sfView::RENDER_VAR != $this->getContext()->getController()->getRenderMode())
     {
-      $response->send();
-    }
-
-    // log timers information
-    if(sfConfig::get('sf_debug') && sfConfig::get('sf_logging_enabled'))
-    {
-      $logger = $this->getContext()->getLogger();
-      foreach(sfTimerManager::getTimers() as $name => $timer)
+      if(sfConfig::get('sf_logging_enabled'))
       {
-        $logger->info(sprintf('{sfTimerManager} %s %.2f ms (%d)', $name, $timer->getElapsedTime() * 1000, $timer->getCalls()));
+        sfLogger::getInstance()->info('{sfFilter} Render to client');
       }
+
+      $response->send();
     }
   }
 

@@ -1,8 +1,8 @@
 <?php
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
+require_once(dirname(__FILE__).'/../sfServiceContainerMock.php');
 require_once(dirname(__FILE__).'/../sfContextMock.class.php');
-require_once(dirname(__FILE__).'/../sfCoreMock.class.php');
 require_once(sfConfig::get('sf_sift_lib_dir').'/i18n/sfI18N.class.php');
 
 $t = new lime_test(12, new lime_output_color());

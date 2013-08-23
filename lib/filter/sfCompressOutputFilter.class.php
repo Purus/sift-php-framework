@@ -33,7 +33,7 @@ class sfCompressOutputFilter extends sfFilter
    *
    * @return void
    */
-  public function execute($filterChain)
+  public function execute(sfFilterChain $filterChain)
   {
     // execute next filter
     $filterChain->execute();

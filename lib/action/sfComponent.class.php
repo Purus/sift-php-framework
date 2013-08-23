@@ -15,11 +15,11 @@
 abstract class sfComponent {
 
   protected
-          $context = null,
-          $request = null,
-          $response = null,
-          $varHolder = null,
-          $requestParameterHolder = null;
+    $context = null,
+    $request = null,
+    $response = null,
+    $varHolder = null,
+    $requestParameterHolder = null;
 
   /**
    * Execute any application/business logic for this component.
@@ -91,7 +91,7 @@ abstract class sfComponent {
    */
   public final function getLogger()
   {
-    return $this->context->getLogger();
+    return sfLogger::getInstance();
   }
 
   /**
@@ -107,22 +107,7 @@ abstract class sfComponent {
   {
     if(sfConfig::get('sf_logging_enabled'))
     {
-      $this->context->getLogger()->log($message, constant('sfLogger::' . strtoupper($priority)));
-    }
-  }
-
-  /**
-   * Displays a message as a short message in the sfWebDebug toolbar.
-   *
-   * @param string The message text
-   * @param string The priority of the message
-   *               (available priorities: emerg, alert, crit, err, warning, notice, info, debug)
-   */
-  public function debugMessage($message, $priority = 'info')
-  {
-    if(sfConfig::get('sf_web_debug'))
-    {
-      return $this->logMessage($message, $priority);
+      $this->getLogger()->log($message, constant('sfLogger::' . strtoupper($priority)));
     }
   }
 

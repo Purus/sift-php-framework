@@ -13,17 +13,48 @@
  * @package    Sift
  * @subpackage database
  */
-class sfDatabaseManager {
+class sfDatabaseManager implements sfIService {
 
+  /**
+   * Array of databases
+   *
+   * @var array
+   */
   protected $databases = array();
+
+  /**
+   * Constructor
+   *
+   */
+  public function __construct()
+  {
+    // $this->loadDatabases();
+  }
+
+  /**
+   * Load databases from databases.yml confuration file
+   *
+   * @throws LogicException If the registered database is not instance of sfDatabase
+   */
+  protected function loadDatabases()
+  {
+    // load database configuration
+    $databases = require(sfConfigCache::getInstance()->checkConfig(sfConfig::get('sf_app_config_dir_name') . '/databases.yml'));
+    foreach($databases as $name => $database)
+    {
+      if(!$database instanceof sfDatabase)
+      {
+        throw new LogicException('The database "%s" (class: "%s") is not an instance of sfDatabase', $name, get_class($database));
+      }
+    }
+    $this->databases = $databases;
+  }
 
   /**
    * Retrieves the database connection associated with this sfDatabase implementation.
    *
-   * @param string A database name
-   *
-   * @return mixed A Database instance
-   *
+   * @param string $name A database name
+   * @return sfDatabase A Database instance
    * @throws sfDatabaseException If the requested database name does not exist
    */
   public function getDatabase($name = 'default')
@@ -37,32 +68,15 @@ class sfDatabaseManager {
   }
 
   /**
-   * Initializes this sfDatabaseManager object
-   *
-   * @return bool true, if initialization completes successfully, otherwise false
-   *
-   * @throws sfInitializationException If an error occurs while initializing this sfDatabaseManager object
-   */
-  public function initialize()
-  {
-    // load database configuration
-    $this->databases = require(sfConfigCache::getInstance()->checkConfig(
-                        sfConfig::get('sf_app_config_dir_name') . '/databases.yml'));
-    return true;
-  }
-
-  /**
    * Executes the shutdown procedure
    *
    * @return void
-   *
-   * @throws sfDatabaseException If an error occurs while shutting down this DatabaseManager
    */
   public function shutdown()
   {
     // loop through databases and shutdown connections
     foreach($this->databases as $database)
-    {
+    {      
       $database->shutdown();
     }
   }

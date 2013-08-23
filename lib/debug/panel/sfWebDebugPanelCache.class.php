@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of the Sift PHP framework.
  *
@@ -13,24 +14,24 @@
  * @package    Sift
  * @subpackage debug_panel
  */
-class sfWebDebugPanelCache extends sfWebDebugPanel
-{
+class sfWebDebugPanelCache extends sfWebDebugPanel {
+
   public function getTitle()
   {
-    return 'reload';
+    return 'ignore cache';
   }
 
   public function getTitleUrl()
   {
     $queryString = parse_url($_SERVER['REQUEST_URI'], PHP_URL_QUERY);
 
-    if (false === strpos($queryString, '_sf_ignore_cache'))
+    if(false === strpos($queryString, '_sf_ignore_cache'))
     {
-      return sprintf('?%s_sf_ignore_cache=1', $queryString ? $queryString.'&' : '');
+      return sprintf('?%s_sf_ignore_cache=1', $queryString ? $queryString . '&' : '');
     }
     else
     {
-      return '?'.$queryString;
+      return '?' . $queryString;
     }
   }
 

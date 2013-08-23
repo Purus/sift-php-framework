@@ -43,6 +43,10 @@ class myTestWebBrowser extends sfWebBrowser
 }
 
 $t = new lime_test($nb_test_orig * count($adapter_list), new lime_output_color());
+
+$t->skip('', $nb_test_orig * count($adapter_list));
+return;
+
 foreach($adapter_list as $adapter)
 {
   $t->diag('Testing '.$adapter);

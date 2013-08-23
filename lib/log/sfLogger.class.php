@@ -105,6 +105,21 @@ class sfLogger extends sfConfigurable implements sfILogger {
   protected static $logger = null;
 
   /**
+   * Returns the sfLogger instance.
+   *
+   * @return sfLogger sfLogger instance
+   */
+  public static function getInstance()
+  {
+    if(!self::$logger)
+    {
+      $class = __CLASS__;
+      self::$logger = new $class();
+    }
+    return self::$logger;
+  }
+
+  /**
    * Constructs the object
    *
    * @param array $options
@@ -116,23 +131,6 @@ class sfLogger extends sfConfigurable implements sfILogger {
   }
 
   /**
-   * Returns the sfLogger instance.
-   *
-   * @return sfLogger sfLogger instance
-   */
-  public static function getInstance()
-  {
-    if(!sfLogger::$logger)
-    {
-      // the class exists
-      $class = __CLASS__;
-      sfLogger::$logger = new $class();
-    }
-
-    return sfLogger::$logger;
-  }
-
-  /**
    * Initializes the logger.
    *
    * @param array $options
@@ -141,7 +139,7 @@ class sfLogger extends sfConfigurable implements sfILogger {
   {
     $this->loggers = array();
   }
-
+  
   /**
    * Retrieves the log level for the current logger instance.
    *

@@ -25,10 +25,9 @@ class sfConsoleRequest extends sfRequest
    *
    * @throws sfInitializationException If an error occurs while initializing this Request
    */
-  public function initialize($context, $parameters = array(), $attributes = array())
+  public function initialize(sfContext $context, $parameters = array(), $attributes = array())
   {
     parent::initialize($context, $parameters, $attributes);
-
     $this->getParameterHolder()->add($_SERVER['argv']);
   }
 

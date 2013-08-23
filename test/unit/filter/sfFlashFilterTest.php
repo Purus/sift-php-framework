@@ -1,6 +1,7 @@
 <?php
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
+require_once(dirname(__FILE__).'/../sfServiceContainerMock.php');
 
 $t = new lime_test(6, new lime_output_color());
 
@@ -16,11 +17,6 @@ class sfContext
 
 class myUser extends sfUser
 {
-  public function initialize ($context, $parameters = array())
-  {
-    $this->context = $context;
-    $this->attributeHolder = new sfParameterHolder(self::ATTRIBUTE_NAMESPACE);
-  }
 }
 
 class myComponent extends sfComponent
@@ -42,7 +38,7 @@ class firstTestFilter extends sfFilter
   public $t = null;
   public $user = null;
 
-  public function execute($filterChain)
+  public function execute(sfFilterChain $filterChain)
   {
     $t  = $this->t;
     $user = $this->user;
@@ -66,7 +62,7 @@ class lastTestFilter extends sfFilter
   public $t = null;
   public $user = null;
 
-  public function execute($filterChain)
+  public function execute(sfFilterChain $filterChain)
   {
     $t  = $this->t;
     $user = $this->user;
@@ -88,11 +84,10 @@ class lastTestFilter extends sfFilter
 }
 
 $context = new sfContext();
-$user = new myUser();
-$user->initialize($context);
+$user = new myUser($serviceContainer);
 $context->user = $user;
 
-$filterChain = new sfFilterChain();
+$filterChain = new sfFilterChain($context);
 
 $filter = new lastTestFilter();
 $filter->t = $t;

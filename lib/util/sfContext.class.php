@@ -17,24 +17,88 @@
  */
 class sfContext {
 
-  protected
-          $dispatcher = null,
-          $application = null;
-  protected
-          $actionStack = null,
-          $controller = null,
-          $databaseManager = null,
-          $request = null,
-          $response = null,
-          $storage = null,
-          $viewCacheManager = null,
-          $i18n = null,
-          $logger = null,
-          $user = null,
-          $mailer = null;
-  protected static
-          $instances = array(),
-          $current = null;
+  /**
+   * Application
+   *
+   * @var sfApplication
+   */
+  protected $application = null;
+
+  /**
+   * Action stack
+   *
+   * @var sfActionStack
+   */
+  protected $actionStack = null;
+
+  /**
+   * Instances holder
+   *
+   * @var array
+   */
+  protected static $instances = array();
+
+  /**
+   * Current name
+   *
+   * @var string
+   */
+  protected static $current = null;
+
+  /**
+   * Construct the context
+   *
+   * @param sfApplication $application
+   */
+  public function __construct(sfApplication $application)
+  {
+    if(sfConfig::get('sf_logging_enabled'))
+    {
+      $this->getLogger()->info('{sfContext} Initialization');
+    }
+
+    $this->application = $application;
+
+    // create a new action stack
+    $this->actionStack = new sfActionStack();
+
+    $serviceContainer = sfServiceContainer::getInstance();
+    $diContainer = sfDependencyInjectionContainer::getInstance();
+
+    $diContainer->getDependencies()->clear();
+
+    // register self to the dependencies for DIC
+    $diContainer->getDependencies()->set('context', $this);
+
+    // clear container
+    $serviceContainer->clear();
+
+    // include the factories configuration, will setup services
+    require(sfConfigCache::getInstance()->checkConfig(sfConfig::get('sf_app_config_dir_name') . '/factories.yml'));
+
+    // load databases
+    if(sfConfig::get('sf_use_database'))
+    {
+      // create the manager
+      $manager = $serviceContainer->get('database_manager');
+      $diContainer->getDependencies()->set('database_manager', $serviceContainer->get('database_manager'));
+    }
+
+    // register existing services as dependecies, 
+    foreach($serviceContainer->getServices() as $id => $service)
+    {
+      $diContainer->getDependencies()->set($id, $service);
+    }
+
+    sfShutdownScheduler::getInstance()->clear();
+
+    // register our shutdown function, to be called last
+    sfShutdownScheduler::getInstance()->register(array($this, 'shutdown'), array(), sfShutdownScheduler::LOW_PRIORITY);
+
+    $this->application->getEventDispatcher()->notify(new sfEvent('context.load_factories', array(
+      'context' => $this
+    )));
+  }
 
   /**
    * Creates a new context instance.
@@ -45,7 +109,7 @@ class sfContext {
    *
    * @return sfContext An sfContext instance
    */
-  static public function createInstance(sfApplication $application, $name = null, $class = __CLASS__)
+  public static function createInstance(sfApplication $application, $name = null, $class = __CLASS__)
   {
     if(null === $name)
     {
@@ -53,46 +117,39 @@ class sfContext {
     }
 
     self::$current = $name;
-    self::$instances[$name] = new $class();
 
-    if(!self::$instances[$name] instanceof sfContext)
+    $instance = new $class($application);
+    if(!$instance instanceof sfContext)
     {
       throw new sfFactoryException(sprintf('Class "%s" is not of the type sfContext.', $class));
     }
 
-    self::$instances[$name]->initialize($application);
-
+    self::$instances[$name] = $instance;
     return self::$instances[$name];
   }
 
-  protected function initialize($application)
+  /**
+   * @see sfServiceContainer::register
+   */
+  public function registerService($serviceName, $service)
   {
-    $this->application = $application;
-    $this->dispatcher = $application->getEventDispatcher();
+    return sfServiceContainer::getInstance()->register($serviceName, $service);
+  }
 
-    $this->logger = sfLogger::getInstance();
-    if(sfConfig::get('sf_logging_enabled'))
-    {
-      $this->logger->info('{sfContext} initialization');
-    }
+  /**
+   * @see sfServiceContainer::get
+   */
+  public function getService($serviceName)
+  {
+    return sfServiceContainer::getInstance()->get($serviceName);
+  }
 
-    if(sfConfig::get('sf_use_database'))
-    {
-      // setup our database connections
-      $this->databaseManager = new sfDatabaseManager();
-      $this->databaseManager->initialize();
-    }
-
-    // create a new action stack
-    $this->actionStack = new sfActionStack();
-
-    // include the factories configuration
-    require(sfConfigCache::getInstance()->checkConfig(sfConfig::get('sf_app_config_dir_name') . '/factories.yml'));
-
-    // register our shutdown function, to be called last
-    sfShutdownScheduler::getInstance()->register(array($this, 'shutdown'), array(), sfShutdownScheduler::LOW_PRIORITY);
-
-    sfCore::dispatchEvent('context.load_factories', array('context' => $this));
+  /**
+   * @see sfServiceContainer::get
+   */
+  public function setService($serviceName, $service)
+  {
+    return sfServiceContainer::getInstance()->set($serviceName, $service);
   }
 
   /**
@@ -145,42 +202,13 @@ class sfContext {
   }
 
   /**
-   * Loads the factories.
-   * 
-   */
-  public function loadFactories()
-  {
-    if(sfConfig::get('sf_use_database'))
-    {
-      // setup our database connections
-      $this->factories['databaseManager'] = new sfDatabaseManager($this->application, array('auto_shutdown' => false));
-    }
-
-    // create a new action stack
-    $this->factories['actionStack'] = new sfActionStack();
-
-    if(sfConfig::get('sf_debug') && sfConfig::get('sf_logging_enabled'))
-    {
-      $timer = sfTimerManager::getTimer('Factories');
-    }
-
-    // include the factories configuration
-    require(sfConfigCache::getInstance()->checkConfig('config/factories.yml'));
-
-    $this->dispatcher->notify(new sfEvent('context.load_factories'));
-
-    if(sfConfig::get('sf_debug') && sfConfig::get('sf_logging_enabled'))
-    {
-      $timer->addTime();
-    }
-  }
-
-  /**
    * Dispatches the current request.
+   *
+   * 
    */
   public function dispatch()
   {
-    $this->getController()->dispatch();
+    return $this->getController()->dispatch();
   }
 
   /**
@@ -226,12 +254,11 @@ class sfContext {
 
   /**
    * Retrieve the controller.
-   *
    * @return sfController The current sfController implementation instance.
    */
   public function getController()
   {
-    return $this->controller;
+    return $this->getService('controller');
   }
 
   /**
@@ -255,7 +282,7 @@ class sfContext {
    */
   public function getLogger()
   {
-    return $this->logger;
+    return sfLogger::getInstance();
   }
 
   /**
@@ -267,25 +294,29 @@ class sfContext {
    * If the [sf_use_database] setting is off, this will return null.
    *
    * @param name A database name.
-   *
    * @return mixed A Database instance.
-   *
    * @throws sfDatabaseException If the requested database name does not exist.
    */
   public function getDatabaseConnection($name = 'default')
   {
-    if($this->databaseManager != null)
-    {
-      return $this->databaseManager->getDatabase($name)->getConnection();
-    }
-
-    return null;
+    return $this->getDatabaseManager()->getDatabase($name)->getConnection();
   }
 
+  /**
+   * Retrieve objects using sfIDataRetriever implementation
+   *
+   * @param string $class Class name
+   * @param string $peerMethod Peer method
+   * @param array $options
+   * @return mixed
+   */
   public function retrieveObjects($class, $peerMethod, $options = array())
   {
-    $retrievingClass = 'sf' . ucfirst(sfConfig::get('sf_orm', 'doctrine')) . 'DataRetriever';
-
+    $retrievingClass = 'sf' . ucfirst(sfConfig::get('sf_orm')) . 'DataRetriever';
+    if(!class_exists($retrievingClass))
+    {
+      throw new InvalidArgumentException(sprintf('The data retriever class "%s" does not exist'), $retrievingClass);
+    }
     return call_user_func(array($retrievingClass, 'retrieveObjects'), $class, $peerMethod, $options);
   }
 
@@ -296,7 +327,7 @@ class sfContext {
    */
   public function getDatabaseManager()
   {
-    return $this->databaseManager;
+    return $this->getService('database_manager');
   }
 
   /**
@@ -351,7 +382,7 @@ class sfContext {
    */
   public function getRequest()
   {
-    return $this->request;
+    return $this->getService('request');
   }
 
   /**
@@ -361,29 +392,28 @@ class sfContext {
    */
   public function getResponse()
   {
-    return $this->response;
+    return $this->getService('response');
   }
 
   /**
    * Set the response object.
    *
    * @param sfResponse A sfResponse instance.
-   *
    * @return void.
    */
-  public function setResponse($response)
+  public function setResponse(sfResponse $response)
   {
-    $this->response = $response;
+    return $this->setService('response', $response);
   }
 
   /**
    * Retrieve the storage.
    *
-   * @return sfStorage The current sfStorage implementation instance.
+   * @return sfIStorage The current sfStorage implementation instance.
    */
   public function getStorage()
   {
-    return $this->storage;
+    return $this->getService('storage');
   }
 
   /**
@@ -393,7 +423,7 @@ class sfContext {
    */
   public function getViewCacheManager()
   {
-    return $this->viewCacheManager;
+    return $this->getService('view_cache_manager');
   }
 
   /**
@@ -403,7 +433,7 @@ class sfContext {
    */
   public function getI18N()
   {
-    return $this->i18n;
+    return $this->getService('i18n');
   }
 
   /**
@@ -413,7 +443,7 @@ class sfContext {
    */
   public function getUser()
   {
-    return $this->user;
+    return $this->getService('user');
   }
 
   /**
@@ -423,7 +453,17 @@ class sfContext {
    */
   public function getEventDispatcher()
   {
-    return $this->dispatcher;
+    return $this->application->getEventDispatcher();
+  }
+
+  /**
+   * Returns an array of already active services
+   *
+   * @return array
+   */
+  public function getServices()
+  {
+    return sfServiceContainer::getInstance()->getServices();
   }
 
   /**
@@ -433,26 +473,12 @@ class sfContext {
    */
   public function shutdown()
   {
-    // shutdown all factories
-    $this->getUser()->shutdown();
-    $this->getStorage()->shutdown();
-    $this->getRequest()->shutdown();
-    $this->getResponse()->shutdown();
-
     if(sfConfig::get('sf_logging_enabled'))
     {
-      $this->getLogger()->shutdown();
+      sfLogger::getInstance()->info('{sfContext} Shutting down');
     }
-
-    if(sfConfig::get('sf_use_database'))
-    {
-      $this->getDatabaseManager()->shutdown();
-    }
-
-    if(sfConfig::get('sf_cache'))
-    {
-      $this->getViewCacheManager()->shutdown();
-    }
+    
+    sfServiceContainer::getInstance()->clear();
   }
 
 }

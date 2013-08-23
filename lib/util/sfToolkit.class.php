@@ -203,38 +203,54 @@ class sfToolkit {
     {
       return $source;
     }
+    
+    $space = $output = '';
 
-    $ignore = array(T_COMMENT => true, T_DOC_COMMENT => true);
-    $output = '';
+    $set = '!"#$&\'()*+,-./:;<=>?@[\]^`{|}';
+    $set = array_flip(preg_split('//',$set));
 
     foreach(token_get_all($source) as $token)
     {
-      // array
-      if(isset($token[1]))
+      if(!is_array($token))
       {
-        // no action on comments
-        if(!isset($ignore[$token[0]]))
-        {
-          // anything else -> output "as is"
-          $output .= $token[1];
-        }
+        $token = array(0, $token);
       }
-      else
+      switch($token[0])
       {
-        // simple 1-character token
-        $output .= $token;
+        case T_DOC_COMMENT:
+          // leave annotations and inject statements in place
+          if(preg_match('# (@inject|@annotation)+#i', $token[1]))
+          {
+            $output .= $token[1];
+          }
+        break;
+
+        case T_COMMENT:
+        case T_WHITESPACE:
+          $space = ' ';
+        break;
+
+        default:
+          if(isset($set[substr($output, -1)]) || isset($set[$token[1]{0}])) $space = '';
+          $output .= $space . $token[1];
+          $space = '';
       }
     }
 
     return $output;
   }
 
+  /**
+   * Strips slashes
+   *
+   * @param array|string $value
+   * @return array
+   */
   public static function stripslashesDeep($value)
   {
     return is_array($value) ? array_map(array('sfToolkit', 'stripslashesDeep'), $value) : stripslashes($value);
   }
 
-  // code from php at moechofe dot com (array_merge comment on php.net)
   /*
    * array arrayDeepMerge ( array array1 [, array array2 [, array ...]] )
    *

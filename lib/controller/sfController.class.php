@@ -12,7 +12,7 @@
  * @package    Sift
  * @subpackage controller
  */
-abstract class sfController
+abstract class sfController implements sfIService
 {
   protected
     $context                  = null,
@@ -20,6 +20,21 @@ abstract class sfController
     $maxForwards              = 5,
     $renderMode               = sfView::RENDER_CLIENT,
     $viewCacheClassName       = null;
+
+  /**
+   * Initializes this controller.
+   *
+   * @param sfContext A sfContext implementation instance
+   */
+  public function __construct(sfContext $context)
+  {
+    $this->context = $context;
+
+    if(sfConfig::get('sf_logging_enabled'))
+    {
+      sfLogger::getInstance()->info('{sfController} Initialization');
+    }
+  }
 
   /**
    * Indicates whether or not a module has a specific component.
@@ -185,7 +200,7 @@ abstract class sfController
       // the requested action doesn't exist
       if(sfConfig::get('sf_logging_enabled'))
       {
-        $this->getContext()->getLogger()->info(sprintf('{sfController} action "%s/%s" does not exist', $moduleName, $actionName));
+        sfLogger::getInstance()->info(sprintf('{sfController} action "%s/%s" does not exist', $moduleName, $actionName));
       }
 
       // track the requested module so we have access to the data in the error 404 page
@@ -233,8 +248,8 @@ abstract class sfController
       if($actionInstance->initialize($this->context))
       {
         // create a new filter chain
-        $filterChain = new sfFilterChain();
-        $this->loadFilters($filterChain, $actionInstance);
+        $filterChain = new sfFilterChain($this->context);
+        $filterChain->load($actionInstance);
 
         sfCore::getEventDispatcher()->notify(
                 new sfEvent('controller.change_action', 
@@ -250,7 +265,6 @@ abstract class sfController
           
           $this->getContext()->getResponse()->setStatusCode(404);
           $this->getContext()->getResponse()->setHttpHeader('Status', '404 Not Found');
-
         }
         
         // process the filter chain
@@ -382,76 +396,35 @@ abstract class sfController
     // user view exists?
     $file = sfConfig::get('sf_app_module_dir').'/'.$moduleName.'/'.sfConfig::get('sf_app_module_view_dir_name').'/'.$actionName.$viewName.'View.class.php';
 
-    if (is_readable($file))
+    if(is_readable($file))
     {
       require_once($file);
-
       $class = $actionName.$viewName.'View';
-
       // fix for same name classes
       $moduleClass = $moduleName.'_'.$class;
-
-      if (class_exists($moduleClass, false))
+      if(class_exists($moduleClass, false))
       {
         $class = $moduleClass;
       }
     }
     else
+    {      
+      $class = sprintf('%sView', // view class (as configured in module.yml or defined in action)
+                  $this->getContext()->getRequest()->getAttribute($moduleName.'_'.$actionName.'_view_name',
+                  sfConfig::get('mod_'.strtolower($moduleName).'_view_class'), 'sift/action/view')
+               );
+    }
+    
+    $view = sfDependencyInjectionContainer::create($class);
+
+    if(!$view instanceof sfIView)
     {
-      // view class (as configured in module.yml or defined in action)
-      $viewName = $this->getContext()->getRequest()->getAttribute($moduleName.'_'.$actionName.'_view_name', sfConfig::get('mod_'.strtolower($moduleName).'_view_class'), 'sift/action/view');
-      // $class    = sfCore::getClassPath($viewName.'View') ? $viewName.'View' : 'sfPHPView';
-      $class    = sprintf('%sView', $viewName);
+      throw new LogicException(sprintf('The "%s" class does not implement sfIView interface.', $class));
     }
 
-    return new $class();
-  }
+    $view->initialize($moduleName, $actionName, $viewName);
 
-  /**
-   * Initializes this controller.
-   *
-   * @param sfContext A sfContext implementation instance
-   */
-  public function initialize($context)
-  {
-    $this->context = $context;
-
-    if (sfConfig::get('sf_logging_enabled'))
-    {
-      $this->context->getLogger()->info('{sfController} initialization');
-    }
-
-    // set max forwards
-    $this->maxForwards = sfConfig::get('sf_max_forwards', 5);
-  }
-
-  /**
-   * Retrieves a new sfController implementation instance.
-   *
-   * @param string A sfController class name
-   *
-   * @return sfController A sfController implementation instance
-   *
-   * @throws sfFactoryException If a new controller implementation instance cannot be created
-   */
-  public static function newInstance($class)
-  {
-    try
-    {
-      // the class exists
-      $object = new $class();
-      if(!($object instanceof sfController))
-      {
-        // the class name is of the wrong type
-        throw new sfFactoryException(sprintf('Class "%s" is not of the type sfController', $class));
-      }
-
-      return $object;
-    }
-    catch(sfException $e)
-    {
-      $e->printStackTrace();
-    }
+    return $view;
   }
 
   /**
@@ -465,9 +438,9 @@ abstract class sfController
    */
   public function getPresentationFor($module, $action, $viewName = null)
   {
-    if (sfConfig::get('sf_logging_enabled'))
+    if(sfConfig::get('sf_logging_enabled'))
     {
-      $this->getContext()->getLogger()->info('{sfController} get presentation for action "'.$module.'/'.$action.'" (view class: "'.$viewName.'")');
+      sfLogger::getInstance()->info('{sfController} Get presentation for action "'.$module.'/'.$action.'" (view class: "'.$viewName.'")');
     }
 
     // get original render mode
@@ -481,10 +454,12 @@ abstract class sfController
 
     // grab this next forward's action stack index
     $index = $actionStack->getSize();
-
+    
     // set viewName if needed
     if($viewName)
     {
+      // $currentViewName = sfConfig::get('mod_'.strtolower($module).'_view_class');
+      // sfConfig::set('mod_'.strtolower($module).'_view_class', $viewName);
       $this->getContext()->getRequest()->setAttribute($module.'_'.$action.'_view_name', $viewName, 'sift/action/view');
     }
 
@@ -501,6 +476,7 @@ abstract class sfController
       // remove viewName
       if ($viewName)
       {
+        // sfConfig::set('mod_'.strtolower($module).'_view_class', $currentViewName);
         $this->getContext()->getRequest()->getAttributeHolder()->remove($module.'_'.$action.'_view_name', 'sift/action/view');
       }
 
@@ -535,6 +511,7 @@ abstract class sfController
     // remove viewName
     if($viewName)
     {
+      // sfConfig::set('mod_'.strtolower($module).'_view_class', $currentViewName);
       $this->getContext()->getRequest()->getAttributeHolder()->remove($module.'_'.$action.'_view_name', 'sift/action/view');
     }
     
@@ -572,19 +549,6 @@ abstract class sfController
   }
 
   /**
-   * Loads application nad module filters.
-   *
-   * @param sfFilterChain A sfFilterChain instance
-   * @param sfAction      A sfAction instance
-   */
-  public function loadFilters(sfFilterChain $filterChain, sfAction $actionInstance)
-  {
-    $moduleName = $this->context->getModuleName();
-
-    require(sfConfigCache::getInstance()->checkConfig(sfConfig::get('sf_app_module_dir_name').'/'.$moduleName.'/'.sfConfig::get('sf_app_module_config_dir_name').'/filters.yml'));
-  }
-
-  /**
    * Calls methods defined via sfEventDispatcher.
    *
    * @param string $method The method name
@@ -609,4 +573,9 @@ abstract class sfController
 
     return $event->getReturnValue();
   }
+
+  public function shutdown()
+  {
+  }
+  
 }

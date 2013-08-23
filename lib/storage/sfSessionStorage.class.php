@@ -22,102 +22,96 @@
  * @package    Sift
  * @subpackage storage
  */
-class sfSessionStorage extends sfStorage
-{
+class sfSessionStorage extends sfStorage {
+
+  static protected
+    $sessionIdRegenerated = false,
+    $sessionStarted       = false;
+
   /**
-   * Initializes this Storage instance.
+   * Default options
    *
-   * @param sfContext A sfContext instance
-   * @param array   An associative array of initialization parameters
-   *
-   * @return boolean true, if initialization completes successfully, otherwise false
-   *
-   * @throws sfInitializationException If an error occurs while initializing this Storage
+   * @var array
    */
-  public function initialize($context, $parameters = null)
+  protected $defaultOptions = array(
+    'session_name' => 'sessionID',
+    'auto_start' => true,
+    'session_cookie_httponly' => true
+  );
+
+  /**
+   * Returns default options for this object.
+   *
+   * @return array
+   */
+  protected function getDefaultOptions()
   {
-    // initialize parent
-    parent::initialize($context, $parameters);
+    $defaultOptions = parent::getDefaultOptions();
+    $cookieDefaults = session_get_cookie_params();
+    $options = array_merge(array(
+      'session_cookie_lifetime' => $cookieDefaults['lifetime'],
+      'session_cookie_path'     => $cookieDefaults['path'],
+      'session_cookie_domain'   => $cookieDefaults['domain'],
+      'session_cookie_secure'   => $cookieDefaults['secure'],
+      'session_cookie_httponly' => isset($cookieDefaults['httponly']) ? $cookieDefaults['httponly'] : false,
+      'session_cache_limiter'   => null,
+    ), $defaultOptions);
+    return $options;
+  }
+
+  /**
+   * Setups the storage
+   *
+   */
+  public function setup()
+  {
+    parent::setup();
 
     // set session name
-    $sessionName = $this->getParameterHolder()->get('session_name', 'sessionID');
+    session_name($this->getOption('session_name'));
 
-    session_name($sessionName);
-
-    $use_cookies = (boolean) ini_get('session.use_cookies');
-    if (!$use_cookies)
+    if(!(boolean) ini_get('session.use_cookies') && $sessionId = $this->getOption('session_id'))
     {
-      $sessionId = $context->getRequest()->getParameter($sessionName, '');
-
-      if ($sessionId != '')
-      {
-        session_id($sessionId);
-      }
+      session_id($sessionId);
     }
 
-    $cookieDefaults = session_get_cookie_params();
-    $lifetime = $this->getParameter('session_cookie_lifetime', $cookieDefaults['lifetime']);
-    $path     = $this->getParameter('session_cookie_path',     $cookieDefaults['path']);
-    $domain   = $this->getParameter('session_cookie_domain',   $cookieDefaults['domain']);
-    $secure   = $this->getParameter('session_cookie_secure',   $cookieDefaults['secure']);
-    $httpOnly = $this->getParameter('session_cookie_httponly', isset($cookieDefaults['httponly']) ? $cookieDefaults['httponly'] : false);
+    $lifetime = $this->getOption('session_cookie_lifetime');
+    $path     = $this->getOption('session_cookie_path');
+    $domain   = $this->getOption('session_cookie_domain');
+    $secure   = $this->getOption('session_cookie_secure');
+    $httpOnly = $this->getOption('session_cookie_httponly');
 
-    if(version_compare(phpversion(), '5.2', '>='))
-    {
-      session_set_cookie_params($lifetime, $path, $domain, $secure, $httpOnly);
-    }
-    else
-    {
-      session_set_cookie_params($lifetime, $path, $domain, $secure);
-    }
+    session_set_cookie_params($lifetime, $path, $domain, $secure, $httpOnly);
 
-    if ($this->getParameter('auto_start', true))
+    if($this->getOption('auto_start', true))
     {
       // start our session
       session_start();
+      self::$sessionStarted = true;
     }
   }
 
   /**
-   * Reads data from this storage.
-   *
-   * The preferred format for a key is directory style so naming conflicts can be avoided.
-   *
-   * @param string A unique key identifying your data
-   *
-   * @return mixed Data associated with the key
+   * @see sfIStorage
    */
-  public function & read($key)
+  public function read($key)
   {
-    $retval = null;
-
-    if (isset($_SESSION[$key]))
+    if(isset($_SESSION[$key]))
     {
-      $retval =& $_SESSION[$key];
+      return $_SESSION[$key];
     }
-
-    return $retval;
   }
 
   /**
-   * Removes data from this storage.
-   *
-   * The preferred format for a key is directory style so naming conflicts can be avoided.
-   *
-   * @param string A unique key identifying your data
-   *
-   * @return mixed Data associated with the key
+   * @see sfIStorage
    */
-  public function & remove($key)
+  public function remove($key)
   {
-    $retval = null;
-
-    if (isset($_SESSION[$key]))
+    if(isset($_SESSION[$key]))
     {
-      $retval =& $_SESSION[$key];
+      $retval = $_SESSION[$key];
       unset($_SESSION[$key]);
     }
-
     return $retval;
   }
 
@@ -130,18 +124,36 @@ class sfSessionStorage extends sfStorage
    * @param mixed  Data associated with your key
    *
    */
-  public function write($key, &$data)
+  public function write($key, $data)
   {
-    $_SESSION[$key] =& $data;
+    $_SESSION[$key] = $data;
   }
 
   /**
-   * Executes the shutdown procedure.
+   * Regenerates id that represents this storage.
    *
+   * @param  boolean $destroy Destroy session when regenerating?
+   * @return boolean True if session regenerated, false if error
+   */
+  public function regenerate($destroy = false)
+  {
+    if(self::$sessionIdRegenerated)
+    {
+      return;
+    }
+
+    // regenerate a new session id once per object
+    session_regenerate_id($destroy);
+
+    self::$sessionIdRegenerated = true;
+  }
+
+  /**
+   * @see sfIService
    */
   public function shutdown()
   {
-    // don't need a shutdown procedure because read/write do it in real-time
+    session_write_close();
   }
 
 }

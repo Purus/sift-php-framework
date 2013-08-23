@@ -1,0 +1,3 @@
+all:
+  _javascript:
+    view_class: sfJavascriptPartial

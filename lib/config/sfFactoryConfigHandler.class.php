@@ -13,8 +13,8 @@
  * @package    Sift
  * @subpackage config
  */
-class sfFactoryConfigHandler extends sfYamlConfigHandler
-{
+class sfFactoryConfigHandler extends sfYamlConfigHandler {
+
   /**
    * Executes this configuration handler.
    *
@@ -31,136 +31,128 @@ class sfFactoryConfigHandler extends sfYamlConfigHandler
     $myConfig = $this->parseYamls($configFiles);
 
     $myConfig = sfToolkit::arrayDeepMerge(
-      isset($myConfig['default']) && is_array($myConfig['default']) ? $myConfig['default'] : array(),
-      isset($myConfig['all']) && is_array($myConfig['all']) ? $myConfig['all'] : array(),
-      isset($myConfig[sfConfig::get('sf_environment')]) && is_array($myConfig[sfConfig::get('sf_environment')]) ? $myConfig[sfConfig::get('sf_environment')] : array()
+        isset($myConfig['default']) && is_array($myConfig['default']) ? $myConfig['default'] : array(),
+        isset($myConfig['all']) && is_array($myConfig['all']) ? $myConfig['all'] : array(),
+        isset($myConfig[sfConfig::get('sf_environment')]) && is_array($myConfig[sfConfig::get('sf_environment')]) ? $myConfig[sfConfig::get('sf_environment')] : array()
+    );
+
+    // required services
+    $requiredServices = array(
+      'event_dispatcher',
+      'controller',
+      'request',
+      'response',
+      'storage',
+      'user',
+      'view_cache',
+      'i18n',
+      'database_manager',
     );
 
     // init our data and includes arrays
-    $includes  = array();
-    $inits     = array();
+    $includes = array();
+    $inits = array();
     $instances = array();
 
-    // available list of factories
-    $factories = array('controller', 'request', 'response', 'storage', 'user', 'view_cache', 'i18n');
-
-    // let's do our fancy work
-    foreach ($factories as $factory)
+    // first check the required
+    foreach($requiredServices as $required)
     {
-      // see if the factory exists for this controller
-      $keys = $myConfig[$factory];
-
-      if (!isset($keys['class']))
+      if(!isset($myConfig[$required]))
       {
-        // missing class key
-        $error = sprintf('Configuration file "%s" specifies category "%s" with missing class key', $configFiles[0], $factory);
-        throw new sfParseException($error);
+        throw new sfParseException(sprintf('Configuration file "%s" is missing required service "%s" definition.', $configFiles[0], $required));
       }
-
-      $class = $keys['class'];
-
-      if (isset($keys['file']))
+      elseif(!isset($myConfig[$required]['class']))
       {
-        // we have a file to include
-        $file = $this->replaceConstants($keys['file']);
-        $file = $this->replacePath($file);
-
-        if (!is_readable($file))
-        {
-            // factory file doesn't exist
-            $error = sprintf('Configuration file "%s" specifies class "%s" with nonexistent or unreadable file "%s"', $configFiles[0], $class, $file);
-            throw new sfParseException($error);
-        }
-
-        // append our data
-        $includes[] = sprintf("require_once('%s');", $file);
+        throw new sfParseException(sprintf('Configuration file "%s" specifies category "%s" with missing class key', $configFiles[0], $required));
       }
+    }
 
-      // parse parameters
-      if (isset($keys['param']))
-      {
-        $parameters = array();
-        foreach ($keys['param'] as $key => $value)
-        {
-          $parameters[$key] = $this->replaceConstants($value);
-        }
-      }
-      else
-      {
-        $parameters = null;
-      }
-      $parameters = var_export($parameters, true);
+    //
+    // let's do our fancy work
+    foreach($myConfig as $serviceName => $definition)
+    {
 
       // append new data
-      switch ($factory)
+      switch($serviceName)
       {
+        /*
         case 'controller':
           // append instance creation
-          $instances[] = sprintf("  \$this->controller = sfController::newInstance(sfConfig::get('sf_factory_controller', '%s'));", $class);
-
+          // $instances[] = sprintf("  \$this->controller = sfController::newInstance(sfConfig::get('sf_factory_controller', '%s'));", $class);
           // append instance initialization
-          $inits[] = "  \$this->controller->initialize(\$this);";
+          // $inits[] = "  \$this->controller->initialize(\$this);";
           break;
 
         case 'request':
           // append instance creation
-          $instances[] = sprintf("  \$this->request = sfRequest::newInstance(sfConfig::get('sf_factory_request', '%s'));", $class);
-
+          // $instances[] = sprintf("  \$this->request = sfRequest::newInstance(sfConfig::get('sf_factory_request', '%s'));", $class);
           // append instance initialization
-          $inits[] = sprintf("  \$this->request->initialize(\$this, sfConfig::get('sf_factory_request_parameters', %s), sfConfig::get('sf_factory_request_attributes', array()));", $parameters);
+          // $inits[] = sprintf("  \$this->request->initialize(\$this, sfConfig::get('sf_factory_request_parameters', %s), sfConfig::get('sf_factory_request_attributes', array()));", $parameters);
           break;
 
         case 'response':
           // append instance creation
-          $instances[] = sprintf("  \$this->response = sfResponse::newInstance(sfConfig::get('sf_factory_response', '%s'));", $class);
-
+          // $instances[] = sprintf("  \$this->response = sfResponse::newInstance(sfConfig::get('sf_factory_response', '%s'));", $class);
           // append instance initialization
-          $inits[] = sprintf("  \$this->response->initialize(\$this, sfConfig::get('sf_factory_response_parameters', %s));", $parameters);
+          // $inits[] = sprintf("  \$this->response->initialize(\$this, sfConfig::get('sf_factory_response_parameters', %s));", $parameters);
           break;
 
         case 'storage':
-          // append instance creation
-          $instances[] = sprintf("  \$this->storage = sfStorage::newInstance(sfConfig::get('sf_factory_storage', '%s'));", $class);
 
+          $inits[] = sprintf("\$this->registerService('%s', %s);\n", $serviceName, $this->varExport($definition));
+          
+          // append instance creation
+          // $instances[] = sprintf("  \$this->storage = sfStorage::newInstance(sfConfig::get('sf_factory_storage', '%s'));", $class);
           // append instance initialization
-          $inits[] = sprintf("  \$this->storage->initialize(\$this, sfConfig::get('sf_factory_storage_parameters', %s));", $parameters);
+          // $inits[] = sprintf("  \$this->storage->initialize(\$this, sfConfig::get('sf_factory_storage_parameters', %s));", $parameters);
           break;
 
         case 'user':
           // append instance creation
-          $instances[] = sprintf("  \$this->user = sfUser::newInstance(sfConfig::get('sf_factory_user', '%s'));", $class);
-
+          // $instances[] = sprintf("  \$this->user = sfUser::newInstance(sfConfig::get('sf_factory_user', '%s'));", $class);
           // append instance initialization
-          $inits[] = sprintf("  \$this->user->initialize(\$this, sfConfig::get('sf_factory_user_parameters', %s));", $parameters);
+          // $inits[] = sprintf("  \$this->user->initialize(\$this, sfConfig::get('sf_factory_user_parameters', %s));", $parameters);
           break;
+
         case 'view_cache':
           // append view cache class name
-          $inits[] = sprintf("\n  if (sfConfig::get('sf_cache'))\n  {\n".
-                             "    \$this->viewCacheManager = new sfViewCacheManager();\n".
-                             "    \$this->viewCacheManager->initialize(\$this, sfConfig::get('sf_factory_view_cache', '%s'), sfConfig::get('sf_factory_view_cache_parameters', %s));\n".
-                             " }\n",
-                             $class, $parameters);
+          
+          $inits[] = sprintf("\n  if(sfConfig::get('sf_cache'))\n  {\n" .
+              "    \$this->viewCacheManager = new sfViewCacheManager(\$this, sfCache::factory(sfConfig::get('sf_factory_view_cache', '%s'), (array)sfConfig::get('sf_factory_view_cache_parameters', %s)));\n" .
+//                             "    \$this->viewCacheManager->initialize(, sfConfig::get('sf_factory_view_cache', '%s'), sfConfig::get('sf_factory_view_cache_parameters', %s));\n".
+              " }\n", $class, $parameters);
+           *
+          
           break;
 
         case 'i18n':
 
-          $inits[] = sprintf("\n  if (sfConfig::get('sf_i18n'))\n  {\n".
-                     "    \$class = sfConfig::get('sf_factory_i18n', '%s');\n".
-                     "    \$this->i18n = new \$class(\$this, sfConfig::get('sf_i18n_param', array()));\n".
-                     "    sfWidgetFormSchemaFormatter::setTranslationCallable(array(\$this->i18n, '__'));\n".
-                     "  }\n"
-                     , $class);
+          
+          $inits[] = sprintf("\n  if (sfConfig::get('sf_i18n'))\n  {\n" .
+              "    \$class = sfConfig::get('sf_factory_i18n', '%s');\n" .
+              "    \$this->i18n = new \$class(\$this, sfConfig::get('sf_i18n_param', array()));\n" .
+              "    sfWidgetFormSchemaFormatter::setTranslationCallable(array(\$this->i18n, '__'));\n" .
+              "  }\n"
+              , $class);
+           * 
+          
           break;
+          */
+        
+        // other  services
+        default:
+          $inits[] = sprintf("\$this->registerService('%s', %s);\n", $serviceName, $this->varExport($definition));
+        break;
+
       }
     }
 
     // compile data
-    $retval = sprintf("<?php\n".
-                      "// auto-generated by sfFactoryConfigHandler\n".
-                      "// date: %s\n%s\n%s\n%s\n",
-                      date('Y/m/d H:i:s'), implode("\n", $includes),
-                      implode("\n", $instances), implode("\n", $inits));
+    $retval = sprintf("<?php\n" .
+        "// auto-generated by sfFactoryConfigHandler\n" .
+        "// date: %s\n%s\n%s\n%s\n", date('Y/m/d H:i:s'), implode("\n", $includes), implode("\n", $instances), implode("\n", $inits));
 
     return $retval;
   }
+
 }

@@ -17,63 +17,31 @@
  * @package    Sift
  * @subpackage storage
  */
-class sfNoStorage extends sfStorage
-{
-  /**
-   * Reads data from this storage.
-   *
-   * The preferred format for a key is directory style so naming conflicts can be avoided.
-   *
-   * @param  string $key  A unique key identifying your data
-   *
-   * @return mixed Data associated with the key
-   *
-   * @throws sfStorageException If an error occurs while reading data from this storage
-   */
-  public function & read($key)
-  {
-    $null = null;
-    return $null;
-  }
+class sfNoStorage extends sfStorage {
 
   /**
-   * Removes data from this storage.
-   *
-   * The preferred format for a key is directory style so naming conflicts can be avoided.
-   *
-   * @param  string $key  A unique key identifying your data
-   *
-   * @return mixed Data associated with the key
-   *
-   * @throws sfStorageException If an error occurs while removing data from this storage
+   * @see sfIStorage
    */
-  public function & remove($key)
-  {
-    $null = null;
-    return $null;
-  }
-
-  /**
-   * Writes data to this storage.
-   *
-   * The preferred format for a key is directory style so naming conflicts can be avoided.
-   *
-   * @param  string $key   A unique key identifying your data
-   * @param  mixed  $data  Data associated with your key
-   *
-   * @throws sfStorageException If an error occurs while writing to this storage
-   */
-  public function write($key, &$data)
+  public function read($key)
   {
   }
 
   /**
-   * Regenerates id that represents this storage.
-   *
-   * @param  boolean $destroy Destroy session when regenerating?
-   *
-   * @return boolean True if session regenerated, false if error
-   *
+   * @see sfIStorage
+   */
+  public function remove($key)
+  {
+  }
+
+  /**
+   * @see sfIStorage
+   */
+  public function write($key, $data)
+  {
+  }
+
+  /**
+   * @see sfIStorage
    */
   public function regenerate($destroy = false)
   {
@@ -81,9 +49,7 @@ class sfNoStorage extends sfStorage
   }
 
   /**
-   * Executes the shutdown procedure.
-   *
-   * @throws sfStorageException If an error occurs while shutting down this storage
+   * @see sfIService
    */
   public function shutdown()
   {

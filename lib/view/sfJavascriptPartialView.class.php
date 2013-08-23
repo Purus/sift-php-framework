@@ -14,23 +14,24 @@
  */
 class sfJavascriptPartialView extends sfPartialView
 {
+  /**
+   * @see sfView
+   */
   protected $extension = '.pjs';
 
+  /**
+   * @see sfView
+   */
   public function configure()
   {
     parent::configure();
     // disable escaping
     $this->setEscaping(false);
-
     sfLoader::loadHelpers('Tag');
   }
 
   /**
-   * Renders the presentation.
-   *
-   * @param  string $_sfFile  Filename
-   *
-   * @return string File content
+   * @see sfView
    */
   public function render($templateVars = array())
   {

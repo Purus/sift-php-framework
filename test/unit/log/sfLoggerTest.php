@@ -13,6 +13,10 @@ class myLogger implements sfILogger
   {
     $this->log .= $message;
   }
+
+  public function shutdown()
+  {
+  }
 }
 
 $myLogger = new myLogger();

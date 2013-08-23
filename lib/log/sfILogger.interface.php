@@ -15,5 +15,5 @@
 interface sfILogger {
 
   public function log($message, $priority = sfLogger::INFO);
-  
+  public function shutdown();
 }

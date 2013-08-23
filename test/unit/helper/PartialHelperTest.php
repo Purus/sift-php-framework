@@ -12,13 +12,23 @@ class MyTestPartialView extends sfPartialView
   {
     return '==RENDERED==';
   }
+
+  protected function preRenderCheck()
+  {
+  }
+
 }
 
+
+
 class defaultActions extends sfActions {}
-$context = sfContext::getInstance();        
+
+$context = sfContext::getInstance();
 $context->actionStack = new sfActionStack();
 $entry = $context->actionStack->addEntry('default', 'index', new defaultActions());
-$entry->setViewInstance(new MyTestPartialView());
+$entry->setViewInstance(new MyTestPartialView($context, 'default', 'index'));
+
+sfDependencyInjectionContainer::getInstance()->getDependencies()->set("context", $context);
 
 $t->diag('get_partial()');
 
@@ -49,9 +59,9 @@ $t->is(ob_get_clean(), 'zoo', 'include_slot() prints out the default content spe
 
 $t->diag('get_component_slot()');
 
-try {    
+try {
   get_component_slot('sidebar');
-  $t->fail('get_component_slot() throws an sfConfigurationException if component is not set');  
+  $t->fail('get_component_slot() throws an sfConfigurationException if component is not set');
 }
 catch(sfConfigurationException $e)
 {

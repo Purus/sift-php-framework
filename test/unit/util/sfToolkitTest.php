@@ -103,7 +103,7 @@ on several lines
 \$i = 1; // A comment on a PHP line
 EOF;
 
-$stripped_php = '<?php $i = 1; ';
+$stripped_php = '<?php $i=1;';
 
 $t->is(preg_replace('/\s*(\r?\n)+/', ' ', sfToolkit::stripComments($php)), $stripped_php, '::stripComments() strip all comments from a php string');
 

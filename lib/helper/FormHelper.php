@@ -342,13 +342,6 @@ function select_language_tag($name, $selected = null, $options = array())
 function input_tag($name, $value = null, $options = array())
 {
   $options = _parse_attributes($options);
-
-  if(sfContext::hasInstance() &&
-          sfContext::getInstance()->getRequest()->hasError(str_replace(array('[', ']'), array('{', '}'), $name)))
-  {
-    $options['class'] = isset($options['class']) ? $options['class'] . ' error' : 'error';
-  }
-
   return tag('input', array_merge(array('type' => 'text', 'name' => $name, 'id' => get_id_from_name($name, $value), 'value' => $value), _convert_options($options)));
 }
 
@@ -400,13 +393,6 @@ function input_hidden_tag($name, $value = null, $options = array())
 function input_file_tag($name, $options = array())
 {
   $options = _parse_attributes($options);
-
-  if(sfContext::hasInstance() &&
-          sfContext::getInstance()->getRequest()->hasError(str_replace(array('[', ']'), array('{', '}'), $name)))
-  {
-    $options['class'] = isset($options['class']) ? $options['class'] . ' error' : 'error';
-  }
-
   $options['type'] = 'file';
   return input_tag($name, null, $options);
 }
@@ -436,13 +422,6 @@ function input_file_tag($name, $options = array())
 function input_password_tag($name = 'password', $value = null, $options = array())
 {
   $options = _parse_attributes($options);
-
-  if(sfContext::hasInstance() &&
-          sfContext::getInstance()->getRequest()->hasError(str_replace(array('[', ']'), array('{', '}'), $name)))
-  {
-    $options['class'] = isset($options['class']) ? $options['class'] . ' error' : 'error';
-  }
-
   $options['type'] = 'password';
   return input_tag($name, $value, $options);
 }
@@ -476,12 +455,6 @@ function input_password_tag($name = 'password', $value = null, $options = array(
 function textarea_tag($name, $content = null, $options = array())
 {
   $options = _parse_attributes($options);
-
-  if(sfContext::hasInstance() &&
-          sfContext::getInstance()->getRequest()->hasError(str_replace(array('[', ']'), array('{', '}'), $name)))
-  {
-    $options['class'] = isset($options['class']) ? $options['class'] . ' error' : 'error';
-  }
 
   if($size = _get_option($options, 'size'))
   {
@@ -552,12 +525,6 @@ function checkbox_tag($name, $value = '1', $checked = false, $options = array())
 {
   $options = _parse_attributes($options);
 
-  if(sfContext::hasInstance() &&
-          sfContext::getInstance()->getRequest()->hasError(str_replace(array('[', ']'), array('{', '}'), $name)))
-  {
-    $options['class'] = isset($options['class']) ? $options['class'] . ' error' : 'error';
-  }
-
   $html_options = array_merge(array('type' => 'checkbox', 'name' => $name, 'id' => get_id_from_name($name, $value), 'value' => $value), _convert_options($options));
 
   if($checked)
@@ -586,12 +553,6 @@ function checkbox_tag($name, $value = '1', $checked = false, $options = array())
 function radiobutton_tag($name, $value, $checked = false, $options = array())
 {
   $options = _parse_attributes($options);
-
-  if(sfContext::hasInstance() &&
-          sfContext::getInstance()->getRequest()->hasError(str_replace(array('[', ']'), array('{', '}'), $name)))
-  {
-    $options['class'] = isset($options['class']) ? $options['class'] . ' error' : 'error';
-  }
 
   $html_options = array_merge(array('type' => 'radio', 'name' => $name, 'id' => get_id_from_name($name . '[]', $value), 'value' => $value), _convert_options($options));
 
@@ -642,12 +603,6 @@ function input_date_range_tag($name, $value, $options = array())
 {
   $options = _parse_attributes($options);
 
-  if(sfContext::hasInstance() &&
-          sfContext::getInstance()->getRequest()->hasError(str_replace(array('[', ']'), array('{', '}'), $name)))
-  {
-    $options['class'] = isset($options['class']) ? $options['class'] . ' error' : 'error';
-  }
-
   $before = _get_option($options, 'before', ' ');
   $middle = _get_option($options, 'middle', ' ');
   $after = _get_option($options, 'after', ' ');
@@ -686,12 +641,6 @@ function input_date_range_tag($name, $value, $options = array())
 function input_date_tag($name, $value = null, $options = array())
 {
   $options = _parse_attributes($options);
-
-  if(sfContext::hasInstance() &&
-          sfContext::getInstance()->getRequest()->hasError(str_replace(array('[', ']'), array('{', '}'), $name)))
-  {
-    $options['class'] = isset($options['class']) ? $options['class'] . ' error' : 'error';
-  }
 
   $context = sfContext::getInstance();
 

@@ -86,7 +86,7 @@ class sfPartialMailView extends sfPartialView
 
     if (sfConfig::get('sf_logging_enabled'))
     {
-      $this->getContext()->getLogger()->info('{sfPartialMailView} decorate content with "'.$template.'"');
+      sfLogger::getInstance()->info('{sfPartialMailView} decorate content with "'.$template.'"');
     }
 
     // set the decorator content as an attribute

@@ -8,33 +8,24 @@
 
 /**
  * sfWebDebugPanelView adds a panel to the web debug toolbar with information about the view layer.
- * 
+ *
  * @package     Sift
  * @subpackage  debug_panel
  */
 class sfWebDebugPanelResponse extends sfWebDebugPanel
 {
   protected $response;
-  
-  /**
-   * Constructor.
-   *
-   * @param sfWebDebug $webDebug The web debug toolbar instance
-   */
-  public function __construct(sfWebDebug $webDebug)
-  {
-    parent::__construct($webDebug);
-    $this->response = sfContext::getInstance()->getResponse();
-  }
 
   /**
    * @see sfWebDebugPanel
    */
   public function getTitle()
   {
+    $this->response = sfContext::getInstance()->getResponse();
+
     $code  = $this->response->getStatusCode();
     $title = $this->response->getStatusText();
-    
+
     $color = '#D25849';
     if($code == 200)
     {

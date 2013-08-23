@@ -9,48 +9,42 @@
 /**
  * sfCacheFilter deals with page caching and action caching.
  *
- * @package    Sift
+ * @package Sift
  * @subpackage filter
  */
 class sfCacheFilter extends sfFilter {
 
   protected
-          $cacheManager = null,
-          $request = null,
-          $response = null,
-          $cache = array();
+    $cacheManager = null,
+    $request = null,
+    $response = null,
+    $routing = null,
+    $cache = array();
 
   /**
-   * Initializes this Filter.
-   *
-   * @param sfContext The current application context
-   * @param array   An associative array of initialization parameters
-   *
-   * @return bool true, if initialization completes successfully, otherwise false
-   *
-   * @throws sfInitializationException If an error occurs while initializing this Filter
+   * @see sfFilter
    */
-  public function initialize($context, $parameters = array())
+  public function initialize(sfContext $context, $parameters = array())
   {
     parent::initialize($context, $parameters);
 
     $this->cacheManager = $context->getViewCacheManager();
     $this->request = $context->getRequest();
     $this->response = $context->getResponse();
+    $this->routing = sfRouting::getInstance();
   }
 
   /**
    * Executes this filter.
    *
-   * @param sfFilterChain A sfFilterChain instance
+   * @param sfFilterChain $filterChain A sfFilterChain instance
    */
-  public function execute($filterChain)
+  public function execute(sfFilterChain $filterChain)
   {
-    // execute this filter only once, if cache is set and no POST parameters
-    if(!sfConfig::get('sf_cache') || count($_POST))
+    // execute this filter only once, if cache is set and no GET or POST parameters
+    if(!sfConfig::get('sf_cache'))
     {
       $filterChain->execute();
-
       return;
     }
 
@@ -64,44 +58,46 @@ class sfCacheFilter extends sfFilter {
 
   public function executeBeforeExecution()
   {
-    // register our cache configuration
-    $this->cacheManager->registerConfiguration($this->getContext()->getModuleName());
-
     $uri = $this->cacheManager->getCurrentCacheKey();
 
-    // page cache
-    $this->cache[$uri] = array('page' => false, 'action' => false);
-    $cacheable = $this->cacheManager->isCacheable($uri);
-
-    if($cacheable)
+    if(null === $uri)
     {
-      if($this->cacheManager->withLayout($uri))
-      {
-        $inCache = $this->getPageCache($uri);
-        $this->cache[$uri]['page'] = !$inCache;
-
-        if($inCache)
-        {
-          // page is in cache, so no need to run execution filter
-          return false;
-        }
-      }
-      else
-      {
-        $inCache = $this->getActionCache($uri);
-
-        $this->cache[$uri]['action'] = !$inCache;
-      }
+      return true;
     }
 
+    // page cache
+    $cacheable = $this->cacheManager->isCacheable($uri);
+
+    if(sfConfig::get('sf_logging_enabled'))
+    {
+      sfLogger::getInstance()->info(sprintf('{sfCacheFilter} The uri: %s is %scacheable.',
+          $uri, $cacheable ? '' : 'not '));
+    }
+
+    if($cacheable && $this->cacheManager->withLayout($uri))
+    {
+      $inCache = $this->cacheManager->getPageCache($uri);
+
+      if(sfConfig::get('sf_logging_enabled'))
+      {
+        sfLogger::getInstance()->info(sprintf('{sfCacheFilter} The uri: %s is %sin cache.',
+            $uri, $inCache ? '' : 'not '));
+      }
+
+      $this->cache[$uri] = $inCache;
+      if($inCache)
+      {
+        // update the local response reference with the one pulled from the cache
+        $this->response = $this->context->getResponse();
+        // page is in cache, so no need to run execution filter
+        return false;
+      }
+    }
     return true;
   }
 
-
   /**
    * Executes this filter.
-   *
-   * @param sfFilterChain A sfFilterChain instance.
    */
   public function executeBeforeRendering()
   {
@@ -114,15 +110,10 @@ class sfCacheFilter extends sfFilter {
     $uri = $this->cacheManager->getCurrentCacheKey();
 
     // save page in cache
-    if($this->cache[$uri]['page'])
+    if(isset($this->cache[$uri]) && false === $this->cache[$uri])
     {
-      // set some headers that deals with cache
-      if($lifetime = $this->cacheManager->getClientLifeTime($uri, 'page'))
-      {
-        $this->response->setHttpHeader('Last-Modified', $this->response->getDate(time()), false);
-        $this->response->setHttpHeader('Expires', $this->response->getDate(time() + $lifetime), false);
-        $this->response->addCacheControlHttpHeader('max-age', $lifetime);
-      }
+      $this->setCacheExpiration($uri);
+      $this->setCacheValidation($uri);
 
       // set Vary headers
       foreach($this->cacheManager->getVary($uri, 'page') as $vary)
@@ -130,175 +121,103 @@ class sfCacheFilter extends sfFilter {
         $this->response->addVaryHttpHeader($vary);
       }
 
-      $this->setPageCache($uri);
-    }
-    else if($this->cache[$uri]['action'])
-    {
-      // save action in cache
-      $this->setActionCache($uri);
+      $this->cacheManager->setPageCache($uri);
     }
 
-    // remove PHP automatic Cache-Control and Expires headers if not overwritten by application or cache
-    if($this->response->hasHttpHeader('Last-Modified') || sfConfig::get('sf_etag'))
+    // cache validation
+    $this->checkCacheValidation();
+  }
+
+  /**
+   * Sets cache expiration headers.
+   *
+   * @param string $uri An internal URI
+   */
+  protected function setCacheExpiration($uri)
+  {
+    // don't add cache expiration (Expires) if
+    //   * the client lifetime is not set
+    //   * the response already has a cache validation (Last-Modified header)
+    //   * the Expires header has already been set
+    if(!$lifetime = $this->cacheManager->getClientLifeTime($uri, 'page'))
     {
-      // FIXME: these headers are set by PHP sessions (see session_cache_limiter())
-      $this->response->setHttpHeader('Cache-Control', null, false);
-      $this->response->setHttpHeader('Expires', null, false);
-      $this->response->setHttpHeader('Pragma', null, false);
+      return;
     }
 
-    // Etag support
+    if($this->response->hasHttpHeader('Last-Modified'))
+    {
+      return;
+    }
+
+    if(!$this->response->hasHttpHeader('Expires'))
+    {
+      $this->response->setHttpHeader('Expires', $this->response->getDate(time() + $lifetime), false);
+      $this->response->addCacheControlHttpHeader('max-age', $lifetime);
+    }
+  }
+
+  /**
+   * Sets cache validation headers.
+   *
+   * @param string $uri An internal URI
+   */
+  protected function setCacheValidation($uri)
+  {
+    // don't add cache validation (Last-Modified) if
+    //   * the client lifetime is set (cache.yml)
+    //   * the response already has a Last-Modified header
+    if($this->cacheManager->getClientLifeTime($uri, 'page'))
+    {
+      return;
+    }
+
+    if(!$this->response->hasHttpHeader('Last-Modified'))
+    {
+      $this->response->setHttpHeader('Last-Modified', $this->response->getDate(time()), false);
+    }
+
     if(sfConfig::get('sf_etag'))
     {
       $etag = '"' . md5($this->response->getContent()) . '"';
       $this->response->setHttpHeader('ETag', $etag);
+    }
+  }
 
+  /**
+   * Checks cache validation headers.
+   */
+  protected function checkCacheValidation()
+  {
+    // Etag support
+    if(sfConfig::get('sf_etag'))
+    {
+      $etag = '"' . md5($this->response->getContent()) . '"';
       if($this->request->getHttpHeader('IF_NONE_MATCH') == $etag)
       {
         $this->response->setStatusCode(304);
         $this->response->setHeaderOnly(true);
-
         if(sfConfig::get('sf_logging_enabled'))
         {
-          $this->getContext()->getLogger()->info('{sfFilter} ETag matches If-None-Match (send 304)');
+          sfLogger::getInstance()->info('{sfCacheFilter} ETag matches If-None-Match (send 304)');
         }
       }
     }
 
     // conditional GET support
     // never in debug mode
-    if($this->response->hasHttpHeader('Last-Modified') && !sfConfig::get('sf_debug'))
+    if($this->response->hasHttpHeader('Last-Modified') && (!sfConfig::get('sf_debug') || sfConfig::get('sf_test')))
     {
-      $last_modified = $this->response->getHttpHeader('Last-Modified');
-      $last_modified = $last_modified[0];
-      if($this->request->getHttpHeader('IF_MODIFIED_SINCE') == $last_modified)
+      $lastModified = $this->response->getHttpHeader('Last-Modified');
+      if($this->request->getHttpHeader('IF_MODIFIED_SINCE') == $lastModified)
       {
         $this->response->setStatusCode(304);
         $this->response->setHeaderOnly(true);
-
         if(sfConfig::get('sf_logging_enabled'))
         {
-          $this->getContext()->getLogger()->info('{sfFilter} Last-Modified matches If-Modified-Since (send 304)');
+          sfLogger::getInstance()->info('{sfCacheFilter} Last-Modified matches If-Modified-Since (send 304)');
         }
       }
     }
-  }
-
-  /**
-   * Sets a page template in the cache.
-   *
-   * @param string The internal URI
-   */
-  protected function setPageCache($uri)
-  {
-    if($this->getContext()->getController()->getRenderMode() != sfView::RENDER_CLIENT)
-    {
-      return;
-    }
-
-    // save content in cache
-    $this->cacheManager->set(serialize($this->response), $uri);
-
-    if(sfConfig::get('sf_web_debug'))
-    {
-      $content = $this->response->getContent();
-      $content = sfCore::filterByEventListeners($content, 'view.cache.filter_content', array(
-                  'uri' => $uri,
-                  'new' => true,
-                  'with_layout' => true
-              ));
-      $this->response->setContent($content);
-    }
-  }
-
-  /**
-   * Gets a page template from the cache.
-   *
-   * @param string The internal URI
-   */
-  protected function getPageCache($uri)
-  {
-    $context = $this->getContext();
-
-    // get the current action information
-    $moduleName = $context->getModuleName();
-    $actionName = $context->getActionName();
-
-    $retval = $this->cacheManager->get($uri);
-
-    if($retval === null)
-    {
-      return false;
-    }
-
-    $cachedResponse = unserialize($retval);
-    $cachedResponse->setContext($context);
-
-    $controller = $context->getController();
-    if($controller->getRenderMode() == sfView::RENDER_VAR)
-    {
-      $controller->getActionStack()->getLastEntry()->setPresentation($cachedResponse->getContent());
-      $this->response->setContent('');
-    }
-    else
-    {
-      $context->setResponse($cachedResponse);
-      $this->response = $this->getContext()->getResponse();
-
-      if(sfConfig::get('sf_web_debug'))
-      {
-        $content = $this->response->getContent();
-        $content = sfCore::filterByEventListeners($content, 'view.cache.filter_content', array(
-                    'uri' => $uri,
-                    'new' => false,
-                    'with_layout' => true
-                ));
-        $this->response->setContent($content);
-      }
-    }
-    return true;
-  }
-
-  /**
-   * Sets an action template in the cache.
-   *
-   * @param string The internal URI
-   */
-  protected function setActionCache($uri)
-  {
-    $content = $this->response->getParameter($uri . '_action', null, 'sift/cache');
-
-    if($content !== null)
-    {
-      $this->cacheManager->set($content, $uri);
-    }
-  }
-
-  /**
-   * Gets an action template from the cache.
-   *
-   * @param string The internal URI
-   */
-  protected function getActionCache($uri)
-  {
-    // retrieve content from cache
-    $retval = $this->cacheManager->get($uri);
-
-    if($retval && sfConfig::get('sf_web_debug'))
-    {
-      $cache = unserialize($retval);
-      $this->response->mergeProperties($cache['response']);
-      $cache['content'] = sfCore::filterByEventListeners($cache['content'], 'view.cache.filter_content', array(
-                  'uri' => $uri,
-                  'new' => false
-       ));
-      $retval = serialize($cache);
-    }
-
-    $this->response->setParameter('current_key', $uri . '_action', 'sift/cache/current');
-    $this->response->setParameter($uri . '_action', $retval, 'sift/cache');
-
-    return $retval ? true : false;
   }
 
 }

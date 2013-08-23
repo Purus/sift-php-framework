@@ -1,6 +1,7 @@
 <?php
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
+require_once(dirname(__FILE__).'/../sfContextMock.class.php');
 
 $t = new lime_test(67, new lime_output_color());
 
@@ -11,8 +12,8 @@ class myRequest extends sfWebRequest
   public $acceptableContentTypes = null;
 }
 
-$context = new sfContext();
-$request = sfRequest::newInstance('myRequest');
+$context = sfContext::getInstance();
+$request = new myRequest();
 
 // ->getLanguages()
 $t->diag('->getLanguages()');
@@ -80,6 +81,7 @@ $t->is($request->splitHttpAcceptHeader('a,b,c'), array('c', 'b', 'a'), '->splitH
 $t->is($request->splitHttpAcceptHeader('a,b;q=0.7,c;q=0.3'), array('a', 'b', 'c'), '->splitHttpAcceptHeader() strips the q value');
 $t->is($request->splitHttpAcceptHeader('a;q=0.1,b,c;q=0.3'), array('b', 'c', 'a'), '->splitHttpAcceptHeader() sorts values by the q value');
 
+
 // ->hasFile() ->getFileValues() ->getFileValue()
 $t->diag('->hasFile() ->getFileValues() ->getFileValue()');
 $_FILES = array(
@@ -107,7 +109,8 @@ $expected = array(
     'size' => 100,
   );
 
-$request->initialize($context);
+$request = new myRequest();
+
 $t->is($request->hasFile('file'), true, '->hasFile() return true if the file exists');
 $t->is($request->hasFile('foo'), false, '->hasFile() return false if the file does not exists');
 $t->is_deeply($request->getFileValues('file'), $expected, '->getFilesValues() return an array of file information');
@@ -142,7 +145,8 @@ $_FILES = array(
   ),
 );
 
-$request->initialize($context);
+$request = new myRequest();
+
 $t->is($request->hasFile('article[file1]'), true, '->hasFile() return true if the file exists');
 $t->is($request->hasFile('foo'), false, '->hasFile() return false if the file does not exists');
 $t->is_deeply($request->getFileValues('article[file1]'), $expected, '->getFilesValues() return an array of file information');
@@ -187,7 +191,8 @@ $_FILES = array (
   )
 );
 
-$request->initialize($context);
+$request = new myRequest();
+
 $t->is($request->hasFile('book[article][file1]'), true, '->hasFile() return true if the file exists');
 $t->is($request->hasFile('foo'), false, '->hasFile() return false if the file does not exists');
 $t->is_deeply($request->getFileValues('book[article][file1]'), $expected, '->getFilesValues() return an array of file information');
@@ -240,7 +245,8 @@ $_FILES = array (
   ),
 );
 
-$request->initialize($context);
+$request = new myRequest();
+
 $t->is($request->hasFile('book[article][0]'), true, '->hasFile() return true if the file exists');
 $t->is($request->hasFile('foo'), false, '->hasFile() return false if the file does not exists');
 $t->is_deeply($request->getFileValues('book[article][0]'), $expected, '->getFilesValues() return an array of file information');
@@ -294,7 +300,6 @@ $_FILES = array (
   ),
 );
 
-$request->initialize($context);
 $t->is($request->hasFile('book[article][0]'), true, '->hasFile() return true if the file exists');
 $t->is($request->hasFile('foo'), false, '->hasFile() return false if the file does not exists');
 $t->is_deeply($request->getFileValues('book[article][0]'), $expected, '->getFilesValues() return an array of file information');
@@ -326,7 +331,8 @@ $_FILES = array(
   ),
 );
 
-$request->initialize($context);
+$request = new myRequest();
+
 $t->is($request->hasFile('article[0]'), true, '->hasFile() return true if the file exists');
 $t->is($request->hasFile('foo'), false, '->hasFile() return false if the file does not exists');
 $t->is_deeply($request->getFileValues('article[0]'), $expected, '->getFilesValues() return an array of file information');
@@ -341,7 +347,7 @@ $_GET = array(
   )
 );
 
-$request->initialize($context);
+$request = new myRequest();
 
 $t->is_deeply($request->getString('foo'), 'bar &lt;li&gt;', '->getString() returns string');
 $t->is_deeply($request->getInt('foo'), 0, '->getInt() returns integer');
@@ -381,7 +387,9 @@ $_FILES = array('foofiles' =>
     ),
   ));
 
-$request->initialize($context);
+
+$request = new myRequest();
+
 $t->is($request->getFiles('foofiles'), array(
     array(
       'error' => 0,

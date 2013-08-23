@@ -57,7 +57,7 @@ class sfI18nModelExtractor extends sfConfigurable implements sfII18nExtractor {
       }
       else
       {
-        throw new InvalidArgumentException(sprintf('Abstract model "%s" cannot be extracted.', $this->getOption('model')));
+        // throw new InvalidArgumentException(sprintf('Abstract model "%s" cannot be extracted.', $this->getOption('model')));
       }
     }
 

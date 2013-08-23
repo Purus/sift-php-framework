@@ -21,9 +21,7 @@ abstract class sfActions extends sfAction {
    * defined action name.
    *
    * @return string A string containing the view name associated with this action
-   *
    * @throws sfInitializationException
-   *
    * @see sfAction
    */
   public function execute()
@@ -45,13 +43,10 @@ abstract class sfActions extends sfAction {
 
     if(sfConfig::get('sf_logging_enabled'))
     {
-      $this->getContext()->getLogger()->info('{sfAction} call "' . get_class($this) . '->' . $actionToRun . '()' . '"');
+      sfLogger::getInstance()->info('{sfAction} Call "' . get_class($this) . '->' . $actionToRun . '()' . '"');
     }
 
-    // run action
-    $ret = $this->$actionToRun();
-
-    return $ret;
+    return $this->$actionToRun();
   }
 
 }

@@ -7,7 +7,7 @@
  */
 
 /**
- * sfParameterHolder provides a base class for managing parameters.
+ * sfRequestFiltersHolder provides a base class for managing parameters.
  *
  * Parameters, in this case, are used to extend classes with additional data
  * that requires no additional logic to manage.

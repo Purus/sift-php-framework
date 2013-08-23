@@ -14,7 +14,7 @@
  * @package    Sift
  * @subpackage view
  */
-abstract class sfView
+abstract class sfView implements sfIView
 {
   /**
    * Show an alert view.
@@ -80,15 +80,48 @@ abstract class sfView
     $helpers            = array();
 
   /**
-   * Executes any presentation logic and set template attributes.
+   * Constructor
+   *
+   * @param sfContext The current application context
+   * @inject context
    */
-  abstract function execute();
+  public function __construct(sfContext $context)
+  {
+    $this->context = $context;
+    
+    $this->attributeHolder = new sfParameterHolder();
+    $this->parameterHolder = new sfParameterHolder();
+
+    sfOutputEscaper::markClassesAsSafe(array('sfForm', 'sfFormField', 'sfFormFieldSchema'));
+  }
 
   /**
-   * Configures template.
+   * Initializes this view.
+   *
+   * @param string The module name for this view
+   * @param string The action name for this view
+   * @param string The view name
+   * @return boolean true, if initialization completes successfully, otherwise false
    */
-  abstract function configure();
+  public function initialize($moduleName, $actionName, $viewName)
+  {
+    if(sfConfig::get('sf_logging_enabled'))
+    {
+      sfLogger::getInstance()->info(sprintf('{sfView} Initialize view for "%s/%s"', $moduleName, $actionName));
+    }
 
+    $this->parameterHolder->add(sfConfig::get('mod_'.strtolower($moduleName).'_view_param', array()));
+
+    $this->moduleName = $moduleName;
+    $this->actionName = $actionName;
+    $this->viewName   = $viewName;
+
+    // include view configuration
+    $this->configure();
+
+    return true;
+  }
+  
   /**
    * Retrieves the current application context.
    *
@@ -130,15 +163,6 @@ abstract class sfView
   }
 
   /**
-   * Retrieves the template engine associated with this view.
-   *
-   * Note: This will return null for PHPView instances.
-   *
-   * @return mixed A template engine instance
-   */
-  abstract function getEngine();
-
-  /**
    * Retrieves this views template.
    *
    * @return string A template filename, if a template has been set, otherwise null
@@ -176,12 +200,12 @@ abstract class sfView
   {
     $method = null === $this->escapingMethod ? sfConfig::get('sf_escaping_method') : $this->escapingMethod;
 
-    if (empty($method))
+    if(empty($method))
     {
       return $method;
     }
 
-    if (!defined($method))
+    if(!defined($method))
     {
       throw new sfException(sprintf('Escaping method "%s" is not available; perhaps another helper needs to be loaded in?', $method));
     }
@@ -291,38 +315,10 @@ abstract class sfView
   }
 
   /**
-   * Initializes this view.
-   *
-   * @param sfContext The current application context
-   * @param string The module name for this view
-   * @param string The action name for this view
-   * @param string The view name
-   *
-   * @return boolean true, if initialization completes successfully, otherwise false
+   * Executes any presentation logic for this view.
    */
-  public function initialize($context, $moduleName, $actionName, $viewName)
+  public function execute()
   {
-    if (sfConfig::get('sf_logging_enabled'))
-    {
-      $context->getLogger()->info(sprintf('{sfView} initialize view for "%s/%s"', $moduleName, $actionName));
-    }
-
-    $this->moduleName = $moduleName;
-    $this->actionName = $actionName;
-    $this->viewName   = $viewName;
-
-    $this->context = $context;
-
-    sfOutputEscaper::markClassesAsSafe(array('sfForm', 'sfFormField', 'sfFormFieldSchema'));
-
-    $this->attributeHolder = new sfParameterHolder();
-    $this->parameterHolder = new sfParameterHolder();
-    $this->parameterHolder->add(sfConfig::get('mod_'.strtolower($moduleName).'_view_param', array()));
-
-    // include view configuration
-    $this->configure();
-
-    return true;
   }
 
   /**
@@ -451,7 +447,7 @@ abstract class sfView
    */
   protected function preRenderCheck()
   {
-    if ($this->template == null)
+    if($this->template == null)
     {
       // a template has not been set
       throw new sfRenderException('A template has not been set');
@@ -459,37 +455,24 @@ abstract class sfView
 
     $template = $this->directory.'/'.$this->template;
 
-    if (!is_readable($template))
+    if(!is_readable($template))
     {
       // the template isn't readable
       throw new sfRenderException(sprintf('The template "%s" does not exist in: %s', $template, $this->directory));
     }
 
     // check to see if this is a decorator template
-    if ($this->decorator)
+    if($this->decorator)
     {
       $template = $this->decoratorDirectory.'/'.$this->decoratorTemplate;
 
-      if (!is_readable($template))
+      if(!is_readable($template))
       {
         // the decorator template isn't readable
         throw new sfRenderException(sprintf('The decorator template "%s" does not exist or is unreadable', $template));
       }
     }
   }
-
-  /**
-   * Renders the presentation.
-   *
-   * When the controller render mode is sfView::RENDER_CLIENT, this method will
-   * render the presentation directly to the client and null will be returned.
-   *
-   * @param  array  An array with variables that will be extracted for the template
-   *                If empty, the current actions var holder will be extracted
-   * @return string A string representing the rendered presentation, if
-   *                the controller render mode is sfView::RENDER_VAR, otherwise null
-   */
-  abstract function render($templateVars = null);
 
   /**
    * Sets the decorator template directory for this view.
@@ -621,7 +604,7 @@ abstract class sfView
    */
   public function setTemplate($template)
   {
-    if (sfToolkit::isPathAbsolute($template))
+    if(sfToolkit::isPathAbsolute($template))
     {
       $this->directory = dirname($template);
       $this->template  = basename($template);
@@ -647,10 +630,12 @@ abstract class sfView
    * Sets an extension for the current view.
    *
    * @param string The extension name.
+   * @return sfView
    */
   public function setExtension($ext)
   {
     $this->extension = $ext;
+    return $this;
   }
 
   /**

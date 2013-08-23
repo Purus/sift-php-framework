@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of the Sift PHP framework.
  *
@@ -15,30 +16,99 @@
  * @package    Sift
  * @subpackage request
  */
-class sfWebRequest extends sfRequest implements Serializable {
+class sfWebRequest extends sfRequest {
 
   /**
    * A list of languages accepted by the browser.
+   *
    * @var array
    */
-  protected $languages = null;
+  protected $languages;
+
   /**
    * A list of charsets accepted by the browser
+   *
    * @var array
    */
-  protected $charsets = null;
+  protected $charsets;
+
   /**
    * @var array  List of content types accepted by the client.
    */
-  protected $acceptableContentTypes = null;
+  protected $acceptableContentTypes;
+
+  /**
+   * Path info array
+   *
+   * @var array
+   */
   protected $pathInfoArray = null;
+
   protected $relativeUrlRoot = null;
   protected $filesInfos;
   protected $getParameters,
-            $postParameters = array();
+      $postParameters = array();
   protected $ip = null;
   protected $ip_forwarded_for = false;
-  protected $fixedFileArray         = false;
+  protected $fixedFileArray = false;
+
+  /**
+   * Initializes this sfRequest.
+   *
+   * @param sfContext A sfContext instance
+   * @param array   An associative array of initialization parameters
+   * @param array   An associative array of initialization attributes
+   *
+   * @return boolean true, if initialization completes successfully, otherwise false
+   *
+   * @throws sfInitializationException If an error occurs while initializing this Request
+   */
+  public function __construct($parameters = array(), $attributes = array())
+  {
+    parent::__construct($parameters, $attributes);
+
+    if(isset($_SERVER['REQUEST_METHOD']))
+    {
+      switch($_SERVER['REQUEST_METHOD'])
+      {
+        case 'GET':
+          $this->setMethod(self::GET);
+          break;
+
+        case 'POST':
+          $this->setMethod(self::POST);
+          break;
+
+        case 'PUT':
+          $this->setMethod(self::PUT);
+          break;
+
+        case 'DELETE':
+          $this->setMethod(self::DELETE);
+          break;
+
+        case 'HEAD':
+          $this->setMethod(self::HEAD);
+          break;
+
+        default:
+          $this->setMethod(self::GET);
+      }
+    }
+    else
+    {
+      // set the default method
+      $this->setMethod(self::GET);
+    }
+
+    // load parameters from GET/PATH_INFO/POST
+    $this->loadParameters();
+
+    // GET parameters
+    $this->getParameters = get_magic_quotes_gpc() ? sfToolkit::stripslashesDeep($_GET) : $_GET;
+    // POST parameters
+    $this->postParameters = get_magic_quotes_gpc() ? sfToolkit::stripslashesDeep($_POST) : $_POST;
+  }
 
   /**
    * Returns true if the request is a XMLHttpRequest.
@@ -77,7 +147,7 @@ class sfWebRequest extends sfRequest implements Serializable {
   public function getIpForwardedFor()
   {
     if($this->ip_forwarded_for != false &&
-            $this->ip_forwarded_for != null)
+        $this->ip_forwarded_for != null)
     {
       return $this->ip_forwarded_for;
     }
@@ -418,7 +488,7 @@ class sfWebRequest extends sfRequest implements Serializable {
   static public function convertFileInformation(array $taintedFiles)
   {
     $files = array();
-    foreach ($taintedFiles as $key => $data)
+    foreach($taintedFiles as $key => $data)
     {
       $files[$key] = self::fixPhpFilesArray($data);
     }
@@ -432,24 +502,24 @@ class sfWebRequest extends sfRequest implements Serializable {
     $keys = array_keys($data);
     sort($keys);
 
-    if ($fileKeys != $keys || !isset($data['name']) || !is_array($data['name']))
+    if($fileKeys != $keys || !isset($data['name']) || !is_array($data['name']))
     {
       return $data;
     }
 
     $files = $data;
-    foreach ($fileKeys as $k)
+    foreach($fileKeys as $k)
     {
       unset($files[$k]);
     }
-    foreach (array_keys($data['name']) as $key)
+    foreach(array_keys($data['name']) as $key)
     {
       $files[$key] = self::fixPhpFilesArray(array(
-        'error'    => $data['error'][$key],
-        'name'     => $data['name'][$key],
-        'type'     => $data['type'][$key],
-        'tmp_name' => $data['tmp_name'][$key],
-        'size'     => $data['size'][$key],
+              'error' => $data['error'][$key],
+              'name' => $data['name'][$key],
+              'type' => $data['type'][$key],
+              'tmp_name' => $data['tmp_name'][$key],
+              'size' => $data['size'][$key],
       ));
     }
 
@@ -506,7 +576,7 @@ class sfWebRequest extends sfRequest implements Serializable {
   {
     if(strpos($name, '['))
     {
-      return!is_null(sfToolkit::getArrayValueForPath($this->filesInfos, $name));
+      return !is_null(sfToolkit::getArrayValueForPath($this->filesInfos, $name));
     }
     else
     {
@@ -612,64 +682,6 @@ class sfWebRequest extends sfRequest implements Serializable {
     }
 
     return isset($mimeTypes[$fileType]) ? '.' . $mimeTypes[$fileType] : '.bin';
-  }
-
-  /**
-   * Initializes this sfRequest.
-   *
-   * @param sfContext A sfContext instance
-   * @param array   An associative array of initialization parameters
-   * @param array   An associative array of initialization attributes
-   *
-   * @return boolean true, if initialization completes successfully, otherwise false
-   *
-   * @throws sfInitializationException If an error occurs while initializing this Request
-   */
-  public function initialize($context, $parameters = array(), $attributes = array())
-  {
-    parent::initialize($context, $parameters, $attributes);
-
-    if(isset($_SERVER['REQUEST_METHOD']))
-    {
-      switch($_SERVER['REQUEST_METHOD'])
-      {
-        case 'GET':
-          $this->setMethod(self::GET);
-          break;
-
-        case 'POST':
-          $this->setMethod(self::POST);
-          break;
-
-        case 'PUT':
-          $this->setMethod(self::PUT);
-          break;
-
-        case 'DELETE':
-          $this->setMethod(self::DELETE);
-          break;
-
-        case 'HEAD':
-          $this->setMethod(self::HEAD);
-          break;
-
-        default:
-          $this->setMethod(self::GET);
-      }
-    }
-    else
-    {
-      // set the default method
-      $this->setMethod(self::GET);
-    }
-
-    // load parameters from GET/PATH_INFO/POST
-    $this->loadParameters();
-
-    // GET parameters
-    $this->getParameters = get_magic_quotes_gpc() ? sfToolkit::stripslashesDeep($_GET) : $_GET;
-    // POST parameters
-    $this->postParameters = get_magic_quotes_gpc() ? sfToolkit::stripslashesDeep($_POST) : $_POST;
   }
 
   /**
@@ -878,14 +890,13 @@ class sfWebRequest extends sfRequest implements Serializable {
       if(0 === stripos($key, '_sf_'))
       {
         $this->getParameterHolder()->remove($key);
-        $this->setParameter($key, $value, 'sift/request/sfWebRequest');
-        unset($_GET[$key]);
+        $this->setParameter(substr($key, 1), $value, self::PROTECTED_NAMESPACE);
       }
     }
 
     if(sfConfig::get('sf_logging_enabled'))
     {
-      $this->getContext()->getLogger()->info(sprintf('{sfRequest} request parameters %s', str_replace("\n", '', var_export($this->getParameterHolder()->getAll(), true))));
+      sfLogger::getInstance()->info(sprintf('{sfRequest} Request parameters %s', str_replace("\n", '', var_export($this->getParameterHolder()->getAll(), true))));
     }
   }
 
@@ -1141,10 +1152,9 @@ class sfWebRequest extends sfRequest implements Serializable {
     $pathArray = $this->getPathInfoArray();
 
     return (
-    (isset($pathArray['HTTPS']) && (strtolower($pathArray['HTTPS']) == 'on' || strtolower($pathArray['HTTPS']) == 1))
-    ||
-    (isset($pathArray['HTTP_X_FORWARDED_PROTO']) && strtolower($pathArray['HTTP_X_FORWARDED_PROTO']) == 'https')
-    );
+        (isset($pathArray['HTTPS']) && (strtolower($pathArray['HTTPS']) == 'on' || strtolower($pathArray['HTTPS']) == 1)) ||
+        (isset($pathArray['HTTP_X_FORWARDED_PROTO']) && strtolower($pathArray['HTTP_X_FORWARDED_PROTO']) == 'https')
+        );
   }
 
   /**
@@ -1178,6 +1188,7 @@ class sfWebRequest extends sfRequest implements Serializable {
    */
   public function shutdown()
   {
+
   }
 
   /**
@@ -1216,10 +1227,7 @@ class sfWebRequest extends sfRequest implements Serializable {
   public function serialize()
   {
     $vars = get_object_vars($this);
-    // we don't serialize context!
-    // since it can hold unserializable objects like Doctrine_Connection
-    unset($vars['context']);
-    return (string) @serialize($vars);
+    return serialize($vars);
   }
 
   /**

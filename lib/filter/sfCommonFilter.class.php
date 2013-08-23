@@ -22,7 +22,7 @@ class sfCommonFilter extends sfFilter
    * @param sfFilterChain A sfFilterChain instance
    * @throws sfException
    */
-  public function execute($filterChain)
+  public function execute(sfFilterChain $filterChain)
   {
     // execute next filter
     $filterChain->execute();
@@ -104,7 +104,7 @@ class sfCommonFilter extends sfFilter
     $response = $this->getContext()->getResponse();
     // include stylesheets
     $content = $response->getContent();
-    if(is_string($contentú) && false !== ($pos = strpos($content, '</head>')))
+    if(is_string($content) && false !== ($pos = strpos($content, '</head>')))
     {
       sfLoader::loadHelpers(array('Tag', 'Asset'));
       $html = '';

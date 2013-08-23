@@ -19,7 +19,7 @@ class sfI18nFilter extends sfFilter {
    *
    * @param sfFilterChain $filterChain
    */
-  public function execute($filterChain)
+  public function execute(sfFilterChain $filterChain)
   {
     // execute only if i18n is enabled
     if(sfConfig::get('sf_i18n') && $this->isFirstCall())

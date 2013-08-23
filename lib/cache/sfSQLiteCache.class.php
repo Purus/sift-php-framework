@@ -9,14 +9,22 @@
 /**
  * Cache class that stores cached content in a SQLite database.
  *
+ * Available options:
+ *
+ * * database: File where to put the cache database (or :memory: to store cache in memory)
+ * * see sfCache for options available for all drivers
+ *
  * @package    Sift
  * @subpackage cache
  */
 class sfSQLiteCache extends sfCache
 {
-  protected
-    $dbh      = null,
-    $database = '';
+  /**
+   * Database handler
+   *
+   * @var PDO
+   */
+  protected $dbh = null;
 
   /**
    * Required options
@@ -26,39 +34,25 @@ class sfSQLiteCache extends sfCache
   protected $requiredOptions = array(
     'database'
   );
-  
+
   /**
    * Valid options for the cache
-   * 
-   * @var array 
+   *
+   * @var array
    */
   protected $validOptions = array(
-    'lifetime', 'automatic_cleaning_factor', 'database'
+    'database'
   );
-  
+
   /**
-   * Initializes this sfCache instance.
-   *
-   * Available options:
-   *
-   * * database: File where to put the cache database (or :memory: to store cache in memory)
-   *
-   * * see sfCache for options available for all drivers
    *
    * @see sfCache
    */
-  public function initialize($options = array())
+  public function setup()
   {
-    if (!extension_loaded('SQLite') && !extension_loaded('pdo_SQLite'))
+    if(!extension_loaded('pdo_SQLite'))
     {
-      throw new sfConfigurationException('sfSQLiteCache class needs "sqlite" or "pdo_sqlite" extension to be loaded.');
-    }
-
-    parent::initialize($options);
-
-    if (!$this->getOption('database'))
-    {
-      throw new sfInitializationException('You must pass a "database" option to initialize a sfSQLiteCache object.');
+      throw new sfConfigurationException('sfSQLiteCache class needs "pdo_sqlite" extension to be loaded.');
     }
 
     $this->setDatabase($this->getOption('database'));
@@ -67,7 +61,7 @@ class sfSQLiteCache extends sfCache
   /**
    * @see sfCache
    */
-  public function getBackend()
+  public function getCacheBackend()
   {
     return $this->dbh;
   }
@@ -75,40 +69,57 @@ class sfSQLiteCache extends sfCache
   /**
    * @see sfCache
    */
-  public function get($id, $namespace = self::DEFAULT_NAMESPACE, $doNotTestCacheValidity = false)
+  public function get($key, $default = null)
   {
-    $data = $this->dbh->singleQuery(sprintf("SELECT data FROM cache WHERE key = '%s' AND timeout > %d", sqlite_escape_string($id), time()));
-
-    return null === $data ? $default : $data;
+    $stmt = $this->dbh->prepare('SELECT data FROM cache WHERE key = ? AND timeout > ?');
+    $stmt->execute(array(
+      $key, time()
+    ));
+    $data = $stmt->fetchColumn();
+    return $data !== false ? $data : $default;
   }
 
   /**
    * @see sfCache
    */
-  public function has($id, $namespace = self::DEFAULT_NAMESPACE, $doNotTestCacheValidity = false)
+  public function has($key)
   {
-    return (boolean) $this->dbh->query(sprintf("SELECT key FROM cache WHERE key = '%s' AND timeout > %d", sqlite_escape_string($id), time()))->numRows();
+    $stmt = $this->dbh->prepare('SELECT COUNT(key) FROM cache WHERE key = ? AND timeout > ?');
+    $stmt->execute(array(
+      $key, time()
+    ));
+    return $stmt->fetchColumn() > 0;
   }
 
   /**
    * @see sfCache
    */
-  public function set($id, $namespace = self::DEFAULT_NAMESPACE, $data, $lifetime = null)
+  public function set($key, $data, $lifetime = null)
   {
-    if ($this->getOption('automatic_cleaning_factor') > 0 && rand(1, $this->getOption('automatic_cleaning_factor')) == 1)
+    if($this->getOption('automatic_cleaning_factor') > 0 &&
+        rand(1, $this->getOption('automatic_cleaning_factor')) == 1)
     {
-      $this->clean(sfCache::OLD);
+      $this->clean(self::MODE_OLD);
     }
 
-    return (boolean) $this->dbh->query(sprintf("INSERT OR REPLACE INTO cache (key, data, timeout, last_modified) VALUES ('%s', '%s', %d, %d)", sqlite_escape_string($id), sqlite_escape_string($data), time() + $this->getLifetime($lifetime), time()));
+    $stmt = $this->dbh->prepare('INSERT OR REPLACE INTO cache (key, data, timeout, last_modified) VALUES (?, ?, ?, ?)');
+    $stmt->execute(array(
+      $key, $data, time() + $this->getLifetime($lifetime), time()
+    ));
+
+    return (boolean)$stmt->rowCount();
   }
 
   /**
    * @see sfCache
    */
-  public function remove($id, $namespace = self::DEFAULT_NAMESPACE)
+  public function remove($key)
   {
-    return (boolean) $this->dbh->query(sprintf("DELETE FROM cache WHERE key = '%s'", sqlite_escape_string($id)));
+    $stmt = $this->dbh->prepare('DELETE FROM cache WHERE key = ?');
+    $stmt->execute(array(
+      $key
+    ));
+    return (boolean)$stmt->rowCount();
   }
 
   /**
@@ -116,15 +127,31 @@ class sfSQLiteCache extends sfCache
    */
   public function removePattern($pattern)
   {
-    return (boolean) $this->dbh->query(sprintf("DELETE FROM cache WHERE REGEXP('%s', key)", sqlite_escape_string(self::patternToRegexp($pattern))));
+    $stmt = $this->dbh->prepare('DELETE FROM cache WHERE REGEXP(?, key)');
+    $stmt->execute(array(
+      $this->patternToRegexp($pattern)
+    ));
+    return (boolean)$stmt->rowCount();
   }
 
   /**
    * @see sfCache
    */
-  public function clean($namespace = null, $mode = self::MODE_ALL)
+  public function clean($mode = self::MODE_ALL)
   {
-    return (boolean) $this->dbh->query("DELETE FROM cache".(sfCache::OLD == $mode ? sprintf(" WHERE timeout < '%s'", time()) : ''))->numRows();
+    switch($mode)
+    {
+      case self::MODE_ALL:
+        $stmt = $this->dbh->query('DELETE FROM cache');
+        return $stmt->rowCount();
+      break;
+
+      case self::MODE_OLD:
+        $stmt = $this->dbh->prepare('DELETE FROM cache WHERE timeout < ?');
+        $stmt->execute(array(time()));
+        return $stmt->rowCount();
+      break;
+    }
   }
 
   /**
@@ -132,19 +159,25 @@ class sfSQLiteCache extends sfCache
    */
   public function getTimeout($key)
   {
-    $rs = $this->dbh->query(sprintf("SELECT timeout FROM cache WHERE key = '%s' AND timeout > %d", sqlite_escape_string($key), time()));
-
-    return $rs->numRows() ? intval($rs->fetchSingle()) : 0;
+    $stmt = $this->dbh->prepare('SELECT timeout FROM cache WHERE key = ? AND timeout > ?');
+    $stmt->execute(array(
+      $key, time()
+    ));
+    $result = $stmt->fetch(PDO::FETCH_COLUMN);
+    return ($result !== false) ? intval($result) : 0;
   }
 
   /**
    * @see sfCache
    */
-  public function getLastModified($id, $namespace = self::DEFAULT_NAMESPACE)
+  public function getLastModified($key)
   {
-    $rs = $this->dbh->query(sprintf("SELECT last_modified FROM cache WHERE key = '%s' AND timeout > %d", sqlite_escape_string($id), time()));
-
-    return $rs->numRows() ? intval($rs->fetchSingle()) : 0;
+    $stmt = $this->dbh->prepare('SELECT last_modified FROM cache WHERE key = ? AND timeout > ?');
+    $stmt->execute(array(
+        $key, time()
+    ));
+    $result = $stmt->fetch(PDO::FETCH_COLUMN);
+    return ($result !== false) ? intval($result) : 0;
   }
 
   /**
@@ -154,17 +187,14 @@ class sfSQLiteCache extends sfCache
    */
   protected function setDatabase($database)
   {
-    $this->database = $database;
-
     $new = false;
-    if (':memory:' == $database)
+    if(':memory:' == $database)
     {
       $new = true;
     }
-    else if (!is_file($database))
+    else if(!is_file($database))
     {
       $new = true;
-
       // create cache dir if needed
       $dir = dirname($database);
       $current_umask = umask(0000);
@@ -172,19 +202,18 @@ class sfSQLiteCache extends sfCache
       {
         @mkdir($dir, 0777, true);
       }
-
       touch($database);
       umask($current_umask);
     }
 
-    if (!$this->dbh = new SQLiteDatabase($this->database, 0644, $errmsg))
+    if(!$this->dbh = new sfPDO(sprintf('sqlite:%s', $this->getOption('database'))))
     {
-      throw new sfCacheException(sprintf('Unable to connect to SQLite database: %s.', $errmsg));
+      throw new sfCacheException(sprintf('Unable to connect to SQLite database: %s.'));
     }
 
-    $this->dbh->createFunction('regexp', array($this, 'removePatternRegexpCallback'), 2);
+    $this->dbh->sqliteCreateFunction('regexp', array($this, 'removePatternRegexpCallback'), 2);
 
-    if ($new)
+    if($new)
     {
       $this->createSchema();
     }
@@ -203,10 +232,17 @@ class sfSQLiteCache extends sfCache
    */
   public function getMany($keys)
   {
-    $rows = $this->dbh->arrayQuery(sprintf("SELECT key, data FROM cache WHERE key IN ('%s') AND timeout > %d", implode('\', \'', array_map('sqlite_escape_string', $keys)), time()));
+    $stmt = $this->dbh->prepare(sprintf('SELECT key, data FROM cache WHERE key IN(%s) AND timeout > ?',
+        join(',', array_fill(0, count($keys), '?'))
+    ));
+
+    $params = $keys;
+    array_push($params, time());
+
+    $stmt->execute($params);
 
     $data = array();
-    foreach ($rows as $row)
+    while($row = $stmt->fetch(PDO::FETCH_ASSOC))
     {
       $data[$row['key']] = $row['data'];
     }
@@ -231,12 +267,21 @@ class sfSQLiteCache extends sfCache
       'CREATE UNIQUE INDEX [cache_unique] ON [cache] ([key])',
     );
 
-    foreach ($statements as $statement)
+    foreach($statements as $statement)
     {
-      if (!$this->dbh->query($statement))
+      if(!$this->dbh->query($statement))
       {
-        throw new sfCacheException(sqlite_error_string($this->dbh->lastError()));
+        throw new sfCacheException($this->dbh->lastError());
       }
     }
   }
+
+  /**
+   * Close connection to database
+   */
+  public function __destruct()
+  {
+    $this->dbh = null;
+  }
+
 }

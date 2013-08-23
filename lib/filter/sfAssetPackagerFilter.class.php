@@ -27,7 +27,7 @@ class sfAssetPackagerFilter extends sfFilter {
    *
    * @param sfFilterChain $filterChain
    */
-  public function execute($filterChain)
+  public function execute(sfFilterChain $filterChain)
   {
     $filterChain->execute();
 

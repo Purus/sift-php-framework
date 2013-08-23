@@ -158,10 +158,9 @@ class sfBrowser extends sfBrowserBase
 
 class sfFakeRenderingFilter extends sfFilter
 {
-  public function execute($filterChain)
+  public function execute(sfFilterChain $filterChain)
   {
     $filterChain->execute();
-
     $this->context->getResponse()->sendContent();
   }
 }

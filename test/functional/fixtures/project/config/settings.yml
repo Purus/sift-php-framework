@@ -1,0 +1,9 @@
+dev:
+  .settings:
+    # Logging and debugging settings
+    web_debug: true  # Enable the web debug toolbar
+staging:
+  .settings:
+    # Logging and debugging settings
+    web_debug: true  # Enable the web debug toolbar
+    cache: true

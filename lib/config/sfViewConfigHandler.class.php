@@ -48,7 +48,7 @@ class sfViewConfigHandler extends sfYamlConfigHandler {
         continue;
       }
 
-      $data[] = ($first ? '' : 'else ') . "if (\$this->actionName.\$this->viewName == '$viewName')\n" .
+      $data[] = ($first ? '' : 'else ') . "if(\$this->actionName.\$this->viewName == '$viewName')\n" .
               "{\n";
       $data[] = $this->addTemplate($viewName);
       $data[] = "}\n";
@@ -70,7 +70,7 @@ class sfViewConfigHandler extends sfYamlConfigHandler {
         continue;
       }
 
-      $data[] = ($first ? '' : 'else ') . "if (\$templateName.\$this->viewName == '$viewName')\n" .
+      $data[] = ($first ? '' : 'else ') . "if(\$templateName.\$this->viewName == '$viewName')\n" .
               "{\n";
 
       $data[] = $this->addLayout($viewName);
@@ -289,7 +289,7 @@ class sfViewConfigHandler extends sfYamlConfigHandler {
   }
 
   /**
-   * Adds a layour statement statement to the data.
+   * Adds a layout statement statement to the data.
    *
    * @param string The view name
    *
@@ -297,20 +297,48 @@ class sfViewConfigHandler extends sfYamlConfigHandler {
    */
   protected function addLayout($viewName = '')
   {
-    $data = '';
+    // true if the user set 'has_layout' to true or set a 'layout' name for this specific action
+    $hasLocalLayout = isset($this->yamlConfig[$viewName]['layout']) || (isset($this->yamlConfig[$viewName]) && array_key_exists('has_layout', $this->yamlConfig[$viewName]));
 
-    if($this->getConfigValue('has_layout', $viewName) && false !== $layout = $this->getConfigValue('layout', $viewName))
+    // the layout value
+    $layout = $this->getConfigValue('has_layout', $viewName) ? $this->getConfigValue('layout', $viewName) : false;
+
+    //$this->getResponse()->setParameter($this->getModuleName().'_'.$this->getActionName().'_layout', $name, 'sift/action/view');
+    // the user set a decorator in the action
+    $data = <<<EOF
+
+  if(null !== (\$layout = sfConfig::get('sift.view.'.\$this->moduleName.'_'.\$this->actionName.'_layout')))
+  {
+    \$this->setDecoratorTemplate(false === \$layout ? false : \$layout.\$this->getExtension());
+  }
+EOF;
+
+    if($hasLocalLayout)
     {
-      $layout = sfToolkit::replaceConstants($layout);
-      $data = "  \$this->setDecoratorTemplate('$layout'.\$this->getExtension());\n";
+      // the user set a decorator in view.yml for this action
+      $data .= <<<EOF
+
+  else
+  {
+    \$this->setDecoratorTemplate('' == '$layout' ? false : '$layout'.\$this->getExtension());
+  }
+
+EOF;
     }
-
-    // For XMLHttpRequest, we want no layout by default
-    // So, we check if the user requested has_layout: true or if he gave a layout: name for this particular action
-    $localLayout = isset($this->yamlConfig[$viewName]['layout']) || isset($this->yamlConfig[$viewName]['has_layout']);
-    if(!$localLayout && $data)
+    else
     {
-      $data = "  if (!\$context->getRequest()->isXmlHttpRequest())\n  {\n  $data  }\n";
+      // no specific configuration
+      // set the layout to the 'all' view.yml value except if:
+      //   * the decorator template has already been set by "someone" (via view.configure_format for example)
+      //   * the request is an XMLHttpRequest request
+      $data .= <<<EOF
+
+  else if (null === \$this->getDecoratorTemplate() && !\$this->context->getRequest()->isXmlHttpRequest())
+  {
+    \$this->setDecoratorTemplate('' == '$layout' ? false : '$layout'.\$this->getExtension());
+  }
+
+EOF;
     }
 
     return $data;
@@ -447,7 +475,7 @@ class sfViewConfigHandler extends sfYamlConfigHandler {
       {
         $tmp = array();
       }
-      else if('-' == $key[0])
+      elseif('-' == $key[0])
       {
         unset($tmp[substr($key, 1)]);
       }

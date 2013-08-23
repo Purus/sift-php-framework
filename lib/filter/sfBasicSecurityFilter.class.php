@@ -22,7 +22,7 @@ class sfBasicSecurityFilter extends sfSecurityFilter
    *
    * @param sfFilterChain A sfFilterChain instance
    */
-  public function execute($filterChain)
+  public function execute(sfFilterChain $filterChain)
   {
     // get the cool stuff
     $context    = $this->getContext();
@@ -32,6 +32,13 @@ class sfBasicSecurityFilter extends sfSecurityFilter
     // get the current action instance
     $actionEntry    = $controller->getActionStack()->getLastEntry();
     $actionInstance = $actionEntry->getActionInstance();
+
+    if(!$actionInstance->isSecure())
+    {
+      $filterChain->execute();
+
+      return;
+    }
 
     // disable security on [sf_login_module] / [sf_login_action]
     if (

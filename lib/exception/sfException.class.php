@@ -33,11 +33,6 @@ class sfException extends Exception {
    */
   public function __construct($message = null, $code = 0)
   {
-    if($this->getName() === null)
-    {
-      $this->setName('sfException');
-    }
-
     parent::__construct($message, $code);
 
     if(sfConfig::get('sf_logging_enabled') && !($this instanceof sfStopException))
@@ -46,8 +41,13 @@ class sfException extends Exception {
       // log the current uri
       if(class_exists('sfContext', false) && sfContext::hasInstance())
       {
-        sfLogger::getInstance()->err(sprintf('{%s} Request URI: %s, method: %s',
-            $name, sfContext::getInstance()->getRequest()->getUri(), sfContext::getInstance()->getRequest()->getMethod()));
+        $uri = $method = 'n/a';
+        if($request = sfContext::getInstance()->getRequest())
+        {
+          $uri = $request->getUri();
+          $method = $request->getMethod();
+        }
+        sfLogger::getInstance()->err(sprintf('{%s} Request URI: %s, method: %s', $name, $uri, $method));
       }
       sfLogger::getInstance()->err(sprintf('{%s} %s %s', $name, $message, join(' --- ', $this->getTraces($this))));
     }
@@ -134,13 +134,12 @@ class sfException extends Exception {
     }
 
     // don't print message if it is an sfStopException exception
-    if(method_exists($exception, 'getName') && $exception->getName() == 'sfStopException')
+    if($exception instanceof sfStopException)
     {
       if(!sfConfig::get('sf_test'))
       {
         exit(1);
       }
-
       return;
     }
 

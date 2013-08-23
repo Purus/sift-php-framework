@@ -44,9 +44,13 @@ class sfWebDebugLogger extends sfVarLogger {
       return;
     }
 
-    sfCore::getEventDispatcher()->connect('context.load_factories', array($this, 'listenForLoadFactories'));
-    sfCore::getEventDispatcher()->connect('web_debug.filter_content', array($this, 'filterResponseContent'));
-    sfCore::getEventDispatcher()->connect('application.render_exception', array($this, 'filterExceptionContent'));
+    if(sfCore::isBootstrapped())
+    {
+      $distatcher = sfCore::getEventDispatcher();
+      $distatcher->connect('context.load_factories', array($this, 'listenForLoadFactories'));
+      $distatcher->connect('web_debug.filter_content', array($this, 'filterResponseContent'));
+      $distatcher->connect('application.render_exception', array($this, 'filterExceptionContent'));
+    }
   }
 
   /**

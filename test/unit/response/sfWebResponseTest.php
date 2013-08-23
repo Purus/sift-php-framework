@@ -4,7 +4,7 @@ require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 require_once($_test_dir.'/unit/sfContextMock.class.php');
 require_once($_test_dir.'/unit/sfCoreMock.class.php');
 
-$t = new lime_test(66, new lime_output_color());
+$t = new lime_test(76, new lime_output_color());
 
 class myWebResponse extends sfWebResponse
 {
@@ -20,8 +20,7 @@ class myWebResponse extends sfWebResponse
 }
 
 $context = new sfContext();
-$response = sfResponse::newInstance('myWebResponse');
-$response->initialize($context);
+$response = new myWebResponse();
 
 // ->getStatusCode() ->setStatusCode()
 $t->diag('->getStatusCode() ->setStatusCode()');
@@ -162,10 +161,8 @@ $t->is($response->getHttpHeader('Cache-Control'), 'max-age=12, no-cache', '->add
 
 // ->mergeProperties()
 $t->diag('->mergeProperties()');
-$response1 = sfResponse::newInstance('myWebResponse');
-$response1->initialize($context);
-$response2 = sfResponse::newInstance('myWebResponse');
-$response2->initialize($context);
+$response1 = new myWebResponse();
+$response2 =new myWebResponse();
 
 $response1->setHttpHeader('symfony', 'foo');
 $response1->setContentType('text/plain');
@@ -178,8 +175,7 @@ $t->is($response1->getTitle(), $response2->getTitle(), '->mergerProperties() mer
 
 // ->addStylesheet()
 $t->diag('->addStylesheet()');
-$response = sfResponse::newInstance('myWebResponse');
-$response->initialize($context);
+$response = new myWebResponse();
 $response->addStylesheet('test');
 $t->ok($response->getParameterHolder()->has('test', 'helper/asset/auto/stylesheet'), '->addStylesheet() adds a new stylesheet for the response');
 $response->addStylesheet('foo', '');
@@ -199,8 +195,7 @@ $t->is($response->getStylesheets('last'), array('last' => array()), '->getStyles
 
 // ->addJavascript()
 $t->diag('->addJavascript()');
-$response = sfResponse::newInstance('myWebResponse');
-$response->initialize($context);
+$response = new myWebResponse();
 $response->addJavascript('test');
 $t->ok($response->getParameterHolder()->has('test', 'helper/asset/auto/javascript'), '->addJavascript() adds a new javascript for the response');
 $response->addJavascript('foo', '');
@@ -223,8 +218,7 @@ $t->is($response->getCookies(), array('foo' => array('name' => 'foo', 'value' =>
 
 // ->setHeaderOnly() ->getHeaderOnly()
 $t->diag('->setHeaderOnly() ->isHeaderOnly()');
-$response = sfResponse::newInstance('myWebResponse');
-$response->initialize($context);
+$response = new myWebResponse();
 $t->is($response->isHeaderOnly(), false, '->isHeaderOnly() returns false if the content must be send to the client');
 $response->setHeaderOnly(true);
 $t->is($response->isHeaderOnly(), true, '->setHeaderOnly() changes the current value of header only');
@@ -242,3 +236,66 @@ $response->setContent('foo');
 ob_start();
 $response->sendContent();
 $t->is(ob_get_clean(), 'foo', '->sendContent() returns the response content if headerOnly is false');
+
+// ->serialize() ->unserialize()
+$t->diag('->serialize() ->unserialize()');
+$resp = unserialize(serialize($response));
+$t->ok($response == $resp, 'sfWebResponse implements the Serializable interface');
+
+$t->diag('->setSlot() ->getSlot() ->clearSlots()');
+
+$response->setSlot('foo', 'bar');
+$t->isa_ok($response->getSlots(), 'array', 'getSlots() returns array');
+
+$t->is($response->getSlots(), array(
+    'foo' => 'bar'
+), 'getSlots() returns array with slots inside');
+
+$response->clearSlots();
+
+$t->is($response->getSlots(), array(), 'getSlots() returns empty array after clearSlots() has been called');
+
+$t->diag('->merge()');
+
+$response = new myWebResponse();
+$response->setTitle('Original title');
+$response->setSlot('component', 'Component');
+$response->addStylesheet('foo_styles2', 'first', array('ie_condition' => 'IE7'));
+
+$response2 = new myWebResponse();
+$response2->addJavascript('foo');
+$response2->addStylesheet('foo_styles', 'last', array('ie_condition' => 'IE6'));
+$response2->setTitle('foobar');
+$response2->setTitleMode('replace');
+$response2->setSlot('my_slot', 'this is a test slot');
+$response2->setMetaDescription('This is a cool site');
+
+$response->merge($response2);
+
+$t->is($response->getAllJavascripts(), array(
+    'foo' => array()
+), 'merge() merged javascripts');
+
+$t->is($response->getAllStylesheets(), array(
+    'foo_styles2' =>
+      array (
+        'ie_condition' => 'IE7',
+    ),
+    'foo_styles' => array(
+        'ie_condition' => 'IE6'
+    )
+), 'merge() merged stylesheets');
+
+$t->is($response->getSlots(), array(
+    'component' => 'Component',
+    'my_slot' => 'this is a test slot'
+), 'merge() merged slots');
+
+$t->is($response->getTitle(), 'foobar', 'merge() merged title');
+
+$t->is($response->getTitleMode(), 'REPLACE', 'merge() merged title mode');
+
+$t->is($response->getMetas(), array(
+  'description' => 'This is a cool site'
+), 'merge() merged metas');
+

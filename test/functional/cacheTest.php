@@ -32,8 +32,8 @@ class myTestBrowser extends sfTestBrowser
 
         // contextual partials
         checkElement('#contextualPartial .contextualPartial')->
-        checkElement('#contextualCacheablePartial .contextualCacheablePartial__'.$parameter, 'Param: '.$parameter)->
-        checkElement('#contextualCacheablePartialVarParam .contextualCacheablePartial_varParam_'.$parameter, 'Param: '.$parameter)->
+        checkElement('#contextualCacheablePartial .contextualCacheablePartial__'.$parameter, $parameter ? ('Param: '.$parameter) : 'Param:')->
+        checkElement('#contextualCacheablePartialVarParam .contextualCacheablePartial_varParam_'.$parameter, $parameter ? ('Param: '.$parameter) : 'Param:')->
 
         // components
         checkElement('#component .component__componentParam_'.$parameter)->
@@ -42,8 +42,8 @@ class myTestBrowser extends sfTestBrowser
         // contextual components
         checkElement('#contextualComponent .contextualComponent__componentParam_'.$parameter)->
         checkElement('#contextualComponentVarParam .contextualComponent_varParam_componentParam_'.$parameter)->
-        checkElement('#contextualCacheableComponent .contextualCacheableComponent__componentParam_'.$parameter, 'Param: '.$parameter)->
-        checkElement('#contextualCacheableComponentVarParam .contextualCacheableComponent_varParam_componentParam_'.$parameter, 'Param: '.$parameter)->
+        checkElement('#contextualCacheableComponent .contextualCacheableComponent__componentParam_'.$parameter, $parameter ? ('Param: '.$parameter) : 'Param:')->
+        checkElement('#contextualCacheableComponentVarParam .contextualCacheableComponent_varParam_componentParam_'.$parameter, $parameter ? ('Param: '.$parameter) : 'Param:')->
       end()->
 
       with('view_cache')->begin()->
@@ -148,7 +148,7 @@ class myTestBrowser extends sfTestBrowser
     ;
 
     // remove all cache
-    sfToolkit::clearDirectory(sfConfig::get('sf_app_cache_dir'));
+    sfToolkit::clearDirectory(sfConfig::get('sf_base_cache_dir'));
 
     $b->
       getMultiAction()->
@@ -165,7 +165,7 @@ class myTestBrowser extends sfTestBrowser
     ;
 
     // remove all cache
-    sfToolkit::clearDirectory(sfConfig::get('sf_app_cache_dir'));
+    sfToolkit::clearDirectory(sfConfig::get('sf_base_cache_dir'));
 
     $b->
       getMultiAction('requestParam')->
@@ -237,7 +237,7 @@ class myTestBrowser extends sfTestBrowser
     ;
 
     // remove all cache
-    sfToolkit::clearDirectory(sfConfig::get('sf_app_cache_dir'));
+    sfToolkit::clearDirectory(sfConfig::get('sf_base_cache_dir'));
 
     // check user supplied cache key for partials and components
     $b->
@@ -268,7 +268,7 @@ class myTestBrowser extends sfTestBrowser
     // check cache content for actions
 
     // remove all cache
-    sfToolkit::clearDirectory(sfConfig::get('sf_app_cache_dir'));
+    sfToolkit::clearDirectory(sfConfig::get('sf_base_cache_dir'));
 
     $b->
       get('/cache/action')->
@@ -345,7 +345,7 @@ $b->
 sfConfig::set('sf_web_debug', false);
 
 // check stylesheets, javascripts inclusions
-sfToolkit::clearDirectory(sfConfig::get('sf_app_cache_dir'));
+sfToolkit::clearDirectory(sfConfig::get('sf_base_cache_dir'));
 $b->
   get('/cache/multiBis')->
   with('request')->begin()->
@@ -493,11 +493,22 @@ $b->setHttpHeader('If-Modified-Since', sfWebResponse::getDate(sfConfig::get('LAS
   ->with('response')->isStatusCode(304)
 ;
 
+$b->
+  get('/cache/partialViews')->
+  with('request')->begin()->
+    isParameter('module', 'cache')->
+    isParameter('action', 'partialViews')->
+  end()->
+  with('response')->begin()->
+    isStatusCode(200)->
+      checkElement('script[id="js-partial"]', true)->
+    end();
+
 // test with sfFileCache class (default)
 $b->launch();
 
 // test with sfSQLiteCache class
-if (extension_loaded('SQLite') || extension_loaded('pdo_SQLite')) 
+if(extension_loaded('pdo_SQLite')) 
 {
   sfConfig::set('sf_factory_view_cache', 'sfSQLiteCache');
   sfConfig::set('sf_factory_view_cache_parameters', 

@@ -4,11 +4,13 @@ prod:
   rotate: true
   purge:  false
 
-dev:
-
-test:
+#dev:
 
 all:
+  enabled: true
+  level: info
+
+#all:
 #  enabled: true
 #  level:  debug
 #  rotate:  false

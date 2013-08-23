@@ -9,26 +9,11 @@
 /**
  * sfCache is an abstract class for all cache classes
  *
- * @package    Sift
+ * @package Sift
  * @subpackage cache
  */
-abstract class sfCache extends sfConfigurable
+abstract class sfCache extends sfConfigurable implements sfICache
 {
-  /**
-   * Delete mode -> only old caches
-   */
-  const MODE_OLD = 'old';
-
-  /**
-   * Delete mode -> all caches
-   */
-  const MODE_ALL = 'all';
-
-  /**
-   * Default cache namespace
-   *
-   */
-  const DEFAULT_NAMESPACE = '';
 
   /**
    * Array of default options
@@ -46,110 +31,66 @@ abstract class sfCache extends sfConfigurable
    * @var array
    */
   protected $validOptions = array(
-    'lifetime', 'automatic_cleaning_factor'
+    'lifetime', 'automatic_cleaning_factor', 'prefix'
   );
 
   /**
-   * Constructs the cache
+   * Cache factory
+   *
+   * @param string $driver
+   * @param array $driverOptions
+   * @return sfCache
+   * @throws LogicException
+   */
+  public static function factory($driver, $driverOptions = array())
+  {
+    $driverClass = sprintf('sf%sCache', ucfirst($driver));
+    $driverObj = false;
+    if(class_exists($driverClass))
+    {
+      $driverObj = new $driverClass($driverOptions);
+    }
+    elseif(class_exists(($driverClass = $driver)))
+    {
+      $driverObj = new $driverClass($driverOptions);
+    }
+
+    if(!$driverObj)
+    {
+      throw new LogicException(sprintf('Invalid cache driver "%s" (class: %s) given.', $driver, $driverClass));
+    }
+    elseif(!$driverObj instanceof sfICache)
+    {
+      throw new LogicException(sprintf('Cache driver "%s" (class: %s) does not implement sfICache.', $driver, $driverClass));
+    }
+
+    return $driverObj;
+  }
+
+  /**
+   * Constructor
    *
    * @param array $options
    */
   public function __construct($options = array())
   {
+    if(is_object($options))
+    {
+      if(is_callable(array($options, 'toArray')))
+      {
+        $options = $options->toArray();
+      }
+      else
+      {
+        throw new InvalidArgumentException(sprintf('Options for "%s" must be an array or a object with ->toArray() method', get_class($this)));
+      }
+    }
+
+    $options = array_merge(array(
+      'prefix' => md5(dirname(__FILE__)),
+    ), $options);
+
     parent::__construct($options);
-    $this->initialize($options);
-  }
-
-  /**
-   * Initializes the cache
-   *
-   * @param array $options
-   */
-  public function initialize($options = array())
-  {
-  }
-
-  /**
-   * Gets the cache content for a given id and namespace.
-   *
-   * @param  string  The cache id
-   * @param  string  The name of the cache namespace
-   * @param  boolean If set to true, the cache validity won't be tested
-   *
-   * @return string  The data of the cache (or null if no cache available)
-   */
-  abstract public function get($id, $namespace = self::DEFAULT_NAMESPACE, $doNotTestCacheValidity = false);
-
-  /**
-   * Returns true if there is a cache for the given id and namespace.
-   *
-   * @param  string  The cache id
-   * @param  string  The name of the cache namespace
-   * @param  boolean If set to true, the cache validity won't be tested
-   *
-   * @return boolean true if the cache exists, false otherwise
-   */
-  abstract public function has($id, $namespace = self::DEFAULT_NAMESPACE, $doNotTestCacheValidity = false);
-
-  /**
-   * Saves some data in the cache.
-   *
-   * @param string The cache id
-   * @param string The name of the cache namespace
-   * @param string The data to put in cache
-   * @param integer Lifetime of the cache
-   * @return boolean true if no problem
-   */
-  abstract public function set($id, $namespace = self::DEFAULT_NAMESPACE, $data, $lifetime = null);
-
-  /**
-   * Removes a content from the cache.
-   *
-   * @param string The cache id
-   * @param string The name of the cache namespace
-   *
-   * @return boolean true if no problem
-   */
-  abstract public function remove($id, $namespace = self::DEFAULT_NAMESPACE);
-
-  /**
-   * Cleans the cache.
-   *
-   * If no namespace is specified all cache content will be destroyed
-   * else only cache contents of the specified namespace will be destroyed.
-   *
-   * @param string The name of the cache namespace
-   *
-   * @return boolean true if no problem
-   */
-  abstract public function clean($namespace = null, $mode = self::MODE_ALL);
-
-  /**
-   * Returns the cache last modification time.
-   *
-   * @return int The last modification time
-   */
-  abstract public function getLastModified($id, $namespace = self::DEFAULT_NAMESPACE);
-
-  /**
-   * Sets a new life time.
-   *
-   * @param int $lifetime The new life time (in seconds)
-   * @return sfCache
-   */
-  public function setLifeTime($lifeTime)
-  {
-    return $this->setOption('lifetime', $lifeTime);
-  }
-
-  /**
-   * Gets automatic_cleaning_factor option
-   *
-   * @return integer
-   */
-  public function getAutomaticCleaningFactor()
-  {
-    return $this->getOption('automatic_cleaning_factor');
   }
 
   /**
@@ -164,14 +105,56 @@ abstract class sfCache extends sfConfigurable
   }
 
   /**
-   * Returns the current life time.
+   * Computes lifetime.
    *
-   * @return int The current life time (in seconds)
+   * @param integer $lifetime Lifetime in seconds
+   *
+   * @return integer Lifetime in seconds
    */
-  public function getLifeTime()
+  public function getLifetime($lifetime)
   {
-    return $this->getOption('lifetime');
+    return null === $lifetime ? $this->getOption('lifetime') : $lifetime;
   }
 
+  /**
+   * @see sfICache
+   */
+  public function getMany($keys)
+  {
+    $data = array();
+    foreach($keys as $key)
+    {
+      $data[$key] = $this->get($key);
+    }
+    return $data;
+  }
+
+  /**
+   * @see sfICache
+   */
+  public function getCacheBackend()
+  {
+  }
+
+  /**
+   * Converts a pattern to a regular expression.
+   *
+   * A pattern can use some special characters:
+   *
+   *  - * Matches a namespace (foo:*:bar)
+   *  - ** Matches one or more namespaces (foo:**:bar)
+   *
+   * @param string $pattern A pattern
+   * @return string A regular expression
+   */
+  protected function patternToRegexp($pattern)
+  {
+    $regexp = str_replace(
+      array('\\*\\*', '\\*'),
+      array('.+?',    '[^'.preg_quote(sfCache::SEPARATOR, '#').']+'),
+      preg_quote($pattern, '#')
+    );
+    return '#^'.$regexp.'$#';
+  }
 
 }

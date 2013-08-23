@@ -15,8 +15,39 @@
 class sfFilterChain
 {
   protected
+    $context = null,
     $chain = array(),
     $index = -1;
+
+  /**
+   * Constructs the chain
+   *
+   * @param sfContext $context
+   */
+  public function __construct(sfContext $context)
+  {
+    $this->context = $context;
+  }
+
+  /**
+   * Returns the context
+   *
+   * @return sfContext
+   */
+  public function getContext()
+  {
+    return $this->context;
+  }
+
+  /**
+   * Load filters for given action
+   *
+   * @param sfAction $actionInstance
+   */
+  public function load(sfAction $actionInstance)
+  {
+    require(sfConfigCache::getInstance()->checkConfig(sfConfig::get('sf_app_module_dir_name').'/'.$actionInstance->getModuleName().'/'.sfConfig::get('sf_app_module_config_dir_name').'/filters.yml'));
+  }
 
   /**
    * Executes the next filter in this chain.
@@ -26,11 +57,11 @@ class sfFilterChain
     // skip to the next filter
     ++$this->index;
 
-    if ($this->index < count($this->chain))
+    if($this->index < count($this->chain))
     {
-      if (sfConfig::get('sf_logging_enabled'))
+      if(sfConfig::get('sf_logging_enabled'))
       {
-        sfLogger::getInstance()->info(sprintf('{sfFilter} executing filter "%s"', get_class($this->chain[$this->index])));
+        sfLogger::getInstance()->info(sprintf('{sfFilter} Executing filter "%s".', get_class($this->chain[$this->index])));
       }
 
       // execute the next filter
@@ -42,19 +73,17 @@ class sfFilterChain
    * Returns true if the filter chain contains a filter of a given class.
    *
    * @param string The class name of the filter
-   *
    * @return boolean true if the filter exists, false otherwise
    */
   public function hasFilter($class)
   {
-    foreach ($this->chain as $filter)
+    foreach($this->chain as $filter)
     {
-      if ($filter instanceof $class)
+      if(get_class($filter) == $class)
       {
         return true;
       }
     }
-
     return false;
   }
 
@@ -63,8 +92,9 @@ class sfFilterChain
    *
    * @param sfFilter A sfFilter implementation instance.
    */
-  public function register($filter)
+  public function register(sfIFilter $filter)
   {
     $this->chain[] = $filter;
   }
+
 }

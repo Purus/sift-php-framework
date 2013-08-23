@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of the Sift PHP framework.
  *
@@ -9,53 +10,81 @@
 /**
  * Cache class that does nothing.
  *
- * @package    Sift
+ * @package Sift
  * @subpackage cache
  */
-class sfNoCache extends sfCache
-{
-  public function get($id, $namespace = self::DEFAULT_NAMESPACE, $doNotTestCacheValidity = false)
+class sfNoCache extends sfCache {
+
+  /**
+   * @see sfICache
+   */
+  public function get($key, $default = null)
   {
-    return null;
+    return $default;
   }
 
   /**
-   * @see sfCache
+   * @see sfICache
    */
-  public function has($id, $namespace = self::DEFAULT_NAMESPACE, $doNotTestCacheValidity = false)
+  public function has($key)
   {
     return false;
   }
 
   /**
-   * @see sfCache
+   * @see sfICache
    */
-  public function set($id, $namespace = self::DEFAULT_NAMESPACE, $data, $lifetime = null)
+  public function set($key, $data, $lifetime = null)
   {
     return true;
   }
 
   /**
-   * @see sfCache
+   * @see sfICache
    */
-  public function remove($id, $namespace = self::DEFAULT_NAMESPACE)
-  {
-    return true;
-  }
-
-  public function clean($namespace = null, $mode = self::MODE_ALL)
+  public function remove($key)
   {
     return true;
   }
 
   /**
-  * Returns the cache last modification time.
-  *
-  * @return int The last modification time
-  */
-  public function getLastModified($id, $namespace = self::DEFAULT_NAMESPACE)
+   * @see sfICache
+   */
+  public function removePattern($pattern)
+  {
+    return true;
+  }
+
+  /**
+   * @see sfICache
+   */
+  public function clean($mode = self::MODE_ALL)
+  {
+    return true;
+  }
+
+  /**
+   * @see sfICache
+   */
+  public function getLastModified($key)
   {
     return 0;
+  }
+
+  /**
+   * @see sfICache
+   */
+  public function getTimeout($key)
+  {
+    return 0;
+  }
+
+  /**
+   * @see sfICache
+   */
+  public function getMany($keys)
+  {
+    return array();
   }
 
 }

@@ -1,3 +1,219 @@
+14.08.2013 [6994475] fixed file cache last modified bug
+14.08.2013 [d0ca9f0] updated bootstrap min js package
+14.08.2013 [a0129d4] fixed js form validation, server generated labels
+14.08.2013 [d632c2f] updated javascript validation, array access interface for messages
+14.08.2013 [cd6b1c4] fixed project_root_dir in build tasks
+14.08.2013 [6b0db63] updated ip2country database
+14.08.2013 [4467057] updated passsword validation, added strength validation feature + strength meter
+14.08.2013 [8c6802c] moved build tasks to build directory
+08.08.2013 [9ab1913] added phone number metadata
+08.08.2013 [d67dd8e] updated format_phone_number() helper
+08.08.2013 [7024807] added phone number validator, formatter
+08.08.2013 [0f4f9cf] updated i18n data, iso 3166
+08.08.2013 [239408f] updated testAutoloader - make the classname case insensitive
+08.08.2013 [a38dc65] removed old cldr data
+08.08.2013 [41fb8f8] updated build tasks
+07.08.2013 [ed3c805] moved poedit js extrator to tools
+07.08.2013 [6f892dc] refactored build tasks
+06.08.2013 [cbde53e] updated subpackage info
+06.08.2013 [e89d27e] updated the sfCollection, now implements sfIArrayAccessByReference intarface
+06.08.2013 [045f06d] fixed typo in project freeze task
+06.08.2013 [b557510] updated subpackage info in form classes
+06.08.2013 [37c6a64] removed static method calls from rich form enhancer
+06.08.2013 [a730faf] updated forms.js to apply jqueryui spinner to .integer inputs
+06.08.2013 [505d235] updated form enhancers, updated forms.yml, fixed unit tests
+06.08.2013 [ea34a2b] updated form skeleton to include getJavascriptFinalValidation method
+06.08.2013 [60f2db1] added test unit tasks, updated project and module test skeletons
+06.08.2013 [988903c] modified the method signature of sfForm::getJavascriptFinalValidation
+06.08.2013 [de113e3] added sfIArrayAccessByReference interface, refactored sfJson encode() to encode traversable objects
+06.08.2013 [8e239c9] refactored core autoloader
+06.08.2013 [a0b63c9] refactored form javascript validation
+06.08.2013 [8fad507] updated json, encode() works for nested sfISerializable objects
+05.08.2013 [cd12e89] added sfIJsonSerializeble interface
+05.08.2013 [8952cc4] added sfCollection, sorter and sorter strategy
+02.08.2013 [6856263] added ignore-errors option to i18n extract task
+02.08.2013 [50860e5] added getUri to console request
+02.08.2013 [bcd04b6] replaced all sfContext::getInstance()->getLogger() calls to sfLogger::getInstance()
+02.08.2013 [64aa8e8] updated i18n catalogues for forms
+02.08.2013 [65c6bbd] added strength option to password validator
+01.08.2013 [bac01c6] added ip2country setting section to settings.yml
+01.08.2013 [5d73413] added missing method signature
+01.08.2013 [922164c] removed invalid files from core autoloader
+01.08.2013 [359f6e5] fixed plugins.yml cache file bug
+01.08.2013 [f396bae] added ip2country
+01.08.2013 [1b8aee4] added typo build data, updated build script
+01.08.2013 [a484576] updated build data dir readme
+01.08.2013 [d27bc3d] added typography build script + source data
+01.08.2013 [c2bbca4] renamed changelog build script
+01.08.2013 [334ca06] renamed mime type build script
+01.08.2013 [75b6e09] updated i18n data files
+01.08.2013 [63922a9] moved cldr data to build folder, updated the cli script
+01.08.2013 [6be6720] updated money currency to use the iso4217 class
+01.08.2013 [22dcc7c] updated iso 4217 - currency codes
+01.08.2013 [ba9d72e] added iso3166 - country codes
+31.07.2013 [89dcdfa] added load mask js + unit test + less
+30.07.2013 [77db341] updated javascript partial view - compress js
+30.07.2013 [00c0942] updated country select
+30.07.2013 [41420e8] updated country validator
+26.07.2013 [4171d01] update cli task for generating forms
+26.07.2013 [479bcbb] added i18n do plugin skeleton
+25.07.2013 [bbc5f0d] updated rich editor, event is triggered for editor, not options
+25.07.2013 [4fa8648] disabled maximize button in ckeditor settings, problems in firefox, until fixed
+24.07.2013 [727abf0] updated ckeditor to 4.2
+24.07.2013 [ebe31e4] disabled conversion of html entities in ckeditor configuration
+24.07.2013 [8b723c5] updated sfException to log stacktrace and uri
+24.07.2013 [59f9d0c] removed tabs
+24.07.2013 [b807178] refactored breadcrumbs helper
+24.07.2013 [f1ca9b0] updated form helper, fixed js inclusion when using asset packages
+24.07.2013 [104f98c] updated task skeleton, get first application
+24.07.2013 [27f2ea6] removed invalid files from project skeleton
+23.07.2013 [871b02b] fixed form error display template, flash messages
+23.07.2013 [bd56d51] updated prefetch task + prefetch browser
+23.07.2013 [7b431b8] update the validator getCulture(), no more getting from user, but from sf_culture setting
+23.07.2013 [930101d] updated price validator unit test
+23.07.2013 [4c7e8a7] updated i18n number validator
+23.07.2013 [39f1ff0] added datadir check to sfCulture
+23.07.2013 [63ad0bf] updated i18n cldr data
+23.07.2013 [fb143f8] updated cldr convert script
+23.07.2013 [f22155a] added currency code validator - sfValidatorI18nChoiceCurrency
+23.07.2013 [28911d0] added sfISO4217 class - currency codes
+23.07.2013 [e37896a] updated generate:plugin-module and module tasks, plugin module skeleton
+23.07.2013 [9b065dd] updated money convertor interface, currency
+22.07.2013 [9f5c6ec] updated number validator test
+22.07.2013 [a4276fc] updated i18n number format tests
+21.07.2013 [8ad866f] fixed clean method of sfMath
+21.07.2013 [14810c5] fixed bug in tax calculation
+21.07.2013 [b8affa8] fixed incosistency in tax calculator
+18.07.2013 [b769a20] fixed extraction of i18n strings in library php files
+17.07.2013 [1846b71] added plugin:enable, plugin:disable tasks
+12.07.2013 [a160b89] added staging section to settings.yml in app skeleton
+12.07.2013 [6a65a1e] added title overflow to colorbox styles
+12.07.2013 [8b89e1c] updated ui tabs styles
+12.07.2013 [bd7527e] updated colorbox, fixed display issues, i18n (cs, sk)
+11.07.2013 [6834551] added sfText::isHtml() method
+11.07.2013 [b6f93d9] [BUGFIX] fixed bug in javascript validation rules in file validator
+09.07.2013 [7eaa2cf] fixed doc typo
+09.07.2013 [10fa837] fixed setupLayout() when using dimensions in the app
+09.07.2013 [121bb77] [BUGFIX] fixed #22
+09.07.2013 [bc760e7] removed unused code from cli base task
+08.07.2013 [0c1d4e4] updated i18n.yml in app skeleton
+08.07.2013 [0083dfc] added image on-fly resizer script
+08.07.2013 [39e1be5] updated htaccess, compress fonts, fonts do not expire...
+07.07.2013 [37d566a] removed pager i18n catalogues which are no longer in the core
+07.07.2013 [4653eca] updated choice formatter, implemented getInstance() method
+06.07.2013 [61211f3] removed var_dump() debug calls
+05.07.2013 [fc2dee7] fixed missing translations when the module name matches (app, plugin)
+05.07.2013 [13fda30] fixed extrating of messages from format_number_choice
+05.07.2013 [8e781b5] fixed extrator domain matching
+05.07.2013 [8a44c8c] added extraction of templates to app i18n extractor
+04.07.2013 [51aa0e3] fixed less compilation when using sf_base_domain setting
+04.07.2013 [14970c5] updates project skeleton htaccess, allow to access to font files from another domain
+04.07.2013 [f9018be] moved setting of sf_culture to setCulture() method
+04.07.2013 [41a59a8] refactored i18nFilter
+04.07.2013 [9e88fee] added get_currency_symbol() and get_currency_name() to I18n helper
+04.07.2013 [dd6e73f] fixed form aria test
+04.07.2013 [171535c] [BUGFIX] fixed generating description in feed item when using utf8
+04.07.2013 [30cd5ae] added default encoding to sfText method
+04.07.2013 [1dd5e8d] fixed tag helper + test
+04.07.2013 [8895279] fixed method declaration bug in xliff message source
+04.07.2013 [e7cc00c] fixed rounding test
+04.07.2013 [bf5e64b] fixed file logger test
+04.07.2013 [3f63c5f] fixed minifier test
+04.07.2013 [2eddf81] fixed test for tax calculator
+04.07.2013 [8682223] removed generator stuff
+04.07.2013 [befda3d] added htaccess to sift data dir to allow cross domain access to fonts
+03.07.2013 [c7d360b] fixed bug in rounding using nearest, added nearest rounding mode
+02.07.2013 [8bc87b8] added tax calculators
+02.07.2013 [a2f21fe] updated money classes
+02.07.2013 [bdef0a5] added x-content-type-options header to renderJson
+02.07.2013 [cee81db] updated feed item description method
+02.07.2013 [202b5af] upated check script to check for bcmath extension
+02.07.2013 [39b5993] fixed bug in TagHelper
+02.07.2013 [586b969] added rounding, updated sfMath
+27.06.2013 [c399cd0] added slovak translation for file_uploader
+20.06.2013 [175aedc] added sfMoney* classes
+19.06.2013 [72a095a] added unit test to sfMath, using objects
+19.06.2013 [0267d30] added javascript unit tests, test skeleton
+19.06.2013 [8e4e1b8] added jquery cache response to core
+19.06.2013 [159e2a5] fixed js generation tool + js doc blocks
+18.06.2013 [a917b9e] added file uploader js
+18.06.2013 [ea738c4] fixed mime detection for wmv
+15.06.2013 [4b27ead] updated autoload config handler, now uses sfGlob to allow long paths on windows
+15.06.2013 [7421d42] added tree javascript + dynatree vendor library (patched for jquery ui > 1.10)
+15.06.2013 [4de7430] updated core js
+15.06.2013 [8df3c78] updated textarea widget to mark itself as rich when rich option is on
+15.06.2013 [53677de] [BUGFIX] fixed bug in downloader, filename must be set before content disposition:
+15.06.2013 [851e856] [BUGFIX] fixed mime detection for docx and xlsx files
+15.06.2013 [b1e6d99] added crossdomain.xml to project skeleton
+15.06.2013 [e64db9d] updated flash template in app skeleton
+15.06.2013 [398e465] updated less
+15.06.2013 [a540e54] added missin less variable which missing caused parsing exception
+15.06.2013 [ba76553] updated less vendor library
+15.06.2013 [4a0f633] [BUGFIX] moved X-UA-Compatible header to the correct place (http meta)
+15.06.2013 [32f9282] fixed generate crypt key task
+11.06.2013 [e36c1a4] added sfGlob utility class
+06.06.2013 [7282203] added antivirus support
+05.06.2013 [9e0ba3e] updated application logging, log manager and rotate task
+05.06.2013 [34555aa] added sfDateFormatRegexGenerator
+01.06.2013 [289d1fe] [BUGFIX] fixed bug in cleaning 0 from numbers
+31.05.2013 [b785784] updated generator i18n extractor
+31.05.2013 [a8a15e5] fixed missing all key in asset packages handling
+31.05.2013 [a4af879] [BUGFIX] fixed javascript validation messages in integer validator
+31.05.2013 [fa174c5] removed apply_filters() helper from FrontHelper
+31.05.2013 [cdae405] [BUGFIX] fixed invalid property usage in form widget schema
+31.05.2013 [a76f126] [BUGFIX] fixed typo of loading JSMin vendor script
+31.05.2013 [048983c] [BUGFIX] fixed web panel html valiadation failed error
+31.05.2013 [f3b9198] [BUGFIX] fixed HTML Purifier autoloading issue
+31.05.2013 [916195d] fixed strict standards
+31.05.2013 [812ea90] added toArray() and elementToArray() to sfXmlElement
+31.05.2013 [462b6fd] [BUGFIX] fixed bug in use_javascripts_fot_form
+31.05.2013 [f2b4252] [BUGFIX] fixed bug in javascript_tag
+31.05.2013 [a93433f] added new line before js include tag to GA helper
+31.05.2013 [2d26aa5] [BUGFIX] fixed asset packages handling, asset helper
+29.05.2013 [62ce10f] added i18n extractor for dashboard widgets
+27.05.2013 [87b1261] fixed typo in arrows.less
+27.05.2013 [3de63e8] [BUGFIX] fixed menu checkAccess()
+27.05.2013 [227a68d] removed unused and unfunctional cli task
+27.05.2013 [ce48060] [BUGFIX] fixed web panel when user attribute was an object which could not be converted to string
+26.05.2013 [5a5d2ab] fixed initializing of editable actions display function
+26.05.2013 [f8cc84f] [BUGFIX] fixed i18n untranslated prefixed, which caused problems with JsMin
+26.05.2013 [2c9d0dc] added setValidatorOption() for form
+26.05.2013 [a679bf3] updated county choice widget and sfCulture, now supports eu_only option
+25.05.2013 [70b6a16] added math utility class for calculations
+25.05.2013 [666ccc3] updated forms.js, removed usage of eval(), fixed globalize issues
+25.05.2013 [e31ef44] fixed dialog removal upon closing, now removes completelly from dom
+25.05.2013 [53c3c3a] updated bootstrap extensions less
+25.05.2013 [95f37ea] added support for converting form fields(widgets) to handlebars templates
+25.05.2013 [cdc7183] [BUGFIX] fixed form enhancer when using embedded forms
+25.05.2013 [aaf78b8] fixed extraction of i18n strings from generator.yml
+25.05.2013 [cdb6cc5] updated form widgets
+25.05.2013 [138caca] [BUGFIX] fixed asset packager filter
+25.05.2013 [81a9c2b] fixed _compute_public_path when using protocol less urls
+25.05.2013 [7af4402] updated validators, added number and price culture specific validators
+23.05.2013 [b9024a1] [BUGFIX] fixed bug in file validator, do not check mime for non uploaded file
+23.05.2013 [52f0812] [BUGFIX] fixed dual list javascript (setup incomplete), added support for search in truncated values
+20.05.2013 [4bd667e] [BUGFIX] fixed bug in formatting form name using nested arrays
+20.05.2013 [abdfa6c] added some log informations to template helper
+20.05.2013 [9401b21] [BUGFIX] fixed bug in sending status header in fastcgi environment
+20.05.2013 [231f864] updated minifier utility script
+20.05.2013 [4d3ef7a] added missing asset package definition for template
+20.05.2013 [0b6242d] fixed minified version of hover intent plugin
+20.05.2013 [f74b2ce] updated core javascript, added window event setup, loaded
+20.05.2013 [5f57b63] fixed wrong path to dropmenu.less
+20.05.2013 [091b300] updated asset packager filter, dropped simple minifier (jsMin is now default)
+19.05.2013 [a60306f] updated tag helper
+19.05.2013 [eb29b60] added static method callback to form enhancer
+19.05.2013 [2cd0b91] updated javascript exception
+19.05.2013 [3a4313e] added handlebars template, custom extension, compilers!
+17.05.2013 [e726941] updated js core, added template, handlebars, exception
+16.05.2013 [a73a81f] updated minifiers, added simple css minifier
+16.05.2013 [1e61db7] updated minifier + script, no minification for already minified files
+16.05.2013 [08a95ff] added minifier for javascripts
+09.05.2013 [0520b71] added getObject() to js tools to avoid using eval()
+09.05.2013 [3139e6e] removed invalid docblock
+09.05.2013 [832ada7] added tree choice widgets, js + dynatree
+08.05.2013 [4788d54] updated js tools, added repeating operation
+07.05.2013 [6105bd8] updated changelog
 07.05.2013 [d57cb44] fixed translation of child widget in i18n aggregate widget
 07.05.2013 [300dcaa] fixed i18naggrate widget - produced invalid js validation code
 07.05.2013 [efade43] added enhancing of i18n aggregate widget

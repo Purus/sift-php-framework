@@ -7,6 +7,11 @@ $t = new lime_test(20, new lime_output_color());
 
 class myFilter extends sfFilter
 {
+  public function execute(sfFilterChain $filterChain)
+  {
+    $filterChain->execute();
+  }
+
   public function isFirstCall()
   {
     return parent::isFirstCall();

@@ -1,5 +1,9 @@
 <?php
 
+class sfDummyApplication extends sfApplication {
+  
+}
+
 class sfContext {
 
   private static $instance = null;
@@ -16,7 +20,7 @@ class sfContext {
   {
     if(!isset(self::$instance))
     {
-      self::$instance = new sfContext();
+      self::$instance = new sfContext(new sfDummyApplication('test'));
     }
 
     return self::$instance;
@@ -36,8 +40,7 @@ class sfContext {
   {
     if(!$this->request)
     {
-      $this->request = new sfWebRequest();
-      $this->request->initialize($this);
+      $this->request = new sfWebRequest($this);
     }
 
     return $this->request;
@@ -47,8 +50,7 @@ class sfContext {
   {
     if(!$this->response)
     {
-      $this->response = new sfWebResponse();
-      $this->response->initialize($this);
+      $this->response = new sfWebResponse($this);
     }
 
     return $this->response;
@@ -58,8 +60,7 @@ class sfContext {
   {
     if(!$this->storage)
     {
-      $this->storage = sfStorage::newInstance('sfSessionTestStorage');
-      $this->storage->initialize($this);
+      $this->storage = new sfSessionTestStorage();
     }
 
     return $this->storage;
@@ -76,10 +77,10 @@ class sfContext {
 
   public function getUser()
   {
+    global $serviceContainer;
     if(!$this->user)
     {
-      $this->user = new sfBasicSecurityUser();
-      $this->user->initialize($this);
+      $this->user = new sfBasicSecurityUser($serviceContainer);
     }
     return $this->user;
   }
@@ -88,8 +89,7 @@ class sfContext {
   {
     if(!$this->controller)
     {
-      $this->controller = new sfFrontWebController();
-      $this->controller->initialize($this);
+      $this->controller = new sfFrontWebController($this);
     }
 
     return $this->controller;

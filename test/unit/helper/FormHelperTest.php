@@ -27,11 +27,6 @@ class myRequest
     return '';
   }
 
-  public function hasError()
-  {
-    return false;
-  }
-
   public function getHost()
   {
     return false;

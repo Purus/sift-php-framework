@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of the Sift PHP framework.
  *
@@ -15,9 +16,20 @@
  * @package    Sift
  * @subpackage util
  */
-class sfParameterHolder implements Serializable {
+class sfParameterHolder implements Serializable, sfIJsonSerializable {
 
-  protected $default_namespace = null;
+  /**
+   * Default namespace
+   *
+   * @var string
+   */
+  protected $defaultNamespace = 'sift/default';
+
+  /**
+   * Array of parameters
+   *
+   * @var array
+   */
   protected $parameters = array();
 
   /**
@@ -30,32 +42,46 @@ class sfParameterHolder implements Serializable {
    * ?>
    * </code>
    */
-  public function __construct($namespace = 'sift/default')
+  public function __construct($namespace = null)
   {
-    $this->default_namespace = $namespace;
+    if($namespace)
+    {
+      $this->defaultNamespace = (string)$namespace;
+    }
+  }
+
+  /**
+   * Specify data which should be serialized to JSON
+   *
+   * @return array
+   */
+  public function jsonSerialize()
+  {
+    return $this->parameters;
   }
 
   /**
    * Get the default namespace value.
    *
-   * The $default_namespace is defined as 'sift/default'.
+   * The $defaultNamespace is defined as 'sift/default'.
    *
    * @return string The default namespace.
    */
   public function getDefaultNamespace()
   {
-    return $this->default_namespace;
+    return $this->defaultNamespace;
   }
 
   /**
-   * Clear all parameters associated with this request.
+   * Clear all parameters
    *
-   * @return void
+   * @return sfParameterHolder
    */
   public function clear()
   {
     $this->parameters = null;
     $this->parameters = array();
+    return $this;
   }
 
   /**
@@ -75,7 +101,7 @@ class sfParameterHolder implements Serializable {
   {
     if(!$ns)
     {
-      $ns = $this->default_namespace;
+      $ns = $this->defaultNamespace;
     }
 
     if(isset($this->parameters[$ns][$name]))
@@ -105,7 +131,7 @@ class sfParameterHolder implements Serializable {
   {
     if(!$ns)
     {
-      $ns = $this->default_namespace;
+      $ns = $this->defaultNamespace;
     }
 
     if(isset($this->parameters[$ns]))
@@ -142,7 +168,7 @@ class sfParameterHolder implements Serializable {
   {
     if(!$ns)
     {
-      $ns = $this->default_namespace;
+      $ns = $this->defaultNamespace;
     }
 
     $parameters = array();
@@ -167,7 +193,7 @@ class sfParameterHolder implements Serializable {
   {
     if(!$ns)
     {
-      $ns = $this->default_namespace;
+      $ns = $this->defaultNamespace;
     }
 
     if(false !== ($offset = strpos($name, '[')))
@@ -227,7 +253,7 @@ class sfParameterHolder implements Serializable {
   {
     if(!$ns)
     {
-      $ns = $this->default_namespace;
+      $ns = $this->defaultNamespace;
     }
 
     $retval = null;
@@ -244,15 +270,14 @@ class sfParameterHolder implements Serializable {
   /**
    * Remove A parameter namespace and all of its associated parameters.
    *
-   * @param string A parameter namespace.
-   *
-   * @return void
+   * @param string $ns A parameter namespace
+   * @return null|mixed The removed value
    */
-  public function & removeNamespace($ns = null)
+  public function &removeNamespace($ns = null)
   {
     if(!$ns)
     {
-      $ns = $this->default_namespace;
+      $ns = $this->defaultNamespace;
     }
 
     $retval = null;
@@ -271,17 +296,16 @@ class sfParameterHolder implements Serializable {
    *
    * If a parameter with the name already exists the value will be overridden.
    *
-   * @param string A parameter name.
-   * @param mixed  A parameter value.
-   * @param string A parameter namespace.
-   *
-   * @return void
+   * @param string $name A parameter name
+   * @param mixed  $value A parameter value
+   * @param string $ns A parameter namespace
+   * @return sfParameterHolder
    */
   public function set($name, $value, $ns = null)
   {
     if(!$ns)
     {
-      $ns = $this->default_namespace;
+      $ns = $this->defaultNamespace;
     }
 
     if(!isset($this->parameters[$ns]))
@@ -290,6 +314,7 @@ class sfParameterHolder implements Serializable {
     }
 
     $this->parameters[$ns][$name] = $value;
+    return $this;
   }
 
   /**
@@ -297,17 +322,16 @@ class sfParameterHolder implements Serializable {
    *
    * If a parameter with the name already exists the value will be overridden.
    *
-   * @param string A parameter name.
-   * @param mixed  A reference to a parameter value.
-   * @param string A parameter namespace.
-   *
-   * @return void
+   * @param string $name A parameter name
+   * @param mixed  $value A reference to a parameter value
+   * @param string $ns A parameter namespace
+   * @return sfParameterHolder
    */
-  public function setByRef($name, & $value, $ns = null)
+  public function setByRef($name, &$value, $ns = null)
   {
     if(!$ns)
     {
-      $ns = $this->default_namespace;
+      $ns = $this->defaultNamespace;
     }
 
     if(!isset($this->parameters[$ns]))
@@ -316,6 +340,7 @@ class sfParameterHolder implements Serializable {
     }
 
     $this->parameters[$ns][$name] = & $value;
+    return $this;
   }
 
   /**
@@ -324,19 +349,20 @@ class sfParameterHolder implements Serializable {
    * If an existing parameter name matches any of the keys in the supplied
    * array, the associated value will be overridden.
    *
-   * @param array An associative array of parameters and their associated values.
-   * @param string A parameter namespace.
-   *
-   * @return void
+   * @param array $parameters An associative array of parameters and their associated values
+   * @param string $ns A parameter namespace
+   * @return sfParameterHolder
    */
   public function add($parameters, $ns = null)
   {
     if($parameters === null)
+    {
       return;
+    }
 
     if(!$ns)
     {
-      $ns = $this->default_namespace;
+      $ns = $this->defaultNamespace;
     }
 
     if(!isset($this->parameters[$ns]))
@@ -348,6 +374,8 @@ class sfParameterHolder implements Serializable {
     {
       $this->parameters[$ns][$key] = $value;
     }
+
+    return $this;
   }
 
   /**
@@ -356,16 +384,15 @@ class sfParameterHolder implements Serializable {
    * If an existing parameter name matches any of the keys in the supplied
    * array, the associated value will be overridden.
    *
-   * @param array An associative array of parameters and references to their associated values.
-   * @param string A parameter namespace.
-   *
-   * @return void
+   * @param array $parameters An associative array of parameters and references to their associated values.
+   * @param string $ns A parameter namespace.
+   * @return sfParameterHolder
    */
   public function addByRef(& $parameters, $ns = null)
   {
     if(!$ns)
     {
-      $ns = $this->default_namespace;
+      $ns = $this->defaultNamespace;
     }
 
     if(!isset($this->parameters[$ns]))
@@ -377,29 +404,29 @@ class sfParameterHolder implements Serializable {
     {
       $this->parameters[$ns][$key] = & $value;
     }
+
+    return $this;
   }
 
   /**
-   * serialize
+   * Serialize the object
+   *
    * @return string
    */
   public function serialize()
   {
-    $vars = get_object_vars($this);
-    return (string) @serialize($vars);
+    return serialize(array($this->defaultNamespace, $this->parameters));
   }
 
   /**
+   * Unserialize the object
+   *
    * @param string $serialized
    * @return void
    */
   public function unserialize($serialized)
   {
-    $vars = unserialize($serialized);
-    foreach($vars as $var => $value)
-    {
-      $this->$var = $value;
-    }
+    list($this->defaultNamespace, $this->parameters) = unserialize($serialized);
   }
 
 }

@@ -1,6 +1,8 @@
 <?php
 
 $app = 'frontend';
+$debug = true;
+
 if(!include(dirname(__FILE__) . '/../bootstrap/functional.php'))
 {
   return;

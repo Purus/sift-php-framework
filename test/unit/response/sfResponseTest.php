@@ -13,42 +13,15 @@ class fakeResponse
 {
 }
 
-$t = new lime_test(25, new lime_output_color());
+$t = new lime_test(19, new lime_output_color());
 
-$context = new sfContext();
+$context = sfContext::getInstance();
 
-// ::newInstance()
-$t->diag('::newInstance()');
-$t->isa_ok(sfResponse::newInstance('myResponse'), 'myResponse', '::newInstance() takes a response class as its first parameter');
-$t->isa_ok(sfResponse::newInstance('myResponse'), 'myResponse', '::newInstance() returns an instance of myResponse');
+$response = new myResponse(array('foo' => 'bar'));
 
-try
-{
-  sfResponse::newInstance('fakeResponse');
-  $t->fail('::newInstance() throws a sfFactoryException if the class does not extends sfResponse');
-}
-catch (sfFactoryException $e)
-{
-  $t->pass('::newInstance() throws a sfFactoryException if the class does not extends sfResponse');
-}
-
-// ->initialize()
-$t->diag('->initialize()');
-$response = sfResponse::newInstance('myResponse');
-$t->is($response->getContext(), null, '->initialize() takes a sfContext object as its first argument');
-$response->initialize($context, array('foo' => 'bar'));
 $t->is($response->getParameter('foo'), 'bar', '->initialize() takes an array of parameters as its second argument');
 
-// ->getContext()
-$t->diag('->getContext()');
-$response->initialize($context);
-$t->is($response->getContext(), $context, '->getContext() returns the current context');
-
-// ->setContext()
-$t->diag('->setContext()');
-$response->setContext(null);
-$t->is($response->getContext(), null, '->setContext() changes the current context');
-$response->setContext($context);
+$response = new myResponse();
 
 // ->getContent() ->setContent()
 $t->diag('->getContent() ->setContent()');

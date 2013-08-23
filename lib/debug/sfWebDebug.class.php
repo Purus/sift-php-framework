@@ -256,6 +256,11 @@ class sfWebDebug extends sfConfigurable
    */
   public function decorateCachedContent(sfEvent $event, $content)
   {
+    if(!$content || false === strpos($event['response']->getContentType(), 'html'))
+    {
+      return $content;
+    }
+
     // we are caching whole layout, do nothing here
     if(isset($event['with_layout']))
     {
@@ -264,21 +269,12 @@ class sfWebDebug extends sfConfigurable
 
     $internalUri = $event['uri'];
     $new = $event['new'];
-
-    $context = sfContext::getInstance();
-
-    // don't decorate if not html or if content is null
-    if (!sfConfig::get('sf_web_debug') ||
-        !$content || false === strpos($context->getResponse()->getContentType(), 'html'))
-    {
-      return $content;
-    }
-
-    $cache = $context->getViewCacheManager();
+    $cache = $event['view_cache_manager'];
+    
     $this->loadHelpers();
+
     $class = $new ? 'new' : 'old';
     $last_modified = $cache->getLastModified($internalUri);
-
     $id = md5($internalUri);
 
     $template = '<div id="sf_cache_%id%" class="sf-web-debug-action-cache %class%">
@@ -302,7 +298,6 @@ class sfWebDebug extends sfConfigurable
       </div>
       </div>';
 
-    // return strtr(($this->getOption('cached_content_template')), array(
     return strtr($template, array(
       '%id%'      => $id,
       '%class%'   => $class,
@@ -322,11 +317,11 @@ class sfWebDebug extends sfConfigurable
    */
   public function getPriority($value)
   {
-    if ($value >= 6)
+    if($value >= 6)
     {
       return 'info';
     }
-    else if ($value >= 4)
+    elseif($value >= 4)
     {
       return 'warning';
     }

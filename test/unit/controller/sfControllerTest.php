@@ -8,12 +8,11 @@ $t = new lime_test(2, new lime_output_color());
 
 class myController extends sfController
 {
-  function execute () {}
+  function execute() {}
 }
 
 $context = new sfContext();
-$controller = new myController();
-$controller->initialize($context);
+$controller = new myController($context);
 
 // new methods via sfEventDispatcher
 require_once($_test_dir.'/unit/sfEventDispatcherTest.class.php');

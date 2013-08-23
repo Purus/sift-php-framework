@@ -12,14 +12,40 @@
  * @package    Sift
  * @subpackage filter
  */
-abstract class sfFilter
+abstract class sfFilter implements sfIFilter
 {
   protected
     $parameterHolder = null,
     $context         = null;
 
-  public static
-    $filterCalled    = array();
+  /**
+   * Array of called filters
+   *
+   * @var array
+   */
+  public static $filterCalled = array();
+
+  /**
+   * Constructs the filter
+   *
+   */
+  public function __construct()
+  {
+    $this->parameterHolder = new sfParameterHolder();
+  }
+
+  /**
+   * Constructor
+   *
+   * @param sfContext $context The current application context
+   * @param array $parameters An associative array of initialization parameters
+   */
+  public function initialize(sfContext $context, $parameters = array())
+  {
+    $this->context = $context;
+    $this->parameterHolder->clear();
+    $this->parameterHolder->add($parameters);
+  }
 
   /**
    * Returns true if this is the first call to the sfFilter instance.
@@ -29,14 +55,13 @@ abstract class sfFilter
   protected function isFirstCall()
   {
     $class = get_class($this);
-    if (isset(self::$filterCalled[$class]))
+    if(isset(self::$filterCalled[$class]))
     {
       return false;
     }
     else
     {
       self::$filterCalled[$class] = true;
-
       return true;
     }
   }
@@ -49,26 +74,6 @@ abstract class sfFilter
   public final function getContext()
   {
     return $this->context;
-  }
-
-  /**
-   * Initializes this Filter.
-   *
-   * @param sfContext The current application context
-   * @param array   An associative array of initialization parameters
-   *
-   * @return boolean true, if initialization completes successfully, otherwise false
-   *
-   * @throws sfInitializationException If an error occurs while initializing this Filter
-   */
-  public function initialize($context, $parameters = array())
-  {
-    $this->context = $context;
-
-    $this->parameterHolder = new sfParameterHolder();
-    $this->parameterHolder->add($parameters);
-
-    return true;
   }
 
   /**

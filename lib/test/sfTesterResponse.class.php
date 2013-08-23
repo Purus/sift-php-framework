@@ -271,23 +271,23 @@ class sfTesterResponse extends sfTester
     $ok = false;
     $regex = false;
     $mustMatch = true;
-    if (preg_match('/^(!)?([^a-zA-Z0-9\\\\]).+?\\2[ims]?$/', $value, $match))
+    if(preg_match('/^(!)?([^a-zA-Z0-9\\\\]).+?\\2[ims]?$/', $value, $match))
     {
       $regex = $value;
-      if ($match[1] == '!')
+      if($match[1] == '!')
       {
         $mustMatch = false;
         $regex = substr($value, 1);
       }
     }
 
-    foreach ($headers as $header)
+    foreach($headers as $header)
     {
-      if (false !== $regex)
+      if(false !== $regex)
       {
-        if ($mustMatch)
+        if($mustMatch)
         {
-          if (preg_match($regex, $header))
+          if(preg_match($regex, $header))
           {
             $ok = true;
             $this->tester->pass(sprintf('response header "%s" matches "%s" (%s)', $key, $value, $this->response->getHttpHeader($key)));
@@ -296,7 +296,7 @@ class sfTesterResponse extends sfTester
         }
         else
         {
-          if (preg_match($regex, $header))
+          if(preg_match($regex, $header))
           {
             $ok = true;
             $this->tester->fail(sprintf('response header "%s" does not match "%s" (%s)', $key, $value, $this->response->getHttpHeader($key)));
@@ -304,7 +304,7 @@ class sfTesterResponse extends sfTester
           }
         }
       }
-      else if ($header == $value)
+      elseif($header == $value)
       {
         $ok = true;
         $this->tester->pass(sprintf('response header "%s" is "%s" (%s)', $key, $value, $this->response->getHttpHeader($key)));
@@ -312,9 +312,9 @@ class sfTesterResponse extends sfTester
       }
     }
 
-    if (!$ok)
+    if(!$ok)
     {
-      if (!$mustMatch)
+      if(!$mustMatch)
       {
         $this->tester->pass(sprintf('response header "%s" matches "%s" (%s)', $key, $value, $this->response->getHttpHeader($key)));
       }
