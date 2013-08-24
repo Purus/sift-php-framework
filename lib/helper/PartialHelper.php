@@ -156,7 +156,7 @@ function get_component($moduleName, $componentName, $vars = array(), $viewName =
   {
     throw new LogicException(sprintf('The view "%s" does not implement sfIPartialView.', $class));
   }
-  
+
   $view->initialize($moduleName, $actionName, '');
   $view->setPartialVars(true === sfConfig::get('sf_escaping_strategy') ? sfOutputEscaper::unescape($vars) : $vars);
 
@@ -172,124 +172,6 @@ function get_component($moduleName, $componentName, $vars = array(), $viewName =
     // render
     $view->getAttributeHolder()->add($allVars);
     return $view->render();
-  }
-
-  return;
-  
-  $context = sfContext::getInstance();
-  $actionName = '_'.$componentName;
-
-  // check cache
-  if ($cacheManager = $context->getViewCacheManager())
-  {
-    if ($retval = _get_cache($cacheManager, $moduleName, $actionName, $vars))
-    {
-      return $retval;
-    }
-
-    $response = $context->getResponse();
-
-    $css = $js = $discovery_links = array();
-    foreach(array('first', '', 'last') as $position)
-    {
-      $js  = array_merge($js, $response->getJavascripts($position));
-      $css = array_merge($css, $response->getStylesheets($position));
-    }
-    $discovery_links = $response->getAutoDiscoveryLinks();
-  }
-
-  $controller = $context->getController();
-
-  if(!$controller->componentExists($moduleName, $componentName))
-  {
-    // cannot find component
-    throw new sfConfigurationException(sprintf('The component does not exist: "%s", "%s"', $moduleName, $componentName));
-  }
-
-  // create an instance of the action
-  $componentInstance = $controller->getComponent($moduleName, $componentName);
-
-  // initialize the action
-  if(!$componentInstance->initialize($context))
-  {
-    // component failed to initialize
-    throw new sfInitializationException(sprintf('Component initialization failed for module "%s", component "%s"', $moduleName, $componentName));
-  }
-
-  // load component's module config file
-  require(sfConfigCache::getInstance()->checkConfig(sfConfig::get('sf_app_module_dir_name').'/'.$moduleName.'/'.sfConfig::get('sf_app_module_config_dir_name').'/module.yml'));
-
-  $componentInstance->getVarHolder()->add($vars);
-
-  // dispatch component
-  $componentToRun = 'execute'.ucfirst($componentName);
-  if(!method_exists($componentInstance, $componentToRun))
-  {
-    if(!method_exists($componentInstance, 'execute'))
-    {
-      // component not found
-      throw new sfInitializationException(sprintf('sfComponent initialization failed for module "%s", component "%s"', $moduleName, $componentName));
-    }
-
-    $componentToRun = 'execute';
-  }
-
-  if(sfConfig::get('sf_logging_enabled'))
-  {
-    $context->getLogger()->info('{PartialHelper} call "'.$moduleName.'->'.$componentToRun.'()'.'"');
-  }
-
-  // run component
-  if(sfConfig::get('sf_debug') && sfConfig::get('sf_logging_enabled'))
-  {
-    $timer = sfTimerManager::getTimer(sprintf('Component "%s/%s"', $moduleName, $componentName));
-  }
-
-  $retval = $componentInstance->$componentToRun();
-
-  if(sfConfig::get('sf_debug') && sfConfig::get('sf_logging_enabled'))
-  {
-    $timer->addTime();
-  }
-
-  if($retval != sfView::NONE)
-  {
-    // render
-    if($viewName == null)
-    {
-     // default view for the partial
-      $viewName = 'sfPartial';
-      // load setting for the module, and detect which view is used for the partial!
-      require_once(sfConfigCache::getInstance()->checkConfig(sfConfig::get('sf_app_module_dir_name').'/'.$moduleName.'/'.
-            sfConfig::get('sf_app_module_config_dir_name').'/module.yml'));
-      $viewName = sfConfig::get(sprintf('mod_'.strtolower($moduleName).'_%s_view_class', $actionName), $viewName);
-    }
-
-    $viewName = sprintf('%sView', $viewName);
-    $view = new $viewName($context, $moduleName, $actionName, '');
-    $view->setPartialVars(true === sfConfig::get('sf_escaping_strategy') ? sfOutputEscaper::unescape($vars) : $vars);
-
-    $retval = $view->render($componentInstance->getVarHolder()->getAll());
-
-    if ($cacheManager && (!sfConfig::get('sf_lazy_cache_key') || $cacheManager->isCacheable($moduleName, $actionName)))
-    {
-      $uri = _get_cache_uri($moduleName, $actionName, $vars);
-
-      $importedJs = $importedCss = $importedDiscoveryLinks = array();
-      foreach(array('first', '', 'last') as $position)
-      {
-        $importedJs  = array_merge($importedJs, $response->getJavascripts($position));
-        $importedCss = array_merge($importedCss, $response->getStylesheets($position));
-      }
-
-      $importedJs = array_diff_key($importedJs, $js);
-      $importedCss = array_diff_key($importedCss, $css);
-      $importedDiscoveryLinks = array_diff_key($response->getAutoDiscoveryLinks(), $discovery_links);
-
-      $retval = _set_cache($cacheManager, $uri, $retval, $importedJs, $importedCss, $importedDiscoveryLinks);
-    }
-
-    return $retval;
   }
 }
 
@@ -345,7 +227,7 @@ function get_partial($templateName, $variables = array(), $viewName = null)
     $moduleName = sfContext::getInstance()->getActionStack()->getLastEntry()->getModuleName();
   }
 
-  $actionName = '_'.$templateName;  
+  $actionName = '_'.$templateName;
   $class = 'sfPartial';
   if(!$viewName)
   {
