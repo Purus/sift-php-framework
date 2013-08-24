@@ -15,11 +15,11 @@ class myView extends sfView
 }
 
 $context = new sfContext();
-$view = new myView($context, '', '', '');
+$view = new myView($context);
 
 // ->getContext()
 $t->diag('->getContext()');
-$view->initialize($context, '', '', '');
+$view->initialize('', '', '');
 $t->is($view->getContext(), $context, '->getContext() returns the current context');
 
 // ->isDecorator() ->setDecorator()
