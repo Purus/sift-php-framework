@@ -3,7 +3,7 @@
 require_once(dirname(__FILE__) . '/../../bootstrap/unit.php');
 require_once(dirname(__FILE__) . '/stubs/Book.php');
 
-$t = new lime_test(6, new lime_output_color());
+$t = new lime_test(7, new lime_output_color());
 
 $container = sfDependencyInjectionContainer::getInstance('testing');
 $container->getDependencies()->set('someValue', 'yellow');
@@ -64,4 +64,20 @@ $t->isa_ok($view->context, 'sfContext', 'create() works with arguments');
 $view = sfDependencyInjectionContainer::create('myPHPView');
 $t->isa_ok($view->context, 'sfContext', 'create() works with arguments');
 
+$t->diag('the container with references to services inside sfServiceContainer');
 
+$container = sfDependencyInjectionContainer::getInstance();
+
+class myFooService {}
+
+$serviceContainer = sfServiceContainer::getInstance();
+$serviceContainer->register('service', array(
+  'class' => 'myFooService'
+));
+
+// works with service reference
+$container->getDependencies()->set('foo', new sfServiceReference('service'));
+
+$foo = $container->getDependencies()->get('foo');
+
+$t->isa_ok($foo, 'myFooService', 'returned object is the service instance');

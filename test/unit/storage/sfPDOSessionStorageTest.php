@@ -21,12 +21,16 @@ ini_set('session.use_cookies', 0);
 $session_id = "1";
 
 class myDatabaseManager extends sfDatabaseManager {
-  
+
   public function __construct($databases)
-  {    
+  {
     $this->databases = $databases;
   }
-  
+
+  protected function loadDatabases($force = false)
+  {
+  }
+
 }
 
 $manager = new myDatabaseManager(array('default' => $database));

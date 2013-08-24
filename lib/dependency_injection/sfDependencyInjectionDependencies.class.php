@@ -31,7 +31,11 @@ class sfDependencyInjectionDependencies {
   {
     if(isset($this->dependencies[$name]))
     {
-      return $this->dependencies[$name]['instance'];
+      if($this->dependencies[$name] instanceof sfServiceReference)
+      {
+        return sfServiceContainer::getInstance()->get((string)$this->dependencies[$name]);
+      }
+      return $this->dependencies[$name];
     }
     else
     {
@@ -48,15 +52,12 @@ class sfDependencyInjectionDependencies {
    */
   public function set($name, $dependency)
   {
-    $this->dependencies[$name] = array(
-        'instance' => $dependency,
-    );
+    $this->dependencies[$name] = $dependency;
     return $this;
   }
-  
+
   /**
    * Clears
-   *
    */
   public function clear()
   {

@@ -16,6 +16,13 @@
 class sfDatabaseManager implements sfIService {
 
   /**
+   * Loaded flag
+   *
+   * @var boolean
+   */
+  protected $isLoaded = false;
+
+  /**
    * Array of databases
    *
    * @var array
@@ -23,20 +30,27 @@ class sfDatabaseManager implements sfIService {
   protected $databases = array();
 
   /**
-   * Constructor
+   * Load databases from databases.yml confuration file
    *
+   * @param boolean $force Force the load?
+   * @throws LogicException If the registered database is not instance of sfDatabase
    */
-  public function __construct()
+  protected function loadDatabases($force = false)
   {
-    // $this->loadDatabases();
+    if($this->isLoaded && !$force)
+    {
+      return;
+    }
+    $this->loadFromConfiguration();
+    $this->isLoaded = true;
   }
 
   /**
-   * Load databases from databases.yml confuration file
+   * Loads databases from databases.yml file
    *
-   * @throws LogicException If the registered database is not instance of sfDatabase
+   * @throws LogicException
    */
-  protected function loadDatabases()
+  protected function loadFromConfiguration()
   {
     // load database configuration
     $databases = require(sfConfigCache::getInstance()->checkConfig(sfConfig::get('sf_app_config_dir_name') . '/databases.yml'));
@@ -59,12 +73,27 @@ class sfDatabaseManager implements sfIService {
    */
   public function getDatabase($name = 'default')
   {
+    $this->loadDatabases();
+
     if(isset($this->databases[$name]))
     {
       return $this->databases[$name];
     }
-    // nonexistent database name
-    throw new sfDatabaseException(sprintf('Database "%s" does not exist', $name));
+    else
+    {
+      throw new sfDatabaseException(sprintf('Database "%s" does not exist', $name));
+    }
+  }
+
+  /**
+   * Returns an array of configured databases
+   *
+   * @return array
+   */
+  public function getDatabases()
+  {
+    $this->loadDatabases();
+    return $this->databases;
   }
 
   /**
@@ -76,7 +105,7 @@ class sfDatabaseManager implements sfIService {
   {
     // loop through databases and shutdown connections
     foreach($this->databases as $database)
-    {      
+    {
       $database->shutdown();
     }
   }

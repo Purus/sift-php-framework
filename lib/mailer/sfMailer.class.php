@@ -155,7 +155,7 @@ class sfMailer extends Swift_Mailer {
       
       if($arguments)
       {
-        $r = new ReflectionClass($spool['class']);
+        $r = new sfReflectionClass($spool['class']);
         $this->spool = $r->newInstanceArgs($arguments);
       }
       else

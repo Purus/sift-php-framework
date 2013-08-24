@@ -46,6 +46,13 @@ class sfContext {
   protected static $current = null;
 
   /**
+   * Service container instance
+   *
+   * @var sfServiceContainer
+   */
+  protected $serviceContainer;
+
+  /**
    * Construct the context
    *
    * @param sfApplication $application
@@ -62,7 +69,9 @@ class sfContext {
     // create a new action stack
     $this->actionStack = new sfActionStack();
 
-    $serviceContainer = sfServiceContainer::getInstance();
+    // create new service container
+    $this->serviceContainer = sfServiceContainer::getInstance();
+
     $diContainer = sfDependencyInjectionContainer::getInstance();
 
     $diContainer->getDependencies()->clear();
@@ -71,23 +80,15 @@ class sfContext {
     $diContainer->getDependencies()->set('context', $this);
 
     // clear container
-    $serviceContainer->clear();
+    $this->serviceContainer->clear();
 
     // include the factories configuration, will setup services
     require(sfConfigCache::getInstance()->checkConfig(sfConfig::get('sf_app_config_dir_name') . '/factories.yml'));
 
-    // load databases
-    if(sfConfig::get('sf_use_database'))
-    {
-      // create the manager
-      $manager = $serviceContainer->get('database_manager');
-      $diContainer->getDependencies()->set('database_manager', $serviceContainer->get('database_manager'));
-    }
-
     // register existing services as dependecies, 
-    foreach($serviceContainer->getServices() as $id => $service)
+    foreach($this->serviceContainer->getServiceDefinitions() as $id => $serviceDefinition)
     {
-      $diContainer->getDependencies()->set($id, $service);
+      $diContainer->getDependencies()->set($id, new sfServiceReference($id));
     }
 
     sfShutdownScheduler::getInstance()->clear();

@@ -67,6 +67,14 @@ class sfServiceContainer {
   }
 
   /**
+   * Reset the instance
+   */
+  public static function reset()
+  {
+    self::$instance = NULL;
+  }
+
+  /**
    * Constructor
    */
   private function __construct()
@@ -178,7 +186,7 @@ class sfServiceContainer {
 
     // register self again
     $this->services[self::SELF_NAME] = $this;
-    
+
     return $this;
   }
 

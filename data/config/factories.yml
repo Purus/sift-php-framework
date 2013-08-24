@@ -52,6 +52,10 @@ default:
   event_dispatcher:
     class: sfEventDispatcher
 
+  # mailer service
+  mailer:
+    class: myMailer
+
   # antivirus service
   antivirus:
     class: sfAntivirus
