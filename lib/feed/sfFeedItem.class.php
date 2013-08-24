@@ -90,6 +90,7 @@ class sfFeedItem {
 
   public function getDescription($maxLength = null, $ending = '[...]')
   {
+    $description = '';
     if($this->description)
     {
       $description = $this->description;
