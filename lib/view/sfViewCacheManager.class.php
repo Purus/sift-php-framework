@@ -295,7 +295,7 @@ class sfViewCacheManager extends sfConfigurable
       }
     }
 
-    $options['lifeTime'] = isset($options['life_time']) ? $options['life_time'] : 0;
+    $options['lifetime'] = isset($options['lifetime']) ? $options['lifetime'] : 0;
     if (!isset($this->cacheConfig[$moduleName]))
     {
       $this->cacheConfig[$moduleName] = array();
