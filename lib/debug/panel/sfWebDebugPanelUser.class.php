@@ -48,6 +48,8 @@ class sfWebDebugPanelUser extends sfWebDebugPanel {
     $user = sfContext::getInstance()->getUser();
     $html = array();
 
+    $html[] = sprintf('<tr><td><h2>Culture:</h2> %s</td></tr>', $user->getCulture());
+
     $html[] = '<tr><td><h2>Credentials:</h2></td></tr>';
 
     $credentials = $user->getCredentials();

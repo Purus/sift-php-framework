@@ -39,7 +39,7 @@ class sfWebDebug extends sfConfigurable
 
     // allow extensions
     sfCore::dispatchEvent('web_debug.load_panels', array(
-      'web_debug' => &$this
+      'web_debug' => $this
     ));
 
     // hook for cached content
@@ -270,7 +270,7 @@ class sfWebDebug extends sfConfigurable
     $internalUri = $event['uri'];
     $new = $event['new'];
     $cache = $event['view_cache_manager'];
-    
+
     $this->loadHelpers();
 
     $class = $new ? 'new' : 'old';

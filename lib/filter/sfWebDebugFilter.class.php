@@ -47,12 +47,12 @@ class sfWebDebugFilter extends sfFilter {
       return;
     }
 
-    $newContent = sfCore::filterByEventListeners($content,
-      'web_debug.filter_content', array(
-      'response'  => $response,
-      'context'   => $context,
-      'controller' => $controller,
-    ));
+    $event = new sfEvent('web_debug.filter_content', array(
+        'response'  => $response,
+        'context'   => $context,
+        'controller' => $controller));
+
+    $newContent = $context->getEventDispatcher()->filter($event, $content)->getReturnValue();
 
     if($content != $newContent)
     {
