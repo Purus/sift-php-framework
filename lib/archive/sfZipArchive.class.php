@@ -129,7 +129,7 @@ class sfZipArchive extends ZipArchive {
   }
 
   /**
-   * closes the stream to ZIP archive file. calls the ZipArchive::close() internally.
+   * Closes the stream to ZIP archive file. calls the ZipArchive::close() internally.
    * overwrites ZipArchive::close() to add the archiveFileName functionality.
    *
    * @return bool
@@ -160,27 +160,24 @@ class sfZipArchive extends ZipArchive {
    * Adds a file to a ZIP archive from the given path. calls the ZipArchive::addFile() internally.
    * overwrites ZipArchive::addFile() to handle maximum file connections in operating systems.
    *
-   * @param string $fileName the path to file to be added to archive
-   * @param string [optional] $localname the name of the file in the ZIP archive
+   * @param string $fileName The path to file to be added to archive
+   * @param string $localName If supplied, this is the local name inside the ZIP archive that will override the filename.
+   * @param integer $start Parameter is not used
+   * @param integer $lentg Parameter is not used
    * @return bool
    */
-  public function addFile($fileName)
+  public function addFile($fileName, $localName = null, $start = 0, $length = 0)
   {
+    if(!is_readable($fileName))
+    {
+      throw new InvalidArgumentException(sprintf('The file "%s" is not readable or does not exist.', $fileName));
+    }
+
     if($this->_newAddedFilesCounter >= $this->_newAddedFilesSize)
     {
       $this->reopen();
     }
-    if(func_num_args() > 1)
-    {
-      $flags = func_get_arg(1);
-      $added = parent::addFile($fileName, $flags);
-      if($added)
-      {
-        $this->_newAddedFilesCounter++;
-      }
-      return $added;
-    }
-    $added = parent::addFile($fileName);
+    $added = parent::addFile($fileName, $localName);
     if($added)
     {
       $this->_newAddedFilesCounter++;
