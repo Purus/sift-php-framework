@@ -142,12 +142,13 @@ class sfFilterConfigHandler extends sfYamlConfigHandler {
   protected function addFilter($category, $class, $parameters)
   {
     $code = array();
-    $code[] = sprintf('$filter = sfDependencyInjectionContainer::create(\'%s\');', $class);    
+    $code[] = sprintf('list($class, $parameters) = sfConfig::get(\'sf_%s_filter\', array(\'%s\', %s));', sfInflector::tableize($category), $class, $parameters);
+    $code[] = sprintf('$filter = sfDependencyInjectionContainer::create($class);');
     $code[] = 'if(!($filter instanceof sfIFilter))';
     $code[] = '{';
     $code[] = sprintf('  throw new LogicException(sprintf(\'The filter "%%s" does not implement sfIFilter interface.\', get_class($filter), \'%s\'));', $class);
     $code[] = '}';
-    $code[] = sprintf('$filter->initialize($this->context, %s);', $parameters);
+    $code[] = '$filter->initialize($this->context, $parameters);';
     $code[] = '$this->register($filter);';
     return join("\n", $code) . "\n";
   }
@@ -164,14 +165,15 @@ class sfFilterConfigHandler extends sfYamlConfigHandler {
   protected function addSecurityFilter($category, $class, $parameters)
   {
     return $this->addFilter($category, $class, $parameters);
-    
+
     $code = array();
-    $code[] = sprintf('$filter = sfDependencyInjectionContainer::create(\'%s\');', $class);
+    $code[] = sprintf('list($class, $parameters) = sfConfig::get(\'sf_%s_filter\', array(\'%s\', %s));', sfInflector::tableize($category), $class, $parameters);
+    $code[] = sprintf('$filter = sfDependencyInjectionContainer::create($class);');
     $code[] = 'if($actionInstance->isSecure() && !in_array(\'sfISecurityUser\', class_implements($this->getContext()->getUser())))';
     $code[] = '{';
     $code[] = '  throw new LogicException(\'Security is enabled, but your sfUser implementation does not implement sfSecurityUser interface.\');';
     $code[] = '}';
-    $code[] = sprintf('$filter->initialize($this->context, %s);', $parameters);
+    $code[] = '$filter->initialize($this->context, $parameters);';
     $code[] = '$this->register($filter);';
 
     return join("\n", $code) . "\n";
