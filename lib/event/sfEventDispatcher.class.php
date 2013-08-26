@@ -95,6 +95,10 @@ class sfEventDispatcher implements sfIService {
    */
   public function notify($event)
   {
+    if(sfConfig::get('sf_logging_enabled'))
+    {
+      sfLogger::getInstance()->info(sprintf('{sfEventDispatcher} Notifying of "%s" event', $event->getName()));
+    }
     foreach($this->getListeners($event->getName()) as $priority => $listeners)
     {
       foreach($listeners as $listener)
@@ -118,6 +122,10 @@ class sfEventDispatcher implements sfIService {
    */
   public function notifyUntil($event)
   {
+    if(sfConfig::get('sf_logging_enabled'))
+    {
+      sfLogger::getInstance()->info(sprintf('{sfEventDispatcher} Notifying until of "%s" event', $event->getName()));
+    }
     foreach($this->getListeners($event->getName()) as $priority => $listeners)
     {
       foreach($listeners as $listener)
@@ -142,6 +150,10 @@ class sfEventDispatcher implements sfIService {
    */
   public function filter($event, $value)
   {
+    if(sfConfig::get('sf_logging_enabled'))
+    {
+      sfLogger::getInstance()->info(sprintf('{sfEventDispatcher} Filtering value by "%s" event', $event->getName()));
+    }
     foreach($this->getListeners($event->getName()) as $priority => $listeners)
     {
       foreach($listeners as $listener)
