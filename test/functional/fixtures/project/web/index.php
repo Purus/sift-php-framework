@@ -12,5 +12,5 @@ sfToolkit::clearDirectory(SF_ROOT_DIR . '/cache');
 sfToolkit::clearDirectory(SF_ROOT_DIR . '/log');
 
 sfContext::createInstance(
-  sfCore::getApplication('cache', 'staging', true)
+  sfCore::getApplication('frontend', 'staging', true)
 )->dispatch();

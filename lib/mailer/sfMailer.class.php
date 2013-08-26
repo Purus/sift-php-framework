@@ -1,7 +1,7 @@
 <?php
 /*
  * This file is part of the Sift PHP framework
- * 
+ *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
@@ -14,7 +14,7 @@ Swift_DependencyContainer::getInstance()
   ->register('message.message')
   ->asNewInstanceOf('myMailerMessage')
   ->register('message.mimepart')
-  ->asNewInstanceOf('Swift_MimePart'); 
+  ->asNewInstanceOf('Swift_MimePart');
 
 /**
  * sfMailer class provides a wrapper around SwiftMailer
@@ -25,9 +25,9 @@ Swift_DependencyContainer::getInstance()
 class sfMailer extends Swift_Mailer {
 
   protected static $instance;
-  
+
   protected
-    $config            = array(),          
+    $config            = array(),
     $spool             = null,
     $logger            = null,
     $strategy          = 'realtime',
@@ -35,29 +35,20 @@ class sfMailer extends Swift_Mailer {
     $realtimeTransport = null,
     $force             = false,
     $redirectingPlugin = null;
-  
+
   protected
     $addToQueue = false;
-  
-  public static function getInstance()
-  {
-    if(!self::$instance)
-    {
-      self::$instance = new myMailer();
-    }
-    return self::$instance;
-  }
 
-  public function reset()
-  {
-    self::$instance = null;
-    return self::getInstance();
-  }
-
+  /**
+   * Constructs the mailer
+   *
+   * @param array $config Array of configuration
+   * @throws InvalidArgumentException If there is an error in the configuration
+   */
   public function __construct($config = null)
   {
     is_null($config) ? $this->loadConfig() : $this->config = $config;
-    
+
     $transport  = $this->getConfig('transport_type', 'default');
     $transports = $this->getConfig('transports', array());
 
@@ -72,7 +63,7 @@ class sfMailer extends Swift_Mailer {
         break;
 
         case 'smtp':
-          
+
           $transport = Swift_SmtpTransport::newInstance($t['hostname'], $t['port']);
 
           if(isset($t['username']))
@@ -115,7 +106,7 @@ class sfMailer extends Swift_Mailer {
             {
               foreach($transport->getExtensionHandlers() as $handler)
               {
-                if(in_array(strtolower($method), array_map('strtolower', 
+                if(in_array(strtolower($method), array_map('strtolower',
                   (array) $handler->exposeMixinMethods())))
                 {
                   $transport->$method($value);
@@ -138,21 +129,21 @@ class sfMailer extends Swift_Mailer {
     {
       $transport = Swift_MailTransport::newInstance();
     }
-    
+
     $this->realtimeTransport = $transport;
-    
+
     $spool = $this->getConfig('spool');
-    
+
     // spool enabled
     if(isset($spool['enabled']) && $spool['enabled'])
-    {     
+    {
       if(!isset($spool['class']))
       {
         throw new InvalidArgumentException('For the spool mail delivery strategy, you must also define a spool_class option');
       }
-      
+
       $arguments = isset($spool['arguments']) ? $spool['arguments'] : array();
-      
+
       if($arguments)
       {
         $r = new sfReflectionClass($spool['class']);
@@ -162,10 +153,10 @@ class sfMailer extends Swift_Mailer {
       {
         $this->spool = new $spool['class'];
       }
-      
+
       $transport = new Swift_SpoolTransport($this->spool);
     }
-    
+
     parent::__construct($transport);
 
     $antiflood = $this->getConfig('anti_flood');
@@ -178,71 +169,71 @@ class sfMailer extends Swift_Mailer {
 
     $log = $this->getConfig('log');
     if($log['enabled'])
-    {      
+    {
       $this->logger = new sfMailerLogger();
-      $this->realtimeTransport->registerPlugin($this->logger);      
+      $this->realtimeTransport->registerPlugin($this->logger);
     }
 
     // preferences for all messages!
-    $charset = $this->getConfig('charset', sfConfig::get('sf_charset'));    
+    $charset = $this->getConfig('charset', sfConfig::get('sf_charset'));
     Swift_Preferences::getInstance()->setCharset($charset);
-    
+
     // register mailer plugins
-    $plugins = (array)$this->getConfig('plugins');    
+    $plugins = (array)$this->getConfig('plugins');
     foreach($plugins as $p)
-    {  
-      $plugin = new $p();    
+    {
+      $plugin = new $p();
       $this->realtimeTransport->registerPlugin($plugin);
       if($this->getTransport() instanceof Swift_SpoolTransport)
       {
         $this->getTransport()->registerPlugin($plugin);
       }
     }
-    
+
     // FIXME: this has been removed from Swift mailer
     // https://github.com/swiftmailer/swiftmailer/commit/d4e5e63f077d74080919521f786138a3b27d556e#lib/classes/Swift/Plugins
     if(!$this->getConfig('deliver'))
     {
       $this->getTransport()->registerPlugin(new sfMailerBlackholePlugin());
     }
-    
+
     sfCore::getEventDispatcher()->notify(new sfEvent('mailer.configure', array(
-        'mailer' => &$this, 'config' => $this->config)));    
+        'mailer' => $this, 'config' => $this->config)));
   }
 
   /**
    * Load configuration from config/mail.yml config file
-   
+
    * @return void
    */
   protected function loadConfig()
   {
     // load yaml configuration
-    $config           = sfConfigCache::getInstance()->checkConfig('config/mail.yml');
+    $config = sfConfigCache::getInstance()->checkConfig('config/mail.yml');
     // load config from yaml
-    $this->config     = include($config);
+    $this->config = include($config);
   }
-  
+
   /**
    * Returns new myMailerMessage
-   * 
-   * @param string $subject
-   * @param string $body
-   * @param string $contentType
-   * @param string $charset
-   * @return myMailerMessage 
+   *
+   * @param string $subject The email subject
+   * @param string $body The email body
+   * @param string $contentType The content type
+   * @param string $charset The charser
+   * @return myMailerMessage
    */
   public function getNewMessage($subject = null, $body = null, $contentType = null, $charset = null)
   {
     return new myMailerMessage($subject, $body, $contentType, $charset);
   }
-  
+
   /**
    * Returns configuration option
-   * 
+   *
    * @param string $name
    * @param mixed $default
-   * @return mixed 
+   * @return mixed
    */
   public function getConfig($name, $default = null)
   {
@@ -273,29 +264,23 @@ class sfMailer extends Swift_Mailer {
    */
   public function send(Swift_Mime_Message $message, &$failedRecipients = null)
   {
-    // deliver is disabled!
-    if(!$this->getConfig('deliver'))
-    {
-      // return true;
-    }
-    
     if(!$this->addToQueue)
     {
       $this->sendNextImmediately();
     }
-    
+
     if($this->force)
     {
       $this->force = false;
 
-      if (!$this->realtimeTransport->isStarted())
+      if(!$this->realtimeTransport->isStarted())
       {
         $this->realtimeTransport->start();
       }
 
       return $this->realtimeTransport->send($message, $failedRecipients);
     }
-    
+
     return parent::send($message, $failedRecipients);
   }
 
@@ -309,10 +294,10 @@ class sfMailer extends Swift_Mailer {
     $this->force = true;
     return $this;
   }
-  
+
   /**
    * Sends the given message with spooling
-   * 
+   *
    * @param $message
    * @param $failedRecipients
    */
@@ -321,7 +306,7 @@ class sfMailer extends Swift_Mailer {
     $this->addToQueue = true;
     return $this->send($message, $failedRecipients);
   }
-  
+
   /**
    * Sends the email (in batch)
    *
@@ -336,9 +321,9 @@ class sfMailer extends Swift_Mailer {
     {
       return true;
     }
-   
+
     $failedRecipients = (array) $failedRecipients;
-    
+
     $sent = 0;
     $to = $message->getTo();
     $cc = $message->getCc();
@@ -351,7 +336,7 @@ class sfMailer extends Swift_Mailer {
     {
       $message->setBcc(array());
     }
-    
+
     // Use an iterator if set
     if(isset($it))
     {
@@ -365,15 +350,15 @@ class sfMailer extends Swift_Mailer {
     {
       foreach($to as $address => $name)
       {
-        if(is_int($address)) 
+        if(is_int($address))
         {
           $message->setTo($name);
-        } 
-        else 
+        }
+        else
         {
           $message->setTo(array($address => $name));
         }
-        
+
         $sent += $this->send($message, $failedRecipients);
       }
     }
@@ -383,18 +368,18 @@ class sfMailer extends Swift_Mailer {
     {
       $message->setCc($cc);
     }
-    
+
     if(!empty($bcc))
     {
       $message->setBcc($bcc);
     }
-    
-    return $sent;    
+
+    return $sent;
   }
-  
+
   /**
    * Like batchSend, but put the messages into the spool queue
-   * 
+   *
    * @param Swift_Mime_Message $message
    * @param array &$failedRecipients, optional
    * @param Swift_Mailer_RecipientIterator $it, optional
@@ -408,9 +393,9 @@ class sfMailer extends Swift_Mailer {
   )
   {
     $this->addToQueue = true;
-    
+
     return $this->batchSend($message, $failedRecipients, $it);
-  }  
+  }
 
   /**
    * Sends the current messages in the spool.
@@ -427,7 +412,7 @@ class sfMailer extends Swift_Mailer {
   }
 
   /**
-   * Returns spool instance 
+   * Returns spool instance
    *
    * @throws LogicException if spool disabled in configuration
    */
@@ -435,7 +420,7 @@ class sfMailer extends Swift_Mailer {
   {
     if(!$this->spool)
     {
-      throw new LogicException('You can only send messages in the spool is spool is enabled in your configuration');
+      throw new LogicException('You can only send messages in the spool is spool is enabled in your configuration.');
     }
     return $this->spool;
   }
@@ -459,7 +444,7 @@ class sfMailer extends Swift_Mailer {
   {
     $this->realtimeTransport = $transport;
   }
-  
+
   /**
    * Gets the logger instance.
    *
@@ -473,13 +458,13 @@ class sfMailer extends Swift_Mailer {
   /**
    * Sets the logger instance.
    *
-   * @param sfMailerLoggerPlugin $logger The logger instance.
+   * @param Swift_Plugins_MessageLogger $logger The logger instance.
    */
-  public function setLogger($logger)
+  public function setLogger(Swift_Plugins_MessageLogger $logger)
   {
     $this->logger = $logger;
   }
-  
+
   /**
    * Calls methods defined via sfEventDispatcher.
    *
@@ -504,6 +489,6 @@ class sfMailer extends Swift_Mailer {
     }
 
     return $event->getReturnValue();
-  }  
-  
+  }
+
 }

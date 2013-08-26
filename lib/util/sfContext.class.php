@@ -269,11 +269,7 @@ class sfContext {
    */
   public function getMailer()
   {
-    if(!isset($this->mailer))
-    {
-      $this->mailer = myMailer::getInstance();
-    }
-    return $this->mailer;
+    return sfServiceContainer::getInstance()->get('mailer');
   }
 
   /**

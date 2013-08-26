@@ -1,10 +1,12 @@
 # You can find more information about this file on:
 # https://bitbucket.org/mishal/sift-php-framework/wiki/Mail
 dev:
-  deliver:    false
+  deliver: false
+test:
+  deliver: false
 prod:
   cache:
-    enabled:   false
+    enabled: false
 all:
   # deliver the mail?
   deliver:  true

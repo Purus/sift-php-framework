@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of the Sift PHP framework.
  *
@@ -12,17 +13,18 @@
  * @package    Sift
  * @subpackage test
  */
-class sfTesterMailer extends sfTester
-{
+class sfTesterMailer extends sfTester {
+
   protected
-    $logger  = null,
-    $message = null;
+      $logger = null,
+      $message = null;
 
   /**
    * Prepares the tester.
    */
   public function prepare()
   {
+
   }
 
   /**
@@ -32,7 +34,7 @@ class sfTesterMailer extends sfTester
   {
     $this->logger = $this->browser->getContext()->getMailer()->getLogger();
 
-    if ($this->logger->countMessages())
+    if($this->logger->countMessages())
     {
       $messages = $this->logger->getMessages();
 
@@ -49,7 +51,7 @@ class sfTesterMailer extends sfTester
    */
   public function hasSent($nb = null)
   {
-    if (null === $nb)
+    if(null === $nb)
     {
       $this->tester->ok($this->logger->countMessages() > 0, 'mailer sent some email(s).');
     }
@@ -66,9 +68,9 @@ class sfTesterMailer extends sfTester
    */
   public function debug()
   {
-    foreach ($this->logger->getMessages() as $message)
+    foreach($this->logger->getMessages() as $message)
     {
-      echo $message->toString()."\n\n";
+      echo $message->toString() . "\n\n";
     }
 
     exit(1);
@@ -87,20 +89,20 @@ class sfTesterMailer extends sfTester
     $messageEmail = $to;
     if(is_array($to))
     {
-      $alias        = current($to);
-      $to           = key($to);
+      $alias = current($to);
+      $to = key($to);
       $messageEmail = sprintf('%s <%s>', $alias, $to);
     }
 
     $matches = 0;
-    foreach ($this->logger->getMessages() as $message)
+    foreach($this->logger->getMessages() as $message)
     {
       $email = $message->getTo();
-      if ($to == key($email))
+      if($to == key($email))
       {
         $matches++;
 
-        if ($matches == $position)
+        if($matches == $position)
         {
           $this->message = $message;
 
@@ -125,35 +127,76 @@ class sfTesterMailer extends sfTester
    * Tests for a mail message body.
    *
    * @param string $value regular expression or value
-   *
    * @return sfTestFunctionalBase|sfTester
    */
   public function checkBody($value)
   {
-    if (!$this->message)
+    if(!$this->message)
     {
       $this->tester->fail('unable to test as no email were sent');
     }
+    $this->checkBodyPart($value, $this->message->getBody());
+    return $this->getObjectToReturn();
+  }
 
-    $body = $this->message->getBody();
+  /**
+   * Checks the body (within multiparts of the email message)
+   *
+   * @param string $value regular expression or value
+   * @param string $contentType The content type to search
+   * @param boolean $matchFirst If the test should be performed on the first multipart with given content type
+   * @return sfTestFunctionalBase|sfTester
+   */
+  public function checkBodyMultipart($value, $contentType = 'text/plain', $matchFirst = true)
+  {
+    $tested = false;
+    foreach($this->message->getChildren() as $key => $child)
+    {
+      if($contentType === $child->getHeaders()->get('content-type')->getValue())
+      {
+        $tested = true;
+        $this->checkBodyPart($value, $child->getBody());
+        if($matchFirst)
+        {
+          break;
+        }
+      }
+    }
+
+    if(!$tested)
+    {
+      $this->tester->fail(sprintf('there is no multipart for given contentType "%s" which should match "%s"', $contentType, $value));
+    }
+
+    return $this->getObjectToReturn();
+  }
+
+  /**
+   * Performs checks on the body
+   *
+   * @param string $value regular expression or value
+   * @param string $body The body to search
+   */
+  protected function checkBodyPart($value, $body)
+  {
     $ok = false;
     $regex = false;
     $mustMatch = true;
-    if (preg_match('/^(!)?([^a-zA-Z0-9\\\\]).+?\\2[ims]?$/', $value, $match))
+    if(preg_match('/^(!)?([^a-zA-Z0-9\\\\]).+?\\2[ims]?$/', $value, $match))
     {
       $regex = $value;
-      if ($match[1] == '!')
+      if($match[1] == '!')
       {
         $mustMatch = false;
         $regex = substr($value, 1);
       }
     }
 
-    if (false !== $regex)
+    if(false !== $regex)
     {
-      if ($mustMatch)
+      if($mustMatch)
       {
-        if (preg_match($regex, $body))
+        if(preg_match($regex, $body))
         {
           $ok = true;
           $this->tester->pass(sprintf('email body matches "%s"', $value));
@@ -161,22 +204,22 @@ class sfTesterMailer extends sfTester
       }
       else
       {
-        if (preg_match($regex, $body))
+        if(preg_match($regex, $body))
         {
           $ok = true;
           $this->tester->fail(sprintf('email body does not match "%s"', $value));
         }
       }
     }
-    else if ($body == $value)
+    else if($body == $value)
     {
       $ok = true;
       $this->tester->pass(sprintf('email body is "%s"', $value));
     }
 
-    if (!$ok)
+    if(!$ok)
     {
-      if (!$mustMatch)
+      if(!$mustMatch)
       {
         $this->tester->pass(sprintf('email body matches "%s"', $value));
       }
@@ -185,8 +228,6 @@ class sfTesterMailer extends sfTester
         $this->tester->fail(sprintf('email body matches "%s"', $value));
       }
     }
-
-    return $this->getObjectToReturn();
   }
 
   /**
@@ -199,13 +240,13 @@ class sfTesterMailer extends sfTester
    */
   public function checkHeader($key, $value)
   {
-    if (!$this->message)
+    if(!$this->message)
     {
       $this->tester->fail('unable to test as no email were sent');
     }
 
     $headers = array();
-    foreach ($this->message->getHeaders()->getAll($key) as $header)
+    foreach($this->message->getHeaders()->getAll($key) as $header)
     {
       $headers[] = $header->getFieldBody();
     }
@@ -213,23 +254,23 @@ class sfTesterMailer extends sfTester
     $ok = false;
     $regex = false;
     $mustMatch = true;
-    if (preg_match('/^(!)?([^a-zA-Z0-9\\\\]).+?\\2[ims]?$/', $value, $match))
+    if(preg_match('/^(!)?([^a-zA-Z0-9\\\\]).+?\\2[ims]?$/', $value, $match))
     {
       $regex = $value;
-      if ($match[1] == '!')
+      if($match[1] == '!')
       {
         $mustMatch = false;
         $regex = substr($value, 1);
       }
     }
 
-    foreach ($headers as $header)
+    foreach($headers as $header)
     {
-      if (false !== $regex)
+      if(false !== $regex)
       {
-        if ($mustMatch)
+        if($mustMatch)
         {
-          if (preg_match($regex, $header))
+          if(preg_match($regex, $header))
           {
             $ok = true;
             $this->tester->pass(sprintf('email header "%s" matches "%s" (%s)', $key, $value, $current));
@@ -238,7 +279,7 @@ class sfTesterMailer extends sfTester
         }
         else
         {
-          if (preg_match($regex, $header))
+          if(preg_match($regex, $header))
           {
             $ok = true;
             $this->tester->fail(sprintf('email header "%s" does not match "%s" (%s)', $key, $value, $current));
@@ -246,7 +287,7 @@ class sfTesterMailer extends sfTester
           }
         }
       }
-      else if ($header == $value)
+      else if($header == $value)
       {
         $ok = true;
         $this->tester->pass(sprintf('email header "%s" is "%s" (%s)', $key, $value, $current));
@@ -254,9 +295,9 @@ class sfTesterMailer extends sfTester
       }
     }
 
-    if (!$ok)
+    if(!$ok)
     {
-      if (!$mustMatch)
+      if(!$mustMatch)
       {
         $this->tester->pass(sprintf('email header "%s" matches "%s" (%s)', $key, $value, $current));
       }
@@ -268,4 +309,5 @@ class sfTesterMailer extends sfTester
 
     return $this->getObjectToReturn();
   }
+
 }
