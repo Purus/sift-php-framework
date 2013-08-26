@@ -22,12 +22,11 @@ class sfDependencyInjectionBuilderConstructor extends sfDependencyInjectionBuild
   public function constructObject($arguments = null)
   {
     $this->loadMap();
-
     $reflector = new sfReflectionClass($this->className);
     if(is_array($arguments) && count($arguments))
-    {     
-      $this->object = null === $reflector->getConstructor() ?
-                        $reflector->newInstance() : $reflector->newInstanceArgs($arguments);
+    {
+      // FIXME: this silently dies if the arguments does not contain the required arguments for the constructor!
+      $this->object = null === $reflector->getConstructor() ? $reflector->newInstance() : $reflector->newInstanceArgs($arguments);
     }
     elseif($this->map->has('constructor'))
     {
