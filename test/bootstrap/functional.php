@@ -1,13 +1,13 @@
 <?php
 
-// we need sqlite for functional tests
-if (!extension_loaded('SQLite'))
+// we need pdo sqlite for functional tests
+if(!extension_loaded('pdo_sqlite'))
 {
+  echo "Pdo sqlite extension is not loaded. Cannot run functional tests\n";
   return false;
 }
 
 define('SF_ROOT_DIR',    realpath(dirname(__FILE__).sprintf('/../%s/fixtures/project', isset($type) ? $type : 'functional')));
-
 define('SF_APP',         $app);
 define('SF_ENVIRONMENT', 'test');
 define('SF_DEBUG',       isset($debug) ? $debug : true);
@@ -25,11 +25,10 @@ sfContext::createInstance(
   'test'      // name of the context instance
 );
 
-if (isset($fixtures))
+if(isset($fixtures))
 {
   // initialize database manager
   $databaseManager = new sfDatabaseManager();
-  $databaseManager->initialize();
 
   // cleanup database
   $db = sfConfig::get('sf_data_dir').DIRECTORY_SEPARATOR.'/database.sqlite';
@@ -56,7 +55,7 @@ if (isset($fixtures))
   }
 
   // load fixtures
-  
+
   /*
   $data = new sfPDoData();
   if (is_array($fixtures))
@@ -67,7 +66,7 @@ if (isset($fixtures))
   {
     $data->loadData(sfConfig::get('sf_data_dir').'/'.$fixtures);
   }
-   * 
+   *
    */
 }
 
