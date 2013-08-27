@@ -15,7 +15,7 @@
  * @package    Sift
  * @subpackage user
  */
-class sfUser implements sfIService {
+class sfUser extends sfConfigurable implements sfIService, ArrayAccess {
 
   /**
    * Attributes namespace
@@ -31,13 +31,6 @@ class sfUser implements sfIService {
    * Flash messages namespace
    */
   const FLASH_NAMESPACE = 'sift/flash';
-
-  /**
-   * Parameter holder
-   *
-   * @var sfParameterHolder
-   */
-  protected $parameterHolder;
 
   /**
    * Attribute holder
@@ -61,19 +54,36 @@ class sfUser implements sfIService {
   protected $serviceContainer;
 
   /**
+   * Array of default options
+   *
+   * @var array
+   */
+  protected $defaultOptions = array(
+    'default_culture' => 'en',
+    'use_flash' => true
+  );
+
+  /**
    * Construct the user
    *
    * @param sfServiceContainer $serviceContainer
    * @param array $parameters An associative array of initialization parameters.
    */
-  public function __construct(sfServiceContainer $serviceContainer, $parameters = array())
+  public function __construct(sfServiceContainer $serviceContainer, $options = array())
   {
     $this->serviceContainer = $serviceContainer;
-
-    $this->parameterHolder = new sfParameterHolder();
-    $this->parameterHolder->add($parameters);
-
     $this->attributeHolder = new sfParameterHolder(self::ATTRIBUTE_NAMESPACE);
+
+    parent::__construct($options);
+  }
+
+  /**
+   * Setups the user instance
+   *
+   */
+  public function setup()
+  {
+    $this->attributeHolder->clear();
 
     // read attributes from storage
     $attributes = $this->serviceContainer->get('storage')->read(self::ATTRIBUTE_NAMESPACE);
@@ -88,28 +98,45 @@ class sfUser implements sfIService {
     // set the user culture to sf_culture parameter if present in the request
     // otherwise
     //  - use the culture defined in the user session
-    //  - use the default culture set in i18n.yml
+    //  - use the default_culture option
     if(!($culture = $this->serviceContainer->get('request')->getParameter('sf_culture')))
     {
       if(null === ($culture = $this->serviceContainer->get('storage')->read(self::CULTURE_NAMESPACE)))
       {
-        $culture = sfConfig::get('sf_i18n_default_culture', 'en');
+        $culture = $this->getOption('default_culture');
       }
     }
 
     $this->setCulture($culture);
+
+    if($this->getOption('use_flash'))
+    {
+      // flag current flash to be removed after the execution filter
+      $names = $this->attributeHolder->getNames(self::FLASH_NAMESPACE);
+      if($names)
+      {
+        foreach($names as $name)
+        {
+          $this->attributeHolder->set($name, true, sfUser::FLASH_NAMESPACE.'/remove');
+        }
+        if(sfConfig::get('sf_logging_enabled'))
+        {
+          sfLogger::getInstance()->info('{sfUser} Flagged old flash messages ("' . implode('", "', $names) . '")');
+        }
+      }
+    }
   }
 
   /**
    * Sets culture.
    *
-   * @param  string culture
+   * @param string $culture Culture
    */
   public function setCulture($culture)
   {
     if($culture === null)
     {
-      $culture = sfConfig::get('sf_i18n_default_culture');
+      $culture = $this->getOption('default_culture');
     }
 
     // dispatch event
@@ -152,8 +179,7 @@ class sfUser implements sfIService {
    */
   public function getRealIp()
   {
-    return $this->getIpForwardedFor() ?
-            $this->getIpForwardedFor() : $this->getIp();
+    return $this->getIpForwardedFor() ? $this->getIpForwardedFor() : $this->getIp();
   }
 
   /**
@@ -252,7 +278,11 @@ class sfUser implements sfIService {
   public function setTimezone($timezone)
   {
     date_default_timezone_set($timezone);
-    $this->serviceContainer->get('event_dispatcher')->notify(new sfEvent('user.change_timezone', array('method' => 'setTimezone', 'timezone' => $timezone)));
+    $this->serviceContainer->get('event_dispatcher')->notify(new sfEvent('user.change_timezone', array(
+      'user' => $this,
+      'method' => 'setTimezone',
+      'timezone' => $timezone)
+    ));
   }
 
   /**
@@ -265,7 +295,6 @@ class sfUser implements sfIService {
     $request = $this->context->getRequest();
     $offset = $request->getCookie('timezone_offset');
     $dst = $request->getCookie('timezone_daylightsavings');
-
     if($offset !== null && $dst !== null)
     {
       $offset *= 3600;
@@ -276,18 +305,113 @@ class sfUser implements sfIService {
         return $zone;
       }
     }
-
     return date_default_timezone_get();
   }
 
   /**
-   * Returns parameter holder
+   * Sets a flash variable that will be passed to the very next action.
    *
-   * @return sfParameterHolder
+   * @param string $name The name of the flash variable
+   * @param string $value The value of the flash variable
+   * @param bool $persist true if the flash have to persist for the following request (true by default)
+   * @return sfUser
    */
-  public function getParameterHolder()
+  public function setFlash($name, $value, $persist = true)
   {
-    return $this->parameterHolder;
+    $flash = new sfUserFlashMessage($value, $name, sfConfig::get('sf_app'));
+    $this->setAttribute($name, $flash, self::FLASH_NAMESPACE);
+    if($persist)
+    {
+      // clear removal flag
+      $this->attributeHolder->remove($name, null, self::FLASH_NAMESPACE.'/remove');
+    }
+    else
+    {
+      $this->setAttribute($name, true, self::FLASH_NAMESPACE.'/remove');
+    }
+    return $this;
+  }
+
+  /**
+   * Gets a flash variable.
+   *
+   * @param string $name The name of the flash variable
+   * @param string $default The default value returned when named variable does not exist.
+   * @param boolean $ignoreApplication Return the flash even for different application?
+   * @return mixed The value of the flash variable
+   */
+  public function getFlash($name, $default = null, $ignoreApplication = false)
+  {
+    if($this->hasAttribute($name, self::FLASH_NAMESPACE))
+    {
+      $flash = $this->getAttribute($name, null, self::FLASH_NAMESPACE);
+      if($ignoreApplication || $flash->getApplication() == sfConfig::get('sf_app'))
+      {
+        return $flash;
+      }
+    }
+    return $default;
+  }
+
+  /**
+   * Returns true if a flash variable of the specified name exists.
+   *
+   * @param string $name The name of the flash variable
+   * @param boolean $ignoreApplication Return the flash even for different application?
+   * @return bool true if the variable exists, false otherwise
+   */
+  public function hasFlash($name, $ignoreApplication = false)
+  {
+    if($this->getFlash($name, false, $ignoreApplication))
+    {
+      return true;
+    }
+    return false;
+  }
+
+  /**
+   * Returns true if the user attribute exists (implements the ArrayAccess interface).
+   *
+   * @param  string $name The name of the user attribute
+   *
+   * @return Boolean true if the user attribute exists, false otherwise
+   */
+  public function offsetExists($name)
+  {
+    return $this->hasAttribute($name);
+  }
+
+  /**
+   * Returns the user attribute associated with the name (implements the ArrayAccess interface).
+   *
+   * @param  string $name  The offset of the value to get
+   *
+   * @return mixed The user attribute if exists, null otherwise
+   */
+  public function offsetGet($name)
+  {
+    return $this->getAttribute($name, false);
+  }
+
+  /**
+   * Sets the user attribute associated with the offset (implements the ArrayAccess interface).
+   *
+   * @param string $offset The parameter name
+   * @param string $value The parameter value
+   */
+  public function offsetSet($offset, $value)
+  {
+    $this->setAttribute($offset, $value);
+  }
+
+  /**
+   * Unsets the user attribute associated with the offset (implements the ArrayAccess interface).
+   *
+   * @param string $offset The parameter name
+   */
+  public function offsetUnset($offset)
+  {
+    $this->getAttributeHolder()->remove($offset);
   }
 
   /**
@@ -315,21 +439,6 @@ class sfUser implements sfIService {
     return $this->attributeHolder->set($name, $value, $ns);
   }
 
-  public function getParameter($name, $default = null, $ns = null)
-  {
-    return $this->parameterHolder->get($name, $default, $ns);
-  }
-
-  public function hasParameter($name, $ns = null)
-  {
-    return $this->parameterHolder->has($name, $ns);
-  }
-
-  public function setParameter($name, $value, $ns = null)
-  {
-    return $this->parameterHolder->set($name, $value, $ns);
-  }
-
   /**
    * Execute the shutdown procedure.
    *
@@ -337,12 +446,29 @@ class sfUser implements sfIService {
    */
   public function shutdown()
   {
+    // remove flash that are tagged to be removed
+    if($this->getOption('use_flash') && ($names = $this->attributeHolder->getNames(sfUser::FLASH_NAMESPACE.'/remove')))
+    {
+      foreach($names as $name)
+      {
+        $this->attributeHolder->remove($name, sfUser::FLASH_NAMESPACE);
+        $this->attributeHolder->remove($name, sfUser::FLASH_NAMESPACE.'/remove');
+      }
+
+      if(sfConfig::get('sf_logging_enabled'))
+      {
+        sfLogger::getInstance()->info('{sfFilter} Removed old flash messages ("' . implode('", "', $names) . '")');
+      }
+    }
+
     $storage = $this->serviceContainer->get('storage');
     $attributes = array();
+
     foreach($this->attributeHolder->getNamespaces() as $namespace)
     {
       $attributes[$namespace] = $this->attributeHolder->getAll($namespace);
     }
+
     // write attributes to the storage
     $storage->write(self::ATTRIBUTE_NAMESPACE, $attributes);
     // write culture to the storage
@@ -362,7 +488,7 @@ class sfUser implements sfIService {
   public function __call($method, $arguments)
   {
     $event = $this->serviceContainer->get('event_dispatcher')->notifyUntil(
-            new sfEvent('user.method_not_found', array(
+        new sfEvent('user.method_not_found', array(
         'user' => $this,
         'method' => $method,
         'arguments' => $arguments)));

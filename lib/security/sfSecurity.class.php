@@ -154,12 +154,12 @@ class sfSecurity {
   /**
    * Checks if user is allowed to execute given action
    * 
-   * @param sfBasicSecurityUser $user
+   * @param sfISecurityUser $user
    * @param string $module
    * @param string $action
    * @return boolean 
    */
-  public static function isUserAllowedToExecuteAction(sfBasicSecurityUser $user, $module, $action)
+  public static function isUserAllowedToExecuteAction(sfISecurityUser $user, $module, $action)
   {
     $isAuthenticated = $user->isAuthenticated();
     $isSuperAdmin    = $isAuthenticated && $user->isSuperAdmin();
@@ -182,7 +182,7 @@ class sfSecurity {
    * @param string $route
    * @return boolean 
    */
-  public static function isUserAllowedToExecuteRoute(sfBasicSecurityUser $user, $route)
+  public static function isUserAllowedToExecuteRoute(sfISecurityUser $user, $route)
   {
     $isAuthenticated = $user->isAuthenticated();
     $isSuperAdmin    = $isAuthenticated && $user->isSuperAdmin();
@@ -207,7 +207,7 @@ class sfSecurity {
    * @param string $url
    * @return boolean 
    */
-  public static function isUserAllowedToExecuteUrl(sfBasicSecurityUser $user, $url)
+  public static function isUserAllowedToExecuteUrl(sfISecurityUser $user, $url)
   {
     // non local urls are always executable 
     if(!self::isLocalUrl($url))

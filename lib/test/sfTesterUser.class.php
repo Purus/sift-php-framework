@@ -12,8 +12,8 @@
  * @package    Sift
  * @subpackage test
  */
-class sfTesterUser extends sfTester
-{
+class sfTesterUser extends sfTester {
+
   protected $user;
 
   /**
@@ -52,12 +52,13 @@ class sfTesterUser extends sfTester
    *
    * @param string $key
    * @param string $value
+   * @param boolean $ignoreApplication
    *
    * @return sfTestFunctionalBase|sfTester
    */
-  public function isFlash($key, $value)
+  public function isFlash($key, $value, $ignoreApplication = false)
   {
-    $this->tester->is($this->user->getFlash($key), $value, sprintf('user flash "%s" is "%s"', $key, $value));
+    $this->tester->is((string)$this->user->getFlash($key, null, $ignoreApplication), $value, sprintf('user flash "%s" is "%s"', $key, $value));
 
     return $this->getObjectToReturn();
   }
@@ -105,4 +106,5 @@ class sfTesterUser extends sfTester
 
     return $this->getObjectToReturn();
   }
+
 }

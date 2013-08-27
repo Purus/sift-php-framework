@@ -29,11 +29,33 @@ class sfWordHtmlCleaner {
   {
     if($convertToUtf8)
     {
-      $html = sfUtf8::convertToUtf8($html);
+      $html = self::convertToUtf8($html);
     }
-    $html = sfSanitizer::clean($html, 'word');
-    // fix newlines
+    return self::fixNewLines(
+      sfSanitizer::sanitize($html, 'word')
+    );
+  }
+
+  /**
+   * Converts the html to utf-8
+   *
+   * @param string $html
+   * @return string
+   */
+  protected static function convertToUtf8($html)
+  {
+    return sfUtf8::convertToUtf8($html);
+  }
+
+  /**
+   * Fixes new lines
+   *
+   * @param string $html
+   * @return string
+   */
+  protected static function fixNewLines($html)
+  {
     return str_replace(array("\r\n", "\r"), array("\n", "\n"), $html);
   }
-  
+
 }

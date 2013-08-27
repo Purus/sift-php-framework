@@ -42,11 +42,6 @@ common:
   param:
     javascript_config: false
 
-flash:
-  class: sfFlashFilter
-  param:
-    condition: %SF_USE_FLASH%
-
 execution:
   class: sfExecutionFilter
   param:

@@ -12,5 +12,5 @@ sfCore::bootstrap($sf_sift_lib_dir, $sf_sift_data_dir);
 // sfToolkit::clearDirectory(SF_ROOT_DIR . '/log');
 
 sfContext::createInstance(
-  sfCore::getApplication('frontend', 'staging', true)
+  sfCore::getApplication('i18n', 'dev', true)
 )->dispatch();

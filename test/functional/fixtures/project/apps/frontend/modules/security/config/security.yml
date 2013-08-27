@@ -1,0 +1,6 @@
+all:
+  is_secure: false
+
+secured:
+  is_secure: true
+  credentials: [foo_credential]

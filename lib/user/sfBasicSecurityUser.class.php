@@ -36,23 +36,24 @@ class sfBasicSecurityUser extends sfUser implements sfISecurityUser, sfIService 
 
   /**
    * Last request time
+   *
    * @var integer
    */
-  protected $lastRequest = null;
+  protected $lastRequest;
 
   /**
    * Credentials
    *
    * @var array
    */
-  protected $credentials = null;
+  protected $credentials = array();
 
   /**
    * Authenticated flag
    *
    * @var boolean
    */
-  protected $authenticated = null;
+  protected $authenticated = false;
 
   /**
    * Timed out flag
@@ -66,14 +67,32 @@ class sfBasicSecurityUser extends sfUser implements sfISecurityUser, sfIService 
    *
    * @var integer
    */
-  protected $id = null;
+  protected $id;
 
   /**
-   * @see sfUser
+   * Array of default options.
+   * The default options are inherited from parent classes.
+   *
+   * @var array
    */
-  public function __construct(sfServiceContainer $serviceContainer, $parameters = array())
+  protected $defaultOptions = array(
+    'timeout' => 1800
+  );
+
+  /**
+   * Setups the user
+   *
+   */
+  public function setup()
   {
-    parent::__construct($serviceContainer, $parameters);
+    parent::setup();
+
+    // force the max lifetime for session garbage collector to be greater than timeout
+    if(ini_get('session.gc_maxlifetime') < $this->getOption('timeout')
+      && sfToolkit::isCallable('ini_set'))
+    {
+      ini_set('session.gc_maxlifetime', $this->getOption('timeout'));
+    }
 
     // read data from storage
     $storage = $this->serviceContainer->get('storage');
@@ -83,24 +102,16 @@ class sfBasicSecurityUser extends sfUser implements sfISecurityUser, sfIService 
     $this->lastRequest = $storage->read(self::LAST_REQUEST_NAMESPACE);
     $this->id = $storage->read(self::ID_NAMESPACE);
 
-    if($this->authenticated == null)
+    // Automatic logout logged in user if no request within the timeout option
+    if(null !== $this->lastRequest && (time() - $this->lastRequest) > $this->getOption('timeout'))
     {
-      $this->authenticated = false;
-      $this->credentials = array();
-    }
-    else
-    {
-      // Automatic logout logged in user if no request within [sf_timeout] setting
-      if(null !== $this->lastRequest && (time() - $this->lastRequest) > sfConfig::get('sf_timeout'))
+      if(sfConfig::get('sf_logging_enabled'))
       {
-        if(sfConfig::get('sf_logging_enabled'))
-        {
-          sfLogger::getInstance()->info('{sfUser} Automatic user logout due to timeout.');
-        }
-        $this->setTimedOut();
-        $this->setAuthenticated(false);
-        $this->setId(null);
+        sfLogger::getInstance()->info('{sfUser} Automatic user logout due to timeout.');
       }
+      $this->setTimedOut(true);
+      $this->setAuthenticated(false);
+      $this->setId(null);
     }
 
     $this->lastRequest = time();
@@ -109,11 +120,12 @@ class sfBasicSecurityUser extends sfUser implements sfISecurityUser, sfIService 
   /**
    * Clears all credentials.
    *
+   * @return sfBasicSecurityUser
    */
   public function clearCredentials()
   {
-    $this->credentials = null;
     $this->credentials = array();
+    return $this;
   }
 
   /**
@@ -129,7 +141,8 @@ class sfBasicSecurityUser extends sfUser implements sfISecurityUser, sfIService 
   /**
    * Removes a credential.
    *
-   * @param  mixed credential
+   * @param mixed $credential credential
+   * @return sfBasicSecurityUser
    */
   public function removeCredential($credential)
   {
@@ -139,31 +152,35 @@ class sfBasicSecurityUser extends sfUser implements sfISecurityUser, sfIService 
       {
         if($credential == $value)
         {
+          unset($this->credentials[$key]);
           if(sfConfig::get('sf_logging_enabled'))
           {
-            sfLogger::getInstance()->info('{sfUser} remove credential "' . $credential . '"');
+            sfLogger::getInstance()->info(sprintf('{sfUser} Removed credential "%s',  $credential));
           }
-          unset($this->credentials[$key]);
-          return;
+          break;
         }
       }
     }
+    return $this;
   }
 
   /**
    * Adds a credential.
    *
    * @param mixed $credential Credentials
+   * @return sfBasicSecurityUser
    */
   public function addCredential($credential)
   {
     $this->addCredentials(func_get_args());
+    return $this;
   }
 
   /**
    * Adds several credential at once.
    *
-   * @param  mixed array or list of credentials
+   * @param array $credentials List of credentials
+   * @return sfBasicSecurityUser
    */
   public function addCredentials()
   {
@@ -175,11 +192,6 @@ class sfBasicSecurityUser extends sfUser implements sfISecurityUser, sfIService 
     // Add all credentials
     $credentials = (is_array(func_get_arg(0))) ? func_get_arg(0) : func_get_args();
 
-    if(sfConfig::get('sf_logging_enabled'))
-    {
-      sfLogger::getInstance()->info('{sfUser} add credential(s) "' . implode(', ', $credentials) . '"');
-    }
-
     foreach($credentials as $aCredential)
     {
       if(!in_array($aCredential, $this->credentials))
@@ -187,6 +199,13 @@ class sfBasicSecurityUser extends sfUser implements sfISecurityUser, sfIService 
         $this->credentials[] = $aCredential;
       }
     }
+
+    if(sfConfig::get('sf_logging_enabled'))
+    {
+      sfLogger::getInstance()->info(sprintf('{sfUser} Add credential(s) "%s"', implode(', ', $credentials)));
+    }
+
+    return $this;
   }
 
   /**
@@ -194,7 +213,7 @@ class sfBasicSecurityUser extends sfUser implements sfISecurityUser, sfIService 
    *
    * @param  mixed credentials
    * @param  boolean useAnd specify the mode, either AND or OR
-   * @return boolean   
+   * @return boolean
    */
   public function hasCredential($credentials, $useAnd = true)
   {
@@ -231,6 +250,16 @@ class sfBasicSecurityUser extends sfUser implements sfISecurityUser, sfIService 
   }
 
   /**
+   * Is the user super admin?
+   *
+   * @return boolean
+   */
+  public function isSuperAdmin()
+  {
+    return $this->hasCredential(self::CREDENTIAL_SUPER_ADMIN);
+  }
+
+  /**
    * Returns true if user is authenticated.
    *
    * @return boolean
@@ -254,13 +283,14 @@ class sfBasicSecurityUser extends sfUser implements sfISecurityUser, sfIService 
   /**
    * Sets authentication for user.
    *
-   * @param  boolean
+   * @param boolean $authenticated The flag
+   * @return sfBasicSecurityUser
    */
   public function setAuthenticated($authenticated)
   {
     if(sfConfig::get('sf_logging_enabled'))
     {
-      sfLogger::getInstance()->info('{sfUser} user is ' . ($authenticated === true ? '' : 'not ') . 'authenticated');
+      sfLogger::getInstance()->info('{sfUser} User is ' . ($authenticated === true ? '' : 'not ') . 'authenticated');
     }
 
     if($authenticated === true)
@@ -272,20 +302,30 @@ class sfBasicSecurityUser extends sfUser implements sfISecurityUser, sfIService 
       $this->authenticated = false;
       $this->clearCredentials();
     }
+
+    return $this;
   }
 
-  public function setTimedOut()
+  /**
+   * @see sfISecurityUser
+   * @return sfBasicSecurityUser
+   */
+  public function setTimedOut($flag = true)
   {
-    $this->timedout = true;
+    $this->timedout = $flag;
+    return $this;
   }
 
+  /**
+   * @see sfISecurityUser
+   */
   public function isTimedOut()
   {
     return $this->timedout;
   }
 
   /**
-   * Returns Id of the user
+   * @see sfISecurityUser
    */
   public function getId()
   {
@@ -293,13 +333,13 @@ class sfBasicSecurityUser extends sfUser implements sfISecurityUser, sfIService 
   }
 
   /**
-   * Returns the user Id
-   *
-   * @param string $id
+   * @see sfISecurityUser
+   * @return sfBasicSecurityUser
    */
   public function setId($id)
   {
     $this->id = $id;
+    return $this;
   }
 
   /**

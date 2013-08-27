@@ -10,7 +10,7 @@
  * sfBasicSecurityFilter checks security by calling the getCredential() method
  * of the action. Once the credential has been acquired, sfBasicSecurityFilter
  * verifies the user has the same credential by calling the hasCredential()
- * method of SecurityUser.
+ * method of sfISecurityUser.
  *
  * @package    Sift
  * @subpackage filter

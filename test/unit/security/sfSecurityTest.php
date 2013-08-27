@@ -9,32 +9,32 @@ $host = 'localhost';
 $protocol = 'http';
 
 class sfRequest {
-  
+
   public function getHost()
   {
     global $host;
     return $host;
   }
-  
+
   public function getProtocol()
   {
     global $protocol;
     return $protocol;
   }
-  
+
 }
 
 class sfContext {
-  
+
   public static function getInstance()
   {
     return new sfContext();
   }
-  
+
   public function getRequest()
   {
     return new sfRequest();
-  }  
+  }
 }
 
 $t->diag('->isRedirectUrlValid()');
@@ -86,6 +86,6 @@ $t->is(sfSecurity::isIpInWhitelist($ip, $whitelist), true, '->isInWhitelist() re
 
 $t->diag('->isIpValid()');
 
-$ip = '88.86.106.74';
+$ip = '88.86.106.1';
 
 $t->is(sfSecurity::isIpValid($ip), true, '->isIpValid() works ok');

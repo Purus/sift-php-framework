@@ -300,47 +300,36 @@ abstract class sfComponent {
   /**
    * Sets a flash variable that will be passed to the very next action.
    *
-   * @param  string  The name of the flash variable
-   * @param  string  The value of the flash variable
-   * @param  boolean true if the flash have to persist for the following request (true by default)
+   * @param string $name The name of the flash variable
+   * @param string $value The value of the flash variable
+   * @param bool $persist true if the flash have to persist for the following request (true by default)
    */
   public function setFlash($name, $value, $persist = true)
   {
-    $this->getUser()->setAttribute($name, $value, sfUser::FLASH_NAMESPACE);
-
-    if($persist)
-    {
-      // clear removal flag
-      $this->getUser()->getAttributeHolder()->remove($name, 'sift/flash/remove');
-    }
-    else
-    {
-      $this->getUser()->setAttribute($name, true, 'sift/flash/remove');
-    }
+    $this->getUser()->setFlash($name, $value, $persist);
   }
 
   /**
    * Gets a flash variable.
    *
-   * @param  string The name of the flash variable
-   *
+   * @param string $name The name of the flash variable
+   * @param string $default The default value returned when named variable does not exist.
    * @return mixed The value of the flash variable
    */
-  public function getFlash($name)
+  public function getFlash($name, $default = null)
   {
-    return $this->getUser()->getAttribute($name, null, sfUser::FLASH_NAMESPACE);
+    return $this->getUser()->getFlash($name, $default);
   }
 
   /**
    * Returns true if a flash variable of the specified name exists.
    *
-   * @param  string The name of the flash variable
-   *
-   * @return boolean   true if the variable exists, false otherwise
+   * @param string $name The name of the flash variable
+   * @return bool true if the variable exists, false otherwise
    */
   public function hasFlash($name)
   {
-    return $this->getUser()->hasAttribute($name, sfUser::FLASH_NAMESPACE);
+    return $this->getUser()->hasFlash($name);
   }
 
   /**

@@ -26,7 +26,7 @@ default:
 
   user:
     class: myUser
-    arguments: ["@service_container"]
+    arguments: ["@service_container", { timeout: %SF_TIMEOUT%, default_culture: %SF_I18N_DEFAULT_CULTURE%, use_flash: %SF_USE_FLASH% }]
 
   # session storage
   storage:

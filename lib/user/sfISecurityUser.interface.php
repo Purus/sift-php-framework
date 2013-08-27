@@ -15,6 +15,11 @@
 interface sfISecurityUser
 {
   /**
+   * Super admin credential
+   */
+  const CREDENTIAL_SUPER_ADMIN = 'super_admin';
+
+  /**
    * Add a credential to this user.
    *
    * @param mixed Credential data.
@@ -63,4 +68,45 @@ interface sfISecurityUser
    * @return void
    */
   public function setAuthenticated($authenticated);
+
+  /**
+   * Is the user super admin?
+   *
+   * @return boolean
+   */
+  public function isSuperAdmin();
+
+  /**
+   * Returns user id
+   *
+   * @return integer
+   */
+  public function getId();
+
+  /**
+   * Set user id
+   *
+   * @param integer $id The user identifier
+   */
+  public function setId($id);
+
+  /**
+   * Set the user timeout status
+   *
+   * @param boolean $flag
+   */
+  public function setTimedOut($flag = true);
+
+  /**
+   * Is the user timed out?
+   */
+  public function isTimedOut();
+
+  /**
+   * Returns last request time
+   *
+   * @return integer
+   */
+  public function getLastRequestTime();
+
 }

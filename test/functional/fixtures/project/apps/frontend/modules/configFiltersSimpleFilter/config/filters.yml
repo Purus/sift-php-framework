@@ -10,9 +10,8 @@ myFilter:
 simpleFilter:
   class: configFiltersSimpleFilterFilter
 
-
 cache:     ~
 common:    ~
-flash:     ~
+#flash:     ~
 execution: ~
 asset_packager: ~
