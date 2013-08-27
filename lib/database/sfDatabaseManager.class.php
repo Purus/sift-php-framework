@@ -35,7 +35,7 @@ class sfDatabaseManager implements sfIService {
    * @param boolean $force Force the load?
    * @throws LogicException If the registered database is not instance of sfDatabase
    */
-  protected function loadDatabases($force = false)
+  public function loadDatabases($force = false)
   {
     if($this->isLoaded && !$force)
     {
