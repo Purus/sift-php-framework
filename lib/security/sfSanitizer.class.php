@@ -7,70 +7,30 @@
  */
 
 /**
- * sfSanitizer sanitizes string using HTML Purifier
+ * sfSanitizer sanitizes string using HTML Purifier. This is a utility wrapper
+ * around sfHtmlSanitizer.
  *
  * @package    Sift
  * @subpackage security
  */
 class sfSanitizer {
 
-  // The following constants allow for nice looking callbacks to static methods
+  // The following constant allow for nice looking callbacks to static methods
   const sanitize = 'sfSanitizer::sanitize';
 
   /**
-   * @var  HTMLPurifier  singleton instances of the HTML Purifier object
-   */
-  protected static $htmlpurifier = array();
-
-  /**
-   * Returns the singleton instance of HTML Purifier. If no instance has
-   * been created, a new instance will be created. Configuration options
-   * for HTML Purifier can be set in `APPPATH/config/purifier.php` in the
-   * "settings" key.
+   * Returns the instance of sfHTMLPurifier, configured for given type.
    *
-   * $purifier = sfSanitizer::getHtmlPurifier();
-   *
-   * @return  HTMLPurifier
+   * @param string $type Type of the configuration setting to use (see sanitize.yml for more info)
+   * @return sfHtmlPurifier
    */
   public static function getHtmlPurifier($type = 'strict')
   {
-    if(!isset(self::$htmlpurifier[$type]))
-    {
-      // Load the all of HTML Purifier right now.
-      // This increases performance with a slight hit to memory usage.
-      require_once sfConfig::get('sf_sift_lib_dir') . '/vendor/htmlpurifier/HTMLPurifier.includes.php';
-
-      // Load the HTML Purifier auto loader
-      spl_autoload_register(array('HTMLPurifier_Bootstrap', 'autoload'));
-
-      // Create a new configuration object
-      $config = HTMLPurifier_Config::createDefault();
-
-      // load from yaml based on the type
-      $settings = include sfConfigCache::getInstance()->checkConfig('config/sanitize.yml');
-
-      if(!isset($settings[$type]))
-      {
-        throw new sfConfigurationException(sprintf('{sfSanitizer} HTMLPurifier configuration for type "%s" is missing in your sanitize.yml file.', $type));
-      }
-
-      // Load the settings
-      $config->loadArray($settings[$type]);
-
-      // Create the purifier instance
-      self::$htmlpurifier[$type] = new HTMLPurifier($config);
-    }
-
-    return self::$htmlpurifier[$type];
+    return sfHtmlPurifier::instance($type);
   }
 
   /**
-   * Sanitizes the $string using $type configuration configured in
-   * sanitize.yml
-   *
-   * @param string|array $string
-   * @param string $type
-   * @return string
+   * @see xssClean()
    */
   public static function sanitize($string, $type = 'strict')
   {
@@ -84,24 +44,12 @@ class sfSanitizer {
    *
    * The original content is returned with all broken HTML and XSS removed.
    *
-   * @param   mixed   text to clean, or an array to clean recursively
-   * @return  mixed
+   * @param string|array $string Text to clean, or an array to clean recursively
+   * @return mixed
    */
-  public static function xssClean($str, $type = 'strict')
+  public static function xssClean($string, $type = 'strict')
   {
-    if(is_array($str))
-    {
-      foreach($str as $i => $s)
-      {
-        // Recursively clean arrays
-        $str[$i] = self::xssClean($s, $type);
-      }
-      return $str;
-    }
-    // Load HTML Purifier
-    $purifier = self::getHtmlPurifier($type);
-    // Clean the HTML and return it
-    return $purifier->purify($str);
+    return self::getHtmlPurifier($type)->purify($string);
   }
 
   /**

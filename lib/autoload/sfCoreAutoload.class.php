@@ -753,6 +753,7 @@ class sfCoreAutoload {
       'sfsearchsourceabstract' => 'search/source/sfSearchSourceAbstract.class.php',
       'sfsearchsourcecollection' => 'search/source/sfSearchSourceCollection.class.php',
       'sfcrypt' => 'security/sfCrypt.class.php',
+      'sfhtmlpurifier' => 'security/sfHtmlPurifier.class.php',
       'sfinputfilters' => 'security/sfInputFilters.class.php',
       'sfsanitizer' => 'security/sfSanitizer.class.php',
       'sfsecurity' => 'security/sfSecurity.class.php',
