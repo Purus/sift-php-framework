@@ -64,16 +64,23 @@ class sfUser extends sfConfigurable implements sfIService, ArrayAccess {
   );
 
   /**
-   * Construct the user
+   * Constructor
    *
-   * @param sfServiceContainer $serviceContainer
-   * @param array $parameters An associative array of initialization parameters.
+   * @param sfEventDispatcher $dispatcher Event dispatcher
+   * @param sfIStorage $storage Storage
+   * @param sfWebRequest $request Request
+   * @param array $options Options
+   * @inject dispatcher
+   * @inject storage
+   * @inject request
    */
-  public function __construct(sfServiceContainer $serviceContainer, $options = array())
+  public function __construct(sfEventDispatcher $dispatcher, sfIStorage $storage, sfWebRequest $request, $options = array())
   {
-    $this->serviceContainer = $serviceContainer;
-    $this->attributeHolder = new sfParameterHolder(self::ATTRIBUTE_NAMESPACE);
+    $this->dispatcher = $dispatcher;
+    $this->storage = $storage;
+    $this->request = $request;
 
+    $this->attributeHolder = new sfParameterHolder(self::ATTRIBUTE_NAMESPACE);
     parent::__construct($options);
   }
 
@@ -86,7 +93,7 @@ class sfUser extends sfConfigurable implements sfIService, ArrayAccess {
     $this->attributeHolder->clear();
 
     // read attributes from storage
-    $attributes = $this->serviceContainer->get('storage')->read(self::ATTRIBUTE_NAMESPACE);
+    $attributes = $this->storage->read(self::ATTRIBUTE_NAMESPACE);
     if(is_array($attributes))
     {
       foreach($attributes as $namespace => $values)
@@ -99,9 +106,9 @@ class sfUser extends sfConfigurable implements sfIService, ArrayAccess {
     // otherwise
     //  - use the culture defined in the user session
     //  - use the default_culture option
-    if(!($culture = $this->serviceContainer->get('request')->getParameter('sf_culture')))
+    if(!($culture = $this->request->getParameter('sf_culture')))
     {
-      if(null === ($culture = $this->serviceContainer->get('storage')->read(self::CULTURE_NAMESPACE)))
+      if(null === ($culture = $this->storage->read(self::CULTURE_NAMESPACE)))
       {
         $culture = $this->getOption('default_culture');
       }
@@ -140,7 +147,7 @@ class sfUser extends sfConfigurable implements sfIService, ArrayAccess {
     }
 
     // dispatch event
-    $this->serviceContainer->get('event_dispatcher')->notify(new sfEvent('user.change_culture', array(
+    $this->dispatcher->notify(new sfEvent('user.change_culture', array(
         'previous' => $this->culture,
         'culture' => $culture)));
 
@@ -169,7 +176,7 @@ class sfUser extends sfConfigurable implements sfIService, ArrayAccess {
    */
   public function getIp()
   {
-    return $this->serviceContainer->get('request')->getIp();
+    return $this->request->getIp();
   }
 
   /**
@@ -189,7 +196,7 @@ class sfUser extends sfConfigurable implements sfIService, ArrayAccess {
    */
   public function getIpForwardedFor()
   {
-    return $this->serviceContainer->get('request')->getIpForwardedFor();
+    return $this->request->getIpForwardedFor();
   }
 
   /**
@@ -199,7 +206,7 @@ class sfUser extends sfConfigurable implements sfIService, ArrayAccess {
    */
   public function getHostname()
   {
-    return $this->serviceContainer->get('request')->getHostname();
+    return $this->request->getHostname();
   }
 
   /**
@@ -209,7 +216,7 @@ class sfUser extends sfConfigurable implements sfIService, ArrayAccess {
    */
   public function getUserAgent()
   {
-    return $this->serviceContainer->get('request')->getUserAgent();
+    return $this->request->getUserAgent();
   }
 
   /**
@@ -278,7 +285,7 @@ class sfUser extends sfConfigurable implements sfIService, ArrayAccess {
   public function setTimezone($timezone)
   {
     date_default_timezone_set($timezone);
-    $this->serviceContainer->get('event_dispatcher')->notify(new sfEvent('user.change_timezone', array(
+    $this->dispatcher->notify(new sfEvent('user.change_timezone', array(
       'user' => $this,
       'method' => 'setTimezone',
       'timezone' => $timezone)
@@ -292,9 +299,8 @@ class sfUser extends sfConfigurable implements sfIService, ArrayAccess {
    */
   public function getTimezone()
   {
-    $request = $this->context->getRequest();
-    $offset = $request->getCookie('timezone_offset');
-    $dst = $request->getCookie('timezone_daylightsavings');
+    $offset = $this->request->getCookie('timezone_offset');
+    $dst = $this->request->getCookie('timezone_daylightsavings');
     if($offset !== null && $dst !== null)
     {
       $offset *= 3600;
@@ -461,18 +467,16 @@ class sfUser extends sfConfigurable implements sfIService, ArrayAccess {
       }
     }
 
-    $storage = $this->serviceContainer->get('storage');
     $attributes = array();
-
     foreach($this->attributeHolder->getNamespaces() as $namespace)
     {
       $attributes[$namespace] = $this->attributeHolder->getAll($namespace);
     }
 
     // write attributes to the storage
-    $storage->write(self::ATTRIBUTE_NAMESPACE, $attributes);
+    $this->storage->write(self::ATTRIBUTE_NAMESPACE, $attributes);
     // write culture to the storage
-    $storage->write(self::CULTURE_NAMESPACE, $this->culture);
+    $this->storage->write(self::CULTURE_NAMESPACE, $this->culture);
   }
 
   /**
@@ -487,7 +491,7 @@ class sfUser extends sfConfigurable implements sfIService, ArrayAccess {
    */
   public function __call($method, $arguments)
   {
-    $event = $this->serviceContainer->get('event_dispatcher')->notifyUntil(
+    $event = $this->dispatcher->notifyUntil(
         new sfEvent('user.method_not_found', array(
         'user' => $this,
         'method' => $method,

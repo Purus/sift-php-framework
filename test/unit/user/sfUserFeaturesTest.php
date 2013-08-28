@@ -1,9 +1,6 @@
 <?php
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
-require_once($_test_dir.'/unit/sfContextMock.class.php');
-require_once($_test_dir.'/unit/sfServiceContainerMock.php');
-
 
 $t = new lime_test(16, new lime_output_color());
 
@@ -26,11 +23,7 @@ class sfTestUser extends sfUser {
 $sessionPath = sys_get_temp_dir() . '/sessions_' . rand(11111, 99999);
 $storage = new sfSessionTestStorage(array('session_path' => $sessionPath));
 
-$serviceContainer->set('storage', $storage);
-
-$storage->clear();
-
-$user = new sfTestUser($serviceContainer);
+$user = new sfTestUser(new sfEventDispatcher(), $storage, new sfWebRequest());
 
 $t->diag('->isBot()');
 

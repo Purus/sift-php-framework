@@ -60,7 +60,7 @@ class sfContext {
   {
     if(!$this->storage)
     {
-      $this->storage = new sfSessionTestStorage();
+      $this->storage = new sfSessionTestStorage(array('session_path' => sys_get_temp_dir()));
     }
 
     return $this->storage;
@@ -77,10 +77,9 @@ class sfContext {
 
   public function getUser()
   {
-    global $serviceContainer;
     if(!$this->user)
     {
-      $this->user = new sfBasicSecurityUser($serviceContainer);
+      $this->user = new sfBasicSecurityUser($this->getEventDispatcher(), $this->getStorage(), $this->getRequest());
     }
     return $this->user;
   }

@@ -38,7 +38,6 @@ class sfFactoryConfigHandler extends sfYamlConfigHandler {
 
     // required services
     $requiredServices = array(
-      'event_dispatcher',
       'controller',
       'request',
       'response',
@@ -100,7 +99,7 @@ class sfFactoryConfigHandler extends sfYamlConfigHandler {
         case 'storage':
 
           $inits[] = sprintf("\$this->registerService('%s', %s);\n", $serviceName, $this->varExport($definition));
-          
+
           // append instance creation
           // $instances[] = sprintf("  \$this->storage = sfStorage::newInstance(sfConfig::get('sf_factory_storage', '%s'));", $class);
           // append instance initialization
@@ -116,29 +115,29 @@ class sfFactoryConfigHandler extends sfYamlConfigHandler {
 
         case 'view_cache':
           // append view cache class name
-          
+
           $inits[] = sprintf("\n  if(sfConfig::get('sf_cache'))\n  {\n" .
               "    \$this->viewCacheManager = new sfViewCacheManager(\$this, sfCache::factory(sfConfig::get('sf_factory_view_cache', '%s'), (array)sfConfig::get('sf_factory_view_cache_parameters', %s)));\n" .
 //                             "    \$this->viewCacheManager->initialize(, sfConfig::get('sf_factory_view_cache', '%s'), sfConfig::get('sf_factory_view_cache_parameters', %s));\n".
               " }\n", $class, $parameters);
            *
-          
+
           break;
 
         case 'i18n':
 
-          
+
           $inits[] = sprintf("\n  if (sfConfig::get('sf_i18n'))\n  {\n" .
               "    \$class = sfConfig::get('sf_factory_i18n', '%s');\n" .
               "    \$this->i18n = new \$class(\$this, sfConfig::get('sf_i18n_param', array()));\n" .
               "    sfWidgetFormSchemaFormatter::setTranslationCallable(array(\$this->i18n, '__'));\n" .
               "  }\n"
               , $class);
-           * 
-          
+           *
+
           break;
           */
-        
+
         // other  services
         default:
           $inits[] = sprintf("\$this->registerService('%s', %s);\n", $serviceName, $this->varExport($definition));

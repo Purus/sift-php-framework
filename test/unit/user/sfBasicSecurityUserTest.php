@@ -2,7 +2,6 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 require_once($_test_dir.'/unit/sfContextMock.class.php');
-require_once($_test_dir.'/unit/sfServiceContainerMock.php');
 
 $t = new lime_test(39, new lime_output_color());
 
@@ -15,8 +14,11 @@ $user = new sfBasicSecurityUser();
 $user->initialize($context);
 $t->is($user->isTimedOut(), true, '->initialize() times out the user if no request made for a long time');
 */
+$dispatcher = new sfEventDispatcher();
+$storage = new sfNoStorage();
+$request = new sfWebRequest();
 
-$user = new sfBasicSecurityUser($serviceContainer);
+$user = new sfBasicSecurityUser($dispatcher, $storage, $request, array());
 
 // ->getCredentials()
 $t->diag('->getCredentials()');
@@ -33,8 +35,9 @@ $user->setAuthenticated(false);
 $t->is($user->isAuthenticated(), false, '->setAuthenticated() accepts a boolean as its first parameter');
 
 // ->setTimedOut() ->getTimedOut()
-sfConfig::set('sf_timeout', 86400);
-$user = new sfBasicSecurityUser($serviceContainer);
+$user = new sfBasicSecurityUser($dispatcher, $storage, $request, array(
+  'timeout' => 86400
+));
 
 $t->diag('->setTimedOut() ->isTimedOut()');
 $t->is($user->isTimedOut(), false, '->isTimedOut() returns false if the session is not timed out');

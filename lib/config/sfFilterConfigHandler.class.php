@@ -164,17 +164,21 @@ class sfFilterConfigHandler extends sfYamlConfigHandler {
    */
   protected function addSecurityFilter($category, $class, $parameters)
   {
-    return $this->addFilter($category, $class, $parameters);
-
     $code = array();
-    $code[] = sprintf('list($class, $parameters) = sfConfig::get(\'sf_%s_filter\', array(\'%s\', %s));', sfInflector::tableize($category), $class, $parameters);
-    $code[] = sprintf('$filter = sfDependencyInjectionContainer::create($class);');
-    $code[] = 'if($actionInstance->isSecure() && !in_array(\'sfISecurityUser\', class_implements($this->getContext()->getUser())))';
+
+    // does this action require security?
+    $code[] = '// does this action require security?';
+    $code[] = 'if($actionInstance->isSecure())';
     $code[] = '{';
-    $code[] = '  throw new LogicException(\'Security is enabled, but your sfUser implementation does not implement sfSecurityUser interface.\');';
+    $code[] = sprintf('  list($class, $parameters) = sfConfig::get(\'sf_%s_filter\', array(\'%s\', %s));', sfInflector::tableize($category), $class, $parameters);
+    $code[] = sprintf('  $filter = sfDependencyInjectionContainer::create($class);');
+    $code[] = 'if(!in_array(\'sfISecurityUser\', class_implements($this->getContext()->getUser())))';
+    $code[] = '{';
+    $code[] = '  throw new LogicException(\'Security is enabled, but your sfUser implementation does not implement sfISecurityUser interface.\');';
     $code[] = '}';
     $code[] = '$filter->initialize($this->context, $parameters);';
     $code[] = '$this->register($filter);';
+    $code[] = '}';
 
     return join("\n", $code) . "\n";
   }

@@ -95,12 +95,10 @@ class sfBasicSecurityUser extends sfUser implements sfISecurityUser, sfIService 
     }
 
     // read data from storage
-    $storage = $this->serviceContainer->get('storage');
-
-    $this->authenticated = $storage->read(self::AUTH_NAMESPACE);
-    $this->credentials = $storage->read(self::CREDENTIAL_NAMESPACE);
-    $this->lastRequest = $storage->read(self::LAST_REQUEST_NAMESPACE);
-    $this->id = $storage->read(self::ID_NAMESPACE);
+    $this->authenticated = $this->storage->read(self::AUTH_NAMESPACE);
+    $this->credentials = $this->storage->read(self::CREDENTIAL_NAMESPACE);
+    $this->lastRequest = $this->storage->read(self::LAST_REQUEST_NAMESPACE);
+    $this->id = $this->storage->read(self::ID_NAMESPACE);
 
     // Automatic logout logged in user if no request within the timeout option
     if(null !== $this->lastRequest && (time() - $this->lastRequest) > $this->getOption('timeout'))
@@ -354,14 +352,12 @@ class sfBasicSecurityUser extends sfUser implements sfISecurityUser, sfIService 
 
   public function shutdown()
   {
-    $storage = $this->serviceContainer->get('storage');
-
     // write the last request time to the storage
-    $storage->write(self::LAST_REQUEST_NAMESPACE, $this->lastRequest);
+    $this->storage->write(self::LAST_REQUEST_NAMESPACE, $this->lastRequest);
 
-    $storage->write(self::AUTH_NAMESPACE, $this->authenticated);
-    $storage->write(self::CREDENTIAL_NAMESPACE, $this->credentials);
-    $storage->write(self::ID_NAMESPACE, $this->id);
+    $this->storage->write(self::AUTH_NAMESPACE, $this->authenticated);
+    $this->storage->write(self::CREDENTIAL_NAMESPACE, $this->credentials);
+    $this->storage->write(self::ID_NAMESPACE, $this->id);
 
     // call the parent shutdown method
     parent::shutdown();

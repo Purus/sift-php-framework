@@ -69,13 +69,12 @@ class sfContext {
     // create a new action stack
     $this->actionStack = new sfActionStack();
 
-    // create new service container
-    $this->serviceContainer = sfServiceContainer::getInstance();
-
     $diContainer = sfDependencyInjectionContainer::getInstance();
-
     $diContainer->getDependencies()->clear();
 
+    // create new service container
+    $this->serviceContainer = sfServiceContainer::getInstance();
+    $diContainer->getDependencies()->set('event_dispatcher', $this->application->getEventDispatcher());
     // register self to the dependencies for DIC
     $diContainer->getDependencies()->set('context', $this);
 
@@ -85,7 +84,7 @@ class sfContext {
     // include the factories configuration, will setup services
     require(sfConfigCache::getInstance()->checkConfig(sfConfig::get('sf_app_config_dir_name') . '/factories.yml'));
 
-    // register existing services as dependecies, 
+    // register existing services as dependecies,
     foreach($this->serviceContainer->getServiceDefinitions() as $id => $serviceDefinition)
     {
       $diContainer->getDependencies()->set($id, new sfServiceReference($id));
@@ -99,6 +98,13 @@ class sfContext {
     $this->application->getEventDispatcher()->notify(new sfEvent('context.load_factories', array(
       'context' => $this
     )));
+
+    // we need to load databases
+    if(sfConfig::get('sf_use_database'))
+    {
+      // load databases
+      $this->getDatabaseManager()->loadDatabases();
+    }
   }
 
   /**
@@ -155,7 +161,7 @@ class sfContext {
 
   /**
    * Returns application instance
-   * 
+   *
    * @return sfApplication
    */
   public function getApplication()
@@ -205,7 +211,7 @@ class sfContext {
   /**
    * Dispatches the current request.
    *
-   * 
+   *
    */
   public function dispatch()
   {
@@ -474,7 +480,9 @@ class sfContext {
     {
       sfLogger::getInstance()->info('{sfContext} Shutting down');
     }
-    
+
+    $this->application->shutdown();
+
     sfServiceContainer::getInstance()->clear();
   }
 

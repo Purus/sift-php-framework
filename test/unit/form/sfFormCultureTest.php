@@ -8,17 +8,9 @@ $t = new lime_test(9, new lime_output_color());
 
 $sessionPath = sys_get_temp_dir() . '/sessions_' . rand(11111, 99999);
 $storage = new sfSessionTestStorage(array('session_path' => $sessionPath));
-
-$seviceContainer = sfServiceContainer::getInstance();
-$seviceContainer->set('storage', $storage);
-$seviceContainer->set('request', new sfWebRequest());
-$seviceContainer->set('event_dispatcher', new sfEventDispatcher());
-
-$user = new sfUser($seviceContainer);
-
+$request = new sfWebRequest();
+$user = new sfUser(new sfEventDispatcher(), $storage, $request);
 $user->setCulture('en');
-
-$request = sfContext::getInstance()->getRequest();
 
 // __construct()
 $t->diag('__construct()');
@@ -31,6 +23,7 @@ catch(RuntimeException $e)
 {
   $t->pass('__construct() throws a RuntimeException if you don\'t pass a "languages" option');
 }
+
 $form = new sfFormCulture($user, array('languages' => array('en', 'fr')));
 $t->is($form->getDefault('language'), 'en', '__construct() sets the default language value to the user language');
 $w = $form->getWidgetSchema();
@@ -47,6 +40,7 @@ sfForm::disableCSRFProtection();
 
 $form = new sfFormCulture($user, array('languages' => array('en', 'fr')));
 $request->setParameter('language', 'fr');
+
 $t->is($form->process($request), true, '->process() returns true if the form is valid');
 $t->is($user->getCulture(), 'fr', '->process() changes the user culture');
 

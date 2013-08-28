@@ -26,7 +26,7 @@ default:
 
   user:
     class: myUser
-    arguments: ["@service_container", { timeout: %SF_TIMEOUT%, default_culture: %SF_I18N_DEFAULT_CULTURE%, use_flash: %SF_USE_FLASH% }]
+    arguments: ["$event_dispatcher", "@storage", "@request", { timeout: %SF_TIMEOUT%, default_culture: %SF_I18N_DEFAULT_CULTURE%, use_flash: %SF_USE_FLASH% }]
 
   # session storage
   storage:
@@ -47,10 +47,6 @@ default:
   i18n:
     class: sfI18n
     arguments: ["$context", %SF_I18N_PARAM%]
-
-  # event dispatcher
-  event_dispatcher:
-    class: sfEventDispatcher
 
   # mailer service
   mailer:

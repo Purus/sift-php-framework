@@ -27,7 +27,7 @@ class myDatabaseManager extends sfDatabaseManager {
     $this->databases = $databases;
   }
 
-  protected function loadDatabases($force = false)
+  public function loadDatabases($force = false)
   {
   }
 

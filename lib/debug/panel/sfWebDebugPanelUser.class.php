@@ -48,7 +48,9 @@ class sfWebDebugPanelUser extends sfWebDebugPanel {
     $user = sfContext::getInstance()->getUser();
     $html = array();
 
+    // FIXME: make the output more compact
     $html[] = sprintf('<tr><td><h2>Culture:</h2> %s</td></tr>', $user->getCulture());
+    $html[] = sprintf('<tr><td><h2>Timezone:</h2> %s</td></tr>', $user->getTimezone());
 
     $html[] = '<tr><td><h2>Credentials:</h2></td></tr>';
 
