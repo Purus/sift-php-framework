@@ -66,11 +66,11 @@ abstract class sfProject extends sfConfigurable {
   protected $dispatcher;
 
   /**
-   * Service container
+   * Shutdown scheduler
    *
-   * @var sfServiceContainer
+   * @var sfShutdownScheduler
    */
-  protected $serviceContainer;
+  protected $shutdownScheduler;
 
   /**
    * Array of required options
@@ -98,13 +98,14 @@ abstract class sfProject extends sfConfigurable {
   /**
    * Constructor.
    *
-   * @param string              $rootDir    The project root directory
-   * @param sfEventDispatcher   $dispatcher The event dispatcher
+   * @param array $options The options
+   * @param sfEventDispatcher $dispatcher The event dispatcher
+   * @param sfShutdownScheduler $shutdownScheduler The shutdown scheduler
    */
-  public function __construct($options = array(), sfEventDispatcher $dispatcher = null)
+  public function __construct($options = array(), sfEventDispatcher $dispatcher = null, sfShutdownScheduler $shutdownScheduler = null)
   {
     $this->dispatcher = is_null($dispatcher) ? new sfEventDispatcher() : $dispatcher;
-    // $this->serviceContaner = sfServiceContainer::getInstance();
+    $this->shutdownScheduler = is_null($shutdownScheduler) ? new sfShutdownScheduler() : $shutdownScheduler;
 
     parent::__construct($options);
 
@@ -113,12 +114,11 @@ abstract class sfProject extends sfConfigurable {
       self::$active = $this;
     }
 
-    // register to shutdown scheduler
-    sfShutdownScheduler::getInstance()->register(array($this, 'shutdown'));
+    // register the shutdown
+    $this->shutdownScheduler->register(array($this, 'shutdown'));
 
     $this->configure();
   }
-
 
   /**
    * Configures the current project
@@ -351,6 +351,16 @@ abstract class sfProject extends sfConfigurable {
   }
 
   /**
+   * Returns the shutdown scheduler instance
+   *
+   * @return sfShutdownScheduler
+   */
+  public function getShutdownScheduler()
+  {
+    return $this->shutdownScheduler;
+  }
+
+  /**
    * Return an array of core helpers
    *
    * @return array
@@ -415,7 +425,8 @@ abstract class sfProject extends sfConfigurable {
                   'sf_app' => $application,
                   'sf_app_dir' => $this->getOption('sf_apps_dir') . '/' . $application
               )),
-              $this->getEventDispatcher());
+              $this->getEventDispatcher(),
+              $this->getShutdownScheduler());
     }
     return $this->applications[$application];
   }

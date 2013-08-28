@@ -73,10 +73,11 @@ abstract class sfApplication extends sfProject {
    * @param boolean $debug Turn on debugging features?
    * @param array $options Array of options
    * @param sfEventDispatcher $dispatcher Event dispatcher object
+   * @param sfShutdownScheduler $shutdownScheduler Shutdown scheduler
    */
-  public function __construct($environment, $debug = false, $options = array(), sfEventDispatcher $dispatcher = null)
+  public function __construct($environment, $debug = false, $options = array(), sfEventDispatcher $dispatcher = null, sfShutdownScheduler $shutdownScheduler = null)
   {
-    parent::__construct($options, $dispatcher);
+    parent::__construct($options, $dispatcher, $shutdownScheduler);
 
     $this->debug = $debug;
     $this->environment = $environment;
@@ -166,7 +167,7 @@ abstract class sfApplication extends sfProject {
       set_error_handler(array('sfPhpErrorException', 'handleErrorCallback'), sfConfig::get('sf_error_reporting', E_ALL & ~E_NOTICE));
     }
 
-    sfShutdownScheduler::getInstance()->register(array('sfPhpErrorException', 'fatalErrorShutdownHandler'), array(), sfShutdownScheduler::LOW_PRIORITY);
+    $this->getShutdownScheduler()->register(array('sfPhpErrorException', 'fatalErrorShutdownHandler'), array(), sfShutdownScheduler::LOW_PRIORITY);
 
     // force setting default timezone if not set
     if(function_exists('date_default_timezone_get'))

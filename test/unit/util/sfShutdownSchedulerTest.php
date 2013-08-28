@@ -4,7 +4,7 @@ require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
 $t = new lime_test(9, new lime_output_color());
 
-$scheduler = sfShutdownScheduler::getInstance();
+$scheduler = new sfShutdownScheduler();
 
 $t->isa_ok($scheduler, 'sfShutdownScheduler', 'getInstance() returns an instance of sfShutdownScheduler');
 $t->isa_ok(count($scheduler), 0, 'implements Countable interface');

@@ -90,10 +90,11 @@ class sfContext {
       $diContainer->getDependencies()->set($id, new sfServiceReference($id));
     }
 
-    sfShutdownScheduler::getInstance()->clear();
+    // sfShutdownScheduler::getInstance()->clear();
 
     // register our shutdown function, to be called last
-    sfShutdownScheduler::getInstance()->register(array($this, 'shutdown'), array(), sfShutdownScheduler::LOW_PRIORITY);
+    $this->application->getShutdownScheduler()->register(array($this, 'shutdown'),
+        array(), sfShutdownScheduler::LOW_PRIORITY);
 
     $this->application->getEventDispatcher()->notify(new sfEvent('context.load_factories', array(
       'context' => $this

@@ -13,14 +13,15 @@
  * Example:
  *
  * <code>
+ * $scheduler = new sfShutdownScheduler();
  * // register function
- * sfShutdownScheduler::getInstance()->register('my_function');
+ * $scheduler->register('my_function');
  * // register static method
- * sfShutdownScheduler::getInstance()->register(array('myClass' 'myStaticMethod'));
+ * $scheduler->register(array('myClass' 'myStaticMethod'));
  * // register object method
- * sfShutdownScheduler::getInstance()->register(array($object, 'myPublicMethod'));
+ * $scheduler->register(array($object, 'myPublicMethod'));
  * // register with arguments
- * sfShutdownScheduler::getInstance()->register('my_function', 'foo', true);
+ * $scheduler->register('my_function', 'foo', true);
  * </code>
  *
  * @package    Sift
@@ -54,30 +55,8 @@ class sfShutdownScheduler implements Countable {
   private $callbacks = array();
 
   /**
-   * sfShutdownScheduler
-   *
-   * @var sfShutdownScheduler
-   */
-  protected static $instance;
-
-  /**
-   * Returns an singleton instance of this class.
-   *
-   * @return sfShutdownScheduler
-   */
-  public static function getInstance()
-  {
-    if(!self::$instance)
-    {
-      self::$instance = new sfShutdownScheduler();
-    }
-    return self::$instance;
-  }
-
-  /**
    * Constructs the object. Automatically registers callRegisteredShutdown()
    * to be executed at script shutdown.
-   *
    */
   public function __construct()
   {
