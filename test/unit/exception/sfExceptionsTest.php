@@ -2,16 +2,18 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(40, new lime_output_color());
+$t = new lime_test(28);
 
 foreach (array(
-  'action', 'autoload', 'cache', 'configuration', 'context', 'controller', 'database', 
-  'error404', 'factory', 'file', 'filter', 'forward', 'initialization', 'parse', 'render', 'security',
-  'stop', 'storage', 'validator', 'view'
+  'cache', 'configuration', 'controller', 'database',
+  'error404', 'factory', 'file', 'forward', 'initialization', 'parse', 'render', 'security',
+  'stop', 'storage', 'view', 'webbrowserinvalidresponse',
+  'phpError', 'lesscompiler', 'calendar', 'imagetransform', 'datetime', 'httpdownload',
+  'plugindependency', 'plugin', 'pluginrecursivedependency', 'pluginrest',
+  'clicommandarguments', 'clicommand'
 ) as $class)
 {
   $class = sprintf('sf%sException', ucfirst($class));
   $e = new $class();
-  $t->is($e->getName(), $class, sprintf('"%s" exception name is "%s"', $class, $class));
-  $t->is(get_parent_class($e), 'sfException', sprintf('"%s" inherits from sfException', $class));
+  $t->ok($e instanceof sfException, sprintf('"%s" inherits from sfException', $class));
 }

@@ -7,11 +7,9 @@
  */
 
 /**
- * sfPluginException.
+ * sfPluginException
  *
  * @package    Sift
  * @subpackage plugin
  */
-class sfPluginException extends sfException {
-  
-}
+class sfPluginException extends sfException {}

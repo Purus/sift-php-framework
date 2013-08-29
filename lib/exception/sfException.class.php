@@ -379,24 +379,13 @@ class sfException extends Exception {
    *
    * @return string
    */
-  static protected function escape($value)
+  protected static function escape($value)
   {
     if(!is_string($value))
     {
       return $value;
     }
-
     return htmlspecialchars($value, ENT_QUOTES, sfConfig::get('sf_charset', 'UTF-8'));
-  }
-
-  /**
-   * Sets the name of this exception.
-   *
-   * @param string An exception name
-   */
-  protected function setName($name)
-  {
-    $this->name = $name;
   }
 
 }

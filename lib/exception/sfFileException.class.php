@@ -13,17 +13,4 @@
  * @package    Sift
  * @subpackage exception
  */
-class sfFileException extends sfException
-{
-  /**
-   * Class constructor.
-   *
-   * @param string The error message
-   * @param int    The error code
-   */
-  public function __construct($message = null, $code = 0)
-  {
-    $this->setName('sfFileException');
-    parent::__construct($message, $code);
-  }
-}
+class sfFileException extends sfException {}

@@ -7,11 +7,9 @@
  */
 
 /**
- * sfPluginRestException.
+ * sfPluginRecursiveDependencyException
  *
  * @package    Sift
  * @subpackage plugin
  */
-class sfPluginRestException extends sfPluginException
-{
-}
+class sfPluginRecursiveDependencyException extends sfPluginException {}

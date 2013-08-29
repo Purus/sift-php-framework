@@ -22,7 +22,6 @@ class sfError404Exception extends sfException
    */
   public function __construct($message = null, $code = 0)
   {
-    $this->setName('sfError404Exception');
     if($message == null && sfContext::hasInstance())
     {
       $request = sfContext::getInstance()->getRequest();

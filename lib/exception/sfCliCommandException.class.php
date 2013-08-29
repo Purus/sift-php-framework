@@ -7,11 +7,9 @@
  */
 
 /**
- * sfPluginDependencyException.
+ * sfCliCommandException is thrown when an error occurs in a task.
  *
  * @package    Sift
- * @subpackage plugin
+ * @subpackage exception
  */
-class sfPluginDependencyException extends sfPluginException {
-  
-}
+class sfCliCommandException extends sfException {}

@@ -13,17 +13,4 @@
  * @package    Sift
  * @subpackage exception
  */
-class sfConfigurationException extends sfException
-{
-  /**
-   * Class constructor.
-   *
-   * @param string The error message
-   * @param int    The error code
-   */
-  public function __construct($message = null, $code = 0)
-  {
-    $this->setName('sfConfigurationException');
-    parent::__construct($message, $code);
-  }
-}
+class sfConfigurationException extends sfException {}

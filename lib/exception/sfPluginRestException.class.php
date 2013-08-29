@@ -5,13 +5,11 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
- 
+
 /**
- * sfCliCommandException is thrown when an error occurs in a cli task.
+ * sfPluginRestException.
  *
  * @package    Sift
- * @subpackage exception
+ * @subpackage plugin
  */
-class sfCliCommandArgumentsException extends sfCliCommandException
-{
-}
+class sfPluginRestException extends sfPluginException {}

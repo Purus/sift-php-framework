@@ -12,18 +12,4 @@
  * @package Sift
  * @subpackage exception
  */
-class sfDateTimeException extends sfException {
-
-  /**
-   * Class constructor.
-   *
-   * @param  string  the error message
-   * @param  int    the error code
-   */
-  public function __construct($message = null, $code = 0)
-  {
-    $this->setName('sfDateTimeException');
-    parent::__construct($message, $code);
-  }
-
-}
+class sfDateTimeException extends sfException {}

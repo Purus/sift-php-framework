@@ -7,11 +7,9 @@
  */
 
 /**
- * sfPluginRecursiveDependencyException
+ * sfCliCommandException is thrown when an error occurs in a cli task.
  *
  * @package    Sift
- * @subpackage plugin
+ * @subpackage exception
  */
-class sfPluginRecursiveDependencyException extends sfPluginException
-{
-}
+class sfCliCommandArgumentsException extends sfCliCommandException {}
