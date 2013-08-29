@@ -1,11 +1,9 @@
 <?php
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
-$t = new lime_test(5, new lime_output_color());
+$t = new lime_test(4, new lime_output_color());
 
-class sfContext {
-  
-}
+class sfContext {}
 
 class testMailer {
 
@@ -29,20 +27,12 @@ class Newsletter {
 
 }
 
-class myServiceContainer extends sfServiceContainer {
-  
-  public function __construct()
-  {    
-  }
-
-}
 
 sfConfig::set('sf_lib_dir', '/foobar');
 
-sfDependencyInjectionContainer::getInstance()
-    ->getDependencies()->set('context', new sfContext());
+$services = new sfServiceContainer();
 
-$services = new myServiceContainer();
+$services->getDependencies()->set('context', new sfContext());
 
 $services->register('mailer', sfServiceDefinition::createFromArray(array(
     'class' => 'testMailer',
@@ -69,13 +59,3 @@ $newsletter = $services->get('newsletter');
 $t->isa_ok($newsletter, 'Newsletter', 'Service returned the object');
 
 $t->is_deeply($newsletter->mailer, $mailer, 'Service returned the object');
-
-try
-{
- clone $services;
- $t->fail('Container throws an exception if trying to clone it');
-}
-catch(Exception $e)
-{
-  $t->pass('Container throws an exception if trying to clone it');
-}

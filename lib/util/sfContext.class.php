@@ -22,14 +22,14 @@ class sfContext {
    *
    * @var sfApplication
    */
-  protected $application = null;
+  protected $application;
 
   /**
    * Action stack
    *
    * @var sfActionStack
    */
-  protected $actionStack = null;
+  protected $actionStack;
 
   /**
    * Instances holder
@@ -43,7 +43,7 @@ class sfContext {
    *
    * @var string
    */
-  protected static $current = null;
+  protected static $current;
 
   /**
    * Service container instance
@@ -57,40 +57,30 @@ class sfContext {
    *
    * @param sfApplication $application
    */
-  public function __construct(sfApplication $application)
+  public function __construct(sfApplication $application, sfServiceContainer $serviceContainer = null)
   {
     if(sfConfig::get('sf_logging_enabled'))
     {
       $this->getLogger()->info('{sfContext} Initialization');
     }
 
-    $this->application = $application;
-
-    // create a new action stack
     $this->actionStack = new sfActionStack();
+    $this->application = $application;
+    $this->serviceContainer = is_null($serviceContainer) ? new sfServiceContainer() : $serviceContainer;
 
-    $diContainer = sfDependencyInjectionContainer::getInstance();
-    $diContainer->getDependencies()->clear();
-
-    // create new service container
-    $this->serviceContainer = sfServiceContainer::getInstance();
-    $diContainer->getDependencies()->set('event_dispatcher', $this->application->getEventDispatcher());
-    // register self to the dependencies for DIC
-    $diContainer->getDependencies()->set('context', $this);
-
-    // clear container
-    $this->serviceContainer->clear();
+    // register dependencies
+    $this->serviceContainer->getDependencies()
+        ->set('event_dispatcher', $this->application->getEventDispatcher())
+        ->set('context', $this);
 
     // include the factories configuration, will setup services
     require(sfConfigCache::getInstance()->checkConfig(sfConfig::get('sf_app_config_dir_name') . '/factories.yml'));
 
-    // register existing services as dependecies,
-    foreach($this->serviceContainer->getServiceDefinitions() as $id => $serviceDefinition)
+    // register existing services as dependencies
+    foreach($this->serviceContainer->getServiceIds() as $id)
     {
-      $diContainer->getDependencies()->set($id, new sfServiceReference($id));
+      $this->serviceContainer->getDependencies()->set($id, new sfServiceReference($id));
     }
-
-    // sfShutdownScheduler::getInstance()->clear();
 
     // register our shutdown function, to be called last
     $this->application->getShutdownScheduler()->register(array($this, 'shutdown'),
@@ -137,47 +127,13 @@ class sfContext {
   }
 
   /**
-   * @see sfServiceContainer::register
-   */
-  public function registerService($serviceName, $service)
-  {
-    return sfServiceContainer::getInstance()->register($serviceName, $service);
-  }
-
-  /**
-   * @see sfServiceContainer::get
-   */
-  public function getService($serviceName)
-  {
-    return sfServiceContainer::getInstance()->get($serviceName);
-  }
-
-  /**
-   * @see sfServiceContainer::get
-   */
-  public function setService($serviceName, $service)
-  {
-    return sfServiceContainer::getInstance()->set($serviceName, $service);
-  }
-
-  /**
-   * Returns application instance
-   *
-   * @return sfApplication
-   */
-  public function getApplication()
-  {
-    return $this->application;
-  }
-
-  /**
    * Retrieves the singleton instance of this class.
    *
    * @param string $name The name of the sfContext to retrieve.
    *
    * @return sfContext The sfContext implementation instance.
    */
-  static public function getInstance($name = null)
+  public static function getInstance($name = null)
   {
     if(null === $name)
     {
@@ -209,15 +165,6 @@ class sfContext {
     return isset(self::$instances[$name]);
   }
 
-  /**
-   * Dispatches the current request.
-   *
-   *
-   */
-  public function dispatch()
-  {
-    return $this->getController()->dispatch();
-  }
 
   /**
    * Sets the current context to something else
@@ -229,10 +176,71 @@ class sfContext {
     if(!isset(self::$instances[$name]))
     {
       $current = sfContext::getInstance()->getApplication();
-      sfContext::createInstance(
-              sfCore::getProject()->getApplication($name, $current->getEnvironment(), $current->isDebug()));
+      sfContext::createInstance(sfCore::getProject()->getApplication($name, $current->getEnvironment(), $current->isDebug()));
     }
     self::$current = $name;
+  }
+
+  /**
+   * Returns the service container instance
+   *
+   * @return sfServiceContainer
+   */
+  public function getServiceContainer()
+  {
+    return $this->serviceContainer;
+  }
+
+  /**
+   * @see sfServiceContainer::register
+   */
+  public function registerService($serviceName, $service)
+  {
+    return $this->serviceContainer->register($serviceName, $service);
+  }
+
+  /**
+   * @see sfServiceContainer::get
+   */
+  public function getService($serviceName)
+  {
+    return $this->serviceContainer->get($serviceName);
+  }
+
+  /**
+   * @see sfServiceContainer::get
+   */
+  public function setService($serviceName, $service)
+  {
+    return $this->serviceContainer->set($serviceName, $service);
+  }
+
+  /**
+   * Returns an array of already active services
+   *
+   * @return array
+   */
+  public function getServices()
+  {
+    return $this->serviceContainer->getServices();
+  }
+
+  /**
+   * Returns application instance
+   *
+   * @return sfApplication
+   */
+  public function getApplication()
+  {
+    return $this->application;
+  }
+
+  /**
+   * Dispatches the current request.
+   */
+  public function dispatch()
+  {
+    return $this->getController()->dispatch();
   }
 
   /**
@@ -262,6 +270,7 @@ class sfContext {
 
   /**
    * Retrieve the controller.
+   *
    * @return sfController The current sfController implementation instance.
    */
   public function getController()
@@ -272,11 +281,11 @@ class sfContext {
   /**
    * Retrieves the mailer.
    *
-   * @return myMailer The current myMailer singleton
+   * @return sfMailer The current sfMailer implementation instance
    */
   public function getMailer()
   {
-    return sfServiceContainer::getInstance()->get('mailer');
+    return $this->getService('mailer');
   }
 
   /**
@@ -461,16 +470,6 @@ class sfContext {
   }
 
   /**
-   * Returns an array of already active services
-   *
-   * @return array
-   */
-  public function getServices()
-  {
-    return sfServiceContainer::getInstance()->getServices();
-  }
-
-  /**
    * Execute the shutdown procedure.
    *
    * @return void
@@ -481,10 +480,8 @@ class sfContext {
     {
       sfLogger::getInstance()->info('{sfContext} Shutting down');
     }
-
-    $this->application->shutdown();
-
-    sfServiceContainer::getInstance()->clear();
+    // shutdown the services
+    $this->serviceContainer->clear();
   }
 
 }

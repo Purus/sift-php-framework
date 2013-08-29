@@ -24,11 +24,12 @@ class MyTestPartialView extends sfPartialView
 class defaultActions extends sfActions {}
 
 $context = sfContext::getInstance();
+$context->getServiceContainer()->getDependencies()->set('context', $context);
+
 $context->actionStack = new sfActionStack();
+
 $entry = $context->actionStack->addEntry('default', 'index', new defaultActions());
 $entry->setViewInstance(new MyTestPartialView($context, 'default', 'index'));
-
-sfDependencyInjectionContainer::getInstance()->getDependencies()->set("context", $context);
 
 $t->diag('get_partial()');
 

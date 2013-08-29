@@ -1,58 +1,61 @@
 <?php
 
 /**
- * @inject Force method:setForce force:true
- * @inject new:StubSomething method:setForce2 force:true
- * @inject DoesNotExist method:setDoesNotExist
- * @inject DoesNotExist property:noSuchProperty
- * @inject Apple property:forcedProperty force:true
+ * @inject new:Something method:setForce force:true
+ * @inject apple method:setApple
  */
-class StubDummy {
+class Dummy {
 
-    protected $_apple = null;
 
-    /**
-     * @inject Pear
-     */
-    public $pear;
-    
-    private $constructorArg;
+  protected $apple;
 
-    /**
-     * @inject Banana
-     */
-    public function  __construct($constructorArg = null) {
-        $this->constructorArg = $constructorArg;
-    }
+  /**
+   * @inject pear
+   */
+  public $pear;
 
-    /**
-     * @inject Apple
-     */
-    public function setApple($apple) {
-        $this->_apple = $apple;
-    }
+  private $constructorArg;
 
-    public function apple() {
-        return $this->_apple;
-    }
+  /**
+   *
+   * @param Banana $constructorArg
+   * @inject banana
+   */
+  public function __construct(Banana $constructorArg = null)
+  {
+    $this->constructorArg = $constructorArg;
+  }
 
-    public function getConstructorArg() {
-        return $this->constructorArg;
-    }
+  /**
+   *
+   * @param Apple $apple
+   * @inject apple
+   */
+  public function setApple(Apple $apple)
+  {
+    $this->apple = $apple;
+  }
 
-    public function hello() {
-        return 'world';
-    }
+  public function getApple()
+  {
+    return $this->apple;
+  }
 
-    public function __call($name, $args) {
-        $var = substr($name, 3, (strlen($name) - 3));
-        $var[0] = strtolower($var[0]);
+  public function getConstructorArg()
+  {
+    return $this->constructorArg;
+  }
 
-        $this->{$var} = $args[0];
+  public function __call($name, $args)
+  {
+    $var = substr($name, 3, (strlen($name) - 3));
+    $var[0] = strtolower($var[0]);
+    $this->{$var} = $args[0];
+  }
 
-    }
+  public function getForcedVar()
+  {
+    return $this->force;
+  }
 
-    public function forcedVar() {
-        return $this->force;
-    }
 }

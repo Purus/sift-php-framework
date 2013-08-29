@@ -4,7 +4,9 @@ require_once(dirname(__FILE__) . '/../../bootstrap/unit.php');
 
 $t = new lime_test(1, new lime_output_color());
 
-$containerDependencies = new sfDependencyInjectionDependencies();
+$serviceContainer = new sfServiceContainer();
+
+$containerDependencies = new sfDependencyInjectionDependencies($serviceContainer);
 
 $object = new stdClass();
 $object->name = 'testName';

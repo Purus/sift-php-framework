@@ -415,7 +415,7 @@ abstract class sfController implements sfIService
                );
     }
     
-    $view = sfDependencyInjectionContainer::create($class);
+    $view = $this->context->getServiceContainer()->createObject($class);
 
     if(!$view instanceof sfIView)
     {

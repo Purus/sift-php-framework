@@ -22,6 +22,23 @@ class sfDependencyInjectionDependencies {
   private $dependencies = array();
 
   /**
+   * service container
+   *
+   * @var sfServiceContainer
+   */
+  protected $serviceContainer;
+
+  /**
+   * Constructor
+   *
+   * @param sfDependencyInjectionContainer $container
+   */
+  public function __construct(sfServiceContainer $container)
+  {
+    $this->serviceContainer = $container;
+  }
+
+  /**
    * Returns a dependency by name. If dependency is not found, null is returned.
    *
    * @param string $name
@@ -33,7 +50,7 @@ class sfDependencyInjectionDependencies {
     {
       if($this->dependencies[$name] instanceof sfServiceReference)
       {
-        return sfServiceContainer::getInstance()->get((string)$this->dependencies[$name]);
+        return $this->serviceContainer->get((string)$this->dependencies[$name]);
       }
       return $this->dependencies[$name];
     }
@@ -58,12 +75,13 @@ class sfDependencyInjectionDependencies {
 
   /**
    * Clears
+   *
+   * @return sfDependencyInjectionDependencies
    */
   public function clear()
   {
     $this->dependencies = array();
     return $this;
   }
-
 
 }

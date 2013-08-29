@@ -10,12 +10,14 @@
 /**
  * Items define how each dependency should be injected/maintained.
  *
- * Options
- *  Name - name of the dependency
- *  InjectWith - method, property, constructor
- *  InjectAs - depends on with param
- *  Force - bool, force injection
- *  NewClass - the name of the new class to create, false otherwise
+ * Options:
+ *
+ *  name - name of the dependency
+ *  inject_with - method, property, constructor
+ *  inject_as - depends on with param
+ *  force - bool, force injection
+ *  new_class - the name of the new class to create, false otherwise
+ *  required - required or can be null?
  *
  * @package Sift
  * @subpackage dependency_injection
@@ -23,16 +25,91 @@
 class sfDependencyInjectionMapItem {
 
   /**
+   * Method injection
+   */
+  const INJECT_WITH_METHOD = 'method';
+
+  /**
+   * Property injection
+   */
+  const INJECT_WITH_PROPERTY = 'property';
+
+  /**
+   * Constructor injection
+   */
+  const INJECT_WITH_CONSTRUCTOR = 'constructor';
+
+  /**
    * Dependency name
    *
    * @var string
    */
-  private $dependencyName;
+  protected $dependencyName;
 
-  private $injectWith;
-  private $injectAs;
-  private $force = false;
-  private $newClass = null;
+  /**
+   * Inject type
+   * @var string
+   */
+  protected $injectWith;
+
+  /**
+   * Inject as
+   * @var string
+   */
+  protected $injectAs;
+
+  /**
+   * Force the injection
+   *
+   * @var boolean
+   */
+  protected $force = false;
+
+  /**
+   * New class
+   *
+   * @var string
+   */
+  protected $newClass;
+
+  /**
+   * Required flag
+   *
+   * @var boolean
+   */
+  protected $required = true;
+
+  /**
+   * Constructor
+   *
+   * @param string $dependencyName The dependency name
+   * @param string $injectWith
+   * @param string $injectAs
+   * @param boolean $force
+   * @param string $newClass
+   * @param boolean $required
+   */
+  public function __construct($dependencyName = null, $injectWith = null, $injectAs = null, $force = false, $newClass = null, $required = true)
+  {
+    $this->dependencyName = $dependencyName;
+    $this->injectWith = $injectWith;
+    $this->injectAs = $injectAs;
+    $this->force = self::convertToBoolean($force);
+    $this->newClass = $newClass;
+    $this->required = self::convertToBoolean($required);
+  }
+
+  /**
+   * Creates the item from array
+   *
+   * @param array $array Array of properties
+   * @return sfDependencyInjectionMapItem
+   */
+  public static function createFromArray($array)
+  {
+    $array = array_merge(self::getDefaultOptions(), $array);
+    return new self($array['dependency_name'], $array['inject_with'], $array['inject_as'], $array['force'], $array['new_class'], $array['required']);
+  }
 
   /**
    * Sets dependency name
@@ -103,6 +180,7 @@ class sfDependencyInjectionMapItem {
   }
 
   /**
+   * Inject with
    *
    * @return string
    */
@@ -112,6 +190,7 @@ class sfDependencyInjectionMapItem {
   }
 
   /**
+   * Inject as
    *
    * @return string
    */
@@ -121,8 +200,9 @@ class sfDependencyInjectionMapItem {
   }
 
   /**
+   * Force the injection?
    *
-   * @return type
+   * @return boolean
    */
   public function getForce()
   {
@@ -130,12 +210,70 @@ class sfDependencyInjectionMapItem {
   }
 
   /**
+   * Returns new class
    *
    * @return
    */
   public function getNewClass()
   {
     return $this->newClass;
+  }
+
+  /**
+   * Set required flag
+   *
+   * @param boolean $flag
+   */
+  public function setRequired($flag = true)
+  {
+    $this->required = self::convertToBoolean($flag);
+    return $this;
+  }
+
+  /**
+   * Is the item required?
+   *
+   * @return boolean
+   */
+  public function isRequired()
+  {
+    return $this->required;
+  }
+
+  /**
+   * Returns default options
+   *
+   * @return array
+   */
+  public static function getDefaultOptions()
+  {
+    return array(
+      'dependency_name' => null,
+      'force' => false,
+      'inject_with' => null,
+      'inject_as' => null,
+      'new_class' => false,
+      'required' => true,
+    );
+  }
+
+  /**
+   * Converts the value to boolean
+   *
+   * @param string $value
+   * @return boolean
+   */
+  public static function convertToBoolean($value)
+  {
+    if(in_array(strtolower($value), array('true')))
+    {
+      return true;
+    }
+    elseif(in_array(strtolower($value), array('false')))
+    {
+      return false;
+    }
+    return (boolean)$value;
   }
 
 }

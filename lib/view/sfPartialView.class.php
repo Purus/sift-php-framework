@@ -11,6 +11,7 @@
  *
  * @package Sift
  * @subpackage view
+ * @inject context
  */
 class sfPartialView extends sfPHPView implements sfIPartialView
 {
@@ -19,7 +20,7 @@ class sfPartialView extends sfPHPView implements sfIPartialView
     $checkCache  = false,
     $cacheKey    = null,
     $partialVars = array();
-  
+
   /**
    * Constructor.
    * 

@@ -15,14 +15,25 @@
  */
 abstract class sfDependencyInjectionMapBuilder {
 
-  protected abstract function _setup();
-
-  protected abstract function _build();
+  /**
+   * @var sfDependencyInjectionMap
+   */
+  protected $map;
 
   /**
-   * @var Pd_Map
+   * Constructor
    */
-  protected $_map;
+  public function __construct()
+  {
+    $this->map = new sfDependencyInjectionMap();
+  }
+
+  /**
+   * Builds the map
+   *
+   * @return sfDependencyInjectionMapBuilder
+   */
+  protected abstract function build();
 
   /**
    * The map
@@ -31,53 +42,18 @@ abstract class sfDependencyInjectionMapBuilder {
    */
   public function getMap()
   {
-    return $this->_map;
+    return $this->map;
   }
 
   /**
-   * Setup for building a make.  Makes a new
-   * Pd_Map and then runs the builders _setup method
-   */
-  public function setup()
-  {
-    $this->_map = new sfDependencyInjectionMap();
-    $this->_setup();
-  }
-
-  /**
-   * Builds the map by running the setup method and
-   * then running the builers _build method.
+   * Creates a map item based off options array
    *
+   * @param array $options Array of options
+   * @return sfDependencyInjectionMapItem
    */
-  public function build()
+  protected function createItemFromArray($options)
   {
-    $this->setup();
-    $this->_build();
-  }
-
-  /**
-   * Creates a Map Item based off options array
-   *
-   * @param array $options
-   * @return Pd_Map_Item
-   */
-  protected function makeItemFromOptions($options)
-  {
-    $options = array_merge( array(
-        'dependencyName' => null,
-        'injectWith' => null,
-        'injectAs' => null,
-        'force' => false,
-        'newClass' => null,
-    ), $options);
-
-    $item = new sfDependencyInjectionMapItem();
-    $item->setDependencyName($options['dependencyName']);
-    $item->setInjectWith($options['injectWith']);
-    $item->setInjectAs($options['injectAs']);
-    $item->setForce($options['force']);
-    $item->setNewClass($options['newClass']);
-    return $item;
+    return sfDependencyInjectionMapItem::createFromArray($options);
   }
 
 }

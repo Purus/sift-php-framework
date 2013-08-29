@@ -33,52 +33,41 @@ class sfServiceContainer {
   const SELF_NAME = 'service_container';
 
   /**
-   * Container instance
-   *
-   * @var sfServiceContainer
-   */
-  private static $instance;
-
-  /**
    * Array of services
    *
    * @var array
    */
-  private $services = array();
+  protected $services = array();
 
   /**
    * Array of service definitions
    *
    * @var array
    */
-  private $definitions = array();
+  protected $definitions = array();
 
   /**
+   * Dependency maps
    *
-   * @return sfServiceContainer
+   * @var sfDependencyInjectionMaps
    */
-  public static function getInstance()
-  {
-    if(!self::$instance)
-    {
-      self::$instance = new self();
-    }
-    return self::$instance;
-  }
+  protected $maps;
 
   /**
-   * Reset the instance
+   * Dependencies
+   *
+   * @var sfDependencyInjectionDependencies
    */
-  public static function reset()
-  {
-    self::$instance = NULL;
-  }
+  protected $dependencies;
 
   /**
    * Constructor
    */
-  private function __construct()
+  public function __construct()
   {
+    $this->maps = new sfDependencyInjectionMaps();
+    $this->dependencies = new sfDependencyInjectionDependencies($this);
+
     // register self as a service
     $this->services[self::SELF_NAME] = $this;
   }
@@ -220,7 +209,7 @@ class sfServiceContainer {
     }
     else
     {
-      $service = sfDependencyInjectionContainer::create($definition->getClass(), $arguments);
+      $service = $this->createObject($definition->getClass(), $arguments);
     }
 
     foreach($definition->getMethodCalls() as $call)
@@ -271,6 +260,12 @@ class sfServiceContainer {
     return $value;
   }
 
+  /**
+   * Replaces constants (like %SF_CACHE_DIR%...)
+   *
+   * @param string $value
+   * @return mixed
+   */
   protected function replaceConstants($value)
   {
     if(preg_match('/%(.+?)%/', $value, $matches))
@@ -318,9 +313,8 @@ class sfServiceContainer {
     }
     elseif(is_string($value) && 0 === strpos($value, self::DEPENDENCY_IDENTIFIER))
     {
-      // get the service
-      $value = sfDependencyInjectionContainer::getInstance()
-              ->getDependencies()->get(substr($value, 1));
+      // get the dependency
+      $value = $this->getDependencies()->get(substr($value, 1));
     }
     return $value;
   }
@@ -369,23 +363,42 @@ class sfServiceContainer {
   }
 
   /**
-   * Clone
+   * Create an object with given class name
    *
-   * @throws BadFunctionCallException
+   * @param string $className The class name
+   * @param array $arguments The arguments
    */
-  final public function __clone()
+  public function createObject($className, $arguments = null)
   {
-    throw new BadFunctionCallException(sprintf('Unable to clone singleton class "%s"', __CLASS__));
+    if(sfConfig::get('sf_logging_enabled'))
+    {
+      sfLogger::getInstance()->info(sprintf('{sfServiceContainer} Creating class "%s"', $className));
+    }
+
+    // construct the object
+    $constructor = new sfDependencyInjectionBuilder($className, $this->getDependencies(), $this->getMaps());
+
+    return $constructor->constructObject($arguments);
   }
 
   /**
-   * Serializing
+   * Returns the dependency maps
    *
-   * @throws BadFunctionCallException
+   * @return sfDependencyInjectionMaps
    */
-  final public function __wakeup()
+  public function getMaps()
   {
-    throw new BadFunctionCallException(sprintf('Unable to unserialize singleton class "%s"', __CLASS__));
+    return $this->maps;
+  }
+
+  /**
+   * Returns the dependencies
+   *
+   * @return sfDependencyInjectionDependencies
+   */
+  public function getDependencies()
+  {
+    return $this->dependencies;
   }
 
 }

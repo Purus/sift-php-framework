@@ -150,7 +150,7 @@ function get_component($moduleName, $componentName, $vars = array(), $viewName =
   }
 
   $class = sprintf('%sView', $class);
-  $view = sfDependencyInjectionContainer::create($class);
+  $view = sfContext::getInstance()->getServiceContainer()->createObject($class);
 
   if(!$view instanceof sfIPartialView)
   {
@@ -248,8 +248,9 @@ function get_partial($templateName, $variables = array(), $viewName = null)
   }
 
   $class = sprintf('%sView', $class);
-  // die('aa' . $class);
-  $view = sfDependencyInjectionContainer::create($class);
+  
+  $view = sfContext::getInstance()->getServiceContainer()->createObject($class);
+  
   if(!$view instanceof sfIPartialView)
   {
     throw new LogicException(sprintf('Partial view "%s" does not implement sfIPartialView', $class));

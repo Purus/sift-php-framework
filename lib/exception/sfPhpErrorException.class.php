@@ -11,24 +11,12 @@ if(!defined('E_DEPRECATED')) define('E_DEPRECATED', 8192);
 if(!defined('E_USER_DEPRECATED')) define('E_USER_DEPRECATED', 16384);
 
 /**
- * sfErrorHandler - php error handler function
+ * PHP error exception
  *
  * @package    Sift
  * @subpackage exception
  */
 class sfPhpErrorException extends sfException {
-
-  /**
-   * Class constructor.
-   *
-   * @param string The error message
-   * @param int    The error code
-   */
-  public function __construct($message = null, $code = 0)
-  {
-    $this->setName('sfPhpErrorException');
-    parent::__construct($message, $code);
-  }
 
   /**
    * Callback used as error handler
@@ -78,7 +66,7 @@ class sfPhpErrorException extends sfException {
   }
 
   /**
-   * Handles php errors E_ERROR and E_PARSE. Tthis method is set as shutdown function.
+   * Handles php errors E_ERROR and E_PARSE. This method is set as shutdown function.
    *
    * @link http://insomanic.me.uk/post/229851073/php-trick-catching-fatal-errors-e-error-with-a
    */

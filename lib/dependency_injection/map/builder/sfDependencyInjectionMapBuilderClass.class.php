@@ -15,41 +15,67 @@
  */
 class sfDependencyInjectionMapBuilderClass extends sfDependencyInjectionMapBuilder {
 
-  private $_class;
+  /**
+   * The class name
+   *
+   * @var string
+   */
+  protected $className;
 
   /**
+   * The reflection object
+   *
    * @var sfReflectionClass
    */
-  private $_reflect;
+  protected $reflection;
+
+  /**
+   * The doc comment parser
+   *
+   * @var sfDependencyInjectionInjectCommandParser
+   */
+  protected $parser;
+
+  /**
+   * Constructor
+   *
+   * @param string $className The class name
+   * @param sfDependencyInjectionInjectCommandParser $parser The doc block parser
+   */
+  public function __construct($className, sfDependencyInjectionInjectCommandParser $parser = null)
+  {
+    parent::__construct();
+
+    $this->className = $className;
+    $this->reflection = new sfReflectionClass($className);
+    $this->parser = is_null($parser) ? new sfDependencyInjectionInjectCommandParser() : $parser;
+  }
 
   /**
    * Set a class name
    *
-   * @param string $class
+   * @param string $className
+   * @return sfDependencyInjectionMapBuilderClass
    */
-  public function setClass($class)
+  public function setClassName($className)
   {
-    $this->_class = $class;
-  }
-
-  /**
-   * Sets up the builder for... building.
-   *
-   * Makes a new map and reflection class
-   */
-  protected function _setup()
-  {
-    $this->_reflect = new sfReflectionClass($this->_class);
+    $this->className = $className;
+    $this->reflection = new sfReflectionClass($className);
+    return $this;
   }
 
   /**
    * Runs all the builders and builds the entire map
+   *
+   * @return sfDependencyInjectionMapBuilderClass
    */
-  protected function _build()
+  public function build()
   {
     $this->buildMethods();
     $this->buildProperties();
     $this->buildClass();
+
+    return $this;
   }
 
   /**
@@ -57,61 +83,76 @@ class sfDependencyInjectionMapBuilderClass extends sfDependencyInjectionMapBuild
    * and this function will build a parser and return its
    * results.
    *
-   * @param ReflectionClass $classProperty
+   * @param ReflectionMethod $classProperty
    * @return array all options
    */
-  private function optionsFrom($classProperty)
+  protected function optionsFrom($classProperty)
   {
-    $parser = new sfDependencyInjectionMapBuilderParser();
-    $parser->setString($classProperty->getDocComment());
-    $parser->setInfo($classProperty);
-    $parser->match();
-    $parser->buildOptions();
-    return $parser->getOptions();
+    if(!$docComment = $classProperty->getDocComment())
+    {
+      return false;
+    }
+
+    $this->parser->setString($docComment)
+                 ->setDebugInformation($classProperty);
+
+    return $this->parser->parse();
   }
 
   /**
-   * Loops through all of the methods and builds items/maps
-   * for them.
+   * Loops through all of the methods and builds items/maps for them.
+   *
    */
-  public function buildMethods()
+  protected function buildMethods()
   {
-    $methods = $this->_reflect->getMethods();
+    $methods = $this->reflection->getMethods();
     foreach($methods as $method)
     {
-      foreach($this->optionsFrom($method) as $options)
+      $commands = $this->optionsFrom($method);
+
+      if(!$commands)
+      {
+        continue;
+      }
+
+      foreach($commands as $options)
       {
         if($method->getName() == '__construct')
         {
-          $options['injectWith'] = 'constructor';
+          $options['inject_with'] = sfDependencyInjectionMapItem::INJECT_WITH_CONSTRUCTOR;
         }
         else
         {
-          $options['injectWith'] = 'method';
-          $options['injectAs'] = $method->getName();
+          $options['inject_with'] = sfDependencyInjectionMapItem::INJECT_WITH_METHOD;
+          $options['inject_as'] = $method->getName();
         }
-        $this->_map->append(
-          $this->makeItemFromOptions($options)
+        $this->map->append(
+          $this->createItemFromArray($options)
         );
       }
     }
   }
 
   /**
-   * Loops through all of the properties and builds items/maps
-   * for them.
+   * Loops through all of the properties and builds items/maps for them.
+   *
    */
-  public function buildProperties()
+  protected function buildProperties()
   {
-    $properties = $this->_reflect->getProperties();
+    $properties = $this->reflection->getProperties();
     foreach($properties as $property)
     {
-      foreach($this->optionsFrom($property) as $options)
+      $commands = $this->optionsFrom($property);
+      if(!$commands)
       {
-        $options['injectWith'] = 'property';
-        $options['injectAs'] = $property->getName();
-        $this->_map->append(
-            $this->makeItemFromOptions($options)
+        continue;
+      }
+      foreach($commands as $options)
+      {
+        $options['inject_with'] = sfDependencyInjectionMapItem::INJECT_WITH_PROPERTY;
+        $options['inject_as'] = $property->getName();
+        $this->map->append(
+          $this->createItemFromArray($options)
         );
       }
     }
@@ -120,12 +161,17 @@ class sfDependencyInjectionMapBuilderClass extends sfDependencyInjectionMapBuild
   /**
    * Builds items based on the classes doc block
    */
-  public function buildClass()
+  protected function buildClass()
   {
-    foreach($this->optionsFrom($this->_reflect) as $options)
+    $commands = $this->optionsFrom($this->reflection);
+    if(!$commands)
     {
-      $this->_map->append(
-          $this->makeItemFromOptions($options)
+      return;
+    }
+    foreach($commands as $options)
+    {
+      $this->map->append(
+        $this->createItemFromArray($options)
       );
     }
   }

@@ -23,6 +23,7 @@ class sfFilterChain
    * Constructs the chain
    *
    * @param sfContext $context
+   * @inject context
    */
   public function __construct(sfContext $context)
   {

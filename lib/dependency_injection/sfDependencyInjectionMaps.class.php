@@ -12,14 +12,14 @@
  * @package Sift
  * @subpackage dependency_injection
  */
-class sfDependencyInjectionMaps {
+class sfDependencyInjectionMaps implements Countable, ArrayAccess {
 
   /**
    * Maps holder
    *
    * @var array
    */
-  private $maps = array();
+  protected $maps = array();
 
   /**
    * Add/set a map to the container by name
@@ -32,6 +32,17 @@ class sfDependencyInjectionMaps {
   {
     $this->maps[$name] = $map;
     return $this;
+  }
+
+  /**
+   * Does the name has a map?
+   *
+   * @param string $name
+   * @return boolean
+   */
+  public function has($name)
+  {
+    return isset($this->maps[$name]);
   }
 
   /**
@@ -50,6 +61,36 @@ class sfDependencyInjectionMaps {
     {
       return new sfDependencyInjectionMap();
     }
+  }
+
+  /**
+   * Returns number of maps
+   *
+   * @return integer
+   */
+  public function count()
+  {
+    return count($this->maps);
+  }
+
+  public function offsetGet($offset)
+  {
+    return $this->maps[$offset];
+  }
+
+  public function offsetExists($offset)
+  {
+    return isset($this->maps[$offset]);
+  }
+
+  public function offsetSet($offset, $value)
+  {
+    throw new BadMethodCallException('Cannot set offset, use set()');
+  }
+
+  public function offsetUnset($offset)
+  {
+    unset($this->maps[$offset]);
   }
 
 }

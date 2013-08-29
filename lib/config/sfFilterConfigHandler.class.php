@@ -143,7 +143,7 @@ class sfFilterConfigHandler extends sfYamlConfigHandler {
   {
     $code = array();
     $code[] = sprintf('list($class, $parameters) = sfConfig::get(\'sf_%s_filter\', array(\'%s\', %s));', sfInflector::tableize($category), $class, $parameters);
-    $code[] = sprintf('$filter = sfDependencyInjectionContainer::create($class);');
+    $code[] = sprintf('$filter = $this->context->getServiceContainer()->createObject($class);');
     $code[] = 'if(!($filter instanceof sfIFilter))';
     $code[] = '{';
     $code[] = sprintf('  throw new LogicException(sprintf(\'The filter "%%s" does not implement sfIFilter interface.\', get_class($filter), \'%s\'));', $class);
@@ -171,13 +171,13 @@ class sfFilterConfigHandler extends sfYamlConfigHandler {
     $code[] = 'if($actionInstance->isSecure())';
     $code[] = '{';
     $code[] = sprintf('  list($class, $parameters) = sfConfig::get(\'sf_%s_filter\', array(\'%s\', %s));', sfInflector::tableize($category), $class, $parameters);
-    $code[] = sprintf('  $filter = sfDependencyInjectionContainer::create($class);');
-    $code[] = 'if(!in_array(\'sfISecurityUser\', class_implements($this->getContext()->getUser())))';
-    $code[] = '{';
-    $code[] = '  throw new LogicException(\'Security is enabled, but your sfUser implementation does not implement sfISecurityUser interface.\');';
-    $code[] = '}';
-    $code[] = '$filter->initialize($this->context, $parameters);';
-    $code[] = '$this->register($filter);';
+    $code[] = sprintf('  $filter = $this->context->getServiceContainer()->createObject($class);');
+    $code[] = '  if(!in_array(\'sfISecurityUser\', class_implements($this->getContext()->getUser())))';
+    $code[] = '  {';
+    $code[] = '      throw new LogicException(\'Security is enabled, but your sfUser implementation does not implement sfISecurityUser interface.\');';
+    $code[] = '  }';
+    $code[] = '  $filter->initialize($this->context, $parameters);';
+    $code[] = '  $this->register($filter);';
     $code[] = '}';
 
     return join("\n", $code) . "\n";

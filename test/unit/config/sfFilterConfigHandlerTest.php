@@ -90,4 +90,5 @@ $files = array(
 $data = $handler->execute($files);
 
 $data = preg_replace('#date\: \d+/\d+/\d+ \d+\:\d+\:\d+#', '', $data);
+
 $t->is($data, str_replace("\r\n", "\n", file_get_contents($dir.'result.php')), 'core filters.yml can be overriden');

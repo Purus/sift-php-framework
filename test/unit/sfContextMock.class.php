@@ -15,7 +15,8 @@ class sfContext {
   public $dispatcher;
   public $storage;
   public $i18n;
-
+  public $serviceContainer;
+  
   static public function getInstance()
   {
     if(!isset(self::$instance))
@@ -111,6 +112,16 @@ class sfContext {
       $this->dispatcher = new sfEventDispatcher();
     }
     return $this->dispatcher;
+  }
+
+  public function getServiceContainer()
+  {
+    if(!$this->serviceContainer)
+    {
+      $this->serviceContainer = new sfServiceContainer();
+      $this->serviceContainer->set('context', $this);
+    }
+    return $this->serviceContainer;
   }
 
 }

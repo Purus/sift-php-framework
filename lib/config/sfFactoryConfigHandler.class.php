@@ -46,6 +46,7 @@ class sfFactoryConfigHandler extends sfYamlConfigHandler {
       'view_cache',
       'i18n',
       'database_manager',
+      'mailer'
     );
 
     // init our data and includes arrays
