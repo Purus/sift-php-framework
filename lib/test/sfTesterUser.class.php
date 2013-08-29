@@ -107,4 +107,17 @@ class sfTesterUser extends sfTester {
     return $this->getObjectToReturn();
   }
 
+  /**
+   * Checks if the user is in given timezone
+   *
+   * @param string $timezone
+   * @return sfTestFunctionalBase|sfTester
+   */
+  public function isTimezone($timezone)
+  {
+    $this->tester->is($this->user->getTimezone(), $timezone, sprintf('user timezone is "%s"', $timezone));
+
+    return $this->getObjectToReturn();
+  }
+
 }

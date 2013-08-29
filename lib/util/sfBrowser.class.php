@@ -41,13 +41,6 @@ class sfBrowser extends sfBrowserBase
 
     // append retval to the response content
     $this->context->getResponse()->setContent($retval);
-
-    // manually shutdown user to save current session data
-    if ($this->context->getUser())
-    {
-      $this->context->getUser()->shutdown();
-      $this->context->getStorage()->shutdown();
-    }
   }
 
   /**
@@ -67,8 +60,8 @@ class sfBrowser extends sfBrowserBase
       // create configuration
       $currentApplication = $context->getApplication();
 
-      $application = sfCore::getApplication($currentApplication->getOption('sf_app'), 
-              $currentApplication->getEnvironment(), $currentApplication->isDebug());
+      $application = sfCore::getApplication($currentApplication->getOption('sf_app'),
+              $currentApplication->getEnvironment(), $currentApplication->isDebug(), true);
 
       // connect listeners
       $application->getEventDispatcher()->connect('application.throw_exception', array($this, 'listenToException'));

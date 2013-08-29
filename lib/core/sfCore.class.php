@@ -76,12 +76,13 @@ class sfCore
    * @param string $application Application name
    * @param string $environment Environment
    * @param boolean $debug Turn on debug feature?
+   * @param boolean $forceReload Force the reloading of the app?
    * @return sfApplication
    * @throws RuntimeException If Sift has not been boostrapped yet
    */
-  public static function getApplication($application, $environment, $debug = false)
+  public static function getApplication($application, $environment, $debug = false, $forceReload = false)
   {
-    return self::getProject()->getApplication($application, $environment, $debug);
+    return self::getProject()->getApplication($application, $environment, $debug, $forceReload);
   }
 
   /**

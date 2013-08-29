@@ -385,13 +385,16 @@ abstract class sfProject extends sfConfigurable {
   /**
    * Returns sfApplication instance
    *
-   * @param string $application
+   * @param string $application The application name
+   * @param string $environment The environment
+   * @param boolean $debug Turn on debug features?
+   * @param boolea $forceReload Force reloading of the application?
    * @return sfApplication
    * @throws RuntimeException
    */
-  public function getApplication($application, $environment, $debug = false)
+  public function getApplication($application, $environment, $debug = false, $forceReload = false)
   {
-    if(!isset($this->applications[$application]))
+    if(!isset($this->applications[$application]) || $forceReload)
     {
       $class = sprintf('my%sApplication', sfInflector::camelize($application));
       if(!class_exists($class, false))

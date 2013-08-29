@@ -47,6 +47,13 @@ class sfUser extends sfConfigurable implements sfIService, ArrayAccess {
   protected $culture;
 
   /**
+   * User timezone
+   *
+   * @var string
+   */
+  protected $timezone;
+
+  /**
    * Service container
    *
    * @var sfServiceContainer
@@ -60,7 +67,15 @@ class sfUser extends sfConfigurable implements sfIService, ArrayAccess {
    */
   protected $defaultOptions = array(
     'default_culture' => 'en',
-    'use_flash' => true
+    'use_flash' => true,
+    // is timezone feature enabled?
+    'timezone_enabled' => true,
+    // cookie names for timezones
+    'timezone_cookie_names' => array(
+      'name' => 'timezone_name',
+      'offset' => 'timezone_offset',
+      'daylightsavings' => 'timezone_dst'
+    )
   );
 
   /**
@@ -115,6 +130,24 @@ class sfUser extends sfConfigurable implements sfIService, ArrayAccess {
     }
 
     $this->setCulture($culture);
+
+    if($this->getOption('timezone_enabled'))
+    {
+      // setup timezone
+      $offset = $this->request->getCookie($this->getOption('timezone_cookie_names.offset'));
+      $daylightsavings = $this->request->getCookie($this->getOption('timezone_cookie_names.daylightsavings'));
+      $name = $this->request->getCookie($this->getOption('timezone_cookie_names.name'));
+      // we have a timezone name
+      if(sfDateTimeZone::isValid($name))
+      {
+        $this->setTimezone($name);
+      }
+      // do we have an offset?
+      elseif($offset !== null && ($zone = sfDateTimeZone::getNameFromOffset($offset, $daylightsavings)))
+      {
+        $this->setTimezone($zone);
+      }
+    }
 
     if($this->getOption('use_flash'))
     {
@@ -284,11 +317,13 @@ class sfUser extends sfConfigurable implements sfIService, ArrayAccess {
    */
   public function setTimezone($timezone)
   {
-    date_default_timezone_set($timezone);
+    $old = $this->timezone;
+    $this->timezone = $timezone;
     $this->dispatcher->notify(new sfEvent('user.change_timezone', array(
       'user' => $this,
-      'method' => 'setTimezone',
-      'timezone' => $timezone)
+      'timezone' => $timezone,
+      'old' => $old
+      )
     ));
   }
 
@@ -299,19 +334,7 @@ class sfUser extends sfConfigurable implements sfIService, ArrayAccess {
    */
   public function getTimezone()
   {
-    $offset = $this->request->getCookie('timezone_offset');
-    $dst = $this->request->getCookie('timezone_daylightsavings');
-    if($offset !== null && $dst !== null)
-    {
-      $offset *= 3600;
-      $zone = timezone_name_from_abbr('', $offset, $dst);
-      if($zone !== false)
-      {
-        $this->setTimezone($zone);
-        return $zone;
-      }
-    }
-    return date_default_timezone_get();
+    return $this->timezone ? $this->timezone : date_default_timezone_get();
   }
 
   /**
@@ -473,6 +496,7 @@ class sfUser extends sfConfigurable implements sfIService, ArrayAccess {
       $attributes[$namespace] = $this->attributeHolder->getAll($namespace);
     }
 
+    $this->timezone = null;
     // write attributes to the storage
     $this->storage->write(self::ATTRIBUTE_NAMESPACE, $attributes);
     // write culture to the storage

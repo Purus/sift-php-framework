@@ -169,12 +169,6 @@ abstract class sfApplication extends sfProject {
 
     $this->getShutdownScheduler()->register(array('sfPhpErrorException', 'fatalErrorShutdownHandler'), array(), sfShutdownScheduler::LOW_PRIORITY);
 
-    // force setting default timezone if not set
-    if(function_exists('date_default_timezone_get'))
-    {
-      date_default_timezone_set(@date_default_timezone_get());
-    }
-
     // get config instance
     $sf_app_config_dir_name = sfConfig::get('sf_app_config_dir_name');
     $sf_debug = sfConfig::get('sf_debug');
@@ -286,15 +280,6 @@ abstract class sfApplication extends sfProject {
     {
       $this->getEventDispatcher()->connect('view.template.variables', array($enhancer,
           'filterTemplateVariables'));
-    }
-
-    // force setting default timezone if not set
-    if(function_exists('date_default_timezone_set'))
-    {
-      if($default_timezone = sfConfig::get('sf_default_timezone'))
-      {
-        date_default_timezone_set($default_timezone);
-      }
     }
 
     if(sfConfig::get('sf_environment') != 'cli' || php_sapi_name() != 'cli')

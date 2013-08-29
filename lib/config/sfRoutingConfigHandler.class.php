@@ -29,8 +29,8 @@ class sfRoutingConfigHandler extends sfYamlConfigHandler
     // parse the yaml
     $config = $this->parseYamls($configFiles);
 
-    // connect routes
     $routes = sfRouting::getInstance();
+    $routes->clearRoutes();
     foreach ($config as $name => $params)
     {
       $routes->connect(

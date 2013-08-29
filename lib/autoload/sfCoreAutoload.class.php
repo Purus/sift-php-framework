@@ -362,6 +362,7 @@ class sfCoreAutoload {
       'sfdate' => 'date/sfDate.class.php',
       'sfdateformatregexgenerator' => 'date/sfDateFormatRegexGenerator.class.php',
       'sfdatetimetoolkit' => 'date/sfDateTimeToolkit.class.php',
+      'sfdatetimezone' => 'date/sfDateTimeZone.class.php',
       'sftime' => 'date/sfTime.class.php',
       'sfwebdebugpanel' => 'debug/panel/sfWebDebugPanel.class.php',
       'sfwebdebugpanelcache' => 'debug/panel/sfWebDebugPanelCache.class.php',
