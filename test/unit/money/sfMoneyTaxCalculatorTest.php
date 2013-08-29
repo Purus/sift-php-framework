@@ -4,7 +4,7 @@ require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
 $t = new lime_test(8, new lime_output_color());
 
-$c = sfMoneyTaxCalculator::getInstance();
+$c = new sfMoneyTaxCalculator();
 
 $t->is(get_class($c), 'sfMoneyTaxCalculator', 'calculator is sfMoneyTaxCalculator object');
 
@@ -15,7 +15,7 @@ $t->is_deeply((string)$c->getPriceWithTax(new sfMoneyCurrencyValue('2801.652893'
 
 $t->is_deeply((string)$c->getPriceWithTax(new sfMoneyCurrencyValue('8', 'CZK'), 21, 10, sfRounding::NONE), '9.68', 'getPriceWithTax() works for generic calculator and tax 21% and no rounding');
 
-$c = sfMoneyTaxCalculator::getInstance('CsCoefficient');
+$c = sfMoneyTaxCalculator::factory('CsCoefficient');
 
 $t->is(get_class($c), 'sfMoneyTaxCalculatorDriverCsCoefficient', 'calculator is sfMoneyTaxCalculatorCsCoefficient object');
 

@@ -15,21 +15,15 @@
 class sfMoneyTaxCalculator implements sfIMoneyTaxCalculator {
 
   /**
-   * Instances holder
-   *
-   * @var array
-   */
-  protected static $instances = array();
-
-  /**
-   * Returns an instance of the calculator
+   * Factory
    *
    * @param string $driver The driver (or empty for generic calculator)
+   * @param array $array Array of options for the driver
    * @return sfIMoneyTaxCalculator
    * @throws InvalidArgumentException If calculator for given country does not exist.
    * @throws LogicException If the calculator does not implement sfIMoneyTaxCalculator interface
    */
-  public static function getInstance($driver = '')
+  public static function factory($driver = '', $options = array())
   {
     if(!empty($driver))
     {
@@ -44,17 +38,13 @@ class sfMoneyTaxCalculator implements sfIMoneyTaxCalculator {
       $class = 'sfMoneyTaxCalculator';
     }
 
-    if(!isset(self::$instances[$driver]))
+    $object = new $class($options);
+    if(!$object instanceof sfIMoneyTaxCalculator)
     {
-      self::$instances[$driver] = new $class();
-
-      if(!self::$instances[$driver] instanceof sfIMoneyTaxCalculator)
-      {
-        throw new LogicException(sprintf('The calculator "%s" instance does not implement sfIMoneyTaxCalculator interface.', $class));
-      }
+      throw new LogicException(sprintf('The calculator "%s" instance does not implement sfIMoneyTaxCalculator interface.', $class));
     }
 
-    return self::$instances[$driver];
+    return $object;
   }
 
   /**
