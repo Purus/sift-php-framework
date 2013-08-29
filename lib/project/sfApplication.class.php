@@ -254,8 +254,6 @@ abstract class sfApplication extends sfProject {
       spl_autoload_register($callable);
     }
 
-    // error settings
-    ini_set('display_errors', $sf_debug ? 'on' : 'off');
     error_reporting(sfConfig::get('sf_error_reporting'));
 
     // required core classes for the framework

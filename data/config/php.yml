@@ -2,13 +2,21 @@
 # https://bitbucket.org/mishal/sift-php-framework/wiki/Php
 
 set:
-  date.timezone:               "Europe/Prague"
+  date.timezone:               %SF_DEFAULT_TIMEZONE%
   magic_quotes_runtime:        false
   log_errors:                  true
+  session.use_only_cookies:    true
+  session.use_trans_sid:       false
+  session.gc_maxlifetime:      %SF_TIMEOUT%
+  display_errors:              %SF_DEBUG%
+  unserialize_callback_func:   spl_autoload_call
+  zlib.output_compression:     false
   arg_separator.output:        |
     &amp;
 
+# Warn when these settings are NOT configured to the following values
 warn:
-  magic_quotes_gpc:            false
-  register_globals:            false
-  session.auto_start:          false
+  # magic quotes are deprecated in PHP 5.3 and removed in PHP 5.4
+  magic_quotes_gpc: false
+  register_globals: false
+  session.auto_start: false
