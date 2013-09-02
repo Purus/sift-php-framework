@@ -1,3 +1,30 @@
+02.09.2013 [352855c] refactored mailer
+29.08.2013 [da9f332] updated swift mailer to 5.0.1
+29.08.2013 [2164969] updated support for timezones
+29.08.2013 [c328cc2] updated php.yml + handler
+29.08.2013 [126fd52] refactored exceptions, removed unused code
+29.08.2013 [9da4998] refactored tax calculator, removed singleton stuff
+29.08.2013 [fc9ca8b] refactored services and dic
+28.08.2013 [096fd07] removed singleton from shutdownscheduler
+28.08.2013 [2fee722] refactored user, next step for more dic
+27.08.2013 [234626e] made the load databases public
+27.08.2013 [39fe046] removed flash filter definition from app skeleton
+27.08.2013 [bca3990] updated security, user and flashes, removed sfFlashFilter
+27.08.2013 [ebba01e] updated sanitizer, added extension to html purifier
+26.08.2013 [ede7d34] updated html purifier to 4.5.0
+26.08.2013 [b36cf5a] updated sfMailer, mailer service + testing
+26.08.2013 [100ee16] updated zip archive
+26.08.2013 [c5e9041] updated filter config handler
+26.08.2013 [cb0daef] added logging to event dispatcher
+26.08.2013 [63694e6] updated dic contructor builder
+26.08.2013 [908a8d4] updated web debugger
+26.08.2013 [5277cad] fixed functional bootstrap
+24.08.2013 [0ff9008] removed dead code from partial helper
+24.08.2013 [0f31e2c] fixed typo in lifetime option
+24.08.2013 [c2c719f] fixed undefined variable error
+24.08.2013 [7e00749] fixed view unit test
+24.08.2013 [b218d73] refactored database manager, upgraded dic container to allow service links
+23.08.2013 [35cb069] updated changelog
 23.08.2013 [ef51f3f] huge update, release 1.1.0
 14.08.2013 [6994475] fixed file cache last modified bug
 14.08.2013 [d0ca9f0] updated bootstrap min js package
