@@ -41,9 +41,9 @@ class sfPartialMailView extends sfPartialView
 
     // where the email layout resides
     $dataDir = sfConfig::get('sf_data_dir') . DIRECTORY_SEPARATOR . 'email';
-    if(is_readable($dataDir . DIRECTORY_SEPARATOR . $type . '.php'))
+    if(is_readable($tpl = ($dataDir . DIRECTORY_SEPARATOR . $type . $this->getExtension())))
     {
-      $this->setDecoratorTemplate($dataDir . DIRECTORY_SEPARATOR . $type);
+      $this->setDecoratorTemplate($tpl);
     }
     else
     {

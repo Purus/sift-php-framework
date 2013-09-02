@@ -24,7 +24,6 @@ class sfTesterMailer extends sfTester {
    */
   public function prepare()
   {
-
   }
 
   /**
@@ -73,7 +72,7 @@ class sfTesterMailer extends sfTester {
       echo $message->toString() . "\n\n";
     }
 
-    exit(1);
+    return $this->getObjectToReturn();
   }
 
   /**
@@ -129,13 +128,29 @@ class sfTesterMailer extends sfTester {
    * @param string $value regular expression or value
    * @return sfTestFunctionalBase|sfTester
    */
-  public function checkBody($value)
+  public function checkBody($value, $type = 'plain')
   {
     if(!$this->message)
     {
       $this->tester->fail('unable to test as no email were sent');
     }
-    $this->checkBodyPart($value, $this->message->getBody());
+
+    switch($type)
+    {
+      case 'plain':
+        $this->checkBodyPart($value, $this->message->getPlainTextBody());
+      break;
+
+      case 'html':
+        $this->checkBodyPart($value, $this->message->getHtmlBody());
+      break;
+
+      default:
+        throw new InvalidArgumentException(sprintf('Invalid body type "%s" given', $type));
+      break;
+    }
+
+
     return $this->getObjectToReturn();
   }
 
@@ -155,6 +170,7 @@ class sfTesterMailer extends sfTester {
       if($contentType === $child->getHeaders()->get('content-type')->getValue())
       {
         $tested = true;
+
         $this->checkBodyPart($value, $child->getBody());
         if($matchFirst)
         {
@@ -167,6 +183,48 @@ class sfTesterMailer extends sfTester {
     {
       $this->tester->fail(sprintf('there is no multipart for given contentType "%s" which should match "%s"', $contentType, $value));
     }
+
+    return $this->getObjectToReturn();
+  }
+
+  /**
+   * Checks if the mail message has the attachment
+   *
+   * @param string $attachmentName The attachment file name
+   * @param string $contentType The content type
+   * @return sfTestFunctionalBase|sfTester
+   */
+  public function hasAttachment($attachmentName, $contentType = null)
+  {
+    foreach($this->message->getChildren() as $child)
+    {
+      if(!$child instanceof Swift_Mime_Attachment)
+      {
+        continue;
+      }
+
+      if($child->getFilename() == $attachmentName)
+      {
+        if($contentType)
+        {
+          if($child->getHeaders()->get('content-type')->getValue() != $contentType)
+          {
+            $this->tester->fail(sprintf('attachment "%s" does not have the right content type "%s"', $attachmentName, $contentType));
+          }
+          else
+          {
+            $this->tester->pass(sprintf('attachment "%s" does have the right content type "%s"', $attachmentName, $contentType));
+          }
+        }
+        else
+        {
+          $this->tester->pass(sprintf('attachment "%s" is attached to the message', $attachmentName));
+        }
+        return $this->getObjectToReturn();
+      }
+    }
+
+    $this->tester->fail(sprintf('attachment "%s" is missing', $attachmentName));
 
     return $this->getObjectToReturn();
   }
