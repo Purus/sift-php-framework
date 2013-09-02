@@ -677,12 +677,8 @@ abstract class sfAction extends sfComponent
     $extension = '.php';
     if($class = sfConfig::get('mod_'.strtolower($this->getModuleName()).'_view_class'))
     {
-      $reflection = new sfReflectionClass(sprintf('%sView', $class));
-      if(!$reflection->isAbstract())
-      {
-        $view = $reflection->newInstance();
-        $extension = $view->getExtension();
-      }
+      $view = $this->getContext()->getServiceContainer()->createObject(sprintf('%sView', $class));
+      $extension = $view->getExtension();
     }
     if(sfLoader::getDecoratorDir($layout . $extension))
     {
