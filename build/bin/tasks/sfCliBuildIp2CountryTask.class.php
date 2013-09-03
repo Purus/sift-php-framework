@@ -24,6 +24,10 @@ class sfCliBuildIp2CountryTask extends sfCliBaseBuildTask {
     $this->name = 'ip2country';
     $this->briefDescription = 'Builds ip2country database';
 
+    $this->addOptions(array(
+      new sfCliCommandOption('non-interactive', null, sfCliCommandOption::PARAMETER_NONE, 'Skip interactive prompts'),
+    ));
+
     $this->detailedDescription = <<<EOF
 The [ip2country|INFO] task builds ip2country database
 
@@ -35,14 +39,20 @@ EOF;
    */
   protected function execute($arguments = array(), $options = array())
   {
-    $result = $this->askConfirmation('This task is a wholeday task. Continue?');
+    if(!$options['non-interactive'])
+    {
+      $result = $this->askConfirmation('Rebuild the ip2country database? Continue? [Y/n]');
+    }
+    else
+    {
+      $result = true;
+    }
 
     if($result)
     {
       $this->logSection($this->getFullName(), 'Building IP to country IP database');
-      $this->logSection($this->getFullName(), 'Please wait. This takes a long time...');
-      $this->logSection($this->getFullName(), 'Go out for couple of hours... Seriously');
-      $this->build();
+      $this->logSection($this->getFullName(), 'Please wait...');
+      $this->build($arguments, $options);
       $this->logSection($this->getFullName(), 'Done.');
     }
     else
@@ -51,7 +61,14 @@ EOF;
     }
   }
 
-  protected function build()
+  /**
+   * Builds the database
+   *
+   * @param array $arguments
+   * @param array $options
+   * @throws Exception If there is an error while creating the database
+   */
+  protected function build($arguments = array(), $options = array())
   {
     $csvDatabase = realpath($this->environment->get('build_data_dir') . '/IpToCountry.csv');
     $database = $this->environment->get('sf_sift_data_dir').'/data/ip2country.db';
@@ -80,6 +97,12 @@ EOF;
         throw new Exception($db->lastError());
       }
     }
+
+    // optimize the speed
+    $db->query('PRAGMA synchronous = 0');
+    $db->query('PRAGMA journal_mode=MEMORY');
+    $db->query('PRAGMA default_cache_size=10000');
+    $db->query('PRAGMA locking_mode=EXCLUSIVE');
 
     $i = $invalid = 0;
     $f = fopen($csvDatabase, 'r');
@@ -110,11 +133,15 @@ EOF;
         continue;
       }
 
+      $db->query('BEGIN TRANSACTION');
+
       $stm = $db->prepare('INSERT INTO ip2country VALUES(?, ?, ?)');
       $stm->bindParam(1, $from);
       $stm->bindParam(2, $to);
       $stm->bindParam(3, $code);
       $stm->execute();
+
+      $db->query('COMMIT');
 
       $i++;
 
