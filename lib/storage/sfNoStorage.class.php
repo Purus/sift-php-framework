@@ -49,6 +49,21 @@ class sfNoStorage extends sfStorage {
   }
 
   /**
+   * @see sfIStorage
+   */
+  public function start()
+  {
+  }
+
+  /**
+   * @see sfIStorage
+   */
+  public function isStarted()
+  {
+    return true;
+  }
+
+  /**
    * @see sfIService
    */
   public function shutdown()

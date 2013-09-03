@@ -49,4 +49,18 @@ interface sfIStorage {
    * @return boolean True if session regenerated, false if error
    */
   public function regenerate($destroy = false);
+
+  /**
+   * Returns if the session is started
+   *
+   * @return boolean True is its started, false otherwise
+   */
+  public function isStarted();
+
+  /**
+   * Starts the session
+   *
+   */
+  public function start();
+
 }

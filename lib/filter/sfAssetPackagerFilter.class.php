@@ -31,12 +31,9 @@ class sfAssetPackagerFilter extends sfFilter {
   {
     $filterChain->execute();
 
-    $response = $this->getContext()->getResponse();
-    $request  = $this->getContext()->getRequest();
-
     if($this->isFirstCall()
-        && !$request->isAjax()
-        && preg_match('|text/html|', $response->getContentType()))
+        && !$this->getContext()->getRequest()->isAjax()
+        && preg_match('|text/html|', $this->getContext()->getResponse()->getContentType()))
     {
       sfLoader::loadHelpers(array('Tag', 'Asset'));
       $this->handleStylesheets();

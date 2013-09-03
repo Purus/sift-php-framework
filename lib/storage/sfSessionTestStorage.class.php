@@ -121,6 +121,21 @@ class sfSessionTestStorage extends sfStorage {
   }
 
   /**
+   * @see sfIStorage
+   */
+  public function isStarted()
+  {
+    return true;
+  }
+
+  /**
+   * @see sfIStorage
+   */
+  public function start()
+  {
+  }
+
+  /**
    * @see sfIService
    */
   public function shutdown()

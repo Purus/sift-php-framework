@@ -83,11 +83,9 @@ class sfSessionStorage extends sfStorage {
 
     session_set_cookie_params($lifetime, $path, $domain, $secure, $httpOnly);
 
-    if($this->getOption('auto_start', true))
+    if($this->getOption('auto_start'))
     {
-      // start our session
-      session_start();
-      self::$sessionStarted = true;
+      $this->start();
     }
   }
 
@@ -149,11 +147,37 @@ class sfSessionStorage extends sfStorage {
   }
 
   /**
+   * @see sfIStorage
+   */
+  public function start()
+  {
+    if(self::$sessionStarted)
+    {
+      return;
+    }
+    // start our session
+    session_start();
+    self::$sessionStarted = true;
+  }
+
+  /**
+   * @see sfIStorage
+   */
+  public function isStarted()
+  {
+    return self::$sessionStarted;
+  }
+
+  /**
    * @see sfIService
    */
   public function shutdown()
   {
-    session_write_close();
+    if($this->isStarted())
+    {
+      session_write_close();
+      self::$sessionStarted = false;
+    }
   }
 
 }

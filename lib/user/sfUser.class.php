@@ -107,6 +107,12 @@ class sfUser extends sfConfigurable implements sfIService, ArrayAccess {
   {
     $this->attributeHolder->clear();
 
+    // start the storage if its not started
+    if(!$this->storage->isStarted())
+    {
+      $this->storage->start();
+    }
+
     // read attributes from storage
     $attributes = $this->storage->read(self::ATTRIBUTE_NAMESPACE);
     if(is_array($attributes))

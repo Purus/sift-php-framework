@@ -12,6 +12,8 @@ class myStorage extends sfStorage
   function shutdown() {}
   function write($key, $data) {}
   function regenerate($destroy = false) {}
+  function isStarted() {return true;}
+  function start(){}
 }
 
 $storage = new myStorage();

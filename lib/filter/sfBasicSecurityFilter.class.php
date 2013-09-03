@@ -27,8 +27,6 @@ class sfBasicSecurityFilter extends sfSecurityFilter
     // get the cool stuff
     $context    = $this->getContext();
     $controller = $context->getController();
-    $user       = $context->getUser();
-
     // get the current action instance
     $actionEntry    = $controller->getActionStack()->getLastEntry();
     $actionInstance = $actionEntry->getActionInstance();
@@ -54,7 +52,7 @@ class sfBasicSecurityFilter extends sfSecurityFilter
 
     // get the credential required for this action
     $credential = $actionInstance->getCredential();
-
+    $user       = $context->getUser();
     // for this filter, the credentials are a simple privilege array
     // where the first index is the privilege name and the second index
     // is the privilege namespace

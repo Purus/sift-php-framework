@@ -140,9 +140,9 @@ abstract class sfApplication extends sfProject {
    */
   protected function initConfiguration()
   {
-    // load base settings
-    include($this->configCache->checkConfig($this->getOption('sf_app_config_dir_name') . '/settings.yml'));
-    include($this->configCache->checkConfig($this->getOption('sf_app_config_dir_name') . '/logging.yml'));
+    $this->configCache->import($this->getOption('sf_app_config_dir_name') . '/settings.yml', false);
+    $this->configCache->import($this->getOption('sf_app_config_dir_name') . '/logging.yml', false);
+    $this->configCache->import($this->getOption('sf_app_config_dir_name') . '/php.yml', false);
 
     // check locks
     if(sfConfig::get('sf_check_lock'))
@@ -255,7 +255,6 @@ abstract class sfApplication extends sfProject {
       $this->configCache->import($sf_app_config_dir_name . '/core_compile.yml', false);
     }
 
-    $this->configCache->import($sf_app_config_dir_name . '/php.yml', false);
     $this->configCache->import($sf_app_config_dir_name . '/routing.yml', false);
 
     // setup generation of html tags (Xhtml vs HTML)
