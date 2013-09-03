@@ -26,4 +26,13 @@ class securityActions extends myActions
     return $this->renderText('Secured');
   }
 
+  public function executeAjax()
+  {
+    if(!$this->getRequest()->isAjax())
+    {
+      throw new sfStopException('Cannot access directly');
+    }
+    return $this->renderJson(json_encode(array('result' => false, 'html' => 'You shouldn\'t see this')));
+  }
+
 }

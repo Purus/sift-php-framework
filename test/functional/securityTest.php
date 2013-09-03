@@ -48,3 +48,16 @@ $b->
     ->hasCredential('foo_credential', true)
     ->isFlash('success', 'redirected')
   ->end();
+
+// ajax request for secured page
+$b->
+  setHttpHeader('X-Requested-With', 'XMLHttpRequest')->
+  get('/security/ajax')->
+  with('response')->begin()
+  ->isStatusCode(401)
+  ->isHeader('Content-type', 'application/json')
+  ->end()
+    ->with('request')->begin()
+    ->isParameter('module', 'security')
+    ->isParameter('action', 'ajax')
+  ->end();

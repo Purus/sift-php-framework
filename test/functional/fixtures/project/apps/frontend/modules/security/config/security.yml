@@ -4,3 +4,6 @@ all:
 secured:
   is_secure: true
   credentials: [foo_credential]
+
+ajax:
+  is_secure: true

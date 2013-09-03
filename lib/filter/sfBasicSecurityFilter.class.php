@@ -34,7 +34,6 @@ class sfBasicSecurityFilter extends sfSecurityFilter
     if(!$actionInstance->isSecure())
     {
       $filterChain->execute();
-
       return;
     }
 
@@ -93,8 +92,7 @@ class sfBasicSecurityFilter extends sfSecurityFilter
       if(sfConfig::get('sf_use_flash'))
       {
         // set flash error, so the user knows whats going on
-        $user->setAttribute('error', __('You have to be logged in to access this page.', array(),
-                sfConfig::get('sf_sift_data_dir') . '/i18n/catalogues/action'), sfUser::FLASH_NAMESPACE);
+        $user->setFlash('error', __('You have to be logged in to access this page.', array(), sfConfig::get('sf_sift_data_dir') . '/i18n/catalogues/action'));
       }
 
       // the user is not authenticated
@@ -116,7 +114,20 @@ class sfBasicSecurityFilter extends sfSecurityFilter
     // violates the RFC
     // @see http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html
     $response->setStatusCode(401);
-    $response->setHeaderOnly(true);
+    if($loginRoute = $this->getLoginRoute())
+    {
+      $response->setContentType('application/json');
+      $response->setHttpHeader('X-Content-Type-Options', 'nosniff');
+      $response->setContent(sfJson::encode(sfAjaxResult::createFromArray(array(
+        'html' => __('This action requires you to be logged in and you are not. Redirect to login page?', array(), sfConfig::get('sf_sift_data_dir') . '/i18n/catalogues/action'),
+        'redirect' => url_for($loginRoute, true)
+      ))));
+    }
+    else
+    {
+      $response->setHeaderOnly(true);
+    }
+
     $response->send();
     return;
   }
@@ -133,6 +144,25 @@ class sfBasicSecurityFilter extends sfSecurityFilter
     $response->setHeaderOnly(true);
     $response->send();
     return;
+  }
+
+  /**
+   * Tries to get the login route
+   *
+   * @return string|false
+   */
+  protected function getLoginRoute()
+  {
+    $routing = sfRouting::getInstance();
+    if($routing->hasRouteName('user_login'))
+    {
+      return sprintf('@%s', $routing->getRouteByName('user_login'));
+    }
+    elseif($routing->hasRouteName('default'))
+    {
+      return sprintf('%s/%s', sfConfig::get('sf_login_module'), sfConfig::get('sf_login_action'));
+    }
+    return false;
   }
 
 }
