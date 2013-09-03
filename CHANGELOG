@@ -1,3 +1,4 @@
+03.09.2013 [a09e952] fixed setting.yml inclusion (was loaded twice in the init procedure)
 03.09.2013 [6f6579e] updated ip2country database, build script (now takes a few seconds!)
 02.09.2013 [dfea32a] updated changelog
 02.09.2013 [ac08ef8] updated view object creation
