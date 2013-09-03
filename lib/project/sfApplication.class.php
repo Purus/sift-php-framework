@@ -174,7 +174,6 @@ abstract class sfApplication extends sfProject {
     $sf_debug = sfConfig::get('sf_debug');
 
     // load base settings
-    include($this->configCache->checkConfig($sf_app_config_dir_name.'/settings.yml'));
     if($file = $this->configCache->checkConfig($sf_app_config_dir_name.'/app.yml', true))
     {
       include($file);
@@ -253,8 +252,7 @@ abstract class sfApplication extends sfProject {
     // required core classes for the framework
     if(!$sf_debug && !sfConfig::get('sf_test'))
     {
-      $core_classes = $sf_app_config_dir_name . '/core_compile.yml';
-      $this->configCache->import($core_classes, false);
+      $this->configCache->import($sf_app_config_dir_name . '/core_compile.yml', false);
     }
 
     $this->configCache->import($sf_app_config_dir_name . '/php.yml', false);
