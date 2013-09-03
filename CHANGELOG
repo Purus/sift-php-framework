@@ -1,3 +1,10 @@
+03.09.2013 [159af23] updated security filter
+03.09.2013 [7db688a] updated storage interface,added possibility to start the session manually
+03.09.2013 [a09e952] fixed setting.yml inclusion (was loaded twice in the init procedure)
+03.09.2013 [6f6579e] updated ip2country database, build script (now takes a few seconds!)
+02.09.2013 [dfea32a] updated changelog
+02.09.2013 [ac08ef8] updated view object creation
+02.09.2013 [9bd4b89] updated changelog
 02.09.2013 [352855c] refactored mailer
 29.08.2013 [da9f332] updated swift mailer to 5.0.1
 29.08.2013 [2164969] updated support for timezones
