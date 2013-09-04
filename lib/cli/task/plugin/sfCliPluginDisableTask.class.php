@@ -49,9 +49,9 @@ EOF;
   {
     $pluginName = $arguments['name'];
 
-    if(!$this->getPluginManager()->isPluginInstalled($pluginName))
+    if(!$this->checkPluginExists($pluginName, false))
     {
-      throw new sfCliCommandException('Unable to enable the plugin. Plugin is not installed.');
+      throw new sfCliCommandException('Unable to disable the plugin. Plugin is not installed.');
     }
 
     $this->logSection($this->getFullName(), sprintf('Disabling plugin "%s"', $arguments['name']));
