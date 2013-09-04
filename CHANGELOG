@@ -1,3 +1,4 @@
+04.09.2013 [2d4a016] cleaned the factory config handler
 03.09.2013 [159af23] updated security filter
 03.09.2013 [7db688a] updated storage interface,added possibility to start the session manually
 03.09.2013 [a09e952] fixed setting.yml inclusion (was loaded twice in the init procedure)
