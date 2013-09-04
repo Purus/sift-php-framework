@@ -68,9 +68,13 @@ EOF;
     $parser = new sfYamlParser();
     $config = $parser->parse(file_get_contents($pluginYaml));
 
+    if(!isset($config[$environment]))
+    {
+      $config[$environment] = array();
+    }
+
     // the plugin entry does not exist
-    if(!isset($config[$environment])
-        || !array_key_exists($pluginName, $config[$environment]))
+    if(!array_key_exists($pluginName, $config[$environment]))
     {
       $config[$environment][$pluginName] = array(
         'disabled' => true
@@ -78,12 +82,14 @@ EOF;
     }
     else
     {
-      if(isset($config[$environment][$pluginName]['disabled'])
-          && !$config[$environment][$pluginName]['disabled'])
+      if(!is_array($config[$environment][$pluginName]))
       {
-        $config[$environment][$pluginName] = array_merge((array)$config[$environment][$pluginName], array(
-          'disabled' => true
-        ));
+        $config[$environment][$pluginName] = array();
+      }
+
+      if(!isset($config[$environment][$pluginName]['disabled']) || !$config[$environment][$pluginName]['disabled'])
+      {
+        $config[$environment][$pluginName]['disabled'] = true;
       }
       else
       {
