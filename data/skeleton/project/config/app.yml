@@ -1,0 +1,5 @@
+# You can find more information about this file on:
+# https://bitbucket.org/mishal/sift-php-framework/wiki/App
+all:
+  # webmater email, used in 500 error pages and by the plugins
+  webmaster_email: ##WEBMASTER_EMAIL##
