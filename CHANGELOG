@@ -1,4 +1,9 @@
-04.09.2013 [2d4a016] cleaned the factory config handler
+05.09.2013 [4f6418d] updated iso3166, now supports also alpha3 codes, but is missing 3 countries
+04.09.2013 [8ea448e] fixed plugin disable task
+04.09.2013 [b4f8ff9] fixed #24
+04.09.2013 [df2884c] fixed #23
+04.09.2013 [35c654e] :leaned the factory config handler
+04.09.2013 [4410667] cleaned the factory config handler
 03.09.2013 [159af23] updated security filter
 03.09.2013 [7db688a] updated storage interface,added possibility to start the session manually
 03.09.2013 [a09e952] fixed setting.yml inclusion (was loaded twice in the init procedure)
