@@ -41,49 +41,111 @@ EOF;
 
   protected function buildCountryCodes()
   {
+    // update!
+    $euCountriesAlpha2 = array('AT', 'BE', 'BG', 'CY', 'CZ', 'DE', 'DK', 'EE', 'ES', 'FI', 'FR',
+                               'GB', 'GR', 'HU', 'IE', 'IT', 'LT', 'LU', 'LV', 'MT', 'NL', 'PL',
+                               'PT', 'RO', 'SE', 'SI', 'SK');
+
     $dataSourceDir = $this->environment->get('build_data_dir');
-    $isoDatabase = $dataSourceDir. '/country_names_and_code_elements.txt';
+    $isoDatabase = $dataSourceDir. '/wikipedia-iso-country-codes.csv';
     $isoClass = $this->environment->get('sf_sift_lib_dir') . '/i18n/iso/sfISO3166.class.php';
 
-    $iso = explode("\n", file_get_contents($isoDatabase));
+    // we do not check for errors!
+    $handle = fopen($isoDatabase, 'r');
+    while(($data = fgetcsv($handle, 1000, ',')) !== false)
+    {
+      $iso[] = $data;
+    }
+    fclose($handle);
 
-    $countries = array();
+    $countriesAlpha2Code = $countriesAlpha3Code = $alpha2Alpha3Map = $alpha3Alpha2Map = $euCountriesAlpha3 = array();
+
     foreach($iso as $line)
     {
-      $line = trim($line);
+      // English short name lower case,Alpha-2 code,Alpha-3 code,Numeric code,ISO 3166-2
+      list($name, $alpha2code, $alpha3code) = $line;
 
-      if(empty($line))
+      if(empty($name) || strlen($alpha2code) !== 2 || strlen($alpha3code) !== 3)
       {
         continue;
       }
 
-      list($name, $code) = explode(';', $line, 2);
+      $name = sfUtf8::ucwords(sfUtf8::lower($name));
 
-      $name = str_replace('\\\'', '\'', trim($name, '\''));
+      $alpha2Alpha3Map[$alpha2code] = $alpha3code;
+      $alpha3Alpha2Map[$alpha3code] = $alpha2code;
 
-      if(empty($name) || strlen($code) !== 2)
+      $countriesAlpha2Code[$alpha2code] = $name;
+      $countriesAlpha3Code[$alpha3code] = $name;
+
+      if(in_array($alpha2code, $euCountriesAlpha2))
       {
-        continue;
+        $euCountriesAlpha3[] = $alpha3code;
       }
-
-      $countries[$code] = sfUtf8::ucwords(sfUtf8::lower($name));
     }
 
-    ksort($countries);
+    ksort($countriesAlpha2Code);
+    ksort($countriesAlpha3Code);
 
-    $php = '';
-    foreach($countries as $code => $name)
+    $alpha2 = '';
+    foreach($countriesAlpha2Code as $code => $name)
     {
-      $php .= sprintf("    '%s', // %s\n", $code, $name);
+      $alpha2 .= sprintf("    '%s', // %s\n", $code, $name);
     }
 
-    $content = preg_replace('/protected static \$countries = array *\(.*?\);/s',
-        sprintf("protected static \$countries = array(\n%s  );", $php), file_get_contents($isoClass));
+    $alpha3 = '';
+    foreach($countriesAlpha3Code as $code => $name)
+    {
+      $alpha3 .= sprintf("    '%s', // %s\n", $code, $name);
+    }
+
+    $alpha2ToAlpha3 = '';
+    foreach($alpha2Alpha3Map as $code2 => $code3)
+    {
+      $alpha2ToAlpha3 .= sprintf("    '%s' => '%s',\n", $code2, $code3);
+    }
+
+    $alpha3ToAlpha2 = '';
+    foreach($alpha3Alpha2Map as $code3 => $code2)
+    {
+      $alpha3ToAlpha2 .= sprintf("    '%s' => '%s',\n", $code3, $code2);
+    }
+
+    $euAlpha2 = '';
+    foreach($euCountriesAlpha2 as $code)
+    {
+      $euAlpha2 .= sprintf("    '%s',\n", $code);
+    }
+
+    $euAlpha3 = '';
+    foreach($euCountriesAlpha3 as $code)
+    {
+      $euAlpha3 .= sprintf("    '%s',\n", $code);
+    }
+
+    $fileContents = file_get_contents($isoClass);
+
+    $content = preg_replace('/protected static \$countriesAlpha2 = array *\(.*?\);/s',
+        sprintf("protected static \$countriesAlpha2 = array(\n%s  );", $alpha2), $fileContents);
+
+    $content = preg_replace('/protected static \$countriesAlpha3 = array *\(.*?\);/s',
+        sprintf("protected static \$countriesAlpha3 = array(\n%s  );", $alpha3), $content);
+
+    $content = preg_replace('/protected static \$alpha2ToAlpha3Map = array *\(.*?\);/s',
+        sprintf("protected static \$alpha2ToAlpha3Map = array(\n%s  );", $alpha2ToAlpha3), $content);
+
+    $content = preg_replace('/protected static \$alpha3ToAlpha2Map = array *\(.*?\);/s',
+        sprintf("protected static \$alpha3ToAlpha2Map = array(\n%s  );", $alpha3ToAlpha2), $content);
+
+    $content = preg_replace('/protected static \$euCountriesAlpha2 = array *\(.*?\);/s',
+        sprintf("protected static \$euCountriesAlpha2 = array(\n%s  );", $euAlpha2), $content);
+
+    $content = preg_replace('/protected static \$euCountriesAlpha3 = array *\(.*?\);/s',
+        sprintf("protected static \$euCountriesAlpha3 = array(\n%s  );", $euAlpha3), $content);
 
     file_put_contents($isoClass, $content);
 
-    $this->logSection($this->getFullName(), sprintf("Found %s country codes.", count($countries)));
-
+    $this->logSection($this->getFullName(), sprintf("Found %s country codes.", count($countriesAlpha2Code)));
   }
 
 }

@@ -12,9 +12,9 @@ Recent version can be downloaded from: [http://cgit.freedesktop.org/xdg/shared-m
 
 Recent version can be downloaded from: [http://software77.net/geo-ip/](http://software77.net/geo-ip/)
 
-## ISO 3166-1 Alpha 2 country codes
+## ISO 3166-1 Alpha 2 and 3 country codes
 
-Recent version can be downloaded from: http://www.iso.org/iso/country_codes
+Recent version can be downloaded from: https://github.com/anthonyringoet/spotify-search
 
 ## ISO 4217 Curriency codes
 
