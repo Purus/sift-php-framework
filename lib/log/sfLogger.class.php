@@ -7,66 +7,24 @@
  */
 
 /**
- * sfLogger manages all logging in Sift projects.
- *
- * sfLogger can be configured via the logging.yml configuration file.
+ * sfLogger manages the logging. sfLogger can be configured via the logging.yml configuration file.
  * Loggers can also be registered directly in the logging.yml configuration file.
  *
- * This level list is ordered by highest priority (sfLogger::EMERG) to lowest priority (sfLogger::DEBUG):
+ * This level list is ordered by highest level (sfLogger::EMERGENCY) to lowest level (sfLogger::DEBUG):
  *
- * - sfLogger::EMERG:   System is unusable
- * - sfLogger::ALERT:   Immediate action required
- * - sfLogger::CRIT:    Critical conditions
- * - sfLogger::ERR:     Error conditions
- * - sfLogger::WARNING: Warning conditions
- * - sfLogger::NOTICE:  Normal but significant
- * - sfLogger::INFO:    Informational
- * - sfLogger::DEBUG:   Debug-level messages
+ * - sfILogger::EMERGENCY:   System is unusable
+ * - sfILogger::ALERT:       Immediate action required
+ * - sfILogger::CRITICAL:    Critical conditions
+ * - sfILogger::ERROR:       Error conditions
+ * - sfILogger::WARNING:     Warning conditions
+ * - sfILogger::NOTICE:      Normal but significant
+ * - sfILogger::INFO:        Informational
+ * - sfILogger::DEBUG:       Debug-level messages
  *
  * @package    Sift
  * @subpackage log
  */
-class sfLogger extends sfConfigurable implements sfILogger {
-
-  /**
-   * System is unusable
-   */
-  const EMERG = 0;
-
-  /**
-   * Immediate action required
-   */
-  const ALERT = 1;
-
-  /**
-   * Critical conditions
-   */
-  const CRIT = 2;
-
-  /**
-   * Error conditions
-   */
-  const ERR = 3;
-
-  /**
-   * Warning conditions
-   */
-  const WARNING = 4;
-
-  /**
-   * Normal but significant
-   */
-  const NOTICE = 5;
-
-  /**
-   * Informational
-   */
-  const INFO = 6;
-
-  /**
-   * Debug-level messages
-   */
-  const DEBUG = 7;
+class sfLogger implements sfILogger {
 
   /**
    * Array of loggers
@@ -78,31 +36,16 @@ class sfLogger extends sfConfigurable implements sfILogger {
   /**
    * Default level
    *
+   * @var integer
    */
-  protected $level = self::EMERG;
-
-  /**
-   * Log level map
-   *
-   * @var array
-   */
-  protected $levels = array(
-    self::EMERG => 'emerg',
-    self::ALERT => 'alert',
-    self::CRIT => 'crit',
-    self::ERR => 'err',
-    self::WARNING => 'warning',
-    self::NOTICE => 'notice',
-    self::INFO => 'info',
-    self::DEBUG => 'debug',
-  );
+  protected $level = sfILogger::EMERGENCY;
 
   /**
    * Instance holder
    *
    * @var sfLogger
    */
-  protected static $logger = null;
+  protected static $logger;
 
   /**
    * Returns the sfLogger instance.
@@ -120,27 +63,6 @@ class sfLogger extends sfConfigurable implements sfILogger {
   }
 
   /**
-   * Constructs the object
-   *
-   * @param array $options
-   */
-  public function __construct($options = array())
-  {
-    parent::__construct($options);
-    $this->initialize($options);
-  }
-
-  /**
-   * Initializes the logger.
-   *
-   * @param array $options
-   */
-  public function initialize($options = array())
-  {
-    $this->loggers = array();
-  }
-  
-  /**
    * Retrieves the log level for the current logger instance.
    *
    * @return string Log level
@@ -154,6 +76,7 @@ class sfLogger extends sfConfigurable implements sfILogger {
    * Sets a log level for the current logger instance.
    *
    * @param string Log level
+   * @return null
    */
   public function setLogLevel($level)
   {
@@ -174,6 +97,7 @@ class sfLogger extends sfConfigurable implements sfILogger {
    * Registers a logger.
    *
    * @param object The Logger object
+   * @return null
    */
   public function registerLogger(sfILogger $logger)
   {
@@ -181,121 +105,126 @@ class sfLogger extends sfConfigurable implements sfILogger {
   }
 
   /**
-   * Logs a message.
+   * Logs a message to the registered loggers.
    *
-   * @param string Message
-   * @param string Message priority
+   * @param string $message
+   * @param integer $level The log level
+   * @param array $context Array of contextual parameters
+   * @return null
    */
-  public function log($message, $priority = self::INFO)
+  public function log($message, $level = sfILogger::INFO, array $context = array())
   {
-    if($this->getLogLevel() < $priority)
+    if($this->getLogLevel() < $level)
     {
       return;
     }
 
     foreach($this->loggers as $logger)
     {
-      $logger->log((string) $message, $priority, is_string($priority) ? $priority : $this->levels[$priority]);
+      $logger->log($message, $level, $context);
     }
   }
 
   /**
-   * Sets an emerg message.
-   *
-   * @param string Message
+   * @see sfILogger
    */
-  public function emerg($message)
+  public function emergency($message, array $context = array())
   {
-    $this->log($message, self::EMERG);
+    $this->log($message, sfILogger::EMERGENCY, $context);
   }
 
   /**
-   * Sets an alert message.
-   *
-   * @param string Message
+   * @see emergency()
    */
-  public function alert($message)
+  public function emerg($message,  array $context = array())
   {
-    $this->log($message, self::ALERT);
+    $this->emergency($message, $context);
   }
 
   /**
-   * Sets a critical message.
-   *
-   * @param string Message
+   * @see sfILogger
    */
-  public function crit($message)
+  public function alert($message, array $context = array())
   {
-    $this->log($message, self::CRIT);
+    $this->log($message, sfILogger::ALERT, $context);
   }
 
   /**
-   * Sets an error message.
-   *
-   * @param string Message
+   * @see sfILogger
    */
-  public function err($message)
+  public function critical($message, array $context = array())
   {
-    $this->log($message, self::ERR);
+    $this->log($message, sfILogger::CRITICAL, $context);
   }
 
   /**
-   * Sets a warning message.
+   * Alias for critical
    *
-   * @param string Message
+   * @see critical()
    */
-  public function warning($message)
+  public function crit($message, array $context = array())
   {
-    $this->log($message, self::WARNING);
+    $this->critical($message, $context);
   }
 
   /**
-   * Sets a notice message.
-   *
-   * @param string Message
+   * @see sfILogger
    */
-  public function notice($message)
+  public function error($message, array $context = array())
   {
-    $this->log($message, self::NOTICE);
+    $this->log($message, sfILogger::ERROR, $context);
   }
 
   /**
-   * Sets an info message.
+   * Alias for err
    *
-   * @param string Message
+   * @see error()
    */
-  public function info($message)
+  public function err($message, array $context = array())
   {
-    $this->log($message, self::INFO);
+    $this->error($message, $context);
   }
 
   /**
-   * Sets a debug message.
-   *
-   * @param string Message
+   * @see sfILogger
    */
-  public function debug($message)
+  public function warning($message, array $context = array())
   {
-    $this->log($message, self::DEBUG);
+    $this->log($message,sfILogger::WARNING, $context);
   }
 
   /**
-   * Returns the priority name given a priority class constant
+   * Alias for warning
    *
-   * @param  integer $priority A priority class constant
-   *
-   * @return string  The priority name
-   *
-   * @throws sfException if the priority level does not exist
+   * see warning()
    */
-  public function getPriorityName($priority)
+  public function warn($message, array $context = array())
   {
-    if (!isset($this->levels[$priority]))
-    {
-      throw new sfException(sprintf('The priority level "%s" does not exist.', $priority));
-    }
+    $this->warning($message, $context);
+  }
 
-    return $this->levels[$priority];
+  /**
+   * @see sfILogger
+   */
+  public function notice($message, array $context = array())
+  {
+    $this->log($message, sfILogger::NOTICE, $context);
+  }
+
+  /**
+   * @see sfILogger
+   */
+  public function info($message, array $context = array())
+  {
+    $this->log($message, sfILogger::INFO, $context);
+  }
+
+  /**
+   * @see sfILogger
+   */
+  public function debug($message, array $context = array())
+  {
+    $this->log($message, sfILogger::DEBUG, $context);
   }
 
   /**
@@ -307,10 +236,7 @@ class sfLogger extends sfConfigurable implements sfILogger {
   {
     foreach($this->loggers as $logger)
     {
-      if(method_exists($logger, 'shutdown'))
-      {
-        $logger->shutdown();
-      }
+      $logger->shutdown();
     }
     $this->loggers = array();
   }

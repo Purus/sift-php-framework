@@ -12,7 +12,7 @@
  * @package    Sift
  * @subpackage log
  */
-class sfFileLogger extends sfLogger
+class sfFileLogger extends sfLoggerBase
 {
   /**
    * Default options
@@ -21,12 +21,21 @@ class sfFileLogger extends sfLogger
    */
   protected $defaultOptions = array(
     'type' => 'Sift',
-    'format' => '%time% %type% [%priority%] %message%%EOL%',
+    'format' => '%time% %type% [%level%] %message%%EOL%',
     'time_format' => '%b %d %H:%M:%S',
     'dir_mode' => 0777,
     'file_mode' => 0666,
     'date_format' => 'Y_m_d',
     'date_prefix' => '_'
+  );
+
+  /**
+   * Array of required options
+   *
+   * @var array
+   */
+  protected $requiredOptions = array(
+    'file'
   );
 
   /**
@@ -41,14 +50,9 @@ class sfFileLogger extends sfLogger
    *
    * @param array Options for the logger
    */
-  public function initialize($options = array())
+  public function setup()
   {
     $file = $this->getOption('file');
-
-    if(!$file)
-    {
-      throw new sfConfigurationException('You must provide a "file" parameter for this logger.');
-    }
 
     if($dateFormat = $this->getOption('date_format'))
     {
@@ -76,26 +80,26 @@ class sfFileLogger extends sfLogger
       chmod($file, $this->getOption('file_mode'));
     }
 
-    return parent::initialize($options);
+    parent::setup();
   }
 
   /**
    * Logs a message.
    *
    * @param string Message
-   * @param string Message priority
-   * @param string Message priority name
+   * @param string Message level
+   * @param string Message level name
    * @param string Application name (default to Sift)
    */
-  public function log($message, $priority = sfLogger::INFO)
+  public function log($message, $level = sfILogger::INFO, array $context = array())
   {
     flock($this->fp, LOCK_EX);
     fwrite($this->fp, strtr($this->getOption('format'), array(
-      '%type%'     => $this->getOption('type'),
-      '%message%'  => $message,
-      '%time%'     => strftime($this->getOption('time_format')),
-      '%priority%' => $this->getPriorityName($priority),
-      '%EOL%'      => PHP_EOL,
+      '%type%' => $this->getOption('type'),
+      '%message%' => $this->formatMessage($message, $context),
+      '%time%' => strftime($this->getOption('time_format')),
+      '%level%' => $this->getLevelName($level),
+      '%EOL%' => PHP_EOL,
     )));
     flock($this->fp, LOCK_UN);
   }

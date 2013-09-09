@@ -10,17 +10,14 @@ if(file_exists($file))
 {
   unlink($file);
 }
-
-// ->initialize()
-$t->diag('->initialize()');
 try
 {
   $logger = new sfFileLogger();
-  $t->fail('->initialize() parameters must contain a "file" parameter');
+  $t->fail('constructor options must contain a "file" option');
 }
-catch (sfConfigurationException $e)
+catch(Exception $e)
 {
-  $t->pass('->initialize() parameters must contain a "file" parameter');
+  $t->pass('->initialize() parameters must contain a "file" option');
 }
 
 // ->log()
@@ -50,7 +47,7 @@ unlink($file);
 
 $logger = new TestLogger(array('file' => $file, 'date_format' => ''));
 $logger->log('foo');
-$t->is(file_get_contents($file), strftime($logger->getTimeFormat()).' Sift [info] foo'.PHP_EOL, '->initialize() can take a format option');
+$t->is(file_get_contents($file), strftime($logger->getTimeFormat()).' Sift [info] foo'.PHP_EOL, 'contructor can take a format option');
 
 // close pointer
 $logger->shutdown();
@@ -58,7 +55,7 @@ unlink($file);
 
 $logger = new TestLogger(array('file' => $file, 'format' => '%message%', 'date_format' => ''));
 $logger->log('foo');
-$t->is(file_get_contents($file), 'foo', '->initialize() can take a format option');
+$t->is(file_get_contents($file), 'foo', 'contructor can take a format option');
 $logger->shutdown();
 
 // option: time_format
@@ -69,7 +66,7 @@ unlink($file);
 $logger = new TestLogger(array('file' => $file, 'time_format' => '%Y %m %d', 'date_format' => ''));
 $logger->log('foo');
 
-$t->is(file_get_contents($file), strftime($logger->getTimeFormat()).' Sift [info] foo'.PHP_EOL, '->initialize() can take a format option');
+$t->is(file_get_contents($file), strftime($logger->getTimeFormat()).' Sift [info] foo'.PHP_EOL, 'contructor can take a format option');
 
 // option: type
 $t->diag('option: type');
@@ -79,7 +76,7 @@ $logger->shutdown();
 unlink($file);
 $logger = new TestLogger(array('file' => $file, 'type' => 'foo', 'date_format' => ''));
 $logger->log('foo');
-$t->is(file_get_contents($file), strftime($logger->getTimeFormat()).' foo [info] foo'.PHP_EOL, '->initialize() can take a format option');
+$t->is(file_get_contents($file), strftime($logger->getTimeFormat()).' foo [info] foo'.PHP_EOL, 'contructor can take a format option');
 
 // ->shutdown()
 $t->diag('->shutdown()');

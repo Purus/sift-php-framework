@@ -11,35 +11,42 @@
  *
  * @package    Sift
  * @subpackage log
- * @link       http://www.nevalon.de
  */
-class sfEmailLogger extends sfLogger
+class sfEmailLogger extends sfLoggerBase
 {
   /**
    * Default options
-   * 
-   * @var array 
+   *
+   * @var array
    */
   protected $defaultOptions = array(
     'type' => 'Sift',
-    'format' => "%time% %type% [%priority%] %message%\n",
+    'format' => "%time% %type% [%level%] %message%\n",
     'time_format' => '%b %d %H:%M:%S',
-    'subject'    => '',
-    'recipients' => array(),
+    'subject' => '',
     'sender_email' => '',
   );
-  
+
+  /**
+   * Array of required options
+   *
+   * @var array
+   */
+  protected $requiredOptions = array(
+    'recipients'
+  );
+
   /**
    * Log flag
-   * 
-   * @var boolean 
+   *
+   * @var boolean
    */
   protected $log = false;
-  
+
   /**
    * Mail body holder
-   * 
-   * @var string 
+   *
+   * @var string
    */
   protected $body = '';
 
@@ -51,20 +58,15 @@ class sfEmailLogger extends sfLogger
    * - emails:        The emails to be send the log messages
    * - subject:       The subject for the email
    * - include_level: Use this to get more detailed information
-   * - format:        The log line format (default to %time% %type% [%priority%] %message%%EOL%)
+   * - format:        The log line format (default to %time% %type% [%level%] %message%%EOL%)
    * - time_format:   The log time strftime format (default to %b %d %H:%M:%S)
    *
    * @param  array             $options     An array of options.
    *
    * @return Boolean      true, if initialization completes successfully, otherwise false.
    */
-  public function initialize($options = array())
+  public function setup()
   {
-    if(!$this->getOption('recipients'))
-    {
-      throw new sfConfigurationException('You must provide a "recipients" parameter for this logger.');
-    }
-    
     // subject is empty, construct some nice subject :)
     if(!$this->getOption('subject'))
     {
@@ -73,53 +75,48 @@ class sfEmailLogger extends sfLogger
       {
         $subject .= ' ' . $app;
       }
-      
       $subject .= ' Error report';
       $this->setOption('subject', trim($subject));
     }
-    
+
     if(!$this->getOption('sender_email'))
     {
-      $this->setOption('sender_email', sprintf('webmaster@%s', 
+      $this->setOption('sender_email', sprintf('webmaster@%s',
               isset($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : 'localhost'));
     }
-    
   }
 
   /**
-   * Logs a message.
-   *
-   * @param string $message   Message
-   * @param string $priority  Message priority
+   * @see sfILogger
    */
-  public function log($message, $priority = sfLogger::INFO)
+  public function log($message, $level = sfILogger::INFO, array $context = array())
   {
     $this->log = true;
     $this->body .= strtr($this->getOption('format'), array(
-      '%type%'     => $this->getOption('type'),
-      '%message%'  => $message,
-      '%time%'     => strftime($this->getOption('time_format')),
-      '%priority%' => $this->getPriorityName($priority)
+      '%type%' => $this->getOption('type'),
+      '%message%' => $this->formatMessage($message, $context),
+      '%time%' => strftime($this->getOption('time_format')),
+      '%level%' => $this->getLevelName($level)
     ));
   }
 
   /**
    * Creates mail headers
-   * 
+   *
    * @return string
    */
   protected function getMailHeaders()
   {
-    return 'MIME-Version: 1.0' . "\r\n" . 
+    return 'MIME-Version: 1.0' . "\r\n" .
            'Content-type: text/plain; charset=UTF-8' . "\r\n" .
-           'X-Priority: 1 (Higuest)' . "\r\n" .
-           'X-MSMail-Priority: High'. "\r\n" .
+           'X-level: 1 (Higuest)' . "\r\n" .
+           'X-MSMail-level: High'. "\r\n" .
            'Importance: High' . "\r\n";
   }
-  
+
   /**
    * Creates body to be send by mail() function
-   * 
+   *
    * @return string
    */
   protected function getMailBody()
@@ -147,23 +144,23 @@ class sfEmailLogger extends sfLogger
     $body[] = 'FILES DUMP';
     $body[] = var_export($_FILES, true);
     $body[] = '----------------------------------------';
-    
+
     return wordwrap(join("\r\n", $body), 70, "\r\n");
   }
-  
+
   /**
    * Rreturns mail subject
-   * 
+   *
    * @return string
    */
   protected function getMailSubject()
   {
-    return '=?UTF-8?B?'.base64_encode($this->getOption('subject')).'?='; 
+    return '=?UTF-8?B?'.base64_encode($this->getOption('subject')).'?=';
   }
 
   /**
    * Sends the mail
-   * 
+   *
    * @param string $email Email address
    * @param string $subject Subject
    * @param string $body Mail body
@@ -172,7 +169,7 @@ class sfEmailLogger extends sfLogger
    */
   protected function sendEmail($email, $subject, $body, $headers)
   {
-    return mail($email, $subject, $body, $headers);    
+    return mail($email, $subject, $body, $headers);
   }
 
   /**
@@ -181,23 +178,23 @@ class sfEmailLogger extends sfLogger
   public function shutdown()
   {
     $recipients = (array)$this->getOption('recipients');
-    
-    if(!$this->log || 
+
+    if(!$this->log ||
       !count($recipients))
     {
       return;
     }
-    
+
     $senderEmail = $this->getOption('sender_email');
     if($senderEmail)
     {
       ini_set('sendmail_from', $senderEmail);
     }
-    
+
     $headers = $this->getMailHeaders();
     $body = $this->getMailBody();
     $subject = $this->getMailSubject();
-    
+
     foreach($recipients as $email)
     {
       $this->sendEmail($email, $subject, $body, $headers);
@@ -207,8 +204,6 @@ class sfEmailLogger extends sfLogger
     {
       ini_restore('sendmail_from');
     }
-    
   }
-
 
 }

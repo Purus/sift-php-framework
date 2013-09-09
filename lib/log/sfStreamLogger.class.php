@@ -7,43 +7,59 @@
  */
 
 /**
- * Log messages to a PHP stream.
+ * Log messages to a PHP stream. Available options:
+ *
+ * * stream (the php stream) [REQUIRED]
+ * * close_stream (boolean)  [OPTIONAL] Close the stream on shutdown?
  *
  * @package    Sift
  * @subpackage log
  */
-class sfStreamLogger extends sfLogger
+class sfStreamLogger extends sfLoggerBase
 {
-  protected
-    $stream = null;
+  /**
+   * The stream to log to
+   *
+   * @var resource
+   */
+  protected $stream;
 
   /**
-   * Initializes this logger.
+   * Array of required options
    *
-   * Available options:
-   *
-   * - stream: A PHP stream
-   *
-   * @param  sfEventDispatcher $dispatcher  A sfEventDispatcher instance
-   * @param  array             $options     An array of options.
-   *
-   * @return Boolean      true, if initialization completes successfully, otherwise false.
+   * @var array
    */
-  public function initialize($options = array())
+  protected $requiredOptions = array(
+    'stream'
+  );
+
+  /**
+   * Array of default options
+   *
+   * @var array
+   */
+  protected $defaultOptions = array(
+    'close_stream' => false
+  );
+
+  /**
+   * Setups this logger.
+   */
+  public function setup()
   {
-    if (!isset($options['stream']))
+    if(!$stream = $this->getOption('stream'))
     {
       throw new sfConfigurationException('You must provide a "stream" option for this logger.');
     }
     else
     {
-      if (is_resource($options['stream']) && 'stream' != get_resource_type($options['stream']))
+      if(is_resource($stream) && 'stream' != get_resource_type($stream))
       {
         throw new sfConfigurationException('The provided "stream" option is not a stream.');
       }
     }
 
-    $this->stream = $options['stream'];
+    $this->stream = $stream;
   }
 
   /**
@@ -57,16 +73,24 @@ class sfStreamLogger extends sfLogger
   }
 
   /**
-   * Logs a message.
-   *
-   * @param string $message   Message
-   * @param string $priority  Message priority
+   * @see sfILogger
    */
-  public function log($message, $priority = sfLogger::INFO)
+  public function log($message, $level = sfILogger::INFO, array $context = array())
   {
-    fwrite($this->stream, $message.PHP_EOL);
+    fwrite($this->stream, $this->formatMessage($message, $context).PHP_EOL);
     flush();
   }
-  
-}
 
+  /**
+   * Shutdown the logger
+   *
+   */
+  public function shutdown()
+  {
+    if($this->getOption('close_stream') && $this->stream)
+    {
+      fclose($this->stream);
+    }
+  }
+
+}

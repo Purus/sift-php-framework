@@ -21,16 +21,14 @@ class myEmailLogger extends sfEmailLogger {
   
 }
 
-// ->initialize()
-$t->diag('->initialize()');
 try
 {
   $logger = new myEmailLogger();
-  $t->fail('->initialize() parameters must contain a "recipients" parameter');
+  $t->fail('constructor options must contain a "recipients" parameter');
 }
-catch (sfConfigurationException $e)
+catch(Exception $e)
 {
-  $t->pass('->initialize() parameters must contain a "recipients" parameter');
+  $t->pass('constructor options parameters must contain a "recipients" parameter');
 }
 
 // ->log()

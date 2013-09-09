@@ -15,28 +15,68 @@
 class sfNoLogger implements sfILogger
 {
   /**
-   * Initializes the logger.
-   *
-   * @param array Options for the logger
+   * @see sfILogger
    */
-  public function initialize($options = array())
+  public function emergency($message, array $context = array())
   {
   }
 
   /**
-   * Logs a message.
-   *
-   * @param string Message
-   * @param string Message priority
-   * @param string Message priority name
+   * @see sfILogger
    */
-  public function log($message, $priority = sfLogger::INFO)
+  public function alert($message, array $context = array())
   {
   }
 
   /**
-   * Executes the shutdown method.
+   * @see sfILogger
    */
+  public function critical($message, array $context = array())
+  {
+  }
+
+  /**
+   * @see sfILogger
+   */
+  public function error($message, array $context = array())
+  {
+  }
+
+  /**
+   * @see sfILogger
+   */
+  public function warning($message, array $context = array())
+  {
+  }
+
+  /**
+   * @see sfILogger
+   */
+  public function notice($message, array $context = array())
+  {
+  }
+
+  /**
+   * @see sfILogger
+   */
+  public function info($message, array $context = array())
+  {
+  }
+
+  /**
+   * @see sfILogger
+   */
+  public function debug($message, array $context = array())
+  {
+  }
+
+  /**
+   * @see sfILogger
+   */
+  public function log($message, $level = sfILogger::INFO, array $context = array())
+  {
+  }
+
   public function shutdown()
   {
   }

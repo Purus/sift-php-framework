@@ -27,14 +27,16 @@ class sfLoggingConfigHandler extends sfDefineEnvironmentConfigHandler {
    */
   public function execute($configFiles)
   {
-    $data = parent::execute($configFiles);
+    $data = array();
+    $data[] = parent::execute($configFiles);
+    $data[] = '// register the loggers';
 
     if($this->enabled)
     {
-      $data .= "\n\$logger = sfLogger::getInstance();\n";
+      $data[] = '$logger = sfLogger::getInstance();';
 
       // log level
-      $data .= "\$logger->setLogLevel(constant('sfLogger::'.strtoupper(sfConfig::get('sf_logging_level'))));\n";
+      $data[] = '$logger->setLogLevel(constant(\'sfILogger::\'.strtoupper(sfConfig::get(\'sf_logging_level\'))));';
 
       // register loggers defined in the logging.yml configuration file
       foreach($this->loggers as $name => $keys)
@@ -62,12 +64,21 @@ class sfLoggingConfigHandler extends sfDefineEnvironmentConfigHandler {
           // parse parameters
           $parameters = isset($keys['param']) ? $this->varExport($keys['param']) : '';
           // register logger
-          $data .= sprintf("\$logger->registerLogger(new %s(%s));\n", $keys['class'], $parameters);
+          $reflection = new sfReflectionClass($keys['class']);
+          $data[] = sprintf('$myLogger = new %s(%s);', $keys['class'], $parameters);
+
+          // inject event dispatcher
+          if($reflection->isSubclassOf('sfIEventDispatcherAware'))
+          {
+            $data[] = '$myLogger->setEventDispatcher($this->getEventDispatcher());';
+          }
+
+          $data[] = '$logger->registerLogger($myLogger);';
         }
       }
     }
 
-    return $data;
+    return join("\n", $data);
   }
 
   protected function getValues($prefix, $category, $keys)

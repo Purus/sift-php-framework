@@ -5,18 +5,19 @@ require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
 $t = new lime_test(136, new lime_output_color());
 
-class myLogger implements sfILogger
+class myLogger extends sfLoggerBase
 {
   public $log = '';
 
-  public function log($message, $priority = sfLogger::INFO)
+  public function log($message, $level = sfILogger::INFO, array $context = array())
   {
-    $this->log .= $message;
+    $this->log .= $this->formatMessage($message, $context);
   }
 
   public function shutdown()
   {
   }
+
 }
 
 $myLogger = new myLogger();
@@ -26,7 +27,7 @@ $t->diag('->getInstance()');
 $t->isa_ok(sfLogger::getInstance(), 'sfLogger', '::getInstance() returns a sfLogger instance');
 $t->is(sfLogger::getInstance(), sfLogger::getInstance(), '::getInstance() is a singleton');
 
-$logger = sfLogger::getInstance();
+$logger = new sfLogger();
 
 // ->getLoggers()
 $t->diag('->getLoggers()');
@@ -37,11 +38,6 @@ $t->diag('->registerLogger()');
 $logger->registerLogger($myLogger);
 $t->is($logger->getLoggers(), array($myLogger), '->registerLogger() registers a new logger instance');
 
-// ->initialize()
-$t->diag('->initialize()');
-$logger->initialize();
-$t->is($logger->getLoggers(), array(), '->initialize() initializes the logger and clears all current registered loggers');
-
 // ->setLogLevel() ->getLogLevel()
 $t->diag('->setLogLevel() ->getLogLevel()');
 $t->is($logger->getLogLevel(), sfLogger::EMERG, '->getLogLevel() gets the current log level');
@@ -49,8 +45,8 @@ $logger->setLogLevel(sfLogger::WARNING);
 $t->is($logger->getLogLevel(), sfLogger::WARNING, '->setLogLevel() sets the log level');
 
 // ->log()
+$logger = new sfLogger();
 $t->diag('->log()');
-$logger->initialize();
 $logger->setLogLevel(sfLogger::DEBUG);
 $logger->registerLogger($myLogger);
 $logger->registerLogger($myLogger);
@@ -61,11 +57,11 @@ $t->is($myLogger->log, 'messagemessage', '->log() calls all registered loggers')
 $t->diag('log levels');
 foreach (array('emerg', 'alert', 'crit', 'err', 'warning', 'notice', 'info', 'debug') as $level)
 {
-  $levelConstant = 'sfLogger::'.strtoupper($level);
+  $levelConstant = 'sfILogger::'.strtoupper($level);
 
   foreach (array('emerg', 'alert', 'crit', 'err', 'warning', 'notice', 'info', 'debug') as $logLevel)
   {
-    $logLevelConstant = 'sfLogger::'.strtoupper($logLevel);
+    $logLevelConstant = 'sfILogger::'.strtoupper($logLevel);
     $logger->setLogLevel(constant($logLevelConstant));
 
     $myLogger->log = '';
@@ -96,3 +92,9 @@ foreach (array('emerg', 'alert', 'crit', 'err', 'warning', 'notice', 'info', 'de
     $t->is($log1, $log2, sprintf('->%s($msg) is a shortcut for ->log($msg, %s)', $level, $levelConstant));
   }
 }
+
+$t->diag('context placeholders');
+
+$myLogger->log = '';
+$myLogger->emerg('Error {foo}', array('foo' => 'bar'));
+$t->is($myLogger->log, 'Error bar', 'message is formatted');

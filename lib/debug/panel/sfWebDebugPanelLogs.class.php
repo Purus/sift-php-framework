@@ -36,12 +36,12 @@ class sfWebDebugPanelLogs extends sfWebDebugPanel
     
     foreach($this->webDebug->getLogger()->getLogs() as $log)
     {
-      $priority = $this->webDebug->getPriority($log['priority']);
+      $priority = $this->webDebug->getPriority($log['level']);
         
       // increase status
-      if ($log['priority'] < $this->getStatus())
+      if ($log['level'] < $this->getStatus())
       {
-        $this->setStatus($log['priority']);
+        $this->setStatus($log['level']);
       }
 
       ++$line_nb;

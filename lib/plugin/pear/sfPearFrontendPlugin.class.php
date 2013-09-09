@@ -31,7 +31,7 @@ class sfPearFrontendPlugin extends PEAR_Frontend_CLI {
     $this->dispatcher = $dispatcher;
   }
 
-  public function setLogger(sfLogger $logger)
+  public function setLogger(sfILogger $logger)
   {
     $this->logger = $logger;
   }

@@ -141,7 +141,7 @@ abstract class sfApplication extends sfProject {
   protected function initConfiguration()
   {
     $this->configCache->import($this->getOption('sf_app_config_dir_name') . '/settings.yml', false);
-    $this->configCache->import($this->getOption('sf_app_config_dir_name') . '/logging.yml', false);
+    require ($this->configCache->checkConfig($this->getOption('sf_app_config_dir_name') . '/logging.yml', false));
     $this->configCache->import($this->getOption('sf_app_config_dir_name') . '/php.yml', false);
 
     // check locks

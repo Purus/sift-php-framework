@@ -12,7 +12,7 @@
  * @package    Sift
  * @subpackage log
  */
-class sfWebDebugLogger extends sfVarLogger {
+class sfWebDebugLogger extends sfVarLogger implements sfIEventDispatcherAware {
 
   /**
    * Web debug holder
@@ -22,35 +22,69 @@ class sfWebDebugLogger extends sfVarLogger {
   protected $webDebug = null;
 
   /**
+   * The event dispatcher
+   *
+   * @var sfEventDispatcher
+   */
+  protected $dispatcher;
+
+  /**
    * Array of default options
    *
    * @var array
    */
   protected $defaultOptions = array(
-    'web_debug_class'   => 'sfWebDebug',
-    'web_debug_options' => array(
-    )
+    'web_debug' => array(
+      'class' => 'sfWebDebug',
+      'options' => array(),
+    ),
   );
+
+  /**
+   * Contructor
+   *
+   * @param sfEventDispatcher $dispatcher The event dispatcher
+   * @param array $options Array of options
+   */
+  public function __construct($options = array(), sfEventDispatcher $dispatcher = null)
+  {
+    parent::__construct($options);
+    $this->dispatcher = $dispatcher;
+    $this->setupEvents();
+  }
+
+  /**
+   * @see sfIEventDispatcherAware
+   */
+  public function setEventDispatcher(sfEventDispatcher $dispatcher = null)
+  {
+    $this->dispatcher = $dispatcher;
+    $this->setupEvents();
+  }
+
+  /**
+   * @see sfIEventDispatcherAware
+   */
+  public function getEventDispatcher()
+  {
+    return $this->dispatcher;
+  }
 
   /**
    * Initializes the web debug logger.
    *
    * @param array Logger options
    */
-  public function initialize($options = array())
+  public function setupEvents()
   {
-    if(!sfConfig::get('sf_web_debug'))
+    if(!$this->dispatcher)
     {
       return;
     }
 
-    if(sfCore::isBootstrapped())
-    {
-      $distatcher = sfCore::getEventDispatcher();
-      $distatcher->connect('context.load_factories', array($this, 'listenForLoadFactories'));
-      $distatcher->connect('web_debug.filter_content', array($this, 'filterResponseContent'));
-      $distatcher->connect('application.render_exception', array($this, 'filterExceptionContent'));
-    }
+    $this->dispatcher->connect('context.load_factories', array($this, 'listenForLoadFactories'));
+    $this->dispatcher->connect('web_debug.filter_content', array($this, 'filterResponseContent'));
+    $this->dispatcher->connect('application.render_exception', array($this, 'filterExceptionContent'));
   }
 
   /**
@@ -60,11 +94,13 @@ class sfWebDebugLogger extends sfVarLogger {
    */
   public function listenForLoadFactories(sfEvent $event)
   {
-    $debugClass   = $this->getOption('web_debug_class', 'sfWebDebug');
+    $debugClass = $this->getOption('web_debug.class');
     $debugOptions = array_merge(array(
       'request_parameters' => $event['context']->getRequest()->getParameterHolder()->getAll(),
-    ), (array)$this->getOption('web_debug_options', array()));
-    $this->webDebug = new $debugClass($this, $debugOptions);
+    ), (array)$this->getOption('web_debug.options', array()));
+
+
+    $this->webDebug = new $debugClass($this, $this->dispatcher, $debugOptions);
   }
 
   /**
@@ -77,7 +113,7 @@ class sfWebDebugLogger extends sfVarLogger {
    */
   public function filterResponseContent(sfEvent $event, $content)
   {
-    if(!sfConfig::get('sf_web_debug'))
+    if(!$this->webDebug)
     {
       return $content;
     }
@@ -97,11 +133,6 @@ class sfWebDebugLogger extends sfVarLogger {
    */
   public function filterExceptionContent(sfEvent $event, $content)
   {
-    if(!sfConfig::get('sf_web_debug'))
-    {
-      return $content;
-    }
-
     if(!$this->webDebug)
     {
       return $content;

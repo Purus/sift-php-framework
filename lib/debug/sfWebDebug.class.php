@@ -16,6 +16,7 @@ class sfWebDebug extends sfConfigurable
 {
   protected
     $logger     = null,
+    $dispatcher = null,
     $panels     = array();
 
   /**
@@ -25,27 +26,38 @@ class sfWebDebug extends sfConfigurable
    *
    *  * request_parameters: The current request parameters
    *
-   * @param sfEventDispatcher $dispatcher The event dispatcher
    * @param sfVarLogger       $logger     The logger
+   * @param sfEventDispatcher $dispatcher The event dispatcher
    * @param array             $options    An array of options
    */
-  public function __construct(sfVarLogger $logger, array $options = array())
+  public function __construct(sfVarLogger $logger, sfEventDispatcher $dispatcher, array $options = array())
   {
     parent::__construct($options);
 
     $this->logger = $logger;
+    $this->dispatcher = $dispatcher;
 
     $this->configure();
 
     // allow extensions
-    sfCore::dispatchEvent('web_debug.load_panels', array(
+    $this->dispatcher->notify(new sfEvent('web_debug.load_panels', array(
       'web_debug' => $this
-    ));
+    )));
 
     // hook for cached content
-    sfCore::getEventDispatcher()->connect('view.cache.filter_content', array(
+    $this->dispatcher->connect('view.cache.filter_content', array(
        $this, 'decorateCachedContent'
     ));
+  }
+
+  /**
+   * Sets the logger
+   *
+   * @param sfVarLogger $logger
+   */
+  public function setLogger(sfVarLogger $logger)
+  {
+    $this->logger = $logger;
   }
 
   /**
