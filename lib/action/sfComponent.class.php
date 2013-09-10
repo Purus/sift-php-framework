@@ -95,19 +95,19 @@ abstract class sfComponent {
   }
 
   /**
-   * Logs a message using the sfLogger object.
+   * Logs a message using the sfILogger object.
    *
-   * @param mixed  String or object containing the message to log
-   * @param string The priority of the message
-   *               (available priorities: emerg, alert, crit, err, warning, notice, info, debug)
+   * @param mixed $message String or object containing the message to log
+   * @param string $lovel The level of the message
+   *               (available levels: emergency, alert, critical, error, warning, notice, info, debug)
    *
-   * @see sfLogger
+   * @see sfILogger
    */
-  public function logMessage($message, $priority = 'info')
+  public function logMessage($message, $level = sfILogger::INFO, array $context = array())
   {
     if(sfConfig::get('sf_logging_enabled'))
     {
-      $this->getLogger()->log($message, constant('sfLogger::' . strtoupper($priority)));
+      $this->getLogger()->log($message, $level, $context);
     }
   }
 
