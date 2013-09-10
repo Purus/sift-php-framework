@@ -90,7 +90,7 @@ class sfWebDebugPanelMailer extends sfWebDebugPanel
     $html[] = '</li>';
 
     $html[] = '<li>';
-    $html[] = sprintf('Deliver: %s', $this->mailer->getConfig('deliver') ? 'yes' : 'no');
+    $html[] = sprintf('Deliver: %s', $this->mailer->getOption('deliver') ? 'yes' : 'no');
 
     $html[] = '</li>';
     $html[] = '</ul>';
