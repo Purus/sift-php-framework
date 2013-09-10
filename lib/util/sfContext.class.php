@@ -70,6 +70,7 @@ class sfContext {
 
     // register dependencies
     $this->serviceContainer->getDependencies()
+        ->set('logger', sfLogger::getInstance())
         ->set('event_dispatcher', $this->application->getEventDispatcher())
         ->set('context', $this);
 
