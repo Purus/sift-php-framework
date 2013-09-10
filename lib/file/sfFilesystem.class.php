@@ -34,12 +34,12 @@ class sfFilesystem
   protected $formatter = null;
 
   /**
+   * Contructor
    *
-   * Constructor
-   *
-   * @param sfLogger $logger
+   * @param sfILogger $logger The logger
+   * @param sfCliFormatter $formatter The formatter
    */
-  public function __construct(sfLogger $logger = null, sfCliFormatter $formatter = null)
+  public function __construct(sfILogger $logger = null, sfCliFormatter $formatter = null)
   {
     $this->logger = $logger;
     $this->formatter = $formatter;
