@@ -12,7 +12,7 @@
  * @package    Sift
  * @subpackage user
  */
-interface sfISecurityUser
+interface sfISecurityUser extends sfIUser
 {
   /**
    * Super admin credential
