@@ -15,7 +15,7 @@
  * @package    Sift
  * @subpackage user
  */
-class sfUser extends sfConfigurable implements sfIService, ArrayAccess {
+class sfUser extends sfConfigurable implements sfIUser, sfIService, ArrayAccess {
 
   /**
    * Attributes namespace
