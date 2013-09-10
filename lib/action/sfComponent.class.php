@@ -14,8 +14,9 @@
  */
 abstract class sfComponent {
 
-  protected
+  private
     $context = null,
+    $dispatcher,
     $request = null,
     $response = null,
     $varHolder = null,
@@ -70,7 +71,7 @@ abstract class sfComponent {
     $this->request = $context->getRequest();
     $this->response = $context->getResponse();
     $this->requestParameterHolder = $this->request->getParameterHolder();
-
+    $this->dispatcher = $context->getEventDispatcher();
     return true;
   }
 
@@ -109,6 +110,16 @@ abstract class sfComponent {
     {
       $this->getLogger()->log($message, $level, $context);
     }
+  }
+
+  /**
+   * Returns the event dispatcher
+   *
+   * @return sfEventDispatcher
+   */
+  public function getEventDispatcher()
+  {
+    return $this->dispatcher;
   }
 
   /**
