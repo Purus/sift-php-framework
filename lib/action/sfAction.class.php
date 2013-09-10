@@ -77,7 +77,7 @@ abstract class sfAction extends sfComponent
    */
   public function forward404Unless($condition, $message = '')
   {
-    if (!$condition)
+    if(!$condition)
     {
       throw new sfError404Exception($message);
     }
@@ -93,7 +93,7 @@ abstract class sfAction extends sfComponent
    */
   public function forward404If($condition, $message = '')
   {
-    if ($condition)
+    if($condition)
     {
       throw new sfError404Exception($message);
     }
@@ -115,20 +115,17 @@ abstract class sfAction extends sfComponent
    *
    * This method stops the action. So, no code is executed after a call to this method.
    *
-   * @param  string A module name
-   * @param  string An action name
-   *
+   * @param string $module A module name
+   * @param string $action An action name
    * @throws sfStopException
    */
   public function forward($module, $action)
   {
-    if (sfConfig::get('sf_logging_enabled'))
-    {
-      sfLogger::getInstance()->info('{sfAction} forward to action "'.$module.'/'.$action.'"');
-    }
+    $this->logMessage('{sfAction} Forwarding to {module_action}', sfILogger::INFO, array(
+      'module_action' => $module.'/'.$action
+    ));
 
     $this->getController()->forward($module, $action);
-
     throw new sfStopException();
   }
 
@@ -145,7 +142,7 @@ abstract class sfAction extends sfComponent
    */
   public function forwardIf($condition, $module, $action)
   {
-    if ($condition)
+    if($condition)
     {
       $this->forward($module, $action);
     }
@@ -179,8 +176,7 @@ abstract class sfAction extends sfComponent
    */
   public function forwardToSecure()
   {
-    $this->forward(sfConfig::get('sf_secure_module'),
-            sfConfig::get('sf_secure_action'));
+    $this->forward(sfConfig::get('sf_secure_module'), sfConfig::get('sf_secure_action'));
   }
 
   /**
@@ -229,13 +225,11 @@ abstract class sfAction extends sfComponent
   {
     $url = $this->getController()->genUrl($url, true);
 
-    if (sfConfig::get('sf_logging_enabled'))
-    {
-      sfLogger::getInstance()->info('{sfAction} redirect to "'.$url.'"');
-    }
+    $this->logMessage('{sfAction} Redirect to "{url}"', sfILogger::INFO, array(
+      'url' => $url
+    ));
 
     $this->getController()->redirect($url, 0, $statusCode);
-
     throw new sfStopException();
   }
 
@@ -286,12 +280,12 @@ abstract class sfAction extends sfComponent
   {
     $actionName = strtolower($this->getActionName());
 
-    if (isset($this->security[$actionName]['is_secure']))
+    if(isset($this->security[$actionName]['is_secure']))
     {
       return $this->security[$actionName]['is_secure'];
     }
 
-    if (isset($this->security['all']['is_secure']))
+    if(isset($this->security['all']['is_secure']))
     {
       return $this->security['all']['is_secure'];
     }
@@ -308,7 +302,7 @@ abstract class sfAction extends sfComponent
   {
     $actionName = strtolower($this->getActionName());
 
-    if (isset($this->security[$actionName]['credentials']))
+    if(isset($this->security[$actionName]['credentials']))
     {
       $credentials = $this->security[$actionName]['credentials'];
     }
@@ -367,11 +361,9 @@ abstract class sfAction extends sfComponent
    */
   public function setLayout($name)
   {
-    if(sfConfig::get('sf_logging_enabled'))
-    {
-      sfLogger::getInstance()->info('{sfAction} Change layout to "'.$name.'"');
-    }
-    
+    $this->logMessage('{sfAction} Change layout to "{layout}"', sfILogger::INFO, array(
+      'layout' => $name
+    ));
     $this->getResponse()->setParameter($this->getModuleName().'_'.$this->getActionName().'_layout', $name, 'sift/action/view');
   }
 
@@ -502,7 +494,7 @@ abstract class sfAction extends sfComponent
       }
     }
 
-    return $this->requestParameterHolder->get($name, $default);
+    return $this->getRequest()->getParameter($name, $default);
   }
 
   /**
@@ -541,7 +533,7 @@ abstract class sfAction extends sfComponent
    */
   public function redirectIf($condition, $url, $code = 302)
   {
-    if ($condition)
+    if($condition)
     {
       $this->redirect($url, $code);
     }
@@ -782,10 +774,7 @@ abstract class sfAction extends sfComponent
    */
   public function getMailBody($partial, sfMailerMessage $message, $vars = null, $type = 'plain')
   {
-    if(sfConfig::get('sf_logging_enabled'))
-    {
-      sfLogger::getInstance()->err('{sfAction} getMailBody() is deprecated. Use $mail_message->setBodyFromPartial() instead.');
-    }
+    $this->logMessage('{sfAction} getMailBody() is deprecated. Use $mail_message->setBodyFromPartial() instead.', sfILogger::ERROR);
 
     // validate email type
     if(!in_array($type, array('plain', 'html')))
