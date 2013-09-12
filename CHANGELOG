@@ -1,3 +1,10 @@
+12.09.2013 [f438c69] fixed #28
+12.09.2013 [d9ed9d3] fixed #27
+12.09.2013 [dbd172f] refactored mail partial view, added tests
+12.09.2013 [32a24ce] added swift init in mailer message for serialize/unserialize dependencies
+12.09.2013 [ae9f890] removed exception throw in GoogleAnalytics helper, now logs an error
+12.09.2013 [b2d0c0f] fixed bug in javascript validation submit_handler's placeholders replacing
+10.09.2013 [fdfa0b9] updated component class
 10.09.2013 [043daee] updated component class
 10.09.2013 [ef4a542] fixed bug in mailer debug panel
 10.09.2013 [979fdb5] updated user to implement sfIUser
