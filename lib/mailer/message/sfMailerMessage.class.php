@@ -6,6 +6,10 @@
  * file that was distributed with this source code.
  */
 
+// we need it here so the unserialize works ok
+require_once dirname(__FILE__).'/../../vendor/swift/swift_required.php';
+require_once dirname(__FILE__).'/../../vendor/swift/swift_init.php';
+
 /**
  * sfMailerMessage class provides extensions for Swift_Message
  *
