@@ -855,7 +855,7 @@ class sfCulture {
   public function getPostCodes($countries = null)
   {
     $countries = $this->getCountryCodes($countries);
-    
+
     $allPostCodes = $this->findInfo('postCodes', true);
 
     if($countries != null)
@@ -880,12 +880,13 @@ class sfCulture {
    * Gets a list of phone numbers regular expressions used for validation
    *
    * @param array $countries Array of countries
+   * @param boolean $sort Sort the result by the country code?
    * @return array
    */
-  public function getPhoneNumbers($countries = null)
+  public function getPhoneNumbers($countries = null, $sort = true)
   {
     $countries = $this->getCountryCodes($countries);
-    
+
     $allPhoneNumbers = $this->findInfo('phoneNumbers', true);
 
     if($countries != null)
@@ -898,10 +899,20 @@ class sfCulture {
         throw new InvalidArgumentException(sprintf('The following phoneNumbers do not exist: %s.', implode(', ', $problems)));
       }
 
-      $allPhoneNumbers = array_intersect_key($allPhoneNumbers, array_flip($countries));
+      $result = array();
+      foreach($countries as $countryCode)
+      {
+        $result[$countryCode] = $allPhoneNumbers[$countryCode];
+      }
+
+      // We cannot use array_intersect_key because we need to preserve the order from countries
+      $allPhoneNumbers = $result;
     }
 
-    ksort($allPhoneNumbers);
+    if($sort)
+    {
+      ksort($allPhoneNumbers);
+    }
 
     return $allPhoneNumbers;
   }
@@ -942,8 +953,8 @@ class sfCulture {
     {
       $countries = sfISO3166::getEuropeanUnionCountries();
     }
-    
+
     return $countries;
   }
-  
+
 }

@@ -2,7 +2,7 @@
 
 require_once(dirname(__FILE__) . '/../../../bootstrap/unit.php');
 
-$t = new lime_test(51);
+$t = new lime_test(52);
 
 // ->configure()
 $t->diag('->configure()');
@@ -77,6 +77,17 @@ foreach($validTests as $country => $numbers)
     }
   }
 }
+
+$countries = array(
+  'SK', 'CZ', 'DE'
+);
+
+$v = new sfValidatorPhoneNumber(array('countries' => $countries));
+
+$phoneSK = '00421907863034';
+$cleaned = $v->clean($phoneSK);
+
+$t->is($cleaned, '+421907863034', 'clean() returns correct phone number in order of the countries');
 
 $t->diag('->getJavascriptValidationRules()');
 

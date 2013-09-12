@@ -119,19 +119,13 @@ class sfValidatorPhoneNumber extends sfValidatorBase {
    */
   protected function loadValidationInfo($countries)
   {
-    if($countries != 'all')
-    {
-      // upper case countries
-      $countries = array_map('strtoupper', $countries);
-    }
-
     if($countries == 'all')
     {
       $info = sfCulture::getInstance()->getPhoneNumbers();
     }
     else
     {
-      $info = sfCulture::getInstance()->getPhoneNumbers($countries);
+      $info = sfCulture::getInstance()->getPhoneNumbers($countries, false);
     }
 
     $this->validationInfo = $info;
