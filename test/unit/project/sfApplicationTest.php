@@ -2,13 +2,8 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(8);
-
 $rootDir = realpath(dirname(__FILE__).'/../../functional/fixtures/project');
 $pluginRoot = realpath($rootDir.'/plugins/sfAutoloadPlugin');
-
-// ->getRootDir() ->guessName()
-$t->diag('->getRootDir() ->guessName()');
 
 class myFrontApplication extends sfApplication {}
 class myProject extends sfProject {}
@@ -21,6 +16,11 @@ $options = array(
 );
 
 $application = new myFrontApplication('dev', true, $options);
+
+$t = new lime_test(8);
+
+// ->getRootDir() ->guessName()
+$t->diag('->getRootDir() ->guessName()');
 
 $t->is($application->getName(), 'frontend', '->getName() returns application name');
 $t->is($application instanceof sfApplication, true, 'Application is instance of sfApplication');
