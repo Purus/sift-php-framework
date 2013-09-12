@@ -46,4 +46,9 @@ class sfCore {
     return $event->getReturnValue();
   }
   
+  public static function getCoreHelpers()
+  {
+    return array('Escaping');
+  }
+
 }

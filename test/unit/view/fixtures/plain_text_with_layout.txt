@@ -1,0 +1,13 @@
+Hi, User
+this is a email message.
+
+Thank you
+
+----------
+
+--------------------------------------------------
+Email has been sent to you by our mailer system.
+
+------------------------------------------------------------
+
+--- CUT HERE ---
