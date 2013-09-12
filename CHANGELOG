@@ -1,3 +1,12 @@
+10.09.2013 [043daee] updated component class
+10.09.2013 [ef4a542] fixed bug in mailer debug panel
+10.09.2013 [979fdb5] updated user to implement sfIUser
+10.09.2013 [27085df] added logger to dependency map
+10.09.2013 [419bb30] added user, service aware interfaces
+10.09.2013 [b56d03d] fixed the filesystem, accept sfILogger
+10.09.2013 [2a35956] updated component logMessage to respect the new log parameters
+09.09.2013 [bf911de] refactored loggers
+05.09.2013 [a98692d] updated changelog
 05.09.2013 [4f6418d] updated iso3166, now supports also alpha3 codes, but is missing 3 countries
 04.09.2013 [8ea448e] fixed plugin disable task
 04.09.2013 [b4f8ff9] fixed #24

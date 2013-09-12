@@ -301,9 +301,8 @@ class sfViewConfigHandler extends sfYamlConfigHandler {
     $hasLocalLayout = isset($this->yamlConfig[$viewName]['layout']) || (isset($this->yamlConfig[$viewName]) && array_key_exists('has_layout', $this->yamlConfig[$viewName]));
 
     // the layout value
-    $layout = $this->getConfigValue('has_layout', $viewName) ? $this->getConfigValue('layout', $viewName) : false;
+    $layout = $this->getConfigValue('has_layout', $viewName) ? $this->replaceConstants($this->getConfigValue('layout', $viewName)) : false;
 
-    //$this->getResponse()->setParameter($this->getModuleName().'_'.$this->getActionName().'_layout', $name, 'sift/action/view');
     // the user set a decorator in the action
     $data = <<<EOF
 

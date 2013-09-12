@@ -2,7 +2,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(7);
+$t = new lime_test(8);
 
 $rootDir = realpath(dirname(__FILE__).'/../../functional/fixtures/project');
 $pluginRoot = realpath($rootDir.'/plugins/sfAutoloadPlugin');
@@ -26,7 +26,7 @@ $t->is($application->getName(), 'frontend', '->getName() returns application nam
 $t->is($application instanceof sfApplication, true, 'Application is instance of sfApplication');
 
 $t->isa_ok($application->getPlugins(), 'array', '->getPlugins() returns array of plugins');
-$t->is(count($application->getPlugins()), 3, '->getPlugins() returns array of plugins');
+$t->is(count($application->getPlugins()), 4, '->getPlugins() returns array of plugins');
 
 foreach($application->getPlugins() as $plugin)
 {

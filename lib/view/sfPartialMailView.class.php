@@ -15,6 +15,13 @@
 class sfPartialMailView extends sfPartialView
 {
   /**
+   * Helpers loaded flag
+   *
+   * @var boolean
+   */
+  protected $helpersLoaded = false;
+
+  /**
    * Executes any presentation logic for this view.
    */
   public function execute()
@@ -26,28 +33,26 @@ class sfPartialMailView extends sfPartialView
    * Email decorator templates should be in "sf_data_dir/email/plain.php" for PLAIN
    * or "sf_data_dir/email/html.php" for HTML version
    *
-   * @param string $type plain or html
-   * @param boolean $noLayout use decorator?
    * @return void
-   * @throws sfException If decorator template is missing
    */
-  protected function setupDecoratorTemplate($type, $noLayout)
+  protected function setupDecoratorTemplate()
   {
-    if($noLayout)
+    // manually set decorator template
+    if(!$this->getDecoratorTemplate())
     {
-      $this->setDecoratorTemplate(false);
-      return;
-    }
-
-    // where the email layout resides
-    $dataDir = sfConfig::get('sf_data_dir') . DIRECTORY_SEPARATOR . 'email';
-    if(is_readable($tpl = ($dataDir . DIRECTORY_SEPARATOR . $type . $this->getExtension())))
-    {
-      $this->setDecoratorTemplate($tpl);
-    }
-    else
-    {
-      throw new sfException(sprintf('{sfPartialMailView} Email decorator template "%s" not found in "%s"', $type, $dataDir));
+      if($this->attributeHolder->get('sf_email_no_layout', false))
+      {
+        return;
+      }
+      $type = $this->attributeHolder->get('sf_email_type', 'plain');
+      // where the email layout resides
+      $dataDir = sfConfig::get('sf_data_dir') . DIRECTORY_SEPARATOR . 'email';
+      // only if readable
+      if(is_readable($tpl = ($dataDir . DIRECTORY_SEPARATOR . $type . $this->getExtension())))
+      {
+        $this->setDecorator(true);
+        $this->setDecoratorTemplate($tpl);
+      }
     }
   }
 
@@ -79,23 +84,28 @@ class sfPartialMailView extends sfPartialView
   {
     if(!$decorator_template = $this->getDecoratorTemplate())
     {
-      return $content;
+      return $this->formatPlainText($content);
     }
 
     $template = $this->getDecoratorDirectory().'/'.$decorator_template;
 
-    if (sfConfig::get('sf_logging_enabled'))
+    if(sfConfig::get('sf_logging_enabled'))
     {
-      sfLogger::getInstance()->info('{sfPartialMailView} decorate content with "'.$template.'"');
+      sfLogger::getInstance()->info('{sfPartialMailView} Decorate content with "'.$template.'"');
     }
 
     // set the decorator content as an attribute
     $this->attributeHolder->set('sf_content', $content);
 
     // render the decorator template and return the result
-    return $this->renderFile($template);
+    return $this->formatPlainText($this->renderFile($template));
   }
 
+  /**
+   * Return variables usefully in email templates
+   *
+   * @return array
+   */
   protected function getMailVars()
   {
     $context    = $this->getContext();
@@ -116,17 +126,17 @@ class sfPartialMailView extends sfPartialView
     return $shortcuts;
   }
 
+  /**
+   * Load helpers
+   *
+   */
   protected function loadMailHelper()
   {
-    static $mailHelpersLoaded = 0;
-
-    if($mailHelpersLoaded)
+    if($this->helpersLoaded)
     {
       return;
     }
-
-    $mailHelpersLoaded = 1;
-
+    $this->helpersLoaded = true;
     sfLoader::loadHelpers(array('Mail'));
   }
 
@@ -139,12 +149,10 @@ class sfPartialMailView extends sfPartialView
    */
   public function render($templateVars = array())
   {
-    if (sfConfig::get('sf_debug') && sfConfig::get('sf_logging_enabled'))
+    if(sfConfig::get('sf_debug') && sfConfig::get('sf_logging_enabled'))
     {
       $timer = sfTimerManager::getTimer(sprintf('Mail partial "%s/%s"', $this->moduleName, $this->actionName));
     }
-
-    $template = $this->getDirectory().'/'.$this->getTemplate();
 
     // execute pre-render check
     $this->preRenderCheck();
@@ -154,22 +162,34 @@ class sfPartialMailView extends sfPartialView
     $this->attributeHolder->add($this->getMailVars());
     $this->attributeHolder->add($templateVars);
 
-    $type     = $this->attributeHolder->get('sf_email_type', 'plain');
-    $noLayout = $this->attributeHolder->get('sf_email_no_layout', false);
-
-    $this->setupDecoratorTemplate($type, $noLayout);
-
     $this->loadMailHelper();
 
     // render template
-    $retval = $this->renderFile($this->getDirectory().'/'.$this->getTemplate());
+    $rendered = $this->renderFile($this->getDirectory().'/'.$this->getTemplate());
 
-    if (sfConfig::get('sf_debug') && sfConfig::get('sf_logging_enabled'))
+    if(sfConfig::get('sf_debug') && sfConfig::get('sf_logging_enabled'))
     {
       $timer->addTime();
     }
 
-    return $this->decorate($retval);
+    $this->setupDecoratorTemplate();
+
+    return $this->decorate($rendered);
+  }
+
+  /**
+   * Formats plain text. Replaces spaces
+   *
+   * @param string $text
+   * @return string
+   */
+  protected function formatPlainText($text)
+  {
+    if($this->attributeHolder->get('sf_email_type', 'plain') == 'plain')
+    {
+      return preg_replace("/(\r?\n){2,}/", "\n\n", $text);
+    }
+    return $text;
   }
 
 }

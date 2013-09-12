@@ -374,9 +374,9 @@ class sfFormJavascriptValidation {
                         'form_id' => $formId,
                       ))) :
                     sprintf('    submitHandler: %s ,',
-                      self::replacePlaceholders(sfJson::encode($options[$option], array(
+                      self::replacePlaceholders(sfJson::encode($options[$option]), array(
                         'form_id' => $formId,
-                      ))));
+                      )));
         break;
 
         case 'invalid_handler':
