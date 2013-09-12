@@ -201,6 +201,15 @@ $b->
     ->responseContains('image')
     ->end();
 
+// view.yml with layout configured as constant asbolute path
+$b->
+  get('/view/absolute')
+    ->with('response')->begin()
+    ->isStatusCode(200)
+    ->isHeader('Content-Type', 'text/html; charset=utf-8')
+    ->checkElement('#admin-layout', 'Absolute path works ok!')
+    ->end();
+
 // getPresentationFor()
 $b->
   get('/presentation')

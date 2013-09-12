@@ -14,3 +14,6 @@ imageSuccess:
   http_metas:
     content-type: image/jpg
   has_layout: false
+
+absoluteSuccess:
+  layout: %SF_PLUGINS_DIR%/sfAdminPlugin/templates/layout

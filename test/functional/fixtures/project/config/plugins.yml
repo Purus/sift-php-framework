@@ -2,3 +2,4 @@ all:
   sfAutoloadPlugin: ~
   sfConfigPlugin: ~
   sfI18NPlugin: ~
+  sfAdminPlugin: ~
