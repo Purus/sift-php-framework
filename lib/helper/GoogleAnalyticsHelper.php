@@ -199,7 +199,7 @@ function google_analytics_ua()
   $analytics_ua = sfConfig::get('app_google_analytics_ua');
   if(!$analytics_ua)
   {
-    throw new sfConfigurationException('{GoogleAnalyticsHelper} Google Analytics is not configured properly.');
+    sfLogger::getInstance()->error('{GoogleAnalyticsHelper} Google Analytics is not configured properly. Missing "app_google_analytics_ua" configuration');
   }
   return $analytics_ua;
 }
