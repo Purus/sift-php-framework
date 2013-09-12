@@ -249,7 +249,7 @@ EOF;
     $tokens['SIFT_CHANNEL'] = $this->environment->get('pear-channel', 'pear.lab');
 
     $finder = sfFinder::type('any')->maxdepth(0)
-                ->prune('test')->discard('test', 'package.xml.tmpl')
+                ->discard('package.xml.tmpl')
                 ->prune('nbproject')->discard('nbproject')
                 ->prune('.gitignore')->discard('.gitignore');
 
