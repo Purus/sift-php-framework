@@ -28,7 +28,7 @@ class sfGeneratorConfigHandler extends sfYamlConfigHandler {
   public function execute($configFiles)
   {
     // parse the yaml
-    $config = self::parseYamls($configFiles);
+    $config = self::getConfiguration($configFiles);
     if(!$config)
     {
       return '';
@@ -104,6 +104,7 @@ class sfGeneratorConfigHandler extends sfYamlConfigHandler {
    *
    * %APP_FOO% => sfPhpExpression('sfConfig::get("app_foo")');
    *
+   *
    * @param mixed $value
    * @return sfPhpExpression|mixed
    */
@@ -111,9 +112,22 @@ class sfGeneratorConfigHandler extends sfYamlConfigHandler {
   {
     if(is_string($value) && preg_match('/%(.+?)%/', $value, $matches))
     {
-      $value = new sfPhpExpression(sprintf('sfConfig::get(\'%s\')', strtolower($matches[1])));
+      // if no other % is present, it means that we will use it as configuration directive
+      // FIXME: make this more smart
+      if(strpos($matches[1], '%') === false)
+      {
+        $value = new sfPhpExpression(sprintf('sfConfig::get(\'%s\')', strtolower($matches[1])));
+      }
     }
     return $value;
+  }
+
+  /**
+   * @see sfConfigHandler
+   */
+  static public function getConfiguration(array $configFiles)
+  {
+    return self::parseYamls($configFiles);
   }
 
 }

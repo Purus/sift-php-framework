@@ -4,7 +4,7 @@ require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
 sfConfig::set('sf_sift_lib_dir', realpath(dirname(__FILE__).'/../../../lib'));
 
-$t = new lime_test(5, new lime_output_color());
+$t = new lime_test(8, new lime_output_color());
 
 $handler = new sfGeneratorConfigHandler();
 $handler->initialize();
@@ -87,3 +87,15 @@ catch (sfParseException $e)
 {
   $t->like($e->getMessage(), '/can specify a "edit" section but only under the param section/', 'generator.yml can have a "edit" section but only under "param"');
 }
+
+
+$t->diag('->replaceConstantsForExpressions');
+
+$value = 'Edit user "%%username%%"';
+$t->is(sfGeneratorConfigHandler::replaceConstantsForExpressions($value), 'Edit user "%%username%%"', '->replaceConstantsForExpressions() does not touch the value if its not configuration directive');
+
+$value = 'Edit user "%app_user.name%"';
+$result = sfGeneratorConfigHandler::replaceConstantsForExpressions($value);
+$t->isa_ok($result, 'sfPhpExpression', '->replaceConstantsForExpressions() works ok for expression');
+
+$t->is_deeply((string)$result, 'sfConfig::get(\'app_user.name\')', '->replaceConstantsForExpressions() works ok for expression');
