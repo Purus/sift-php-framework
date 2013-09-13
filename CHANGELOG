@@ -1,3 +1,8 @@
+13.09.2013 [7b690fd] added generator stuff
+13.09.2013 [f54a609] fixed #31
+12.09.2013 [62744d6] fixed #30
+12.09.2013 [183578d] fixed #29
+12.09.2013 [8fad600] updated changelog
 12.09.2013 [f438c69] fixed #28
 12.09.2013 [d9ed9d3] fixed #27
 12.09.2013 [dbd172f] refactored mail partial view, added tests
