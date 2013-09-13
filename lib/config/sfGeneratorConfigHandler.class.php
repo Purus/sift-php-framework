@@ -28,7 +28,7 @@ class sfGeneratorConfigHandler extends sfYamlConfigHandler {
   public function execute($configFiles)
   {
     // parse the yaml
-    $config = self::getConfiguration($configFiles);
+    $config = self::parseYamls($configFiles);
     if(!$config)
     {
       return '';
@@ -56,13 +56,15 @@ class sfGeneratorConfigHandler extends sfYamlConfigHandler {
 
     // generate class and add a reference to it
     $generatorManager = new sfGeneratorManager(sfConfig::get('sf_module_cache_dir'));
-    
+
     // generator parameters
     $generatorParam = (isset($config['param']) ? $config['param'] : array());
 
     // hack to find the module name (look for the last /modules/ in path)
     preg_match(sprintf('#.*/%s/([^/]+)/#', sfConfig::get('sf_app_module_dir_name')), str_replace('\\', '/', $configFiles[0]), $match);
     $generatorParam['module_name'] = $match[1];
+
+    $generatorParam = self::replaceConstants($generatorParam);
 
     // compile data
     $retval = "<?php\n" .
@@ -79,11 +81,39 @@ class sfGeneratorConfigHandler extends sfYamlConfigHandler {
   }
 
   /**
-   * @see sfConfigHandler
+   * Replaces constants for php expressions
+   *
+   * @param mixed $value
+   * @return mixed
    */
-  static public function getConfiguration(array $configFiles)
+  public static function replaceConstants($value)
   {
-    return self::parseYamls($configFiles);
+    if(is_array($value))
+    {
+      array_walk_recursive($value, create_function('&$value', '$value = sfGeneratorConfigHandler::replaceConstantsForExpressions($value);'));
+    }
+    else
+    {
+      $value = sfGeneratorConfigHandler::replaceConstantsForExpressions($value);
+    }
+    return $value;
+  }
+
+  /**
+   * Replaces the configuration constants for php expressions:
+   *
+   * %APP_FOO% => sfPhpExpression('sfConfig::get("app_foo")');
+   *
+   * @param mixed $value
+   * @return sfPhpExpression|mixed
+   */
+  public static function replaceConstantsForExpressions($value)
+  {
+    if(is_string($value) && preg_match('/%(.+?)%/', $value, $matches))
+    {
+      $value = new sfPhpExpression(sprintf('sfConfig::get(\'%s\')', strtolower($matches[1])));
+    }
+    return $value;
   }
 
 }
