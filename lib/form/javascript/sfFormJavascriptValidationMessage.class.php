@@ -37,7 +37,7 @@ class sfFormJavascriptValidationMessage implements sfIJsonSerializable {
   public function __construct($message, $parameters = array())
   {
     $this->message = (string)$message;
-    $this->parameters = $parameters;
+    $this->parameters = (array)($parameters);
   }
 
   /**
