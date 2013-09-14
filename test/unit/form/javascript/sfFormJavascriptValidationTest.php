@@ -3,7 +3,7 @@
 require_once(dirname(__FILE__).'/../../../bootstrap/unit.php');
 require_once($_test_dir.'/unit/sfCoreMock.class.php');
 
-$t = new lime_test(12);
+$t = new lime_test(14);
 
 class TestForm1 extends sfForm
 {
@@ -82,27 +82,11 @@ $t->is(json_decode($rulesEncoded, true), array(
 
 ), 'rules are valid.');
 
-$t->is(json_decode(sfJson::encode($messages), true), array(
-  'a' =>
-  array (
-    'required' => 'This value is required.',
-    'minlength' => 'Value is too short (2 characters min).',
-  ),
-  'b' =>
-  array (
-    'required' => 'This value is required.',
-    'maxlength' => 'Value is too long (3 characters max).',
-  ),
-  'c' =>
-  array (
-    'required' => 'This value is required.',
-    'maxlength' => 'Value is too long (1000 characters max).',
-  ),
-), 'Messages are encoded to json');
+$t->isa_ok(sfJson::encode($messages), 'string', 'Messages can be encoded to json');
 
 list($rules, $messages) = sfFormJavascriptValidation::getValidationRulesAndMessagesForForm(new TestForm2());
 
-$t->is(json_decode(sfJson::encode($rules), true), array(
+$t->is_deeply(json_decode(sfJson::encode($rules), true), array(
     'a' => array(
       'required' => false,
       'minlength' => 2,
@@ -118,7 +102,39 @@ $t->is(json_decode(sfJson::encode($rules), true), array(
 
 ), 'rules can be modified in getJavascriptFinalValidation method of the form.');
 
-$t->is($messages['a']['required'], 'Enter the A!', 'messages can be modified in getJavascriptFinalValidation method of the form.');
+$t->is((string)$messages['a']['required'], 'Enter the A!', 'messages can be modified in getJavascriptFinalValidation method of the form.');
 
 $t->diag('->getFormForm()');
 $t->isa_ok(sfFormJavascriptValidation::getForForm($form), 'string', 'getFormForm() returns string');
+
+class TranslatedForm extends sfForm {
+
+  public function configure()
+  {
+    $this->setWidget('a', new sfWidgetFormInput());
+    $this->setValidator('a', new sfValidatorString(array(
+      'required' => true,
+    ), array(
+      'required' => 'This is a text to be translated',
+    )));
+  }
+
+  public function translate($str, $params = array())
+  {
+    return $str . '-TRANSLATED';
+  }
+}
+
+list($rules, $messages) = sfFormJavascriptValidation::getValidationRulesAndMessagesForForm(new TranslatedForm());
+
+$t->is_deeply(json_decode(sfJson::encode($messages), true), array(
+    'a' => array(
+      'required' => 'This is a text to be translated-TRANSLATED'
+    )
+), 'messages are translated');
+
+$t->is_deeply(json_decode(sfJson::encode($rules), true), array(
+    'a' => array(
+      'required' => true
+    )
+), 'rules are as expected');

@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of the Sift PHP framework.
  *
@@ -12,7 +13,7 @@
  * @package Sift
  * @subpackage form_javascript
  */
-class sfFormJavascriptValidationFieldMessages implements ArrayAccess {
+class sfFormJavascriptValidationFieldMessages implements ArrayAccess, Iterator {
 
   /**
    * Field name (short version)
@@ -111,6 +112,36 @@ class sfFormJavascriptValidationFieldMessages implements ArrayAccess {
   public function offsetUnset($name)
   {
     unset($this->messages[$name]);
+  }
+
+  public function rewind()
+  {
+    reset($this->messages);
+  }
+
+  public function current()
+  {
+    $var = current($this->messages);
+    return $var;
+  }
+
+  public function key()
+  {
+    $var = key($this->messages);
+    return $var;
+  }
+
+  public function next()
+  {
+    $var = next($this->messages);
+    return $var;
+  }
+
+  public function valid()
+  {
+    $key = key($this->messages);
+    $var = ($key !== null && $key !== false);
+    return $var;
   }
 
 }

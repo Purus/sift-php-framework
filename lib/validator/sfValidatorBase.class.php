@@ -17,14 +17,18 @@
 abstract class sfValidatorBase {
 
   protected static
-          $charset = 'UTF-8',
-          $globalDefaultMessages = array('invalid' => 'This value is invalid.', 'required' => 'This value is required.');
+    $charset = 'UTF-8',
+    $globalDefaultMessages = array(
+      'invalid' => 'This value is invalid.',
+      'required' => 'This value is required.'
+    );
+
   protected
-          $requiredOptions = array(),
-          $defaultMessages = array(),
-          $defaultOptions = array(),
-          $messages = array(),
-          $options = array();
+    $requiredOptions = array(),
+    $defaultMessages = array(),
+    $defaultOptions = array(),
+    $messages = array(),
+    $options = array();
 
   /**
    * Constructor.

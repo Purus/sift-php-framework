@@ -540,15 +540,14 @@ class sfFormJavascriptValidation {
         if($message->hasParameters())
         {
           $msg = new sfJsonExpression(sprintf("function(parameters, element) { return '%s'.replace('%%value%%', jQuery(element).val(), 'g'); }",
-                        $form->__($message->getMessage(), $message->getParameters())
+                        $form->translate($message->getMessage(), $message->getParameters())
                      ));
         }
         else
         {
-          $msg = $form->__($message->getMessage());
+          $msg = $form->translate($message->getMessage());
         }
-
-        $message->setMessage($message);
+        $message->setMessage($msg);
       }
     }
 

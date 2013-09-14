@@ -1,7 +1,7 @@
 <?php
 require_once(dirname(__FILE__) . '/../../bootstrap/unit.php');
 
-$t = new lime_test(12);
+$t = new lime_test(15);
 
 $v = new sfValidatorString();
 
@@ -77,3 +77,24 @@ else
   $v->setOption('max_length', 4);
   $t->is($v->clean('été'), 'été', '"sfValidatorString" supports UTF-8');
 }
+
+
+$v = new sfValidatorString(array(), array('required' => 'My required message'));
+
+$messages = $v->getJavascriptValidationMessages();
+
+$t->is($messages, array(
+    'required' => 'My required message'
+), 'getJavascriptValidationMessages() works ok');
+
+$t->is($v->getActiveMessages(), array(
+  'My required message'
+), 'getActiveMessages() returns active messages');
+
+$v = new sfValidatorString(array(), array('required' => 'My required message'));
+
+$rules = $v->getJavascriptValidationRules();
+
+$t->is($messages, array(
+    'required' => 'My required message'
+), 'getJavascriptValidationRules() works ok');
