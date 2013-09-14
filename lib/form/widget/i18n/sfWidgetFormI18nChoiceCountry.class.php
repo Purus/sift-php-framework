@@ -36,6 +36,7 @@ class sfWidgetFormI18nChoiceCountry extends sfWidgetFormChoice
     $this->addOption('culture');
     $this->addOption('countries');
     $this->addOption('add_empty', false);
+    $this->setOption('translate_choices', false);
 
     $countries = sfCulture::getInstance($this->getCulture())->getCountries(isset($options['countries']) ?
             $options['countries'] : null);

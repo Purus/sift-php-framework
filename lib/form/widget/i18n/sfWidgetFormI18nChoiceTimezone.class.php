@@ -34,6 +34,7 @@ class sfWidgetFormI18nChoiceTimezone extends sfWidgetFormChoice {
 
     $this->addOption('culture');
     $this->addOption('add_empty', false);
+    $this->setOption('translate_choices', false);
 
     $culture = isset($options['culture']) ? $options['culture'] : 'en';
     $timezones = array_keys(sfCulture::getInstance($culture)->getTimeZones());

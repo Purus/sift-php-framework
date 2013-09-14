@@ -36,6 +36,7 @@ class sfWidgetFormI18nChoiceCurrency extends sfWidgetFormChoice
     $this->addOption('culture');
     $this->addOption('currencies');
     $this->addOption('add_empty', false);
+    $this->setOption('translate_choices', false);
 
     // populate choices with all currencies
     $culture = isset($options['culture']) ? $options['culture'] : 'en';

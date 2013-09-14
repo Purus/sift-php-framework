@@ -36,6 +36,7 @@ class sfWidgetFormI18nSelectCountry extends sfWidgetFormSelect {
     $this->addOption('culture', $this->getCulture());
     $this->addOption('countries');
     $this->addOption('add_empty', false);
+    $this->setOption('translate_choices', false);
 
     // populate choices with all countries
     $culture = $this->getOption('culture');

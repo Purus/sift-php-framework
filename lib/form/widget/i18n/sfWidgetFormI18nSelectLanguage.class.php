@@ -36,6 +36,7 @@ class sfWidgetFormI18nSelectLanguage extends sfWidgetFormSelect {
     $this->addRequiredOption('culture');
     $this->addOption('languages');
     $this->addOption('add_empty', false);
+    $this->setOption('translate_choices', false);
 
     // populate choices with all languages
     $culture = isset($options['culture']) ? $options['culture'] : 'en';
