@@ -347,7 +347,7 @@ class sfI18nApplicationExtract extends sfI18nExtract
           case 'application':
           case 'plugin':
              $key = $this->getOption('app_dir') . '/' . $this->getOption('i18n_dir_name')
-                  . '/'. $this->catalogueName;
+                  . '/'. ($isPluginCatalogue ? basename($domain) : $this->catalogueName);
           break;
 
           case 'module':
