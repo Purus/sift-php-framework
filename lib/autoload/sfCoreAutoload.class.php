@@ -232,6 +232,7 @@ class sfCoreAutoload {
       'sfcache' => 'cache/sfCache.class.php',
       'sffilecache' => 'cache/sfFileCache.class.php',
       'sficache' => 'cache/sfICache.interface.php',
+      'sficacheaware' => 'cache/sfICacheAware.interface.php',
       'sfnocache' => 'cache/sfNoCache.class.php',
       'sfprocesscache' => 'cache/sfProcessCache.class.php',
       'sfsqlitecache' => 'cache/sfSQLiteCache.class.php',

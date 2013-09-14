@@ -17,7 +17,7 @@
  * @package Sift
  * @subpackage i18n
  */
-interface sfII18nMessageSource {
+interface sfII18nMessageSource extends sfICacheAware {
 
   /**
    * Loads the translation table for this particular catalogue.
@@ -120,17 +120,5 @@ interface sfII18nMessageSource {
    * Returns original source
    */
   public function getOriginalSource();
-
-  /**
-   * Sets cache for this source
-   *
-   * @param sfCache $cache
-   */
-  public function setCache(sfCache $cache);
-
-  /**
-   * Returns cache instance
-   */
-  public function getCache();
 
 }

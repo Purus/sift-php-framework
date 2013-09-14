@@ -165,21 +165,19 @@ abstract class sfI18nMessageSource implements sfII18nMessageSource {
       {
         continue;
       }
-
       $loadData = true;
-      if($this->cache && $this->cache->has($variant, $this->culture))
+      if($this->cache && $this->cache->has($variant))
       {
-        $data = unserialize($this->cache->get($variant, $this->culture));
+        $data = unserialize($this->cache->get($variant));
         if(is_array($data))
         {
           $this->messages[$variant] = $data;
           $loadData = false;
         }
-
         unset($data);
       }
 
-      if ($loadData)
+      if($loadData)
       {
         $data = &$this->loadData($source);
         if(is_array($data))
@@ -187,13 +185,12 @@ abstract class sfI18nMessageSource implements sfII18nMessageSource {
           $this->messages[$variant] = $data;
           if($this->cache)
           {
-            $this->cache->set($variant, $this->culture, serialize($data));
+            $this->cache->set($variant, serialize($data));
           }
         }
         unset($data);
       }
     }
-
     return $this;
   }
 
@@ -232,10 +229,10 @@ abstract class sfI18nMessageSource implements sfII18nMessageSource {
   /**
    * Sets the cache handler for caching the messages.
    *
-   * @param sfMessageCache the cache handler.
+   * @param sfICache The cache
    * @return sfI18nMessageSource
    */
-  public function setCache(sfCache $cache)
+  public function setCache(sfICache $cache = null)
   {
     $this->cache = $cache;
     return $this;

@@ -232,13 +232,13 @@ class sfI18nMessageSourceGettext extends sfI18nMessageSource {
       list($variant, $MOFile, $POFile) = $this->createMessageTemplate($catalogue);
     }
 
-    if(is_writable($MOFile) == false)
+    if(!is_writable($MOFile))
     {
-      throw new sfException(sprintf("Unable to save to file %s, file must be writable.", $MOFile));
+      throw new sfException(sprintf('Unable to save to file "%s", file must be writable', $MOFile));
     }
-    if(is_writable($POFile) == false)
+    if(!is_writable($POFile))
     {
-      throw new sfException(sprintf("Unable to save to file %s, file must be writable.", $POFile));
+      throw new sfException(sprintf('Unable to save to file "%s", file must be writable', $POFile));
     }
 
     // set the strings as untranslated.
@@ -269,7 +269,7 @@ class sfI18nMessageSourceGettext extends sfI18nMessageSource {
       $mo = $po->toMO();
       if($po->save() && $mo->save($MOFile))
       {
-        if(!empty($this->cache))
+        if($this->cache)
         {
           $this->cache->clean($variant, $this->culture);
         }
@@ -306,15 +306,15 @@ class sfI18nMessageSourceGettext extends sfI18nMessageSource {
 
     if(is_writable($MOFile) == false)
     {
-      throw new sfException(sprintf("Unable to modify file %s, file must be writable.", $MOFile));
+      throw new sfException(sprintf('Unable to modify file "%s", file must be writable', $MOFile));
     }
 
     if(is_writable($POFile) == false)
     {
-      throw new sfException(sprintf("Unable to modify file %s, file must be writable.", $POFile));
+      throw new sfException(sprintf('Unable to modify file "%s", file must be writable', $POFile));
     }
 
-    $po = sfI18nGettext::factory('PO', $POFile);
+    $po = sfI18nGettext::factory('Po', $POFile);
     $po->load();
     $result = $po->toArray();
 
@@ -329,7 +329,7 @@ class sfI18nMessageSourceGettext extends sfI18nMessageSource {
         $mo = $po->toMO();
         if($po->save() && $mo->save($MOFile))
         {
-          if(!empty($this->cache))
+          if($this->cache)
           {
             $this->cache->clean($variant, $this->culture);
           }
@@ -369,15 +369,15 @@ class sfI18nMessageSourceGettext extends sfI18nMessageSource {
 
     if(is_writable($MOFile) == false)
     {
-      throw new sfException(sprintf("Unable to update file %s, file must be writable.", $MOFile));
+      throw new sfException(sprintf('Unable to update file "%s", file must be writable', $MOFile));
     }
 
     if(is_writable($POFile) == false)
     {
-      throw new sfException(sprintf("Unable to update file %s, file must be writable.", $POFile));
+      throw new sfException(sprintf('Unable to update file "%s", file must be writable', $POFile));
     }
 
-    $po = sfI18nGettext::factory('PO', $POFile);
+    $po = sfI18nGettext::factory('Po', $POFile);
     $po->load();
     $result = $po->toArray();
 
@@ -393,11 +393,10 @@ class sfI18nMessageSourceGettext extends sfI18nMessageSource {
 
         if($po->save() && $mo->save($MOFile))
         {
-          if(!empty($this->cache))
+          if($this->cache)
           {
             $this->cache->clean($variant, $this->culture);
           }
-
           return true;
         }
         else
@@ -406,7 +405,6 @@ class sfI18nMessageSourceGettext extends sfI18nMessageSource {
         }
       }
     }
-
     return false;
   }
 
@@ -489,7 +487,7 @@ class sfI18nMessageSourceGettext extends sfI18nMessageSource {
       throw new sfException(sprintf("Unable to create directory %s.", $dir));
     }
 
-    $po = sfI18nGettext::factory('PO', $po_file);
+    $po = sfI18nGettext::factory('Po', $po_file);
     $result['meta']['PO-Revision-Date'] = date('Y-m-d H:i:s');
     $result['meta']['Content-Type'] = 'text/plain; charset=UTF-8';
 
@@ -507,7 +505,7 @@ class sfI18nMessageSourceGettext extends sfI18nMessageSource {
     }
     else
     {
-      throw new sfException(sprintf("Unable to create file %s and %s.", $po_file, $mo_file));
+      throw new sfException(sprintf('Unable to create file "%s" and "%s"', $po_file, $mo_file));
     }
   }
 

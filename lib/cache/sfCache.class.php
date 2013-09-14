@@ -151,7 +151,7 @@ abstract class sfCache extends sfConfigurable implements sfICache
   {
     $regexp = str_replace(
       array('\\*\\*', '\\*'),
-      array('.+?',    '[^'.preg_quote(sfCache::SEPARATOR, '#').']+'),
+      array('.+?',    '[^'.preg_quote(sfICache::SEPARATOR, '#').']+'),
       preg_quote($pattern, '#')
     );
     return '#^'.$regexp.'$#';
