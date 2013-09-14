@@ -158,15 +158,15 @@ class sfI18nPhpExtractor extends sfConfigurable implements sfII18nExtractor
       }
       if(')' == $token)
       {
-        if(0 == $paren_level)
-        {
+        // if(0 == $paren_level)
+        // {
           $in_func = false;
           $args[] = $current_argument;
           $call = array('name' => $func_name, 'args' => $args, 'line' => $func_line);
           if($func_comment)
             $call['comment'] = $func_comment;
           $function_calls[] = $call;
-        }
+        // }
         $paren_level--;
         continue;
       }
