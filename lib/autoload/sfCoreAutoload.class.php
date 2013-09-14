@@ -557,6 +557,7 @@ class sfCoreAutoload {
       'sfi18nyamlgeneratorextractor' => 'i18n/extract/sfI18nYamlGeneratorExtractor.class.php',
       'sfi18nyamlmenuextractor' => 'i18n/extract/sfI18nYamlMenuExtractor.class.php',
       'sfi18nyamlvalidateextractor' => 'i18n/extract/sfI18nYamlValidateExtractor.class.php',
+      'sfii18nextractableform' => 'i18n/extract/sfII18nExtractableForm.interface.php',
       'sfii18nextractor' => 'i18n/extract/sfII18nExtractor.interface.php',
       'sfi18ndatetimeformat' => 'i18n/format/sfI18nDateTimeFormat.class.php',
       'sfi18nnumberformat' => 'i18n/format/sfI18nNumberFormat.class.php',

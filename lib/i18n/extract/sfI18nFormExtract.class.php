@@ -58,7 +58,14 @@ class sfI18nFormExtract extends sfI18nExtract {
 
     $reflection = $this->checkForm($class);
 
-    $this->form = new $class();
+    if($reflection->isSubclassOf('sfII18nExtractableForm'))
+    {
+      $this->form = call_user_func(array($class, '__construct_i18n'));
+    }
+    else 
+    {
+      $this->form = $reflection->newInstanceArgs();
+    }
 
     // where do the translations sit?
     $catalogue = $this->form->getTranslationCatalogue();
@@ -73,7 +80,7 @@ class sfI18nFormExtract extends sfI18nExtract {
 
     if(!is_dir($this->cataloguePath))
     {
-      throw new sfException(sprintf('The form catalogue specifies the path "%s" which does not exist.', $this->cataloguePath));
+      throw new sfConfigurationException(sprintf('The form catalogue specifies the path "%s" which does not exist.', $this->cataloguePath));
     }
 
     // load form contents
@@ -107,31 +114,32 @@ class sfI18nFormExtract extends sfI18nExtract {
       throw new sfCliCommandArgumentsException(sprintf('Form "%s" is not an instance of sfForm.', $class));
     }
 
-    // check if we can contruct the form,
-    // how do the __contructor arguments look like?
-    // are the optional or array based?
-    $constructor = $reflection->getConstructor();
-    $parameters = $constructor->getParameters();
-    $cannotCreate = false;
-    foreach($parameters as $parameter)
+    // this is not an extractable form
+    if(!$reflection->isSubclassOf('sfII18nExtractableForm'))
     {
-      if($parameter->isOptional())
+      // check if we can contruct the form,
+      // how do the __contructor arguments look like?
+      // are the optional or array based?
+      $constructor = $reflection->getConstructor();
+      $parameters = $constructor->getParameters();
+      $cannotCreate = false;
+      foreach($parameters as $parameter)
       {
-        continue;
+        if($parameter->isOptional())
+        {
+          continue;
+        }
+        if(!$parameter->isArray())
+        {
+          $cannotCreate = true;
+          break;
+        }
       }
-      if(!$parameter->isArray())
+      if($cannotCreate)
       {
-        $cannotCreate = true;
-        break;
+        throw new sfException(sprintf('The form "%s" cannot be extracted. Constructor arguments disallow standard way of extraction. Please implement sfII18nExtractable interface to the form.', $class));
       }
     }
-
-    if($cannotCreate)
-    {
-      // FIXME: make it possible to extract only __() or $this->__() function calls
-      throw new sfCliCommandArgumentsException(sprintf('Class "%s" is not initiable. Cannot extract strings.', $class));
-    }
-
     return $reflection;
   }
 

@@ -12,7 +12,7 @@
  * @package Sift
  * @subpackage i18n_extract
  */
-abstract class sfI18nExtractUser extends sfUser implements sfSecurityUser {
+abstract class sfI18nExtractUser extends sfUser implements sfISecurityUser {
 
   public function __construct()
   {
@@ -44,6 +44,10 @@ abstract class sfI18nExtractUser extends sfUser implements sfSecurityUser {
   {
   }
 
+  public function isSuperAdmin()
+  {
+  }
+
   public function setCulture($culture)
   {
   }
@@ -51,6 +55,35 @@ abstract class sfI18nExtractUser extends sfUser implements sfSecurityUser {
   public function getCulture()
   {
   }
+
+  /**
+   * @see sfISecurityUser
+   * @return sfBasicSecurityUser
+   */
+  public function setTimedOut($flag = true)
+  {
+  }
+
+  public function getLastRequestTime()
+  {
+    return time();
+  }
+
+  /**
+   * @see sfISecurityUser
+   */
+  public function isTimedOut()
+  {
+  }
+
+  /**
+   * @see sfISecurityUser
+   * @return sfBasicSecurityUser
+   */
+  public function setId($id)
+  {
+  }
+
 
   public function getIp()
   {
