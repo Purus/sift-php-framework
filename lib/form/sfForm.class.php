@@ -153,10 +153,10 @@ class sfForm implements ArrayAccess, Iterator, Countable
     if(!is_null($formatter))
     {
       $formatter->setValidatorSchema($this->getValidatorSchema());
-      if(sfConfig::get('sf_i18n') && $this->translationCatalogue)
+      if(sfConfig::get('sf_i18n') && ($catalogue = $this->getTranslationCatalogue()))
       {
         $formatter->setTranslationCallable('__');
-        $formatter->setTranslationCatalogue($this->translationCatalogue);
+        $formatter->setTranslationCatalogue($catalogue);
       }
     }
 
