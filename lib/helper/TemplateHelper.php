@@ -164,12 +164,12 @@ function _compile_template($buffer)
     {
       if(!$key)
       {
-        $key = md5($context->getModuleName() . $context->getActionName() . $buffer . serialize($options));
+        $key = md5('template_javascript' . $context->getModuleName() . $context->getActionName() . $buffer . serialize($options));
       }
 
-      if($cache->has($key, 'template_javascript'))
+      if($cache->has($key))
       {
-        return $cache->get($key, 'template_javascript');
+        return $cache->get($key);
       }
     }
   }
@@ -190,7 +190,7 @@ function _compile_template($buffer)
 
   if(sfConfig::get('sf_cache') && $key)
   {
-    $cache->set($key, 'template_javascript', $result, $lifetime);
+    $cache->set($key, $result, $lifetime);
   }
 
   return $result;

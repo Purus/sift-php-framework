@@ -279,9 +279,9 @@ function _compress_javascript($buffer)
         $key = md5($context->getModuleName() . $context->getActionName() . $buffer);
       }
 
-      if($cache->has($key, 'minimize_javascript'))
+      if($cache->has($key))
       {
-        return $cache->get($key, 'minimize_javascript');
+        return $cache->get($key);
       }
     }
   }
@@ -291,7 +291,7 @@ function _compress_javascript($buffer)
 
   if(sfConfig::get('sf_cache') && $key)
   {
-    $cache->set($key, 'minimize_javascript', $result, $lifetime);
+    $cache->set($key, $result, $lifetime);
   }
 
   return $result;
