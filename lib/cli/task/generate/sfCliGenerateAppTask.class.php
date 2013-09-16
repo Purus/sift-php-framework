@@ -35,7 +35,7 @@ class sfCliGenerateAppTask extends sfCliGeneratorBaseTask
     $this->briefDescription = 'Generates a new application';
 
     $scriptName = $this->environment->get('script_name');
-    
+
     $this->detailedDescription = <<<EOF
 The [generate:app|INFO] task creates the basic directory structure
 for a new application in the current project:
@@ -101,7 +101,7 @@ EOF;
     }
 
     $this->logSection($this->getFullName(), 'Generating app...');
-    
+
     $appDir = $this->environment->get('sf_apps_dir') . '/' . $app;
 
     // Create basic application structure
@@ -110,9 +110,9 @@ EOF;
     $this->getFilesystem()->mirror($skeletonDir.'/app', $appDir, $finder);
 
     $this->replaceTokens(array(
-        $appDir        
+        $appDir
     ), array('APP_NAME' => $app));
-    
+
     // Create $app.php or index.php if it is our first app
     $indexName = 'index';
     $firstApp = !file_exists($this->environment->get('sf_web_dir').'/index.php');
@@ -128,7 +128,7 @@ EOF;
 
     // Set no_script_name value in settings.yml for production environment
     $finder = sfFinder::type('file')->name('settings.yml');
-    
+
     $this->getFilesystem()->replaceTokens($finder->in($appDir.'/config'), '##', '##', array(
       'NO_SCRIPT_NAME'    => $firstApp ? 'true' : 'false',
       'CSRF_SECRET'       => $options['csrf-secret'],
@@ -141,77 +141,74 @@ EOF;
     $this->getFilesystem()->copy($skeletonDir.'/web/index.php', $this->environment->get('sf_web_dir').'/'.$app.'_dev.php');
 
     $this->getFilesystem()->replaceTokens($this->environment->get('sf_web_dir').'/'.$indexName.'.php', '##', '##', array(
-      'APP_NAME'    => $app,
+      'APP_NAME' => $app,
       'ENVIRONMENT' => 'prod',
-      'IS_DEBUG'    => 'false',
-      'IP_CHECK'    => '',
+      'IS_DEBUG' => 'false',
+      'IS_DEBUG_HUMAN' => 'no',
+      'IP_CHECK' => sfCliGenerateControllerTask::getIpCheckCode(false),
     ));
 
     $this->getFilesystem()->replaceTokens($this->environment->get('sf_web_dir').'/'.$app.'_dev.php', '##', '##', array(
-      'APP_NAME'    => $app,
+      'APP_NAME' => $app,
       'ENVIRONMENT' => 'dev',
-      'IS_DEBUG'    => 'true',
-      'IP_CHECK'    => '// this check prevents access to debug front controllers that are deployed by accident to production servers.'.PHP_EOL.
-                       '// feel free to remove this, extend it or make something more sophisticated.'.PHP_EOL.
-                       'if (!in_array(@$_SERVER[\'REMOTE_ADDR\'], array(\'127.0.0.1\', \'::1\')))'.PHP_EOL.
-                       '{'.PHP_EOL.
-                       '  //die(\'You are not allowed to access this file. Check \'.basename(__FILE__).\' for more information.\');'.PHP_EOL.
-                       '}'.PHP_EOL,
+      'IS_DEBUG' => 'true',
+      'IS_DEBUG_HUMAN' => 'yes',
+      'IP_CHECK' => sfCliGenerateControllerTask::getIpCheckCode(true)
     ));
 
     $className = sprintf('my%sApplication', sfInflector::camelize($app));
-    
+
     $this->getFilesystem()->rename($appDir.'/lib/application.class.php', $appDir.'/lib/'.$className.'.class.php');
-    $this->getFilesystem()->replaceTokens($appDir.'/lib/'.$className.'.class.php', '##', '##', 
+    $this->getFilesystem()->replaceTokens($appDir.'/lib/'.$className.'.class.php', '##', '##',
             array('CLASS_NAME' => $className, 'PROJECT_NAME' => $this->getProjectProperty('name')));
 
     // security
-    $finder = sfFinder::type('file')->name('security.yml');    
+    $finder = sfFinder::type('file')->name('security.yml');
     $this->getFilesystem()->replaceTokens($finder->in($appDir.'/config'), '##', '##', array(
       'IS_SECURE' => $options['secured'] ? 'true' : 'false',
     ));
-    
+
     // Create test dir
     $this->getFilesystem()->mkdirs($this->environment->get('sf_test_dir').'/functional/'.$app);
-    
-    $this->logSection($this->getFullName(), 'Done.');    
+
+    $this->logSection($this->getFullName(), 'Done.');
 
     // fix permissions
     $fixPerms = new sfCliProjectPermissionsTask($this->environment, $this->dispatcher, $this->formatter, $this->logger);
     $fixPerms->setCommandApplication($this->commandApplication);
     $fixPerms->run();
   }
-  
+
   /**
    * Generates CSRF protection string
-   * 
+   *
    * @return string
    */
   protected function generateCsrfSecret()
   {
-    $words = explode(' ', str_replace(array(',', '.', ':', ';'), '', 
+    $words = explode(' ', str_replace(array(',', '.', ':', ';'), '',
       'And the Lord said, Simon, Simon, behold, Satan hath desired to have you, that he may sift you as wheat: '.
       'But I have prayed for thee, that thy faith fail not: and when thou art converted, strengthen thy brethren. '.
       'His head and his hairs were white like wool, as white as snow; and his eyes were as a flame of fire '.
       'And his feet like unto fine brass, as if they burned in a furnace; and his voice as the sound of many waters. '.
       'And they said, Believe on the Lord Jesus Christ, and thou shalt be saved, and thy house.'
     ));
-    
+
     shuffle($words);
-    
-    $word = substr(join('', $words), 0, 32);    
-    $output = '';    
+
+    $word = substr(join('', $words), 0, 32);
+    $output = '';
     for($l = 0, $len = strlen($word); $l < $len; $l++)
     {
-      if(mt_rand(0, 1) == 1) 
+      if(mt_rand(0, 1) == 1)
       {
         $output .= strtoupper($word[$l]);
       }
       else
       {
         $output .= strtolower($word[$l]);
-      }      
-    }    
+      }
+    }
     return $output;
   }
 
