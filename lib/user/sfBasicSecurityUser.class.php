@@ -100,6 +100,12 @@ class sfBasicSecurityUser extends sfUser implements sfISecurityUser, sfIService 
     $this->lastRequest = $this->storage->read(self::LAST_REQUEST_NAMESPACE);
     $this->id = $this->storage->read(self::ID_NAMESPACE);
 
+    if(null === $this->authenticated)
+    {
+      $this->authenticated = false;
+      $this->credentials = array();
+    }
+
     // Automatic logout logged in user if no request within the timeout option
     if(null !== $this->lastRequest && (time() - $this->lastRequest) > $this->getOption('timeout'))
     {
@@ -184,7 +190,7 @@ class sfBasicSecurityUser extends sfUser implements sfISecurityUser, sfIService 
   {
     if(func_num_args() == 0)
     {
-      return;
+      return $this;
     }
 
     // Add all credentials
