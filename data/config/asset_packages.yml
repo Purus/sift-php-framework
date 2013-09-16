@@ -7,8 +7,8 @@ dev:
   packages:
     jquery:
       javascripts:
-        - %SF_SIFT_WEB_DIR%/js/jquery/jquery-1.9.1.min.js: { position: first }
-        - //code.jquery.com/jquery-migrate-1.2.1.min.js: { position: first }
+        - %SF_SIFT_WEB_DIR%/js/jquery/jquery-1.10.2.min.js : { position: first }
+        - %SF_SIFT_WEB_DIR%/js/jquery/jquery-migrate-1.2.1.min.js : { position: first }
 
     validation:
       javascripts:
@@ -78,7 +78,7 @@ default:
     # jquery package
     jquery:
       javascripts:
-        - //code.jquery.com/jquery-1.9.1.min.js : { position: first }
+        - //code.jquery.com/jquery-1.10.2.min.js : { position: first }
         - //code.jquery.com/jquery-migrate-1.2.1.min.js : { position: first }
 
     google_analytics_tracker:
