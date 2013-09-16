@@ -75,25 +75,24 @@ class sfPhpErrorException extends sfException {
     $last_error = error_get_last();
     if($last_error['type'] === E_ERROR || $last_error['type'] === E_PARSE)
     {
-      $env = sfConfig::get('sf_environment');
       try
       {
         self::handleErrorCallback(E_ERROR, $last_error['message'], $last_error['file'], $last_error['line'], '');
       }
-      catch(sfPhpErrorException $e)
+      catch(sfPhpErrorException $exception)
       {
-        if($env == 'prod')
+        if(sfConfig::get('sf_environment') == 'prod')
         {
           // clear output buffers
           while(ob_get_level() > 0)
           {
             ob_get_clean();
           }
-          sfCore::displayErrorPage('error500');
+          sfCore::displayErrorPage($exception);
         }
         else
         {
-          $e->printStackTrace();
+          $exception->printStackTrace();
         }
       }
     }
