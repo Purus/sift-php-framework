@@ -670,7 +670,10 @@
         Cookie.set('has_js', 1, '', path, domain);
 
         // detect timezone
-        Application.detectTimezone();
+        if(Config.get('timezones_enabled'))
+        {
+          Application.detectTimezone();
+        }
 
         // @see: http://stackoverflow.com/questions/4098504/running-a-function-just-before-document-ready-triggers
         $(window).trigger('setup');

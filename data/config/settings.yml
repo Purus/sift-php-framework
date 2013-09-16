@@ -85,6 +85,8 @@ default:
 
     # timezone setting
     default_timezone:       "Europe/Prague"
+    # enable timezones in the application
+    timezones_enabled:      false
 
     # ajax timeout in miliseconds
     ajax_timeout:           8000

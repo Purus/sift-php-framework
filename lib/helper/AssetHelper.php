@@ -810,13 +810,14 @@ function get_javascript_configuration($options = array(), $app = null)
 
   // default configuration
   $default = array(
-      'culture' => sfContext::getInstance()->getUser()->getCulture(),
-      'debug' => sfConfig::get('sf_debug'),
-      'cookie_domain' => '.' . sfContext::getInstance()->getRequest()->getBaseDomain(), // cross domain cookie
-      'cookie_path:' => sfConfig::get('sf_relative_url_root') ? sfConfig::get('sf_relative_url_root') : '/',
-      'homepage_url' => url_for('@homepage'),
-      'url_suffix' => sfConfig::get('sf_suffix'),
-      'ajax_timeout' => sfConfig::get('sf_ajax_timeout')
+    'culture' => sfContext::getInstance()->getUser()->getCulture(),
+    'debug' => sfConfig::get('sf_debug'),
+    'cookie_domain' => '.' . sfContext::getInstance()->getRequest()->getBaseDomain(), // cross domain cookie
+    'cookie_path' => sfConfig::get('sf_relative_url_root') ? sfConfig::get('sf_relative_url_root') : '/',
+    'homepage_url' => url_for('@homepage'),
+    'url_suffix' => sfConfig::get('sf_suffix'),
+    'ajax_timeout' => sfConfig::get('sf_ajax_timeout'),
+    'timezones_enabled' => sfConfig::get('sf_timezones_enabled')
   );
 
   use_package('core');

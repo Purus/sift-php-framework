@@ -69,3 +69,5 @@ all:
 
     # Timezone
     default_timezone: "Europe/Prague"
+    # enable timezones in the application
+    timezones_enabled: false
