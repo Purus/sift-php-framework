@@ -302,22 +302,26 @@
       $('body').append('<div id="application-dialog" />');
       $('#application-dialog').html('<div>' + message + '</div>').dialog(
       {
-        dialogClass:  'ui-dropshadow',
-        autoOpen:    true,
-        minHeight:   50,
-        modal:       true,
-        closeText:   __('close'),
-        resizable:   false,
-        title:       (title ? title : __('Alert')),
-        buttons: [
+        dialogClass: 'ui-dropshadow',
+        autoOpen: true,
+        minHeight: 50,
+        modal: true,
+        closeText: __('close'),
+        resizable: false,
+        title: (title ? title : __('Alert')),
+        close: function(event, ui)
         {
-          text: __('Ok'),
-          click: function()
+          $('#application-dialog').dialog('destroy').remove();
+        },
+        buttons:
+        [
           {
-            $(this).dialog('close');
-            $('#application-dialog').dialog('destroy').remove();
+            text: __('Ok'),
+            click: function()
+            {
+              $(this).dialog('close');
+            }
           }
-        }
         ]
       });
     }
