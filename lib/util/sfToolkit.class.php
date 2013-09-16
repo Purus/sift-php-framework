@@ -150,18 +150,19 @@ class sfToolkit {
   /**
    * Determine if a filesystem path is absolute.
    *
-   * @param path A filesystem path.
-   *
+   * @param string $path A filesystem path.
    * @return bool true, if the path is absolute, otherwise false.
    */
   public static function isPathAbsolute($path)
   {
+    if(empty($path))
+    {
+      return false;
+    }
+
     if($path[0] == '/' || $path[0] == '\\' ||
-            (strlen($path) > 3 && ctype_alpha($path[0]) &&
-            $path[1] == ':' &&
-            ($path[2] == '\\' || $path[2] == '/')
-            )
-    )
+      (strlen($path) > 3 && ctype_alpha($path[0]) &&
+      $path[1] == ':' && ($path[2] == '\\' || $path[2] == '/')))
     {
       return true;
     }
@@ -203,7 +204,7 @@ class sfToolkit {
     {
       return $source;
     }
-    
+
     $space = $output = '';
 
     $set = '!"#$&\'()*+,-./:;<=>?@[\]^`{|}';
