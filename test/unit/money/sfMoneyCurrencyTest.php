@@ -3,7 +3,22 @@
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 require_once(dirname(__FILE__).'/../../../lib/helper/NumberHelper.php');
 
-$t = new lime_test(52, new lime_output_color());
+$t = new lime_test(54, new lime_output_color());
+
+$t->diag('sfMoneyCurrency');
+$t->diag('->create()');
+$t->isa_ok(sfMoneyCurrency::create('CZK'), 'sfMoneyCurrencyCZK', 'create() returns valid instance');
+
+try {
+  sfMoneyCurrency::create(null);
+  $t->fail('create() throws an exception if the currency code is not valid');
+}
+catch(InvalidArgumentException $e)
+{
+  $t->pass('create() throws an exception if the currency code is not valid');
+}
+
+$t->diag('sfMoneyCurrencyValue');
 
 $m1 = new sfMoneyCurrencyValue('100', 'CZK');
 $m2 = new sfMoneyCurrencyValue('101', 'CZK');

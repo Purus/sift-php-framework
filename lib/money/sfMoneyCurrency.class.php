@@ -63,7 +63,7 @@ class sfMoneyCurrency {
    */
   public static function create($name)
   {
-    if(class_exists($class = sprintf('sfMoneyCurrency%s', $name)))
+    if(!empty($name) && class_exists($class = sprintf('sfMoneyCurrency%s', $name)))
     {
       return new $class();
     }
