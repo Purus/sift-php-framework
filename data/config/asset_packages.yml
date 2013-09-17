@@ -26,6 +26,7 @@ dev:
         - %SF_SIFT_WEB_DIR%/js/core/local_storage.js
         - %SF_SIFT_WEB_DIR%/js/core/request_storage.js
         - %SF_SIFT_WEB_DIR%/js/core/cache_response.js
+        - %SF_SIFT_WEB_DIR%/js/core/ajax_queue.js
         - %SF_SIFT_WEB_DIR%/js/core/globalize.js
         - %SF_SIFT_WEB_DIR%/js/core/i18n.js
         - %SF_SIFT_WEB_DIR%/js/core/i18n/%SF_CULTURE%.js
