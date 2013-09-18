@@ -586,6 +586,7 @@ class sfFormJavascriptValidation {
       return $message;
     }
 
+    $params = array();
     foreach($matches[0] as $match)
     {
       $option = str_replace('%', '', $match);
