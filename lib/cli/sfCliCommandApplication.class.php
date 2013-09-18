@@ -356,6 +356,7 @@ abstract class sfCliCommandApplication {
   public function help()
   {
     $messages = array(
+        $this->getApplicationSignature(),
         $this->formatter->format('Usage:', 'COMMENT'),
         sprintf("  %s [options] task_name [arguments]\n", $this->getScriptName()),
         $this->formatter->format('Options:', 'COMMENT'),
@@ -371,6 +372,24 @@ abstract class sfCliCommandApplication {
     {
       $this->logger->log($message);
     }
+  }
+
+  /**
+   * Returns application signature
+   *
+   * @return string
+   */
+  protected function getApplicationSignature()
+  {
+    return
+"
+           o88     o888o  o8
+ oooooooo8 oooo  o888oo o888oo
+888ooooooo  888   888    888
+        888 888   888    888
+88oooooo88 o888o o888o    888o
+";
+
   }
 
   /**
