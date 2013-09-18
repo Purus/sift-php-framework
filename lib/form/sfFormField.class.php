@@ -245,17 +245,17 @@ class sfFormField
         if($validator->hasOption('required')
             && $validator->getOption('required'))
         {
-          $class = get_class($this->widget);
-
+          $reflection = new sfReflectionClass(get_class($this->widget));
           // Handle Special case for checkboxes
           // Checkboxes does not work as expected
           // at least with HTML5 "required" attribute
           // Aria not tested!
           // http://stackoverflow.com/questions/5884582/hml5-required-attribute-on-multiple-checkboxes-with-the-same-name
-          if(!in_array($class, array(
+          if(!$reflection->isSubclassOfOrIsEqual(array(
               'sfWidgetFormSelectCheckbox',
               'sfWidgetFormInputCheckbox',
-              'sfWidgetFormChoiceMany'
+              'sfWidgetFormChoiceMany',
+              'sfWidgetFormSelectRadio',
           )))
           {
             if(!isset($attributes['aria-required']))
