@@ -2,7 +2,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(88, new lime_output_color());
+$t = new lime_test(89, new lime_output_color());
 
 $t->diag('i18n data');
 $en = unserialize(file_get_contents(dirname(__FILE__).'/../../../data/i18n/cultures/en.dat'));
@@ -115,11 +115,13 @@ foreach (array(0 => 'January', 1 => 'February', 2 => 'March', 3 => 'April', 4 =>
   $t->is($a[$key], $name, '"calendar" contains month names');
 }
 
-
 // zoneStrings
 $t->diag('timeZones');
 $t->is(count($en['timeZones']) > 0, true, '"timeZones" contains time zone names');
 
+// phonenumbers
+$t->diag('phoneNumbers');
+$t->is(count($root['phoneNumbers']) > 0, true, '"phoneNumbers" contains phonenumber informations');
 
 // Types
 

@@ -42,8 +42,8 @@ EOF;
   {
     $this->logSection($this->getFullName(), 'Preparing ...');
 
-    $this->buildPhoneData();
     $this->buildCldrData($this->getCultures());
+    $this->buildPhoneData();
 
     $this->logSection($this->getFullName(), 'Done.');
   }
@@ -454,7 +454,7 @@ EOF;
 
         if(isset($markers['am']) && isset($markers['pm']))
         {
-          $data['calendar'][$type]['amPmMarkers'][] = array($markers['am'], $markers['pm']);
+          $data['calendar'][$type]['amPmMarkers'] = array($markers['am'], $markers['pm']);
         }
 
         // timeFormats
