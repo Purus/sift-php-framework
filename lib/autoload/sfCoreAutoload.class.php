@@ -765,6 +765,7 @@ class sfCoreAutoload {
       'sfservicedefinition' => 'service/sfServiceDefinition.class.php',
       'sfservicereference' => 'service/sfServiceReference.php',
       'sfistorage' => 'storage/sfIStorage.interface.php',
+      'sfistorageaware' => 'storage/sfIStorageAware.interface.php',
       'sfnostorage' => 'storage/sfNoStorage.class.php',
       'sfpdosessionstorage' => 'storage/sfPDOSessionStorage.class.php',
       'sfsessionstorage' => 'storage/sfSessionStorage.class.php',
