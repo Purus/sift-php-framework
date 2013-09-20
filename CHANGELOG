@@ -1,4 +1,40 @@
-13.09.2013 [7b690fd] added generator stuff
+20.09.2013 [2a3f082] refactored http download
+20.09.2013 [be9f555] added stream wrapper + wrapper interface
+19.09.2013 [8f4a26b] added sfIResponseAware intarface, removed console request and response
+19.09.2013 [6fe5201] added missing files for unit test, how they disapeared?
+19.09.2013 [7a40f04] added sfIStorageAware interface
+18.09.2013 [e8908ab] updated readme
+18.09.2013 [b115473] added ascii signature
+18.09.2013 [53e82a9] fixed #57
+18.09.2013 [ea35223] fixed #56
+18.09.2013 [8a3a6aa] fixed #55
+17.09.2013 [d44155a] fixed #54
+17.09.2013 [9dc954f] added missing ajax_queue to core package in dev env
+17.09.2013 [7405f7e] added jQuery.ajaxQueue() to core
+17.09.2013 [cbdf0fd] updated sinon to 1.7.3
+17.09.2013 [a979885] added qunit reference to the template
+16.09.2013 [c6fa943] fixed #51
+16.09.2013 [6180416] fixed #50, updated to jquery 1.10.2
+16.09.2013 [cff16f4] fixed #48
+16.09.2013 [0d5eeea] fixed #46
+16.09.2013 [a5f8ff3] fixed #45
+16.09.2013 [3bcdafd] fixed #44
+16.09.2013 [3a8252c] fixed #43
+16.09.2013 [50ef2a0] remove dialog div after closing, #fixed 41
+16.09.2013 [7420878] fixed #40
+14.09.2013 [6f908f2] fixed #39
+14.09.2013 [aeef528] updated form translation catalogue to formatter reference
+14.09.2013 [242140e] fixed wrong arguments for cache
+14.09.2013 [cc68387] fixed #37
+14.09.2013 [7e15bfe] partialy fixed #36
+14.09.2013 [1c054f1] fixed #35
+14.09.2013 [92cfada] updated readme
+14.09.2013 [1e6e1ce] updated readme
+14.09.2013 [88d20d9] fixed #34
+14.09.2013 [2dc6920] fixed #33, added sfII18nExtractableForm interface
+13.09.2013 [67976a9] fixed #32
+13.09.2013 [78ba885] fixed #31
+13.09.2013 [4248277] added generator stuff
 13.09.2013 [f54a609] fixed #31
 12.09.2013 [62744d6] fixed #30
 12.09.2013 [183578d] fixed #29
