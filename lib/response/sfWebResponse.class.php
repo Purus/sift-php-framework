@@ -418,17 +418,10 @@ class sfWebResponse extends sfResponse
       }
       elseif(sfToolkit::isCallable($this->content, false, $callableName))
       {
-        // clear output buffer
-        while(ob_get_level())
-        {
-          ob_end_clean();
-        }
-
         if(sfConfig::get('sf_logging_enabled'))
         {
           sfLogger::getInstance()->info(sprintf('{sfResponse} Calling callable "%s"', $callableName));
         }
-
         call_user_func($this->content);
       }
     }

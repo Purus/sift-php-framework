@@ -811,9 +811,10 @@ abstract class sfAction extends sfComponent
    */
   protected function downloadFile($file, array $options = array())
   {
-    $downloader = new sfHttpDownload($options);
+    $downloader = new sfHttpDownload($options, $this->getRequest(), $this->getResponse(),
+                                     $this->getEventDispatcher(), $this->getLogger());
     $downloader->setFile($file);
-    return $this->renderCallable(array(&$downloader, 'send'));
+    return $this->renderCallable(array($downloader, 'send'));
   }
 
   /**
@@ -824,9 +825,10 @@ abstract class sfAction extends sfComponent
    */
   protected function downloadData($data, array $options = array())
   {
-    $downloader = new sfHttpDownload($options);
+    $downloader = new sfHttpDownload($options, $this->getRequest(), $this->getResponse(),
+                                     $this->getEventDispatcher(), $this->getLogger());
     $downloader->setData($data);
-    return $this->renderCallable(array(&$downloader, 'send'));
+    return $this->renderCallable(array($downloader, 'send'));
   }
 
 }

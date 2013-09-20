@@ -5,7 +5,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
- 
+
 /**
  * sfBrowser simulates a browser which can surf a application.
  *
@@ -154,6 +154,16 @@ class sfFakeRenderingFilter extends sfFilter
   public function execute(sfFilterChain $filterChain)
   {
     $filterChain->execute();
+
+    // rethrow sfForm and|or sfFormField __toString() exceptions (see sfForm and sfFormField)
+    if(sfForm::hasToStringException())
+    {
+      throw sfForm::getToStringException();
+    }
+    elseif(sfFormField::hasToStringException())
+    {
+      throw sfFormField::getToStringException();
+    }
     $this->context->getResponse()->sendContent();
   }
 }

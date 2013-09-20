@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of the Sift PHP framework.
  *
@@ -7,23 +8,13 @@
  */
 
 /**
- * sfHttpDonwload provides methods for downloading files over network 
- * (based on downloader class by Nguyen Quoc Bao
- * and HTTP_Download by Michael Wallner)
- * 
+ * sfHttpDonwload provides methods for downloading files over network.
  * Supports section downloading.
- * 
- * Tested with:
- * - Reget
- * - FDM
- * - FlashGet
- * - GetRight
- * - DAP
  *
  * @package    Sift
  * @subpackage response
  */
-class sfHttpDownload extends sfConfigurable {
+class sfHttpDownload extends sfConfigurable implements sfIEventDispatcherAware, sfILoggerAware {
 
   /**
    * Donwload attachment
@@ -34,25 +25,54 @@ class sfHttpDownload extends sfConfigurable {
    * Download inline
    */
   const DOWNLOAD_INLINE = 'inline';
- 
-  const CACHE_PUBLIC  = 'public';
+
+  /**
+   * Public cache
+   */
+  const CACHE_PUBLIC = 'public';
+
+  /**
+   * Private cache
+   */
   const CACHE_PRIVATE = 'private';
-  
+
+  /**
+   * Default options
+   *
+   * @var array
+   */
+  protected $defaultOptions = array(
+     // Use download resume?
+    'use_resume' => true,
+    // Buffer size in bytes (default to 2MB)
+    'buffer_size' => 2000000,
+    // Allow clients to cache the download?
+    'allow_cache' => true,
+    // Speed limit? False to disable or value in MB/s
+    'speed_limit' => false,
+    // Cache control (public, private)
+    'cache_control' => self::CACHE_PUBLIC,
+    // Max age of cache on the client side in seconds
+    'cache_max_age' => 3600,
+    // content disposition of the download
+    'content_disposition' => self::DOWNLOAD_ATTACHMENT
+  );
+
   /**
    * Path to file for download
    *
-   * @see     sfHttpDownload::setFile()
-   * @var     string
+   * @see sfHttpDownload::setFile()
+   * @var string
    */
-  protected $file = null;
+  protected $file;
 
   /**
    * Data for download
    *
-   * @see     sfHttpDownload::setData()
-   * @var     string
+   * @see sfHttpDownload::setData()
+   * @var string
    */
-  protected $data = null;
+  protected $data;
 
   /**
    * Size of download
@@ -62,141 +82,98 @@ class sfHttpDownload extends sfConfigurable {
   protected $size = 0;
 
   /**
-   * Etag
+   * Last modified timestamp
    *
-   * @var string
-   */
-  protected $etag = null;
-
-  /**
-   * Last modified
-   *
-   * @access  protected
-   * @var     int
+   * @var integer
    */
   protected $lastModified = 0;
-  
+
   /**
    * Is this a range request?
-   * 
-   * @var boolean 
+   *
+   * @var boolean
    */
   protected $isRangeRequest = false;
 
   /**
-   * Use download resume
-   *
-   * @var boolean
-   */
-  protected $useResume = true;
-
-  /**
-   * Automatically call "exit();" after download
-   * 
-   * @var boolean
-   */
-  protected $autoExit = true;
-  protected $filename = null;
-
-  /**
-   * Buffer size (default to 20MB)
+   * Total bandwidth has been used for this download
    *
    * @var integer
-   */
-  protected $bufferSize = 2097152;
-  
-  /**
-   * Seek start (internal pointer)
-   * 
-   * @var integer 
-   */
-  protected $seekStart = 0;
-  
-  /**
-   * Seek end (internal pointer)
-   * 
-   * @var integer 
-   */
-  protected $seekEnd = -1;
-
-  /**
-   * Total bandwidth has been used for this download
-   * 
-   * @var int
    */
   protected $bandwidth = 0;
 
   /**
-   * LimitSpeed limit
-   * 
-   * @var float
-   */
-  protected $limitSpeed = 0;
-
-  /**
-   * Whether to allow caching of the download on the clients side
+   * sfResponse
    *
-   * @access  protected
-   * @var     bool
-   */
-  protected $cache = true;
-
-  /**
-   * sfContext
-   * 
-   * @var sfContext holder 
-   */
-  protected $context;
-  
-  /**
-   * sfWebResponse
-   * 
-   * @var sfWebResponse 
+   * @var sfResponse
    */
   protected $response;
-  
+
   /**
-   * HTTP headers
+   * The logger instance
    *
-   * @access  protected
-   * @var     array
+   * @var sfILogger
    */
-  protected $headers = array(
-    'Pragma' => 'cache',
-    'Cache-Control' => 'public, must-revalidate, max-age=0'
-  );
-  
+  protected $logger;
+
   /**
-   * Default options
-   * 
-   * @var array 
+   * The storage instance
+   *
+   * @var sfIStorage
    */
-  protected $defaultOptions = array();
+  protected $storage;
+
+  /**
+   * The request instance
+   *
+   * @var sfWebRequest
+   */
+  protected $request;
 
   /**
    * Valid options
-   * 
-   * @var array 
+   *
+   * @var array
    */
   protected $validOptions = array(
-    'speed_limit', 'content_disposition', 'filename',
-    'use_resume', 'mime', 'auto_exit', 'cache',
-    'cache_control'
+    'speed_limit',
+    'content_disposition',
+    'filename',
+    'use_resume',
+    'buffer_size',
+    'allow_cache',
+    'cache_control',
+    'cache_max_age',
+    'content_type', 'mime' // mime is for BC
   );
-    
+
   /**
    * Constructs the downloader
-   * 
-   * @param sfContext $context
-   * @param array Array of options
+   *
+   * @param array $options
+   * @param sfWebRequest $request
+   * @param sfWebResponse $response
+   * @param sfEventDispatcher $dispatcher
+   * @param sfILogger $logger
    */
-  public function __construct($options = array())
+  public function __construct($options = array(), sfWebRequest $request,
+      sfWebResponse $response, sfEventDispatcher $dispatcher = null, sfILogger $logger = null)
   {
+    $this->setEventDispatcher($dispatcher);
+    $this->setRequest($request);
+    $this->setResponse($response);
+    $this->setLogger($logger);
     parent::__construct($options);
+  }
 
-    $this->context  = sfContext::getInstance();
-    $this->response = $this->context->getResponse();
-    
+  /**
+   * Setups the downloader
+   *
+   */
+  public function setup()
+  {
+    $options = $this->getOptions();
+
     if(isset($options['speed_limit']))
     {
       $this->limitSpeed($options['speed_limit']);
@@ -206,7 +183,7 @@ class sfHttpDownload extends sfConfigurable {
     {
       $this->setFilename($options['filename']);
     }
-    
+
     if(isset($options['content_disposition']))
     {
       $this->setContentDisposition($options['content_disposition']);
@@ -217,19 +194,24 @@ class sfHttpDownload extends sfConfigurable {
       $this->useResume($options['use_resume']);
     }
 
+    // BC compatibility
     if(isset($options['mime']))
     {
       $this->setContentType($options['mime']);
     }
-
-    if(isset($options['auto_exit']))
+    elseif(isset($options['content_type']))
     {
-      $this->autoExit($options['auto_exit']);
+      $this->setContentType($options['content_type']);
     }
-    
-    if(isset($options['cache']))
+
+    if(isset($options['etag']))
     {
-      $this->setCache($options['cache']);
+      $this->setEtag($options['etag']);
+    }
+
+    if(isset($options['allow_cache']))
+    {
+      $this->allowCache($options['allow_cache']);
     }
 
     if(isset($options['cache_control']))
@@ -237,500 +219,644 @@ class sfHttpDownload extends sfConfigurable {
       $this->setCacheControl($options['cache_control']);
     }
 
-  }
-  
-  protected function initialize()
-  {
-    if($this->useResume() && isset($_SERVER['HTTP_RANGE']))
+    if(isset($options['cache_max_age']))
     {
-      $seek_range = substr($_SERVER['HTTP_RANGE'], strlen('bytes='));
-      $range = explode('-', $seek_range);
-
-      if($range[0] > 0)
-      {
-        $this->seekStart = intval($range[0]);
-      }
-
-      if($range[1] > 0)
-      {
-        $this->seekEnd = intval($range[1]);
-      }
-      else
-      {
-        $this->seekEnd = -1;
-      }
-
-      $this->headers['Accept-Ranges'] = 'bytes';
-      $this->isRangeRequest = true;
+      $this->setCacheMaxAge($options['cache_max_age']);
     }
-
-    return true;
   }
 
   /**
-   * Send 
-   * 
-   * @return boolean Returns true on success
-   * @throws sfHttpDownloadException If HTTP headers were already sent
+   * Prepare the sending.
+   *
+   * * cleans output buffers
+   * * disables time_limit for the script (only when allowed by the environment)
+   * * sets ignore user abort
    */
-  public function send()
-  {    
-    if(function_exists('headers_sent') 
-            && headers_sent())
+  protected function prepareSending()
+  {
+    // we need it for abort detection
+    ignore_user_abort(true);
+
+    // set the time limit
+    if(!sfToolkit::setTimeLimit(0))
     {
-      throw new sfHttpDownloadException('Headers already sent.');
+      $this->log('Script execution time limit could not be set.', sfILogger::WARNING);
     }
 
-    // close session
-    $this->context->getStorage()->shutdown();
-    
-    $this->initialize();
-    
-    sfCore::dispatchEvent('download.before_send', array('downloader' => $this));
+    $this->prepareResponse();
+  }
 
-    $this->log('Sending download.');
+  /**
+   * Prepare headers for the response
+   *
+   * @return array
+   */
+  protected function prepareResponse()
+  {
+    $headers = array();
+    $this->response->clearHttpHeaders();
 
-    $seek = $this->seekStart;
-    $bufferSize = $this->bufferSize;
+    $statusCode = 200;
+    $isHeaderOnly = false;
 
-    // do some clean up
-    // cleanup all buffers
-    if(ob_get_level())
-    {
-      while(@ob_end_clean());
-    }
+    $filename = $this->getFilename();
+    $headers['Content-Disposition'] = sprintf('%s; filename="%s"', $this->getContentDisposition(),
+        $this->fixFilename($filename ? $filename : $this->guessFilename()));
 
-    $old_status = ignore_user_abort(true);    
-    sfToolkit::setTimeLimit(0);
-
-    // reset bandwith
-    $this->bandwidth = 0;
-
-    $this->headers['ETag'] = $this->generateETag();
-      
-    if($this->cache)
-    {
-      if($this->isCached())
-      {
-        $this->sendHttpStatusCode(304);
-        $this->sendHeaders();   
-        $this->log('Sending finished. Sent status 304, Not modified.');
-        sfCore::dispatchEvent('download.finished', array('downloader' => $this));        
-      }
-    }
-    else
-    {
-      unset($this->headers['Last-Modified']);
-      // force pragma
-      $this->headers['Pragma'] = 'no-cache';
-    }
-
-    if(!isset($this->headers['Content-Disposition']))
-    {
-      $this->setContentDisposition();
-    }
-    
-    if(!isset($this->headers['Content-Type']))
+    if(!($contentType = $this->getContentType()))
     {
       if($this->file)
       {
-        $this->setContentType(sfMimeType::getTypeFromFile($this->file));
+        $contentType = sfMimeType::getTypeFromFile($this->file);
       }
-      elseif($this->filename)
+      elseif($this->data)
       {
-        $this->setContentType(sfMimeType::getTypeFromExtension($this->filename));
+        $contentType = sfMimeType::getTypeFromString($this->data);
       }
-      else
-      {        
-        $this->setContentType(sfMimeType::getTypeFromString($this->data));
+      elseif($filename)
+      {
+        $contentType = sfMimeType::getTypeFromExtension($filename);
       }
-    }    
+    }
 
-    if($this->useResume() && $this->isRangeRequest())
+    $headers['Content-Type'] = $contentType;
+
+    if($this->useResume())
     {
-      // partial content
-      $this->sendHttpStatusCode(206);
-      $this->headers['Status'] = '206 Partial Content';
+      $headers['Accept-Ranges'] = 'bytes';
     }
     else
     {
-      $this->sendHttpStatusCode(200);
-      $this->headers['Content-Length'] = $this->size;
+      $headers['Accept-Ranges'] = 'none';
     }
 
-    $size = $this->size;
-    // download from a file
-    if($this->file)
+    $headers['Cache-Control'] = sprintf('%s, must-revalidate, max-age=%s', $this->getCacheControl(), $this->getCacheMaxAge());
+
+    if($this->allowCache())
     {
-      if($seek > ($size - 1))
-      {
-        $seek = 0;
-      }
-      // open file
-      $res = fopen($this->file, 'rb');
-      if($seek)
-      {
-        fseek($res, $seek);
-      }
-      if($this->seekEnd < $seek)
-      {
-        $this->seekEnd = $size - 1;
-      }
+      $etag = $this->getEtag() ? $this->getEtag() : $this->generateETag();
+      $headers['ETag'] = $etag;
 
-      if($this->useResume() && $this->isRangeRequest())
+      $isCached = false;
+      // timestamp
+      if(($modifiedSince = $this->getRequest()->getHttpHeader('IF_MODIFIED_SINCE')))
       {
-        $this->headers['Content-Range'] = sprintf('bytes %s-%s/%s', $seek, $this->seekEnd, $size);
-        $this->headers['Content-Length'] = $this->seekEnd - $seek + 1;
-      }
-
-      $size = $this->seekEnd - $seek + 1;
-
-      $this->sendHeaders();
-
-      while(!(connection_aborted() || connection_status() == 1) && $size > 0)
-      {
-        if($size < $bufferSize)
+        if($this->lastModified == strtotime(current(explode(';', $modifiedSince))))
         {
-          echo fread($res, $size);
-          $this->bandwidth += $size;
-        }
-        else
-        {
-          echo fread($res, $bufferSize);
-          $this->bandwidth += $bufferSize;
-        }
-
-        $size -= $bufferSize;
-        flush();
-
-        if($this->limitSpeed)
-        {
-          $this->sleep();
+          $isCached = true;
         }
       }
-      fclose($res);
-    }
-    // sending raw data
-    elseif($this->data)
-    {
-      if($seek > ($size - 1))
+
+      // Etag
+      if(($noneMatch = $this->getRequest()->getHttpHeader('IF_NONE_MATCH')))
       {
-        $seek = 0;
-      }
-      if($this->seekEnd < $seek)
-      {
-        $this->seekEnd = $this->size - 1;
+        $isCached = $this->compareAsterisk($noneMatch, $etag);
       }
 
-      $this->data = substr($this->data, $this->seekStart, $this->seekEnd - $this->seekStart + 1);
+      $headers['Pragma'] = 'cache';
+      $headers['Last-Modified'] = $this->response->getDate($this->getLastModified());
 
-      // send
-      $this->sendHeaders();
-
-      $size = $this->size;
-      while(!connection_aborted() && $size > 0)
+      if($isCached)
       {
-        if($size < $bufferSize)
-        {
-          $this->bandwidth += $size;
-        }
-        else
-        {
-          $this->bandwidth += $bufferSize;
-        }
-
-        echo substr($this->data, 0, $bufferSize);
-        $this->data = substr($this->data, $bufferSize);
-        $size -= $bufferSize;
-        flush();
-
-        if($this->limitSpeed)
-        {
-          $this->sleep();
-        }
+        // clear other headers
+        $headers = array();
+        $statusCode = 304;
+        $isHeaderOnly = true;
       }
-    }
-
-    // restore old status
-    ignore_user_abort($old_status);
-    
-    if(connection_status() != CONNECTION_NORMAL) 
-    {
-      $this->log('Connection lost.');
-      sfCore::dispatchEvent('download.connection_lost', array('downloader' => $this));
-      
-      if(connection_aborted()) 
-      {
-        $this->log('Sending aborted by user.');
-        sfCore::dispatchEvent('download.aborted', array('downloader' => $this));
-      }      
     }
     else
     {
-      $this->log('Sending finished.');
-      sfCore::dispatchEvent('download.finished', array('downloader' => $this));
-    }
-      
-    if($this->autoExit())
-    {
-      exit();
+      $headers['Pragma'] = 'no-cache';
     }
 
-    return true;
+    $this->response->setStatusCode($statusCode);
+    $this->response->isHeaderOnly($isHeaderOnly);
+    foreach($headers as $header => $value)
+    {
+      $this->response->setHttpHeader($header, $value);
+    }
   }
 
   /**
-   * Limit download limitSpeed for the file
+   * Sets the Etag
    *
-   * @param integer $limit
-   */
-  
-  /**
-   * 
-   * @param integer $limit
+   * @param string $etag The Etag
    * @return sfHttpDownload
    */
-  public function limitSpeed($limit)
+  public function setETag($etag)
   {
-    $this->limitSpeed = true;
-    $this->bufferSize = round($limit * 1024);
+    $this->etag = $etag;
     return $this;
   }
 
   /**
-   * Set path to file for download
-   * 
-   * The Last-Modified header will be set to files filemtime(), actually.
-   * 
-   * @param string $file Path to file for download
+   * Returns the Etag
+   *
+   * @return string|null
+   */
+  public function getEtag()
+  {
+    return $this->etag;
+  }
+
+  /**
+   * Send the download.
+   */
+  public function send()
+  {
+    $this->prepareSending();
+    $this->preSend();
+
+    if(!$this->response->isHeaderOnly())
+    {
+      $this->sendDownload();
+    }
+    else
+    {
+      $this->response->sendHttpHeaders();
+    }
+
+    $this->postSend();
+  }
+
+  /**
+   * Sends the download. This is used as as callback for the response
+   *
+   * @throws LogicException If called directly
+   */
+  protected function sendDownload()
+  {
+    // do some clean up
+    // cleanup all buffers
+    if(!sfConfig::get('sf_test'))
+    {
+      if(ob_get_level())
+      {
+        while(@ob_end_clean());
+      }
+      ob_implicit_flush(true);
+    }
+
+    $this->doDownload();
+  }
+
+  /**
+   * Pre send. Dispatches an event `download.before_send` with parameters:
+   *
+   *  * download: sfHttpDownload (current download instance)
+   */
+  protected function preSend()
+  {
+    $this->dispatchEvent('download.before_send');
+    $this->log('Sending download.');
+  }
+
+  /**
+   * Post send. Dispatches events:
+   *
+   * `download.finished` when file was downloaded successfully with parameters:
+   *   * download: sfHttpDownload (current download instance)
+   *
+   * * `download.aborted` when user aborted the download with parameters:
+   *   * download: sfHttpDownload (current download instance)
+   *
+   * Warning: If you want to track the finished downloads do not use
+   * resume. When using resume, there are `download.aborted` events fired
+   * for the chunks!
+   *
+   */
+  protected function postSend()
+  {
+    // something has been sent
+    if($this->bandwidth > 0)
+    {
+      $this->log('Post send, connection status {status}', sfILogger::DEBUG, array('status' => connection_status()));
+      if(!$this->aborted)
+      {
+        $this->log('Download successfully finished.');
+        $this->dispatchEvent('download.finished', array(
+          'range_request' => $this->isRangeRequest()
+        ));
+      }
+      else
+      {
+        $this->log('Sending aborted by user.: '  . $this->remaining);
+        $this->dispatchEvent('download.aborted', array(
+          'range_request' => $this->isRangeRequest()
+        ));
+      }
+    }
+  }
+
+  /**
+   * Does the download job
+   *
+   * @return void
+   */
+  protected function doDownload()
+  {
+    $startPoint = 0;
+    $endPoint = $this->size - 1;
+
+    // do we use resume?
+    if($this->useResume() &&
+        ($range = $this->getRequest()->getHttpHeader('RANGE')))
+    {
+      // this does not look like valid range
+      if(!preg_match('/^bytes=((\d*-\d*,? ?)+)$/', $range))
+      {
+        $this->response->setStatusCode(416);
+        $this->response->setHttpHeader('Content-Range', sprintf('bytes */%s', $this->size));
+        $this->response->sendHttpHeaders();
+        return;
+      }
+
+      $range = explode('-', substr($range, strlen('bytes=')));
+      $startPoint = intval($range[0]);
+
+      if($range[1] > 0)
+      {
+        $endPoint = $range[1];
+      }
+
+      if($startPoint > $endPoint)
+      {
+        $this->response->setStatusCode(416);
+        $this->response->setHttpHeader('Content-Range', sprintf('bytes */%s', $this->size));
+        $this->response->sendHttpHeaders();
+        return;
+      }
+
+      $this->response->setStatusCode(206);
+      $this->response->setHttpHeader('Status', '206 Partial Content');
+      $this->response->setHttpHeader('Content-Range', sprintf('bytes %s-%s/%s', $startPoint, $endPoint, $this->size));
+      $this->response->setHttpHeader('Content-Length', ($endPoint - $startPoint + 1));
+      // mark as range request
+      $this->isRangeRequest = true;
+    }
+    else
+    {
+      $this->response->setHttpHeader('Content-Length', $this->size);
+    }
+
+    if($this->file)
+    {
+      // open file
+      $handle = fopen($this->file, 'rb');
+    }
+    else
+    {
+      sfStringStreamWrapper::register();
+      $handle = fopen('string://', 'r+');
+      fputs($handle, $this->data);
+    }
+
+    rewind($handle);
+
+    if($startPoint > 0)
+    {
+      fseek($handle, $startPoint);
+    }
+
+    // reset bandwith
+    $this->bandwidth = 0;
+    $this->remaining = $this->size;
+
+    // send the headers
+    $this->response->sendHttpHeaders();
+
+    if(($speedLimit = $this->limitSpeed()))
+    {
+      $this->log('Limitting speed to {limit} MB/s', sfILogger::INFO, array('limit' => round($this->getBufferSize() / 1000 / 1000, 5)));
+    }
+
+    $this->log('Sending total {size} B', sfILogger::INFO, array('size' => $this->remaining));
+
+    $currentPosition = $startPoint;
+    while(!feof($handle) && $currentPosition <= $endPoint)
+    {
+      if(connection_aborted() || connection_status() != CONNECTION_NORMAL)
+      {
+        $this->aborted = true;
+        break;
+      }
+
+      $chunkSize = $this->getBufferSize();
+      if($currentPosition + $chunkSize > $endPoint + 1)
+      {
+        $chunkSize = $endPoint - $currentPosition + 1;
+      }
+
+      echo fread($handle, $chunkSize);
+      flush();
+      if(!sfConfig::get('sf_test'))
+      {
+        ob_flush();
+      }
+
+      $this->bandwidth += $chunkSize;
+      $this->remaining -= $chunkSize;
+
+      $this->log('Sent {bytes} B', sfILogger::DEBUG, array('bytes' => $this->bandwidth));
+
+      // increment download point
+      $currentPosition += $chunkSize;
+      // speed limit
+      if($speedLimit)
+      {
+        $this->sleep(1);
+      }
+    }
+
+    fclose($handle);
+  }
+
+  /**
+   * Sets or gets the speed limit
+   *
+   * @param false|integer $limit The speed limit in bytes per second
+   * @param string $unit The speed limit unit (MB, kB...)
+   * @return boolean
+   */
+  public function limitSpeed($limit = null)
+  {
+    $value = $this->getOption('speed_limit');
+    if(!is_null($limit))
+    {
+      // disable speed limit
+      if($limit === false)
+      {
+        $this->setOption('speed_limit', false);
+        // reset the buffer size?
+        $this->setBufferSize($this->defaultOptions['buffer_size']);
+      }
+      else
+      {
+        $this->setOption('speed_limit', true);
+        $this->setBufferSize(round($limit * 1000 * 1000));
+      }
+    }
+    return $value;
+  }
+
+  /**
+   * Set path to file for download.
+   *
+   * @param string $file Absolute path to file for download
    * @return sfHttpDownload
-   * @throws sfHttpDownloadException
+   * @throws sfFileException If the file does not exist or is not readable
    */
   public function setFile($file)
   {
     $file = realpath($file);
-    
-    if(!is_file($file))
+
+    if(!is_readable($file))
     {
-      throw new sfHttpDownloadException(sprintf('File "%s" does not exist or is not readable.', $file));
+      throw new sfFileException(sprintf('File "%s" does not exist or is not readable.', $file));
     }
-    
-    $this->setLastModified(filemtime($file));
+
     $this->file = $file;
     $this->size = filesize($file);
+    $this->setLastModified(filemtime($file));
     return $this;
   }
 
   /**
-   * Set resume mode. Returns old status.
-   * 
+   * Set or gets the resume mode. Returns old status.
+   *
    * @param boolean $flag
-   * @return boolen Old value
+   * @return boolean Old value
    */
   public function useResume($flag = null)
   {
-    if(is_null($flag))
+    $value = $this->getOption('use_resume');
+    if(!is_null($flag))
     {
-      return $this->useResume;
+      $this->setOption('use_resume', (bool) $flag);
     }
-    $old = $this->useResume;
-    $this->useResume = (bool) $flag;
-    return $old;
+    return $value;
   }
 
   /**
-   * Sets autoexit feature or returns current value
-   * 
-   * @param boolean $flag
-   * @return boolean
-   */
-  public function autoExit($flag = null)
-  {
-    if(is_null($flag))
-    {
-      return $this->autoExit;
-    }
-    $old = $this->autoExit;
-    $this->autoExit = (bool) $flag;
-    return $old;
-  }
-
-  /**
-   * Sleep for $seconds second
-   * 
-   * @param int $seconds Number of second to sleep
-   */
-  protected function sleep($seconds = 1)
-  {
-    if(strtoupper(substr(PHP_OS, 0, 3)) == 'WIN')
-    {
-      com_message_pump($seconds * 1000);
-    }
-    else
-    {
-      usleep($seconds * 1000);
-    }
-  }
-
-  /**
-   * Set size of Buffer
-   * 
+   * Set size of buffer
+   *
    * The amount of bytes specified as buffer size is the maximum amount
-   * of data read at once from resources or files.  The default size is 2M
+   * of data read at once from resources or files. The default size is 2M
    * (2097152 bytes).
-   * 
-   * @param int $bytes Amount of bytes to use as buffer.
+   *
+   * @param integer $bytes Amount of bytes to use as buffer.
    * @return sfHttpDownload
-   * @throws sfHttpDownloadException If $bytes is not greater than 0 bytes.
+   * @throws InvalidArgumentException If $bytes is not greater than 0 bytes.
    */
-  public function setBufferSize($bytes = 2097152)
+  public function setBufferSize($bytes)
   {
     if(0 >= $bytes)
     {
-      throw new sfHttpDownloadException(sprintf('Buffer size must be greater than 0 bytes ("%s" given)', $bytes));
+      throw new InvalidArgumentException(sprintf('Buffer size must be greater than 0 bytes ("%s" given)', $bytes));
     }
-    $this->bufferSize = $bytes;
+    $this->setOption('buffer_size', $bytes);
     return $this;
   }
 
   /**
-   * Whether to allow caching
-   * 
+   * Returns the buffer size
+   *
+   * @return integer
+   */
+  public function getBufferSize()
+  {
+    return $this->getOption('buffer_size');
+  }
+
+  /**
+   * Returns total number of bytes this download took
+   * @return integer
+   */
+  public function getBandwidth()
+  {
+    return $this->bandwidth;
+  }
+
+  /**
+   * Gets or sets the option whether to allow client caching
+   *
    * If set to true (default) we'll send some headers that are commonly
    * used for caching purposes like ETag, Cache-Control and Last-Modified.
    *
    * If caching is disabled, we'll send the download no matter if it
    * would actually be cached at the client side.
-   *  
-   * @param boolean $cache whether to allow caching
-   * @return sfHttpDownload
+   *
+   * @param boolean $flag whether to allow caching
+   * @return boolean The old value
    */
-  public function setCache($cache)
+  public function allowCache($flag = null)
   {
-    $this->cache = (boolean)$cache;
-    return $this;
+    $value = $this->getOption('allow_cache');
+    if(!is_null($flag))
+    {
+      $this->setOption('allow_cache', (bool)$flag);
+    }
+    return $value;
   }
-  
+
   /**
-   * Set "Last-Modified"
-   * 
-   * This is usually determined by filemtime() in HTTP_Download::setFile()
-   * If you set raw data for download with HTTP_Download::setData() and you
+   * Set last mofification of the file or data.
+   *
+   * This is usually determined by filemtime() in sfHttpDownload::setFile()
+   * If you set raw data for download with sfHttpDownload::setData() and you
    * want do send an appropiate "Last-Modified" header, you should call this
    * method.
-   * 
-   * @param int|DateTime $last_modified unix timestamp of DateTime object
+   *
+   * @param int|DateTime $lastModified The unix timestamp or DateTime object
    * @return sfHttpDownload
    */
-  public function setLastModified($last_modified)
+  public function setLastModified($lastModified)
   {
-    if($last_modified instanceof DateTime)
+    if($lastModified instanceof DateTime)
     {
-      $last_modified = $last_modified->format('U');
+      $lastModified = $lastModified->format('U');
     }
-    
-    $last_modified = intval($last_modified);
-    if($last_modified <= 0)
+    elseif($lastModified instanceof sfDate)
     {
-      $last_modified = time();
+      $lastModified = $lastModified->format('U');
     }
-    
-    $this->lastModified = $this->headers['Last-Modified'] = $last_modified;
-    
+
+    if($lastModified <= 0)
+    {
+      throw new InvalidArgumentException(sprintf('Invalid last modified time "%s" given. The value should be greater than zero', $last_modified));
+    }
+
+    $this->lastModified = $lastModified;
     return $this;
   }
 
   /**
-   * Set Content-Disposition header
+   * Returns the last modified time
    *
-   * @access  public
-   * @return  void
-   * @param   string  $disposition    whether to send the download
-   *                                  inline or as attachment
-   * @param   string  $file_name      the filename to display in
-   *                                  the browser's download window
-   *
-   * <b>Example:</b>
-   * <code>
-   * $downloader->setContentDisposition(
-   *   sfHttpDownload::DOWNLOAD_ATTACHMENT,
-   *   'download.tgz'
-   * );
-   * </code>
+   * @return integer
    */
-  public function setContentDisposition($disposition = self::DOWNLOAD_ATTACHMENT, 
-          $filename = null)
+  public function getLastModified()
   {
-    $cd = $disposition;
-    
-    if(isset($filename))
-    {
-      $cd .= '; filename="' . $filename . '"';
-    }
-    else
-    {
-      $cd .= '; filename="' . $this->getFilename() . '"';
-    }
-
-    $this->headers['Content-Disposition'] = $cd;
-    return $this;
+    return $this->lastModified;
   }
 
   /**
-   * Set content type of the download
+   * Set content disposition. Inline or attachment
    *
-   * Default content type of the download will be 'application/x-octetstream'.
-   * Returns PEAR_Error (HTTP_DOWNLOAD_E_INVALID_CONTENT_TYPE) if
-   * $content_type doesn't seem to be valid.
-   *
-   * @access  public
-   * @return  mixed   Returns true on success or PEAR_Error on failure.
-   * @param   string  $content_type   content type of file for download
+   * @param string $disposition whether to send the download inline or as attachment
+   * @param string $filename The filename to display in the browser's download window
+   * @throws InvalidArgumentException If the disposition is not valid
    */
-  public function setContentType($content_type = 'application/x-octetstream')
+  public function setContentDisposition($disposition, $filename = null)
   {
-    if(!preg_match('#^[-\w\+]+/[-\w\+.]+$#', $content_type))
+    switch($disposition = strtolower($disposition))
     {
-      throw new sfHttpDownloadException("Invalid content type '$content_type' supplied.");
+      case self::DOWNLOAD_ATTACHMENT:
+      case self::DOWNLOAD_INLINE:
+        $this->setOption('content_disposition', $disposition);
+        if($filename)
+        {
+          $this->setFilename($filename);
+        }
+      break;
+
+      default:
+        throw new InvalidArgumentException(sprintf('Invalid content disposition "%s" given', $disposition));
     }
 
-    $this->headers['Content-Type'] = $content_type;
-    
     return $this;
   }
 
   /**
-   * Sets filename
+   * Returns the content disposition
    *
-   * @param string $filename
+   * @return string
+   */
+  public function getContentDisposition()
+  {
+    return $this->getOption('content_disposition');
+  }
+
+  /**
+   * Sets content type of the download
+   *
+   * @param string $contentType The content mime type
+   * @return sfHttpDownload
+   * @throws InvalidArgumentException If the content type is not valid
+   */
+  public function setContentType($contentType)
+  {
+    if(!preg_match('#^[-\w\+]+/[-\w\+.]+$#', $contentType))
+    {
+      throw new InvalidArgumentException(sprintf('Invalid content type "%s" given.', $contentType));
+    }
+    $this->setOption('content_type', $contentType);
+    return $this;
+  }
+
+  /**
+   * Returns the content type
+   *
+   * @return string
+   */
+  public function getContentType()
+  {
+    return $this->getOption('content_type');
+  }
+
+  /**
+   * Sets the filename
+   *
+   * @param string $filename The filename of the download
+   * @return sfHttpDownload
    */
   public function setFilename($filename)
   {
-    $this->filename = $filename;    
+    $this->setOption('filename', $filename);
     return $this;
   }
 
+  /**
+   * Returns the filename
+   *
+   * @return string
+   */
   public function getFilename()
   {
-    if($this->filename)
+    return $this->getOption('filename');
+  }
+
+  /**
+   * Returns the file size
+   *
+   * @return integer
+   */
+  public function getFileSize()
+  {
+    return $this->size;
+  }
+
+  /**
+   * Guesses the filename of the download
+   *
+   * @return string
+   */
+  protected function guessFilename()
+  {
+    if($this->file)
     {
-      $filename = $this->filename;
-    }
-    elseif($this->file)
-    {
-      $filename = basename($this->file);
+      return basename($this->file);
     }
     else
     {
-      $filename = 'download-' . time();
+      // what is this?
+      return sprintf('download-%s.bin', time());
     }
-    
-    return $this->fixFilenameForInternetExplorer($filename);
   }
 
   /**
    * Is range request?
-   * 
+   *
    * @return boolean
    */
   public function isRangeRequest()
@@ -740,7 +866,7 @@ class sfHttpDownload extends sfConfigurable {
 
   /**
    * Set data for download
-   * 
+   *
    * @param string $data raw data to send
    * @return sfHttpDownload
    */
@@ -754,73 +880,36 @@ class sfHttpDownload extends sfConfigurable {
     }
     return $this;
   }
-  
-  /**
-   * Set ETag
-   * 
-   * Sets a user-defined ETag for cache-validation.  The ETag is usually
-   * generated by sfHttpDownload through its payload information.
-   * 
-   * @param string $etag
-   * @return sfHttpDownload
-   */
-  public function setETag($etag = null)
-  {
-    $this->etag = (string) $etag;
-    return $this;
-  }
 
   /**
-   * Generate ETag
+   * Generates the ETag
    *
-   * @access  protected
-   * @return  string
+   * @return string
    */
   protected function generateETag()
   {
-    if(!$this->etag)
+    if($this->data)
     {
-      if($this->data)
-      {
-        $md5 = md5($this->data);
-      }
-      else
-      {
-        $fst = stat($this->file);
-        $md5 = md5($fst['mtime'] . '=' . $fst['ino'] . '=' . $fst['size']);
-      }
-      $this->etag = '"' . $md5 . '-' . crc32($md5) . '"';
+      $md5 = md5($this->data);
     }
-    return $this->etag;
-  }
-
-  /**
-   * Check if entity is cached
-   *
-   * @access  protected
-   * @return  bool
-   */
-  protected function isCached()
-  {
-    return ((isset($_SERVER['HTTP_IF_MODIFIED_SINCE']) &&
-            $this->lastModified == strtotime(@current($a = explode(
-                            ';', $_SERVER['HTTP_IF_MODIFIED_SINCE'])))) ||
-            (isset($_SERVER['HTTP_IF_NONE_MATCH']) &&
-            $this->compareAsterisk('HTTP_IF_NONE_MATCH', $this->etag))
-            );
+    else
+    {
+      $fst = stat($this->file);
+      $md5 = md5($fst['mtime'] . '=' . $fst['size']);
+    }
+    return '"' . $md5 . '-' . crc32($md5) . '"';
   }
 
   /**
    * Compare against an asterisk or check for equality
    *
-   * @access  protected
-   * @return  bool
-   * @param   string  key for the $_SERVER array
-   * @param   string  string to compare
+   * @param string $variable key for the array
+   * @param string $compare string to compare
+   * @return boolean
    */
-  protected function compareAsterisk($svar, $compare)
+  protected function compareAsterisk($variable, $compare)
   {
-    foreach(array_map('trim', explode(',', $_SERVER[$svar])) as $request)
+    foreach(array_map('trim', explode(',', $variable)) as $request)
     {
       if($request === '*' || $request === $compare)
       {
@@ -832,88 +921,225 @@ class sfHttpDownload extends sfConfigurable {
 
   /**
    * Whether to allow proxies to cache
-   * 
+   *
    * If set to 'private' proxies shouldn't cache the response.
    * This setting defaults to 'public' and affects only cached responses.
-   * 
-   * @param string $cache private or public
-   * @param integer $maxage maximum age of the client cache entry
+   *
+   * @param string $cacheControl private or public
+   * @param integer $maxage Maximum age of the client cache entry
    * @return sfHttpDownload
-   * @throws InvalidArgumentException
+   * @throws InvalidArgumentException If the cache control is invalid
    */
-  public function setCacheControl($cache = self::CACHE_PUBLIC, $maxage = 0)
+  public function setCacheControl($cacheControl, $maxAge = null)
   {
-    switch($cache = strtolower($cache))
+    switch($cacheControl = strtolower($cacheControl))
     {
       case self::CACHE_PUBLIC:
       case self::CACHE_PRIVATE:
-        $this->headers['Cache-Control'] = sprintf('%s, must-revalidate, max-age=%s', $cache, abs($maxage));
+        $this->setOption('cache_control', $cacheControl);
+        if($maxAge)
+        {
+          $this->setCacheMaxAge($maxAge);
+        }
       break;
-    
+
       default:
         throw new InvalidArgumentException(sprintf('Invalid cache type "%s" given. This should be one of: "public" or "private".', $cache));
-      break;    
+      break;
     }
-    
-    return $this;    
+    return $this;
   }
 
   /**
-   * Sends header with http code
+   * Sets the cache max age
    *
-   * @param integer $code integer HTTP code
+   * @param integer $maxAge
+   * @return sfHttpDownload
+   * @throws InvalidArgumentException
    */
-  protected function sendHttpStatusCode($code)
+  public function setCacheMaxAge($maxAge)
   {
-    $this->log(sprintf('Sending http status code: %s', $code));
-    // http://stackoverflow.com/questions/4797274/how-to-send-a-status-code-in-php-without-maintaining-an-array-of-status-names
-    header('x', true, $code);
-  }
-
-  /**
-   * Sends headers
-   *
-   */
-  protected function sendHeaders()
-  {
-    foreach($this->headers as $header => $value)
+    if($maxAge < 0)
     {
-      $header = sprintf('%s: %s', $header, $value);
-      $this->log($header);
-      header($header);    
+      throw new InvalidArgumentException(sprintf('Invalid cache max age "%s" given. Should be greater than zero', $maxAge));
     }
+    $this->setOption('cache_max_age', $maxAge);
+    return $this;
   }
 
   /**
-   * Fixes filename for Internet explorer
+   * Returns the cache control
+   *
+   * @return string
+   */
+  public function getCacheControl()
+  {
+    return $this->getOption('cache_control');
+  }
+
+  /**
+   * Returns the cache max age
+   *
+   * @return integer
+   */
+  public function getCacheMaxAge()
+  {
+    return $this->getOption('cache_max_age');
+  }
+
+  /**
+   * Fixes filename for Internet Explorer. Converts the Utf-8 name to
+   * windows-1250 charset
    *
    * @param string $fileName
    * @param string $inputEncoding
-   * @return string string
+   * @return string The fixed filename
    */
-  protected function fixFilenameForInternetExplorer($fileName, $inputEncoding = 'UTF-8')
+  protected function fixFilename($fileName, $inputEncoding = 'UTF-8')
   {
-    if(isset($_SERVER['HTTP_USER_AGENT']) && function_exists('iconv'))
+    $userAgent = $this->getRequest()->getHttpHeader('USER_AGENT');
+    if($userAgent && function_exists('iconv') && preg_match('|MSIE\s*[1-8]|', $userAgent))
     {
-      if(preg_match("|MSIE\s*[1-8]|", $_SERVER['HTTP_USER_AGENT']))
-      {
-        $fileName = iconv($inputEncoding, 'windows-1250', $fileName);
-      }
+      $fileName = iconv($inputEncoding, 'windows-1250', $fileName);
     }
     return $fileName;
   }
 
   /**
-   * Logs message using Sift logger 
+   * Sets the response
    *
-   * @param string $message string Message to log
+   * @param sfWebResponse $response
+   * @return sfHttpDownload
    */
-  protected function log($message)
+  public function setResponse(sfWebResponse $response)
   {
-    if(sfConfig::get('sf_logging_enabled'))
+    $this->response = $response;
+    return $this;
+  }
+
+  /**
+   * Returns the response
+   *
+   * @return sfWebResponse
+   */
+  public function getResponse()
+  {
+    return $this->response;
+  }
+
+  /**
+   * Sets the request
+   *
+   * @param sfWebRequest $request
+   * @return sfHttpDownload
+   */
+  public function setRequest(sfWebRequest $request)
+  {
+    $this->request = $request;
+    return $this;
+  }
+
+  /**
+   * Returns the request
+   *
+   * @return sfRequest|null
+   */
+  public function getRequest()
+  {
+    return $this->request;
+  }
+
+  /**
+   * Sets the event dispatcher
+   *
+   * @param sfEventDispatcher $dispatcher
+   * @return sfHttpDownload
+   */
+  public function setEventDispatcher(sfEventDispatcher $dispatcher = null)
+  {
+    $this->dispatcher = $dispatcher;
+    return $this;
+  }
+
+  /**
+   * Dispatches event using the event dispatcher
+   *
+   * @param string $eventName
+   * @param array $parameters Array of parameters for the event
+   */
+  protected function dispatchEvent($eventName, $parameters = array())
+  {
+    if(!$this->dispatcher)
     {
-      sfLogger::getInstance()->info(sprintf('{sfHttpDownload} %s', $message));
+      return;
     }
+
+    if(!isset($parameters['download']))
+    {
+      $parameters['download'] = $this;
+    }
+
+    $this->dispatcher->notify(new sfEvent($eventName, $parameters));
+  }
+
+  /**
+   * Returns the event dispatcher
+   *
+   * @return sfEventDispatcher|null
+   */
+  public function getEventDispatcher()
+  {
+    return $this->dispatcher;
+  }
+
+  /**
+   * Sets the logger
+   *
+   * @param sfILogger $logger
+   * @return sfHttpDownload
+   */
+  public function setLogger(sfILogger $logger = null)
+  {
+    $this->logger = $logger;
+    return $this;
+  }
+
+  /**
+   * Returns the logger
+   *
+   * @return sfILogger|null
+   */
+  public function getLogger()
+  {
+    return $this->logger;
+  }
+
+  /**
+   * Logs the message
+   *
+   * @param string $message The message to log
+   * @param integer $level The log level
+   * @param array $context
+   * @return sfHttpDownload
+   */
+  protected function log($message, $level = sfILogger::INFO, array $context = array())
+  {
+    if($this->logger)
+    {
+      $this->logger->log(sprintf('{sfHttpDownload} %s', $message), $level, $context);
+    }
+    return $this;
+  }
+
+  /**
+   * Sleep for $seconds second(s)
+   *
+   * @param integer $seconds Number of second to sleep
+   */
+  protected function sleep($seconds = 1)
+  {
+    $this->log('Sleeping for {seconds}s', sfILogger::DEBUG, array('seconds' => $seconds));
+    usleep($seconds * 1000000);
   }
 
 }

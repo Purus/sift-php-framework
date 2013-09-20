@@ -27,16 +27,18 @@ class sfRenderingFilter extends sfFilter {
     // execute next filter
     $filterChain->execute();
 
-    // this is a fix for double response
-    if(!$this->isFirstCall())
-    {
-      //return;
-    }
-
-
-
     // get response object
     $response = $this->getContext()->getResponse();
+
+    // rethrow sfForm and|or sfFormField __toString() exceptions (see sfForm and sfFormField)
+    if(sfForm::hasToStringException())
+    {
+      throw sfForm::getToStringException();
+    }
+    elseif(sfFormField::hasToStringException())
+    {
+      throw sfFormField::getToStringException();
+    }
 
     // send headers + content
     if(sfView::RENDER_VAR != $this->getContext()->getController()->getRenderMode())
@@ -45,7 +47,6 @@ class sfRenderingFilter extends sfFilter {
       {
         sfLogger::getInstance()->info('{sfFilter} Render to client');
       }
-
       $response->send();
     }
   }
