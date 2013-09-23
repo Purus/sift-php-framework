@@ -68,3 +68,9 @@ $b->setHttpHeader('Range', 'I-WANT_TO_HACK-THIS-SITE')
   ->with('response')->begin()
     ->isStatusCode(416)
   ->end();
+
+// custom etag
+$b->get('/download/etag')
+  ->with('response')->begin()
+    ->isHeader('Etag', 'THIS-IS-AN-ETAG')
+  ->end();

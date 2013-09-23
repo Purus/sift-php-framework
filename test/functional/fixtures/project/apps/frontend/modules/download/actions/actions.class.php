@@ -26,4 +26,12 @@ class downloadActions extends sfActions
     ));
   }
 
+  public function executeEtag()
+  {
+    return $this->downloadFile(sfConfig::get('sf_data_dir').'/email/files/foo.pdf', array(
+      'allow_cache' => true,
+      'etag' => 'THIS-IS-AN-ETAG'
+    ));
+  }
+
 }

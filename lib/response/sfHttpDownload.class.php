@@ -89,6 +89,13 @@ class sfHttpDownload extends sfConfigurable implements sfIEventDispatcherAware, 
   protected $lastModified = 0;
 
   /**
+   * Etag
+   *
+   * @var string
+   */
+  protected $etag;
+
+  /**
    * Is this a range request?
    *
    * @var boolean
@@ -131,6 +138,13 @@ class sfHttpDownload extends sfConfigurable implements sfIEventDispatcherAware, 
   protected $request;
 
   /**
+   * Aborted flag
+   *
+   * @var boolean
+   */
+  protected $aborted = false;
+
+  /**
    * Valid options
    *
    * @var array
@@ -144,6 +158,7 @@ class sfHttpDownload extends sfConfigurable implements sfIEventDispatcherAware, 
     'allow_cache',
     'cache_control',
     'cache_max_age',
+    'etag',
     'content_type', 'mime' // mime is for BC
   );
 
@@ -294,8 +309,12 @@ class sfHttpDownload extends sfConfigurable implements sfIEventDispatcherAware, 
 
     if($this->allowCache())
     {
-      $etag = $this->getEtag() ? $this->getEtag() : $this->generateETag();
-      $headers['ETag'] = $etag;
+      // etag
+      if(($etag = $this->getEtag()) !== false)
+      {
+        $etag = $etag ? $etag : $this->generateETag();
+        $headers['ETag'] = $etag;
+      }
 
       $isCached = false;
       // timestamp
@@ -549,10 +568,6 @@ class sfHttpDownload extends sfConfigurable implements sfIEventDispatcherAware, 
 
       echo fread($handle, $chunkSize);
       flush();
-      if(!sfConfig::get('sf_test'))
-      {
-        ob_flush();
-      }
 
       $this->bandwidth += $chunkSize;
       $this->remaining -= $chunkSize;
