@@ -16,6 +16,11 @@
 class sfStringStreamWrapper extends sfStreamWrapper {
 
   /**
+   * Name of stream protocol - string://
+   */
+  const PROTOCOL = 'string';
+
+  /**
    * The string data
    *
    * @var string
@@ -41,9 +46,12 @@ class sfStringStreamWrapper extends sfStreamWrapper {
    */
   public static function register($protocol = null, $flags = null)
   {
-    return stream_wrapper_register($protocol ? $protocol : 'string', 'sfStringStreamWrapper', $flags);
+    return stream_wrapper_register($protocol ? $protocol : self::PROTOCOL, __CLASS__, $flags);
   }
 
+  /**
+   * Contructor
+   */
   public function __construct()
   {
     $this->length = 0;

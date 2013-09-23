@@ -832,6 +832,7 @@ class sfCoreAutoload {
       'sfshutdownscheduler' => 'util/sfShutdownScheduler.class.php',
       'sftoolkit' => 'util/sfToolkit.class.php',
       'sfuuid' => 'util/sfUuid.class.php',
+      'sffilesafestreamwrapper' => 'util/stream/sfFileSafeStream.class.php',
       'sfistreamwrapper' => 'util/stream/sfIStreamWrapper.interface.php',
       'sfstreamwrapper' => 'util/stream/sfStreamWrapper.class.php',
       'sfstringstreamwrapper' => 'util/stream/sfStringStreamWrapper.class.php',
