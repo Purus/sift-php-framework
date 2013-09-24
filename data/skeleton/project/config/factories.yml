@@ -16,4 +16,5 @@ all:
 #
   storage:
     class: sfSessionStorage
-    arguments: [ { session_name: sessionID } ]
+    arguments:
+     - { auto_start: true, session_name: sessionID, session_cache_limiter: nocache }

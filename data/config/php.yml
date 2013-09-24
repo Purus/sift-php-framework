@@ -8,6 +8,9 @@ set:
   session.use_only_cookies:    true
   session.use_trans_sid:       false
   session.gc_maxlifetime:      %SF_TIMEOUT%
+  # disable cache limiter
+  # cache limiter is to be set via factories.yml under the storage
+  session.cache_limiter:       ''
   display_errors:              %SF_DEBUG%
   unserialize_callback_func:   spl_autoload_call
   zlib.output_compression:     false

@@ -18,6 +18,7 @@
  * * session_cookie_domain - Cookie domain, for example 'www.example.com'. To make cookies visible on all subdomains then the domain must be prefixed with a dot like '.example.com'. Default value is taken from session_get_cookie_params();
  * * session_cookie_secure - If true cookie will only be sent over secure connections. Default value is taken from session_get_cookie_params();
  * * session_cookie_httponly - If set to true then PHP will attempt to send the httponly flag when setting the session cookie. Default value is taken from session_get_cookie_params();
+ * * session_cache_limiter: - The cache limiter setting. see session_cache_limiter()
  *
  * @package    Sift
  * @subpackage storage
@@ -54,7 +55,7 @@ class sfSessionStorage extends sfStorage {
       'session_cookie_domain'   => $cookieDefaults['domain'],
       'session_cookie_secure'   => $cookieDefaults['secure'],
       'session_cookie_httponly' => isset($cookieDefaults['httponly']) ? $cookieDefaults['httponly'] : false,
-      'session_cache_limiter'   => null,
+      'session_cache_limiter'   => '',
     ), $defaultOptions);
     return $options;
   }
@@ -80,8 +81,12 @@ class sfSessionStorage extends sfStorage {
     $domain   = $this->getOption('session_cookie_domain');
     $secure   = $this->getOption('session_cookie_secure');
     $httpOnly = $this->getOption('session_cookie_httponly');
+    $limiter  = $this->getOption('session_cache_limiter');
 
     session_set_cookie_params($lifetime, $path, $domain, $secure, $httpOnly);
+
+    // set cache limiter
+    session_cache_limiter($limiter);
 
     if($this->getOption('auto_start'))
     {

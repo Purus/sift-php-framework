@@ -31,6 +31,8 @@ default:
   # session storage
   storage:
     class: sfSessionStorage
+    arguments:
+     - { session_cache_limiter: nocache }
 
   database_manager:
     class: sfDatabaseManager
