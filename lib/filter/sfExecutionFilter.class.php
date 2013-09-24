@@ -105,9 +105,6 @@ class sfExecutionFilter extends sfFilter
     }
 
     $this->executeView($actionInstance->getModuleName(), $actionInstance->getActionName(), $viewName, $actionInstance->getVarHolder()->getAll());
-    
-
-    // $filterChain->execute();
   }
 
   /**
