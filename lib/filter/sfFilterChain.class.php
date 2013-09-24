@@ -60,13 +60,25 @@ class sfFilterChain
 
     if($this->index < count($this->chain))
     {
-      if(sfConfig::get('sf_logging_enabled'))
+      // execute if not disabled
+      if(!$this->chain[$this->index]->isDisabled($this->context->getModuleName(), $this->context->getActionName()))
       {
-        sfLogger::getInstance()->info(sprintf('{sfFilter} Executing filter "%s".', get_class($this->chain[$this->index])));
+        if(sfConfig::get('sf_logging_enabled'))
+        {
+          sfLogger::getInstance()->info(sprintf('{sfFilter} Executing filter "%s".', get_class($this->chain[$this->index])));
+        }
+        // execute the next filter
+        $this->chain[$this->index]->execute($this);
       }
-
-      // execute the next filter
-      $this->chain[$this->index]->execute($this);
+      else
+      {
+        if(sfConfig::get('sf_logging_enabled'))
+        {
+          sfLogger::getInstance()->info(sprintf('{sfFilter} Skipping execution of filter "%s".', get_class($this->chain[$this->index])));
+        }
+        // call itself again
+        $this->execute();
+      }
     }
   }
 
@@ -78,9 +90,10 @@ class sfFilterChain
    */
   public function hasFilter($class)
   {
+    $class = strtolower($class);
     foreach($this->chain as $filter)
     {
-      if(get_class($filter) == $class)
+      if(strtolower(get_class($filter)) == $class)
       {
         return true;
       }

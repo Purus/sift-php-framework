@@ -1,7 +1,7 @@
 <?php
 
 class sfDummyApplication extends sfApplication {
-  
+
 }
 
 class sfContext {
@@ -16,7 +16,7 @@ class sfContext {
   public $storage;
   public $i18n;
   public $serviceContainer;
-  
+
   static public function getInstance()
   {
     if(!isset(self::$instance))
@@ -33,6 +33,11 @@ class sfContext {
   }
 
   public function getModuleName()
+  {
+    return '';
+  }
+
+  public function getActionName()
   {
     return '';
   }

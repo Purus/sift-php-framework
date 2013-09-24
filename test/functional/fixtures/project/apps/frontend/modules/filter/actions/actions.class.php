@@ -11,4 +11,10 @@ class filterActions extends sfActions
   {
     $this->forward('filter', 'index');
   }
+
+  public function executeDisabled()
+  {
+    return $this->renderText('Disabled');
+  }
+
 }

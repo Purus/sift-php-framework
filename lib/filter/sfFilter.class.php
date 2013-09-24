@@ -14,9 +14,28 @@
  */
 abstract class sfFilter implements sfIFilter
 {
-  protected
-    $parameterHolder = null,
-    $context         = null;
+  /**
+   * Default parameters
+   *
+   * @var array
+   */
+  protected $defaultParameters = array(
+    'disabled_for' => array()
+  );
+
+  /**
+   * The context
+   *
+   * @var sfContext
+   */
+  protected $context;
+
+  /**
+   * The parameter holder
+   *
+   * @var sfFlatParameterHolder
+   */
+  protected $parameterHolder;
 
   /**
    * Array of called filters
@@ -27,11 +46,10 @@ abstract class sfFilter implements sfIFilter
 
   /**
    * Constructs the filter
-   *
    */
   public function __construct()
   {
-    $this->parameterHolder = new sfParameterHolder();
+    $this->parameterHolder = new sfFlatParameterHolder();
   }
 
   /**
@@ -44,6 +62,7 @@ abstract class sfFilter implements sfIFilter
   {
     $this->context = $context;
     $this->parameterHolder->clear();
+    $this->parameterHolder->add($this->defaultParameters);
     $this->parameterHolder->add($parameters);
   }
 
@@ -67,6 +86,48 @@ abstract class sfFilter implements sfIFilter
   }
 
   /**
+   * Is this filter disabled? Takes the parameter `disabled_for` and checks
+   * the current module/action. See the docs for possible values for `disabled_for`.
+   *
+   * @param string $module Module name
+   * @param string $action Action name
+   * @return boolean
+   */
+  public function isDisabled($module, $action)
+  {
+    $disabledFor = $this->getParameter('disabled_for', array());
+
+    if(!is_array($disabledFor))
+    {
+      $disabledFor = array($disabledFor);
+    }
+
+    $isDisabled = false;
+    foreach($disabledFor as $disabled)
+    {
+      // handle special cases
+      if(in_array($disabled, array('*', '*/*')))
+      {
+        $isDisabled = true;
+        break;
+      }
+
+      // intentionally
+      @list($disabledModule, $disabledAction) = explode('/', $disabled);
+
+      if($disabledModule == $module &&
+         // action is disabled, or action is *
+         ($disabledAction == $action || $disabledAction == '*'))
+      {
+        $isDisabled = true;
+        break;
+      }
+    }
+
+    return $isDisabled;
+  }
+
+  /**
    * Retrieves the current application context.
    *
    * @return sfContext The current sfContext instance
@@ -79,7 +140,7 @@ abstract class sfFilter implements sfIFilter
   /**
    * Gets the parameter holder for this object.
    *
-   * @return sfParameterHolder A sfParameterHolder instance
+   * @return sfFlatParameterHolder A sfFlatParameterHolder instance
    */
   public function getParameterHolder()
   {
@@ -93,17 +154,14 @@ abstract class sfFilter implements sfIFilter
    *
    * <code>$this->getParameterHolder()->get()</code>
    *
-   * @param string The key name
-   * @param string The default value
-   * @param string The namespace to use
-   *
+   * @param string $name The key name
+   * @param string $default The default value
    * @return string The value associated with the key
-   *
-   * @see sfParameterHolder
+   * @see sfFlatParameterHolder
    */
-  public function getParameter($name, $default = null, $ns = null)
+  public function getParameter($name, $default = null)
   {
-    return $this->parameterHolder->get($name, $default, $ns);
+    return $this->parameterHolder->get($name, $default);
   }
 
   /**
@@ -113,16 +171,13 @@ abstract class sfFilter implements sfIFilter
    *
    * <code>$this->getParameterHolder()->has()</code>
    *
-   * @param string The key name
-   * @param string The namespace to use
-   *
+   * @param string $name The key name
    * @return boolean true if the given key exists, false otherwise
-   *
-   * @see sfParameterHolder
+   * @see sfFlatParameterHolder
    */
-  public function hasParameter($name, $ns = null)
+  public function hasParameter($name)
   {
-    return $this->parameterHolder->has($name, $ns);
+    return $this->parameterHolder->has($name);
   }
 
   /**
@@ -132,14 +187,12 @@ abstract class sfFilter implements sfIFilter
    *
    * <code>$this->getParameterHolder()->set()</code>
    *
-   * @param string The key name
-   * @param string The value
-   * @param string The namespace to use
-   *
-   * @see sfParameterHolder
+   * @param string $name The key name
+   * @param string $value The value
+   * @see sfFlatParameterHolder
    */
-  public function setParameter($name, $value, $ns = null)
+  public function setParameter($name, $value)
   {
-    return $this->parameterHolder->set($name, $value, $ns);
+    return $this->parameterHolder->set($name, $value);
   }
 }

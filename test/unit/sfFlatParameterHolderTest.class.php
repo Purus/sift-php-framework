@@ -1,7 +1,7 @@
 <?php
 
 // helper class to test parameter holder proxies
-class sfParameterHolderProxyTest
+class sfFlatParameterHolderProxyTest
 {
   protected $t = null;
 
@@ -21,7 +21,7 @@ class sfParameterHolderProxyTest
 
     $t->diag(ucfirst($methodName).' holder proxy');
 
-    $t->isa_ok($object->$holderMethod(), 'sfParameterHolder', "->$holderMethod() returns a parameter holder instance");
+    $t->isa_ok($object->$holderMethod(), 'sfFlatParameterHolder', "->$holderMethod() returns a parameter holder instance");
     $t->is($object->$hasMethod('foo'), false, "->$hasMethod() returns false if the $methodName does not exist");
     $t->is($object->$getMethod('foo', 'default'), 'default', "->$getMethod() returns the default value if $methodName does not exist");
     $object->$setMethod('foo', 'bar');
@@ -29,11 +29,8 @@ class sfParameterHolderProxyTest
     $t->is($object->$hasMethod('foo'), $object->$holderMethod()->has('foo'), "->$hasMethod() is a proxy method");
     $t->is($object->$getMethod('foo'), 'bar', "->$getMethod() returns the value of the $methodName");
     $t->is($object->$getMethod('foo'), $object->$holderMethod()->get('foo'), "->$getMethod() is a proxy method");
-    $t->is($object->$getMethod('foo', 'default'), 'bar', "->$getMethod() does not return the default value if the $methodName exists");
-    $object->$setMethod('foo1', 'bar1', 'mynamespace');
+    $t->is($object->$getMethod('foo', 'default'), 'bar', "->$getMethod() does not return the default value if the $methodName exists");    
     $t->is($object->$hasMethod('foo1'), false, "->$hasMethod() takes a namespace as its second parameter");
-    $t->is($object->$hasMethod('foo1', 'mynamespace'), true, "->$hasMethod() takes a namespace as its second parameter");
-    $t->is($object->$getMethod('foo1', 'default', 'mynamespace'), 'bar1', "->$getMethod() takes a namespace as its third parameter");
     $object->$setMethod('foo2', 'bar2');
     $object->$holderMethod()->set('foo3', 'bar3');
     $t->is($object->$getMethod('foo2'), $object->$holderMethod()->get('foo2'), "->$setMethod() is a proxy method");

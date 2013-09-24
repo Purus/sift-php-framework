@@ -6,6 +6,9 @@ security:  ~
 # generally, you will want to insert your own filters here
 myFilter:
   class: myFilter
+  param:
+    disabled_for:
+      - filter/disabled
 
 cache:     ~
 common:    ~

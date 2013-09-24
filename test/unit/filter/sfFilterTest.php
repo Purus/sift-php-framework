@@ -3,7 +3,7 @@
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 require_once($_test_dir.'/unit/sfContextMock.class.php');
 
-$t = new lime_test(20, new lime_output_color());
+$t = new lime_test(18, new lime_output_color());
 
 class myFilter extends sfFilter
 {
@@ -44,6 +44,6 @@ $filter->initialize($context);
 $t->is($filter->isFirstCall('beforeExecution'), false, '->isFirstCall() returns false if this is not the first call with this argument');
 
 // parameter holder proxy
-require_once($_test_dir.'/unit/sfParameterHolderTest.class.php');
-$pht = new sfParameterHolderProxyTest($t);
+require_once($_test_dir.'/unit/sfFlatParameterHolderTest.class.php');
+$pht = new sfFlatParameterHolderProxyTest($t);
 $pht->launchTests($filter, 'parameter');

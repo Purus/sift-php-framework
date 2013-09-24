@@ -53,21 +53,6 @@ if(isset($fixtures))
 
     $con->exec('CREATE TABLE '.$table);
   }
-
-  // load fixtures
-
-  /*
-  $data = new sfPDoData();
-  if (is_array($fixtures))
-  {
-    $data->loadDataFromArray($fixtures);
-  }
-  else
-  {
-    $data->loadData(sfConfig::get('sf_data_dir').'/'.$fixtures);
-  }
-   *
-   */
 }
 
 return true;

@@ -1,35 +1,10 @@
 <?php
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
+require_once($_test_dir.'/unit/sfContextMock.class.php');
 
 $t = new lime_test(32, new lime_output_color());
 
-class sfContext
-{
-  public $response = null;
-  public $request = null;
-  static public $instance = null;
-
-  public static function getInstance()
-  {
-    if (!isset(self::$instance))
-    {
-      self::$instance = new sfContext();
-    }
-
-    return self::$instance;
-  }
-
-  public function getRequest()
-  {
-    return $this->request;
-  }
-
-  public function getResponse()
-  {
-    return $this->response;
-  }
-}
 
 class myRequest
 {
