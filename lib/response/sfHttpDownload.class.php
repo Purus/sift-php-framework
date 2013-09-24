@@ -8,8 +8,60 @@
  */
 
 /**
- * sfHttpDonwload provides methods for downloading files over network.
+ * sfHttpDownload provides methods for downloading files over network.
  * Supports section downloading.
+ *
+ * ### Available options
+ *
+ * - `use_resume`: [boolean] Use download resume?
+ * - `buffer_size`: [integer] Buffer size for file reasing in bytes (default to 2MB)
+ * - `cache_control`: [string] The available controls are: `public`, `private`, `private_no_expire`, `nocache`
+ * - `client_lifetime`: [integer] Max age of cache on the client side in seconds
+ * - `vary`: [array] Vary headers
+ * - `etag`: [string|false] Custom etag, if false Etag will be disabled
+ * - `speed_limit`: [integer|false] False to disable or value in MB/s
+ * - `content_disposition`: [string]: Disposition either `attachment` or `inline`
+ * - `filename`: [string]: Name of the filename
+ *
+ * ### Dispatched events
+ *
+ * |---------------------------------------------------------------------------
+ * | Event name              | When dispatched           | Parameters
+ * |---------------------------------------------------------------------------
+ * | `download.before_send`  | before sending the file   | downloader, response
+ * | `download.finished`     | when succesfully finished | downloader
+ * | `download.aborted`      | when download aborted     | downloader
+ *
+ * 1) **`download.before_send`**
+ *
+ * Dispatched before sending the file (data).
+ *
+ * ## Parameters
+ *
+ * - **download**: sfHttpDownload (current download instance)
+ * - **response**: sfWebResponse (current web response instance)
+ *
+ * 2) **`download.finished`**
+ *
+ * Dispatched when file was downloaded successfully.
+ *
+ * ## Parameters
+ *
+ *  - download: sfHttpDownload (current download instance)
+ *
+ * 3) **`download.aborted`**
+ *
+ * Dispatched when user aborted the download.
+ *
+ * ## Parameters
+ *
+ * - download: sfHttpDownload (current download instance)
+ *
+ * ### Warning
+ *
+ * If you want to track the finished downloads do not use
+ * resume. When using resume, the `download.aborted` events are fired
+ * for all of the downloaded chunks!
  *
  * @package    Sift
  * @subpackage response
@@ -27,14 +79,25 @@ class sfHttpDownload extends sfConfigurable implements sfIEventDispatcherAware, 
   const DOWNLOAD_INLINE = 'inline';
 
   /**
-   * Public cache
+   * Permits caching by proxies and the client
+   *
    */
-  const CACHE_PUBLIC = 'public';
+  const CACHE_CONTROL_PUBLIC = 'public';
 
   /**
-   * Private cache
+   * Disallow caching by proxies and permits the client to cache the contents
    */
-  const CACHE_PRIVATE = 'private';
+  const CACHE_CONTROL_PRIVATE = 'private';
+
+  /**
+   * Download may not be cached.
+   */
+  const CACHE_CONTROL_PRIVATE_NO_EXPIRE = 'private_no_expire';
+
+  /**
+   * Disallow any client/proxy caching
+   */
+  const CACHE_CONTROL_NO_CACHE = 'nocache';
 
   /**
    * Default options
@@ -42,18 +105,19 @@ class sfHttpDownload extends sfConfigurable implements sfIEventDispatcherAware, 
    * @var array
    */
   protected $defaultOptions = array(
-     // Use download resume?
     'use_resume' => true,
     // Buffer size in bytes (default to 2MB)
-    'buffer_size' => 2000000,
-    // Allow clients to cache the download?
-    'allow_cache' => true,
+    'buffer_size' => 2097152,
+    // Cache control
+    'cache_control' => self::CACHE_CONTROL_PUBLIC,
+    // Max age of cache on the client side in seconds
+    'client_lifetime' => 0,
+    // vary headers
+    'vary' => array(),
+    // Custom etag, if false Etag will be disabled
+    'etag' => null,
     // Speed limit? False to disable or value in MB/s
     'speed_limit' => false,
-    // Cache control (public, private)
-    'cache_control' => self::CACHE_PUBLIC,
-    // Max age of cache on the client side in seconds
-    'cache_max_age' => 3600,
     // content disposition of the download
     'content_disposition' => self::DOWNLOAD_ATTACHMENT
   );
@@ -87,13 +151,6 @@ class sfHttpDownload extends sfConfigurable implements sfIEventDispatcherAware, 
    * @var integer
    */
   protected $lastModified = 0;
-
-  /**
-   * Etag
-   *
-   * @var string
-   */
-  protected $etag;
 
   /**
    * Is this a range request?
@@ -155,9 +212,9 @@ class sfHttpDownload extends sfConfigurable implements sfIEventDispatcherAware, 
     'filename',
     'use_resume',
     'buffer_size',
-    'allow_cache',
     'cache_control',
-    'cache_max_age',
+    'client_lifetime',
+    'vary',
     'etag',
     'content_type', 'mime' // mime is for BC
   );
@@ -182,7 +239,7 @@ class sfHttpDownload extends sfConfigurable implements sfIEventDispatcherAware, 
   }
 
   /**
-   * Setups the downloader
+   * Setups the downloader.
    *
    */
   public function setup()
@@ -234,9 +291,14 @@ class sfHttpDownload extends sfConfigurable implements sfIEventDispatcherAware, 
       $this->setCacheControl($options['cache_control']);
     }
 
-    if(isset($options['cache_max_age']))
+    if(isset($options['client_lifetime']))
     {
-      $this->setCacheMaxAge($options['cache_max_age']);
+      $this->setClientLifetime($options['client_lifetime']);
+    }
+
+    if(isset($options['vary']))
+    {
+      $this->setVary($options['vary']);
     }
   }
 
@@ -268,91 +330,159 @@ class sfHttpDownload extends sfConfigurable implements sfIEventDispatcherAware, 
    */
   protected function prepareResponse()
   {
-    $headers = array();
     $this->response->clearHttpHeaders();
 
-    $statusCode = 200;
-    $isHeaderOnly = false;
+    switch(($cacheControl = $this->getCacheControl()))
+    {
+      // cache is allowed for this control types:
+      case self::CACHE_CONTROL_PUBLIC:
+      case self::CACHE_CONTROL_PRIVATE:
+      case self::CACHE_CONTROL_PRIVATE_NO_EXPIRE:
 
-    $filename = $this->getFilename();
-    $headers['Content-Disposition'] = sprintf('%s; filename="%s"', $this->getContentDisposition(),
-        $this->fixFilename($filename ? $filename : $this->guessFilename()));
+        $isCached = false;
+
+        if(($modifiedSince = $this->getRequest()->getHttpHeader('IF_MODIFIED_SINCE')))
+        {
+          if($this->lastModified == strtotime(current(explode(';', $modifiedSince))))
+          {
+            $isCached = true;
+          }
+        }
+
+        if(($etag = $this->getEtag()) !== false && ($noneMatch = $this->getRequest()->getHttpHeader('IF_NONE_MATCH')))
+        {
+          if(!$etag)
+          {
+            $etag = $this->generateETag();
+          }
+          $isCached = $this->compareAsterisk($noneMatch, $etag);
+        }
+
+        // the download is cached on client side, return
+        if($isCached)
+        {
+          $this->log('Download is cached, setting 304 (not modified) header.', sfILogger::INFO);
+          $this->response->setStatusCode(304);
+          $this->response->setHeaderOnly(true);
+          return;
+        }
+
+      break;
+    }
+
+    $this->response->setHttpHeader('Content-Disposition',
+        sprintf('%s; filename="%s"', $this->getContentDisposition(), $this->fixFilename($this->getFilename() ? $this->getFilename() : $this->guessFilename())));
 
     if(!($contentType = $this->getContentType()))
     {
-      if($this->file)
-      {
-        $contentType = sfMimeType::getTypeFromFile($this->file);
-      }
-      elseif($this->data)
-      {
-        $contentType = sfMimeType::getTypeFromString($this->data);
-      }
-      elseif($filename)
-      {
-        $contentType = sfMimeType::getTypeFromExtension($filename);
-      }
+      $contentType = $this->guessContentType();
     }
 
-    $headers['Content-Type'] = $contentType;
+    $this->response->setHttpHeader('Content-Type', $contentType);
 
     if($this->useResume())
     {
-      $headers['Accept-Ranges'] = 'bytes';
-    }
-    else
-    {
-      $headers['Accept-Ranges'] = 'none';
+      $this->response->setHttpHeader('Accept-Ranges', 'bytes');
     }
 
-    $headers['Cache-Control'] = sprintf('%s, must-revalidate, max-age=%s', $this->getCacheControl(), $this->getCacheMaxAge());
+    $lifetime = $this->getClientLifetime();
 
-    if($this->allowCache())
+    // cache control
+    switch($cacheControl)
     {
-      // etag
-      if(($etag = $this->getEtag()) !== false)
-      {
-        $etag = $etag ? $etag : $this->generateETag();
-        $headers['ETag'] = $etag;
-      }
+      // Public cache control:
+      // Expires: (sometime in the future, according to client_lifetime)
+      // Cache-Control: public, no-transform, max-age=(sometime in the future, according to client_lifetime)
+      // Last-Modified: (the timestamp of when the download was last saved)
+      // Etag: etag set or generated etag from the downloaded file or data
+      case self::CACHE_CONTROL_PUBLIC:
 
-      $isCached = false;
-      // timestamp
-      if(($modifiedSince = $this->getRequest()->getHttpHeader('IF_MODIFIED_SINCE')))
-      {
-        if($this->lastModified == strtotime(current(explode(';', $modifiedSince))))
+        $this->response->addCacheControlHttpHeader('public, no-transform, must-revalidate');
+
+        if($lifetime)
         {
-          $isCached = true;
+          $this->response->addCacheControlHttpHeader('max-age', $lifetime);
+          $this->response->addCacheControlHttpHeader('s-maxage', $lifetime);
+          $this->response->setHttpHeader('Expires', $this->response->getDate(time() + $lifetime));
         }
-      }
 
-      // Etag
-      if(($noneMatch = $this->getRequest()->getHttpHeader('IF_NONE_MATCH')))
-      {
-        $isCached = $this->compareAsterisk($noneMatch, $etag);
-      }
+        $this->response->setHttpHeader('Last-Modified', $this->response->getDate($this->getLastModified()));
 
-      $headers['Pragma'] = 'cache';
-      $headers['Last-Modified'] = $this->response->getDate($this->getLastModified());
+        if(($etag = $this->getEtag()) !== false)
+        {
+          $this->response->setHttpHeader('ETag', $etag ? $etag : $this->generateETag());
+        }
 
-      if($isCached)
-      {
-        // clear other headers
-        $headers = array();
-        $statusCode = 304;
-        $isHeaderOnly = true;
-      }
+      break;
+
+      // Private cache control:
+      // Expires: 10 years before now
+      // Cache-Control: private, no-transform, must-revalidate, proxy-revalidate, max-age=(client_lifetime), pre-check=(client_lifetime)
+      // Last-Modified: (the timestamp of when the download was last modified)
+      // Etag: etag set or generated etag from the downloaded file or data
+      case self::CACHE_CONTROL_PRIVATE:
+
+        $this->response->addCacheControlHttpHeader('private, no-transform, must-revalidate, proxy-revalidate');
+
+        if($lifetime)
+        {
+          $this->response->addCacheControlHttpHeader('max-age', $lifetime);
+          $this->response->addCacheControlHttpHeader('smax-age', $lifetime);
+          $this->response->addCacheControlHttpHeader('pre-check', $lifetime);
+        }
+
+        $this->response->setHttpHeader('Expires', $this->response->getDate(strtotime('-10 years')));
+        $this->response->setHttpHeader('Last-Modified', $this->response->getDate($this->getLastModified()));
+
+        if(($etag = $this->getEtag()) !== false)
+        {
+          $this->response->setHttpHeader('ETag', $etag ? $etag : $this->generateETag());
+        }
+
+      break;
+
+      // Cache-Control: private, no-transform, must-revalidate, max-age=(client_lifetime in the future), pre-check=(client_lifetime in the future)
+      // Last-Modified: (the timestamp of when the download was last modified)
+      case self::CACHE_CONTROL_PRIVATE_NO_EXPIRE:
+
+        $this->response->addCacheControlHttpHeader('private, no-transform, must-revalidate, proxy-revalidate');
+
+        if($lifetime)
+        {
+          $this->response->addCacheControlHttpHeader('max-age', $lifetime);
+          $this->response->addCacheControlHttpHeader('smax-age', $lifetime);
+          $this->response->addCacheControlHttpHeader('pre-check', $lifetime);
+        }
+
+        if(($etag = $this->getEtag()) !== false)
+        {
+          $this->response->setHttpHeader('ETag', $etag ? $etag : $this->generateETag());
+        }
+
+        $this->response->setHttpHeader('Last-Modified', $this->response->getDate($this->getLastModified()));
+
+      break;
+
+      // Expires: 10 years before now
+      // Cache-Control: no-store, no-cache, must-revalidate, proxy-revalidate, post-check=0, pre-check=0
+      // Etag: is not set
+      case self::CACHE_CONTROL_NO_CACHE:
+
+        $this->response->addCacheControlHttpHeader('no-store, no-cache, no-transform, must-revalidate, proxy-revalidate, post-check=0, pre-check=0');
+        $this->response->setHttpHeader('Expires', $this->response->getDate(strtotime('-10 years')));
+
+      break;
+
     }
-    else
-    {
-      $headers['Pragma'] = 'no-cache';
-    }
 
-    $this->response->setStatusCode($statusCode);
-    $this->response->isHeaderOnly($isHeaderOnly);
-    foreach($headers as $header => $value)
+    // vary headers
+    // This causes most of browsers
+    if(($vary = $this->getVary()))
     {
-      $this->response->setHttpHeader($header, $value);
+      foreach($vary as $varyHeader)
+      {
+        $this->response->addVaryHttpHeader($varyHeader);
+      }
     }
   }
 
@@ -364,7 +494,7 @@ class sfHttpDownload extends sfConfigurable implements sfIEventDispatcherAware, 
    */
   public function setETag($etag)
   {
-    $this->etag = $etag;
+    $this->setOption('etag', $etag);
     return $this;
   }
 
@@ -375,7 +505,33 @@ class sfHttpDownload extends sfConfigurable implements sfIEventDispatcherAware, 
    */
   public function getEtag()
   {
-    return $this->etag;
+    return $this->getOption('etag');
+  }
+
+  /**
+   * Set the vary headers
+   *
+   * @param array|string $vary Vary headers
+   * @return sfHttpDownload
+   */
+  public function setVary($vary)
+  {
+    if(!is_array($vary))
+    {
+      $vary = array($vary);
+    }
+    $this->setOption('vary', $vary);
+    return $this;
+  }
+
+  /**
+   * Returns the vary headers
+   *
+   * @return array
+   */
+  public function getVary()
+  {
+    return $this->getOption('vary');
   }
 
   /**
@@ -420,34 +576,25 @@ class sfHttpDownload extends sfConfigurable implements sfIEventDispatcherAware, 
   }
 
   /**
-   * Pre send. Dispatches an event `download.before_send` with parameters:
+   * Pre send
    *
-   *  * download: sfHttpDownload (current download instance)
+   * @return void
    */
   protected function preSend()
   {
-    $this->dispatchEvent('download.before_send');
+    $this->dispatchEvent('download.before_send', array('response' => $this->getResponse()));
     $this->log('Sending download.');
   }
 
   /**
-   * Post send. Dispatches events:
+   * Post send
    *
-   * `download.finished` when file was downloaded successfully with parameters:
-   *   * download: sfHttpDownload (current download instance)
-   *
-   * * `download.aborted` when user aborted the download with parameters:
-   *   * download: sfHttpDownload (current download instance)
-   *
-   * Warning: If you want to track the finished downloads do not use
-   * resume. When using resume, there are `download.aborted` events fired
-   * for the chunks!
-   *
+   * @return void
    */
   protected function postSend()
   {
     // something has been sent
-    if($this->bandwidth > 0)
+    if($this->getBandwidth() > 0 || $this->response->isHeaderOnly())
     {
       $this->log('Post send, connection status {status}', sfILogger::DEBUG, array('status' => connection_status()));
       if(!$this->aborted)
@@ -459,7 +606,7 @@ class sfHttpDownload extends sfConfigurable implements sfIEventDispatcherAware, 
       }
       else
       {
-        $this->log('Sending aborted by user.: '  . $this->remaining);
+        $this->log('Sending aborted by user.');
         $this->dispatchEvent('download.aborted', array(
           'range_request' => $this->isRangeRequest()
         ));
@@ -482,26 +629,21 @@ class sfHttpDownload extends sfConfigurable implements sfIEventDispatcherAware, 
         ($range = $this->getRequest()->getHttpHeader('RANGE')))
     {
       // this does not look like valid range
-      if(!preg_match('/^bytes=((\d*-\d*,? ?)+)$/', $range))
+      if(($range = $this->getStartEndPointsFromRange($range)) !== false)
       {
+        list($startPoint, $endPoint) = $range;
+      }
+      // invalid range
+      else
+      {
+        $this->log('Range request invalid "{range}".', sfILogger::WARNING, array(
+          'range' => $this->getRequest()->getHttpHeader('RANGE')
+        ));
+
+        $this->response->clearHttpHeaders();
         $this->response->setStatusCode(416);
         $this->response->setHttpHeader('Content-Range', sprintf('bytes */%s', $this->size));
-        $this->response->sendHttpHeaders();
-        return;
-      }
-
-      $range = explode('-', substr($range, strlen('bytes=')));
-      $startPoint = intval($range[0]);
-
-      if($range[1] > 0)
-      {
-        $endPoint = $range[1];
-      }
-
-      if($startPoint > $endPoint)
-      {
-        $this->response->setStatusCode(416);
-        $this->response->setHttpHeader('Content-Range', sprintf('bytes */%s', $this->size));
+        $this->response->setHeaderOnly(true);
         $this->response->sendHttpHeaders();
         return;
       }
@@ -546,10 +688,10 @@ class sfHttpDownload extends sfConfigurable implements sfIEventDispatcherAware, 
 
     if(($speedLimit = $this->limitSpeed()))
     {
-      $this->log('Limitting speed to {limit} MB/s', sfILogger::INFO, array('limit' => round($this->getBufferSize() / 1000 / 1000, 5)));
+      $this->log('Limitting speed to {limit}', sfILogger::INFO, array('limit' => $this->formatBytes($this->getBufferSize())));
     }
 
-    $this->log('Sending total {size} B', sfILogger::INFO, array('size' => $this->remaining));
+    $this->log('Sending total {size}', sfILogger::INFO, array('size' => $this->formatBytes($this->remaining)));
 
     $currentPosition = $startPoint;
     while(!feof($handle) && $currentPosition <= $endPoint)
@@ -572,7 +714,7 @@ class sfHttpDownload extends sfConfigurable implements sfIEventDispatcherAware, 
       $this->bandwidth += $chunkSize;
       $this->remaining -= $chunkSize;
 
-      $this->log('Sent {bytes} B', sfILogger::DEBUG, array('bytes' => $this->bandwidth));
+      $this->log('Sent {bytes} B', sfILogger::DEBUG, array('bytes' => $this->formatBytes($this->bandwidth)));
 
       // increment download point
       $currentPosition += $chunkSize;
@@ -623,8 +765,6 @@ class sfHttpDownload extends sfConfigurable implements sfIEventDispatcherAware, 
    */
   public function setFile($file)
   {
-    $file = realpath($file);
-
     if(!is_readable($file))
     {
       throw new sfFileException(sprintf('File "%s" does not exist or is not readable.', $file));
@@ -852,24 +992,6 @@ class sfHttpDownload extends sfConfigurable implements sfIEventDispatcherAware, 
   }
 
   /**
-   * Guesses the filename of the download
-   *
-   * @return string
-   */
-  protected function guessFilename()
-  {
-    if($this->file)
-    {
-      return basename($this->file);
-    }
-    else
-    {
-      // what is this?
-      return sprintf('download-%s.bin', time());
-    }
-  }
-
-  /**
    * Is range request?
    *
    * @return boolean
@@ -897,95 +1019,69 @@ class sfHttpDownload extends sfConfigurable implements sfIEventDispatcherAware, 
   }
 
   /**
-   * Generates the ETag
-   *
-   * @return string
-   */
-  protected function generateETag()
-  {
-    if($this->data)
-    {
-      $md5 = md5($this->data);
-    }
-    else
-    {
-      $fst = stat($this->file);
-      $md5 = md5($fst['mtime'] . '=' . $fst['size']);
-    }
-    return '"' . $md5 . '-' . crc32($md5) . '"';
-  }
-
-  /**
-   * Compare against an asterisk or check for equality
-   *
-   * @param string $variable key for the array
-   * @param string $compare string to compare
-   * @return boolean
-   */
-  protected function compareAsterisk($variable, $compare)
-  {
-    foreach(array_map('trim', explode(',', $variable)) as $request)
-    {
-      if($request === '*' || $request === $compare)
-      {
-        return true;
-      }
-    }
-    return false;
-  }
-
-  /**
-   * Whether to allow proxies to cache
+   * Sets cache control
    *
    * If set to 'private' proxies shouldn't cache the response.
    * This setting defaults to 'public' and affects only cached responses.
    *
-   * @param string $cacheControl private or public
-   * @param integer $maxage Maximum age of the client cache entry
+   * @param string|array $cacheControl private or public
    * @return sfHttpDownload
-   * @throws InvalidArgumentException If the cache control is invalid
+   * @throw InvalidArgumentException If the cache control is not valid
    */
-  public function setCacheControl($cacheControl, $maxAge = null)
+  public function setCacheControl($cacheControl)
   {
-    switch($cacheControl = strtolower($cacheControl))
+    if(!in_array($cacheControl, array(
+      self::CACHE_CONTROL_PUBLIC,
+      self::CACHE_CONTROL_PRIVATE,
+      self::CACHE_CONTROL_PRIVATE_NO_EXPIRE,
+      self::CACHE_CONTROL_NO_CACHE
+    )))
     {
-      case self::CACHE_PUBLIC:
-      case self::CACHE_PRIVATE:
-        $this->setOption('cache_control', $cacheControl);
-        if($maxAge)
-        {
-          $this->setCacheMaxAge($maxAge);
-        }
-      break;
-
-      default:
-        throw new InvalidArgumentException(sprintf('Invalid cache type "%s" given. This should be one of: "public" or "private".', $cache));
-      break;
+      throw new InvalidArgumentException(sprintf('Invalid cache control "%s" given. Valid controls are: %s.', $cacheControl,
+        '"' . join('", "', array(
+            self::CACHE_CONTROL_PUBLIC,
+            self::CACHE_CONTROL_PRIVATE,
+            self::CACHE_CONTROL_PRIVATE_NO_EXPIRE,
+            self::CACHE_CONTROL_NO_CACHE
+          )) . '"'
+      ));
     }
+
+    $this->setOption('cache_control', $cacheControl);
     return $this;
   }
 
   /**
    * Sets the cache max age
    *
-   * @param integer $maxAge
+   * @param integer $lifetime
    * @return sfHttpDownload
    * @throws InvalidArgumentException
    */
-  public function setCacheMaxAge($maxAge)
+  public function setClientLifetime($lifetime)
   {
-    if($maxAge < 0)
+    if($lifetime < 0)
     {
-      throw new InvalidArgumentException(sprintf('Invalid cache max age "%s" given. Should be greater than zero', $maxAge));
+      throw new InvalidArgumentException(sprintf('Invalid client lifetime value "%s" given. Should be greater than zero', $lifetime));
     }
-    $this->setOption('cache_max_age', $maxAge);
+    $this->setOption('client_lifetime', $lifetime);
     return $this;
+  }
+
+  /**
+   * Returns the client lifetime
+   *
+   * @return integer
+   */
+  public function getClientLifetime()
+  {
+    return $this->getOption('client_lifetime');
   }
 
   /**
    * Returns the cache control
    *
-   * @return string
+   * @return array
    */
   public function getCacheControl()
   {
@@ -1000,24 +1096,6 @@ class sfHttpDownload extends sfConfigurable implements sfIEventDispatcherAware, 
   public function getCacheMaxAge()
   {
     return $this->getOption('cache_max_age');
-  }
-
-  /**
-   * Fixes filename for Internet Explorer. Converts the Utf-8 name to
-   * windows-1250 charset
-   *
-   * @param string $fileName
-   * @param string $inputEncoding
-   * @return string The fixed filename
-   */
-  protected function fixFilename($fileName, $inputEncoding = 'UTF-8')
-  {
-    $userAgent = $this->getRequest()->getHttpHeader('USER_AGENT');
-    if($userAgent && function_exists('iconv') && preg_match('|MSIE\s*[1-8]|', $userAgent))
-    {
-      $fileName = iconv($inputEncoding, 'windows-1250', $fileName);
-    }
-    return $fileName;
   }
 
   /**
@@ -1077,27 +1155,6 @@ class sfHttpDownload extends sfConfigurable implements sfIEventDispatcherAware, 
   }
 
   /**
-   * Dispatches event using the event dispatcher
-   *
-   * @param string $eventName
-   * @param array $parameters Array of parameters for the event
-   */
-  protected function dispatchEvent($eventName, $parameters = array())
-  {
-    if(!$this->dispatcher)
-    {
-      return;
-    }
-
-    if(!isset($parameters['download']))
-    {
-      $parameters['download'] = $this;
-    }
-
-    $this->dispatcher->notify(new sfEvent($eventName, $parameters));
-  }
-
-  /**
    * Returns the event dispatcher
    *
    * @return sfEventDispatcher|null
@@ -1129,6 +1186,150 @@ class sfHttpDownload extends sfConfigurable implements sfIEventDispatcherAware, 
     return $this->logger;
   }
 
+
+  /**
+   * Guesses the filename of the download
+   *
+   * @return string
+   */
+  protected function guessFilename()
+  {
+    if($this->file)
+    {
+      return basename($this->file);
+    }
+    else
+    {
+      return sprintf('download-%s.bin', time());
+    }
+  }
+
+  /**
+   * Guesses the content type
+   *
+   * @return string
+   */
+  protected function guessContentType()
+  {
+    $contentType = 'application/octet-stream';
+    if($this->file)
+    {
+      $contentType = sfMimeType::getTypeFromFile($this->file);
+    }
+    elseif($this->data)
+    {
+      $contentType = sfMimeType::getTypeFromString($this->data);
+    }
+    elseif(($filename = $this->getFilename()))
+    {
+      $contentType = sfMimeType::getTypeFromExtension($filename);
+    }
+    return $contentType;
+  }
+
+  /**
+   * Generates the ETag
+   *
+   * @return string
+   */
+  protected function generateETag()
+  {
+    if($this->data)
+    {
+      $md5 = md5($this->data);
+    }
+    else
+    {
+      $fst = stat($this->file);
+      $md5 = md5($fst['mtime'] . '=' . $fst['size']);
+    }
+    return '"' . $md5 . '-' . crc32($md5) . '"';
+  }
+
+  /**
+   * Compare against an asterisk or check for equality
+   *
+   * @param string $variable key for the array
+   * @param string $compare string to compare
+   * @return boolean
+   */
+  protected function compareAsterisk($variable, $compare)
+  {
+    foreach(array_map('trim', explode(',', $variable)) as $request)
+    {
+      if($request === '*' || $request === $compare)
+      {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  /**
+   * Returns the start and end points from the range request
+   *
+   * @param string $range
+   * @return array|false Returns false if the range is invalid
+   */
+  protected function getStartEndPointsFromRange($range)
+  {
+    //if(!preg_match('/^bytes=((\d*-\d*,? ?)+)$/', $range))
+    if(strpos($range, 'bytes=') !== 0)
+    {
+      return false;
+    }
+
+    $range = explode('-', substr($range, strlen('bytes=')));
+    $startPoint = intval($range[0]);
+    $endPoint = !empty($range[1]) ? intval($range[1]) : $this->size;
+
+    if($startPoint < $endPoint)
+    {
+      return array($startPoint, $endPoint);
+    }
+
+    return false;
+  }
+
+  /**
+   * Fixes filename for Internet Explorer. Converts the Utf-8 name to
+   * windows-1250 charset
+   *
+   * @param string $fileName
+   * @param string $inputEncoding
+   * @return string The fixed filename
+   */
+  protected function fixFilename($fileName, $inputEncoding = 'UTF-8')
+  {
+    $userAgent = $this->getRequest()->getHttpHeader('USER_AGENT');
+    if($userAgent && function_exists('iconv') && preg_match('|MSIE\s*[1-8]|', $userAgent))
+    {
+      $fileName = iconv($inputEncoding, 'windows-1250', $fileName);
+    }
+    return $fileName;
+  }
+
+  /**
+   * Dispatches event using the event dispatcher
+   *
+   * @param string $eventName
+   * @param array $parameters Array of parameters for the event
+   */
+  protected function dispatchEvent($eventName, $parameters = array())
+  {
+    if(!$this->dispatcher)
+    {
+      return;
+    }
+
+    if(!isset($parameters['download']))
+    {
+      $parameters['download'] = $this;
+    }
+
+    $this->dispatcher->notify(new sfEvent($eventName, $parameters));
+  }
+
   /**
    * Logs the message
    *
@@ -1155,6 +1356,19 @@ class sfHttpDownload extends sfConfigurable implements sfIEventDispatcherAware, 
   {
     $this->log('Sleeping for {seconds}s', sfILogger::DEBUG, array('seconds' => $seconds));
     usleep($seconds * 1000000);
+  }
+
+  /**
+   * Formats bytes to kB, MB...
+   *
+   * @param integer $bytes
+   * @return string The formatted value
+   */
+  protected function formatBytes($bytes, $precision = 2)
+  {
+    // human readable format -- powers of 1024
+    $unit = array('B','kB','MB','GB','TB','PB','EB');
+    return sprintf('%s %s', @round($bytes / pow(1024, ($i = floor(log($bytes, 1024)))), $precision), $unit[$i]);
   }
 
 }

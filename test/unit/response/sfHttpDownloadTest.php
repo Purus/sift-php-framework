@@ -3,7 +3,7 @@
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 require_once($_test_dir.'/unit/sfContextMock.class.php');
 
-$t = new lime_test(25, new lime_output_color());
+$t = new lime_test(22, new lime_output_color());
 
 $fixturesDir = dirname(__FILE__) . '/fixtures';
 
@@ -47,7 +47,7 @@ $t->is_deeply($download->useResume(), false, 'useResume() switched the option');
 
 $t->diag('->setBufferSize() ->getBufferSize()');
 
-$t->is_deeply($download->getBufferSize(), 2000000, 'getBufferSize() returns default value');
+$t->is_deeply($download->getBufferSize(), 2097152, 'getBufferSize() returns default value');
 
 try
 {
@@ -62,12 +62,6 @@ catch(InvalidArgumentException $e)
 $download->setBufferSize(50);
 
 $t->is_deeply($download->getBufferSize(), 50, 'getBufferSize() returns the value in bytes');
-
-$t->diag('->allowCache()');
-
-$t->is_deeply($download->allowCache(true), true, 'allowCache() works ok');
-$t->is_deeply($download->allowCache(false), true, 'allowCache() returns the old value');
-$t->is_deeply($download->allowCache(), false, 'allowCache() switched the option');
 
 $t->diag('->limitSpeed()');
 

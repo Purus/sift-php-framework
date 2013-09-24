@@ -14,23 +14,23 @@ class downloadActions extends sfActions
   public function executeFile()
   {
     return $this->downloadFile(sfConfig::get('sf_data_dir').'/email/files/foo.pdf', array(
-      'allow_cache' => false
+      'cache_control' => sfHttpDownload::CACHE_CONTROL_PUBLIC
     ));
   }
 
   public function executeFileCached()
   {
     return $this->downloadFile(sfConfig::get('sf_data_dir').'/email/files/foo.pdf', array(
-      'allow_cache' => true,
+      'cache_control' => sfHttpDownload::CACHE_CONTROL_PRIVATE_NO_EXPIRE,
       'speed_limit' => 0.5
     ));
   }
 
   public function executeEtag()
   {
-    return $this->downloadFile(sfConfig::get('sf_data_dir').'/email/files/foo.pdf', array(
-      'allow_cache' => true,
-      'etag' => 'THIS-IS-AN-ETAG'
+    return $this->downloadData('sample data', array(
+      'etag' => 'THIS-IS-AN-ETAG',
+      'client_lifetime' => 1
     ));
   }
 
