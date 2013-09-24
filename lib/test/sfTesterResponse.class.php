@@ -436,8 +436,9 @@ class sfTesterResponse extends sfTester
    *
    * @param string $realOutput Whether to display the actual content of the response when an error occurred
    *                           or the exception message and the stack trace to ease debugging
+   * @param boolean $exit Exit?
    */
-  public function debug($realOutput = false)
+  public function debug($realOutput = false, $exit = false)
   {
     print $this->tester->error('Response debug');
 
@@ -480,6 +481,11 @@ class sfTesterResponse extends sfTester
     }
     echo "\n";
 
-    exit(1);
+    if($exit)
+    {
+      exit(1);
+    }
+
+    return $this->getObjectToReturn();
   }
 }
