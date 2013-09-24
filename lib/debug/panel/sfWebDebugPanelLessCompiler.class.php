@@ -76,11 +76,11 @@ class sfWebDebugPanelLessCompiler extends sfWebDebugPanelLogs {
     {
       if(($class == $log['type'] || (class_exists($log['type'], false) && is_subclass_of($log['type'], $class))))
       {
-        $priority = $this->webDebug->getPriority($log['priority']);
-
+        $level = $this->webDebug->getPriority($log['level']);
         $this->events[] = array(
-            'priority' => $priority,
-            'message' => $this->formatLogLine($log['message']));
+            'level' => $level,
+            'message' => $this->formatLogLine($log['message'])
+        );
       }
     }
     return $this->events;
