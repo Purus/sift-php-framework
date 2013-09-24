@@ -1,3 +1,13 @@
+24.09.2013 [40c786d] fixed sfLessCompiler debug panel
+24.09.2013 [8e79709] added support for disabling filters via disabled_for parameter
+24.09.2013 [42b74ab] removed dead line from execution filter
+24.09.2013 [28da500] added exit option to response tester debug() method
+24.09.2013 [286bf2b] updated sfHttpDownload, added more tests
+24.09.2013 [f5cd136] added sfLogger::resetInstance()
+24.09.2013 [198bb8f] added session_cache_limiter reset to php.yml, updated app and project skeleton factories.yml storage settings
+23.09.2013 [77eb2a8] updated http downloader, etag can be disabled, updated test
+23.09.2013 [0e8884b] updated streams, added file safe stream
+20.09.2013 [7018b0c] updated changelog
 20.09.2013 [2a3f082] refactored http download
 20.09.2013 [be9f555] added stream wrapper + wrapper interface
 19.09.2013 [8f4a26b] added sfIResponseAware intarface, removed console request and response
