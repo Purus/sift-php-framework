@@ -33,6 +33,7 @@ class sfLoggingConfigHandler extends sfDefineEnvironmentConfigHandler {
 
     if($this->enabled)
     {
+      $data[] = 'sfLogger::resetInstance();';
       $data[] = '$logger = sfLogger::getInstance();';
 
       // log level

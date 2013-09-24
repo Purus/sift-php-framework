@@ -63,6 +63,15 @@ class sfLogger implements sfILogger {
   }
 
   /**
+   * Resets the singleton instance
+   *
+   */
+  public static function resetInstance()
+  {
+    self::$logger = null;
+  }
+
+  /**
    * Retrieves the log level for the current logger instance.
    *
    * @return string Log level
@@ -228,6 +237,17 @@ class sfLogger implements sfILogger {
   }
 
   /**
+   * Clears the registered loggers
+   *
+   * @return sfLogger
+   */
+  public function clear()
+  {
+    $this->loggers = array();
+    return $this;
+  }
+
+  /**
    * Executes the shutdown procedure.
    *
    * Cleans up the current logger instance.
@@ -238,7 +258,7 @@ class sfLogger implements sfILogger {
     {
       $logger->shutdown();
     }
-    $this->loggers = array();
+    $this->clear();
   }
 
 }
