@@ -11,7 +11,7 @@
  * Andreas Heigl (Org_Heigl_Hyphenator version 1).
  *
  * @package    Sift
- * @subpackage util
+ * @subpackage text
  * @see http://www.smashingmagazine.com/2011/08/15/mind-your-en-and-em-dashes-typographic-etiquette/
  * @see http://kevin.deldycke.com/2007/03/ultimate-regular-expression-for-html-tag-parsing-with-php/
  */
