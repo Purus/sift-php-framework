@@ -5,7 +5,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
- 
+
 /**
  * TextHelper.
  *
@@ -123,7 +123,7 @@ function format_file_size($size, $round = 1)
 {
   trigger_error('Deprecated usage of format_file_size(). Use file_format_size() is FileHelper.');
   use_helper('File');
-  
+
   return file_format_size($size, $round);
 }
 
@@ -166,18 +166,6 @@ function format_phone_number($phoneNumber, $culture = null)
 }
 
 /**
- * Apply filters to given variable
- *
- * @param string $content
- * @param string $tag
- * @return sring string
- */
-function get_content($content, $tag = 'content')
-{
-  return apply_filters($tag, $content);
-}
-
-/**
  *
  * Toggle between $one and $two
  *
@@ -193,7 +181,7 @@ function toggle($one, $two, $section = 'a')
   {
     $toggle[$section] = array();
   }
-  
+
   $toggle[$section] = ($toggle[$section] == $one) ? $two : $one;
   return $toggle[$section];
 }
@@ -205,36 +193,36 @@ function get_words_count($text)
 
 /**
  * Hyphenates the text using sfTypography
- * 
+ *
  * @param string $text
  * @param string $language
  * @param array $options
- * @return string 
+ * @return string
  */
 function hyphenate_text($text, $options = array())
 {
   if(sfConfig::get('sf_logging_enabled'))
   {
-    sfLogger::getInstance()->warning('hyphenate_text() is deprecated. Use typography_text() instead');    
+    sfLogger::getInstance()->warning('hyphenate_text() is deprecated. Use typography_text() instead');
   }
-  
+
   return typography_text($text, $options);
 }
 
 /**
  * Hyphenates the text using sfTypography
- * 
+ *
  * @param string $text
  * @param string $language
  * @param array $options
- * @return string 
+ * @return string
  */
 function typography_text($text, $options = array())
 {
   $options  = _parse_attributes($options);
-  
+
   $language = _get_option($options, 'culture', sfConfig::get('sf_i18n_default_culture'));
-  
+
   // hyphenate text, true by default
   $hyphenate = _get_option($options, 'hyphenate', true);
 
@@ -243,11 +231,11 @@ function typography_text($text, $options = array())
     // @see http://www.utf8-chartable.de/unicode-utf8-table.pl?utf8=dec
     $options['hyphen'] = chr(194).chr(173);
   }
-  
+
   // convert options to method names
   // what is this? a joke?
   $options = array_flip(
-              array_map('lcfirst',   
+              array_map('lcfirst',
                 array_map('sfInflector::camelize', array_flip($options)
             )));
 
@@ -255,10 +243,10 @@ function typography_text($text, $options = array())
   {
     sfTimerManager::getTimer('{sfTypography} typography_text');
   }
-  
+
   // correct the text before hyphenating?
   $correct = _get_option($options, 'correct', true);
-  
+
   $typography = sfTypography::getInstance($language);
   $typography->setOptions($options);
 
@@ -269,21 +257,21 @@ function typography_text($text, $options = array())
   {
     $text = $typography->hyphenate($text);
   }
-  
+
   if($correct)
   {
-    // $text = $typography->correct($text, $options);    
+    // $text = $typography->correct($text, $options);
   }
-  
+
   if($wrapWords)
   {
     // $text = $typography->wrapWords($text, $options);
   }
-  
+
   if(sfConfig::get('sf_debug'))
   {
     sfTimerManager::getTimer('{sfTypography} typography_text')->addTime();
   }
-  
-  return $text;  
+
+  return $text;
 }
