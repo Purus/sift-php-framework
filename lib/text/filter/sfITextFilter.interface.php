@@ -10,7 +10,7 @@
  * sfTextFilter interface
  *
  * @package    Sift
- * @subpackage text
+ * @subpackage text_filter
  */
 interface sfITextFilter {
 

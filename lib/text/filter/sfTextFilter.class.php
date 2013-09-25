@@ -10,6 +10,6 @@
  * sfTextFilter is a base class for configurable text filters
  *
  * @package    Sift
- * @subpackage text
+ * @subpackage text_filter
  */
 abstract class sfTextFilter extends sfConfigurable implements sfITextFilter {}

@@ -10,7 +10,7 @@
  * sfITextMacroFilter interface
  *
  * @package    Sift
- * @subpackage text
+ * @subpackage text_macro
  */
 interface sfITextMacroFilter {
 

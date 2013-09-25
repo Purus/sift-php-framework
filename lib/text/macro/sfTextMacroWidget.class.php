@@ -11,7 +11,7 @@
  * macros widget should extend this class
  *
  * @package    Sift
- * @subpackage text
+ * @subpackage text_macro
  */
 abstract class sfTextMacroWidget implements sfITextMacroWidget {
 

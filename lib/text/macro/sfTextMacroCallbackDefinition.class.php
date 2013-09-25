@@ -12,7 +12,7 @@
  * including static class methods.
  *
  * @package    Sift
- * @subpackage text_filter
+ * @subpackage text_macro
  */
 class sfTextMacroCallbackDefinition extends sfCallbackDefinition {
 

@@ -10,7 +10,7 @@
  * sfMacroTextFilter applies macros to the text
  *
  * @package    Sift
- * @subpackage text
+ * @subpackage text_filter
  */
 class sfMacroTextFilter extends sfTextFilter {
 

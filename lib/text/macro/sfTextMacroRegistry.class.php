@@ -12,7 +12,7 @@
  * is wordpress speak are configured in text_filters.yml file inside plugins.
  *
  * @package    Sift
- * @subpackage text
+ * @subpackage text_macro
  */
 class sfTextMacroRegistry implements Countable, sfILoggerAware {
 

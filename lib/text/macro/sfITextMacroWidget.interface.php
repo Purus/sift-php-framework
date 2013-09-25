@@ -10,7 +10,7 @@
  * sfTextMacroWidget interface
  *
  * @package    Sift
- * @subpackage text
+ * @subpackage text_macro
  */
 interface sfITextMacroWidget {
 

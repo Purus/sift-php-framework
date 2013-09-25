@@ -11,8 +11,7 @@
  * Each filter can cancel the bubbling of next registered text filters.
  *
  * @package    Sift
- * @subpackage text
- * @see sfTextFilterRegistry
+ * @subpackage text_filter
  */
 class sfTextFilterContent {
 
