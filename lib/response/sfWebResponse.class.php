@@ -123,9 +123,6 @@ class sfWebResponse extends sfResponse
   public function __construct($parameters = array())
   {
     parent::__construct($parameters);
-    
-    // parent::initialize($parameters);
-
     /*
     if('HEAD' == $this->context->getRequest()->getMethodName())
     {
@@ -133,7 +130,6 @@ class sfWebResponse extends sfResponse
     }
      *
      */
-
     $this->setTitleMode(strtoupper(sfConfig::get('app_title_mode', self::TITLE_MODE_PREPEND)));
   }
 

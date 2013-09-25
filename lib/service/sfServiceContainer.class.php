@@ -198,23 +198,33 @@ class sfServiceContainer {
       sfLogger::getInstance()->info(sprintf('{sfServiceContainer} Building service "%s"', $serviceName));
     }
 
-    /* @var $definition sfServiceDefinition */
-    $definition = $this->definitions[$serviceName];
+    return $this->services[$serviceName] = $this->createObjectFromDefinition($this->definitions[$serviceName]);
+  }
+
+  /**
+   * Creates the object from callback definition
+   *
+   * @param sfObjectCallbackDefinition $definition
+   * @return object
+   * @throws InvalidArgumentException
+   */
+  public function createObjectFromDefinition(sfObjectCallbackDefinition $definition)
+  {
     $arguments = $this->resolveDependencies($this->resolveServices($this->resolveValue($definition->getArguments())));
 
     // static call
     if(null !== $definition->getConstructor())
     {
-      $service = call_user_func_array(array($this->resolveValue($definition->getClass()), $definition->getConstructor()), $arguments);
+      $object = call_user_func_array(array($this->resolveValue($definition->getClass()), $definition->getConstructor()), $arguments);
     }
     else
     {
-      $service = $this->createObject($definition->getClass(), $arguments);
+      $object = $this->createObject($definition->getClass(), $arguments);
     }
 
     foreach($definition->getMethodCalls() as $call)
     {
-      call_user_func_array(array($service, $call[0]), $this->resolveDependencies($this->resolveServices($this->resolveValue($call[1]))));
+      call_user_func_array(array($object, $call[0]), $this->resolveDependencies($this->resolveServices($this->resolveValue($call[1]))));
     }
 
     if($callable = $definition->getConfigurator())
@@ -226,13 +236,13 @@ class sfServiceContainer {
 
       if(!sfToolkit::isCallable($callable, false, $callableName))
       {
-        throw new InvalidArgumentException(sprintf('The configured callable "%s" for class "%s" is not callable.', $callableName, get_class($service)));
+        throw new InvalidArgumentException(sprintf('The configured callable "%s" for class "%s" is not callable.', $callableName, get_class($object)));
       }
 
-      call_user_func($callable, $service);
+      call_user_func($callable, $object);
     }
 
-    return $this->services[$serviceName] = $service;
+    return $object;
   }
 
   /**
@@ -266,7 +276,7 @@ class sfServiceContainer {
    * @param string $value
    * @return mixed
    */
-  protected function replaceConstants($value)
+  public function replaceConstants($value)
   {
     if(preg_match('/%(.+?)%/', $value, $matches))
     {
@@ -285,7 +295,7 @@ class sfServiceContainer {
    * @param  mixed $value A value
    * @return mixed
    */
-  protected function resolveServices($value)
+  public function resolveServices($value)
   {
     if(is_array($value))
     {
@@ -305,7 +315,7 @@ class sfServiceContainer {
    * @param  mixed $value A value
    * @return mixed
    */
-  protected function resolveDependencies($value)
+  public function resolveDependencies($value)
   {
     if(is_array($value))
     {

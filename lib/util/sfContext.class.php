@@ -209,6 +209,14 @@ class sfContext {
   }
 
   /**
+   * @see sfServiceContainer::has
+   */
+  public function hasService($serviceName)
+  {
+    return $this->serviceContainer->has($serviceName);
+  }
+
+  /**
    * @see sfServiceContainer::get
    */
   public function setService($serviceName, $service)

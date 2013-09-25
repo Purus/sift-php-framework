@@ -75,7 +75,8 @@ abstract class sfApplication extends sfProject {
    * @param sfEventDispatcher $dispatcher Event dispatcher object
    * @param sfShutdownScheduler $shutdownScheduler Shutdown scheduler
    */
-  public function __construct($environment, $debug = false, $options = array(), sfEventDispatcher $dispatcher = null, sfShutdownScheduler $shutdownScheduler = null)
+  public function __construct($environment, $debug = false, $options = array(),
+      sfEventDispatcher $dispatcher = null, sfShutdownScheduler $shutdownScheduler = null)
   {
     parent::__construct($options, $dispatcher, $shutdownScheduler);
 
@@ -265,9 +266,6 @@ abstract class sfApplication extends sfProject {
 
     // import modudes.yml for current application
     $this->configCache->import(sprintf($sf_app_config_dir_name . '/%s/modules.yml', sfConfig::get('sf_app')), true, true);
-
-    // import text macros configuration
-    include($this->configCache->checkConfig($sf_app_config_dir_name . '/text_macros.yml'));
 
     // load asset packages
     include($this->configCache->checkConfig($sf_app_config_dir_name . '/asset_packages.yml'));
@@ -477,82 +475,6 @@ abstract class sfApplication extends sfProject {
         'sf_test_cache_dir' => $sf_cache_dir . DS . 'test',
         'sf_module_cache_dir' => $sf_cache_dir . DS . 'modules',
     ));
-  }
-
-  /**
-   * Add a text filter callback. Tell that a filter is to be run on a filter
-   * at a certain point.
-   *
-   * @param string $tag Name of the filter to hook.
-   * @param string $function Callable function to be run on the hoook
-   * @param integer $priority Priority of this filter, default is 10 (higher value, higher priority)
-   */
-  public function addFilter($tag, $function, $priority = 10)
-  {
-    if(!isset($this->filters[$tag]))
-    {
-      $this->filters[$tag] = array();
-    }
-
-    if(!isset($this->filters[$tag][$priority]))
-    {
-      $this->filters[$tag][$priority] = array();
-    }
-
-    $this->filters[$tag][$priority][serialize($function)] = $function;
-  }
-
-  /**
-   * Remove a filter added previously. Called with the same arguments as addfilter
-   *
-   * $tag          string  Name of the filter to remove.
-   * $method       string  Name of method to remove
-   * $class        string  Name of the class providing the function
-   * $priority     integer Prority of this filter, default is 10
-   */
-  public function removeFilter($tag, $function, $priority = 10)
-  {
-    if(isset($this->filters[$tag][$priority][serialize($function)]))
-    {
-      unset($this->filters[$tag][$priority][serialize($function)]);
-      return true;
-    }
-    return false;
-  }
-
- /**
-   * Apply filters to a tag.
-   *
-   * $tag  string Name of the filter
-   * $data string The data the filter has to work on
-   */
-  public function applyFilters($tag, $data, $optionalArgs = null)
-  {
-    if(!isset($this->filters[$tag]))
-    {
-      return $data;
-    }
-
-    $args = func_get_args();
-    // remove first parameter
-    array_shift($args);
-    // sort by priority
-    krsort($this->filters[$tag]);
-
-    foreach($this->filters[$tag] as $priority => $phooks)
-    {
-      foreach($phooks as $hook)
-      {
-        // is the method available?
-        if(!sfToolkit::isCallable($hook))
-        {
-          throw new Exception(sprintf('{sfApplication} "%s" is not callable.', var_export($hook, true)));
-        }
-        // call the method
-        $args[1] = call_user_func_array($hook, $args);
-      }
-    }
-    return $args[1];
   }
 
   /**

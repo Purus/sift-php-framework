@@ -5,15 +5,11 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
- 
+
 /**
- * sfTextMacroWidget interface
+ * sfTextFiltersConfigHandler
  *
  * @package    Sift
- * @subpackage text
+ * @subpackage config
  */
-interface sfTextMacroWidget {
-
-  public static function getHtml($attributes, $value = null);
-
-}
+class sfTextFiltersConfigHandler extends sfSimpleYamlConfigHandler {}

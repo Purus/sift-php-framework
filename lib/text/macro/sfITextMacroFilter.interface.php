@@ -7,19 +7,19 @@
  */
 
 /**
- * sfTextFilter interface
+ * sfITextMacroFilter interface
  *
  * @package    Sift
  * @subpackage text
  */
-interface sfTextFilter {
+interface sfITextMacroFilter {
 
   /**
-   * Filter given text
+   * Filters given content
    *
-   * @param string $text
-   * @param array  $params
+   * @param array $attributes The array of attributes
+   * @param string $value The value
    */
-  public static function filter($text, $params = array());
-  
+  public function filter($attributes, $value = null);
+
 }

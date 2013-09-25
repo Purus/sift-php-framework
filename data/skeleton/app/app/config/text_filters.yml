@@ -1,0 +1,19 @@
+# You can find more information about this file on:
+# https://bitbucket.org/mishal/sift-php-framework/wiki/TextFilters
+
+# Example filters configuration
+#filters:
+# # filter name
+#  html.title:
+#    macro:
+#     priority: 100
+#     class: sfMacroTextFilter
+#     arguments:
+#      - "@text_macro_registry"
+#      - { allowed_tags: ["foobar"] }
+#    markdown_filter:
+#      priority: 10
+#      class: sfMarkdownTextFilter
+#macros:
+#  macroName:
+#    class: myMacroFilter

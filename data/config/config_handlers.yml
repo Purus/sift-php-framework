@@ -54,8 +54,8 @@ config/mail.yml:
 config/*/modules.yml:
   class: sfModulesConfigHandler
 
-config/text_macros.yml:
-  class: sfTextMacrosConfigHandler
+config/text_filters.yml:
+  class: sfTextFiltersConfigHandler
 
 modules/*/config/generator.yml:
   class:    sfGeneratorConfigHandler

@@ -573,7 +573,7 @@ function include_title($withGlobal = true)
  */
 function get_title($withGlobal = true)
 {
-  return sfCore::applyFilters('html.title', sfContext::getInstance()->getResponse()->getTitle($withGlobal));
+  return apply_filters('html.title', sfContext::getInstance()->getResponse()->getTitle($withGlobal));
 }
 
 /**
@@ -986,15 +986,20 @@ function _dynamic_path($uri, $absolute = false)
 }
 
 /**
- * Applies filter $tag to given $data.
+ * Applies text filters for $tag to given $data.
  *
  * @param string $tag
- * @param mixed $data
- * @param array $arguments Array of additional arguments
- * @return mixed
- * @see sfCore::applyFilters()
+ * @param string $string
+ * @return string
  */
-function apply_filters($tag, $data, $arguments = array())
+function apply_filters($tag, $string)
 {
-  return sfCore::applyFilters($tag, $data, $arguments);
+  if(sfContext::hasInstance()
+      && sfContext::getInstance()->hasService('text_filters_registry'))
+  {
+    return sfContext::getInstance()
+            ->getService('text_filters_registry')
+            ->apply($tag, $string);
+  }
+  return $string;
 }

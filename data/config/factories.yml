@@ -54,6 +54,16 @@ default:
   mailer:
     class: sfMailer
 
+  # text macro registry
+  text_macro_registry:
+    class: sfTextMacroRegistry
+    arguments: ["@service_container", "$logger"]
+
+  # text filters registry
+  text_filters_registry:
+    class: sfTextFilterRegistry
+    arguments: ["@service_container", "$logger"]
+
   # antivirus service
   antivirus:
     class: sfAntivirus

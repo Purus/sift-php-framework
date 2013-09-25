@@ -169,11 +169,12 @@ function format_phone_number($phoneNumber, $culture = null)
  * Apply filters to given variable
  *
  * @param string $content
+ * @param string $tag
  * @return sring string
  */
-function get_content($content, $filter = 'content')
+function get_content($content, $tag = 'content')
 {
-  return sfCore::applyFilter($filter, $content);
+  return apply_filters($tag, $content);
 }
 
 /**
