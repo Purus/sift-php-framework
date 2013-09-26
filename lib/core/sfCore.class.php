@@ -207,44 +207,6 @@ class sfCore
     return self::getProject()->getActiveApplication()->displayErrorPage($exception, $error);
   }
 
-
-  /**
-   * Add a filter call back. Tell sfCore that a filter is to be run on a filter
-   * at a certain point.
-   *
-   * $tag          string  Name of the filter to hook.
-   * $function     string  Callable function to be run on the hoook
-   * $priority     integer Priority of this filter, default is 10 (higher value, higher priority)
-   */
-  public static function addFilter($tag, $function, $priority = 10)
-  {
-    return self::getProject()->getActiveApplication()->addFilter($tag, $function, $priority);
-  }
-
-  /**
-   * Remove a filter added previously. Called with the same arguments as addfilter
-   *
-   * $tag          string  Name of the filter to remove.
-   * $method       string  Name of method to remove
-   * $class        string  Name of the class providing the function
-   * $priority     integer Prority of this filter, default is 10
-   */
-  public static function removeFilter($tag, $function, $priority = 10)
-  {
-    return self::getProject()->getActiveApplication()->removeFilter($tag, $function, $priority);
-  }
-
-  /**
-   * Apply filters to a tag.
-   *
-   * $tag  string Name of the filter
-   * $data string The data the filter has to work on
-   */
-  public static function applyFilters($tag, $data, $optionalArgs = null)
-  {
-    return self::getProject()->getActiveApplication()->applyFilters($tag, $data, $optionalArgs);
-  }
-
   /**
    * Filters variable using event dispatcher. Dispatches
    * an event with given name and parameters passed.
@@ -271,8 +233,7 @@ class sfCore
   }
 
   /**
-   * Compare the specified version string $version
-   * with the current version
+   * Compare the specified version string $version with the current version
    *
    * @param  string  $version  A version string (e.g. "0.7.1").
    * @return boolean           -1 if the $version is older,
