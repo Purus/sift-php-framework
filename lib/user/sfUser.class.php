@@ -185,10 +185,14 @@ class sfUser extends sfConfigurable implements sfIUser, sfIService, ArrayAccess 
       $culture = $this->getOption('default_culture');
     }
 
-    // dispatch event
-    $this->dispatcher->notify(new sfEvent('user.change_culture', array(
+    // dispatch event only if current culture is not the same as new culture
+    if($this->culture && ($this->culture !== $culture))
+    {
+      $this->dispatcher->notify(new sfEvent('user.change_culture', array(
         'previous' => $this->culture,
-        'culture' => $culture)));
+        'culture' => $culture)
+      ));
+    }
 
     $this->culture = $culture;
 
