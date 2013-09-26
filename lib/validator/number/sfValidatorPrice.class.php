@@ -32,7 +32,7 @@ class sfValidatorPrice extends sfValidatorNumber {
     parent::configure($options, $messages);
     $this->addOption('culture', null);
     // strict mode, which allows only culture specifics
-    $this->addOption('strict_mode', true);
+    $this->addOption('strict_mode', false);
     $this->setMessage('invalid', '"%value%" is not a valid price.');
   }
 

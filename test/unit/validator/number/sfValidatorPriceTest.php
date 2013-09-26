@@ -2,9 +2,11 @@
 
 require_once(dirname(__FILE__).'/../../../bootstrap/unit.php');
 
-$t = new lime_test(23, new lime_output_color());
+$t = new lime_test(24, new lime_output_color());
 
-$v = new sfValidatorPrice();
+$v = new sfValidatorPrice(array(
+  'strict_mode' => true
+));
 
 // ->clean() - no culture
 $t->diag('->clean() - standard culture = en');
@@ -123,6 +125,20 @@ try
   $value = $v->clean('0.0');
   $t->pass('->clean() throws a sfValidatorError if the value is empty');
   $t->is_deeply($value, 0.0, 'Value is ok');
+}
+catch(sfValidatorError $e)
+{
+  $t->fail('->clean() throws a sfValidatorError if the value is empty');
+  $t->skip('', 1);
+}
+
+// #64
+$v->setOption('culture', 'cs_CZ');
+
+try
+{
+  $value = $v->clean('1635.5');
+  $t->is_deeply($value, 1635.5, 'Value is ok');
 }
 catch(sfValidatorError $e)
 {
