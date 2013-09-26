@@ -10,7 +10,7 @@
  * FileHelper.
  *
  * @package    Sift
- * @subpackage helper
+ * @subpackage helper_file
  */
 
 /**

@@ -2,7 +2,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(4, new lime_output_color());
+$t = new lime_test(6, new lime_output_color());
 
 $formatter = new sfI18nDateFormatter('en_US');
 $t->is($formatter->format('September 18, 2013 11:29:10', 'f'), 'September 18, 2013 11:29 AM', 'format() works ok for "en" and format "f"');
@@ -13,7 +13,9 @@ $t->is($formatter->format('September 18, 2013 11:29:10', 'd'), '9/18/13', 'forma
 $formatter = new sfI18nDateFormatter('cs');
 
 $t->is($formatter->format('September 18, 2013 11:29:10', 'f'), '18. září 2013 11:29', 'format() works ok for "cs" and format "f"');
-
 $t->is($formatter->format('September 18, 2013 11:29:10', 'd'), '18.9.2013', 'format() works ok for "cs" and format "d"');
+
+$t->is($formatter->format(new sfDate(strtotime('September 18, 2013 11:29:10')), 'd'), '18.9.2013', 'format() works accepts sfDate object');
+$t->is($formatter->format(new DateTime('September 18, 2013 11:29:10'), 'd'), '18.9.2013', 'format() works accepts DateTime object');
 
 // FIXME: Make test for other cultures

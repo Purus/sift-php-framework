@@ -7,12 +7,19 @@
  */
 
 /**
+ * Rating helpers
+ *
+ * @package Sift
+ * @subpackage helper_rating
+ */
+
+/**
  * Returns HTML code for rating stars.
- * 
+ *
  * @param float $avg_rating
  * @param array $options
  * @return string
- * @throws InvalidArgumentException 
+ * @throws InvalidArgumentException
  */
 function rating_stars($avg_rating, $options = array())
 {
@@ -32,7 +39,7 @@ function rating_stars($avg_rating, $options = array())
   {
     $options['max'] = 5;
   }
-  
+
   if($options['max'] < 1 || $options['max'] > 10)
   {
     throw new InvalidArgumentException('{RatingHelper} rating_stars() max parameter is invalid. It should be an integer between 1 and 10');
@@ -40,7 +47,7 @@ function rating_stars($avg_rating, $options = array())
 
   $percent  = floor($avg_rating / $options['max'] * 100);
   $width    = $percent > 0 ? $percent : 0;
-  
+
   $class    = sprintf('%s-stars', $options['size']);
   $html     = array();
   $html[]   = sprintf('<span class="star-rating-state%s" title="%s/%s">', $class ? (' ' . $class) : '', round($avg_rating, 1), $options['max']);
@@ -50,7 +57,7 @@ function rating_stars($avg_rating, $options = array())
 
 /**
  * Returns rating stars with rating enabled for rating
- * 
+ *
  * @param $rating
  * @param array $options
  * @return string
@@ -69,7 +76,7 @@ function rating_stars_votable($rating, $options = array())
   {
     throw new InvalidArgumentException('{RatingHelper} rating_stars() max parameter is invalid. It should be an integer between 1 and 10');
   }
-  
+
   if(!isset($options['size']))
   {
     $options['size'] = 'small';
@@ -100,7 +107,7 @@ function rating_stars_votable($rating, $options = array())
   }
 
   $html[] = '</ul>';
-  return join("\n", $html);  
+  return join("\n", $html);
 }
 
 /**
@@ -114,13 +121,13 @@ function rating_ratio($avg_rating, $max = 5)
   if($max > 10)
   {
     throw new sfException("{RatingHelper} Rating supports only max 10 stars!");
-  }  
+  }
   return sprintf('%s/%s', round($avg_rating, 1), $max);
 }
 
 /**
  * Returns css class for given rating value
- * 
+ *
  * @staticvar array $nwords
  * @param  $i
  * @return string

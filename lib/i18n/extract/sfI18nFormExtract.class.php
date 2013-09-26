@@ -17,6 +17,7 @@ if(!function_exists('__'))
    * @param array $args
    * @param string $catalogue
    * @return string
+   * @internal
    */
   function __($string, $args = array(), $catalogue = 'messages')
   {

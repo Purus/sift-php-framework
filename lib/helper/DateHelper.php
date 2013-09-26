@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of the Sift PHP framework.
  *
@@ -7,29 +8,55 @@
  */
 
 /**
- * DateHelper
+ * Date helpers
  *
- * @package    Sift
- * @subpackage helper
+ * @package Sift
+ * @subpackage helper_date
+ *
  */
- 
- 
-function format_daterange($start_date, $end_date, $format = 'd', $full_text, $start_text, $end_text, $culture = null, $charset = null)
+
+/**
+ * Formats the date range
+ *
+ * @param string $startDate The start date
+ * @param string $endDate The end date
+ * @param string $format Format
+ * @param string $fullText The string for sprintf() Should contain 2 (%s) placeholdes for $startDate and $endDate
+ * @param string $startText The string for sprintf(). Should contain 1 placeholder
+ * @param string $endText The string for sprintf(). Should contain 1 placeholder
+ * @param string $culture The culture
+ * @param string $charset The charset
+ * @return string
+ */
+function format_daterange($startDate, $endDate, $format = 'd',
+    $fullText = '%s - %s', $startText = '%s', $endText = '%s',
+    $culture = null, $charset = null)
 {
-  if($start_date != '' && $end_date != '')
+  if($startDate && $endDate)
   {
-    return sprintf($full_text, format_date($start_date, $format, $culture, $charset), format_date($end_date, $format, $culture, $charset));
+    return sprintf($fullText, format_date($startDate, $format, $culture, $charset),
+                              format_date($endDate, $format, $culture, $charset));
   }
-  else if($start_date != '')
+  else if($startDate)
   {
-    return sprintf($start_text, format_date($start_date, $format, $culture, $charset));
+    return sprintf($startText, format_date($startDate, $format, $culture, $charset));
   }
-  else if($end_date != '')
+  else if($endDate)
   {
-    return sprintf($end_text, format_date($end_date, $format, $culture, $charset));
+    return sprintf($endText, format_date($endDate, $format, $culture, $charset));
   }
 }
 
+/**
+ * Formats the date
+ *
+ * @staticvar array $dateFormats
+ * @param string $date The date to format
+ * @param string $format The format
+ * @param string $culture The culture
+ * @param string $charset The charset
+ * @return string
+ */
 function format_date($date, $format = 'd', $culture = null, $charset = null)
 {
   static $dateFormats = array();
@@ -57,11 +84,28 @@ function format_date($date, $format = 'd', $culture = null, $charset = null)
   return $dateFormats[$culture]->format($date, $format, null, $charset);
 }
 
+/**
+ * Formats the date time
+ *
+ * @param string $date The date to format
+ * @param string $format The format
+ * @param string $culture The culture
+ * @param string $charset The charser
+ * @return string
+ */
 function format_datetime($date, $format = 'F', $culture = null, $charset = null)
 {
   return format_date($date, $format, $culture, $charset);
 }
 
+/**
+ * Returns the distance of time in human readable format
+ *
+ * @param integer $from_time
+ * @param integer $to_time
+ * @param boolean $include_seconds
+ * @return string
+ */
 function distance_of_time_in_words($from_time, $to_time = null, $include_seconds = false)
 {
   $to_time = $to_time ? $to_time : time();
@@ -148,19 +192,16 @@ function distance_of_time_in_words($from_time, $to_time = null, $include_seconds
     $parameters['%years%'] = floor($distance_in_minutes / 525960);
   }
 
-  if(sfConfig::get('sf_i18n'))
-  {
-    $catalogue = str_replace('/', DIRECTORY_SEPARATOR, sfConfig::get('sf_sift_data_dir'))
-            . DIRECTORY_SEPARATOR . 'i18n' . DIRECTORY_SEPARATOR . 'catalogues' . DIRECTORY_SEPARATOR . 'time_distance';
-    return __($string, $parameters, $catalogue);
-  }
-  else
-  {
-    return strtr($string, $parameters);
-  }
+  return __($string, $parameters, '%SF_SIFT_DATA_DIR%/i18n/catalogues/time_distance');
 }
 
-// Like distance_of_time_in_words, but where to_time is fixed to time()
+/**
+ * Like distance_of_time_in_words, but where to_time is fixed to time()
+ *
+ * @param integer $from_time The time
+ * @param boolean $include_seconds
+ * @return string
+ */
 function time_ago_in_words($from_time, $include_seconds = false)
 {
   return distance_of_time_in_words($from_time, time(), $include_seconds);

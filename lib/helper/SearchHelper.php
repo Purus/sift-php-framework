@@ -5,7 +5,14 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
- 
+
+/**
+ * Search helpers
+ *
+ * @package Sift
+ * @subpackage helper_search
+ */
+
 /**
  * @see sfSearchTools::highlight()
  */
@@ -16,7 +23,6 @@ function search_highlight($text, sfSearchQueryExpression $expression)
 
 /**
  * @see sfSearchTools::truncateUrl()
- * 
  */
 function search_truncate_url($url)
 {
@@ -31,6 +37,12 @@ function search_relevancy_percentage($relevancy)
   return sfSearchTools::formatRelevancy($relevancy);
 }
 
+/**
+ * Adds open search link to the response
+ *
+ * @package Sift
+ * @subpackage helper_search
+ */
 function search_add_open_search_link()
 {
   $config = mySearchTools::getOpenSearchConfig();
@@ -41,7 +53,10 @@ function search_add_open_search_link()
 /**
  * Returns <script> tags for all javascripts associated with the given search source.
  *
+ * @param sfISearchSource $source The search source
  * @return string <script> tags
+ * @package Sift
+ * @subpackage helper_search
  */
 function get_javascripts_for_search_source(sfISearchSource $source)
 {
@@ -49,7 +64,7 @@ function get_javascripts_for_search_source(sfISearchSource $source)
   foreach($source->getJavascripts() as $file)
   {
     $html .= javascript_include_tag($file);
-  }  
+  }
   return $html;
 }
 

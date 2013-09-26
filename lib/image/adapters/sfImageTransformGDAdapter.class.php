@@ -8,7 +8,13 @@
 
 if(!function_exists('imagecopymergealpha'))
 {
-  // @see http://cz.php.net/manual/en/function.imagecopymerge.php#92787
+  /**
+   * Merge image with alpha channel support (using GD apadapter)
+   *
+   * @see http://cz.php.net/manual/en/function.imagecopymerge.php#92787
+   * @package Sift
+   * @subpackage image
+   */
   function imagecopymergealpha($dst_im, $src_im, $dst_x, $dst_y, $src_x, $src_y, $src_w, $src_h, $pct)
   {
     // creating a cut resource

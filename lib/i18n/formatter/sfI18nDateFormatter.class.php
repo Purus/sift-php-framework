@@ -108,6 +108,10 @@ class sfI18nDateFormatter {
     {
       $time = $time->getTimestamp();
     }
+    elseif($time instanceof sfDate)
+    {
+      $time = $time->getTS();
+    }
 
     // if the type is not a php timestamp
     $isString = (string) $time !== (string) (int) $time;

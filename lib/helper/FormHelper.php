@@ -7,10 +7,10 @@
  */
 
 /**
- * FormHelper.
+ * Form helpers
  *
  * @package    Sift
- * @subpackage helper
+ * @subpackage helper_form
  */
 
 /**

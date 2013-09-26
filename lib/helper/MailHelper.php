@@ -10,7 +10,7 @@
  * Mail helper functions
  *
  * @package    Sift
- * @subpackage helper
+ * @subpackage helper_mail
  */
  
 /**

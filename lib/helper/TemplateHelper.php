@@ -10,7 +10,7 @@
  * TemplateHelper defines some base helpers for constructing javascript templates.
  *
  * @package    Sift
- * @subpackage helper
+ * @subpackage helper_javascript
  */
 
 /**
@@ -137,6 +137,7 @@ function end_template()
  * Captures the output between start_template() and end_template().
  *
  * @param string $buffer
+ * @internal
  */
 function _compile_template($buffer)
 {

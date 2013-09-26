@@ -10,7 +10,7 @@
  * TextHelper.
  *
  * @package    Sift
- * @subpackage helper
+ * @subpackage helper_text
  */
 
 /**
@@ -156,8 +156,8 @@ function format_address($address)
 /**
  * Formats phone number
  *
- * @param string $phoneNumber
- * @param string $culture $culture
+ * @param string $phoneNumber The phone number to format
+ * @param string $culture The culture
  * @return string Formatted phone number
  */
 function format_phone_number($phoneNumber, $culture = null)

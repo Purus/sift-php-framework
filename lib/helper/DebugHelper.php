@@ -7,16 +7,24 @@
  */
 
 /**
+ * Debugging helpers
+ *
+ * @package Sift
+ * @subpackage helper_debug
+ */
+
+/**
  * Logs message to the logger. Only if web debug is turned on.
  *
  * @param string $message Message to be logged
- * @param string $priority Piority
+ * @param string $level The log level
+ * @param array $context The context variables
  */
-function debug_message($message, $priority = 'info')
+function debug_message($message, $level = 'info', array $context = array())
 {
   if(sfConfig::get('sf_web_debug'))
   {
-    return log_message($message, $priority);
+    return log_message($message, $level, $context);
   }
 }
 
@@ -24,21 +32,23 @@ function debug_message($message, $priority = 'info')
  * Logs message to the logger
  *
  * @param string $message Message to be logged
- * @param string $priority Priority
+ * @param string $level The log level
+ * @param array $context The context variables 
  */
-function log_message($message, $priority = 'info')
+function log_message($message, $level = 'info', array $context = array())
 {
   if(sfConfig::get('sf_logging_enabled'))
   {
-    sfLogger::getInstance()->log($message, $priority);
+    sfLogger::getInstance()->log($message, $level, $context);
   }
 }
 
 /**
- * Dumps $var using sfDebug
+ * Dumps the variable
  *
  * @param mixed $var Variable to dump
  * @param boolean $exit Exit after dumping the variable?
+ * @return string The dump result
  */
 function dump($var, $exit = false)
 {

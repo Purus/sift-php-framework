@@ -7,10 +7,10 @@
  */
 
 /**
- * GoogleAnalytics helper.
+ * Google Analytics helper
  *
  * @package    Sift
- * @subpackage helper
+ * @subpackage helper_analytics
  */
 
 /**
