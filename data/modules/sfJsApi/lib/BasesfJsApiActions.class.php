@@ -163,7 +163,7 @@ class BasesfJsApiActions extends myActions {
           // less support
           if(isset($options['less']) || preg_match('/\.less$/i', $source))
           {
-            $source = sfLessCompiler::getInstance()->compileStylesheetIfNeeded(
+            $source = $this->getContext()->getService('less_compiler')->compileStylesheetIfNeeded(
               stylesheet_path($source)
             );
           }
