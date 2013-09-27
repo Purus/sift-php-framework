@@ -18,8 +18,17 @@ require_once dirname(__FILE__) . '/../vendor/lessphp/lessc.inc.php';
  * */
 class sfLessCompiler extends lessc {
 
+  /**
+   * Array of default options
+   *
+   * @var array
+   */
+  protected $defaultOptions = array(
+    'relative_url_root' => '',
+    'cache_dir' => ''
+  );
+
   public $importDir = array();
-  static $instance;
 
   /**
    * Name for cache files
@@ -43,32 +52,40 @@ class sfLessCompiler extends lessc {
   protected $pathAliases = array();
 
   /**
-   * Returns singleton instance of sfLessCompiler
+   * The dispatcher instance
    *
-   * @return sfLessCompiler
+   * @var sfEventDispatcher
    */
-  public static function getInstance()
-  {
-    if(!self::$instance)
-    {
-      self::$instance = new self();
-    }
-    return self::$instance;
-  }
+  protected $dispatcher;
 
   /**
-   * Constructs the compiler
+   * Costructor
+   *
+   * @param sfEventDispatcher $dispatcher The dispatcher
    */
-  public function __construct()
+  public function __construct(sfEventDispatcher $eventDispatcher, $options = array())
   {
+    $this->dispatcher = $eventDispatcher;
+    $this->options = array_merge($this->defaultOptions, $options);
+
+    if(!isset($this->options['cache_dir']) || empty($this->options['cache_dir']))
+    {
+      throw new sfConfigurationException('Missing "cache_dir" configuration value.');
+    }
+
     parent::__construct();
 
     $this->construct();
   }
 
+  /**
+   * Returns the relative url
+   *
+   * @return string
+   */
   protected function getRelativeUrlRoot()
   {
-    return sfContext::getInstance()->getRequest()->getRelativeUrlRoot();
+    return $this->options['relative_url_root'];
   }
 
   /**
@@ -100,17 +117,17 @@ class sfLessCompiler extends lessc {
     );
 
     // pass thru event system
-    $variables = sfCore::filterByEventListeners($variables, 'less.compile.variables');
+    $variables = $this->dispatcher->filter(new sfEvent('less.compile.variables'), $variables)->getReturnValue();
     $this->setVariables($variables);
 
-    $this->pathAliases = sfCore::filterByEventListeners($this->pathAliases, 'less.compile.path_aliases');
+    $this->pathAliases = $this->dispatcher->filter(new sfEvent('less.compile.path_aliases'), $this->pathAliases)->getReturnValue();
 
     $importDir = array(
         str_replace(DIRECTORY_SEPARATOR, '/', sfConfig::get('sf_less_import_path', sfConfig::get('sf_web_dir') . DIRECTORY_SEPARATOR . 'css')),
         str_replace(DIRECTORY_SEPARATOR, '/', $siftDataDir)
     );
 
-    $importDir = sfCore::filterByEventListeners($importDir, 'less.compile.import_dir');
+    $importDir = $this->dispatcher->filter(new sfEvent('less.compile.import_dir'), $importDir)->getReturnValue();
     foreach($importDir as $dir)
     {
       $this->addImportDir($dir);
@@ -129,8 +146,18 @@ class sfLessCompiler extends lessc {
       $this->setFormatter('compressed');
       $this->setCacheName('%s.min.css');
     }
+  }
 
-
+  /**
+   * Sets path aliases
+   *
+   * @param array $aliases
+   * @return sfLessCompiler
+   */
+  public function setPathAliases($aliases)
+  {
+    $this->pathAliases = (array)$aliases;
+    return $this;
   }
 
   /**
@@ -246,7 +273,7 @@ class sfLessCompiler extends lessc {
    */
   public function compileIfNeeded($inputFile, $outputFile)
   {
-    $cacheDir = sfConfig::get('sf_cache_dir') . DIRECTORY_SEPARATOR . 'less_compile';
+    $cacheDir = $this->options['cache_dir'] . '/less_compile';
 
     if(!is_dir($cacheDir))
     {

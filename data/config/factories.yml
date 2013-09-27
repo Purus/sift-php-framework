@@ -64,6 +64,13 @@ default:
     class: sfTextFilterRegistry
     arguments: ["@service_container", "$logger"]
 
+  # less compiler
+  less_compiler:
+    class: sfLessCompiler
+    arguments:
+     - "$event_dispatcher"
+     - { relative_url_root : %SF_RELATIVE_URL_ROOT%, cache_dir: %SF_CACHE_DIR% }
+
   # antivirus service
   antivirus:
     class: sfAntivirus

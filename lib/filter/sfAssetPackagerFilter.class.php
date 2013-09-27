@@ -225,7 +225,7 @@ class sfAssetPackagerFilter extends sfFilter {
                     sfContext::getInstance()->getRequest()->getRelativeUrlRoot()), '', $file);
               }
 
-              $file = sfLessCompiler::getInstance()->compileStylesheetIfNeeded($file);
+              $file = $this->context->getService('less_compiler')->compileStylesheetIfNeeded($file);
 
               if($baseDomain)
               {

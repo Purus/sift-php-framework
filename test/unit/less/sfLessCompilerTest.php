@@ -17,7 +17,10 @@ function lessphp_image_path($arg) {
     return array($type, '', array($value));
 }
 
-$c = new sfLessCompiler();
+$c = new sfLessCompiler(new sfEventDispatcher(), array(
+    'cache_dir' => sys_get_temp_dir()
+));
+
 $c->registerFunction("double", "lessphp_double");
 $c->registerFunction("imagePath", "lessphp_image_path");
 

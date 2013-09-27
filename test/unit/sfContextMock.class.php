@@ -129,4 +129,19 @@ class sfContext {
     return $this->serviceContainer;
   }
 
+  public function getService($name)
+  {
+    switch($name)
+    {
+      case 'less_compiler':
+        return new sfLessCompiler($this->getEventDispatcher(), array(
+          'cache_dir' => sfConfig::get('sf_cache_dir')
+        ));
+      break;
+
+      default:
+        throw new InvalidArgumentException('Service not present in the mock');
+    }
+  }
+
 }

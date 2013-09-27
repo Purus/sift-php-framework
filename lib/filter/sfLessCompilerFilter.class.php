@@ -92,7 +92,7 @@ class sfLessCompilerFilter extends sfFilter {
           try 
           {
             $response->addStylesheet(
-                    sfLessCompiler::getInstance()->compileStylesheetIfNeeded(
+                    $this->context->getService('less_compiler')->compileStylesheetIfNeeded(
                             $stylesheet), $position, $options);
           }
           catch(sfLessCompilerException $e)

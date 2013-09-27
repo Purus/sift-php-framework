@@ -265,7 +265,7 @@ function stylesheet_tag()
               sfContext::getInstance()->getRequest()->getRelativeUrlRoot()), '', $source);
         }
 
-        $source = sfLessCompiler::getInstance()->compileStylesheetIfNeeded($source);
+        $source = sfContext::getInstance()->getService('less_compiler')->compileStylesheetIfNeeded($source);
 
         if($baseDomain)
         {

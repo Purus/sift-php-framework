@@ -14,7 +14,7 @@
  */
 class sfAssetPackagesConfigHandler extends sfSimpleYamlConfigHandler {
 
-/**
+  /**
    * Executes this configuration handler.
    *
    * @param array An array of absolute filesystem path to a configuration file

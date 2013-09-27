@@ -44,11 +44,6 @@ default:
     suffix:                 .           # Default suffix for generated URLs. If set to a single dot (.), no suffix is added. Possible values: .html, .php, and so on.
     no_script_name:         false       # Enable the front controller name in generated URLs
 
-    # validator settings
-
-    #validator_email_check_mx: true
-    #validator_email_strict_pattern: true
-
     # Cache settings
     cache:                  false       # Enable the template cache
     etag:                   true        # Enable etag handling
@@ -61,8 +56,6 @@ default:
 
     # sift web directory
     sift_web_dir:           /sf
-    # Rich calendar web directory
-    calendar_web_dir:       /sf/js/calendar
 
     # Helpers included in all templates by default
     standard_helpers:       [Partial, Cache, Form, I18N]
@@ -79,6 +72,9 @@ default:
     # Miscellaneous
     autoloading_functions:  ~          # Functions called when a class is requested and this it is not already loaded. Expects an array of callables. Used by the framework bridges.
     timeout:                1800       # Session timeout, in seconds
+
+    # Paths
+    #relative_url_root:      ~
     path_info_array:        SERVER
     path_info_key:          PATH_INFO
     url_format:             PATH

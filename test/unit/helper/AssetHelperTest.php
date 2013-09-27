@@ -26,7 +26,7 @@ class myRequest
   {
     return 'localhost';
   }
-  
+
   public function getMethodName()
   {
     return 'GET';
@@ -38,29 +38,24 @@ class myController
   public function genUrl($parameters = null, $absolute = false)
   {
     $root = sfContext::getInstance()->getRequest()->getRelativeUrlRoot();
-    
+
     if($root)
     {
       return sprintf('%s/%s', $root, $parameters);
     }
-    
+
     return '/' . $parameters;
-    
+
   }
 }
 
 class sfLessCompiler {
-  
-  public static function getInstance()
-  {    
-    return new sfLessCompiler();
-  }
-  
+
   public function compileStylesheetIfNeeded($less)
   {
     return '/cache'.$less.'.css';
   }
-  
+
 }
 
 $context = sfContext::getInstance();
@@ -97,21 +92,21 @@ $t->is(stylesheet_tag('random.styles', '/css/stylish'),
   '<link rel="stylesheet" type="text/css" media="screen,projection,tv" href="/css/random.styles" />'."\n".
   '<link rel="stylesheet" type="text/css" media="screen,projection,tv" href="/css/stylish.css" />'."\n", 'stylesheet_tag() can takes n stylesheet names as its arguments');
 
-$t->is(stylesheet_tag('style'), 
-  '<link rel="stylesheet" type="text/css" media="screen,projection,tv" href="/css/style.css" />'."\n", 
+$t->is(stylesheet_tag('style'),
+  '<link rel="stylesheet" type="text/css" media="screen,projection,tv" href="/css/style.css" />'."\n",
   'stylesheet_tag() takes a stylesheet name as its first argument');
 $t->is(stylesheet_tag('random.styles', '/css/stylish'),
   '<link rel="stylesheet" type="text/css" media="screen,projection,tv" href="/css/random.styles" />'."\n".
-  '<link rel="stylesheet" type="text/css" media="screen,projection,tv" href="/css/stylish.css" />'."\n", 
+  '<link rel="stylesheet" type="text/css" media="screen,projection,tv" href="/css/stylish.css" />'."\n",
   'stylesheet_tag() can takes n stylesheet names as its arguments');
-$t->is(stylesheet_tag('style', array('media' => 'all')), 
-  '<link rel="stylesheet" type="text/css" media="all" href="/css/style.css" />'."\n", 
+$t->is(stylesheet_tag('style', array('media' => 'all')),
+  '<link rel="stylesheet" type="text/css" media="all" href="/css/style.css" />'."\n",
   'stylesheet_tag() can take a media option');
-$t->is(stylesheet_tag('style', array('absolute' => true)), 
-  '<link rel="stylesheet" type="text/css" media="screen,projection,tv" href="http://localhost/css/style.css" />'."\n", 
+$t->is(stylesheet_tag('style', array('absolute' => true)),
+  '<link rel="stylesheet" type="text/css" media="screen,projection,tv" href="http://localhost/css/style.css" />'."\n",
   'stylesheet_tag() can take an absolute option to output an absolute file name');
-$t->is(stylesheet_tag('style', array('raw' => true)), 
-  '<link rel="stylesheet" type="text/css" media="screen,projection,tv" href="style" />'."\n", 
+$t->is(stylesheet_tag('style', array('raw' => true)),
+  '<link rel="stylesheet" type="text/css" media="screen,projection,tv" href="style" />'."\n",
   'stylesheet_tag() can take a raw option to bypass file name decoration');
 $t->is(stylesheet_tag('style', array('ie_condition' => 'IE 6')),
   '<!--[if IE 6]><link rel="stylesheet" type="text/css" media="screen,projection,tv" href="/css/style.css" /><![endif]-->'."\n",
@@ -158,12 +153,12 @@ $t->is(image_tag('gold', array('size' => '45x70')),
   '<img src="/images/gold.png" alt="Gold" height="70" width="45" />');
 
 //// auto_discovery_link_tag()
-$t->is(auto_discovery_link_tag('rss', '@route'),       
+$t->is(auto_discovery_link_tag('rss', '@route'),
   '<link rel="alternate" href="/@route" type="application/rss+xml" title="Rss" />');
 
 $t->is(auto_discovery_link_tag('atom', '@route'),
   '<link rel="alternate" href="/@route" type="application/atom+xml" title="Atom" />');
- 
+
 $t->is(auto_discovery_link_tag('rss', 'feed'),
   '<link rel="alternate" href="/feed" type="application/rss+xml" title="Rss" />');
 
@@ -235,7 +230,7 @@ $t->is(get_javascripts(),
 $t->diag('use_dynamic_stylesheet()');
 use_dynamic_stylesheet('module/action');
 $t->is(get_stylesheets(),
-  '<link rel="stylesheet" type="text/css" media="screen,projection,tv" href="/module/action" />'."\n", 
+  '<link rel="stylesheet" type="text/css" media="screen,projection,tv" href="/module/action" />'."\n",
   'use_dynamic_stylesheet() register a dynamic stylesheet in the response'
 );
 
@@ -244,21 +239,21 @@ class MyForm extends sfForm
 {
   public function getStylesheets()
   {
-    return array( 
- 		      '/path/to/a/foo.css',                                             // use default "screen" media 
- 		      '/path/to/a/bar.css' => 'print',                                  // media set a value 
- 		      '/path/to/a/buz.css' => array('position' => 'last'), // position set as an option 
- 		      '/path/to/a/baz.css' => array('media' => 'print'),                // options support 
+    return array(
+ 		      '/path/to/a/foo.css',                                             // use default "screen" media
+ 		      '/path/to/a/bar.css' => 'print',                                  // media set a value
+ 		      '/path/to/a/buz.css' => array('position' => 'last'), // position set as an option
+ 		      '/path/to/a/baz.css' => array('media' => 'print'),                // options support
  	   );
   }
 
   public function getJavaScripts()
   {
-    return array( 
- 		      '/path/to/a/foo.js',                                             // doesn't use any option 
- 		      '/path/to/a/bar.js' => array('position' => 'last'), // position set as an option 
- 	        '/path/to/a/baz.js' => array('ie_condition' => 'IE'),               // options support 
-    );    
+    return array(
+ 		      '/path/to/a/foo.js',                                             // doesn't use any option
+ 		      '/path/to/a/bar.js' => array('position' => 'last'), // position set as an option
+ 	        '/path/to/a/baz.js' => array('ie_condition' => 'IE'),               // options support
+    );
   }
 }
 
@@ -290,28 +285,28 @@ $form = new MyForm();
 $response->resetAssets();
 use_stylesheets_for_form($form);
 
-$t->is_deeply( 
-	  $response->getAllStylesheets(), 
-	  array( 
-	    '/path/to/a/foo.css' => array('media' => 'screen,projection,tv'), 
-	    '/path/to/a/bar.css' => array('media' => 'print'), 
-	    '/path/to/a/baz.css' => array('media' => 'print'), 
-	    '/path/to/a/buz.css' => array('media' => 'screen,projection,tv'), 
-	  ), 
-	  'use_stylesheets_for_form() adds stylesheets to the response' 
-); 
+$t->is_deeply(
+	  $response->getAllStylesheets(),
+	  array(
+	    '/path/to/a/foo.css' => array('media' => 'screen,projection,tv'),
+	    '/path/to/a/bar.css' => array('media' => 'print'),
+	    '/path/to/a/baz.css' => array('media' => 'print'),
+	    '/path/to/a/buz.css' => array('media' => 'screen,projection,tv'),
+	  ),
+	  'use_stylesheets_for_form() adds stylesheets to the response'
+);
 
 $response->resetAssets();
 use_javascripts_for_form($form);
-$t->is_deeply( 
- 	  $response->getAllJavaScripts(), 
- 	  array( 
- 	    '/path/to/a/foo.js' => array(), 
- 	    '/path/to/a/bar.js' => array(), 
- 	    '/path/to/a/baz.js' => array('ie_condition' => 'IE'), 
- 	  ), 
- 	  'use_javascripts_for_form() adds javascripts to the response' 
- 	); 
+$t->is_deeply(
+ 	  $response->getAllJavaScripts(),
+ 	  array(
+ 	    '/path/to/a/foo.js' => array(),
+ 	    '/path/to/a/bar.js' => array(),
+ 	    '/path/to/a/baz.js' => array('ie_condition' => 'IE'),
+ 	  ),
+ 	  'use_javascripts_for_form() adds javascripts to the response'
+ 	);
 
 // custom web paths
 $t->diag('Custom asset path handling');
@@ -319,13 +314,13 @@ $t->diag('Custom asset path handling');
 sfConfig::set('sf_web_js_dir_name', 'static/js');
 $t->is(javascript_path('xmlhr'), '/static/js/xmlhr.js', 'javascript_path() decorates a relative filename with js dir name and extension with custom js dir');
 $t->is(javascript_include_tag('xmlhr'),
-  '<script type="text/javascript" src="/static/js/xmlhr.js"></script>'."\n", 
+  '<script type="text/javascript" src="/static/js/xmlhr.js"></script>'."\n",
   'javascript_include_tag() takes a javascript name as its first argument');
 
 sfConfig::set('sf_web_css_dir_name', 'static/css');
 $t->is(stylesheet_path('style'), '/static/css/style.css', 'stylesheet_path() decorates a relative filename with css dir name and extension with custom css dir');
-$t->is(stylesheet_tag('style'), 
-  '<link rel="stylesheet" type="text/css" media="screen,projection,tv" href="/static/css/style.css" />'."\n", 
+$t->is(stylesheet_tag('style'),
+  '<link rel="stylesheet" type="text/css" media="screen,projection,tv" href="/static/css/style.css" />'."\n",
   'stylesheet_tag() takes a stylesheet name as its first argument');
 
 sfConfig::set('sf_web_images_dir_name', 'static/img');
