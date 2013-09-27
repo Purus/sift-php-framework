@@ -36,6 +36,13 @@ class sfLessCompiler extends lessc {
   protected $debugMode = false;
 
   /**
+   * Path aliases
+   *
+   * @var array
+   */
+  protected $pathAliases = array();
+
+  /**
    * Returns singleton instance of sfLessCompiler
    *
    * @return sfLessCompiler
@@ -96,6 +103,8 @@ class sfLessCompiler extends lessc {
     $variables = sfCore::filterByEventListeners($variables, 'less.compile.variables');
     $this->setVariables($variables);
 
+    $this->pathAliases = sfCore::filterByEventListeners($this->pathAliases, 'less.compile.path_aliases');
+
     $importDir = array(
         str_replace(DIRECTORY_SEPARATOR, '/', sfConfig::get('sf_less_import_path', sfConfig::get('sf_web_dir') . DIRECTORY_SEPARATOR . 'css')),
         str_replace(DIRECTORY_SEPARATOR, '/', $siftDataDir)
@@ -120,6 +129,8 @@ class sfLessCompiler extends lessc {
       $this->setFormatter('compressed');
       $this->setCacheName('%s.min.css');
     }
+
+
   }
 
   /**
@@ -196,7 +207,20 @@ class sfLessCompiler extends lessc {
     }
     else
     {
-      $source = sfConfig::get('sf_web_dir') . DIRECTORY_SEPARATOR . $source;
+      $found = false;
+      foreach($this->pathAliases as $alias => $path)
+      {
+        if(preg_match('/^'.preg_quote($alias, '/').'/', $source, $matches))
+        {
+          $found = true;
+          $source = $path . DIRECTORY_SEPARATOR . $source;
+          break;
+        }
+      }
+      if(!$found)
+      {
+        $source = sfConfig::get('sf_web_dir') . DIRECTORY_SEPARATOR . $source;
+      }
     }
 
     try
