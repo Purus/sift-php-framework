@@ -3,7 +3,7 @@
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 require_once($_test_dir.'/unit/sfContextMock.class.php');
 
-$t = new lime_test(39, new lime_output_color());
+$t = new lime_test(41, new lime_output_color());
 
 // ->initialize()
 $t->todo('->initialize() times out the user if no request made for a long time');
@@ -133,3 +133,9 @@ $t->diag('->clearCredentials()');
 $user->clearCredentials();
 $t->is($user->hasCredential('subscriber'), false);
 $t->is($user->hasCredential('superadmin'), false);
+
+$t->diag('__toString()');
+$t->is((string)$user, 'Anonymous user', '__toString() works ok');
+
+$user->setAuthenticated(true);
+$t->is((string)$user, 'Logged in user', '__toString() works ok');

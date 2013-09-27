@@ -369,4 +369,14 @@ class sfBasicSecurityUser extends sfUser implements sfISecurityUser, sfIService 
     parent::shutdown();
   }
 
+  /**
+   * __toString magic method
+   *
+   * @return string
+   */
+  public function __toString()
+  {
+    return $this->isAuthenticated() ? 'Logged in user' : 'Anonymous user';
+  }
+
 }

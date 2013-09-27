@@ -109,4 +109,11 @@ interface sfISecurityUser extends sfIUser
    */
   public function getLastRequestTime();
 
+  /**
+   * Converts the user to string. Usually to get the user nickname
+   *
+   * @return string
+   */
+  public function __toString();
+
 }
