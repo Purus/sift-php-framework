@@ -242,6 +242,9 @@ abstract class sfApplication extends sfProject {
       }
     }
 
+    // set default culture
+    $this->setOption('sf_culture', $this->getOption('sf_i18n_default_culture', 'en'));
+
     // add autoloading callables
     foreach((array) sfConfig::get('sf_autoloading_functions', array()) as $callable)
     {
