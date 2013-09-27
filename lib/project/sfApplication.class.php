@@ -142,6 +142,13 @@ abstract class sfApplication extends sfProject {
   protected function initConfiguration()
   {
     $this->configCache->import($this->getOption('sf_app_config_dir_name') . '/settings.yml', false);
+
+    // detect relative url root, before setting up the request
+    if(!$this->hasOption('sf_relative_url_root'))
+    {
+      $this->setOption('sf_relative_url_root', $this->detectRelativeUrlRoot());
+    }
+
     require ($this->configCache->checkConfig($this->getOption('sf_app_config_dir_name') . '/logging.yml', false));
     $this->configCache->import($this->getOption('sf_app_config_dir_name') . '/php.yml', false);
 
@@ -478,6 +485,31 @@ abstract class sfApplication extends sfProject {
         'sf_test_cache_dir' => $sf_cache_dir . DS . 'test',
         'sf_module_cache_dir' => $sf_cache_dir . DS . 'modules',
     ));
+  }
+
+  /**
+   * Detects the relative url root from the script name
+   *
+   * @return string The url root
+   * @throws sfConfigurationException
+   */
+  protected function detectRelativeUrlRoot()
+  {
+    $pathInfo = sfConfig::get('sf_path_info_array');
+    switch($pathInfo)
+    {
+      case 'SERVER':
+        $scriptName = $_SERVER['SCRIPT_NAME'];
+      break;
+
+      case 'ENV':
+        $scriptName = $_ENV['SCRIPT_NAME'];
+      break;
+
+      default:
+        throw new sfConfigurationException(sprintf('Invalid configuration value "%s" for "sf_path_info_array". Valid values are "SERVER" or "ENV"', $pathInfo));
+    }
+    return preg_replace('#/[^/]+\.php5?$#', '', $scriptName);
   }
 
   /**
