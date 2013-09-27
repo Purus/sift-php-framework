@@ -534,6 +534,7 @@ class sfCoreAutoload {
       'sfwizardform' => 'form/wizard/sfWizardForm.class.php',
       'sfgenerator' => 'generator/sfGenerator.class.php',
       'sfgeneratorfield' => 'generator/sfGeneratorField.class.php',
+      'sfgeneratorformbuilder' => 'generator/sfGeneratorFormBuilder.class.php',
       'sfgeneratormanager' => 'generator/sfGeneratorManager.class.php',
       'sfigenerator' => 'generator/sfIGenerator.interface.php',
       'sfigeneratorfield' => 'generator/sfIGeneratorField.interface.php',
