@@ -53,7 +53,6 @@ abstract class sfProject extends sfConfigurable {
     'sf_app_module_template_dir_name' => 'templates',
     'sf_app_module_lib_dir_name' => 'lib',
     'sf_app_module_view_dir_name' => 'views',
-    'sf_app_module_validate_dir_name' => 'validate',
     'sf_app_module_config_dir_name' => 'config',
     'sf_app_module_i18n_dir_name' => 'i18n',
   );
