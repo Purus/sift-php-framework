@@ -54,11 +54,25 @@ class sfUser extends sfConfigurable implements sfIUser, sfIService, ArrayAccess 
   protected $timezone;
 
   /**
-   * Service container
+   * The dispatcher instance
    *
-   * @var sfServiceContainer
+   * @var sfEventDispatcher
    */
-  protected $serviceContainer;
+  protected $dispatcher;
+
+  /**
+   * The storage instance
+   *
+   * @var sfIstorage
+   */
+  protected $storage;
+
+  /**
+   * The web request
+   *
+   * @var sfWebRequest
+   */
+  protected $request;
 
   /**
    * Array of default options
@@ -81,9 +95,9 @@ class sfUser extends sfConfigurable implements sfIUser, sfIService, ArrayAccess 
   /**
    * Constructor
    *
-   * @param sfEventDispatcher $dispatcher Event dispatcher
-   * @param sfIStorage $storage Storage
-   * @param sfWebRequest $request Request
+   * @param sfEventDispatcher $dispatcher The event dispatcher
+   * @param sfIStorage $storage The storage
+   * @param sfWebRequest $request The web request
    * @param array $options Options
    * @inject dispatcher
    * @inject storage
@@ -123,16 +137,11 @@ class sfUser extends sfConfigurable implements sfIUser, sfIService, ArrayAccess 
       }
     }
 
-    // set the user culture to sf_culture parameter if present in the request
-    // otherwise
-    //  - use the culture defined in the user session
-    //  - use the default_culture option
-    if(!($culture = $this->request->getParameter('sf_culture')))
+    // use the culture defined in the user session
+    // or use the default_culture option
+    if(null === ($culture = $this->storage->read(self::CULTURE_NAMESPACE)))
     {
-      if(null === ($culture = $this->storage->read(self::CULTURE_NAMESPACE)))
-      {
-        $culture = $this->getOption('default_culture');
-      }
+      $culture = $this->getOption('default_culture');
     }
 
     $this->setCulture($culture);

@@ -46,7 +46,7 @@ class sfContext {
   {
     if(!$this->request)
     {
-      $this->request = new sfWebRequest($this);
+      $this->request = new sfWebRequest($this->getEventDispatcher());
     }
 
     return $this->request;
@@ -56,7 +56,7 @@ class sfContext {
   {
     if(!$this->response)
     {
-      $this->response = new sfWebResponse($this);
+      $this->response = new sfWebResponse($this->getEventDispatcher());
     }
 
     return $this->response;

@@ -20,9 +20,14 @@ default:
 
   request:
     class: sfWebRequest
+    arguments: ["$event_dispatcher"]
 
   response:
     class: sfWebResponse
+    arguments:
+     - $event_dispatcher
+     - []
+     - { title_mode: %APP_TITLE_MODE%, charset: %SF_CHARSET%}
 
   user:
     class: myUser

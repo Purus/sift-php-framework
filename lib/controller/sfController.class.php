@@ -29,10 +29,27 @@ abstract class sfController implements sfIService
   public function __construct(sfContext $context)
   {
     $this->context = $context;
+    $this->setup();
+  }
 
-    if(sfConfig::get('sf_logging_enabled'))
+  /**
+   * Setup
+   */
+  protected function setup()
+  {
+    if('HEAD' == $this->context->getRequest()->getMethodName())
     {
-      sfLogger::getInstance()->info('{sfController} Initialization');
+      $this->context->getResponse()->setHeaderOnly(true);
+    }
+
+    // request has culture parameter
+    if(($culture = $this->context->getRequest()->getParameter('sf_culture')))
+    {
+      // validate
+      if($culture !== sfConfig::get('sf_culture'))
+      {
+        $this->context->getUser()->setCulture($culture);
+      }
     }
   }
 
@@ -175,9 +192,8 @@ abstract class sfController implements sfIService
       throw new sfForwardException(sprintf('Too many forwards have been detected for this request (> %d)', $this->maxForwards));
     }
 
-    $rootDir = sfConfig::get('sf_root_dir');
-    $app     = sfConfig::get('sf_app');
-    $env     = sfConfig::get('sf_environment');
+    $app = sfConfig::get('sf_app');
+    $env = sfConfig::get('sf_environment');
 
     if (!sfConfig::get('sf_available') || sfToolkit::hasLockFile(sfConfig::get('sf_data_dir').'/'.$app.'_'.$env.'.lck'))
     {
@@ -200,7 +216,7 @@ abstract class sfController implements sfIService
       // the requested action doesn't exist
       if(sfConfig::get('sf_logging_enabled'))
       {
-        sfLogger::getInstance()->info(sprintf('{sfController} action "%s/%s" does not exist', $moduleName, $actionName));
+        sfLogger::getInstance()->info(sprintf('{sfController} The action "%s/%s" does not exist', $moduleName, $actionName));
       }
 
       // track the requested module so we have access to the data in the error 404 page

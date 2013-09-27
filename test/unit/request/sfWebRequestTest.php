@@ -13,7 +13,7 @@ class myRequest extends sfWebRequest
 }
 
 $context = sfContext::getInstance();
-$request = new myRequest();
+$request = new myRequest(new sfEventDispatcher());
 
 // ->getLanguages()
 $t->diag('->getLanguages()');
@@ -109,7 +109,7 @@ $expected = array(
     'size' => 100,
   );
 
-$request = new myRequest();
+$request = new myRequest(new sfEventDispatcher());
 
 $t->is($request->hasFile('file'), true, '->hasFile() return true if the file exists');
 $t->is($request->hasFile('foo'), false, '->hasFile() return false if the file does not exists');
@@ -145,7 +145,7 @@ $_FILES = array(
   ),
 );
 
-$request = new myRequest();
+$request = new myRequest(new sfEventDispatcher());
 
 $t->is($request->hasFile('article[file1]'), true, '->hasFile() return true if the file exists');
 $t->is($request->hasFile('foo'), false, '->hasFile() return false if the file does not exists');
@@ -191,7 +191,7 @@ $_FILES = array (
   )
 );
 
-$request = new myRequest();
+$request = new myRequest(new sfEventDispatcher());
 
 $t->is($request->hasFile('book[article][file1]'), true, '->hasFile() return true if the file exists');
 $t->is($request->hasFile('foo'), false, '->hasFile() return false if the file does not exists');
@@ -245,7 +245,7 @@ $_FILES = array (
   ),
 );
 
-$request = new myRequest();
+$request = new myRequest(new sfEventDispatcher());
 
 $t->is($request->hasFile('book[article][0]'), true, '->hasFile() return true if the file exists');
 $t->is($request->hasFile('foo'), false, '->hasFile() return false if the file does not exists');
@@ -331,7 +331,7 @@ $_FILES = array(
   ),
 );
 
-$request = new myRequest();
+$request = new myRequest(new sfEventDispatcher());
 
 $t->is($request->hasFile('article[0]'), true, '->hasFile() return true if the file exists');
 $t->is($request->hasFile('foo'), false, '->hasFile() return false if the file does not exists');
@@ -347,7 +347,7 @@ $_GET = array(
   )
 );
 
-$request = new myRequest();
+$request = new myRequest(new sfEventDispatcher());
 
 $t->is_deeply($request->getString('foo'), 'bar &lt;li&gt;', '->getString() returns string');
 $t->is_deeply($request->getInt('foo'), 0, '->getInt() returns integer');
@@ -388,7 +388,7 @@ $_FILES = array('foofiles' =>
   ));
 
 
-$request = new myRequest();
+$request = new myRequest(new sfEventDispatcher());
 
 $t->is($request->getFiles('foofiles'), array(
     array(

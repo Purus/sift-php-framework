@@ -31,8 +31,8 @@ class myTestResponse extends sfWebResponse {
 }
 
 $dispatcher = new sfEventDispatcher();
-$request = new sfWebRequest();
-$response = new sfWebResponse();
+$request = new sfWebRequest($dispatcher);
+$response = new sfWebResponse($dispatcher);
 $logger = new sfConsoleLogger();
 
 $download = new sfHttpDownload(array(), $request, $response, $dispatcher, $logger);

@@ -22,8 +22,9 @@ class sfTestUser extends sfUser {
 
 $sessionPath = sys_get_temp_dir() . '/sessions_' . rand(11111, 99999);
 $storage = new sfSessionTestStorage(array('session_path' => $sessionPath));
+$dispatcher = new sfEventDispatcher();
 
-$user = new sfTestUser(new sfEventDispatcher(), $storage, new sfWebRequest());
+$user = new sfTestUser($dispatcher, $storage, new sfWebRequest($dispatcher ));
 
 $t->diag('->isBot()');
 

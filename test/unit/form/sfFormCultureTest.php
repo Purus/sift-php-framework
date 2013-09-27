@@ -8,8 +8,9 @@ $t = new lime_test(9, new lime_output_color());
 
 $sessionPath = sys_get_temp_dir() . '/sessions_' . rand(11111, 99999);
 $storage = new sfSessionTestStorage(array('session_path' => $sessionPath));
-$request = new sfWebRequest();
-$user = new sfUser(new sfEventDispatcher(), $storage, $request);
+$dispatcher = new sfEventDispatcher();
+$request = new sfWebRequest($dispatcher);
+$user = new sfUser($dispatcher, $storage, $request);
 $user->setCulture('en');
 
 // __construct()

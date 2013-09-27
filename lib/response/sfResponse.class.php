@@ -13,7 +13,7 @@
  * @package    Sift
  * @subpackage response
  */
-abstract class sfResponse implements Serializable, sfIService {
+abstract class sfResponse extends sfConfigurable implements sfIResponse {
 
   /**
    * Parameter holder
@@ -23,13 +23,6 @@ abstract class sfResponse implements Serializable, sfIService {
   protected $parameterHolder;
 
   /**
-   * Context holder
-   *
-   * @var sfContext
-   */
-  protected $context;
-
-  /**
    * Content
    *
    * @var string
@@ -37,14 +30,28 @@ abstract class sfResponse implements Serializable, sfIService {
   protected $content = '';
 
   /**
+   * The dispatcher instance
+   *
+   * @var sfEventDispatcher
+   */
+  protected $dispatcher;
+
+  /**
    * Constructor
    *
+   * @param sfEventDispatcher $dispatcher
    * @param array $parameters
+   * @param array $options
+   * @inject event_dispatcher
    */
-  public function __construct($parameters = array())
+  public function __construct(sfEventDispatcher $dispatcher, $parameters = array(), $options = array())
   {
+    $this->dispatcher = $dispatcher;
+
     $this->parameterHolder = new sfParameterHolder();
     $this->parameterHolder->add($parameters);
+
+    parent::__construct($options);
   }
 
   /**
@@ -76,9 +83,9 @@ abstract class sfResponse implements Serializable, sfIService {
   {
     $content = $this->getContent();
 
-    $content = sfCore::filterByEventListeners($content, 'response.filter_content', array(
+    $content = $this->dispatcher->filter(new sfEvent('response.filter_content', array(
       'response' => $this
-    ));
+    )), $content)->getReturnValue();
 
     if(sfConfig::get('sf_logging_enabled'))
     {
@@ -145,26 +152,45 @@ abstract class sfResponse implements Serializable, sfIService {
   }
 
   /**
+   * Sets the dispatcher
+   *
+   * @param sfEventDispatcher $dispatcher
+   */
+  public function setEventDispatcher(sfEventDispatcher $dispatcher)
+  {
+    $this->dispatcher = $dispatcher;
+  }
+
+  /**
+   * Returns the dispatcher
+   *
+   * @return sfEventDispatcher
+   */
+  public function getEventDispatcher()
+  {
+    return $this->dispatcher;
+  }
+
+  /**
    * Calls methods defined via sfEventDispatcher.
    *
    * @param string $method The method name
    * @param array  $arguments The method arguments
-   *
    * @return mixed The returned value of the called method
-   *
    * @throws sfException If called method is undefined
    */
   public function __call($method, $arguments)
   {
-    $event = sfCore::getEventDispatcher()->notifyUntil(
-                    new sfEvent('response.method_not_found', array(
-                        'method' => $method,
-                        'arguments' => $arguments,
-                        'component' => $this)));
+    $event = $this->dispatcher->notifyUntil(
+               new sfEvent('response.method_not_found',
+                 array('method' => $method,
+                       'arguments' => $arguments,
+                       'component' => $this)
+               ));
 
     if(!$event->isProcessed())
     {
-      throw new sfException(sprintf('Call to undefined method %s::%s.', get_class($this), $method));
+      throw new sfException(sprintf('Call to undefined method %s::%s', get_class($this), $method));
     }
 
     return $event->getReturnValue();

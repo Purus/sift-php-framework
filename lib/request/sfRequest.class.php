@@ -14,38 +14,12 @@
  * @package    Sift
  * @subpackage request
  */
-abstract class sfRequest implements Serializable, sfIService {
-
-  /**
-   * GET
-   */
-  const GET = 'GET';
-
-  /**
-   * POST
-   */
-  const POST = 'POST';
-
-  /**
-   * PUT
-   */
-  const PUT = 'PUT';
-
-  /**
-   * DELETE
-   */
-  const DELETE = 'DELETE';
-
-  /**
-   * HEAD
-   *
-   */
-  const HEAD = 'HEAD';
+abstract class sfRequest implements sfIRequest, Serializable {
 
   /**
    * Protected namespace. Request parameters which are
    * prefixed with _sf_ should be there
-   * 
+   *
    */
   const PROTECTED_NAMESPACE = 'sift/request/protected';
 
@@ -77,13 +51,24 @@ abstract class sfRequest implements Serializable, sfIService {
   protected $attributeHolder;
 
   /**
+   * The dispatcher instance
+   *
+   * @var sfEventDispatcher
+   */
+  protected $eventDispatcher;
+
+  /**
    * Constructor
    *
+   * @param sfEventDispatcher $dispatcher The dispatcher
    * @param array $parameters Array of parameters
    * @param array $attributes Array of attributes
+   * @inject event_dispatcher
    */
-  public function __construct($parameters = array(), $attributes = array())
+  public function __construct(sfEventDispatcher $dispatcher, $parameters = array(), $attributes = array())
   {
+    $this->setEventDispatcher($dispatcher);
+
     // initialize parameter and attribute holders
     $this->parameterHolder = new sfParameterHolder();
     $this->attributeHolder = new sfParameterHolder();
@@ -222,7 +207,7 @@ abstract class sfRequest implements Serializable, sfIService {
    * @param string Parameter name
    * @param string Parameter default value
    * @param string Namespace for the current request
-   *
+   * @return mixed The parameter value
    */
   public function getParameter($name, $default = null, $ns = null)
   {
@@ -417,22 +402,20 @@ abstract class sfRequest implements Serializable, sfIService {
    *
    * @param string $method The method name
    * @param array  $arguments The method arguments
-   *
    * @return mixed The returned value of the called method
    *
    * @throws sfException If called method is undefined
    */
   public function __call($method, $arguments)
   {
-    $event = sfCore::getEventDispatcher()->notifyUntil(
-      new sfEvent('request.method_not_found', array(
-          'method'    => $method,
-          'arguments' => $arguments,
-          'request'   => $this)));
+    $event = $this->dispatcher->notifyUntil(new sfEvent('request.method_not_found', array(
+                'method'    => $method,
+                'arguments' => $arguments,
+                'request'   => $this)));
 
     if (!$event->isProcessed())
     {
-      throw new sfException(sprintf('Call to undefined method %s::%s.', get_class($this), $method));
+      throw new sfException(sprintf('Call to undefined method %s::%s', get_class($this), $method));
     }
 
     return $event->getReturnValue();
@@ -489,8 +472,8 @@ abstract class sfRequest implements Serializable, sfIService {
   public function serialize()
   {
     $vars = get_object_vars($this);
-    // we don't serialize context!    
-    unset($vars['context']);
+    // we don't serialize the dispatcher!
+    unset($vars['dispatcher']);
     return (string) @serialize($vars);
   }
 
@@ -507,10 +490,6 @@ abstract class sfRequest implements Serializable, sfIService {
     {
       $this->$var = $value;
     }
-    if(sfContext::hasInstance())
-    {
-      $this->context = sfContext::getInstance();
-    }
   }
 
   /**
@@ -520,6 +499,36 @@ abstract class sfRequest implements Serializable, sfIService {
   {
     $this->parameterHolder = clone $this->parameterHolder;
     $this->attributeHolder = clone $this->attributeHolder;
+  }
+
+  /**
+   * Sets the dispatcher
+   *
+   * @param sfEventDispatcher $dispatcher
+   */
+  public function setEventDispatcher(sfEventDispatcher $dispatcher)
+  {
+    $this->dispatcher = $dispatcher;
+  }
+
+  /**
+   * Returns the dispatcher
+   *
+   * @return sfEventDispatcher
+   */
+  public function getEventDispatcher()
+  {
+    return $this->dispatcher;
+  }
+
+  /**
+   * Dispatches an event using the dispatcher
+   *
+   * @param sfEvent $event
+   */
+  protected function dispatchEvent(sfEvent $event)
+  {
+    $this->dispatcher->notify($event);
   }
 
 }

@@ -18,7 +18,7 @@ $t = new lime_test(34, new lime_output_color());
 
 sfRouting::getInstance()->clearRoutes();
 
-$request = new myRequest(array('foo' => 'bar'));
+$request = new myRequest(new sfEventDispatcher(), array('foo' => 'bar'));
 
 $t->is($request->getParameter('foo'), 'bar', '->initialize() takes an array of parameters as its second argument');
 
@@ -39,13 +39,13 @@ catch (sfException $e)
 
 // ->extractParameters()
 $t->diag('->extractParameters()');
-$request = new myRequest(array('foo' => 'foo', 'bar' => 'bar'));
+$request = new myRequest(new sfEventDispatcher(), array('foo' => 'foo', 'bar' => 'bar'));
 
 $t->is($request->extractParameters(array()), array(), '->extractParameters() returns parameters');
 $t->is($request->extractParameters(array('foo')), array('foo' => 'foo'), '->extractParameters() returns parameters for keys in its first parameter');
 $t->is($request->extractParameters(array('bar')), array('bar' => 'bar'), '->extractParameters() returns parameters for keys in its first parameter');
 
-$request = new myRequest();
+$request = new myRequest($dispatcher = new sfEventDispatcher());
 
 // parameter holder proxy
 require_once($_test_dir.'/unit/sfParameterHolderTest.class.php');
@@ -59,4 +59,4 @@ $pht->launchTests($request, 'attribute');
 // new methods via sfEventDispatcher
 require_once($_test_dir.'/unit/sfEventDispatcherTest.class.php');
 $dispatcherTest = new sfEventDispatcherTest($t);
-$dispatcherTest->launchTests(sfCore::getEventDispatcher(), $request, 'request');
+$dispatcherTest->launchTests($dispatcher, $request, 'request');

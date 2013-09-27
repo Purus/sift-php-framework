@@ -42,7 +42,7 @@ class sfViewCacheManager extends sfConfigurable
   public function __construct(sfContext $context, sfCache $cache, $options = array())
   {
     $this->context = $context;
-    // $this->dispatcher = $context->getEventDispatcher();
+    $this->dispatcher = $context->getEventDispatcher();
     $this->controller = $context->getController();
     $this->request = $context->getRequest();
 
@@ -892,6 +892,7 @@ class sfViewCacheManager extends sfConfigurable
 
     $cache = unserialize($cache);
     $content = $cache['content'];
+    $cache['response']->setEventDispatcher($this->dispatcher);
 
     $this->context->getResponse()->mergeProperties($cache['response']);
 
@@ -986,6 +987,7 @@ class sfViewCacheManager extends sfConfigurable
     }
 
     $cachedResponse = unserialize($retval);
+    $cachedResponse->setEventDispatcher($this->dispatcher);
 
     if(sfView::RENDER_VAR == $this->controller->getRenderMode())
     {

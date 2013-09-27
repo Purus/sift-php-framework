@@ -59,6 +59,15 @@ class sfWebResponse extends sfResponse
    */
   protected $headerOnly  = false;
 
+  /**
+   * Array of default options
+   *
+   * @var array
+   */
+  protected $defaultOptions = array(
+    'title_mode' => self::TITLE_MODE_PREPEND,
+    'charset' => 'UTF-8',
+  );
 
   /**
    * Array of known statuses
@@ -111,27 +120,6 @@ class sfWebResponse extends sfResponse
     507 => 'Insufficient Storage',
     509 => 'Bandwidth Limit Exceeded'
   );
-
-  /**
-   * Initializes this sfWebResponse.
-   *
-   * @param sfContext $context A sfContext instance
-   * @param array $parameters Array of parameters
-   * @return boolean true, if initialization completes successfully, otherwise false
-   * @throws sfInitializationException If an error occurs while initializing this Response
-   */
-  public function __construct($parameters = array())
-  {
-    parent::__construct($parameters);
-    /*
-    if('HEAD' == $this->context->getRequest()->getMethodName())
-    {
-      $this->setHeaderOnly(true);
-    }
-     *
-     */
-    $this->setTitleMode(strtoupper(sfConfig::get('app_title_mode', self::TITLE_MODE_PREPEND)));
-  }
 
   /**
    * Sets if the response consist of just HTTP headers.
@@ -342,7 +330,7 @@ class sfWebResponse extends sfResponse
    */
   public function getCharset()
   {
-    return sfConfig::get('sf_charset');
+    return $this->getOption('charset');
   }
 
   /**
@@ -352,7 +340,7 @@ class sfWebResponse extends sfResponse
    */
   public function getContentType()
   {
-    return $this->getHttpHeader('Content-Type', 'text/html; charset='.sfConfig::get('sf_charset'));
+    return $this->getHttpHeader('Content-Type', 'text/html; charset='.$this->getCharset());
   }
 
   /**
@@ -429,8 +417,7 @@ class sfWebResponse extends sfResponse
    */
   public function send()
   {
-    sfCore::getEventDispatcher()->notify(
-            new sfEvent('response.send', array('response' => &$this)));
+    $this->dispatcher->notify(new sfEvent('response.send', array('response' => $this)));
 
     if(!sfToolkit::isCallable($this->content))
     {

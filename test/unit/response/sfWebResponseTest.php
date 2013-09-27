@@ -19,8 +19,8 @@ class myWebResponse extends sfWebResponse
   }
 }
 
-$context = new sfContext();
-$response = new myWebResponse();
+$dispatcher = new sfEventDispatcher();
+$response = new myWebResponse($dispatcher);
 
 // ->getStatusCode() ->setStatusCode()
 $t->diag('->getStatusCode() ->setStatusCode()');
@@ -161,8 +161,8 @@ $t->is($response->getHttpHeader('Cache-Control'), 'max-age=12, no-cache', '->add
 
 // ->mergeProperties()
 $t->diag('->mergeProperties()');
-$response1 = new myWebResponse();
-$response2 =new myWebResponse();
+$response1 = new myWebResponse($dispatcher);
+$response2 =new myWebResponse($dispatcher);
 
 $response1->setHttpHeader('symfony', 'foo');
 $response1->setContentType('text/plain');
@@ -175,7 +175,7 @@ $t->is($response1->getTitle(), $response2->getTitle(), '->mergerProperties() mer
 
 // ->addStylesheet()
 $t->diag('->addStylesheet()');
-$response = new myWebResponse();
+$response = new myWebResponse($dispatcher);
 $response->addStylesheet('test');
 $t->ok($response->getParameterHolder()->has('test', 'helper/asset/auto/stylesheet'), '->addStylesheet() adds a new stylesheet for the response');
 $response->addStylesheet('foo', '');
@@ -195,7 +195,7 @@ $t->is($response->getStylesheets('last'), array('last' => array()), '->getStyles
 
 // ->addJavascript()
 $t->diag('->addJavascript()');
-$response = new myWebResponse();
+$response = new myWebResponse($dispatcher);
 $response->addJavascript('test');
 $t->ok($response->getParameterHolder()->has('test', 'helper/asset/auto/javascript'), '->addJavascript() adds a new javascript for the response');
 $response->addJavascript('foo', '');
@@ -218,7 +218,7 @@ $t->is($response->getCookies(), array('foo' => array('name' => 'foo', 'value' =>
 
 // ->setHeaderOnly() ->getHeaderOnly()
 $t->diag('->setHeaderOnly() ->isHeaderOnly()');
-$response = new myWebResponse();
+$response = new myWebResponse($dispatcher = new sfEventDispatcher());
 $t->is($response->isHeaderOnly(), false, '->isHeaderOnly() returns false if the content must be send to the client');
 $response->setHeaderOnly(true);
 $t->is($response->isHeaderOnly(), true, '->setHeaderOnly() changes the current value of header only');
@@ -239,7 +239,11 @@ $t->is(ob_get_clean(), 'foo', '->sendContent() returns the response content if h
 
 // ->serialize() ->unserialize()
 $t->diag('->serialize() ->unserialize()');
+
 $resp = unserialize(serialize($response));
+$resp->setOptions($response->getOptions());
+$resp->setEventDispatcher($dispatcher);
+
 $t->ok($response == $resp, 'sfWebResponse implements the Serializable interface');
 
 $t->diag('->setSlot() ->getSlot() ->clearSlots()');
@@ -257,12 +261,12 @@ $t->is($response->getSlots(), array(), 'getSlots() returns empty array after cle
 
 $t->diag('->merge()');
 
-$response = new myWebResponse();
+$response = new myWebResponse($dispatcher);
 $response->setTitle('Original title');
 $response->setSlot('component', 'Component');
 $response->addStylesheet('foo_styles2', 'first', array('ie_condition' => 'IE7'));
 
-$response2 = new myWebResponse();
+$response2 = new myWebResponse($dispatcher);
 $response2->addJavascript('foo');
 $response2->addStylesheet('foo_styles', 'last', array('ie_condition' => 'IE6'));
 $response2->setTitle('foobar');

@@ -55,17 +55,14 @@ class sfWebRequest extends sfRequest {
   /**
    * Initializes this sfRequest.
    *
-   * @param sfContext A sfContext instance
-   * @param array   An associative array of initialization parameters
-   * @param array   An associative array of initialization attributes
-   *
-   * @return boolean true, if initialization completes successfully, otherwise false
-   *
-   * @throws sfInitializationException If an error occurs while initializing this Request
+   * @param sfEventDispatcher $dispatcher The dispatcher
+   * @param array $parameters An associative array of initialization parameters
+   * @param array $attributes An associative array of initialization attributes
+   * @inject event_dispatcher
    */
-  public function __construct($parameters = array(), $attributes = array())
+  public function __construct(sfEventDispatcher $dispatcher, $parameters = array(), $attributes = array())
   {
-    parent::__construct($parameters, $attributes);
+    parent::__construct($dispatcher, $parameters, $attributes);
 
     if(isset($_SERVER['REQUEST_METHOD']))
     {

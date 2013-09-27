@@ -16,7 +16,7 @@ $t->is($user->isTimedOut(), true, '->initialize() times out the user if no reque
 */
 $dispatcher = new sfEventDispatcher();
 $storage = new sfNoStorage();
-$request = new sfWebRequest();
+$request = new sfWebRequest($dispatcher);
 
 $user = new sfBasicSecurityUser($dispatcher, $storage, $request, array());
 

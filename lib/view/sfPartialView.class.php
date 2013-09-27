@@ -23,7 +23,7 @@ class sfPartialView extends sfPHPView implements sfIPartialView
 
   /**
    * Constructor.
-   * 
+   *
    * @see sfView
    */
   public function initialize($moduleName, $actionName, $viewName)
@@ -39,7 +39,7 @@ class sfPartialView extends sfPHPView implements sfIPartialView
 
     return $ret;
   }
-  
+
   /**
    * Executes any presentation logic for this view.
    */
@@ -96,11 +96,9 @@ class sfPartialView extends sfPHPView implements sfIPartialView
     if($this->checkCache)
     {
       $mainResponse = $this->context->getResponse();
+      $response = $this->context->getServiceContainer()->createObject(get_class($mainResponse));
+      $response->setOptions($mainResponse->getOptions());
 
-      $responseClass = get_class($mainResponse);
-      $response = new $responseClass($this->context);
-      // $response->initialize();
-      
       // the inner response has access to different properties, depending on whether it is marked as contextual in cache.yml
       if($this->viewCache->isContextual($this->viewCache->getPartialUri($this->moduleName, $this->actionName, $this->cacheKey)))
       {
@@ -146,7 +144,7 @@ class sfPartialView extends sfPHPView implements sfIPartialView
       $mainResponse->merge($response);
     }
 
-    if (sfConfig::get('sf_debug') && sfConfig::get('sf_logging_enabled'))
+    if(sfConfig::get('sf_debug') && sfConfig::get('sf_logging_enabled'))
     {
       $timer->addTime();
     }
@@ -161,7 +159,7 @@ class sfPartialView extends sfPHPView implements sfIPartialView
       return null;
     }
     $this->cacheKey = $this->viewCache->checkCacheKey($this->partialVars);
-    if($retval = $this->viewCache->getPartialCache($this->moduleName, $this->actionName, $this->cacheKey))
+    if(($retval = $this->viewCache->getPartialCache($this->moduleName, $this->actionName, $this->cacheKey)))
     {
       return $retval;
     }

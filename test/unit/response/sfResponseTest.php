@@ -7,6 +7,9 @@ require_once($_test_dir.'/unit/sfCoreMock.class.php');
 class myResponse extends sfResponse
 {
   function shutdown() {}
+  public function send()
+  {
+  }
 }
 
 class fakeResponse
@@ -16,12 +19,12 @@ class fakeResponse
 $t = new lime_test(19, new lime_output_color());
 
 $context = sfContext::getInstance();
-
-$response = new myResponse(array('foo' => 'bar'));
+$dispatcher = new sfEventDispatcher();
+$response = new myResponse($dispatcher, array('foo' => 'bar'));
 
 $t->is($response->getParameter('foo'), 'bar', '->initialize() takes an array of parameters as its second argument');
 
-$response = new myResponse();
+$response = new myResponse($dispatcher);
 
 // ->getContent() ->setContent()
 $t->diag('->getContent() ->setContent()');
@@ -44,4 +47,4 @@ $pht->launchTests($response, 'parameter');
 // new methods via sfEventDispatcher
 require_once($_test_dir.'/unit/sfEventDispatcherTest.class.php');
 $dispatcherTest = new sfEventDispatcherTest($t);
-$dispatcherTest->launchTests(sfCore::getEventDispatcher(), $response, 'response');
+$dispatcherTest->launchTests($dispatcher, $response, 'response');

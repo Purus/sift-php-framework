@@ -76,7 +76,7 @@ class lastTestFilter extends sfFilter
 
 $context = sfContext::getInstance();
 $context->request = new myRequest();
-$response = new sfWebResponse($context);
+$response = new sfWebResponse($context->getEventDispatcher());
 $context->response = $response;
 
 $selector = execute_filter_chain($context, $t);
