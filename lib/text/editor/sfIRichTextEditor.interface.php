@@ -12,7 +12,7 @@
  * @package    Sift
  * @subpackage text_editor
  */
-interface sfIRichTextEditor {
+interface sfIRichTextEditor extends sfIConfigurable {
 
   /**
    * Renders the field with given $name as rich editor
