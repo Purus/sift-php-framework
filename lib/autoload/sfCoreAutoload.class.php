@@ -790,6 +790,7 @@ class sfCoreAutoload {
       'sftextfiltercallbackdefinition' => 'text/filter/sfTextFilterCallbackDefinition.class.php',
       'sftextfiltercontent' => 'text/filter/sfTextFilterContent.class.php',
       'sftextfilterregistry' => 'text/filter/sfTextFilterRegistry.class.php',
+      'sfitextmacrofilter' => 'text/macro/sfITextMacroFilter.interface.php',
       'sfitextmacrowidget' => 'text/macro/sfITextMacroWidget.interface.php',
       'sftextmacrocallbackdefinition' => 'text/macro/sfTextMacroCallbackDefinition.class.php',
       'sftextmacroregistry' => 'text/macro/sfTextMacroRegistry.class.php',
