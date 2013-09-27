@@ -386,7 +386,7 @@ class sfLessCompiler extends lessc {
     {
       if(sfConfig::get('sf_logging_enabled'))
       {
-        sfLogger::getInstance()->log(sprintf('{sfLessCompiler} Looking up for "%s" in "%s"', $url, $dir));
+        sfLogger::getInstance()->debug(sprintf('{sfLessCompiler} Looking up for "%s" in "%s"', $url, $dir));
       }
 
       $dir = rtrim($dir, DIRECTORY_SEPARATOR);
