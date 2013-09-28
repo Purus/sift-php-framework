@@ -1,7 +1,7 @@
 <?php
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
-$t = new lime_test(4, new lime_output_color());
+$t = new lime_test(10, new lime_output_color());
 
 class sfContext {}
 
@@ -13,13 +13,13 @@ class testMailer {
   {
     $this->context = $context;
   }
-  
+
 }
 
 class Newsletter {
 
   public $mailer;
-  
+
   public function __construct(testMailer $mailer)
   {
     $this->mailer = $mailer;
@@ -27,8 +27,20 @@ class Newsletter {
 
 }
 
+class Foo {
+
+  public $options;
+
+  public function __construct($options = array())
+  {
+    $this->options = $options;
+  }
+
+}
 
 sfConfig::set('sf_lib_dir', '/foobar');
+sfConfig::set('sf_cache_dir', '/cache/application');
+sfConfig::set('sf_array_config', array('empty'));
 
 $services = new sfServiceContainer();
 
@@ -59,3 +71,29 @@ $newsletter = $services->get('newsletter');
 $t->isa_ok($newsletter, 'Newsletter', 'Service returned the object');
 
 $t->is_deeply($newsletter->mailer, $mailer, 'Service returned the object');
+
+$services->register('foo', sfServiceDefinition::createFromArray(array(
+    'class' => 'Foo',
+    'arguments' => array(
+      array('option' => '%SF_CACHE_DIR%/foo', 'another' => '%SF_ARRAY_CONFIG%')
+    )
+)));
+
+$foo = $services->get('foo');
+
+$t->isa_ok($foo, 'Foo', 'Service returned the object');
+
+$t->is_deeply($foo->options, array(
+    'option' => '/cache/application/foo',
+    'another' => array('empty')
+), 'Service returned the object');
+
+$t->diag('->resolveValue()');
+
+$t->is($services->resolveValue('%SF_CACHE_DIR%'), '/cache/application', 'resolveValue() works ok');
+$t->is($services->resolveValue('%SF_CACHE_DIR%/foobar'), '/cache/application/foobar', 'resolveValue() works ok');
+
+$t->diag('->replaceConstants()');
+
+$t->is($services->replaceConstants('%SF_CACHE_DIR%'), '/cache/application', 'replaceConstants() works ok');
+$t->is($services->replaceConstants('%SF_CACHE_DIR%/foobar'), '/cache/application/foobar', 'replaceConstants() works ok');

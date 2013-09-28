@@ -278,12 +278,26 @@ class sfServiceContainer {
    */
   public function replaceConstants($value)
   {
-    if(preg_match('/%(.+?)%/', $value, $matches))
+    // it looks like a constant
+    if(strpos($value, '%') !== false)
     {
-      $name = strtolower($matches[1]);
-      if(sfConfig::has($name))
+      if(preg_match('/%(.+?)%/', $value, $matches, PREG_OFFSET_CAPTURE))
       {
-        return sfConfig::get($name);
+        $name = strtolower($matches[1][0]);
+        if(sfConfig::has($name))
+        {
+          $configured = sfConfig::get($name);
+        }
+        else
+        {
+          $configured = $value;
+        }
+        // we have non string
+        if(is_array($configured) || is_object($configured))
+        {
+          return $configured;
+        }
+        $value = substr_replace($value, $configured, $matches[0][1], strlen($matches[0][0]));
       }
     }
     return $value;
