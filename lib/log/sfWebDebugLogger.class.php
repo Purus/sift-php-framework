@@ -83,7 +83,7 @@ class sfWebDebugLogger extends sfVarLogger implements sfIEventDispatcherAware {
     }
 
     $this->dispatcher->connect('context.load_factories', array($this, 'listenForLoadFactories'));
-    $this->dispatcher->connect('response.filter_content', array($this, 'filterResponseContent'));
+    $this->dispatcher->connect('response.pre_send', array($this, 'filterResponseContent'));
     $this->dispatcher->connect('application.render_exception', array($this, 'filterExceptionContent'));
   }
 
@@ -107,20 +107,22 @@ class sfWebDebugLogger extends sfVarLogger implements sfIEventDispatcherAware {
    * Listens to the web_debug.filter_content event.
    *
    * @param  sfEvent $event   The sfEvent instance
-   * @param  string  $content The response content
-   *
    * @return string  The filtered response content
    */
-  public function filterResponseContent(sfEvent $event, $content)
+  public function filterResponseContent(sfEvent $event)
   {
-    if(!$this->webDebug)
+    $response = $event['response'];
+    if(null === $this->webDebug || strpos($response->getContentType(), 'html') === false
+      || '3' == substr($response->getStatusCode(), 0, 1) || $response->isHeaderOnly())
     {
-      return $content;
+      return;
     }
 
+    $content = $response->getContent();
     $content = str_ireplace('</head>', "<style type=\"text/css\">\n".$this->webDebug->getDebugCss().'</style>' . '</head>', $content);
     $content = str_ireplace('</body>', $this->webDebug->getHtml() . '</body>', $content);
-    return $content;
+
+    $response->setContent($content);
   }
 
  /**

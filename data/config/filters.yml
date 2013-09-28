@@ -6,7 +6,7 @@ rendering:
   param:
     type: rendering
     whitespace_removal_condition: "!%SF_WEB_DEBUG%"
-    compress: false
+    compress: true
 
 # security filter must have a type of security
 security:

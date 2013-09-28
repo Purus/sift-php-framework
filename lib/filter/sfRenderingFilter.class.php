@@ -61,6 +61,10 @@ class sfRenderingFilter extends sfFilter {
       // get response object
       $response = $this->getContext()->getResponse();
 
+      $this->getContext()->getEventDispatcher()->notify(new sfEvent('response.pre_send', array(
+        'response' => $response
+      )));
+
       // can only for HTML text
       if(!$response->isHeaderOnly()
           && is_string($response->getContent())
