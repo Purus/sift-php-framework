@@ -5,7 +5,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
- 
+
 /**
  * Converts HTML to plain text
  *
@@ -31,12 +31,17 @@ class sfHtml2Text {
   public static function convert($html)
   {
     $html = self::fixNewlines($html);
-    
+
+    if(empty($html))
+    {
+      return '';
+    }
+
     // http://stackoverflow.com/a/2238149/515871
     $html = mb_convert_encoding($html, 'HTML-ENTITIES', 'UTF-8');
-    
+
     $doc = new DOMDocument('1.0', 'UTF-8');
-    
+
     // $doc->preserveWhiteSpace = false;
     // $doc->formatOutput = true;
     // $doc->recover = true;
@@ -45,7 +50,7 @@ class sfHtml2Text {
     {
       throw new sfException("Could not load HTML - badly formed?");
     }
-    
+
     $output = self::iterateOverNode($doc);
     // remove leading and trailing spaces on each line
     $output = preg_replace("/[ \t]*\n[ \t]*/im", "\n", $output);
@@ -73,9 +78,9 @@ class sfHtml2Text {
 
   /**
    * Iterates over the node
-   * 
+   *
    * @param DOMtext $node
-   * @return string 
+   * @return string
    */
   protected static function iterateOverNode($node)
   {
@@ -83,7 +88,7 @@ class sfHtml2Text {
     {
       return preg_replace("/\\s+/im", " ", $node->wholeText);
     }
-    
+
     if($node instanceof DOMDocumentType)
     {
       // ignore
@@ -128,12 +133,12 @@ class sfHtml2Text {
 
       case 'ul':
         $output = '---';
-      break;  
-    
+      break;
+
       case 'li':
         $output = '\t* ';
-      break;  
-    
+      break;
+
       default:
         // print out contents of unknown tags
         $output = "";
@@ -180,7 +185,7 @@ class sfHtml2Text {
           $output .= "\n";
         break;
 
-        
+
       case "a":
         // links are returned in [text](link) format
         $href = $node->getAttribute("href");
@@ -221,40 +226,40 @@ class sfHtml2Text {
     return $output;
   }
 
-  protected static function prevChildName($node) 
+  protected static function prevChildName($node)
   {
     // get the previous child
     $nextNode = $node->previousSibling;
-    while($nextNode != null) 
+    while($nextNode != null)
     {
-      if($nextNode instanceof DOMElement) 
+      if($nextNode instanceof DOMElement)
       {
         break;
       }
     $nextNode = $nextNode->previousSibling;
     }
     $nextName = null;
-    if($nextNode instanceof DOMElement && $nextNode != null) 
+    if($nextNode instanceof DOMElement && $nextNode != null)
     {
       $nextName = strtolower($nextNode->nodeName);
     }
     return $nextName;
   }
-  
-  public static function nextChildName($node) 
+
+  public static function nextChildName($node)
   {
     // get the next child
     $nextNode = $node->nextSibling;
-    while($nextNode != null) 
+    while($nextNode != null)
     {
-      if($nextNode instanceof DOMElement) 
+      if($nextNode instanceof DOMElement)
       {
         break;
       }
       $nextNode = $nextNode->nextSibling;
     }
     $nextName = null;
-    if($nextNode instanceof DOMElement && $nextNode != null) 
+    if($nextNode instanceof DOMElement && $nextNode != null)
     {
       $nextName = strtolower($nextNode->nodeName);
     }

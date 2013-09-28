@@ -99,7 +99,11 @@ class sfFeedItem {
     {
       try
       {
-        $description = sfHtml2Text::convert(sfText::stripLinks($this->content));
+        $content = sfText::stripLinks($this->content);
+        if(!empty($content))
+        {
+          $description = sfHtml2Text::convert($content);
+        }
       }
       catch(Exception $e)
       {
