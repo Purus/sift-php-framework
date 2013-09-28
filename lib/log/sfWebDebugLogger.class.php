@@ -83,7 +83,7 @@ class sfWebDebugLogger extends sfVarLogger implements sfIEventDispatcherAware {
     }
 
     $this->dispatcher->connect('context.load_factories', array($this, 'listenForLoadFactories'));
-    $this->dispatcher->connect('web_debug.filter_content', array($this, 'filterResponseContent'));
+    $this->dispatcher->connect('response.filter_content', array($this, 'filterResponseContent'));
     $this->dispatcher->connect('application.render_exception', array($this, 'filterExceptionContent'));
   }
 

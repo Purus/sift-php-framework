@@ -45,9 +45,8 @@ class sfWebDebug extends sfConfigurable
     )));
 
     // hook for cached content
-    $this->dispatcher->connect('view.cache.filter_content', array(
-       $this, 'decorateCachedContent'
-    ));
+    $this->dispatcher
+      ->connect('view.cache.filter_content', array($this, 'decorateCachedContent'));
   }
 
   /**
