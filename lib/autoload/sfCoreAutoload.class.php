@@ -437,7 +437,6 @@ class sfCoreAutoload {
       'sfbasicsecurityfilter' => 'filter/sfBasicSecurityFilter.class.php',
       'sfcachefilter' => 'filter/sfCacheFilter.class.php',
       'sfcommonfilter' => 'filter/sfCommonFilter.class.php',
-      'sfcompressoutputfilter' => 'filter/sfCompressOutputFilter.class.php',
       'sfexecutionfilter' => 'filter/sfExecutionFilter.class.php',
       'sffilter' => 'filter/sfFilter.class.php',
       'sffilterchain' => 'filter/sfFilterChain.class.php',

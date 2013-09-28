@@ -2,6 +2,15 @@
 # https://bitbucket.org/mishal/sift-php-framework/wiki/Filters
 
 rendering: ~
+## Rendering filter parameters:
+#  param:
+#    whitespace_removal_condition: !%SF_WEB_DEBUG%
+#    # enable output compression
+#    compress: true
+#    compression_level: 9
+#    # minimal length of the content to apply the compression
+#    compression_min_length: 2048
+
 i18n:      ~
 web_debug: ~
 security:  ~

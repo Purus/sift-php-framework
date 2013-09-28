@@ -70,6 +70,39 @@ abstract class sfConfigHandler {
   }
 
   /**
+   * Parses the condition. Condition can be prepend
+   * with an exclamation mark, which means that the condition will be negated.
+   *
+   * @param string $condition The condition like: !%SF_WEB_DEBUG%
+   * @return string|boolean The condition
+   */
+  public static function parseCondition($condition)
+  {
+    $condition = sfToolkit::replaceConstants($condition);
+
+    $negative = false;
+    // negative
+    if(preg_match('/^!+/', $condition, $matches, PREG_OFFSET_CAPTURE))
+    {
+      $condition = str_replace('!', '', $condition);
+      $negative = strlen($matches[0][0]);
+    }
+
+    $condition = filter_var($condition, FILTER_VALIDATE_BOOLEAN);
+
+    if($negative)
+    {
+      // odd number, it means the it will be negative
+      if($negative % 2 != 0)
+      {
+        $condition = !$condition;
+      }
+    }
+
+    return $condition;
+  }
+
+  /**
    * Replaces a relative filesystem path with an absolute one.
    *
    * @param string A relative filesystem path

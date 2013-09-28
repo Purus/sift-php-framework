@@ -5,6 +5,7 @@ rendering:
   class: sfRenderingFilter
   param:
     type: rendering
+    whitespace_removal_condition: "!%SF_WEB_DEBUG%"
 
 i18n:
   class: sfI18nFilter

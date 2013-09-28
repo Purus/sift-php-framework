@@ -56,7 +56,7 @@ class sfLoggingConfigHandler extends sfDefineEnvironmentConfigHandler {
         $condition = true;
         if(isset($keys['param']['condition']))
         {
-          $condition = $this->replaceConstants($keys['param']['condition']);
+          $condition = self::parseCondition($keys['param']['condition']);
           unset($keys['param']['condition']);
         }
 

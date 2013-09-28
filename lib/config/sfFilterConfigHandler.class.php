@@ -73,12 +73,19 @@ class sfFilterConfigHandler extends sfYamlConfigHandler {
       if(isset($keys['param']))
       {
         $keys['param'] = $this->replaceConstants($keys['param']);
+        foreach($keys['param'] as $paramName => &$paramValue)
+        {
+          if(is_string($paramValue) && strpos($paramName, '_condition') !== false)
+          {
+            $paramValue = self::parseCondition($paramValue);
+          }
+        }
       }
 
       $condition = true;
       if(isset($keys['param']['condition']))
       {
-        $condition = sfToolkit::replaceConstants($keys['param']['condition']);
+        $condition = self::parseCondition($keys['param']['condition']);
         unset($keys['param']['condition']);
       }
 

@@ -16,6 +16,19 @@
 class sfRenderingFilter extends sfFilter {
 
   /**
+   * Array of default parameters
+   *
+   * @var array
+   */
+  protected $defaultParameters = array(
+    'charset' => 'utf-8',
+    'compress' => true,
+    'compression_level' => 9,
+    'compression_min_length' => 2048,
+    'whitespace_removal_condition' => true,
+  );
+
+  /**
    * Executes this filter.
    *
    * @param sfFilterChain The filter chain.
@@ -26,9 +39,6 @@ class sfRenderingFilter extends sfFilter {
   {
     // execute next filter
     $filterChain->execute();
-
-    // get response object
-    $response = $this->getContext()->getResponse();
 
     // rethrow sfForm and|or sfFormField __toString() exceptions (see sfForm and sfFormField)
     if(sfForm::hasToStringException())
@@ -47,7 +57,189 @@ class sfRenderingFilter extends sfFilter {
       {
         sfLogger::getInstance()->info('{sfFilter} Render to client');
       }
+
+      // get response object
+      $response = $this->getContext()->getResponse();
+
+      // can only for HTML text
+      if(!$response->isHeaderOnly()
+          && is_string($response->getContent())
+          && preg_match('~(text/html|javascript)+~', $response->getContentType(), $matches))
+      {
+        // remove whitespace
+        if($this->getParameter('whitespace_removal_condition') &&
+            strpos($response->getContentType(), 'text/html') !== false)
+        {
+          if(sfConfig::get('sf_logging_enabled'))
+          {
+            sfLogger::getInstance()->info('{sfFilter} Removing whitespace from the response content.');
+          }
+
+          $content = $this->removeWhitespace($response->getContent());
+          $response->setContent($content);
+          $response->setHttpHeader('Content-Length', strlen($content));
+        }
+
+        // compress
+        if($this->getParameter('compress') && ($encoding = $this->getClientEncoding()))
+        {
+          $content = $response->getContent();
+
+          // no need to waste resources in compressing very little data
+          if(mb_strlen($content, $this->getParameter('charset')) >
+              $this->getParameter('compression_min_length'))
+          {
+            try
+            {
+              $content = $this->compress(
+                $content,
+                $encoding,
+                $this->getParameter('compression_level')
+              );
+
+              if(sfConfig::get('sf_logging_enabled'))
+              {
+                sfLogger::getInstance()->info('{sfFilter} Compresed the output using "{encoding}". Compressed size {saving}%.', array(
+                  'encoding' => $encoding,
+                  'saving' => ($total = strlen($response->getContent())) > 0 ? ((round(strlen($content) / $total, 2) * 100)) : 0
+                ));
+              }
+
+              $response->setContent($content);
+              $response->setHttpHeader('Content-Encoding', $encoding);
+              $response->setHttpHeader('Content-Length', strlen($content));
+            }
+            // not implemented
+            catch(LogicException $e)
+            {
+            }
+          }
+        }
+      }
       $response->send();
+    }
+  }
+
+  /**
+   * Compresses the content using gzip compression
+   *
+   * @param string $content The content to compress
+   * @param string $encoding The encoding method
+   * @return string, compressed content when browser does support gzip encoding
+   */
+  protected function compress($content, $encoding, $level = 9)
+  {
+    switch($encoding)
+    {
+      case 'x-gzip':
+      case 'gzip':
+        $compressed = substr(gzcompress($content, $level), 0, -4);
+        $content = "\x1f\x8b\x08\x00\x00\x00\x00\x00" . $compressed;
+      break;
+
+      case 'deflate':
+        $content = gzdeflate($content, $level);
+      break;
+
+      default:
+        throw new LogicException(sprintf('The encoding method "%s" is not implemented', $encoding));
+    }
+
+    return $content;
+  }
+
+  /**
+   * REturns current browser support for compression gzip or x-gzip
+   *
+   * @return boolean|string Returns false if gzip is not supported or suppported encoding
+   */
+  protected function getClientEncoding()
+  {
+    $acceptEncoding = $this->getContext()->getRequest()->getHttpHeader('accept_encoding');
+    $encoding = false;
+    if(strpos($acceptEncoding, 'x-gzip') !== false)
+    {
+      $encoding = 'x-gzip';
+    }
+    else if(strpos($acceptEncoding, 'gzip') !== false)
+    {
+      $encoding = 'gzip';
+    }
+    else if(strpos($acceptEncoding, 'deflate') !== false)
+    {
+      $encoding = 'deflate';
+    }
+    return $encoding;
+  }
+
+  /**
+   * Removes extra white space within the text.
+   *
+   * Trim leading white space and blank lines from html code,
+   * cleaning up code and saving bandwidth. Does not
+   * affect <PRE>></PRE>, <TEXTAREA></TEXTAREA> and <SCRIPT></SCRIPT> blocks.
+   *
+   * @param string $content The content to trim
+   */
+  protected function removeWhitespace($content)
+  {
+    // Pull out the script blocks
+    preg_match_all("!<script[^>]+>.*?</script>!is", $content, $match);
+    $scripts = $match[0];
+    $content = preg_replace("!<script[^>]+>.*?</script>!is", '@@@SIFT:TRIM:SCRIPT@@@', $content);
+
+    // Pull out the pre blocks
+    preg_match_all("!<pre[^>]*>.*?</pre>!is", $content, $match);
+    $pres = $match[0];
+    $content = preg_replace("!<pre[^>]*>.*?</pre>!is", '@@@SIFT:TRIM:PRE@@@', $content);
+
+    // Pull out the textarea blocks
+    preg_match_all("!<textarea[^>]+>.*?</textarea>!is", $content, $match);
+    $textareas = $match[0];
+    $content = preg_replace("!<textarea[^>]+>.*?</textarea>!is", '@@@SIFT:TRIM:TEXTAREA@@@', $content);
+
+    $content = preg_replace(array(
+                "/[\r\n][\r\n\t]*[\r\n]/i",
+                // strip spaces between tags
+                "/(\s+)?(\<.+\>)(\s+)?/",
+                // strip comments
+                // "/<!--((?!-->).)*-->/",
+                // get rid of mutliple spaces and replace it with one
+                "/(\s){2,}/i"), array(
+                chr(10), " $2 ", // add spaces !
+                // '',
+                ' '), $content);
+
+    // replace script blocks
+    $this->replace("@@@SIFT:TRIM:SCRIPT@@@", $scripts, $content);
+    // replace pre blocks
+    $this->replace("@@@SIFT:TRIM:PRE@@@", $pres, $content);
+    // replace textarea blocks
+    $this->replace("@@@SIFT:TRIM:TEXTAREA@@@", $textareas, $content);
+    return $content;
+  }
+
+  /**
+   * Replaces string within another string
+   *
+   * @param string $string The string
+   * @param array $replace The replacement string
+   * @param string $subject The subject
+   */
+  protected function replace($string, $replace, &$subject)
+  {
+    $length = strlen($string);
+    $pos = 0;
+    for($i = 0, $count = count($replace); $i < $count; $i++)
+    {
+      if(($pos = strpos($subject, $string, $pos)) !== false)
+      {
+        $subject = substr_replace($subject, $replace[$i], $pos, $length);
+      }
+      else
+      {
+        break;
+      }
     }
   }
 
