@@ -42,13 +42,15 @@ abstract class sfController implements sfIService
       $this->context->getResponse()->setHeaderOnly(true);
     }
 
-    // request has culture parameter
-    if(($culture = $this->context->getRequest()->getParameter('sf_culture')))
+    if(sfConfig::get('sf_i18n'))
     {
-      // validate
-      if($culture !== sfConfig::get('sf_culture'))
+      // request has culture parameter
+      if(($culture = $this->context->getRequest()->getParameter('sf_culture')))
       {
-        $this->context->getUser()->setCulture($culture);
+        if(in_array($culture, sfConfig::get('sf_i18n_enabled_cultures')))
+        {
+          $this->context->getUser()->setCulture($culture);
+        }
       }
     }
   }
@@ -268,9 +270,9 @@ abstract class sfController implements sfIService
         $filterChain->load($actionInstance);
 
         sfCore::getEventDispatcher()->notify(
-                new sfEvent('controller.change_action', 
-                        array('module' => $moduleName, 'action' => $actionName, 'controller' => &$this))); 
-        
+                new sfEvent('controller.change_action',
+                        array('module' => $moduleName, 'action' => $actionName, 'controller' => &$this)));
+
         if($moduleName == sfConfig::get('sf_error_404_module') && $actionName == sfConfig::get('sf_error_404_action'))
         {
           sfCore::getEventDispatcher()->notify(
@@ -278,11 +280,11 @@ abstract class sfController implements sfIService
                         'controller'  => $this,
                         'module'      => $moduleName,
                         'action'      => $actionName)));
-          
+
           $this->getContext()->getResponse()->setStatusCode(404);
           $this->getContext()->getResponse()->setHttpHeader('Status', '404 Not Found');
         }
-        
+
         // process the filter chain
         $filterChain->execute();
       }
@@ -424,13 +426,13 @@ abstract class sfController implements sfIService
       }
     }
     else
-    {      
+    {
       $class = sprintf('%sView', // view class (as configured in module.yml or defined in action)
                   $this->getContext()->getRequest()->getAttribute($moduleName.'_'.$actionName.'_view_name',
                   sfConfig::get('mod_'.strtolower($moduleName).'_view_class'), 'sift/action/view')
                );
     }
-    
+
     $view = $this->context->getServiceContainer()->createObject($class);
 
     if(!$view instanceof sfIView)
@@ -470,7 +472,7 @@ abstract class sfController implements sfIService
 
     // grab this next forward's action stack index
     $index = $actionStack->getSize();
-    
+
     // set viewName if needed
     if($viewName)
     {
@@ -530,7 +532,7 @@ abstract class sfController implements sfIService
       // sfConfig::set('mod_'.strtolower($module).'_view_class', $currentViewName);
       $this->getContext()->getRequest()->getAttributeHolder()->remove($module.'_'.$action.'_view_name', 'sift/action/view');
     }
-    
+
     return $presentation;
   }
 
@@ -593,5 +595,5 @@ abstract class sfController implements sfIService
   public function shutdown()
   {
   }
-  
+
 }

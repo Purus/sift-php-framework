@@ -36,7 +36,7 @@ class sfViewConfigHandler extends sfYamlConfigHandler {
     // init our data array
     $data = array();
 
-    $data[] = "\$context  = sfContext::getInstance();\n";
+    $data[] = "\$context = sfContext::getInstance();\n";
     $data[] = "\$response = \$context->getResponse();\n\n";
 
     // first pass: iterate through all view names to determine the real view name
@@ -398,8 +398,8 @@ EOF;
 
     foreach($packages as $package)
     {
-      $packageStylesheets = array_merge($packageStylesheets, sfAssetPackage::getStylesheets($package));
-      $packageJavascripts = array_merge($packageJavascripts, sfAssetPackage::getJavascripts($package));
+      $packageStylesheets = array_merge($packageStylesheets, sfAssetPackage::getStylesheets($package, true, false));
+      $packageJavascripts = array_merge($packageJavascripts, sfAssetPackage::getJavascripts($package, true, false));
     }
 
     // Merge the current view's stylesheets with the app's default stylesheets
@@ -426,8 +426,6 @@ EOF;
         $options = array();
       }
 
-      $key = $this->replaceConstants($key);
-
       if('-*' == $key)
       {
         $tmp = array();
@@ -438,7 +436,7 @@ EOF;
       }
       else
       {
-        $tmp[$key] = sprintf("  \$response->addStylesheet('%s', '%s', %s);", $key, $position, str_replace("\n", '', var_export($options, true)));
+        $tmp[$key] = sprintf("  \$response->addStylesheet('%s', '%s', %s);", $key, $position, str_replace("\n", '', $this->varExport($options)));
       }
     }
 
@@ -468,8 +466,6 @@ EOF;
         $options = array();
       }
 
-      $key = $this->replaceConstants($key);
-
       if('-*' == $key)
       {
         $tmp = array();
@@ -480,7 +476,7 @@ EOF;
       }
       else
       {
-        $tmp[$key] = sprintf("  \$response->addJavascript('%s', '%s', %s);", $key, $position, str_replace("\n", '', var_export($options, true)));
+        $tmp[$key] = sprintf("  \$response->addJavascript('%s', '%s', %s);", $key, $position, str_replace("\n", '', $this->varExport($options)));
       }
     }
 
@@ -504,12 +500,12 @@ EOF;
 
     if(isset($escaping['strategy']))
     {
-      $data[] = sprintf("  \$this->setEscaping(%s);", var_export($escaping['strategy'], true));
+      $data[] = sprintf("  \$this->setEscaping(%s);", $this->varExport($escaping['strategy']));
     }
 
     if(isset($escaping['method']))
     {
-      $data[] = sprintf("  \$this->setEscapingMethod(%s);", var_export($escaping['method'], true));
+      $data[] = sprintf("  \$this->setEscapingMethod(%s);", $this->varExport($escaping['method']));
     }
 
     return implode("\n", $data) . "\n";
@@ -525,17 +521,12 @@ EOF;
   protected function addHelpers($viewName = '')
   {
     $data = array();
-
     $helpers = $this->getConfigValue('helpers', $viewName);
-
     if($helpers)
     {
-      $data[] = sprintf("  \$this->addHelpers(%s);", var_export($helpers, true));
-
+      $data[] = sprintf("  \$this->addHelpers(%s);", $this->varExport($helpers));
       return implode("\n", $data) . "\n";
     }
-
     return '';
   }
-
 }

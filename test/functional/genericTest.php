@@ -25,10 +25,10 @@ $b->
 $b->
   get('/nonexistant')->
   with('request')->begin()
-    ->isForwardedTo('default', 'error404')        
-  ->end()      
+    ->isForwardedTo('default', 'error404')
+  ->end()
   ->with('response')->begin()
-    ->isStatusCode(404)    
+    ->isStatusCode(404)
     ->checkElement('body', '!/congratulations/i')
   ->end();
 
@@ -37,8 +37,8 @@ $b->
   get('/default/nonexistantaction')
   ->with('request')->begin()
     ->isForwardedTo('default', 'error404')
-  ->end()      
-  ->with('response')->begin()      
+  ->end()
+  ->with('response')->begin()
   ->isStatusCode(404)
   ->end();
 
@@ -50,11 +50,11 @@ $b->
 //  get('/')
 //  ->with('request')->begin()
 //    ->isForwardedTo('default', 'unavailable')
-//  ->end()        
-//  ->with('response')->begin()      
+//  ->end()
+//  ->with('response')->begin()
 //    ->isStatusCode(200)
 //    ->checkElement('body', '/unavailable/i')
-//    ->checkElement('body', '!/congratulations/i')        
+//    ->checkElement('body', '!/congratulations/i')
 //  ->end();
 //
 //sfConfig::set('sf_available', true);
@@ -64,9 +64,9 @@ $b->
   get('/configModuleDisabled')
   ->with('request')->begin()
     ->isForwardedTo('default', 'disabled')
-  ->end()         
-  ->with('response')->begin()    
-    ->isStatusCode(200)->        
+  ->end()
+  ->with('response')->begin()
+    ->isStatusCode(200)->
     checkElement('body', '/module is unavailable/i')->
     checkElement('body', '!/congratulations/i')
     ->end();
@@ -74,7 +74,7 @@ $b->
 // view.yml: has_layout
 $b->
   get('/configViewHasLayout/withoutLayout')
-    ->with('response')->begin()        
+    ->with('response')->begin()
     ->isStatusCode(200)
     ->checkElement('body', '/no layout/i')
     ->checkElement('head title', false)
@@ -85,20 +85,20 @@ $b->
   get('/configSecurityIsSecure')
   ->with('request')->begin()
     ->isForwardedTo('default', 'login')
-  ->end()      
-  ->with('response')->begin()         
+  ->end()
+  ->with('response')->begin()
     ->isStatusCode(200)
     ->checkElement('body', '/Login Required/i')
     // check that there is no double output caused by the forwarding in a filter
-    ->checkElement('body', 1)  
+    ->checkElement('body', 1)
   ->end();
 
 // security.yml: case sensitivity
 $b->
   get('/configSecurityIsSecureAction/index')
-  ->with('request')->begin()        
+  ->with('request')->begin()
   ->isForwardedTo('default', 'login')
-  ->end()        
+  ->end()
   ->with('response')->begin()
   ->isStatusCode(200)
   ->checkElement('body', '/Login Required/i')
@@ -145,7 +145,7 @@ $b->
 // libraries autoloading
 $b->
   get('/autoload/index')
-  ->with('response')->begin()        
+  ->with('response')->begin()
     ->isStatusCode(200)
     ->checkElement('#lib1', 'pong')
     ->checkElement('#lib2', 'pong')
@@ -184,7 +184,7 @@ $b->
 // view.yml with other than default content-type
 $b->
   get('/view/plain')
-  ->with('response')->begin()        
+  ->with('response')->begin()
     ->isStatusCode(200)
     ->isHeader('Content-Type', 'text/plain; charset=utf-8')
     ->contains('<head>')
@@ -195,7 +195,7 @@ $b->
 // view.yml with other than default content-type and no layout
 $b->
   get('/view/image')
-    ->with('response')->begin()         
+    ->with('response')->begin()
     ->isStatusCode(200)
     ->isHeader('Content-Type', 'image/jpg')
     ->responseContains('image')
@@ -213,10 +213,40 @@ $b->
 // getPresentationFor()
 $b->
   get('/presentation')
-    ->with('response')->begin()          
+    ->with('response')->begin()
     ->isStatusCode(200)
     ->checkElement('#foo1', 'foo')
     ->checkElement('#foo2', 'foo')
     ->checkElement('#foo3', 'foo')
   ->end();
 
+// view.yml an asset package
+$b->
+  get('/assetPackage')
+    ->with('request')
+      ->begin()
+        ->isParameter('module', 'assetPackage')
+        ->isParameter('action', 'index')
+      ->end()
+    ->with('response')
+      ->begin()
+        ->isStatusCode(200)
+        ->checkElement('head script[type="text/javascript"]', 7)
+        ->checkElement('head link[rel="stylesheet"]', 2)
+        ->checkElement('head script[src="/sf/js/core/i18n/cs_CZ.min.js"]', 1)
+      ->end();
+
+$b->get('/assetPackage', array('sf_culture' => 'fr_FR'))
+    ->with('request')
+      ->begin()
+        ->isParameter('module', 'assetPackage')
+        ->isParameter('action', 'index')
+      ->end()
+    ->with('response')
+      ->begin()
+        ->isStatusCode(200)
+        ->responseContains('fr_FR')
+        ->checkElement('head script[type="text/javascript"]', 7)
+        ->checkElement('head link[rel="stylesheet"]', 2)
+        ->checkElement('head script[src="/sf/js/core/i18n/fr_FR.min.js"]', 1)
+      ->end();

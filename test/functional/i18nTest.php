@@ -27,14 +27,14 @@ $b->
   ->end();
 
 $b->
-  get('/fr/i18n/index')
+  get('/fr_FR/i18n/index')
   ->with('request')->begin()
     ->isParameter('module', 'i18n')
     ->isParameter('action', 'index')
-    ->isParameter('sf_culture', 'fr')
+    ->isParameter('sf_culture', 'fr_FR')
   ->end()
     ->with('user')->begin()
-      ->isCulture('fr')
+      ->isCulture('fr_FR')
   ->end()
   ->with('response')->begin()
   ->isStatusCode(200)->
@@ -56,7 +56,7 @@ $b->
 
 // messages for a module plugin
 $b->
-  get('/fr/sfI18NPlugin/index')
+  get('/fr_FR/sfI18NPlugin/index')
   ->with('response')->begin()->
     isStatusCode(200)->
     checkElement('#action', '/une phrase en français/i')->
@@ -69,7 +69,7 @@ $b->
     isParameter('action', 'index')
   ->end()
   ->with('user')->begin()->
-    isCulture('fr')->
+    isCulture('fr_FR')->
   end();
 
 // sfToolkit::clearDirectory(sfConfig::get('sf_root_cache_dir'));

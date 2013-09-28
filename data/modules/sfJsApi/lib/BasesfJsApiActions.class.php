@@ -34,9 +34,9 @@ class BasesfJsApiActions extends myActions {
       }
 
       // get javascripts but, exclude required
-      $javascripts = sfAssetPackage::getJavascripts($name, false);
+      $javascripts = sfAssetPackage::getJavascripts($name, false, true);
       // get stylesheets but exclude required
-      $stylesheets = sfAssetPackage::getStylesheets($name, false);
+      $stylesheets = sfAssetPackage::getStylesheets($name, false, true);
 
       $stylesheets = $this->parseAssets($stylesheets, 'css');
       $javascripts = $this->parseAssets($javascripts, 'js');

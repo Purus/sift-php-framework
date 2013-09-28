@@ -6,7 +6,7 @@ require_once($_test_dir.'/unit/sfCoreMock.class.php');
 
 sfLoader::loadHelpers(array('Helper', 'Tag', 'Url', 'Asset', 'Form'));
 
-$t = new lime_test(63, new lime_output_color());
+$t = new lime_test(73, new lime_output_color());
 
 class myRequest
 {
@@ -326,3 +326,89 @@ $t->is(stylesheet_tag('style'),
 sfConfig::set('sf_web_images_dir_name', 'static/img');
 $t->is(image_path('img'), '/static/img/img.png', 'image_path() decorates a relative filename with images dir name and png extension with custom images dir');
 $t->is(image_tag('test'), '<img src="/static/img/test.png" alt="Test" />', 'image_tag() takes an image name as its first argument');
+
+sfConfig::clear();
+
+$t->diag('replacing constants');
+sfConfig::set('my_constant', '/just-an-alias');
+$t->is(stylesheet_path('%MY_CONSTANT%/foo'), '/just-an-alias/foo.css', 'stylesheet_path() works ok with constants');
+$t->is(javascript_path('%MY_CONSTANT%/foo'), '/just-an-alias/foo.js', 'javascript_path() works ok with constants');
+$t->is(image_path('%MY_CONSTANT%/foo.png'), '/just-an-alias/foo.png', 'image_path() works ok with constants');
+
+$t->is(stylesheet_tag('%MY_CONSTANT%/foo'),
+  '<link rel="stylesheet" type="text/css" media="screen,projection,tv" href="/just-an-alias/foo.css" />'."\n",
+  'stylesheet_tag() works with constants');
+
+$t->is(javascript_include_tag('%MY_CONSTANT%/foo'),
+  '<script type="text/javascript" src="/just-an-alias/foo.js"></script>'."\n",
+  'javascript_include_tag() worsk with constants');
+
+$t->is(image_tag('%MY_CONSTANT%/test'), '<img src="/just-an-alias/test.png" alt="Test" />', 'image_tag() works with constants');
+
+class MySecondForm extends sfForm
+{
+  public function getStylesheets()
+  {
+    return array(
+ 		      '%MY_CONSTANT%/path/to/a/foo.css', // use default "screen" media
+ 		      '%MY_CONSTANT%/path/to/a/bar.css' => 'print',                                  // media set a value
+ 		      '%MY_CONSTANT%/path/to/a/buz.css' => array('position' => 'last'), // position set as an option
+ 		      '%MY_CONSTANT%/path/to/a/baz.css' => array('media' => 'print'),                // options support
+ 	   );
+  }
+
+  public function getJavaScripts()
+  {
+    return array(
+ 		      '%MY_CONSTANT%/path/to/a/foo.js',                                             // doesn't use any option
+ 		      '%MY_CONSTANT%/path/to/a/bar.js' => array('position' => 'last'), // position set as an option
+ 	        '%MY_CONSTANT%/path/to/a/baz.js' => array('ie_condition' => 'IE'),               // options support
+    );
+  }
+}
+
+$form = new MySecondForm();
+
+$output = <<<EOF
+<script type="text/javascript" src="/just-an-alias/path/to/a/foo.js"></script>
+<script type="text/javascript" src="/just-an-alias/path/to/a/bar.js"></script>
+<!--[if IE]><script type="text/javascript" src="/just-an-alias/path/to/a/baz.js"></script><![endif]-->
+
+EOF;
+$t->is(get_javascripts_for_form($form), fix_linebreaks($output), 'get_javascripts_for_form() works ok with constants');
+$output = <<<EOF
+<link rel="stylesheet" type="text/css" media="screen,projection,tv" href="/just-an-alias/path/to/a/foo.css" />
+<link rel="stylesheet" type="text/css" media="print" href="/just-an-alias/path/to/a/bar.css" />
+<link rel="stylesheet" type="text/css" media="screen,projection,tv" href="/just-an-alias/path/to/a/buz.css" />
+<link rel="stylesheet" type="text/css" media="print" href="/just-an-alias/path/to/a/baz.css" />
+
+EOF;
+
+$t->is(get_stylesheets_for_form($form), fix_linebreaks($output), 'get_stylesheets_for_form() works ok with constants');
+
+$response->resetAssets();
+use_stylesheets_for_form($form);
+
+$t->is_deeply(
+	  $response->getAllStylesheets(),
+	  array(
+	    '%MY_CONSTANT%/path/to/a/foo.css' => array('media' => 'screen,projection,tv'),
+	    '%MY_CONSTANT%/path/to/a/bar.css' => array('media' => 'print'),
+	    '%MY_CONSTANT%/path/to/a/baz.css' => array('media' => 'print'),
+	    '%MY_CONSTANT%/path/to/a/buz.css' => array('media' => 'screen,projection,tv'),
+	  ),
+	  'use_stylesheets_for_form() works ok with constants'
+);
+
+$response->resetAssets();
+use_javascripts_for_form($form);
+$t->is_deeply(
+ 	  $response->getAllJavaScripts(),
+ 	  array(
+ 	    '%MY_CONSTANT%/path/to/a/foo.js' => array(),
+ 	    '%MY_CONSTANT%/path/to/a/bar.js' => array(),
+ 	    '%MY_CONSTANT%/path/to/a/baz.js' => array('ie_condition' => 'IE'),
+ 	  ),
+ 	  'use_javascripts_for_form() works ok with constants'
+ 	);
+

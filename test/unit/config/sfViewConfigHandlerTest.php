@@ -381,7 +381,7 @@ $content = <<<EOF
   \$response->addStylesheet('core', '', array ());
   \$response->addJavascript('core', '', array ());
   \$response->addJavascript('jqueryui.min.js', '', array ());
-  \$response->addJavascript('ie_hacks', '', array (  'ie_condition' => 'IE lte 9',));
+  \$response->addJavascript('ie_hacks', '', array('ie_condition' => 'IE lte 9'));
 
 EOF;
 $t->is(fix_content($handler->addHtmlAsset('myView')), fix_content($content), 'addHtmlAsset() supports asset packages');
@@ -394,7 +394,7 @@ function filterAssetPackages(sfEvent $event, $config)
 }
 
 sfAssetPackage::setConfig($packages['all']);
-// filter by event system
+
 sfCore::getEventDispatcher()->connect('asset_packages.get_config', 'filterAssetPackages');
 
 $handler->mergeConfig(array(
@@ -406,7 +406,7 @@ $content = <<<EOF
   \$response->addStylesheet('modified_core', '', array ());
   \$response->addJavascript('modified_core', '', array ());
   \$response->addJavascript('modified_jqueryui.min.js', '', array ());
-  \$response->addJavascript('modified_ie_hacks', '', array (  'ie_condition' => 'IE lt 10',));
+  \$response->addJavascript('modified_ie_hacks', '', array('ie_condition' => 'IE lt 10'));
 
 EOF;
 

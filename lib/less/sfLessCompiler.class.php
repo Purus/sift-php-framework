@@ -25,7 +25,9 @@ class sfLessCompiler extends lessc {
    */
   protected $defaultOptions = array(
     'relative_url_root' => '',
-    'cache_dir' => ''
+    'cache_dir' => '',
+     // where to look for files
+    'import_dirs' => array()
   );
 
   public $importDir = array();
@@ -105,15 +107,15 @@ class sfLessCompiler extends lessc {
 
     // initial variables
     $variables = array(
-        '@root_path' => sprintf('"%s"', $rootPath),
-        '@components_path' => sprintf('"%s"', $componentsPath),
-        '@images_path' => sprintf('"%s"', $imagesPath),
-        '@fonts_path' => sprintf('"%s"', $fontsPath),
-        '@variables_path' => sprintf('"%s"', $variablesPath),
-        // base CSS/Less components
-        '@sf_sift_base_components_dir' => sprintf('"%s"', $siftDataDir),
-        // directories accessible via web
-        '@sf_sift_web_dir' => sprintf('"%s"', $siftWebDir)
+      '@root_path' => sprintf('"%s"', $rootPath),
+      '@components_path' => sprintf('"%s"', $componentsPath),
+      '@images_path' => sprintf('"%s"', $imagesPath),
+      '@fonts_path' => sprintf('"%s"', $fontsPath),
+      '@variables_path' => sprintf('"%s"', $variablesPath),
+      // base CSS/Less components
+      '@sf_sift_base_components_dir' => sprintf('"%s"', $siftDataDir),
+      // directories accessible via web
+      '@sf_sift_web_dir' => sprintf('"%s"', $siftWebDir)
     );
 
     // pass thru event system
@@ -127,7 +129,9 @@ class sfLessCompiler extends lessc {
         str_replace(DIRECTORY_SEPARATOR, '/', $siftDataDir)
     );
 
+    $importDir = $this->options['import_dirs'];
     $importDir = $this->dispatcher->filter(new sfEvent('less.compile.import_dir'), $importDir)->getReturnValue();
+
     foreach($importDir as $dir)
     {
       $this->addImportDir($dir);

@@ -64,9 +64,10 @@ class sfAssetPackage {
    *
    * @param string $name Package name eg. "ui"
    * @param boolen $includeRequired Include required scripts?
+   * @param boolean $replaceVariables Replace variables?
    * @return array
    */
-  public static function getJavascripts($name, $includeRequired = true)
+  public static function getJavascripts($name, $includeRequired = true, $replaceVariables = true)
   {
     if(!is_array($name))
     {
@@ -89,7 +90,7 @@ class sfAssetPackage {
       }
       $result = array_merge($result, $javascripts);
     }
-    return self::replaceVariables($result);
+    return $replaceVariables ? self::replaceVariables($result) : $result;
   }
 
   /**
@@ -108,9 +109,10 @@ class sfAssetPackage {
    *
    * @param string $name Package name eg. "ui"
    * @param boolean $includeRequired Include also stylesheets from required modules?
+   * @param boolean $replaceVariables Replace variables?
    * @return array
    */
-  public static function getStylesheets($name, $includeRequired = true)
+  public static function getStylesheets($name, $includeRequired = true, $replaceVariables = true)
   {
     if(!is_array($name))
     {
@@ -138,8 +140,7 @@ class sfAssetPackage {
       }
       $result = array_merge($result, $stylesheets);
     }
-
-    return self::replaceVariables($result);
+    return $replaceVariables ? self::replaceVariables($result) : $result;
   }
 
   /**

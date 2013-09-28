@@ -54,7 +54,7 @@ class sfI18nFilter extends sfFilter {
 
         if($user->getCulture() != $culture)
         {
-          $user->setCulture($culture);
+          //$user->setCulture($culture);
         }
 
         // we are generating html
@@ -88,7 +88,6 @@ class sfI18nFilter extends sfFilter {
     {
       $this->addTranslationToolbox();
     }
-
   }
 
   /**

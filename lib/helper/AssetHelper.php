@@ -92,7 +92,7 @@ function auto_discovery_link_tag($type = 'rss', $url, $tag_options = array())
  */
 function javascript_path($source, $absolute = false)
 {
-  return _compute_public_path($source, sfConfig::get('sf_web_js_dir_name', 'js'), 'js', $absolute);
+  return _compute_public_path(_replace_constants($source), sfConfig::get('sf_web_js_dir_name', 'js'), 'js', $absolute);
 }
 
 /**
@@ -188,7 +188,7 @@ function javascript_include_tag()
  */
 function stylesheet_path($source, $absolute = false)
 {
-  return _compute_public_path($source, sfConfig::get('sf_web_css_dir_name', 'css'), 'css', $absolute);
+  return _compute_public_path(_replace_constants($source), sfConfig::get('sf_web_css_dir_name', 'css'), 'css', $absolute);
 }
 
 /**
@@ -374,7 +374,7 @@ function decorate_with($layout)
  */
 function image_path($source, $absolute = false)
 {
-  return _compute_public_path($source, sfConfig::get('sf_web_images_dir_name', 'images'), 'png', $absolute);
+  return _compute_public_path(_replace_constants($source), sfConfig::get('sf_web_images_dir_name', 'images'), 'png', $absolute);
 }
 
 /**
@@ -1002,4 +1002,19 @@ function apply_filters($tag, $string)
             ->apply($tag, $string);
   }
   return $string;
+}
+
+/**
+ * Replaces constants with modifiers. Allows to use constants in paths.
+ * 
+ * @param string $value
+ * @internal
+ */
+function _replace_constants($value)
+{
+  if(strpos($value, '%') !== false)
+  {
+    return sfAssetPackage::replaceVariables($value);
+  }
+  return $value;
 }

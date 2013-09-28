@@ -87,6 +87,9 @@ default:
     # ajax timeout in miliseconds
     ajax_timeout:           8000
 
+    # Default stylesheet media
+    # default_stylesheet_media: screen,projection,tv
+
     # this is used by _compute_public_path
     # for generating absolute urls for subdomains
     # leave empty to be disabled

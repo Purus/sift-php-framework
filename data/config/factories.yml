@@ -74,7 +74,7 @@ default:
     class: sfLessCompiler
     arguments:
      - "$event_dispatcher"
-     - { relative_url_root : %SF_RELATIVE_URL_ROOT%, cache_dir: %SF_CACHE_DIR% }
+     - { relative_url_root : %SF_RELATIVE_URL_ROOT%, cache_dir: %SF_CACHE_DIR%, import_dirs: [ "%SF_WEB_DIR%/css", "%SF_SIFT_DATA_DIR%/web/sf/css" ] }
 
   # antivirus service
   antivirus:

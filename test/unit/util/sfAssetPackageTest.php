@@ -83,6 +83,3 @@ $t->is(myAssetPackage::getJavascripts('fancybox'), array(
     ),
   ),
 ), '::getJavascripts() returns array');
-
-// http://trac.symfony-project.org/attachment/ticket/7588/AssetHelperPatch.diff
-// http://exacttarget.github.com/fuelux/#spinner

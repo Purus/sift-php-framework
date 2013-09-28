@@ -34,7 +34,7 @@ class sfAssetPackagesConfigHandler extends sfSimpleYamlConfigHandler {
 
     $config = $this->evaluate($configFiles);
 
-    return sprintf($retval, __CLASS__, date('Y/m/d H:i:s'), var_export($config, true));
+    return sprintf($retval, __CLASS__, date('Y/m/d H:i:s'), $this->varExport($config));
   }
 
   /**
