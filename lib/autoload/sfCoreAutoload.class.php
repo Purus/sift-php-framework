@@ -440,7 +440,6 @@ class sfCoreAutoload {
       'sfexecutionfilter' => 'filter/sfExecutionFilter.class.php',
       'sffilter' => 'filter/sfFilter.class.php',
       'sffilterchain' => 'filter/sfFilterChain.class.php',
-      'sfi18nfilter' => 'filter/sfI18nFilter.class.php',
       'sfifilter' => 'filter/sfIFilter.interface.php',
       'sfisecurityfilter' => 'filter/sfISecurityFilter.interface.php',
       'sflesscompilerfilter' => 'filter/sfLessCompilerFilter.class.php',
