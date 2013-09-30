@@ -4,6 +4,7 @@ require_once(dirname(__FILE__) . '/../../lib/util/sfFinder.class.php');
 require_once(dirname(__FILE__) . '/../../lib/util/sfGlobToRegex.class.php');
 require_once(dirname(__FILE__) . '/../../lib/util/sfNumberCompare.class.php');
 require_once(dirname(__FILE__) . '/../../lib/util/sfToolkit.class.php');
+require_once(dirname(__FILE__) . '/../../lib/util/sfInflector.class.php');
 
 class testAutoloader {
 

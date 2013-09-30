@@ -11,31 +11,148 @@
  *
  * All rules may be invoked several times, except for ->in() method.
  * Some rules are cumulative (->name() for example) whereas others are destructive
- * (most recent value is used, ->maxdepth() method for example).
+ * (most recent value is used, ->maxDepth() method for example).
  *
  * All methods return the current sfFinder object to allow easy chaining:
  *
- * $files = sfFinder::type('file')->name('*.php')->in(.);
- *
- * Interface loosely based on perl File::Find::Rule module.
+ * <code>
+ * // find php files in current directory
+ * $files = sfFinder::type('file')->name('*.php')->in('.');
+ * </code>
  *
  * @package    Sift
  * @subpackage util
  */
 class sfFinder {
 
-  protected $type = 'file';
+  /**
+   * Type file
+   */
+  const TYPE_FILE = 'file';
+
+  /**
+   * Type directory
+   */
+  const TYPE_DIRECTORY = 'directory';
+
+  /**
+   * Type any (file or directory)
+   */
+  const TYPE_ANY = 'any';
+
+  /**
+   * The default search type
+   *
+   * @var string
+   */
+  protected $type = self::TYPE_FILE;
+
+  /**
+   * Names to seach for
+   *
+   * @var array
+   */
   protected $names = array();
+
+  /**
+   * Array of prune items
+   *
+   * @var array
+   */
   protected $prunes = array();
+
+  /**
+   * Array of discard items
+   *
+   * @var array
+   */
   protected $discards = array();
-  protected $execs = array();
-  protected $mindepth = 0;
+
+  /**
+   * Array of excecutable callbacks
+   *
+   * @var array
+   */
+  protected $execChecks = array();
+
+  /**
+   *
+   * @var array
+   */
   protected $sizes = array();
-  protected $maxdepth = 1000000;
+
+  /**
+   * Minimal depth to search
+   *
+   * @var integer
+   */
+  protected $minDepth = 0;
+
+  /**
+   * Max depth to search
+   *
+   * @var integer
+   */
+  protected $maxDepth = PHP_INT_MAX;
+
+  /**
+   * Return relative paths?
+   *
+   * @var boolean
+   */
   protected $relative = false;
-  protected $follow_link = false;
+
+  /**
+   * Follow symlinks?
+   *
+   * @var boolean
+   */
+  protected $followLink = false;
+
+  /**
+   * Sort the result?
+   *
+   * @var string|false
+   */
   protected $sort = false;
-  protected $ignore_version_control = true;
+
+  /**
+   * Ignore version control?
+   *
+   * @var boolean
+   */
+  protected $ignoreVersionControl = true;
+
+  /**
+   * Array of ignored patterns for version control systems
+   *
+   * @var array
+   */
+  public static $versionControlIgnores = array(
+    '.svn', '_svn', 'CVS', '_darcs', '.arch-params',
+    '.monotone', '.bzr', '.git', '.hg'
+  );
+
+  /**
+   * Constructor
+   *
+   * @param string $type
+   */
+  public function __construct($type = self::TYPE_FILE)
+  {
+    $this->setType($type);
+  }
+
+  /**
+   * Sets the type of elements to return.
+   *
+   * @param  string $name The directory or file or any (for both file and directory)
+   * @return sfFinder new sfFinder object
+   */
+  public static function type($name)
+  {
+    return new self($name);
+  }
 
   /**
    * Sets maximum directory depth.
@@ -45,29 +162,30 @@ class sfFinder {
    * @param  int $level
    * @return sfFinder current sfFinder object
    */
-  public function maxdepth($level)
+  public function maxDepth($level)
   {
-    $this->maxdepth = $level;
-
+    $this->maxDepth = $level;
     return $this;
   }
 
   /**
    * Sets minimum directory depth.
    *
-   * Finder will start applying tests at level $level.
-   *
-   * @param  int $level
+   * @param integer $level The level
    * @return sfFinder current sfFinder object
    */
-  public function mindepth($level)
+  public function minDepth($level)
   {
-    $this->mindepth = $level;
-
+    $this->minDepth = $level;
     return $this;
   }
 
-  public function get_type()
+  /**
+   * Returns the type which is searched for
+   *
+   * @return string
+   */
+  public function getType()
   {
     return $this->type;
   }
@@ -75,80 +193,36 @@ class sfFinder {
   /**
    * Sets the type of elements to returns.
    *
-   * @param  string $name  directory or file or any (for both file and directory)
-   * @return sfFinder new sfFinder object
-   */
-  public static function type($name)
-  {
-    $finder = new self();
-    return $finder->setType($name);
-  }
-
-  /**
-   * Sets the type of elements to returns.
-   *
-   * @param  string $name  directory or file or any (for both file and directory)
+   * @param string $type The type, either "directory" or "file" or "any" (for both file and directory)
+   * @throws InvalidArgumentException If the type is invalid
    * @return sfFinder Current object
    */
-  public function setType($name)
+  public function setType($type)
   {
-    $name = strtolower($name);
+    $type = strtolower($type);
 
-    if(substr($name, 0, 3) === 'dir')
+    if(substr($type, 0, 3) === 'dir')
     {
-      $this->type = 'directory';
-
-      return $this;
+      $this->type = self::TYPE_DIRECTORY;
     }
-    if($name === 'any')
+    else if($type === 'any')
     {
-      $this->type = 'any';
-
-      return $this;
+      $this->type = self::TYPE_ANY;
     }
-
-    $this->type = 'file';
+    else if($type === 'file')
+    {
+      $this->type = self::TYPE_FILE;
+    }
+    else
+    {
+      throw new InvalidArgumentException(sprintf('Invalid type "%s" given. Valid types are: "file", "dir" or "any".', $type));
+    }
 
     return $this;
   }
 
-  /*
-   * glob, patterns (must be //) or strings
-   *
-   */
-  protected function to_regex($str)
-  {
-    if(preg_match('/^(!)?([^a-zA-Z0-9\\\\]).+?\\2[ims]?$/', $str))
-    {
-      return $str;
-    }
-    return sfGlobToRegex::toRegex($str);
-  }
-
-  protected function args_to_array($arg_list, $not = false)
-  {
-    $list = array();
-    $nbArgList = count($arg_list);
-    for($i = 0; $i < $nbArgList; $i++)
-    {
-      if(is_array($arg_list[$i]))
-      {
-        foreach($arg_list[$i] as $arg)
-        {
-          $list[] = array($not, $this->to_regex($arg));
-        }
-      }
-      else
-      {
-        $list[] = array($not, $this->to_regex($arg_list[$i]));
-      }
-    }
-
-    return $list;
-  }
-
   /**
-   * Adds rules that files must match.
+   * Adds rules that files must match. Accepts unlimited number of parameters.
    *
    * You can use patterns (delimited with / sign), globs or simple strings.
    *
@@ -156,79 +230,72 @@ class sfFinder {
    * $finder->name('/\.php$/') // same as above
    * $finder->name('test.php')
    *
-   * @param  list   a list of patterns, globs or strings
+   * @param string $pattern A pattern (a regexp, a glob, or a string).
    * @return sfFinder Current object
    */
-  public function name()
+  public function name($pattern)
   {
     $args = func_get_args();
-    $this->names = array_merge($this->names, $this->args_to_array($args));
-
+    $this->names = array_merge($this->names, $this->argumentsToArray($args));
     return $this;
   }
 
   /**
-   * Adds rules that files must not match.
+   * Adds rules that files must not match. Accepts unlimited number of parameters.
    *
-   * @see    ->name()
-   * @param  list   a list of patterns, globs or strings
+   * @param string $pattern A pattern (a regexp, a glob, or a string)
    * @return sfFinder Current object
    */
-  public function not_name()
+  public function notName($pattern)
   {
     $args = func_get_args();
-    $this->names = array_merge($this->names, $this->args_to_array($args, true));
-
+    $this->names = array_merge($this->names, $this->argumentsToArray($args, true));
     return $this;
   }
 
   /**
-   * Adds tests for file sizes.
+   * Adds tests for file sizes. Accepts unlimited number of parameters.
    *
    * $finder->size('> 10K');
    * $finder->size('<= 1Ki');
    * $finder->size(4);
    *
-   * @param  list   a list of comparison strings
+   * @param string $size A size range string
    * @return sfFinder Current object
    */
-  public function size()
+  public function size($size)
   {
     $args = func_get_args();
-    $numargs = count($args);
-    for($i = 0; $i < $numargs; $i++)
+    for($i = 0, $count = count($args); $i < $count; $i++)
     {
       $this->sizes[] = new sfNumberCompare($args[$i]);
     }
-
     return $this;
   }
 
   /**
    * Traverses no further.
    *
-   * @param  list   a list of patterns, globs to match
+   * @param string $pattern A pattern (a regexp, a glob, or a string)
    * @return sfFinder Current object
    */
-  public function prune()
+  public function prune($pattern)
   {
     $args = func_get_args();
-    $this->prunes = array_merge($this->prunes, $this->args_to_array($args));
-
+    $this->prunes = array_merge($this->prunes, $this->argumentsToArray($args));
     return $this;
   }
 
   /**
    * Discards elements that matches.
    *
-   * @param  list   a list of patterns, globs to match
+   * @param string $pattern A pattern (a regexp, a glob, or a string)
    * @return sfFinder Current object
    */
-  public function discard()
+  public function discard($pattern)
   {
     $args = func_get_args();
-    $this->discards = array_merge($this->discards, $this->args_to_array($args));
-
+    $this->discards = array_merge($this->discards, $this->argumentsToArray($args));
     return $this;
   }
 
@@ -241,10 +308,9 @@ class sfFinder {
    *
    * @return sfFinder Current object
    */
-  public function ignore_version_control($ignore = true)
+  public function ignoreVersionControl($ignore = true)
   {
-    $this->ignore_version_control = $ignore;
-
+    $this->ignoreVersionControl = $ignore;
     return $this;
   }
 
@@ -253,10 +319,9 @@ class sfFinder {
    *
    * @return sfFinder Current object
    */
-  public function sort_by_name()
+  public function sortByName()
   {
     $this->sort = 'name';
-
     return $this;
   }
 
@@ -265,42 +330,36 @@ class sfFinder {
    *
    * @return sfFinder Current object
    */
-  public function sort_by_type()
+  public function sortByType()
   {
     $this->sort = 'type';
-
     return $this;
   }
 
   /**
-   * Executes function or method for each element.
-   *
-   * Element match if functino or method returns true.
+   * Executes function or method for each element. The element matches if the callback returns true.
    *
    * $finder->exec('myfunction');
    * $finder->exec(array($object, 'mymethod'));
    *
-   * @param  mixed  function or method to call
+   * @param callable $function function or method to call
    * @return sfFinder Current object
    */
-  public function exec()
+  public function exec($function)
   {
     $args = func_get_args();
-    $numargs = count($args);
-    for($i = 0; $i < $numargs; $i++)
+    for($i = 0, $count = count($args); $i < $count; $i++)
     {
       if(is_array($args[$i]) && !method_exists($args[$i][0], $args[$i][1]))
       {
-        throw new sfException(sprintf('method "%s" does not exist for object "%s".', $args[$i][1], $args[$i][0]));
+        throw new sfException(sprintf('The method "%s" does not exist for object "%s".', $args[$i][1], $args[$i][0]));
       }
       if(!is_array($args[$i]) && !function_exists($args[$i]))
       {
-        throw new sfException(sprintf('function "%s" does not exist.', $args[$i]));
+        throw new sfException(sprintf('The function "%s" does not exist.', $args[$i]));
       }
-
-      $this->execs[] = $args[$i];
+      $this->execChecks[] = $args[$i];
     }
-
     return $this;
   }
 
@@ -312,76 +371,70 @@ class sfFinder {
   public function relative()
   {
     $this->relative = true;
-
     return $this;
   }
 
   /**
    * Symlink following.
    *
+   * @param $follow Follow the symlinks?
    * @return sfFinder Current object
    */
-  public function follow_link()
+  public function followLink($follow = true)
   {
-    $this->follow_link = true;
-
+    $this->followLink = filter_var($follow, FILTER_VALIDATE_BOOLEAN);
     return $this;
   }
 
   /**
    * Searches files and directories which match defined rules.
    *
-   * @return array list of files and directories
+   * @param string $directory The directory to search in
+   * @return array Array of items
    */
-  public function in()
+  public function in($directory)
   {
     $files = array();
-    $here_dir = getcwd();
-
+    $here = getcwd();
     $finder = clone $this;
 
-    if($this->ignore_version_control)
+    if($this->ignoreVersionControl)
     {
-      $ignores = array('.svn', '_svn', 'CVS', '_darcs', '.arch-params',
-                       '.monotone', '.bzr', '.git', '.hg');
-
-      $finder->discard($ignores)->prune($ignores);
+      $finder->discard(self::$versionControlIgnores)->prune(self::$versionControlIgnores);
     }
 
     // first argument is an array?
-    $numargs = func_num_args();
+    $numberOfArgs = func_num_args();
     $arg_list = func_get_args();
-    if($numargs === 1 && is_array($arg_list[0]))
+    if($numberOfArgs === 1 && is_array($arg_list[0]))
     {
       $arg_list = $arg_list[0];
-      $numargs = count($arg_list);
+      $numberOfArgs = count($arg_list);
     }
 
-    for($i = 0; $i < $numargs; $i++)
+    for($i = 0; $i < $numberOfArgs; $i++)
     {
       $dir = realpath($arg_list[$i]);
-
       if(!is_dir($dir))
       {
         continue;
       }
 
       $dir = str_replace('\\', '/', $dir);
-
       // absolute path?
       if(!self::isPathAbsolute($dir))
       {
-        $dir = $here_dir . '/' . $dir;
+        $dir = $here . '/' . $dir;
       }
 
-      $new_files = str_replace('\\', '/', $finder->search_in($dir));
+      $newFiles = str_replace('\\', '/', $finder->searchIn($dir));
 
       if($this->relative)
       {
-        $new_files = preg_replace('#^' . preg_quote(rtrim($dir, '/'), '#') . '/#', '', $new_files);
+        $newFiles = preg_replace('#^' . preg_quote(rtrim($dir, '/'), '#') . '/#', '', $newFiles);
       }
 
-      $files = array_merge($files, $new_files);
+      $files = array_merge($files, $newFiles);
     }
 
     if($this->sort === 'name')
@@ -392,67 +445,82 @@ class sfFinder {
     return array_unique($files);
   }
 
-  protected function search_in($dir, $depth = 0)
+  /**
+   * Search in the directory
+   *
+   * @param string $dir The directory
+   * @param integer $depth The depth
+   * @return array
+   */
+  protected function searchIn($dir, $depth = 0)
   {
-    if($depth > $this->maxdepth)
+    if($depth > $this->maxDepth)
     {
       return array();
     }
 
     $dir = realpath($dir);
 
-    if((!$this->follow_link) && is_link($dir))
+    if(!$this->followLink && is_link($dir))
     {
       return array();
     }
 
-    $files = array();
-    $temp_files = array();
-    $temp_folders = array();
+    $files = $tempFiles = $tempFolders = array();
+
     if(is_dir($dir) && is_readable($dir))
     {
       $current_dir = opendir($dir);
-      while(false !== $entryname = readdir($current_dir))
+      while(false !== $entryName = readdir($current_dir))
       {
-        if($entryname == '.' || $entryname == '..')
-          continue;
-
-        $current_entry = $dir . DIRECTORY_SEPARATOR . $entryname;
-        if((!$this->follow_link) && is_link($current_entry))
+        if($entryName == '.' || $entryName == '..')
         {
           continue;
         }
 
-        if(is_dir($current_entry))
+        $currentEntry = $dir . DIRECTORY_SEPARATOR . $entryName;
+
+        if(!$this->followLink && is_link($currentEntry))
+        {
+          continue;
+        }
+
+        if(is_dir($currentEntry))
         {
           if($this->sort === 'type')
           {
-            $temp_folders[$entryname] = $current_entry;
+            $tempFolders[$entryName] = $currentEntry;
           }
           else
           {
-            if(($this->type === 'directory' || $this->type === 'any') && ($depth >= $this->mindepth) && !$this->is_discarded($dir, $entryname) && $this->match_names($dir, $entryname) && $this->exec_ok($dir, $entryname))
+            if(($this->type === 'directory' || $this->type === 'any')
+                && ($depth >= $this->minDepth) && !$this->isDiscarded($entryName)
+                && $this->matchNames($entryName) && $this->execOk($dir, $entryName))
             {
-              $files[] = $current_entry;
+              $files[] = $currentEntry;
             }
 
-            if(!$this->is_pruned($dir, $entryname))
+            if(!$this->isPruned($entryName))
             {
-              $files = array_merge($files, $this->search_in($current_entry, $depth + 1));
+              $files = array_merge($files, $this->searchIn($currentEntry, $depth + 1));
             }
           }
         }
         else
         {
-          if(($this->type !== 'directory' || $this->type === 'any') && ($depth >= $this->mindepth) && !$this->is_discarded($dir, $entryname) && $this->match_names($dir, $entryname) && $this->size_ok($dir, $entryname) && $this->exec_ok($dir, $entryname))
+          if(($this->type !== 'directory' || $this->type === 'any')
+              && ($depth >= $this->minDepth) && !$this->isDiscarded($entryName)
+              && $this->matchNames($entryName)
+              && $this->isSizeOk($dir . DIRECTORY_SEPARATOR . $entryName)
+              && $this->execOk($dir, $entryName))
           {
             if($this->sort === 'type')
             {
-              $temp_files[] = $current_entry;
+              $tempFiles[] = $currentEntry;
             }
             else
             {
-              $files[] = $current_entry;
+              $files[] = $currentEntry;
             }
           }
         }
@@ -460,22 +528,25 @@ class sfFinder {
 
       if($this->sort === 'type')
       {
-        ksort($temp_folders);
-        foreach($temp_folders as $entryname => $current_entry)
+        ksort($tempFolders);
+        foreach($tempFolders as $entryName => $currentEntry)
         {
-          if(($this->type === 'directory' || $this->type === 'any') && ($depth >= $this->mindepth) && !$this->is_discarded($dir, $entryname) && $this->match_names($dir, $entryname) && $this->exec_ok($dir, $entryname))
+          if(($this->type === 'directory' || $this->type === 'any')
+              && ($depth >= $this->minDepth) && !$this->isDiscarded($entryName)
+              && $this->matchNames($dir, $entryName)
+              && $this->execOk($dir, $entryName))
           {
-            $files[] = $current_entry;
+            $files[] = $currentEntry;
           }
 
-          if(!$this->is_pruned($dir, $entryname))
+          if(!$this->isPruned($entryName))
           {
-            $files = array_merge($files, $this->search_in($current_entry, $depth + 1));
+            $files = array_merge($files, $this->searchIn($currentEntry, $depth + 1));
           }
         }
 
-        sort($temp_files);
-        $files = array_merge($files, $temp_files);
+        sort($tempFiles);
+        $files = array_merge($files, $tempFiles);
       }
 
       closedir($current_dir);
@@ -484,21 +555,28 @@ class sfFinder {
     return $files;
   }
 
-  protected function match_names($dir, $entry)
+  /**
+   * Matches the names which are we searching for?
+   *
+   * @param string $entry The entry name
+   * @return boolean
+   */
+  protected function matchNames($entry)
   {
     if(!count($this->names))
+    {
       return true;
+    }
 
     // Flags indicating that there was attempts to match
-    // at least one "not_name" or "name" rule respectively
+    // at least one "notName" or "name" rule respectively
     // to following variables:
-    $one_not_name_rule = false;
-    $one_name_rule = false;
+    $oneNotNameRule = $oneNameRule = false;
 
     foreach($this->names as $args)
     {
       list($not, $regex) = $args;
-      $not ? $one_not_name_rule = true : $one_name_rule = true;
+      $not ? $oneNotNameRule = true : $oneNameRule = true;
       if(preg_match($regex, $entry))
       {
         // We must match ONLY ONE "not_name" or "name" rule:
@@ -508,96 +586,197 @@ class sfFinder {
       }
     }
 
-    if($one_not_name_rule && $one_name_rule)
+    if($oneNotNameRule && $oneNameRule)
     {
       return false;
     }
-    else if($one_not_name_rule)
+    else if($oneNotNameRule)
     {
       return true;
     }
-    else if($one_name_rule)
+    else if($oneNameRule)
     {
       return false;
     }
     return true;
   }
 
-  protected function size_ok($dir, $entry)
+  /**
+   * Is size ok for the item?
+   *
+   * @param string $entry The absolute path to the item (file or directory)
+   * @return boolean
+   */
+  protected function isSizeOk($entry)
   {
     if(0 === count($this->sizes))
-      return true;
-
-    if(!is_file($dir . DIRECTORY_SEPARATOR . $entry))
-      return true;
-
-    $filesize = filesize($dir . DIRECTORY_SEPARATOR . $entry);
-    foreach($this->sizes as $number_compare)
     {
-      if(!$number_compare->test($filesize))
-        return false;
+      return true;
     }
 
+    if(!is_file($entry))
+    {
+      return true;
+    }
+
+    $filesize = filesize($entry);
+    foreach($this->sizes as $numberCompare)
+    {
+      if(!$numberCompare->test($filesize))
+      {
+        return false;
+      }
+    }
     return true;
   }
 
-  protected function is_pruned($dir, $entry)
+  /**
+   * Checks if the entry is marked as pruned.
+   *
+   * @param string $entry The entry name
+   * @return boolean
+   */
+  protected function isPruned($entry)
   {
     if(0 === count($this->prunes))
+    {
       return false;
-
+    }
     foreach($this->prunes as $args)
     {
-      $regex = $args[1];
-      if(preg_match($regex, $entry))
+      if(preg_match($args[1], $entry))
+      {
         return true;
+      }
     }
-
     return false;
   }
 
-  protected function is_discarded($dir, $entry)
+  /**
+   * Is the given item mark as to be discarded?
+   *
+   * @param string $entry The entry name
+   * @return boolean
+   */
+  protected function isDiscarded($entry)
   {
     if(0 === count($this->discards))
+    {
       return false;
-
+    }
     foreach($this->discards as $args)
     {
-      $regex = $args[1];
-      if(preg_match($regex, $entry))
+      if(preg_match($args[1], $entry))
+      {
         return true;
+      }
     }
-
     return false;
   }
 
-  protected function exec_ok($dir, $entry)
+  /**
+   * Does the exceute check marked this entry as ok?
+   *
+   * @param string $dir The directory
+   * @param string $entry The file name
+   * @return boolean
+   */
+  protected function execOk($dir, $entry)
   {
-    if(0 === count($this->execs))
-      return true;
-
-    foreach($this->execs as $exec)
+    if(0 === count($this->execChecks))
     {
-      if(!call_user_func_array($exec, array($dir, $entry)))
-        return false;
+      return true;
     }
 
+    foreach($this->execChecks as $exec)
+    {
+      if(call_user_func_array($exec, array($dir, $entry)) !== true)
+      {
+        return false;
+      }
+    }
     return true;
   }
 
+  /**
+   * Is the path absolute?
+   *
+   * @param string $path
+   * @return boolean
+   */
   public static function isPathAbsolute($path)
   {
     if($path{0} === '/' || $path{0} === '\\' ||
-            (strlen($path) > 3 && ctype_alpha($path{0}) &&
-            $path{1} === ':' &&
-            ($path{2} === '\\' || $path{2} === '/')
-            )
-    )
+      (strlen($path) > 3 && ctype_alpha($path{0}) && $path{1} === ':' && ($path{2} === '\\' || $path{2} === '/')))
     {
       return true;
     }
-
     return false;
+  }
+
+  /**
+   * Converts the string to regular expression
+   *
+   * @param type $str
+   * @return type
+   */
+  protected function toRegex($str)
+  {
+    if(preg_match('/^(!)?([^a-zA-Z0-9\\\\]).+?\\2[ims]?$/', $str))
+    {
+      return $str;
+    }
+    return sfGlobToRegex::toRegex($str);
+  }
+
+  /**
+   * Converts the arguments to array
+   *
+   * @param array $arg_list
+   * @param boolean $not
+   * @return array
+   */
+  protected function argumentsToArray($arguments, $not = false)
+  {
+    $list = array();
+    for($i = 0, $count = count($arguments); $i < $count; $i++)
+    {
+      if(is_array($arguments[$i]))
+      {
+        foreach($arguments[$i] as $arg)
+        {
+          $list[] = array($not, $this->toRegex($arg));
+        }
+      }
+      else
+      {
+        $list[] = array($not, $this->toRegex($arguments[$i]));
+      }
+    }
+    return $list;
+  }
+
+  /**
+   * Magic call method.
+   *
+   * @param string $method The method name
+   * @param array $arguments Array of arguments
+   * @return mixed
+   * @throws sfException If the method does not exist
+   */
+  public function __call($method, $arguments)
+  {
+    // BC compatibility
+    // the call to get_type() will be converted to getType()
+    if(strpos($method, '_') !== false)
+    {
+      $alias = sfInflector::camelize($method);
+      if(method_exists($this, $alias))
+      {
+        return call_user_func_array(array($this, $alias), $arguments);
+      }
+    }
+    throw new sfException(sprintf('Call to undefined method %s::%s.', get_class($this), $method));
   }
 
 }
