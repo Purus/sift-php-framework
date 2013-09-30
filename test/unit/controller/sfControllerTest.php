@@ -8,7 +8,18 @@ $t = new lime_test(2, new lime_output_color());
 
 class myController extends sfController
 {
-  function execute() {}
+  public function dispatch()
+  {
+  }
+
+  public function genUrl($parameters = array(), $absolute = false, $getParameters = array(), $protocol = null)
+  {
+  }
+
+  public function redirect($url, $statusCode = 302)
+  {
+  }
+
 }
 
 $context = new sfContext();

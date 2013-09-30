@@ -229,7 +229,7 @@ abstract class sfAction extends sfComponent
       'url' => $url
     ));
 
-    $this->getController()->redirect($url, 0, $statusCode);
+    $this->getController()->redirect($url, $statusCode);
     throw new sfStopException();
   }
 

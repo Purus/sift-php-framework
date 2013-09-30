@@ -233,7 +233,7 @@ abstract class sfWebController extends sfController {
    *               browsers that do not support HTTP headers
    * @param int    The status code
    */
-  public function redirect($url, $delay = 0, $statusCode = 302)
+  public function redirect($url, $statusCode = 302)
   {
     $response = $this->getContext()->getResponse();
 
@@ -242,7 +242,7 @@ abstract class sfWebController extends sfController {
     $response->setStatusCode($statusCode);
     $response->setHttpHeader('Location', $url);
 
-    $response->setContent(sprintf('<html><head><meta http-equiv="Refresh" content="%d;url=%s"></head></html>', $delay, htmlentities($url, ENT_QUOTES, sfConfig::get('sf_charset'))));
+    $response->setContent(sprintf('<html><head><meta http-equiv="Refresh" content="0;url=%s"></head></html>', htmlentities($url, ENT_QUOTES, sfConfig::get('sf_charset'))));
 
     if(!sfConfig::get('sf_test'))
     {

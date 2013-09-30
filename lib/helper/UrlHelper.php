@@ -148,7 +148,7 @@ function link_to($name = '', $internal_uri = '', $options = array())
   $getParameters = array();
   if(isset($html_options['get_parameters']))
   {
-    $protocol = (array) $html_options['get_parameters'];
+    $getParameters = (array) $html_options['get_parameters'];
     unset($html_options['get_parameters']);
   }
 

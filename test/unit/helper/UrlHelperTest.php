@@ -1,41 +1,35 @@
 <?php
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
+require_once($_test_dir.'/unit/sfContextMock.class.php');
 require_once($_test_dir.'/unit/sfCoreMock.class.php');
 
 sfLoader::loadHelpers(array('Helper', 'Asset', 'Url', 'Tag'));
 
-class myController
+class myController extends sfController
 {
-  public function genUrl($parameters = array(), $absolute = false)
+
+  public function __construct()
   {
-    return ($absolute ? '/' : '').'module/action';
   }
+
+  public function genUrl($parameters = array(), $absolute = false, $getParameters = array(), $protocol = null)
+  {
+    return ($absolute ? '/' : '').'module/action' . (count($getParameters)
+        ? ('?' . http_build_query($getParameters)) : '');
+  }
+
+  public function dispatch()
+  {
+  }
+
+  public function redirect($url, $statusCode = 302)
+  {
+  }
+
 }
 
-class sfContext
-{
-  public $controller = null;
-
-  static public $instance = null;
-
-  public static function getInstance()
-  {
-    if (!isset(self::$instance))
-    {
-      self::$instance = new sfContext();
-    }
-
-    return self::$instance;
-  }
-
-  public function getController()
-  {
-    return $this->controller;
-  }
-}
-
-$t = new lime_test(33, new lime_output_color());
+$t = new lime_test(34, new lime_output_color());
 
 $context = sfContext::getInstance();
 $context->controller = new myController();
@@ -53,6 +47,13 @@ $t->is(link_to('test', '', array('absolute' => true)), '<a href="/module/action"
 $t->is(link_to('test', '', array('absolute' => false)), '<a href="module/action">test</a>', 'link_to() can take an "absolute" option');
 $t->is(link_to('test', '', array('query_string' => 'foo=bar')), '<a href="module/action?foo=bar">test</a>', 'link_to() can take an "query_string" option');
 $t->is(link_to(''), '<a href="module/action">module/action</a>', 'link_to() takes the url as the link name if the first argument is empty');
+
+$t->is(link_to('foo', '@homepage', array(
+    'get_parameters' => array(
+        'a' => 'value1'
+    )
+)), '<a href="module/action?a=value1">foo</a>', 'link_to() accepts get_parameters');
+
 
 //button_to()
 $t->diag('button_to()');

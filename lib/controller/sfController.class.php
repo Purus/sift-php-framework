@@ -7,12 +7,12 @@
  */
 
 /**
- * sfController directs application flow.
+ * sfController directs application flow
  *
  * @package    Sift
  * @subpackage controller
  */
-abstract class sfController implements sfIService
+abstract class sfController implements sfIController
 {
   protected
     $context                  = null,

@@ -5,6 +5,7 @@
 - %SF_SIFT_LIB_DIR%/action/sfActions.class.php
 - %SF_SIFT_LIB_DIR%/action/sfActionStack.class.php
 - %SF_SIFT_LIB_DIR%/action/sfActionStackEntry.class.php
+- %SF_SIFT_LIB_DIR%/controller/sfIController.interface.php
 - %SF_SIFT_LIB_DIR%/controller/sfController.class.php
 - %SF_SIFT_LIB_DIR%/database/sfDatabaseManager.class.php
 - %SF_SIFT_LIB_DIR%/filter/sfIFilter.interface.php

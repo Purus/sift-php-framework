@@ -33,6 +33,17 @@ class myViewCacheManager extends sfViewCacheManager
 
 class myController extends sfWebController
 {
+  public function dispatch()
+  {
+  }
+
+  public function genUrl($parameters = array(), $absolute = false, $getParameters = array(), $protocol = null)
+  {
+  }
+
+  public function redirect($url, $statusCode = 302)
+  {
+  }
 }
 
 class myRequest
