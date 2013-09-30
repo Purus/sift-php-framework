@@ -51,5 +51,13 @@ class browserActions extends sfActions
   {
     return $this->renderText('ok');
   }
-  
+
+  public function executeRedirectWithAdditionalGetParameters()
+  {
+    $this->redirect('browser/redirectTarget1', 301, array(
+      'foo' => 'bar',
+      'sf_culture' => $this->getRequestParameter('sf_culture')
+    ));
+  }
+
 }

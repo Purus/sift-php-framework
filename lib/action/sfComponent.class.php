@@ -61,10 +61,9 @@ abstract class sfComponent {
    * Initializes this component.
    *
    * @param sfContext The current application context
-   *
    * @return boolean true, if initialization completes successfully, otherwise false
    */
-  public function initialize($context)
+  public function initialize(sfContext $context)
   {
     $this->context = $context;
     $this->varHolder = new sfParameterHolder();

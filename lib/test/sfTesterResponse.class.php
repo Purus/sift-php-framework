@@ -413,15 +413,27 @@ class sfTesterResponse extends sfTester
   /**
    * Tests if the current request has been redirected.
    *
-   * @param  bool $boolean  Flag for redirection mode
+   * @param boolean $boolean  Flag for redirection mode
+   * @param string $url The url Where is the response redirected?
    *
    * @return sfTestFunctionalBase|sfTester
    */
-  public function isRedirected($boolean = true)
+  public function isRedirected($boolean = true, $url = null)
   {
-    if ($location = $this->response->getHttpHeader('location'))
+    if($location = $this->response->getHttpHeader('Location'))
     {
       $boolean ? $this->tester->pass(sprintf('page redirected to "%s"', $location)) : $this->tester->fail(sprintf('page redirected to "%s"', $location));
+      if($url)
+      {
+        if($url == $location)
+        {
+          $this->tester->pass(sprintf('page redirect url is "%s" ("%s")', $url, $location));
+        }
+        else
+        {
+          $this->tester->fail(sprintf('page redirect url is not "%s" ("%s")', $url, $location));
+        }
+      }
     }
     else
     {

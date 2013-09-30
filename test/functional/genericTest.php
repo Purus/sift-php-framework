@@ -250,3 +250,16 @@ $b->get('/assetPackage', array('sf_culture' => 'fr_FR'))
         ->checkElement('head link[rel="stylesheet"]', 2)
         ->checkElement('head script[src="/sf/js/core/i18n/fr_FR.min.js"]', 1)
       ->end();
+
+$b->get('/browser/redirectWithAdditionalGetParameters', array('sf_culture' => 'fr_FR'))
+    ->with('request')
+      ->begin()
+        ->isParameter('module', 'browser')
+        ->isParameter('action', 'redirectWithAdditionalGetParameters')
+      ->end()
+    ->with('response')
+      ->begin()
+        ->isRedirected(true, 'http://localhost/index.php/browser/redirectTarget1?foo=bar&amp;sf_culture=fr_FR')
+        ->isStatusCode(301)
+        ->responseContains('ok')
+      ->end();

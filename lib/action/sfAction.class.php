@@ -20,10 +20,9 @@ abstract class sfAction extends sfComponent
    * Initializes this action.
    *
    * @param sfContext The current application context.
-   *
    * @return bool true, if initialization completes successfully, otherwise false
    */
-  public function initialize($context)
+  public function initialize(sfContext $context)
   {
     parent::initialize($context);
 
@@ -103,7 +102,6 @@ abstract class sfAction extends sfComponent
    * Redirects current action to the default 404 error action (with browser redirection).
    *
    * This method stops the current code flow.
-   *
    */
   public function redirect404()
   {
@@ -216,21 +214,67 @@ abstract class sfAction extends sfComponent
    *
    * This method stops the action. So, no code is executed after a call to this method.
    *
-   * @param  string Url
-   * @param  string Status code (default to 302)
-   *
+   * @param string $url The url
+   * @param string $statusCode The status code (default to 302)
+   * @param array $getParameters Array of additional get parameters to append to url
    * @throws sfStopException
    */
-  public function redirect($url, $statusCode = 302)
+  public function redirect($url, $statusCode = 302, $getParameters = array())
   {
-    $url = $this->getController()->genUrl($url, true);
+    $url = $this->getController()->genUrl($url, true, $getParameters);
 
-    $this->logMessage('{sfAction} Redirect to "{url}"', sfILogger::INFO, array(
-      'url' => $url
+    $this->logMessage('{sfAction} Redirect to "{url}", code: {code}', sfILogger::INFO, array(
+      'url' => $url,
+      'code' => $statusCode
     ));
 
     $this->getController()->redirect($url, $statusCode);
     throw new sfStopException();
+  }
+
+
+  /**
+   * Redirects current request to a new URL, unless specified condition is true.
+   *
+   * This method stops the action. So, no code is executed after a call to this method.
+   *
+   * @param boolean $condition A condition that evaluates to true or false
+   * @param string $url The url
+   * @param string $statusCode The status code (default to 302)
+   * @param array $getParameters Array of additional get parameters to append to url
+   *
+   * @throws sfStopException
+   *
+   * @see redirect
+   */
+  public function redirectUnless($condition, $url, $statusCode = 302, $getParameters = array())
+  {
+    if(!$condition)
+    {
+      $this->redirect($url, $statusCode, $getParameters);
+    }
+  }
+
+  /**
+   * Redirects current request to a new URL, only if specified condition is true.
+   *
+   * This method stops the action. So, no code is executed after a call to this method.
+   *
+   * @param boolean $condition A condition that evaluates to true or false
+   * @param string $url The url
+   * @param string $statusCode The status code (default to 302)
+   * @param array $getParameters Array of additional get parameters to append to url
+   *
+   * @throws sfStopException
+   *
+   * @see redirect
+   */
+  public function redirectIf($condition, $url, $statusCode = 302, $getParameters = array())
+  {
+    if($condition)
+    {
+      $this->redirect($url, $statusCode, $getParameters);
+    }
   }
 
   /**
@@ -495,48 +539,6 @@ abstract class sfAction extends sfComponent
     }
 
     return $this->getRequest()->getParameter($name, $default);
-  }
-
-  /**
-   * Redirects current request to a new URL, unless specified condition is true.
-   *
-   * This method stops the action. So, no code is executed after a call to this method.
-   *
-   * @param  bool   A condition that evaluates to true or false
-   * @param  string Url
-   * @param  string Status code (default to 302)
-   *
-   * @throws sfStopException
-   *
-   * @see redirect
-   */
-  public function redirectUnless($condition, $url, $code = 302)
-  {
-    if(!$condition)
-    {
-      $this->redirect($url, $code);
-    }
-  }
-
-  /**
-   * Redirects current request to a new URL, only if specified condition is true.
-   *
-   * This method stops the action. So, no code is executed after a call to this method.
-   *
-   * @param  bool   A condition that evaluates to true or false
-   * @param  string url
-   * @param  string Status code (default to 302)
-   *
-   * @throws sfStopException
-   *
-   * @see redirect
-   */
-  public function redirectIf($condition, $url, $code = 302)
-  {
-    if($condition)
-    {
-      $this->redirect($url, $code);
-    }
   }
 
   /**
