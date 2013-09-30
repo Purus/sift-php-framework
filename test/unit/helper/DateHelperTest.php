@@ -136,8 +136,8 @@ foreach($cultures as $culture)
 $t->diag('format_daterange()');
 $user->culture = 'cs';
 
-$t->is(format_daterange(time(), strtotime('+1 day')), date('d.n.Y') . ' - ' . date('d.n.Y', strtotime('+1 day')), '');
-$t->is(format_daterange(new sfDate(), strtotime('+1 day')), date('d.n.Y') . ' - ' . date('d.n.Y', strtotime('+1 day')), 'formate_daterange() accepts sfDate object');
-$t->is(format_daterange(new DateTime(), strtotime('+1 day')), date('d.n.Y') . ' - ' . date('d.n.Y', strtotime('+1 day')), 'formate_daterange() accepts DateTime object');
-$t->is(format_daterange(new DateTime(), null), date('d.n.Y'), 'formate_daterange() works if endDate is empty');
-$t->is(format_daterange(null, time()), date('d.n.Y'), 'formate_daterange() works if startDate is empty');
+$t->is(format_daterange(time(), strtotime('+1 day')), date('j.n.Y') . ' - ' . date('j.n.Y', strtotime('+1 day')), '');
+$t->is(format_daterange(new sfDate(), strtotime('+1 day')), date('j.n.Y') . ' - ' . date('j.n.Y', strtotime('+1 day')), 'formate_daterange() accepts sfDate object');
+$t->is(format_daterange(new DateTime(), strtotime('+1 day')), date('j.n.Y') . ' - ' . date('j.n.Y', strtotime('+1 day')), 'formate_daterange() accepts DateTime object');
+$t->is(format_daterange(new DateTime(), null), date('j.n.Y'), 'formate_daterange() works if endDate is empty');
+$t->is(format_daterange(null, time()), date('j.n.Y'), 'formate_daterange() works if startDate is empty');
