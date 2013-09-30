@@ -397,7 +397,7 @@ abstract class sfComponent {
    */
   public function __call($method, $arguments)
   {
-    $event = sfCore::getEventDispatcher()->notifyUntil(
+    $event = $this->dispatcher->notifyUntil(
             new sfEvent('component.method_not_found', array(
                 'method' => $method,
                 'arguments' => $arguments,

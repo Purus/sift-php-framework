@@ -44,4 +44,4 @@ $t->is($component->foo, array('bar'), '__set() populates component variables');
 // new methods via sfEventDispatcher
 require_once($_test_dir.'/unit/sfEventDispatcherTest.class.php');
 $dispatcherTest = new sfEventDispatcherTest($t);
-$dispatcherTest->launchTests(sfCore::getEventDispatcher(), $component, 'component');
+$dispatcherTest->launchTests($context->getEventDispatcher(), $component, 'component');
