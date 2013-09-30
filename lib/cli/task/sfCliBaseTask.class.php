@@ -298,7 +298,7 @@ abstract class sfCliBaseTask extends sfCliCommandApplicationTask
    */
   protected function getFirstApplication()
   {
-    if (count($dirs = sfFinder::type('dir')->maxdepth(0)->follow_link()->relative()->in(
+    if (count($dirs = sfFinder::type('dir')->maxDepth(0)->followLink()->relative()->in(
             $this->environment->get('sf_apps_dir'))))
     {
       return $dirs[0];

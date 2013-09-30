@@ -36,16 +36,16 @@ $m->rotate('front', 'dev');
 // how many files are in the log dir?
 // get all log history files for this application and environment
 $logs = sfFinder::type('file')
-    ->ignore_version_control()
-    ->maxdepth(1)
+    ->ignoreVersionControl()
+    ->maxDepth(1)
     ->name('front_dev*.log')
     ->in($tmpDir.'/history');
 
 $t->ok(count($logs) == 10, 'Files have copied to history folder');
 
 $logs = sfFinder::type('file')
-    ->ignore_version_control()
-    ->maxdepth(0)
+    ->ignoreVersionControl()
+    ->maxDepth(0)
     ->name('front_dev*.log')
     ->in($tmpDir);
 

@@ -71,7 +71,7 @@ EOF;
 
       foreach($arguments['name'] as $name)
       {
-        $finder = sfFinder::type('file')->follow_link()->name(basename($name).'Test.php');
+        $finder = sfFinder::type('file')->followLink()->name(basename($name).'Test.php');
         $files = array_merge($files, $finder->in($this->environment->get('sf_test_dir').'/unit/'.dirname($name)));
       }
 
@@ -102,7 +102,7 @@ EOF;
       $h->base_dir = $this->environment->get('sf_test_dir').'/unit';
 
       // filter and register unit tests
-      $finder = sfFinder::type('file')->follow_link()->name('*Test.php');
+      $finder = sfFinder::type('file')->followLink()->name('*Test.php');
       $h->register($this->filterTestFiles($finder->in($h->base_dir), $arguments, $options));
 
       $ret = $h->run() ? 0 : 1;

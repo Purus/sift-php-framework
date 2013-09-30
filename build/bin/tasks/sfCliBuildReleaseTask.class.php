@@ -130,7 +130,7 @@ EOF;
                       $this->environment->get('project_root_dir').'/package.xml');
 
     // add class files
-    $finder = sfFinder::type('file')->ignore_version_control()->relative();
+    $finder = sfFinder::type('file')->ignoreVersionControl()->relative();
 
     $xml_classes = '';
 

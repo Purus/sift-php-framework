@@ -67,7 +67,7 @@ EOF;
 
     // Look in templates
     $dirs = array();
-    $moduleNames = sfFinder::type('dir')->maxdepth(0)->relative()
+    $moduleNames = sfFinder::type('dir')->maxDepth(0)->relative()
             ->in($dir . '/' . $this->environment->get('sf_app_module_dir_name'));
 
     foreach($moduleNames as $moduleName)

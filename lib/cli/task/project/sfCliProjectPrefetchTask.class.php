@@ -60,7 +60,7 @@ EOF;
     else
     {
       // find applications
-      $applications = sfFinder::type('dir')->maxdepth(0)
+      $applications = sfFinder::type('dir')->maxDepth(0)
                         ->relative()->in($this->environment->get('sf_apps_dir'));
     }
 

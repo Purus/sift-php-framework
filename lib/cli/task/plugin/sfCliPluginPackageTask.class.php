@@ -91,7 +91,7 @@ EOF;
       $cleanup['temp_files'] = array();
       foreach (sfFinder::type('dir')->in($this->pluginDir) as $dir)
       {
-        if (!sfFinder::type('any')->maxdepth(0)->in($dir))
+        if (!sfFinder::type('any')->maxDepth(0)->in($dir))
         {
           $this->getFilesystem()->touch($file = $dir.'/.sf');
           $cleanup['temp_files'][] = $file;

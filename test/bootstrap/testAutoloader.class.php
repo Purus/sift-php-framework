@@ -19,7 +19,7 @@ class testAutoloader {
     }
     else
     {
-      $files = sfFinder::type('file')->name('*.php')->ignore_version_control()->in(realpath(dirname(__FILE__) . '/../../lib'));
+      $files = sfFinder::type('file')->name('*.php')->ignoreVersionControl()->in(realpath(dirname(__FILE__) . '/../../lib'));
       self::$class_paths = array();
       foreach($files as $file)
       {

@@ -71,7 +71,7 @@ EOF;
 
     // finder to find directories (1 level) in a directory
     // leave hidden files in the place -> discard(.*)
-    $dirFinder = sfFinder::type('dir')->discard('.*')->maxdepth(0)->relative();
+    $dirFinder = sfFinder::type('dir')->discard('.*')->maxDepth(0)->relative();
 
     // iterate through applications
 

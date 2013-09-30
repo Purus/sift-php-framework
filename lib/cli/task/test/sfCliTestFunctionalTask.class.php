@@ -76,7 +76,7 @@ EOF;
 
       foreach ($arguments['controller'] as $controller)
       {
-        $finder = sfFinder::type('file')->follow_link()->name(basename($controller).'Test.php');
+        $finder = sfFinder::type('file')->followLink()->name(basename($controller).'Test.php');
         $files = array_merge($files, $finder->in($this->environment->get('sf_test_dir').'/functional/'.$app.'/'.dirname($controller)));
       }
 
@@ -108,7 +108,7 @@ EOF;
       $h->base_dir = $this->environment->get('sf_test_dir').'/functional/'.$app;
 
       // filter and register functional tests
-      $finder = sfFinder::type('file')->follow_link()->name('*Test.php');
+      $finder = sfFinder::type('file')->followLink()->name('*Test.php');
       $h->register($this->filterTestFiles($finder->in($h->base_dir), $arguments, $options));
 
       $ret = $h->run() ? 0 : 1;

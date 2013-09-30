@@ -260,7 +260,7 @@ class sfValidatorImage extends sfValidatorFile {
   {
     // clear data files
     $persistentDir = $this->getPersistentDir();
-    $files = sfFinder::type('file')->ignore_version_control()
+    $files = sfFinder::type('file')->ignoreVersionControl()
                     ->name('*.dat')->name('*.file')->in($persistentDir);
     $now = time();
 
@@ -274,7 +274,7 @@ class sfValidatorImage extends sfValidatorFile {
 
     // clear previews
     $previewDir = $this->getPreviewDir();
-    $files = sfFinder::type('file')->ignore_version_control()
+    $files = sfFinder::type('file')->ignoreVersionControl()
                     ->name('*')->in($previewDir);
 
     foreach($files as $file)

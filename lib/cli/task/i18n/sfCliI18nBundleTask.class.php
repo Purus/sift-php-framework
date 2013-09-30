@@ -58,7 +58,7 @@ EOF;
       $this->logSection($this->getFullName(), sprintf('Preparing catalogues for "%s"', $application));
     }
 
-    $moduleNames = sfFinder::type('dir')->maxdepth(0)->ignore_version_control()->relative()->in(
+    $moduleNames = sfFinder::type('dir')->maxDepth(0)->ignoreVersionControl()->relative()->in(
       $dir . '/' . $this->environment->get('sf_app_module_dir_name')
     );
 

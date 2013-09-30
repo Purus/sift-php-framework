@@ -91,7 +91,7 @@ class sfAutoloadConfigHandler extends sfYamlConfigHandler {
         $ext = isset($entry['ext']) ? $entry['ext'] : '.php';
         $path = $entry['path'];
 
-        $finder = sfFinder::type('file')->name('*' . $ext)->follow_link();
+        $finder = sfFinder::type('file')->name('*' . $ext)->followLink();
 
         // recursive mapping?
         $recursive = isset($entry['recursive']) ? $entry['recursive'] : false;

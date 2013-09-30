@@ -100,8 +100,8 @@ class sfLogManager extends sfConfigurable
 
     // determine date of last rotation
     $logs = sfFinder::type('file')
-              ->ignore_version_control()
-              ->maxdepth(1)->name($name)
+              ->ignoreVersionControl()
+              ->maxDepth(1)->name($name)
               ->in($this->logDir.'/history/');
 
     usort($logs, array($this, 'sort'));
@@ -132,8 +132,8 @@ class sfLogManager extends sfConfigurable
 
       // find all logs for the application
       $allLogs = sfFinder::type('file')
-                  ->ignore_version_control()
-                  ->maxdepth(0)->name($name)
+                  ->ignoreVersionControl()
+                  ->maxDepth(0)->name($name)
                   ->in($this->logDir);
 
       // loop all logs and move them to history
@@ -169,7 +169,7 @@ class sfLogManager extends sfConfigurable
 
       // get all log history files for this application and environment
       $new_logs = sfFinder::type('file')
-          ->ignore_version_control()
+          ->ignoreVersionControl()
           ->maxdepth(0)
           ->name($name)
           ->in($this->logDir.'/history');

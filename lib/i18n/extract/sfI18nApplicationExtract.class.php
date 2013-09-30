@@ -83,7 +83,7 @@ class sfI18nApplicationExtract extends sfI18nExtract
   {
     $files = sfFinder::type('file')
               // skip forms
-              ->not_name('*Form.class.php')
+              ->notName('*Form.class.php')
               ->in($this->getOption('app_dir').'/'.$this->getOption('lib_dir_name'));
 
     $extracted = array();
@@ -120,7 +120,7 @@ class sfI18nApplicationExtract extends sfI18nExtract
   protected function extractModules()
   {
     $modulesDir = $this->getOption('app_dir').'/'.$this->getOption('module_dir_name');
-    $modules = sfFinder::type('dir')->maxdepth(0)->ignore_version_control()->in($modulesDir);
+    $modules = sfFinder::type('dir')->maxDepth(0)->ignoreVersionControl()->in($modulesDir);
 
     foreach($modules as $module)
     {

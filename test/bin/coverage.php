@@ -20,6 +20,6 @@ $c->extension = '.class.php';
 $c->verbose = false;
 $c->base_dir = realpath(dirname(__FILE__).'/../../lib');
 
-$finder = pakeFinder::type('file')->ignore_version_control()->name('*.php')->prune('vendor');
+$finder = pakeFinder::type('file')->ignoreVersionControl()->name('*.php')->prune('vendor');
 $c->register($finder->in($c->base_dir));
 $c->run();

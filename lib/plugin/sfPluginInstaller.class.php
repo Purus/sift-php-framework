@@ -129,7 +129,7 @@ class sfPluginInstaller extends sfConfigurable implements sfIPluginInstaller {
     // where is web directory?
     $webDir = $this->task->environment->get('sf_web_dir');
 
-    $directories = sfFinder::type('dir')->maxdepth(0)->in($pluginDir . '/web');
+    $directories = sfFinder::type('dir')->maxDepth(0)->in($pluginDir . '/web');
 
     $filesystem = new sfFilesystem();
 
@@ -205,7 +205,7 @@ class sfPluginInstaller extends sfConfigurable implements sfIPluginInstaller {
     // where is web directory?
     $webDir = $this->task->environment->get('sf_web_dir');
 
-    $directories = sfFinder::type('dir')->maxdepth(0)->in($pluginDir . '/web');
+    $directories = sfFinder::type('dir')->maxDepth(0)->in($pluginDir . '/web');
 
     $filesystem = new sfFilesystem();
 

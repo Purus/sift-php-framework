@@ -48,7 +48,7 @@ EOF;
   protected function execute($arguments = array(), $options = array())
   {
     $applications = count($arguments['app']) ? $arguments['app'] : 
-      sfFinder::type('dir')->relative()->maxdepth(0)->in($this->environment->get('sf_apps_dir'));
+      sfFinder::type('dir')->relative()->maxDepth(0)->in($this->environment->get('sf_apps_dir'));
     
     $env = $arguments['env'];    
 
