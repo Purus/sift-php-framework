@@ -85,7 +85,7 @@ class sfRenderingFilter extends sfFilter {
         }
 
         // compress
-        if($this->getParameter('compress') && ($encoding = $this->getClientEncoding()))
+        if($this->canCompress() && ($encoding = $this->getClientEncoding()))
         {
           $content = $response->getContent();
 
@@ -111,7 +111,6 @@ class sfRenderingFilter extends sfFilter {
 
               $response->setContent($content);
               $response->setHttpHeader('Content-Encoding', $encoding);
-              $response->setHttpHeader('Content-Length', strlen($content));
             }
             // not implemented
             catch(LogicException $e)
@@ -122,6 +121,24 @@ class sfRenderingFilter extends sfFilter {
       }
       $response->send();
     }
+  }
+
+  /**
+   * Can the response be compressed? The output can be compress when
+   * following conditions are met:
+   *
+   * 1) The `compress` parameter must be `true`
+   * 2) No output was found in the output buffer
+   *
+   * @return boolean
+   */
+  protected function canCompress()
+  {
+    if(!$this->getParameter('compress'))
+    {
+      return false;
+    }
+    return ob_get_length() == 0;
   }
 
   /**
