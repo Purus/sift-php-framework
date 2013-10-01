@@ -259,7 +259,7 @@ $b->get('/browser/redirectWithAdditionalGetParameters', array('sf_culture' => 'f
       ->end()
     ->with('response')
       ->begin()
-        ->isRedirected(true, 'http://localhost/index.php/browser/redirectTarget1?foo=bar&amp;sf_culture=fr_FR')
+        ->isRedirected(true, 'http://localhost/index.php/browser/redirectTarget1?foo=bar&sf_culture=fr_FR')
         ->isStatusCode(301)
         ->responseContains('ok')
       ->end();

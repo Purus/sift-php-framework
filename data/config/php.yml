@@ -14,8 +14,7 @@ set:
   display_errors:              %SF_DEBUG%
   unserialize_callback_func:   spl_autoload_call
   zlib.output_compression:     false
-  arg_separator.output:        |
-    &amp;
+  arg_separator.output:        '&'
 
 # Warn when these settings are NOT configured to the following values
 warn:

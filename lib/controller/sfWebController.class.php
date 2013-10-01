@@ -72,7 +72,7 @@ abstract class sfWebController extends sfController {
     else
     {
       // use GET format
-      $divider = '&';
+      $divider = ini_get('arg_separator.output');
       $equals = '=';
       $querydiv = '?';
     }
@@ -106,17 +106,16 @@ abstract class sfWebController extends sfController {
           // merge parameters, passed parameters takes precedence
           $getParameters = array_merge($queryParameters, $getParameters);
         }
-
-        $generated_url .= '?' . http_build_query($getParameters, null, ini_get('arg_separator.output'));
+        $generated_url .= '?' . http_build_query($getParameters);
       }
     }
     else
     {
-      $query = http_build_query($parameters);
+      $query = http_build_query($parameters, '', $divider);
 
       if(sfConfig::get('sf_url_format') == 'PATH')
       {
-        $query = strtr($query, ini_get('arg_separator.output') . '=', '/');
+        $query = strtr($query, array('=' => $equals));
       }
 
       $url .= $query;
@@ -139,7 +138,7 @@ abstract class sfWebController extends sfController {
     // append get parameters to the query
     if(count($appendParameters))
     {
-      $url .= strpos($url, '?') !== false ? ('&' . http_build_query($appendParameters)) : ('?' . http_build_query($appendParameters));
+      $url .= strpos($url, '?') !== false ? ($di . http_build_query($appendParameters, null, ini_get('arg_separator.output'))) : ('?' . http_build_query($appendParameters, null, ini_get('arg_separator.output')));
     }
 
     if($fragment)
