@@ -478,6 +478,7 @@ class sfCoreAutoload {
       'sfwidgetformchoicemany' => 'form/widget/choice/sfWidgetFormChoiceMany.class.php',
       'sfwidgetformduallist' => 'form/widget/choice/sfWidgetFormDualList.class.php',
       'sfwidgetforminputcheckbox' => 'form/widget/choice/sfWidgetFormInputCheckbox.class.php',
+      'sfwidgetforminputradio' => 'form/widget/choice/sfWidgetFormInputRadio.class.php',
       'sfwidgetformselect' => 'form/widget/choice/sfWidgetFormSelect.class.php',
       'sfwidgetformselectcheckbox' => 'form/widget/choice/sfWidgetFormSelectCheckbox.class.php',
       'sfwidgetformselectmany' => 'form/widget/choice/sfWidgetFormSelectMany.class.php',
