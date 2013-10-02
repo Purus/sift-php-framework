@@ -392,4 +392,27 @@ abstract class sfWidgetForm extends sfWidget
     }
   }
 
+  /**
+   * Configures the widget from array of options. Invalid options are skipped.
+   *
+   * @param array $options Array of options
+   * @param boolean $unset Unset the option after configuring?
+   * @return sfWidgetForm
+   */
+  public function setOptionsFromArray(&$options, $unset = true)
+  {
+    foreach(array_keys($this->getOptions()) as $option)
+    {
+      if(array_key_exists($option, $options))
+      {
+        $this->setOption($option, $options[$option]);
+        if($unset)
+        {
+          unset($options[$option]);
+        }
+      }
+    }
+    return $this;
+  }
+
 }

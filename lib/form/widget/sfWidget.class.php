@@ -494,7 +494,7 @@ abstract class sfWidget {
    */
   static public function escapeOnce($value)
   {
-    return self::fixDoubleEscape(htmlspecialchars(!is_array($value) ? (string) $value : null, ENT_QUOTES, self::getCharset()));
+    return sfHtml::escapeOnce($value);
   }
 
   /**
@@ -505,7 +505,7 @@ abstract class sfWidget {
    */
   static public function fixDoubleEscape($escaped)
   {
-    return preg_replace('/&amp;([a-z]+|(#\d+)|(#x[\da-f]+));/i', '&$1;', $escaped);
+    return sfHtml::fixDoubleEscape($escaped);
   }
 
   /**

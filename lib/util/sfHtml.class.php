@@ -15,8 +15,8 @@
 class sfHtml {
 
   protected static
-          $xhtml = true,
-          $charset = 'UTF-8';
+    $xhtml = true,
+    $charset = 'UTF-8';
 
   /**
    * Sets the XHTML generation flag.
@@ -99,6 +99,11 @@ class sfHtml {
    */
   protected static function attributesToHtmlCallback($k, $v)
   {
+    // this is a data attribute, leave it here!
+    if(strpos($k, 'data-') === 0)
+    {
+      return sprintf(' %s="%s"', $k, self::escapeOnce($v));
+    }
     return false === $v || null === $v || ('' === $v && 'value' != $k) ? '' : sprintf(' %s="%s"', $k, self::escapeOnce($v));
   }
 
@@ -108,9 +113,9 @@ class sfHtml {
    * @param  string $value  string to escape
    * @return string escaped string
    */
-  static public function escapeOnce($value)
+  public static function escapeOnce($value)
   {
-    return self::fixDoubleEscape(htmlspecialchars((string) $value, ENT_QUOTES, self::getCharset()));
+    return self::fixDoubleEscape(htmlspecialchars(!is_array($value) ? (string) $value : null, ENT_COMPAT, self::getCharset()));
   }
 
   /**
@@ -139,7 +144,7 @@ class sfHtml {
    * @param  string $escaped  string to fix
    * @return string single escaped string
    */
-  static public function fixDoubleEscape($escaped)
+  public static function fixDoubleEscape($escaped)
   {
     return preg_replace('/&amp;([a-z]+|(#\d+)|(#x[\da-f]+));/i', '&$1;', $escaped);
   }
@@ -155,6 +160,61 @@ class sfHtml {
   static public function ieConditionalComment($condition, $content)
   {
     return sprintf('<!--[if %s]>%s<![endif]-->', $condition, $content);
+  }
+
+  /**
+   * Adds another CSS class to the list of CSS classes
+   *
+   * @param string|array $class The string or array of CSS classes to add the $another
+   * @param string $another
+   * @return string
+   */
+  public static function addCssClass($class, $another)
+  {
+    if(is_string($class))
+    {
+      $class = explode(' ', $class);
+    }
+    elseif(!is_array($class))
+    {
+      $class = array((string)$class);
+    }
+    return trim(join(' ', array_unique(array_merge($class, explode(' ', $another)))));
+  }
+
+  /**
+   * Returns CDATA section with the given content
+   *
+   * @param string $content
+   * @return string
+   */
+  public static function cdataSection($content)
+  {
+    return "<![CDATA[$content]]>";
+  }
+
+  /**
+   * Returns the CDATA section with given $javascript. For usage in XML.
+   *
+   * @param string $javascript The javascript
+   * @return string
+   */
+  public static function javascriptCdataSection($javascript)
+  {
+    return "\n//".self::cdataSection("\n$javascript\n//")."\n";
+  }
+
+  /**
+   * Returns the javascript tag
+   *
+   * @param string $javascript The javascript
+   * @param string $type The type
+   */
+  public static function javascriptTag($javascript, $type = 'text/javascript')
+  {
+    return self::contentTag('script',
+            self::isXhtml() ? self::javascriptCdataSection($javascript) : ("\n" . $javascript . "\n"),
+              array('type' => $type));
   }
 
 }

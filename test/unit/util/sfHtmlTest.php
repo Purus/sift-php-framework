@@ -2,10 +2,17 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(2, new lime_output_color());
+$t = new lime_test(4, new lime_output_color());
 
-$t->isa_ok(sfUuid::generate(), 'string', '->sfUuid::generate() returns string');
+$class = 'foo';
+$t->diag('->addCssClass');
 
-$uuid  = sfUuid::generate();
-$valid = preg_match('/^\{?[0-9a-f]{8}\-?[0-9a-f]{4}\-?[0-9a-f]{4}\-?'.'[0-9a-f]{4}\-?[0-9a-f]{12}\}?$/i', $uuid) === 1;
-$t->is($valid, true, '->sfUuid::generate() returns valid uuid string');
+$t->is(sfHtml::addCssClass('another', $class), 'another foo', 'addCssClass() works ok');
+$t->is(sfHtml::addCssClass('another foobar', $class), 'another foobar foo', 'addCssClass() works ok');
+$t->is(sfHtml::addCssClass(array('another', 'foobar', 'has-upload'), $class), 'another foobar has-upload foo', 'addCssClass() works ok with array');
+
+$t->diag('->attributesToHtml()');
+
+$t->is(sfHtml::attributesToHtml(array(
+  'value' => ''
+)), ' value=""', '');
