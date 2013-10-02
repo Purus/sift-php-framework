@@ -735,40 +735,31 @@ function set_canonical_url($url)
  * Gets canonical url from response
  *
  * @param boolean $raw Raw Url or include inside <link rel="canonical" href="url" />
- * @param boolean $autoset Auto sets canonical url based on current route
+ * @param boolean $detect Detect the canonical url from the current URI?
  * @return string string
  */
-function get_canonical_url($raw = true, $autoset = false)
+function get_canonical_url($raw = true, $detect = true)
 {
+  // custom
   $url = sfContext::getInstance()->getResponse()->getCanonicalUrl();
-  if(!$url && $autoset)
-  {
-    // there are troubles with post requests
-    // all params are appended present in route!
-    // and we dont want this!
-    if(sfContext::getInstance()->getRequest()->isPost())
-    {
-      $route = sfContext::getInstance()->getRequest()->getUri();
-    }
-    else
-    {
-      $route = sfRouting::getInstance()->getCurrentInternalUri(true);
-    }
 
-    // error404 does not have any route configured
-    if(!$route)
+  if(!$url && $detect)
+  {
+    if(sfContext::getInstance()->getModuleName() == sfConfig::get('sf_error_404_module')
+        && sfContext::getInstance()->getActionName() == sfConfig::get('sf_error_404_action'))
     {
       return '';
     }
-
-    // generate url from current route!
-    $url = url_for($route, true);
+    else if(($route = sfRouting::getInstance()->getCurrentInternalUri(false)))
+    {
+      $url = url_for($route, true);
+    }
+    else
+    {
+      $url = sfContext::getInstance()->getRequest()->getUri();
+    }
   }
-  if(!$raw)
-  {
-    $url = tag('link', array('rel' => 'canonical', 'href' => $url));
-  }
-  return $url;
+  return $raw ? $url : tag('link', array('rel' => 'canonical', 'href' => $url));
 }
 
 /**
@@ -788,7 +779,11 @@ function clear_canonical_url()
  */
 function include_canonical_url()
 {
-  echo get_canonical_url(false, true) . "\n";
+  if(!($canonicalUrl = get_canonical_url(false, true)))
+  {
+    return;
+  }
+  echo $canonicalUrl . "\n";
 }
 
 /**
