@@ -51,6 +51,12 @@ abstract class sfWidgetFormChoiceBase extends sfWidgetForm
       return $choices;
     }
 
+    // the choices is string!
+    if(is_string($choices))
+    {
+      return $choices;
+    }
+
     $results = array();
     foreach ($choices as $key => $choice)
     {
