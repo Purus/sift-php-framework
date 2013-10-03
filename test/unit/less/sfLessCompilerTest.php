@@ -18,18 +18,19 @@ function lessphp_image_path($arg) {
 }
 
 $c = new sfLessCompiler(new sfEventDispatcher(), array(
-    'cache_dir' => sys_get_temp_dir()
+    'cache_dir' => sys_get_temp_dir(),
+    'web_cache_dir' => sys_get_temp_dir() . '/less_compiled'
 ));
 
 $c->registerFunction("double", "lessphp_double");
 $c->registerFunction("imagePath", "lessphp_image_path");
 
 $less = '
- 
+
   div { width: double(400px); }
 
-  div { 
-    background-image: imagePath(\'foo.gif\');  
+  div {
+    background-image: imagePath(\'foo.gif\');
   }
 ';
 
