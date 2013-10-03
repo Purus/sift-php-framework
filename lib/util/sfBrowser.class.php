@@ -30,7 +30,7 @@ class sfBrowser extends sfBrowserBase
     sfConfig::set('sf_test', true);
 
     // we register a fake rendering filter
-    sfConfig::set('sf_rendering_filter', array('sfFakeRenderingFilter', null));
+    sfConfig::set('sf_rendering_filter', array('sfTestRenderingFilter', null));
 
     $this->resetCurrentException();
 
@@ -38,6 +38,26 @@ class sfBrowser extends sfBrowserBase
     ob_start();
     $this->context->getController()->dispatch();
     $retval = ob_get_clean();
+
+    // handle content-encoding first
+    if($encoding = $this->context->getResponse()->getHttpHeader('Content-Encoding'))
+    {
+      switch(strtolower($encoding))
+      {
+        // Handle gzip encoding
+        case 'gzip':
+          $retval = $this->decodeGzip($retval);
+        break;
+
+        // Handle deflate encoding
+        case 'deflate':
+          $retval = $this->decodeDeflate($retval);
+        break;
+
+        default:
+          throw new LogicException(sprintf('Cannot decompress encoding "%s" of the response.', $encoding));
+      }
+    }
 
     // append retval to the response content
     $this->context->getResponse()->setContent($retval);
@@ -147,23 +167,34 @@ class sfBrowser extends sfBrowserBase
   {
     $this->setCurrentException($event['exception']);
   }
-}
 
-class sfFakeRenderingFilter extends sfFilter
-{
-  public function execute(sfFilterChain $filterChain)
+  /**
+   * Decodes gzip-encoded content.
+   *
+   * @param string $text The text to decode
+   * @return string
+   * @throws Exception
+   */
+  protected function decodeGzip($text)
   {
-    $filterChain->execute();
-
-    // rethrow sfForm and|or sfFormField __toString() exceptions (see sfForm and sfFormField)
-    if(sfForm::hasToStringException())
+    $decoded = @gzinflate(substr($text, 10));
+    if($decoded === false)
     {
-      throw sfForm::getToStringException();
+      throw new Exception('Could not decode GZIPed response');
     }
-    elseif(sfFormField::hasToStringException())
-    {
-      throw sfFormField::getToStringException();
-    }
-    $this->context->getResponse()->sendContent();
+    return $decoded;
   }
+
+  /**
+   * Decodes deflate-encoded content.
+   *
+   * @param string $text The text to decode
+   * @return string
+   */
+  protected function decodeDeflate($text)
+  {
+    $header = unpack('n', substr($text, 0, 2));
+    return (0 == $header[1] % 31) ? gzuncompress($text) : gzinflate($text);
+  }
+
 }

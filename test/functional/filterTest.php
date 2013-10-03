@@ -42,9 +42,45 @@ $b->
     ->with('response')->begin()
       ->isStatusCode(200)
       ->checkElement('div[class="before"]', 2)
-      ->checkElement('div[class="after"]', 1)    
+      ->checkElement('div[class="after"]', 1)
     ->end()
     ->with('request')->begin()
       ->isParameter('module', 'filter')
       ->isParameter('action', 'indexWithForward')
+    ->end();
+
+// asset packaging and output compression
+$b->info('gzip compression')
+  ->setHttpHeader('Accept-Encoding', 'gzip, deflate')
+  ->get('/filter/packageAssets')
+    ->with('response')->begin()
+      ->isStatusCode(200)
+      ->isHeader('Content-Encoding', 'gzip')
+      ->isHeader('Content-Type', '~text/html~')
+      ->contains('Jesus is Lord')
+      ->matches('~<script type="text/javascript" src="/min/\d+/f=/js/custom.js~')
+      ->matches('~href="/min/\d+/f=/cache/css/[a-z0-9]+.min.css,/css/custom/two.css"~')
+    ->end()
+    ->with('request')->begin()
+      ->isParameter('module', 'filter')
+      ->isParameter('action', 'packageAssets')
+    ->end();
+
+// asset packaging and output compression
+$b->info('deflate compression')
+  ->setHttpHeader('Accept-Encoding', 'deflate')
+  ->get('/filter/packageAssets')
+    ->with('response')->begin()
+      ->isStatusCode(200)
+      ->isHeader('Content-Encoding', 'deflate')
+      ->isHeader('Content-Type', '~text/html~')
+      ->contains('Jesus is Lord')
+      // javascripts are minified
+      ->matches('~<script type="text/javascript" src="/min/\d+/f=/~')
+      // stylesheets are minified
+      ->matches('~href="/min/\d+/f=/cache/css/[a-z0-9]+.min.css,/css/custom/two.css"~')
+    ->end()
+    ->with('request')->begin()
+      ->isParameter('module', 'filter')
+      ->isParameter('action', 'packageAssets')
     ->end();

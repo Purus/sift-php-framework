@@ -60,7 +60,7 @@ default:
     # Helpers included in all templates by default
     standard_helpers:       [Partial, Cache, Form, I18N]
 
-    # package assets using minifier?
+    # package javascript and stylesheet assets?
     package_assets:         false
 
     # Activated modules from plugins or from the Sift core

@@ -58,68 +58,76 @@ class sfRenderingFilter extends sfFilter {
         sfLogger::getInstance()->info('{sfFilter} Render to client');
       }
 
-      // get response object
-      $response = $this->getContext()->getResponse();
+      $this->prepare();
+      $this->getContext()->getResponse()->send();
+    }
+  }
 
-      $this->getContext()->getEventDispatcher()->notify(new sfEvent('response.pre_send', array(
-        'response' => $response
-      )));
+  /**
+   * Prepares the response for rendering to client
+   *
+   */
+  protected function prepare()
+  {
+    $response = $this->getContext()->getResponse();
 
-      // can only for HTML text
-      if(!$response->isHeaderOnly()
-          && is_string($response->getContent())
-          && preg_match('~(text/html|javascript)+~', $response->getContentType(), $matches))
+    $this->getContext()->getEventDispatcher()->notify(new sfEvent('response.pre_send', array(
+      'response' => $response
+    )));
+
+    // can only for HTML text
+    if(!$response->isHeaderOnly()
+        && is_string($response->getContent())
+        && preg_match('~(text/html|javascript)+~', $response->getContentType(), $matches))
+    {
+      // remove whitespace
+      if(!sfConfig::get('sf_test') && $this->getParameter('whitespace_removal_condition') &&
+          strpos($response->getContentType(), 'text/html') !== false)
       {
-        // remove whitespace
-        if($this->getParameter('whitespace_removal_condition') &&
-            strpos($response->getContentType(), 'text/html') !== false)
+        if(sfConfig::get('sf_logging_enabled'))
         {
-          if(sfConfig::get('sf_logging_enabled'))
-          {
-            sfLogger::getInstance()->info('{sfFilter} Removing whitespace from the response content.');
-          }
-
-          $content = $this->removeWhitespace($response->getContent());
-          $response->setContent($content);
-          $response->setHttpHeader('Content-Length', strlen($content));
+          sfLogger::getInstance()->info('{sfFilter} Removing whitespace from the response content.');
         }
 
-        // compress
-        if($this->canCompress() && ($encoding = $this->getClientEncoding()))
+        $content = $this->removeWhitespace($response->getContent());
+        $response->setContent($content);
+        $response->setHttpHeader('Content-Length', strlen($content));
+      }
+
+      // compress
+      if($this->canCompress() && ($encoding = $this->getClientEncoding()))
+      {
+        $content = $response->getContent();
+
+        // no need to waste resources in compressing very little data
+        if(mb_strlen($content, $this->getParameter('charset')) >
+            $this->getParameter('compression_min_length'))
         {
-          $content = $response->getContent();
-
-          // no need to waste resources in compressing very little data
-          if(mb_strlen($content, $this->getParameter('charset')) >
-              $this->getParameter('compression_min_length'))
+          try
           {
-            try
-            {
-              $content = $this->compress(
-                $content,
-                $encoding,
-                $this->getParameter('compression_level')
-              );
+            $content = $this->compress(
+              $content,
+              $encoding,
+              $this->getParameter('compression_level')
+            );
 
-              if(sfConfig::get('sf_logging_enabled'))
-              {
-                sfLogger::getInstance()->info('{sfFilter} Compresed the output using "{encoding}". Compressed size {saving}%.', array(
-                  'encoding' => $encoding,
-                  'saving' => ($total = strlen($response->getContent())) > 0 ? ((round(strlen($content) / $total, 2) * 100)) : 0
-                ));
-              }
-
-              $response->setContent($content);
-              $response->setHttpHeader('Content-Encoding', $encoding);
-            }
-            // not implemented
-            catch(LogicException $e)
+            if(sfConfig::get('sf_logging_enabled'))
             {
+              sfLogger::getInstance()->info('{sfFilter} Compresed the output using "{encoding}". Compressed size {saving}%.', array(
+                'encoding' => $encoding,
+                'saving' => ($total = strlen($response->getContent())) > 0 ? ((round(strlen($content) / $total, 2) * 100)) : 0
+              ));
             }
+
+            $response->setContent($content);
+            $response->setHttpHeader('Content-Encoding', $encoding);
+          }
+          // not implemented type of compression, see getClientEncoding()
+          catch(LogicException $e)
+          {
           }
         }
       }
-      $response->send();
     }
   }
 
@@ -138,6 +146,7 @@ class sfRenderingFilter extends sfFilter {
     {
       return false;
     }
+
     return ob_get_length() == 0;
   }
 
@@ -170,13 +179,13 @@ class sfRenderingFilter extends sfFilter {
   }
 
   /**
-   * REturns current browser support for compression gzip or x-gzip
+   * Returns current browser support for compression gzip or x-gzip
    *
    * @return boolean|string Returns false if gzip is not supported or suppported encoding
    */
   protected function getClientEncoding()
   {
-    $acceptEncoding = $this->getContext()->getRequest()->getHttpHeader('accept_encoding');
+    $acceptEncoding = $this->getContext()->getRequest()->getHttpHeader('Accept-Encoding');
     $encoding = false;
     if(strpos($acceptEncoding, 'x-gzip') !== false)
     {

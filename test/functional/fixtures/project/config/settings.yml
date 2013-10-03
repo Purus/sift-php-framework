@@ -1,3 +1,6 @@
+all:
+  package_assets: false
+
 dev:
   .settings:
     # Logging and debugging settings

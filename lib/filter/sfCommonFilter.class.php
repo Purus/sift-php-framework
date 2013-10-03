@@ -33,8 +33,8 @@ class sfCommonFilter extends sfFilter
     // we assume that this means that the design is responsive
     if(isset($metas['viewport']))
     {
-      sfCore::getEventDispatcher()->notify(new sfEvent('response.responsive', array(
-        'response' => &$response
+      $this->getContext()->getEventDispatcher()->notify(new sfEvent('response.responsive', array(
+        'response' => $response
       )));
     }
 
@@ -50,7 +50,7 @@ class sfCommonFilter extends sfFilter
       break;
 
       default:
-        throw new sfException(sprintf('{sfCommonFilter} Invalid mode "%s". Valid modes are: normal, optimized', $mode));
+        throw new sfException(sprintf('{sfCommonFilter} Invalid mode "%s". Valid modes are: "normal", "optimized"', $mode));
       break;
     }
   }
@@ -63,8 +63,8 @@ class sfCommonFilter extends sfFilter
     if(is_string($content) && false !== ($pos = strpos($content, '</head>')))
     {
       sfLoader::loadHelpers(array('Tag', 'Asset'));
-      $html = '';
 
+      $html = '';
       if(!$response->getParameter('auto_discovery_links_included', false, 'sift/view/asset'))
       {
         $html .= get_auto_discovery_links();

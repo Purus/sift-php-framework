@@ -15,6 +15,11 @@
  */
 class sfExecutionFilter extends sfFilter
 {
+  /**
+   * Exceutes the filter
+   *
+   * @param sfFilterChain $filterChain
+   */
   public function execute(sfFilterChain $filterChain)
   {
     // get the current action instance
@@ -36,10 +41,13 @@ class sfExecutionFilter extends sfFilter
       $timer->addTime();
     }
     else
-    {      
+    {
       $viewName = $this->handleAction($filterChain, $actionInstance);
       $this->handleView($filterChain, $actionInstance, $viewName);
     }
+
+    // we need to execute next filters
+    $filterChain->execute();
   }
 
   /**

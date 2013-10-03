@@ -1,0 +1,8 @@
+all:
+  packages:
+    custom:
+      javascripts:
+        - custom
+      stylesheets:
+        - custom/one.less
+        - custom/two.css

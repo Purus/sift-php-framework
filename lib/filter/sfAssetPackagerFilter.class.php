@@ -31,14 +31,23 @@ class sfAssetPackagerFilter extends sfFilter {
   {
     $filterChain->execute();
 
-    if($this->isFirstCall()
-        && !$this->getContext()->getRequest()->isAjax()
-        && preg_match('|text/html|', $this->getContext()->getResponse()->getContentType()))
+    if($this->isFirstCall() && $this->canPackage())
     {
       sfLoader::loadHelpers(array('Tag', 'Asset'));
       $this->handleStylesheets();
       $this->handleJavascripts();
     }
+  }
+
+  /**
+   * Can be the assets packaged?
+   *
+   * @return boolean
+   */
+  protected function canPackage()
+  {
+    return !$this->getContext()->getRequest()->isAjax()
+            && strpos($this->getContext()->getResponse()->getContentType(), 'text/html') !== false;
   }
 
   /**
@@ -175,7 +184,6 @@ class sfAssetPackagerFilter extends sfFilter {
         $response->addJavascript($path, $position, $options);
       }
     }
-
   }
 
   /**
@@ -436,10 +444,11 @@ class sfAssetPackagerFilter extends sfFilter {
     if(!$this->pathAliases)
     {
       $aliases = $this->getParameter('path_aliases', array());
-      $aliases = sfCore::filterByEventListeners($aliases, 'filter.asset_packager.path_aliases');
+      $aliases = $this->getContext()
+                  ->getEventDispatcher()->filter(new sfEvent('filter.asset_packager.path_aliases'), $aliases)
+                  ->getReturnValue();
       $this->pathAliases = $aliases;
     }
-
     return $this->pathAliases;
   }
 
@@ -492,16 +501,17 @@ class sfAssetPackagerFilter extends sfFilter {
   }
 
   /**
-   * Logs a message to logger instance (only if enabled via configuration)
+   * Logs a message to logger instance
    *
    * @param string $message Message to log
-   * @param string $priority Priority of the log entry
+   * @param string $level Log level
+   * @param array $context Array of context variables
    */
-  protected function log($message, $priority = sfLogger::ERR)
+  protected function log($message, $level = sfLogger::ERR, array $context = array())
   {
     if(sfConfig::get('sf_logging_enabled'))
     {
-      sfLogger::getInstance()->log(sprintf('{sfAssesPackager} %s', $message), $priority);
+      sfLogger::getInstance()->log(sprintf('{sfAssetPackagerFilter} %s', $message), $level, $context);
     }
   }
 

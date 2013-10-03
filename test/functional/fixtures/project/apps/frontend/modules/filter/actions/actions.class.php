@@ -17,4 +17,8 @@ class filterActions extends sfActions
     return $this->renderText('Disabled');
   }
 
+  public function executePackageAssets()
+  {
+  }
+
 }
