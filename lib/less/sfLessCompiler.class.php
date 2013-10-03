@@ -86,8 +86,8 @@ class sfLessCompiler extends lessc implements sfIService {
 
     parent::__construct();
 
-    // make it less readable for
-    // $this->options['web_cache_dir_suffix'] = dechex(crc32($this->options['web_cache_dir_suffix']));
+    // make it less readable for rummagers
+    $this->options['web_cache_dir_suffix'] = dechex(crc32($this->options['web_cache_dir_suffix']));
 
     if(!is_dir($this->options['web_cache_dir'] . '/' . $this->options['web_cache_dir_suffix']))
     {
