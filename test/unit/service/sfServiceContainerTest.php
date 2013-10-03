@@ -1,7 +1,7 @@
 <?php
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
-$t = new lime_test(10, new lime_output_color());
+$t = new lime_test(17, new lime_output_color());
 
 class sfContext {}
 
@@ -38,9 +38,22 @@ class Foo {
 
 }
 
+class ConfiguredObject {
+
+  public function __toString()
+  {
+    return '_configured_';
+  }
+
+}
+
 sfConfig::set('sf_lib_dir', '/foobar');
 sfConfig::set('sf_cache_dir', '/cache/application');
 sfConfig::set('sf_array_config', array('empty'));
+sfConfig::set('sf_app', 'front');
+sfConfig::set('sf_configured_object', new stdClass());
+sfConfig::set('sf_configured_object_to_string', new ConfiguredObject());
+sfConfig::set('what', 'this_is_what_i_dont_know');
 
 $services = new sfServiceContainer();
 
@@ -97,3 +110,31 @@ $t->diag('->replaceConstants()');
 
 $t->is($services->replaceConstants('%SF_CACHE_DIR%'), '/cache/application', 'replaceConstants() works ok');
 $t->is($services->replaceConstants('%SF_CACHE_DIR%/foobar'), '/cache/application/foobar', 'replaceConstants() works ok');
+$t->is($services->replaceConstants('%SF_CACHE_DIR%/%SF_APP%'), '/cache/application/front', 'replaceConstants() works ok');
+$t->is($services->replaceConstants('/myfoo%SF_CACHE_DIR%/%SF_APP%/directory'), '/myfoo/cache/application/front/directory', 'replaceConstants() works ok');
+
+$t->is($services->replaceConstants('/myfoo%SF_CACHE_DIR%/what/%SF_APP%/directory'), '/myfoo/cache/application/what/front/directory', 'replaceConstants() works ok');
+
+try
+{
+  $services->replaceConstants('/myfoo%SF_CACHE_DIR%/%SF_ARRAY_CONFIG%/directory');
+  $t->fail('Exception is thrown when using array in the value (when there is present more than one constant');
+}
+catch(LogicException $e)
+{
+  $t->pass('Exception is thrown when using array in the value (when there is present more than one constant');
+}
+
+try
+{
+  $services->replaceConstants('/myfoo%SF_CACHE_DIR%/%SF_CONFIGURED_OBJECT%/directory');
+  $t->fail('Exception is thrown when using object without __toString() in the value (when there is present more than one constant');
+}
+catch(LogicException $e)
+{
+  $t->pass('Exception is thrown when using object without __toString() in the value (when there is present more than one constant');
+}
+
+$t->is($services->replaceConstants('/myfoo%SF_CACHE_DIR%/what/%SF_CONFIGURED_OBJECT_TO_STRING%/directory'), '/myfoo/cache/application/what/_configured_/directory', 'replaceConstants() works ok');
+
+$t->is($services->replaceConstants('%SF_CACHE_DIR%/%WHAT%/%SF_CONFIGURED_OBJECT_TO_STRING%/directory/slash'), '/cache/application/this_is_what_i_dont_know/_configured_/directory/slash', 'replaceConstants() works ok');

@@ -278,29 +278,48 @@ class sfServiceContainer {
    */
   public function replaceConstants($value)
   {
-    // it looks like a constant
-    if(strpos($value, '%') !== false)
+    if(strpos($value, '%') === false)
     {
-      if(preg_match('/%(.+?)%/', $value, $matches, PREG_OFFSET_CAPTURE))
+      return $value;
+    }
+
+    // get all matches
+    preg_match_all('/%(.+?)%/', $value, $matches, PREG_OFFSET_CAPTURE | PREG_SET_ORDER);
+
+    $replaced = $value;
+    $shift = 0;
+    foreach($matches as $match)
+    {
+      $found = false;
+      $name = strtolower($match[1][0]);
+      if(sfConfig::has($name))
       {
-        $name = strtolower($matches[1][0]);
-        if(sfConfig::has($name))
+        $configured = sfConfig::get($name);
+        $found = true;
+      }
+
+      if(is_array($configured) ||
+          (is_object($configured) && !method_exists($configured, '__toString')))
+      {
+        // this is a misconfigured value
+        if(count($matches) > 1)
         {
-          $configured = sfConfig::get($name);
+          throw new LogicException(sprintf('Possible misconfiguration of "%s". The returned configuration value for "%s" is an %s.', $value, $match[0][0], gettype($configured)));
         }
-        else
-        {
-          $configured = $value;
-        }
-        // we have non string
-        if(is_array($configured) || is_object($configured))
-        {
-          return $configured;
-        }
-        $value = substr_replace($value, $configured, $matches[0][1], strlen($matches[0][0]));
+        return $configured;
+      }
+
+      // force string
+      $configured = (string)$configured;
+      if($found)
+      {
+        $start = $match[0][1] - $shift;
+        $replaced = substr_replace($replaced, $configured, $start, strlen($match[0][0]));
+        // offset shift (length of the placeholder - length of the replacement text)
+        $shift += strlen($match[0][0]) - strlen($configured);
       }
     }
-    return $value;
+    return $replaced;
   }
 
   /**
