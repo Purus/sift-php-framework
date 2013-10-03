@@ -16,7 +16,7 @@ require_once dirname(__FILE__) . '/../vendor/lessphp/lessc.inc.php';
  * @package    Sift
  * @subpackage less
  * */
-class sfLessCompiler extends lessc {
+class sfLessCompiler extends lessc implements sfIService {
 
   /**
    * Array of default options
@@ -27,7 +27,11 @@ class sfLessCompiler extends lessc {
     'relative_url_root' => '',
     'cache_dir' => '',
      // where to look for files
-    'import_dirs' => array()
+    'import_dirs' => array(),
+    // web cache dir suffix
+    'web_cache_dir_suffix' => '',
+    // 5% change to execute the garbage collector
+    'garbage_collection_probability' => 5
   );
 
   public $importDir = array();
@@ -75,7 +79,20 @@ class sfLessCompiler extends lessc {
       throw new sfConfigurationException('Missing "cache_dir" configuration value.');
     }
 
+    if(!isset($this->options['web_cache_dir']) || empty($this->options['web_cache_dir']))
+    {
+      throw new sfConfigurationException('Missing "web_cache_dir" configuration value.');
+    }
+
     parent::__construct();
+
+    // make it less readable for
+    // $this->options['web_cache_dir_suffix'] = dechex(crc32($this->options['web_cache_dir_suffix']));
+
+    if(!is_dir($this->options['web_cache_dir'] . '/' . $this->options['web_cache_dir_suffix']))
+    {
+      mkdir($this->options['web_cache_dir'] . '/' . $this->options['web_cache_dir_suffix']);
+    }
 
     $this->construct();
   }
@@ -141,7 +158,7 @@ class sfLessCompiler extends lessc {
     {
       $this->setCacheName('%s.css');
       // preserve comments in the stylesheets
-      // $this->setPreserveComments(true);
+      $this->setPreserveComments(true);
       $this->setFormatter('classic');
       $this->setDebugMode(true);
     }
@@ -209,19 +226,30 @@ class sfLessCompiler extends lessc {
   }
 
   /**
+   * Returns cache name for the source file
    *
-   * @param string $source
+   * @param string $source The file name
+   * @return string
    */
-  public function compileStylesheetIfNeeded($source)
+  protected function getCacheFileName($source)
   {
     // hexadecimal representation of the checksum you can either
     // use the "%x" formatter of sprintf() or printf() or the dechex()
     // conversion functions, both of these also take care of converting
     // the crc32() result to an unsigned integer.
-
-    $cache = $this->getDebugMode() ?
+    return $this->getDebugMode() ?
             sprintf('%s.css', str_replace('/', '.', ltrim(str_replace('/css', '', $source), '/'))) :
-            sprintf($this->getCacheName(), dechex(crc32($source)));
+              sprintf($this->getCacheName(), dechex(crc32($source)));
+  }
+
+  /**
+   * Compiles the stylesheet only if needed.
+   *
+   * @param string $source
+   */
+  public function compileStylesheetIfNeeded($source)
+  {
+    $cache = $this->getCacheFileName($source);
 
     // sift webdirectory
     if(strpos($source, sfConfig::get('sf_sift_web_dir')) !== false)
@@ -256,16 +284,14 @@ class sfLessCompiler extends lessc {
 
     try
     {
-      $this->compileIfNeeded($source, sfConfig::get('sf_web_dir') .
-              DIRECTORY_SEPARATOR . 'cache' .
-              DIRECTORY_SEPARATOR . 'css' . DIRECTORY_SEPARATOR . $cache);
+      $this->compileIfNeeded($source, $this->options['web_cache_dir'] . '/' . $this->options['web_cache_dir_suffix'] . '/' . $cache);
     }
     catch(Exception $e)
     {
       throw sfLessCompilerException::createFromException($e);
     }
 
-    return sprintf('%s/cache/css/%s', $this->getRelativeUrlRoot(), $cache);
+    return sprintf('%s/cache/css/%s/%s', $this->getRelativeUrlRoot(), $this->options['web_cache_dir_suffix'], $cache);
   }
 
   /**
@@ -277,7 +303,7 @@ class sfLessCompiler extends lessc {
    */
   public function compileIfNeeded($inputFile, $outputFile)
   {
-    $cacheDir = $this->options['cache_dir'] . '/less_compile';
+    $cacheDir = $this->options['cache_dir'];
 
     if(!is_dir($cacheDir))
     {
@@ -412,6 +438,43 @@ class sfLessCompiler extends lessc {
     }
 
     return null;
+  }
+
+  /**
+   * @see sfIService
+   */
+  public function shutdown()
+  {
+    if(rand(1, 100) <= $this->options['garbage_collection_probability'])
+    {
+      $this->cacheGc();
+    }
+  }
+
+  /**
+   * Garbage collector. Cleans up the old compiled files
+   *
+   */
+  public function cacheGc()
+  {
+    if(sfConfig::get('sf_logging_enabled'))
+    {
+      sfLogger::getInstance()->info('{sfLessCompiler} Cache garbage collection.');
+    }
+
+    $cacheDir = $this->options['web_cache_dir'] . '/' . $this->options['web_cache_dir_suffix'];
+    $compileDir = $this->options['cache_dir'];
+
+    $cached = sfFinder::type('file')->name('*.css')->maxDepth(1)->in($cacheDir);
+    $compiled = sfFinder::type('file')->name('*.cache')->relative()->in($compileDir);
+
+    foreach($cached as $file)
+    {
+      if(!in_array(sprintf('%s.cache', basename($file)), $compiled))
+      {
+        unlink($file);
+      }
+    }
   }
 
 }
