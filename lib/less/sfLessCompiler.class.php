@@ -91,7 +91,9 @@ class sfLessCompiler extends lessc implements sfIService {
 
     if(!is_dir($this->options['web_cache_dir'] . '/' . $this->options['web_cache_dir_suffix']))
     {
-      mkdir($this->options['web_cache_dir'] . '/' . $this->options['web_cache_dir_suffix']);
+      $current_umask = umask(0000);
+      mkdir($this->options['web_cache_dir'] . '/' . $this->options['web_cache_dir_suffix'], 0777, true);
+      umask($current_umask);
     }
 
     $this->construct();
@@ -314,7 +316,7 @@ class sfLessCompiler extends lessc implements sfIService {
 
     $cacheFile = $cacheDir . DIRECTORY_SEPARATOR . basename($outputFile) . '.cache';
 
-    if(file_exists($cacheFile))
+    if(file_exists($cacheFile) && file_exists($outputFile))
     {
       $cache = unserialize(file_get_contents($cacheFile));
     }
