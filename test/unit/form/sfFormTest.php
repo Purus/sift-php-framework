@@ -104,6 +104,7 @@ class NumericFieldsForm extends sfForm
 }
 
 sfForm::disableCSRFProtection();
+sfForm::setEventDispatcher(new sfEventDispatcher());
 
 // __construct()
 $t->diag('__construct');
@@ -1029,7 +1030,7 @@ function myListener(sfEvent $event)
   return false;
 }
 
-sfCore::getEventDispatcher()->connect('form.method_not_found', 'myListener');
+sfForm::getEventDispatcher()->connect('form.method_not_found', 'myListener');
 
 try
 {
@@ -1071,7 +1072,7 @@ function myFormListener($event, $values)
   return $values;
 }
 
-sfCore::getEventDispatcher()->connect('form.filter_values', 'myFormListener');
+sfForm::getEventDispatcher()->connect('form.filter_values', 'myFormListener');
 
 $f = new TestForm1();
 $f->bind(array('a' => 'aaaaaaaaaaaa', 'b' => 'bbb', 'c' => 'ccccc'));

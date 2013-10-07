@@ -23,6 +23,13 @@
  */
 class sfForm implements ArrayAccess, Iterator, Countable
 {
+  /**
+   * The event dispatcher
+   *
+   * @var sfEventDispatcher
+   */
+  protected static $dispatcher;
+
   protected static
     $CSRFSecret         = false,
     $CSRFFieldName      = '_csrf_token',
@@ -82,19 +89,39 @@ class sfForm implements ArrayAccess, Iterator, Countable
     $this->addCSRFProtection($this->localCSRFSecret);
     $this->resetFormFields();
 
-    if(sfContext::hasInstance())
+    if(self::$dispatcher)
     {
       // generic event
-      sfContext::getInstance()->getEventDispatcher()->notify(new sfEvent('form.post_configure', array(
+      self::$dispatcher->notify(new sfEvent('form.post_configure', array(
         'form' => $this
       )));
 
       // specific event for current class name
-      sfContext::getInstance()->getEventDispatcher()->notify(new sfEvent(sprintf('form.%s.post_configure',
+      self::$dispatcher->notify(new sfEvent(sprintf('form.%s.post_configure',
         sfInflector::tableize(get_class($this))), array(
           'form' => $this
       )));
     }
+  }
+
+  /**
+   * Sets the event dispatcher to be used by all forms.
+   *
+   * @param sfEventDispatcher $dispatcher
+   */
+  public static function setEventDispatcher(sfEventDispatcher $dispatcher = null)
+  {
+    self::$dispatcher = $dispatcher;
+  }
+
+  /**
+   * Returns the event dispatcher.
+   *
+   * @return sfEventDispatcher
+   */
+  public static function getEventDispatcher()
+  {
+    return self::$dispatcher;
   }
 
   /**
@@ -487,10 +514,12 @@ class sfForm implements ArrayAccess, Iterator, Countable
    */
   protected function doBind(array $values)
   {
-    // filters the values via event dispatcher
-    $values = sfCore::getEventDispatcher()->filter(
-              new sfEvent('form.filter_values',
-                array('form' => $this)), $values)->getReturnValue();
+    if(self::$dispatcher)
+    {
+      // filters the values via event dispatcher
+      $values = self::$dispatcher->filter(new sfEvent('form.filter_values', array('form' => $this)), $values)->getReturnValue();
+    }
+
     try
     {
       $this->values = $this->validatorSchema->clean($values);
@@ -503,10 +532,13 @@ class sfForm implements ArrayAccess, Iterator, Countable
         }
       }
     }
-    catch (sfValidatorError $error)
+    catch(sfValidatorError $error)
     {
-      sfCore::getEventDispatcher()->notify(new sfEvent('form.validation_error',
-              array('error' => $error, 'form' => $this)));
+      if(self::$dispatcher)
+      {
+        self::$dispatcher->notify(new sfEvent('form.validation_error', array('error' => $error, 'form' => $this)));
+      }
+
       throw $error;
     }
   }
@@ -2188,14 +2220,16 @@ class sfForm implements ArrayAccess, Iterator, Countable
    */
   public function __call($method, $arguments)
   {
-    $event = sfCore::getEventDispatcher()->notifyUntil(
-            new sfEvent('form.method_not_found',
-                    array('method' => $method,
-                          'arguments' => $arguments)));
-    /* @var $event sfEvent */
-    if($event->isProcessed())
+    if(self::$dispatcher)
     {
-      return $event->getReturnValue();
+      $event = self::$dispatcher->notifyUntil(new sfEvent('form.method_not_found',
+                        array('method' => $method,
+                            'arguments' => $arguments)));
+      /* @var $event sfEvent */
+      if($event->isProcessed())
+      {
+        return $event->getReturnValue();
+      }
     }
     throw new sfException(sprintf('Call to undefined method %s::%s.', get_class($this), $method));
   }

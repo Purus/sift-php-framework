@@ -192,6 +192,9 @@ abstract class sfApplication extends sfProject {
       sfForm::enableCSRFProtection(sfConfig::get('sf_csrf_secret'));
     }
 
+    // provide the dispatcher to the forms
+    sfForm::setEventDispatcher($this->getEventDispatcher());
+
     if(sfConfig::get('sf_i18n'))
     {
       $i18nConfig = include($this->configCache->checkConfig($sf_app_config_dir_name . '/i18n.yml'));

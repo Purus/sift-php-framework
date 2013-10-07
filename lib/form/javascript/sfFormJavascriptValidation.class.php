@@ -284,6 +284,7 @@ class sfFormJavascriptValidation {
           $triggerValidation = false)
   {
     $options = sfInputFilters::toArray($options);
+    $dispatcher = $form->getEventDispatcher();
 
     if(!isset($options['id']))
     {
@@ -319,16 +320,35 @@ class sfFormJavascriptValidation {
     if(!isset($options['error_placement']))
     {
       $options['error_placement'] = self::getErrorPlacementExpression();
+
+      if($dispatcher)
+      {
+        $options['error_placement'] = $dispatcher->filter(
+            new sfEvent('form.javascript.validation.expression.error_placement'),
+            $options['error_placement'])->getReturnValue();
+      }
     }
 
     if(!isset($options['unhighlight']))
     {
       $options['unhighlight'] = self::getUnhighlightExpression();
+      if($dispatcher)
+      {
+        $options['unhighlight'] = $dispatcher->filter(
+            new sfEvent('form.javascript.validation.expression.unhighlight'),
+            $options['unhighlight'])->getReturnValue();
+      }
     }
 
     if(!isset($options['submit_handler']) && ($submitHandler = self::getSubmitHandlerExpression()))
     {
       $options['submit_handler'] = $submitHandler;
+      if($dispatcher)
+      {
+        $options['submit_handler'] = $dispatcher->filter(
+            new sfEvent('form.javascript.validation.expression.submit_handler'),
+            $options['submit_handler'])->getReturnValue();
+      }
     }
 
     $formId = $options['id'];
@@ -603,9 +623,7 @@ class sfFormJavascriptValidation {
   }
 
   /**
-   * Returns unhighlight expression (Filtered by event system)
-   *
-   * Event name: "form.javascript.validation.expression.unhighlight"
+   * Returns the default unhighlight expression
    *
    * @return sfJsonExpression
    */
@@ -671,14 +689,12 @@ class sfFormJavascriptValidation {
     (sfWidgetForm::isAriaEnabled() ? '.attr(\'aria-invalid\', true)' : '')
   ));
 
-    return sfCore::filterByEventListeners($expression,
-            'form.javascript.validation.expression.unhighlight');
+    return $expression;
   }
 
   /**
-   * Returns error_placement expression (Filtered by event system)
+   * Returns the default error_placement expression
    *
-   * Event name: "form.javascript.validation.expression.error_placement"
    *
    * @return sfJsonExpression
    */
@@ -723,8 +739,7 @@ error.css({
       $expression = new sfJsonExpression(sprintf('function(error, element) { %s }', $placement));
     }
 
-    return sfCore::filterByEventListeners($expression,
-            'form.javascript.validation.expression.error_placement');
+    return $expression;
   }
 
   /**
@@ -737,7 +752,7 @@ error.css({
   public static function getSubmitHandlerExpression()
   {
     $expression = '';
-    return sfCore::filterByEventListeners($expression, 'form.javascript.validation.expression.submit_handler');
+    return $expression;
   }
 
   /**
