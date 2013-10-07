@@ -37,7 +37,7 @@
  * @package Sift
  * @subpackage image
  */
-class sfImage {
+class sfImage implements sfIDataUriConvertable {
 
   /**
    * Empty gif string
@@ -756,6 +756,15 @@ class sfImage {
     $copy = $this->copy()->resize(1, 1);
     list($red, $green, $blue) = $copy->getAdapter()->getRGBFromPixel(0, 0);
     return new sfColor(array($red, $green, $blue));
+  }
+
+  /**
+   * @see sfIDataUriConvertable
+   */
+  public function toDataUri($raw = true)
+  {
+    $dataUri = new sfDataUri($this->getMIMEType(), $this->__toString(), sfDataUri::ENCODING_BASE64);
+    return $raw ? $dataUri->toString() : $dataUri;
   }
 
 }

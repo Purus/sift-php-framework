@@ -810,6 +810,8 @@ class sfCoreAutoload {
       'sfuseragentdetector' => 'user/sfUserAgentDetector.class.php',
       'sfuserflashmessage' => 'user/sfUserFlashMessage.class.php',
       'sfutf8' => 'utf8/sfUtf8.class.php',
+      'sfdatauri' => 'util/data_uri/sfDataUri.class.php',
+      'sfidatauriconvertable' => 'util/data_uri/sfIDataUriConvertable.interface.php',
       'sfarray' => 'util/sfArray.class.php',
       'sfassetpackage' => 'util/sfAssetPackage.class.php',
       'sfbitwise' => 'util/sfBitwise.class.php',

@@ -4,7 +4,7 @@ require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
 $fixturesDir = dirname(__FILE__) . '/fixtures';
 
-$t = new lime_test(56, new lime_output_color());
+$t = new lime_test(58, new lime_output_color());
 
 
 $image = new sfImage();
@@ -164,6 +164,15 @@ foreach($grayscaleImages as $image => $expectedValue)
 
 $t->diag('Imagick');
 $t->todo('Implement Imagick tests');
+
+$t->diag('toDataUri()');
+
+$image = new sfImage();
+$image->create(10, 10);
+
+$data = base64_encode($image->toString());
+$t->isa_ok($image->toDataUri(false), 'sfDataUri', 'toDataUri(false) returns sfDataUri object');
+$t->is($image->toDataUri(), 'data:image/png;base64,'.$data, 'toDataUri returns data uri string');
 
 //
 //
