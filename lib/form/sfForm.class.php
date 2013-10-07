@@ -91,6 +91,8 @@ class sfForm implements ArrayAccess, Iterator, Countable
 
     if(self::$dispatcher)
     {
+      $this->validatorSchema->setEventDispatcher(self::$dispatcher);
+
       // generic event
       self::$dispatcher->notify(new sfEvent('form.post_configure', array(
         'form' => $this
@@ -893,12 +895,12 @@ class sfForm implements ArrayAccess, Iterator, Countable
    */
   public function mergePostValidator(sfValidatorBase $validator = null)
   {
-    if (null === $validator)
+    if(null === $validator)
     {
       return;
     }
 
-    if (null === $this->validatorSchema->getPostValidator())
+    if(null === $this->validatorSchema->getPostValidator())
     {
       $this->validatorSchema->setPostValidator($validator);
     }
@@ -920,8 +922,9 @@ class sfForm implements ArrayAccess, Iterator, Countable
    */
   public function setValidators(array $validators)
   {
-    $this->setValidatorSchema(new sfValidatorSchema($validators));
-
+    $schema = new sfValidatorSchema($validators);
+    $schema->setEventDispatcher($this->getEventDispatcher());
+    $this->setValidatorSchema($schema);
     return $this;
   }
 
@@ -935,10 +938,9 @@ class sfForm implements ArrayAccess, Iterator, Countable
    */
   public function setValidator($name, sfValidatorBase $validator)
   {
+    $validator->setEventDispatcher($this->getEventDispatcher());
     $this->validatorSchema[$name] = $validator;
-
     $this->resetFormFields();
-
     return $this;
   }
 
@@ -1018,10 +1020,9 @@ class sfForm implements ArrayAccess, Iterator, Countable
    */
   public function setValidatorSchema(sfValidatorSchema $validatorSchema)
   {
+    $validatorSchema->setEventDispatcher($this->getEventDispatcher());
     $this->validatorSchema = $validatorSchema;
-
     $this->resetFormFields();
-
     return $this;
   }
 
@@ -1126,13 +1127,14 @@ class sfForm implements ArrayAccess, Iterator, Countable
   }
 
   /**
-   * Sets the post validator. This is a shortcut method for
+   * Sets the post validator. This is a shortcut method for `setPostValidator`.
    *
    * @param sfValidatorBase $validator sfValidatorBase instance
    * @return sfForm
    */
   public function setFinalValidator(sfValidatorBase $validator)
   {
+    $validator->setEventDispatcher($this->getEventDispatcher());
     $this->validatorSchema->setPostValidator($validator);
     return $this;
   }
@@ -1155,6 +1157,7 @@ class sfForm implements ArrayAccess, Iterator, Countable
    */
   public function setPreValidator(sfValidatorBase $validator)
   {
+    $validator->setEventDispatcher($this->getEventDispatcher());
     $this->validatorSchema->setPreValidator($validator);
     return $this;
   }

@@ -14,7 +14,14 @@
  * @package    Sift
  * @subpackage validator
  */
-abstract class sfValidatorBase {
+abstract class sfValidatorBase implements sfIEventDispatcherAware {
+
+  /**
+   * The event dispatcher
+   *
+   * @var sfEventDispatcher
+   */
+  protected $dispatcher;
 
   protected static
     $charset = 'UTF-8',
@@ -584,6 +591,26 @@ abstract class sfValidatorBase {
       sfLogger::getInstance()->log(
               sprintf('{%s} %s', get_class($this), $message), $priority);
     }
+  }
+
+  /**
+   * Sets the event dispatcher
+   *
+   * @param sfEventDispatcher $dispatcher
+   */
+  public function setEventDispatcher(sfEventDispatcher $dispatcher = null)
+  {
+    $this->dispatcher = $dispatcher;
+  }
+
+  /**
+   * Return the event dispatcher
+   *
+   * @return sfEventDispatcher
+   */
+  public function getEventDispatcher()
+  {
+    return $this->dispatcher;
   }
 
 }
