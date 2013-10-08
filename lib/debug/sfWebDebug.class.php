@@ -45,8 +45,7 @@ class sfWebDebug extends sfConfigurable
     )));
 
     // hook for cached content
-    $this->dispatcher
-      ->connect('view.cache.filter_content', array($this, 'decorateCachedContent'));
+    $this->dispatcher->connect('view.cache.filter_content', array($this, 'decorateCachedContent'));
   }
 
   /**
@@ -148,12 +147,9 @@ class sfWebDebug extends sfConfigurable
   {
     $current = isset($this->options['request_parameters']['sf-web-debug-panel']) ?
                      $this->options['request_parameters']['sf-web-debug-panel'] : null;
-
-    $current = false;
     $titles = array();
     $panels = array();
-
-    foreach ($this->panels as $name => $panel)
+    foreach($this->panels as $name => $panel)
     {
       if($title = $panel->getTitle())
       {
@@ -340,6 +336,16 @@ class sfWebDebug extends sfConfigurable
     {
       return 'error';
     }
+  }
+
+  /**
+   * Returns the event dispatcher
+   *
+   * @return sfEventDispatcher
+   */
+  public function getEventDispatcher()
+  {
+    return $this->dispatcher;
   }
 
 }

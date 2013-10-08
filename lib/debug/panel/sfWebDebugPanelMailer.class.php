@@ -25,8 +25,8 @@ class sfWebDebugPanelMailer extends sfWebDebugPanel
   {
     parent::__construct($webDebug);
 
-    sfCore::getEventDispatcher()->connect('mailer.configure', array(
-        $this, 'listenMailConfigureEvent'
+    $webDebug->getEventDispatcher()->connect('mailer.configure', array(
+      $this, 'listenMailConfigureEvent'
     ));
   }
 

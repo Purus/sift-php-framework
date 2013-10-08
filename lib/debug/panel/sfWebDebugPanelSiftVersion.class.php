@@ -7,14 +7,14 @@
  */
 
 /**
- * sfWebDebugPanelSymfonyVersion adds a panel to the web debug toolbar with the Sift version.
+ * sfWebDebugPanelSiftVersion adds a panel to the web debug toolbar with the Sift version.
  *
  * @package    Sift
  * @subpackage debug_panel
  */
 class sfWebDebugPanelSiftVersion extends sfWebDebugPanel
 {
-  
+
   public function getTitle()
   {
     return '<span id="sfWebDebugSiftVersion">'.sfCore::getVersion().'</span>';
@@ -27,5 +27,5 @@ class sfWebDebugPanelSiftVersion extends sfWebDebugPanel
   public function getPanelContent()
   {
   }
-  
+
 }
