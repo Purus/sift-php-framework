@@ -104,7 +104,9 @@ class sfAssetPackagerFilter extends sfFilter {
 
             if(!is_readable($filePath))
             {
-              $this->log(sprintf('File "%s" is not readable or does not exist.', $file), sfILogger::ERROR);
+              $this->log('The file "{file}" is not readable or does not exist.', sfILogger::ERROR, array(
+                'file' => $file
+              ));
               // mark as invalid
               $invalid[$position][$file] = $options;
               continue;
@@ -267,7 +269,9 @@ class sfAssetPackagerFilter extends sfFilter {
             if(!is_readable($filePath))
             {
               $invalid[$position][$file] = $options;
-              $this->log(sprintf('File "%s" is not readable or does not exist.', $file));
+              $this->log('The file "{file}" is not readable or does not exist.', sfILogger::ERROR, array(
+                'file' => $file
+              ));
               continue;
             }
 
@@ -497,21 +501,6 @@ class sfAssetPackagerFilter extends sfFilter {
     }
 
     return true;
-  }
-
-  /**
-   * Logs a message to logger instance
-   *
-   * @param string $message Message to log
-   * @param string $level Log level
-   * @param array $context Array of context variables
-   */
-  protected function log($message, $level = sfLogger::ERROR, array $context = array())
-  {
-    if(sfConfig::get('sf_logging_enabled'))
-    {
-      sfLogger::getInstance()->log(sprintf('{sfAssetPackagerFilter} %s', $message), $level, $context);
-    }
   }
 
 }

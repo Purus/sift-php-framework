@@ -68,21 +68,19 @@ class sfCacheFilter extends sfFilter {
     // page cache
     $cacheable = $this->cacheManager->isCacheable($uri);
 
-    if(sfConfig::get('sf_logging_enabled'))
-    {
-      sfLogger::getInstance()->info(sprintf('{sfCacheFilter} The uri: %s is %scacheable.',
-          $uri, $cacheable ? '' : 'not '));
-    }
+    $this->log('The uri "{uri}" is {cacheable}.', sfILogger::INFO, array(
+      'uri' => $uri,
+      'cacheable' => $cacheable ? 'cacheable' : 'not cacheable'
+    ));
 
     if($cacheable && $this->cacheManager->withLayout($uri))
     {
       $inCache = $this->cacheManager->getPageCache($uri);
 
-      if(sfConfig::get('sf_logging_enabled'))
-      {
-        sfLogger::getInstance()->info(sprintf('{sfCacheFilter} The uri: %s is %sin cache.',
-            $uri, $inCache ? '' : 'not '));
-      }
+      $this->log('The uri "{uri}" is {in_cache}.', sfILogger::INFO, array(
+        'uri' => $uri,
+        'in_cache' => $inCache ? 'in cache' : 'not in cache'
+      ));
 
       $this->cache[$uri] = $inCache;
       if($inCache)
@@ -196,10 +194,7 @@ class sfCacheFilter extends sfFilter {
       {
         $this->response->setStatusCode(304);
         $this->response->setHeaderOnly(true);
-        if(sfConfig::get('sf_logging_enabled'))
-        {
-          sfLogger::getInstance()->info('{sfCacheFilter} ETag matches If-None-Match (send 304)');
-        }
+        $this->log('ETag matches If-None-Match (send 304).', sfILogger::INFO);
       }
     }
 
@@ -212,10 +207,7 @@ class sfCacheFilter extends sfFilter {
       {
         $this->response->setStatusCode(304);
         $this->response->setHeaderOnly(true);
-        if(sfConfig::get('sf_logging_enabled'))
-        {
-          sfLogger::getInstance()->info('{sfCacheFilter} Last-Modified matches If-Modified-Since (send 304)');
-        }
+        $this->log('Last-Modified matches If-Modified-Since (send 304).', sfILogger::INFO);
       }
     }
   }

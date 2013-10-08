@@ -195,4 +195,20 @@ abstract class sfFilter implements sfIFilter
   {
     return $this->parameterHolder->set($name, $value);
   }
+
+  /**
+   * Log a message.
+   *
+   * @param string $message The message
+   * @param integer $level The log level
+   * @param array $context Array of context variables
+   */
+  protected function log($message, $level = sfILogger::INFO, array $context = array())
+  {
+    if(sfConfig::get('sf_logging_enabled'))
+    {
+      sfLogger::getInstance()->log(sprintf('{%s} %s', get_class($this), $message), $level, $context);
+    }
+  }
+
 }

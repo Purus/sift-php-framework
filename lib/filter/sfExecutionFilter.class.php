@@ -63,12 +63,6 @@ class sfExecutionFilter extends sfFilter
     if(sfConfig::get('sf_cache'))
     {
       $uri = $this->context->getViewCacheManager()->getCurrentCacheKey();
-
-      if(sfConfig::get('sf_logging_enabled'))
-      {
-        sfLogger::getInstance()->info(sprintf('{sfExecutionFilter} The uri: %s is cacheable.', $uri));
-      }
-
       if(null !== $uri && $this->context->getViewCacheManager()->hasActionCache($uri))
       {
         // action in cache, so go to the view
@@ -133,10 +127,10 @@ class sfExecutionFilter extends sfFilter
    */
   protected function executeView($moduleName, $actionName, $viewName, $viewAttributes)
   {
-    if(sfConfig::get('sf_logging_enabled'))
-    {
-      sfLogger::getInstance()->info(sprintf('{sfFilter} Executing view for "%s/%s".', $moduleName, $actionName));
-    }
+    $this->log('Executing view for "{module}/{action}".', sfILogger::INFO, array(
+      'module' => $moduleName,
+      'action' => $actionName
+    ));
 
     $controller = $this->context->getController();
 
@@ -166,9 +160,10 @@ class sfExecutionFilter extends sfFilter
         break;
     }
 
-    if(sfConfig::get('sf_logging_enabled'))
-    {
-      sfLogger::getInstance()->info(sprintf('{sfFilter} View "%s" executed for "%s/%s".', $viewName, $moduleName, $actionName));
-    }
+    $this->log('View {view_name} executed for "{module}/{action}".', sfILogger::INFO, array(
+      'view_name' => $viewName,
+      'module' => $moduleName,
+      'action' => $actionName
+    ));
   }
 }

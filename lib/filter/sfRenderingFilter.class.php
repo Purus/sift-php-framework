@@ -53,11 +53,7 @@ class sfRenderingFilter extends sfFilter {
     // send headers + content
     if(sfView::RENDER_VAR != $this->getContext()->getController()->getRenderMode())
     {
-      if(sfConfig::get('sf_logging_enabled'))
-      {
-        sfLogger::getInstance()->info('{sfFilter} Render to client');
-      }
-
+      $this->log('Render to client.', sfILogger::INFO);
       $this->prepare();
       $this->getContext()->getResponse()->send();
     }
@@ -84,11 +80,7 @@ class sfRenderingFilter extends sfFilter {
       if(!sfConfig::get('sf_test') && $this->getParameter('whitespace_removal_condition') &&
           strpos($response->getContentType(), 'text/html') !== false)
       {
-        if(sfConfig::get('sf_logging_enabled'))
-        {
-          sfLogger::getInstance()->info('{sfFilter} Removing whitespace from the response content.');
-        }
-
+        $this->log('Removing whitespace from the response content.', sfILogger::INFO);
         $content = $this->removeWhitespace($response->getContent());
         $response->setContent($content);
         $response->setHttpHeader('Content-Length', strlen($content));
@@ -111,13 +103,10 @@ class sfRenderingFilter extends sfFilter {
               $this->getParameter('compression_level')
             );
 
-            if(sfConfig::get('sf_logging_enabled'))
-            {
-              sfLogger::getInstance()->info('{sfFilter} Compresed the output using "{encoding}". Compressed size {saving}%.', array(
-                'encoding' => $encoding,
-                'saving' => ($total = strlen($response->getContent())) > 0 ? ((round(strlen($content) / $total, 2) * 100)) : 0
-              ));
-            }
+            $this->log('Compresed the output using "{encoding}". Compressed size {saving}%.', sfILogger::INFO, array(
+              'encoding' => $encoding,
+              'saving' => ($total = strlen($response->getContent())) > 0 ? ((round(strlen($content) / $total, 2) * 100)) : 0
+            ));
 
             $response->setContent($content);
             $response->setHttpHeader('Content-Encoding', $encoding);
