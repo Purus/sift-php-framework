@@ -195,7 +195,9 @@ class sfServiceContainer {
 
     if(sfConfig::get('sf_logging_enabled'))
     {
-      sfLogger::getInstance()->info(sprintf('{sfServiceContainer} Building service "%s"', $serviceName));
+      sfLogger::getInstance()->info('{sfServiceContainer} Building service "{name}"', array(
+        'name' => $serviceName
+      ));
     }
 
     return $this->services[$serviceName] = $this->createObjectFromDefinition($this->definitions[$serviceName]);
@@ -292,6 +294,7 @@ class sfServiceContainer {
     {
       $found = false;
       $name = strtolower($match[1][0]);
+      $configured = $match[0][0];
       if(sfConfig::has($name))
       {
         $configured = sfConfig::get($name);
@@ -377,7 +380,9 @@ class sfServiceContainer {
       {
         if(sfConfig::get('sf_logging_enabled'))
         {
-          sfLogger::getInstance()->info(sprintf('{sfServiceContainer} Shutting down service "%s"', $serviceName));
+          sfLogger::getInstance()->info('{sfServiceContainer} Shutting down service "{name}"', array(
+            'name' => $serviceName
+          ));
         }
         $this->services[$serviceName]->shutdown();
       }
@@ -415,7 +420,9 @@ class sfServiceContainer {
   {
     if(sfConfig::get('sf_logging_enabled'))
     {
-      sfLogger::getInstance()->info(sprintf('{sfServiceContainer} Creating class "%s"', $className));
+      sfLogger::getInstance()->info('{sfServiceContainer} Creating class "{class_name}"', array(
+        'class_name' => $className
+      ));
     }
 
     // construct the object
