@@ -202,40 +202,98 @@ class sfRenderingFilter extends sfFilter {
    */
   protected function removeWhitespace($content)
   {
+    try
+    {
+      $scripts = $this->matchAll($content, '!<script[^>]*>.*?<\/script>!is');
+      $pres = $this->matchAll($content, '!<pre[^>]*>.*?</pre>!is');
+      $textareas = $this->matchAll($content, '!<textarea[^>]+>.*?</textarea>!is');
+    }
+    catch(sfRegexpException $e)
+    {
+      $this->log('Error while removing whitespace. {exception}', sfILogger::WARNING, array(
+        'exception' => $e->getMessage()
+      ));
+
+      // we return the content unmodified
+      return $content;
+    }
+
     // Pull out the script blocks
-    preg_match_all("!<script[^>]+>.*?</script>!is", $content, $match);
-    $scripts = $match[0];
-    $content = preg_replace("!<script[^>]+>.*?</script>!is", '@@@SIFT:TRIM:SCRIPT@@@', $content);
-
+    $this->replaceAll($content, '!<script[^>]*>.*?<\/script>!is', '@@@SIFT:TRIM:SCRIPT@@@');
     // Pull out the pre blocks
-    preg_match_all("!<pre[^>]*>.*?</pre>!is", $content, $match);
-    $pres = $match[0];
-    $content = preg_replace("!<pre[^>]*>.*?</pre>!is", '@@@SIFT:TRIM:PRE@@@', $content);
-
+    $this->replaceAll($content, '!<pre[^>]*>.*?</pre>!is', '@@@SIFT:TRIM:PRE@@@');
     // Pull out the textarea blocks
-    preg_match_all("!<textarea[^>]+>.*?</textarea>!is", $content, $match);
-    $textareas = $match[0];
-    $content = preg_replace("!<textarea[^>]+>.*?</textarea>!is", '@@@SIFT:TRIM:TEXTAREA@@@', $content);
+    $this->replaceAll($content, '!<textarea[^>]+>.*?</textarea>!is', '@@@SIFT:TRIM:TEXTAREA@@@');
+    // strip the whitespace
+    $this->cleanup($content);
 
-    $content = preg_replace(array(
-                "/[\r\n][\r\n\t]*[\r\n]/i",
-                // strip spaces between tags
-                "/(\s+)?(\<.+\>)(\s+)?/",
-                // strip comments
-                // "/<!--((?!-->).)*-->/",
-                // get rid of mutliple spaces and replace it with one
-                "/(\s){2,}/i"), array(
-                chr(10), " $2 ", // add spaces !
-                // '',
-                ' '), $content);
+    // PUT ALL BACK
+    // script blocks
+    $this->replace('@@@SIFT:TRIM:SCRIPT@@@', $scripts, $content);
+    // pre blocks
+    $this->replace('@@@SIFT:TRIM:PRE@@@', $pres, $content);
+    // textarea blocks
+    $this->replace('@@@SIFT:TRIM:TEXTAREA@@@', $textareas, $content);
 
-    // replace script blocks
-    $this->replace("@@@SIFT:TRIM:SCRIPT@@@", $scripts, $content);
-    // replace pre blocks
-    $this->replace("@@@SIFT:TRIM:PRE@@@", $pres, $content);
-    // replace textarea blocks
-    $this->replace("@@@SIFT:TRIM:TEXTAREA@@@", $textareas, $content);
     return $content;
+  }
+
+  /**
+   * Removes whitespace from the content
+   *
+   * @param string $content
+   */
+  protected function cleanup(&$content)
+  {
+    $content = preg_replace(
+        array(
+          '/[\r\n][\r\n\t]*[\r\n]/i',
+          '/(\s+)?(\<.+\>)(\s+)?/', // strip spaces between tags
+          '/(\s){2,}/i' // get rid of mutliple spaces and replace it with one
+        ),
+        array(
+          chr(10), " $2 ", // add spaces !
+          ' '
+        ), $content);
+  }
+
+  /**
+   * Matches all $pattern in the $subject
+   *
+   * @param string $subject
+   * @param type $pattern
+   * @param integer $flags
+   * @param integer $offset
+   * @return array Array of matches
+   * @throws sfRegexpException
+   */
+  protected function matchAll($subject, $pattern, $flags = 0, $offset = 0)
+  {
+    preg_match_all($pattern, $subject, $matches, ($flags & PREG_PATTERN_ORDER) ? $flags : ($flags | PREG_SET_ORDER),  $offset);
+    if($error = preg_last_error())
+    {
+      throw new sfRegexpException(null, $error, $pattern);
+    }
+    return $matches;
+  }
+
+  /**
+   * Regular expression replacement
+   *
+   * @param string $subject The subject
+   * @param string $pattern
+   * @param string $replacement
+   * @param integer $limit
+   * @return string
+   * @throws sfRegexpException
+   */
+  protected function replaceAll(&$subject, $pattern, $replacement, $limit = -1)
+  {
+    $subject = preg_replace($pattern, $replacement, $subject, $limit);
+    if($error = preg_last_error())
+    {
+      throw new sfRegexpException(null, $error, $pattern);
+    }
   }
 
   /**

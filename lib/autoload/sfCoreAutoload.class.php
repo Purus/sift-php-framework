@@ -417,6 +417,7 @@ class sfCoreAutoload {
       'sfpluginexception' => 'exception/sfPluginException.class.php',
       'sfpluginrecursivedependencyexception' => 'exception/sfPluginRecursiveDependencyException.class.php',
       'sfpluginrestexception' => 'exception/sfPluginRestException.class.php',
+      'sfregexpexception' => 'exception/sfRegexpException.class.php',
       'sfrenderexception' => 'exception/sfRenderException.class.php',
       'sfsecurityexception' => 'exception/sfSecurityException.class.php',
       'sfstopexception' => 'exception/sfStopException.class.php',
