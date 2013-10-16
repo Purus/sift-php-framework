@@ -831,6 +831,7 @@ class sfCoreAutoload {
       'sfiarrayaccessbyreference' => 'util/sfIArrayAccessByReference.interface.php',
       'sfinflector' => 'util/sfInflector.class.php',
       'sfintegerencoder' => 'util/sfIntegerEncoder.class.php',
+      'sflimitedscope' => 'util/sfLimitedScope.class.php',
       'sfmimetype' => 'util/sfMimeType.class.php',
       'sfnumbercompare' => 'util/sfNumberCompare.class.php',
       'sfobjectcallbackdefinition' => 'util/sfObjectCallbackDefinition.class.php',
