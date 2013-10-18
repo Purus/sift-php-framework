@@ -121,4 +121,18 @@ abstract class sfPlugin extends sfConfigurable {
     return $this->project;
   }
 
+  /**
+   * Returns plugin version
+   *
+   * @return string
+   */
+  public function getVersion()
+  {
+    if(is_readable(($version = $this->getRootDir() . '/VERSION')))
+    {
+      return file_get_contents($version);
+    }
+    return 'UNKNOWN';
+  }
+
 }
