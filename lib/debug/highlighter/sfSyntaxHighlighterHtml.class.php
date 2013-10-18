@@ -28,8 +28,8 @@ class sfSyntaxHighlighterHtml extends sfSyntaxHighlighterGeneric {
   protected function setup()
   {
     $this->addStringPattern();
-    $this->addPattern('/(&gt;)((.|\n)*?)(&lt;)/i', '&gt;<span class="' . $this->getCssPrefix . 'default">$2</span>&lt;');
-    $this->addPattern('/(&lt;\!--)(.*?)(--&gt;)/', '<span class="' . $this->getCssPrefix . 'comment">$1$2$3</span>');
+    $this->addPattern('/(&gt;)((.|\n)*?)(&lt;)/i', '&gt;<span class="' . $this->getCssPrefix() . 'default">$2</span>&lt;');
+    $this->addPattern('/(&lt;\!--)(.*?)(--&gt;)/', '<span class="' . $this->getCssPrefix() . 'comment">$1$2$3</span>');
   }
 
   /**
@@ -59,7 +59,7 @@ class sfSyntaxHighlighterHtml extends sfSyntaxHighlighterGeneric {
     $php = new sfSyntaxHighligherPhp($code[2]);
     $php->setCssPrefix($this->getCssPrefix());
     $html = $code[1] . $php->getHtml() . $code[3];
-    $this->phpBlocks[$token] = '<span class="' . $this->getCssPrefix . 'default">' . $html . '</span>';
+    $this->phpBlocks[$token] = '<span class="' . $this->getCssPrefix() . 'default">' . $html . '</span>';
     return $token;
   }
 
