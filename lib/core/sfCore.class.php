@@ -199,12 +199,12 @@ class sfCore
   /**
    * Displays error page
    *
-   * @param sfException $exception
-   * @param string $error
+   * @param string $error The error page
+   * @param string $format The format
    */
-  public static function displayErrorPage(sfException $exception, $error = 'error500')
+  public static function displayErrorPage($error = 'error500', $format = 'html')
   {
-    return self::getProject()->getActiveApplication()->displayErrorPage($exception, $error);
+    return self::getProject()->getActiveApplication()->displayErrorPage($error, $format);
   }
 
   /**

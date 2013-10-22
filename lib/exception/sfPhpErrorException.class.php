@@ -22,7 +22,7 @@ class sfPhpErrorException extends sfException {
    * Callback used as error handler
    *
    * set_error_handler(array('sfPhpErrorException',
-   *                                        'handleErrorCallback'), E_ALL);
+   *                         'handleErrorCallback'), E_ALL);
    *
    * @param integer $code
    * @param string $string
@@ -40,25 +40,25 @@ class sfPhpErrorException extends sfException {
       return;
     }
 
-    switch($code)
+    if(in_array($code, array(
+        E_DEPRECATED, E_USER_DEPRECATED,
+        E_NOTICE, E_USER_NOTICE,
+        E_STRICT
+    )))
     {
-      case E_DEPRECATED:
-      case E_USER_DEPRECATED:
-      case E_NOTICE:
-      case E_USER_NOTICE:
-      case E_STRICT:
-
       if(sfConfig::get('sf_logging_enabled'))
       {
-        sfLogger::getInstance()->warning(sprintf('{sfPhpErrorException} %s, file: "%s", line: %s', $string, $file, $line));
+        sfLogger::getInstance()->warning('{sfPhpErrorException} {error}, file: "{file}", line: {line}', array(
+          'file' => $file,
+          'line' => $line,
+          'error' => $string
+        ));
       }
-
-      return;
-
-      break;
+      // The error handler must return FALSE to populate $php_errormsg. 
+      return false;
     }
 
-    $e = new self($string . ' (in file ' . $file . ', line: ' . $line . ')', $code);
+    $e = new self($string . ' (in file "' . $file . '", line: ' . $line . ')', $code);
     $e->line = $line;
     $e->file = $file;
 
@@ -72,31 +72,39 @@ class sfPhpErrorException extends sfException {
    */
   public static function fatalErrorShutdownHandler()
   {
-    $last_error = error_get_last();
-    if($last_error['type'] === E_ERROR || $last_error['type'] === E_PARSE)
+    $error = error_get_last();
+    if(in_array($error['type'], array(E_ERROR, E_CORE_ERROR, E_COMPILE_ERROR, E_PARSE)))
     {
-      try
-      {
-        self::handleErrorCallback(E_ERROR, $last_error['message'], $last_error['file'], $last_error['line'], '');
-      }
-      catch(sfPhpErrorException $exception)
-      {
-        if(sfConfig::get('sf_environment') == 'prod')
-        {
-          // clear output buffers
-          while(ob_get_level() > 0)
-          {
-            ob_get_clean();
-          }
-          sfCore::displayErrorPage($exception);
-        }
-        else
-        {
-          $exception->printStackTrace();
-        }
-      }
-    }
+      $e = new self(sprintf('%s (in file "%s", on line %s)',
+                    $error['message'], $error['file'],
+                    $error['line'], $error['type']));
 
+      $e->line = $error['file'];
+      $e->file = $error['line'];
+
+      self::fixExceptionStack($e, $error['file'], $error['line']);
+      $e->printStackTrace();
+    }
+  }
+
+  /**
+   * Fixes exception stack. Injects the "correct" location
+   *
+   */
+  public static function fixExceptionStack(Exception &$exception, $file, $line)
+  {
+    $stack = array(
+      array(
+        'file' => $file,
+        'line' => $line,
+        'function' => '*unknown*',
+        'args' => array(),
+      )
+    );
+    $ref = new ReflectionProperty('Exception', 'trace');
+    $ref->setAccessible(true);
+    $ref->setValue($exception, $stack);
+    return $exception;
   }
 
 }

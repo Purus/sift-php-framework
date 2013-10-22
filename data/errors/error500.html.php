@@ -6,7 +6,6 @@
  * file that was distributed with this source code.
  */
 
-return array(
-  'error' => 'Database is temporarily unvailable',
-  'error_msg_1' => 'Please, try it again later.'
-);
+require_once dirname(__FILE__) . '/lib/sfSimpleErrorPage.class.php';
+$error = new sfSimpleErrorPage('error500');
+$error->render();

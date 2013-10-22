@@ -495,6 +495,8 @@ class sfContext {
     {
       sfLogger::getInstance()->info('{sfContext} Shutting down');
     }
+
+    sfLogger::getInstance()->shutdown();
     // shutdown the services
     $this->serviceContainer->clear();
   }

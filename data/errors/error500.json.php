@@ -6,7 +6,6 @@
  * file that was distributed with this source code.
  */
 
-return array(
-  'Site is unavailable.',
-  'Site is under maintenance, please try again in 30 minutes.'
-);
+require_once dirname(__FILE__) . '/lib/sfSimpleErrorPage.class.php';
+$error = new sfSimpleErrorPage('error500', 'json');
+$error->render();

@@ -1,5 +1,0 @@
-<?php echo json_encode(array(
-    'result'    => false,
-    // FIXME: make i18n
-    'html'      => sfConfig::get('sf_debug') ? ($name . ' ' . $message) : 'An error ocurred while loading data',
-)); ?>

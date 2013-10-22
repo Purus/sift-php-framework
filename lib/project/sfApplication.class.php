@@ -175,7 +175,7 @@ abstract class sfApplication extends sfProject {
       set_error_handler(array('sfPhpErrorException', 'handleErrorCallback'), sfConfig::get('sf_error_reporting', E_ALL & ~E_NOTICE));
     }
 
-    $this->getShutdownScheduler()->register(array('sfPhpErrorException', 'fatalErrorShutdownHandler'), array(), sfShutdownScheduler::LOW_PRIORITY);
+    $this->getShutdownScheduler()->register(array('sfPhpErrorException', 'fatalErrorShutdownHandler'));
 
     // get config instance
     $sf_app_config_dir_name = sfConfig::get('sf_app_config_dir_name');
@@ -249,6 +249,17 @@ abstract class sfApplication extends sfProject {
           }
           return strtr($string, $args);
         }
+      }
+    }
+
+    // create dummy function
+    if(!$this->isDebug() && !function_exists('dump'))
+    {
+      /**
+       * @internal
+       */
+      function dump()
+      {
       }
     }
 
@@ -535,54 +546,105 @@ abstract class sfApplication extends sfProject {
       ||
       sfToolkit::hasLockFile($this->getOption('sf_data_dir').DIRECTORY_SEPARATOR.$this->getOption('sf_app').'_'.$this->getEnvironment().'.lck'))
     {
-      // application is not available - we'll find the most specific unavailable page...
-      $files = array(
-        $this->getOption('sf_app_config_dir').'/unavailable.php',
-        $this->getOption('sf_config_dir').'/unavailable.php',
-        $this->getOption('sf_web_dir').'/errors/unavailable.php',
-        $this->getOption('sf_sift_data_dir').'/errors/unavailable.php',
-      );
-
-      foreach($files as $file)
-      {
-        if(is_readable($file))
-        {
-          header("HTTP/1.1 503 Service Temporarily Unavailable");
-          header("Status: 503 Service Temporarily Unavailable");
-          include $file;
-          break;
-        }
-      }
-      die(1);
+      $this->displayErrorPage('unavailable');
+      // exit, so nothing else gets rendered
+      exit;
     }
   }
 
   /**
    * Displays error page
    *
-   * @param sfException $exception
-   * @param string $error
+   * @param Exception $exception The exception
+   * @param string $error The error (error500, unavailable)
+   * @param string $format The format If null, the correct format will be autodetected
    */
-  public function displayErrorPage(sfException $exception, $error = 'error500')
+  public function displayErrorPage($error = 'error500', $format = null)
   {
+    if(is_null($format))
+    {
+      $format = 'html';
+      if(sfContext::hasInstance() && $request = sfContext::getInstance()->getRequest()
+      // we will detect which is the best format for current response
+      && ((method_exists($request, 'isAjax') && $request->isAjax()) ||
+           (method_exists($request, 'isXmlHttpRequest') && $request->isXmlHttpRequest())))
+      {
+        $format = 'json';
+      }
+    }
+
+    switch($error)
+    {
+      case 'unavailable':
+        header('HTTP/1.1 503 Service Temporarily Unavailable');
+        header('Status: 503 Service Temporarily Unavailable');
+        // FIXME: should be configurable
+        header('Retry-After: 3600');
+      break;
+
+      case 'error500':
+      default:
+        header('HTTP/1.0 500 Internal Server Error');
+      break;
+    }
+
+    // format specific
     $files = array(
+      sprintf($this->getOption('sf_app_config_dir').'/%s.%s.php', $error, $format),
+      sprintf($this->getOption('sf_config_dir').'/%s.%s.php', $error, $format),
+      sprintf($this->getOption('sf_sift_data_dir').'/errors/%s.%s.php', $error, $format),
+    );
+
+    // generic html fallback
+    $fallbacks = array(
+      // generic
       sprintf($this->getOption('sf_app_config_dir').'/%s.php', $error),
       sprintf($this->getOption('sf_config_dir').'/%s.php', $error),
-      $this->getOption('sf_web_dir').'/errors/error500.php',
-      $this->getOption('sf_sift_data_dir').'/errors/error500.php'
+      sprintf($this->getOption('sf_sift_data_dir').'/errors/%s.php', $error),
+      // fallback
+      $this->getOption('sf_sift_data_dir').'/errors/error500.html.php'
     );
+
+    $errorPage = false;
     foreach($files as $file)
     {
       if(is_readable($file))
       {
-        include $file;
+        $errorPage = sfLimitedScope::render($file);
         break;
       }
     }
-    if(!$this->getOption('sf_test'))
+
+    // no error page, try html fallbacks
+    if(!$errorPage)
     {
-      exit(1);
+      foreach($fallbacks as $file)
+      {
+        if(is_readable($file))
+        {
+          $format = 'html';
+          $errorPage = sfLimitedScope::render($file);
+          break;
+        }
+      }
     }
+
+    $charset = sfConfig::get('sf_charset');
+    switch($format)
+    {
+      case 'html':
+        @header(sprintf('Content-type: text/html;charset=%s', $charset));
+      break;
+
+      case 'json':
+        @header(sprintf('Content-type: application/json;charset=%s', $charset));
+        @header('X-Content-Type-Options: nosniff');
+      break;
+    }
+
+    echo $errorPage;
+
+    // do not exit, so the shutdown handlers can work
   }
 
   /**

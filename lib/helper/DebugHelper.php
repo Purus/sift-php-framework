@@ -33,7 +33,7 @@ function debug_message($message, $level = 'info', array $context = array())
  *
  * @param string $message Message to be logged
  * @param string $level The log level
- * @param array $context The context variables 
+ * @param array $context The context variables
  */
 function log_message($message, $level = 'info', array $context = array())
 {
@@ -43,14 +43,47 @@ function log_message($message, $level = 'info', array $context = array())
   }
 }
 
-/**
- * Dumps the variable
- *
- * @param mixed $var Variable to dump
- * @param boolean $exit Exit after dumping the variable?
- * @return string The dump result
- */
-function dump($var, $exit = false)
+if(!function_exists('dump'))
 {
-  return sfDebug::dump($var, $exit, debug_backtrace());
+  /**
+   * Dumps variable to the output.
+   *
+   * @param mixed $var The variable to dump
+   * @param array $options Array of options
+   * @param boolean $echo Echo the output?
+   */
+  function dump($var, array $options = null, $echo = true)
+  {
+    $dir = dirname(__FILE__);
+    $location = null;
+    // we need to provide the location where was the dump() called
+    foreach(debug_backtrace(PHP_VERSION_ID >= 50306 ? DEBUG_BACKTRACE_IGNORE_ARGS : false) as $item)
+    {
+      if(isset($item['file']) && strpos($item['file'], $dir) === 0)
+      {
+        continue;
+      }
+      elseif(!isset($item['file'], $item['line']) || !is_file($item['file']))
+      {
+        break;
+      }
+      else
+      {
+        $lines = file($item['file']);
+        $line = $lines[$item['line'] - 1];
+        $location = array(
+          $item['file'],
+          $item['line'],
+          preg_match('#\w*dump(er::\w+)?\((.*)\)#i', $line, $match) ? $match[2] : $line
+        );
+        break;
+      }
+    }
+    $options['location'] = $location;
+    return sfDebugDumper::dump($var, $options, $echo);
+  }
+}
+else
+{
+  log_message('The dump() function already exists. Are you including Debug helper in production environment?', 'warning');
 }

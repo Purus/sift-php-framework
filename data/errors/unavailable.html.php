@@ -6,7 +6,6 @@
  * file that was distributed with this source code.
  */
 
-return array(
-  'error' => 'Databáze je dočasně nedostupná',
-  'error_msg_1' => 'Prosím, zkuste to později.'
-);
+require_once dirname(__FILE__) . '/lib/sfSimpleErrorPage.class.php';
+$error = new sfSimpleErrorPage('unavailable');
+$error->render();

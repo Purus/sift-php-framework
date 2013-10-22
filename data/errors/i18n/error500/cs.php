@@ -7,7 +7,8 @@
  */
 
 return array(
-  'error' => 'Interní chyba serveru',
-  'error_msg_1' => 'Omlouváme se, ale při vyřizování Vašeho požadavku došlo k interní chybě serveru.',
-  'error_msg_2' => 'Chyba byla uložena pro administrátora systému. Jestliže se bude chyba zobrazovat i nadále, prosím kontaktujte webmastera (%email%).',    
+  'Interní chyba serveru',
+  'Omlouváme se, ale při vyřizování Vašeho požadavku došlo k interní chybě serveru.',
+  'Chyba byla uložena pro administrátora systému. Jestliže se bude chyba zobrazovat i nadále, prosím kontaktujte webmastera <a href="mailto:%email%" title="Odeslat email webmasterovi">%email%</a>.',
+  'Děkujeme za Vaši trpělivost.'
 );

@@ -7,6 +7,7 @@
  */
 
 return array(
-  'error' => 'Stránky jsou dočasně nedostupné',
-  'error_msg_1' => 'Provádíme udržbu stránek, prosíme zkuste to za 30 minut.'    
+  'Stránky jsou dočasně nedostupné',
+  'Omlouváme se, ale právě <strong>provádíme udržbu stránek</strong>. Prosíme zkuste to za 30 minut.',
+  'Děkujeme za Vaši trpělivost.'
 );
