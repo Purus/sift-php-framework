@@ -11,6 +11,8 @@
         <li><?php echo $k; ?>: <?php echo $v; ?></li>
 <?php endforeach; ?>
       </ul>
+<?php elseif(is_numeric($value)): ?>
+<?php echo $value; ?>
 <?php elseif(empty($value)): ?>
 <span class="empty">n/a</span>
 <?php else: ?>

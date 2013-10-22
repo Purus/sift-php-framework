@@ -28,6 +28,8 @@ class sfDebug {
         'Extensions' => join(', ', self::getPhpLoadedExtensions()),
         'Disabled functions' => ini_get('disable_functions'),
         'Disabled classes' => ini_get('disable_classes'),
+        'Session Hash function' => ini_get('session.hash_function'),
+        'Session Hash bit/character' => ini_get('session.hash_bits_per_character'),
         'Log errors (to system)' => (boolean) ini_get('log_errors'),
         'System error log' => ini_get('error_log'),
         'Can call system executables' => sfToolkit::isCallable('exec') && sfToolkit::isCallable('shell_exec'),
