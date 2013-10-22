@@ -229,7 +229,7 @@ class sfPDOSessionStorage extends sfSessionStorage {
       // for update is not supported by sqlite
       if($this->db->getAttribute(PDO::ATTR_DRIVER_NAME) !== 'sqlite')
       {
-        $sql . ' FOR UPDATE';
+        $sql .= ' FOR UPDATE';
       }
 
       $stmt = $this->db->prepare($sql);
