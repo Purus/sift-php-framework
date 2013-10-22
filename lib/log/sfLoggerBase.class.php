@@ -19,14 +19,11 @@ abstract class sfLoggerBase extends sfConfigurable implements sfILogger {
    *
    * @var array
    */
-  protected $logLevelMap = array(
-    sfILogger::EMERG => 'emergency',
+  protected static $logLevelMap = array(
     sfILogger::EMERGENCY => 'emergency',
     sfILogger::ALERT => 'alert',
-    sfILogger::CRIT => 'critical',
     sfILogger::CRITICAL => 'critical',
     sfILogger::ERROR => 'error',
-    sfILogger::ERR => 'error',
     sfILogger::WARNING => 'warning',
     sfILogger::NOTICE => 'notice',
     sfILogger::INFO => 'info',
@@ -44,7 +41,7 @@ abstract class sfLoggerBase extends sfConfigurable implements sfILogger {
   /**
    * @see emergency()
    */
-  public function emerg($message,  array $context = array())
+  public function emerg($message, array $context = array())
   {
     $this->emergency($message, $context);
   }
@@ -144,11 +141,21 @@ abstract class sfLoggerBase extends sfConfigurable implements sfILogger {
    */
   public function getLevelName($level)
   {
-    if(!isset($this->logLevelMap[$level]))
+    if(!isset(self::$logLevelMap[$level]))
     {
       throw new InvalidArgumentException(sprintf('The level level "%s" does not exist.', $level));
     }
-    return $this->logLevelMap[$level];
+    return self::$logLevelMap[$level];
+  }
+
+  /**
+   * Returns the log level map
+   *
+   * @return array
+   */
+  public static function getLogLevelMap()
+  {
+    return self::$logLevelMap;
   }
 
   /**

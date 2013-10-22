@@ -36,7 +36,7 @@ class sfWebDebugLogger extends sfVarLogger implements sfIEventDispatcherAware {
   protected $defaultOptions = array(
     'web_debug' => array(
       'class' => 'sfWebDebug',
-      'options' => array(),
+      'options' => array()
     ),
   );
 
@@ -83,7 +83,8 @@ class sfWebDebugLogger extends sfVarLogger implements sfIEventDispatcherAware {
     }
 
     $this->dispatcher->connect('context.load_factories', array($this, 'listenForLoadFactories'));
-    $this->dispatcher->connect('response.pre_send', array($this, 'filterResponseContent'));
+    // connect with low priority to allow modifications
+    $this->dispatcher->connect('response.pre_send', array($this, 'filterResponseContent'), -99);
     $this->dispatcher->connect('application.render_exception', array($this, 'filterExceptionContent'));
   }
 
@@ -98,7 +99,6 @@ class sfWebDebugLogger extends sfVarLogger implements sfIEventDispatcherAware {
     $debugOptions = array_merge(array(
       'request_parameters' => $event['context']->getRequest()->getParameterHolder()->getAll(),
     ), (array)$this->getOption('web_debug.options', array()));
-
 
     $this->webDebug = new $debugClass($this, $this->dispatcher, $debugOptions);
   }
@@ -119,9 +119,8 @@ class sfWebDebugLogger extends sfVarLogger implements sfIEventDispatcherAware {
     }
 
     $content = $response->getContent();
-    $content = str_ireplace('</head>', "<style type=\"text/css\">\n".$this->webDebug->getDebugCss().'</style>' . '</head>', $content);
     $content = str_ireplace('</body>', $this->webDebug->getHtml() . '</body>', $content);
-
+    $content = str_ireplace('</head>', "<style type=\"text/css\" id=\"web-debug-style\">\n".$this->webDebug->getDebugCss().'</style>' . '</head>', $content);
     $response->setContent($content);
   }
 
@@ -140,8 +139,8 @@ class sfWebDebugLogger extends sfVarLogger implements sfIEventDispatcherAware {
       return $content;
     }
 
-    $content = str_ireplace('</head>', "<style type=\"text/css\">\n".$this->webDebug->getDebugCss().'</style>' . '</head>', $content);
     $content = str_ireplace('</body>', $this->webDebug->getHtml() . '</body>', $content);
+    $content = str_ireplace('</head>', "<style type=\"text/css\" id=\"web-debug-style\">\n".$this->webDebug->getDebugCss().'</style>' . '</head>', $content);
     return $content;
   }
 

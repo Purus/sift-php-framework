@@ -36,6 +36,8 @@ interface sfILogger extends sfIService {
 
   /**
    * Alias for CRITICAL
+   *
+   * @internal
    */
   const CRIT = 2;
 
@@ -73,6 +75,12 @@ interface sfILogger extends sfIService {
    * Debug-level messages
    */
   const DEBUG = 7;
+
+  /**
+   * Extra context namespace
+   *
+   */
+  const CONTEXT_EXTRA = '_extra_';
 
   /**
    * System is unusable.
@@ -158,8 +166,7 @@ interface sfILogger extends sfIService {
   public function debug($message, array $context = array());
 
   /**
-   * Logs with an arbitrary level. If the message is not present,
-   * the level is the message and the level is the default level
+   * Logs with an arbitrary level.
    *
    * @param string $message The message to log
    * @param integer $level The level

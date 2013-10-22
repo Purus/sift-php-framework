@@ -21,8 +21,8 @@ class sfFileLogger extends sfLoggerBase
    */
   protected $defaultOptions = array(
     'type' => 'Sift',
-    'format' => '%time% %type% [%level%] %message%%EOL%',
-    'time_format' => '%b %d %H:%M:%S',
+    'format' => '%time% %type% [%level%] %message% [%extra%]%EOL%',
+    'time_format' => 'M d H:i:s', // format for date() function
     'dir_mode' => 0777,
     'file_mode' => 0666,
     'date_format' => 'Y_m_d',
@@ -69,7 +69,7 @@ class sfFileLogger extends sfLoggerBase
     }
 
     $fileExists = file_exists($file);
-    if (!is_writable($dir) || ($fileExists && !is_writable($file)))
+    if(!is_writable($dir) || ($fileExists && !is_writable($file)))
     {
       throw new sfFileException(sprintf('Unable to open the log file "%s" for writing.', $file));
     }
@@ -93,13 +93,21 @@ class sfFileLogger extends sfLoggerBase
    */
   public function log($message, $level = sfILogger::INFO, array $context = array())
   {
+    $extra = '';
+    if(isset($context[sfILogger::CONTEXT_EXTRA]) && !empty($context[sfILogger::CONTEXT_EXTRA]))
+    {
+      $extra = sfJson::encode($context[sfILogger::CONTEXT_EXTRA]);
+      unset($context[sfILogger::CONTEXT_EXTRA]);
+    }
+
     flock($this->fp, LOCK_EX);
     fwrite($this->fp, strtr($this->getOption('format'), array(
       '%type%' => $this->getOption('type'),
       '%message%' => $this->formatMessage($message, $context),
-      '%time%' => strftime($this->getOption('time_format')),
+      '%time%' => date($this->getOption('time_format')),
       '%level%' => $this->getLevelName($level),
       '%EOL%' => PHP_EOL,
+      '%extra%' => $extra
     )));
     flock($this->fp, LOCK_UN);
   }

@@ -20,6 +20,16 @@ class sfVarLogger extends sfLoggerBase {
     $xdebugLogging = false;
 
   /**
+   * Array of default options
+   *
+   * @var array
+   */
+  protected $defaultOptions = array(
+    // xdebug logging
+    'xdebug_logging' => true
+  );
+
+  /**
    * Initializes this logger.
    *
    * Available options:
@@ -33,15 +43,15 @@ class sfVarLogger extends sfLoggerBase {
    */
   public function __construct($options = array())
   {
-    $this->xdebugLogging = isset($options['xdebug_logging']) ? $options['xdebug_logging'] : false;
+    parent::__construct($options);
+
+    $this->xdebugLogging = $this->getOption('xdebug_logging');
 
     // disable xdebug when an HTTP debug session exists (crashes Apache, see #2438)
     if(isset($_GET['XDEBUG_SESSION_START']) || isset($_COOKIE['XDEBUG_SESSION']))
     {
       $this->xdebugLogging = false;
     }
-
-    return parent::__construct($options);
   }
 
   /**
@@ -117,7 +127,6 @@ class sfVarLogger extends sfLoggerBase {
         $level = $log['level'];
       }
     }
-
     return $level;
   }
 
@@ -141,7 +150,9 @@ class sfVarLogger extends sfLoggerBase {
       'level' => $level,
       'level_name' => $this->getLevelName($level),
       'time' => time(),
-      'message' => $this->formatMessage($message, $context),
+      'message_formatted' => $this->formatMessage($message, $context),
+      'message' => $message,
+      'context' => $context,
       'type' => $type,
       'debug_backtrace' => $this->getDebugBacktrace(),
     );
@@ -160,23 +171,8 @@ class sfVarLogger extends sfLoggerBase {
     {
       return array();
     }
-
-    $traces = debug_backtrace();
-
-    // remove sfLogger and sfEventDispatcher from the top of the trace
-    foreach($traces as $i => $trace)
-    {
-      $class = isset($trace['class']) ? $trace['class'] : substr($file = basename($trace['file']), 0, strpos($file, '.'));
-
-      if(!class_exists($class) ||
-        (!in_array($class, array('sfLogger', 'sfEventDispatcher')) && !is_subclass_of($class, 'sfLogger') && !is_subclass_of($class, 'sfEventDispatcher')))
-      {
-        $traces = array_slice($traces, $i);
-        break;
-      }
-    }
-
-    return $traces;
+    // remove first item, since its this function
+    return array_slice(debug_backtrace(), 0);
   }
 
   public function shutdown()

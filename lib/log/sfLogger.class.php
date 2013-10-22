@@ -123,6 +123,8 @@ class sfLogger implements sfILogger {
    */
   public function log($message, $level = sfILogger::INFO, array $context = array())
   {
+    $level = $this->convertLevel($level);
+
     if($this->getLogLevel() < $level)
     {
       return;
@@ -132,6 +134,25 @@ class sfLogger implements sfILogger {
     {
       $logger->log($message, $level, $context);
     }
+  }
+
+  /**
+   * Converts string levels like "info" to its corresponding level constant
+   *
+   * @param string|integer $level
+   * @return integer
+   */
+  public function convertLevel($level)
+  {
+    if(is_string($level))
+    {
+      $constant = sprintf('sfILogger::%s', strtoupper($level));
+      if(defined($constant))
+      {
+        return constant($constant);
+      }
+    }
+    return $level;
   }
 
   /**
@@ -145,7 +166,7 @@ class sfLogger implements sfILogger {
   /**
    * @see emergency()
    */
-  public function emerg($message,  array $context = array())
+  public function emerg($message, array $context = array())
   {
     $this->emergency($message, $context);
   }

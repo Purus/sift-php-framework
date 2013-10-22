@@ -35,7 +35,7 @@ class TestLogger extends sfFileLogger
   public function getTimeFormat()
   {
     return $this->getOption('time_format');
-  }  
+  }
 }
 
 // option: format
@@ -47,7 +47,7 @@ unlink($file);
 
 $logger = new TestLogger(array('file' => $file, 'date_format' => ''));
 $logger->log('foo');
-$t->is(file_get_contents($file), strftime($logger->getTimeFormat()).' Sift [info] foo'.PHP_EOL, 'contructor can take a format option');
+$t->is(file_get_contents($file), date($logger->getTimeFormat()).' Sift [info] foo []'.PHP_EOL, 'contructor can take a format option');
 
 // close pointer
 $logger->shutdown();
@@ -63,10 +63,10 @@ $t->diag('option: time_format');
 
 unlink($file);
 
-$logger = new TestLogger(array('file' => $file, 'time_format' => '%Y %m %d', 'date_format' => ''));
+$logger = new TestLogger(array('file' => $file, 'time_format' => 'Y m d', 'date_format' => ''));
 $logger->log('foo');
 
-$t->is(file_get_contents($file), strftime($logger->getTimeFormat()).' Sift [info] foo'.PHP_EOL, 'contructor can take a format option');
+$t->is(file_get_contents($file), date($logger->getTimeFormat()).' Sift [info] foo []'.PHP_EOL, 'contructor can take a format option');
 
 // option: type
 $t->diag('option: type');
@@ -76,7 +76,7 @@ $logger->shutdown();
 unlink($file);
 $logger = new TestLogger(array('file' => $file, 'type' => 'foo', 'date_format' => ''));
 $logger->log('foo');
-$t->is(file_get_contents($file), strftime($logger->getTimeFormat()).' foo [info] foo'.PHP_EOL, 'contructor can take a format option');
+$t->is(file_get_contents($file), date($logger->getTimeFormat()).' foo [info] foo []'.PHP_EOL, 'contructor can take a format option');
 
 // ->shutdown()
 $t->diag('->shutdown()');

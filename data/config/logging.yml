@@ -18,18 +18,17 @@ default:
         file: %SF_LOG_DIR%/%SF_APP%_%SF_ENVIRONMENT%.log
         # there is new log file for every day in month
         date_format: Y_m_d
-#
-#prod:
-#  enabled: true
-#  level:   err
-#  rotate:  false
-#  period:  7
-#  history: 10
-#  purge:   true
-#  loggers:
-#    sf_file_logger:
-#      class: sfFileLogger
-#      param:
-#        file: %SF_LOG_DIR%/%SF_APP%_%SF_ENVIRONMENT%.log
-##    sf_email_logger:
-##      class: sfEmailLogger
+prod:
+  enabled: true
+  level:   err
+  loggers:
+    sf_file_logger:
+      class: sfFileLogger
+      param:
+        file: %SF_LOG_DIR%/%SF_APP%_%SF_ENVIRONMENT%.log
+    sf_email_logger:
+      class: sfEmailLogger
+      param:
+        template: %SF_SIFT_DATA_DIR%/logger/email.php
+        recipients: %SF_WEBMASTER_EMAIL%
+        sender_email: %SF_WEBMASTER_EMAIL%
