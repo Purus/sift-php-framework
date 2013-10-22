@@ -65,7 +65,9 @@ class sfFilterChain
       {
         if(sfConfig::get('sf_logging_enabled'))
         {
-          sfLogger::getInstance()->info(sprintf('{sfFilter} Executing filter "%s".', get_class($this->chain[$this->index])));
+          sfLogger::getInstance()->info('{sfFilterChain} Executing filter "{filter}".', array(
+            'filter' => get_class($this->chain[$this->index]))
+          );
         }
         // execute the next filter
         $this->chain[$this->index]->execute($this);
@@ -74,7 +76,9 @@ class sfFilterChain
       {
         if(sfConfig::get('sf_logging_enabled'))
         {
-          sfLogger::getInstance()->info(sprintf('{sfFilter} Skipping execution of filter "%s".', get_class($this->chain[$this->index])));
+          sfLogger::getInstance()->info('{sfFilterChain} Skipping execution of filter "{filter}".', array(
+            'filter' => get_class($this->chain[$this->index])
+          ));
         }
         // call itself again
         $this->execute();

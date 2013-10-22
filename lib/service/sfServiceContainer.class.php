@@ -195,7 +195,7 @@ class sfServiceContainer {
 
     if(sfConfig::get('sf_logging_enabled'))
     {
-      sfLogger::getInstance()->info('{sfServiceContainer} Building service "{name}"', array(
+      sfLogger::getInstance()->debug('{sfServiceContainer} Building service "{name}"', array(
         'name' => $serviceName
       ));
     }
@@ -380,7 +380,7 @@ class sfServiceContainer {
       {
         if(sfConfig::get('sf_logging_enabled'))
         {
-          sfLogger::getInstance()->info('{sfServiceContainer} Shutting down service "{name}"', array(
+          sfLogger::getInstance()->debug('{sfServiceContainer} Shutting down service "{name}"', array(
             'name' => $serviceName
           ));
         }
@@ -420,7 +420,7 @@ class sfServiceContainer {
   {
     if(sfConfig::get('sf_logging_enabled'))
     {
-      sfLogger::getInstance()->info('{sfServiceContainer} Creating class "{class_name}"', array(
+      sfLogger::getInstance()->debug('{sfServiceContainer} Creating class "{class_name}"', array(
         'class_name' => $className
       ));
     }
