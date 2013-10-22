@@ -674,6 +674,8 @@ class sfCoreAutoload {
       'sffilelogger' => 'log/sfFileLogger.class.php',
       'sfilogger' => 'log/sfILogger.interface.php',
       'sfiloggeraware' => 'log/sfILoggerAware.interface.php',
+      'sfloganalyzer' => 'log/sfLogAnalyzer.class.php',
+      'sfloganalyzermessage' => 'log/sfLogAnalyzerMessage.class.php',
       'sflogmanager' => 'log/sfLogManager.class.php',
       'sflogger' => 'log/sfLogger.class.php',
       'sfloggerbase' => 'log/sfLoggerBase.class.php',
