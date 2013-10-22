@@ -204,7 +204,7 @@ class sfMarkdownParser {
    * Returns singleton instance of the class
    *
    * @param array $options Array of options for the parser
-   * @return sfMardownParser
+   * @return sfMarkdownParser
    */
   public static function getInstance($options = array())
   {
