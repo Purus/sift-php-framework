@@ -51,13 +51,13 @@ $t->isnt(session_id(), $session_id, 'regenerate() regenerated the session with a
 $result = $connection->query(sprintf('SELECT id, blob_data FROM session WHERE id = "%s"', $session_id));
 $data = $result->fetchAll();
 $t->is(count($data), 1, 'regenerate() has kept destroyed old session');
-$t->is($data[0]['blob_data'], $oldSessionData, 'regenerate() has kept destroyed old session data');
+$t->is(base64_decode($data[0]['blob_data']), $oldSessionData, 'regenerate() has kept destroyed old session data');
 
 // checking if the new session record has been created
 $result = $connection->query(sprintf('SELECT id, blob_data FROM session WHERE id = "%s"', session_id()));
 $data = $result->fetchAll();
 $t->is(count($data), 1, 'regenerate() has created a new session record');
-$t->is($data[0]['blob_data'], $newSessionData, 'regenerate() has created a new record with correct data');
+$t->is(base64_decode($data[0]['blob_data']), $newSessionData, 'regenerate() has created a new record with correct data');
 
 $session_id = session_id();
 

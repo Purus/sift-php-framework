@@ -225,7 +225,12 @@ class sfPDOSessionStorage extends sfSessionStorage {
 
     try
     {
-      $sql = 'SELECT ' . $db_data_col . ' FROM ' . $db_table . ' WHERE ' . $db_id_col . '=? FOR UPDATE';
+      $sql = 'SELECT ' . $db_data_col . ' FROM ' . $db_table . ' WHERE ' . $db_id_col . '=?';
+      // for update is not supported by sqlite
+      if(!$this->db->getAttribute(PDO::ATTR_DRIVER_NAME) !== 'sqlite')
+      {
+        $sql . ' FOR UPDATE';
+      }
 
       $stmt = $this->db->prepare($sql);
       $stmt->bindParam(1, $id, PDO::PARAM_STR, 255);
@@ -234,7 +239,8 @@ class sfPDOSessionStorage extends sfSessionStorage {
       // it is recommended to use fetchAll so that PDO can close the DB cursor
       // we anyway expect either no rows, or one row with one column. fetchColumn, seems to be buggy #4777
       $sessionRows = $stmt->fetchAll(PDO::FETCH_NUM);
-      if(count($sessionRows) == 1 )
+
+      if(count($sessionRows) == 1)
       {
         return base64_decode($sessionRows[0][0]);
       }
@@ -290,6 +296,7 @@ class sfPDOSessionStorage extends sfSessionStorage {
     try
     {
       $stmt = $this->db->prepare($sql);
+      $data = base64_encode($data);
       $stmt->bindParam(1, $data, PDO::PARAM_STR); // setString(1, $data);
       $stmt->bindParam(2, $id, PDO::PARAM_STR); // setString(2, $id);
       $stmt->execute();
