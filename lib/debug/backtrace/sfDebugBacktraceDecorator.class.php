@@ -64,4 +64,14 @@ abstract class sfDebugBacktraceDecorator extends sfConfigurable implements sfIDe
     return sfLimitedScope::render($file, $vars);
   }
 
+  /**
+   * Renders the backtrace
+   *
+   * @return string
+   */
+  public function __toString()
+  {
+    return $this->toString();
+  }
+
 }

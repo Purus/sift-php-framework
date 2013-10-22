@@ -12,7 +12,7 @@
  * @package Sift
  * @subpackage debug
  */
-class sfDebugBacktrace extends sfConfigurable implements Serializable {
+class sfDebugBacktrace extends sfConfigurable implements Serializable, sfIJsonSerializable {
 
   /**
    * Object
@@ -73,12 +73,13 @@ class sfDebugBacktrace extends sfConfigurable implements Serializable {
     // which classes should be not listed in the stack
     // interface of classes
     'skip_classes' => array(
-      'sfILogger', 'sfPhpErrorException'
+      'sfILogger', 'sfPhpErrorException', 'sfShutdownScheduler'
     ),
     'file_url_format' => 'editor://open?file=%file%&line=%line%',
     // include file excerpt?
     'file_excerpt' => false,
-    'file_excerpt_limit_lines' => 15
+    'file_excerpt_limit_lines' => 15,
+    'shorten_file_paths' => false
   );
 
   /**
@@ -165,9 +166,23 @@ class sfDebugBacktrace extends sfConfigurable implements Serializable {
         $excerpt = $this->getFileExcerpt($trace['file'], $this->getOption('file_excerpt_limit_lines'), $trace['line']);
       }
 
+      $fileShort = '';
+      if($trace['file'])
+      {
+        if($this->getOption('shorten_file_paths'))
+        {
+          $trace['file'] = $this->shortenFilePath($trace['file']);
+          $fileShort = $trace['file'];
+        }
+        else
+        {
+          $fileShort = $this->shortenFilePath($trace['file']);
+        }
+      }
+
       $processed[] = array(
         'file' => $trace['file'],
-        'file_short' => $trace['file'] ? $this->shortenFilePath($trace['file']) : '',
+        'file_short' => $fileShort,
         'file_excerpt' => $excerpt,
         'line' => $trace['line'],
         'file_edit_url' => $trace['file'] ? $this->getFileEditUrl($trace['file'], $trace['line']) : '',
@@ -352,6 +367,27 @@ class sfDebugBacktrace extends sfConfigurable implements Serializable {
   {
     list($options, $this->processed) = unserialize($data);
     $this->setOptions($options);
+  }
+
+  /**
+   * Converts the backtrace to string
+   *
+   * @return string
+   */
+  public function __toString()
+  {
+    $decorator = new sfDebugBacktraceLogDecorator($this);
+    return $decorator->toString();
+  }
+
+  /**
+   * Returns an array which should be serialized to JSON
+   *
+   * @return string
+   */
+  public function jsonSerialize()
+  {
+    return $this->__toString();
   }
 
 }
