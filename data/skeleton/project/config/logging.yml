@@ -5,12 +5,12 @@ prod:
   enabled: true
   level:   err
   rotate:  true
-  purge:   off
+  purge:   false
 
 #all:
 #  enabled: true
 #  level:   debug
-#  rotate:  off
+#  rotate:  false
 #  period:  7
 #  history: 10
 #  purge:   true
