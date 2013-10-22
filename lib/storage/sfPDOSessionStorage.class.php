@@ -30,7 +30,8 @@ class sfPDOSessionStorage extends sfSessionStorage {
     'db_data_col' => 'blob_data',
     'db_time_col' => 'expire',
     'database'   => 'default',
-    'db_table' => 'session'
+    'db_table' => 'session',
+    'use_transaction' => false
   );
 
   /**
@@ -46,6 +47,12 @@ class sfPDOSessionStorage extends sfSessionStorage {
    * @var sfDatabaseManager
    */
   protected $manager;
+
+  /**
+   *
+   * @var boolean
+   */
+  protected $transactionStarted = false;
 
   /**
    * Constructs the storage
@@ -81,7 +88,6 @@ class sfPDOSessionStorage extends sfSessionStorage {
         array($this, 'sessionGC'));
 
     parent::setup();
-
   }
 
   /**
@@ -91,6 +97,19 @@ class sfPDOSessionStorage extends sfSessionStorage {
    */
   public function sessionClose()
   {
+    // manually call garbage collector
+    // 10% chance
+    if(rand(1, 100) < 10)
+    {
+      try
+      {
+        // manually call garbage collection
+        $this->sessionGC(ini_get('session.gc_maxlifetime'));
+      }
+      catch(sfDatabaseException $e)
+      {
+      }
+    }
     // do nothing
     return true;
   }
@@ -195,17 +214,29 @@ class sfPDOSessionStorage extends sfSessionStorage {
     $db_id_col = $this->getOption('db_id_col');
     $db_time_col = $this->getOption('db_time_col');
 
+    // prevent starting new transaction when session_start()
+    // has been called from $this->regenerateId()
+    if($this->getOption('use_transaction')
+        && !$this->transactionStarted)
+    {
+      $this->transactionBegin();
+      $this->transactionStarted = true;
+    }
+
     try
     {
-      $sql = 'SELECT ' . $db_data_col . ' FROM ' . $db_table . ' WHERE ' . $db_id_col . '=?';
+      $sql = 'SELECT ' . $db_data_col . ' FROM ' . $db_table . ' WHERE ' . $db_id_col . '=? FOR UPDATE';
 
       $stmt = $this->db->prepare($sql);
       $stmt->bindParam(1, $id, PDO::PARAM_STR, 255);
 
       $stmt->execute();
-      if($data = $stmt->fetchColumn())
+      // it is recommended to use fetchAll so that PDO can close the DB cursor
+      // we anyway expect either no rows, or one row with one column. fetchColumn, seems to be buggy #4777
+      $sessionRows = $stmt->fetchAll(PDO::FETCH_NUM);
+      if(count($sessionRows) == 1 )
       {
-        return $data;
+        return base64_decode($sessionRows[0][0]);
       }
       else
       {
@@ -223,6 +254,15 @@ class sfPDOSessionStorage extends sfSessionStorage {
     }
     catch(PDOException $e)
     {
+      // If the insertion fails, it may be due to a race condition that
+      // exists between multiple instances of this session handler in the
+      // case where a new session is created by multiple script instances
+      // at the same time (as can occur when Asynchronous Ajax Requests
+      // or multiple session-aware frames exist).
+      //
+      // In this case, we attempt another SELECT operation which will
+      // hopefully retrieve the session data inserted by the competing
+      // FIXME: to do second session select
       throw new sfDatabaseException(sprintf('PDOException was thrown when trying to manipulate session data. Message: %s', $e->getMessage()));
     }
   }
@@ -284,11 +324,40 @@ class sfPDOSessionStorage extends sfSessionStorage {
   }
 
   /**
+   * Begins the transaction
+   *
+   * @return boolean Returns true on success or false on failure.
+   */
+  protected function transactionBegin()
+  {
+    return $this->db->beginTransaction();
+  }
+
+  /**
+   * Commits the transaction
+   *
+   * @return boolean Returns true on success or false on failure.
+   */
+  protected function transactionCommit()
+  {
+    return $this->db->commit();
+  }
+
+  /**
    * Executes the shutdown procedure.
    *
    */
   public function shutdown()
   {
+    // commit transaction
+    if($this->getOption('use_transaction') &&
+        $this->transactionStarted)
+    {
+      $this->transactionCommit();
+      // reset semaphore
+      $this->transactionStarted = false;
+    }
+    parent::shutdown();
   }
 
 }

@@ -1,0 +1,7 @@
+# You can find more information about this file on:
+# https://bitbucket.org/mishal/sift-php-framework/wiki/Php
+#set:
+  # Session settings
+  #session.hash_function:  0
+  #session.entropy_length: 128
+  #session.entropy_file:   /dev/urandom

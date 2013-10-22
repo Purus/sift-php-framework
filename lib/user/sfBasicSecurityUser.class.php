@@ -307,6 +307,14 @@ class sfBasicSecurityUser extends sfUser implements sfISecurityUser, sfIService 
       $this->clearCredentials();
     }
 
+    if(sfConfig::get('sf_logging_enabled'))
+    {
+      sfLogger::getInstance()->debug('{sfUser} Regenerating storage id');
+    }
+
+    // session fixation, destroy old session
+    $this->storage->regenerate(true);
+
     return $this;
   }
 

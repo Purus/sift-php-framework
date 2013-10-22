@@ -2,21 +2,37 @@
 # https://bitbucket.org/mishal/sift-php-framework/wiki/Php
 
 set:
-  date.timezone:               %SF_DEFAULT_TIMEZONE%
-  magic_quotes_runtime:        false
-  log_errors:                  true
-  session.use_only_cookies:    true
-  session.use_trans_sid:       false
-  session.gc_maxlifetime:      %SF_TIMEOUT%
+  date.timezone:                   %SF_DEFAULT_TIMEZONE%
+  magic_quotes_runtime:            false
+  log_errors:                      true
+  session.use_only_cookies:        true
+  session.use_trans_sid:           false
+  # Select a hash function for use in generating session ids.
+  # Possible Values:
+  #   * 0 (MD5 128 bits)
+  #   * 1 (SHA-1 160 bits)
+  # This option may also be set to the name of any hash function supported by
+  # the hash extension. A list of available hashes is returned by the hash_algos()
+  # function. (if php > 5.3.0)
+  # http://php.net/session.hash-function
+  session.hash_function:           0
+  # Define how many bits are stored in each character when converting  the binary hash data to something readable.
+  # Possible values:
+  #   * 4 (4 bits: 0-9, a-f)
+  #   * 5 (5 bits: 0-9, a-v)
+  #   * 6 (6 bits: 0-9, a-z, A-Z, "-", ",")
+  # http://php.net/session.hash-bits-per-character
+  session.hash_bits_per_character: 6
+  session.gc_maxlifetime:          %SF_TIMEOUT%
   # disable cache limiter
   # cache limiter is to be set via factories.yml under the storage
-  session.cache_limiter:       ''
-  display_errors:              %SF_DEBUG%
-  unserialize_callback_func:   spl_autoload_call
-  zlib.output_compression:     false
-  arg_separator.output:        '&'
+  session.cache_limiter:           ''
+  display_errors:                  %SF_DEBUG%
+  unserialize_callback_func:       spl_autoload_call
+  zlib.output_compression:         false
+  arg_separator.output:            '&'
   # PCRE limit
-  pcre.backtrack_limit:        10000000
+  pcre.backtrack_limit:            10000000
 
 # Warn when these settings are NOT configured to the following values
 warn:
