@@ -14,24 +14,19 @@
  */
 class sfWebDebugPanelResponse extends sfWebDebugPanel
 {
-  protected $response;
-
   /**
    * @see sfWebDebugPanel
    */
   public function getTitle()
   {
-    $this->response = sfContext::getInstance()->getResponse();
-
-    $code  = $this->response->getStatusCode();
-    $title = $this->response->getStatusText();
-
-    $color = '#D25849';
-    if($code == 200)
+    if(!$context = $this->webDebug->getContext())
     {
-      $color = '#297A50';
+      return;
     }
-    return sprintf('<span style="color:%s" title="%s">%s</span>', $color, $title, $code);
+    $response = $context->getResponse();
+    $code = $response->getStatusCode();
+    $title = $response->getStatusText();
+    return sprintf('<span class="%s" title="%s">%s</span>', $code == 200 ? 'success' : 'error', $title, $code);
   }
 
   /**

@@ -124,6 +124,12 @@ class sfContext {
     }
 
     self::$instances[$name] = $instance;
+
+    // notify when the context is created
+    $instance->getApplication()->getEventDispatcher()->notify(new sfEvent('context.instance_created', array(
+      'context' => $instance
+    )));
+
     return self::$instances[$name];
   }
 

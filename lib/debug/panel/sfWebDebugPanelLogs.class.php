@@ -14,107 +14,154 @@
  */
 class sfWebDebugPanelLogs extends sfWebDebugPanel
 {
+  /**
+   * Array of default options
+   *
+   * @var array
+   */
+  protected $defaultOptions = array(
+    // include debug backtrace information?
+    'with_debug_backtrace' => false
+  );
+
+  /**
+   * Array of logs to display
+   *
+   * @var array
+   */
+  protected $logs = array();
+
+  /**
+   * Array of log types
+   *
+   * @var array
+   */
+  protected $types = array();
+
+  /**
+   * Array of log level counts
+   *
+   * @var array
+   */
+  protected $counts = array();
+
+  /**
+   * @see sfWebDebugPanel
+   */
   public function getTitle()
   {
     return 'logs';
   }
 
+  /**
+   * @see sfWebDebugPanel
+   */
   public function getPanelTitle()
   {
     return 'Logs';
   }
 
-  public function getPanelContent()
+  /**
+   * Prepares the logs
+   *
+   */
+  public function beforeRender()
   {
-    $html = '<table class="sfWebDebugLogs">
-      <tr>
-        <th>#</th>
-        <th>type</th>
-        <th>message</th>
-      </tr>'."\n";
-    $line_nb = 0;
-    
-    foreach($this->webDebug->getLogger()->getLogs() as $log)
+    $this->logs = $this->types = array();
+
+    $event = $this->webDebug->getEventDispatcher()->filter(
+        new sfEvent('web_debug.filter_logs', array('panel' => $this)),
+          $this->webDebug->getLogger()->getLogs());
+
+    $allLogs = $event->getReturnValue();
+    $withTrace = $this->getOption('with_debug_backtrace');
+
+    $types = $counts = array();
+    foreach($allLogs as $log)
     {
-      $priority = $this->webDebug->getPriority($log['level']);
-        
-      // increase status
-      if ($log['level'] < $this->getStatus())
+      if($log['level'] < $this->getStatus())
       {
         $this->setStatus($log['level']);
       }
 
-      ++$line_nb;
-      $html .= sprintf("<tr class='sfWebDebugLogLine sfWebDebug%s %s'><td class=\"sf-web-debug-log-number\">%s</td><td class=\"sf-web-debug-log-type\">%s&nbsp;%s</td><td>%s %s</td></tr>\n",
-        ucfirst($priority),
-        $log['type'],
-        $line_nb,
-        ucfirst($priority),
-        class_exists($log['type'], false) ? $this->formatFileLink($log['type']) : $log['type'],
-        $this->formatLogLine($log['message']),
-        $this->getToggleableDebugStack($log['debug_backtrace'])
+      if(!isset($counts[$log['level_name']]))
+      {
+        $counts[$log['level_name']] = 0;
+      }
+
+      $counts[$log['level_name']]++;
+
+      $this->logs[] = array(
+        'level' => $log['level'],
+        'level_name' => $log['level_name'],
+        'time' => $log['time'],
+        'type' => $log['type'],
+        'message' => $this->formatMessage($log['message'], $log['context']),
+        'debug_backtrace' => $withTrace ? $this->getDebugStack($log['debug_backtrace']) : null
       );
-    }
-    $html .= '</table>';
 
-    $types = array();
-    
-    foreach ($this->webDebug->getLogger()->getTypes() as $type)
-    {
-      $types[] = '<a href="#" onclick="sfWebDebugToggleMessages(\''.$type.'\'); return false;">'.$type.'</a>';
+      $types[] = $log['type'];
     }
 
-    return '
-      <ul id="sf-web-debug-log-menu">
-        <li><a href="#" onclick="sfWebDebugToggleAllLogLines(true, \'sfWebDebugLogLine\'); return false;">[all]</a></li>
-        <li><a href="#" onclick="sfWebDebugToggleAllLogLines(false, \'sfWebDebugLogLine\'); return false;">[none]</a></li>
-        <li><a href="#" onclick="sfWebDebugShowOnlyLogLines(\'info\'); return false;">Show only infos</a></li>
-        <li><a href="#" onclick="sfWebDebugShowOnlyLogLines(\'warning\'); return false;">Show only warnings</a></li>
-        <li><a href="#" onclick="sfWebDebugShowOnlyLogLines(\'error\'); return false;">Show only errors</a></li>
-        <li>'.implode("</li>\n<li>", $types).'</li>
-      </ul>
-      <div id="sfWebDebugLogLines">'.$html.'</div>
-    ';
+    $this->types = array_unique($types);
+    $this->counts = $counts;
+
+    asort($this->types);
   }
 
   /**
-   * Formats a log line.
-   *
-   * @param string $logLine The log line to format
-   *
-   * @return string The formatted log lin
+   * @see sfWebDebugPanel
    */
-  protected function formatLogLine($logLine)
+  public function getPanelContent()
+  {
+    return $this->webDebug->render($this->getOption('template_dir').'/panel/logs.php', array(
+      'logs' => $this->logs,
+      'types' => $this->types,
+      'counts' => $this->counts
+    ));
+  }
+
+  /**
+   * Formats context values into the message placeholders.
+   *
+   * @param string $message The message
+   * @param array $context Array of context
+   * @return string
+   */
+  protected function formatMessage($message, array $context = array())
   {
     static $constants;
 
-    if (!$constants)
+    if(!$constants)
     {
-      foreach (array('sf_app_dir', 'sf_root_dir', 'sf_sift_lib_dir') as $constant)
+      foreach(array('sf_app_dir', 'sf_root_dir', 'sf_sift_lib_dir') as $constant)
       {
         $constants[realpath(sfConfig::get($constant)).DIRECTORY_SEPARATOR] = $constant.DIRECTORY_SEPARATOR;
       }
     }
 
     // escape HTML
-    $logLine = htmlspecialchars($logLine, ENT_QUOTES, sfConfig::get('sf_charset'));
+    $message = htmlspecialchars($message, ENT_QUOTES, sfConfig::get('sf_charset'));
 
-    // replace constants value with constant name
-    $logLine = str_replace(array_keys($constants), array_values($constants), $logLine);
-
-    $logLine = sfToolkit::pregtr($logLine, array('/&quot;(.+?)&quot;/s' => '"<span class="sf-web-debug-log-info">\\1</span>"',
-                                                   '/^(.+?)\(\)\:/S'      => '<span class="sf-web-debug-log-info">\\1()</span>:',
-                                                   '/line (\d+)$/'        => 'line <span class="sf-web-debug-log-info">\\1</span>'));
-
-    // special formatting for SQL lines
-    $logLine = $this->formatSql($logLine);
-
-    // remove username/password from DSN
-    if (strpos($logLine, 'DSN') !== false)
+    // build a replacement array with braces around the context keys
+    $replace = array();
+    foreach($context as $key => $val)
     {
-      $logLine = preg_replace("/=&gt;\s+'?[^'\s,]+'?/", "=&gt; '****'", $logLine);
+      $replace['{' . $key . '}'] = sprintf('<span class="keyword">%s</span>', $val);
     }
 
-    return $logLine;
+    // interpolate replacement values into the message and return
+    $message = strtr((string)$message, $replace);
+
+    // replace constants value with constant name
+    $message = str_replace(array_keys($constants), array_values($constants), $message);
+
+    // remove username/password from DSN
+    if(strpos($message, 'DSN') !== false)
+    {
+      $message = preg_replace("/=&gt;\s+'?[^'\s,]+'?/", "=&gt; '****'", $message);
+    }
+
+    return $message;
   }
 }

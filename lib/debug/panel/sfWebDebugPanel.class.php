@@ -12,20 +12,50 @@
  * @package    Sift
  * @subpackage debug_panel
  */
-abstract class sfWebDebugPanel
+abstract class sfWebDebugPanel extends sfConfigurable
 {
   protected
     $webDebug = null,
-    $status   = sfLogger::INFO;
+    $status = sfILogger::INFO;
+
+  /**
+   * The debug backtrace decorator
+   *
+   * @var sfIDebugBacktraceDecorator
+   */
+  protected $debugBacktraceDecorator;
+
+  /**
+   * Array of default options
+   *
+   * @var array
+   */
+  protected $defaultOptions = array(
+    'file_url_format' => 'editor://open?file=%file%&line=%line%',
+    'backtrace_class' => 'web-debug-backtrace',
+    // backtrace decorator template directory
+    'backtrace_decorator_template_dir' => null,
+    'backtrace_decorator_template' => null
+  );
+
+  /**
+   * Array of required options
+   *
+   * @var array
+   */
+  protected $requiredOptions = array(
+    'template_dir'
+  );
 
   /**
    * Constructor.
    *
    * @param sfWebDebug $webDebug The web debug toolbar instance
    */
-  public function __construct(sfWebDebug $webDebug)
+  public function __construct(sfWebDebug $webDebug, $options = array())
   {
     $this->webDebug = $webDebug;
+    parent::__construct($options);
   }
 
   /**
@@ -68,6 +98,15 @@ abstract class sfWebDebugPanel
   abstract public function getPanelContent();
 
   /**
+   * Called before rendering the web debug. Allow to
+   * prepare the title, content and so on.
+   *
+   */
+  public function beforeRender()
+  {
+  }
+
+  /**
    * Returns panel css
    */
   public function getPanelCss()
@@ -88,7 +127,7 @@ abstract class sfWebDebugPanel
   /**
    * Returns the current status.
    *
-   * @return integer A {@link sfLogger} priority constant
+   * @return integer A {@link sfILogger} level constant
    */
   public function getStatus()
   {
@@ -98,24 +137,11 @@ abstract class sfWebDebugPanel
   /**
    * Sets the current panel's status.
    *
-   * @param integer $status A {@link sfLogger} priority constant
+   * @param integer $status A {@link sfILogger} level constant
    */
   public function setStatus($status)
   {
     $this->status = $status;
-  }
-
-  /**
-   * Returns a toggler element.
-   *
-   * @param  string $element The value of an element's DOM id attribute
-   * @param  string $title   A title attribute
-   *
-   * @return string
-   */
-  public function getToggler($element, $title = 'Toggle details')
-  {
-    return sprintf('<a href="#" onclick="sfWebDebugToggle(\''.$element.'\'); return false;" title="'.$title.'" class="sf-debug-toggle"><span>%s</span></a>', $title);
   }
 
   /**
@@ -125,102 +151,86 @@ abstract class sfWebDebugPanel
    *
    * @return string
    */
-  public function getToggleableDebugStack($debugStack)
+  public function getDebugStack($debugStack)
   {
-    static $i = 1;
-
-    if (!$debugStack)
+    if(!$debugStack instanceof sfDebugBacktrace)
     {
-      return '';
+      $debugStack = new sfDebugBacktrace($debugStack);
     }
 
-    $element = get_class($this).'Debug'.$i++;
-    $keys = array_reverse(array_keys($debugStack));
+    $decorator = $this->getDebugBacktraceDecorator();
+    $decorator->setBacktrace($debugStack);
 
-    $html  = $this->getToggler($element, 'Toggle debug stack');
-    $html .= '<div class="sf-web-debug-info" id="'.$element.'" style="display:none">';
-    foreach ($debugStack as $j => $trace)
-    {
-      $file = isset($trace['file']) ? $trace['file'] : null;
-      $line = isset($trace['line']) ? $trace['line'] : null;
-
-      $isProjectFile = $file && 0 === strpos($file, sfConfig::get('sf_root_dir')) && !preg_match('/(cache|plugins|vendor)/', $file);
-
-      $html .= sprintf('<span%s>#%s &raquo; ', $isProjectFile ? ' class="sfWebDebugHighlight"' : '', $keys[$j] + 1);
-
-      if (isset($trace['function']))
-      {
-        $html .= sprintf('in <span class="sf-web-debug-log-info">%s%s%s()</span> ',
-          isset($trace['class']) ? $trace['class'] : '',
-          isset($trace['type']) ? $trace['type'] : '',
-          $trace['function']
-        );
-      }
-
-      $html .= sprintf('from %s line %s', $this->formatFileLink($file, $line), $line);
-      $html .= '</span><br/>';
-    }
-    $html .= "</div>\n";
-
-    return $html;
+    return $decorator->toString();
   }
 
   /**
-   * Formats a file link.
+   * Returns the debug backtrace decorator
    *
-   * @param  string  $file A file path or class name
-   * @param  integer $line
-   * @param  string  $text Text to use for the link
-   *
-   * @return string
+   * @return sfDebugBacktraceDecoratorHtml
    */
-  public function formatFileLink($file, $line = null, $text = null)
+  protected function getDebugBacktraceDecorator()
   {
-    // this method is called a lot so we avoid calling class_exists()
-    if ($file && !sfToolkit::isPathAbsolute($file))
+    if(!$this->debugBacktraceDecorator)
     {
-      if (null === $text)
+      $options = array(
+        'class' => $this->getOption('backtrace_class'),
+        'template_dir' => $this->getOption('backtrace_decorator_template_dir',
+                          $this->getOption('template_dir') . '/backtrace'),
+      );
+
+      if($template = $this->getOption('backtrace_decorator_template'))
       {
-        $text = $file;
+        $options['template'] = $template;
       }
 
-      // translate class to file name
-      $r = new ReflectionClass($file);
-      $file = $r->getFileName();
+      $this->debugBacktraceDecorator = new sfDebugBacktraceHtmlDecorator(null, $options);
     }
 
-    $shortFile = sfDebug::shortenFilePath($file);
+    return $this->debugBacktraceDecorator;
+  }
 
-    if($linkFormat = sfConfig::get('sf_file_link_format', 'editor://open?file=%f&line=%l'))
+  /**
+   * Return file edit url
+   *
+   * @param string  $file A file path or class name
+   * @param integer $line
+   * @return string
+   */
+  public function getFileEditUrl($file, $line = null)
+  {
+    if(!($linkFormat = $this->getOption('file_url_format')))
     {
-      // return a link
-      return sprintf(
-        '<a href="%s" class="sfWebDebugFileLink" title="%s">%s</a>',
-        htmlspecialchars(strtr($linkFormat, array('%f' => $file, '%l' => $line)), ENT_QUOTES, sfConfig::get('sf_charset')),
-        htmlspecialchars($shortFile, ENT_QUOTES, sfConfig::get('sf_charset')),
-        null === $text ? $shortFile : $text);
+      return '';
     }
-    elseif(null === $text)
-    {
-      // return the shortened file path
-      return $shortFile;
-    }
-    else
-    {
-      // return the provided text with the shortened file path as a tooltip
-      return sprintf('<span title="%s">%s</span>', $shortFile, $text);
-    }
+    return strtr($linkFormat, array('%file%' => $file, '%line%' => $line));
+  }
+
+  /**
+   * Shortens file path
+   *
+   * @param string $file
+   * @return string
+   */
+  protected function shortenFilePath($file)
+  {
+    return sfDebug::shortenFilePath($file);
   }
 
   /**
    * Format a SQL string with some colors on SQL keywords to make it more readable.
    *
    * @param  string $sql    SQL string to format
-   *
    * @return string $newSql The new formatted SQL string
    */
   public function formatSql($sql)
   {
-    return preg_replace('/\b(UPDATE|SET|SELECT|FROM|AS|LIMIT|ASC|COUNT|DESC|WHERE|LEFT JOIN|INNER JOIN|RIGHT JOIN|ORDER BY|GROUP BY|IN|LIKE|DISTINCT|DELETE|INSERT|INTO|VALUES)\b/', '<span class="sf-web-debug-log-info">\\1</span>', $sql);
+    static $highlighter;
+    if(!$highlighter)
+    {
+      $highlighter = sfSyntaxHighlighter::factory('sql');
+    }
+    return $highlighter->setCode($sql)->getHtml();
   }
+
 }

@@ -14,51 +14,80 @@
  */
 class sfWebDebugPanelDatabase extends sfWebDebugPanel
 {
-  protected $events = array();
-  
+  /**
+   * Database queries
+   *
+   * @var array
+   */
+  protected $queries = false;
+
+  /**
+   * @see sfWebDebugPanel
+   */
   public function getTitle()
   {
-    return sprintf('%s', count($this->getEvents()));
+    return sprintf('%s', count($this->getQueries()));
   }
 
+  /**
+   * @see sfWebDebugPanel
+   */
   public function getPanelTitle()
   {
-    return sprintf('Database queries (%s)', count($this->events));
+    return sprintf('Database queries (%s)', count($this->getQueries()));
   }
 
+  /**
+   * @see sfWebDebugPanel
+   */
   public function getPanelContent()
-  {    
-    if(!count($this->events))
+  {
+    if(!count($queries = $this->getQueries()))
     {
       return '';
     }
-    
-    $html = array();
-    $html[] = '<table class="sfWebDebugLogs">';
-    
-    foreach($this->events as $i => $event)
-    {
-      $html[] = sprintf('<tr><td>%s</td><td>%s</td></tr>', ++$i, $event);
-    }
-    
-    $html[] = '</table>';
-    
-    return join("\n", $html);
+
+    return $this->webDebug->render($this->getOption('template_dir').'/panel/database.php', array(
+      'queries' => $queries
+    ));
   }
-  
-  protected function getEvents()
+
+  /**
+   * @see sfWebDebugPanel
+   */
+  public function getIcon()
   {
-    $this->events = array();    
-    $class = 'sfPDO';    
+    return sfWebDebugIcon::get('database');
+  }
+
+  /**
+   * Returns the queries
+   *
+   * @return array
+   */
+  protected function getQueries()
+  {
+    if($this->queries !== false)
+    {
+      return $this->queries;
+    }
+
+    $queries = array();
+    $class = 'sfPDO';
     foreach($this->webDebug->getLogger()->getLogs() as $log)
     {
       // catch sfPDO messages
-      if(($class == $log['type'] || (class_exists($log['type'], false) && is_subclass_of($log['type'], $class))))
-      {        
-        $this->events[] = $this->formatSql(htmlspecialchars($log['message'], ENT_QUOTES, sfConfig::get('sf_charset')));
+      if(($class == $log['type'] ||
+          (class_exists($log['type'], false) && is_subclass_of($log['type'], $class))))
+      {
+        $queries[] = $this->formatSql($log['message_formatted']);
       }
     }
-    return $this->events;
+
+    $queries = $this->webDebug->getEventDispatcher()->filter(
+        new sfEvent('web_debug.filter_database_queries'), $queries)->getReturnValue();
+
+    return $this->queries = $queries;
   }
-  
+
 }

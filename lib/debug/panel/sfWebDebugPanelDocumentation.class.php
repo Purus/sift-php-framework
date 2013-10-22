@@ -8,11 +8,20 @@
 
 /**
  * Documentation Web Debug Panel
- * 
+ *
  * @package     Sift
  * @subpackage  debug
  */
 class sfWebDebugPanelDocumentation extends sfWebDebugPanel {
+
+  /**
+   * Array of documentation links
+   *
+   * @var array
+   */
+  protected $links = array(
+    'Sift Wiki on Bitbucket' => 'https://bitbucket.org/mishal/sift-php-framework/wiki/Home'
+  );
 
   /**
    * @see sfWebDebugPanel
@@ -35,26 +44,19 @@ class sfWebDebugPanelDocumentation extends sfWebDebugPanel {
    */
   public function getPanelContent()
   {
-    $html = array();
-    
-    foreach($this->getLinks() as $link => $url)
-    {
-      $html[] = sfHtml::contentTag('li', sprintf('<a href="%s" target="sift_docs">%s</a>', 
-              htmlspecialchars($url, ENT_QUOTES, sfConfig::get('sf_charset')), $link));
-    }    
-    return sfHtml::contentTag('ul', join("\n", $html));
+    return $this->webDebug->render($this->getOption('template_dir').'/panel/documentation.php', array(
+      'links' => $this->getLinks()
+    ));
   }
-  
+
   /**
    * Returns links to documentation
-   * 
+   *
    * @return array
    */
   protected function getLinks()
   {
-    return array(
-     'Sift Wiki on Bitbucket' => 'https://bitbucket.org/mishal/sift-php-framework/wiki/Home'        
-    );
+    return $this->webDebug->getEventDispatcher()->filter(new sfEvent('web_debug.filter_documentation_links'), $this->links)->getReturnValue();
   }
 
 }

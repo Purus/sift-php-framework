@@ -17,7 +17,38 @@ class sfWebDebug extends sfConfigurable
   protected
     $logger     = null,
     $dispatcher = null,
+    $context    = null,
     $panels     = array();
+
+  /**
+   * Array of default options
+   *
+   * @var array
+   */
+  protected $defaultOptions = array(
+    // options which are exported to javascript
+    // for `web_debug.js`
+    'javascript' => array(
+      // option names are Lower-CamelCased
+      'htmlValidator' => array(
+        // see: http://about.validator.nu/
+        'url' => 'http://html5.validator.nu'
+      ),
+    ),
+    // panels configuration
+    'panels' => array(),
+    // status map: level to css class
+    'status_map' => array(
+      sfILogger::EMERGENCY => 'emergency',
+      sfILogger::ALERT => 'alert',
+      sfILogger::CRITICAL => 'critical',
+      sfILogger::ERROR => 'error',
+      sfILogger::WARNING => 'warning',
+      sfILogger::NOTICE => 'notice',
+      sfILogger::INFO => 'info',
+      sfILogger::DEBUG => 'debug'
+    )
+  );
 
   /**
    * Constructor.
@@ -44,8 +75,10 @@ class sfWebDebug extends sfConfigurable
       'web_debug' => $this
     )));
 
+    // context created
+    $this->dispatcher->connect('context.instance_created', array($this, 'listenToContextCreatedEvent'));
     // hook for cached content
-    $this->dispatcher->connect('view.cache.filter_content', array($this, 'decorateCachedContent'));
+    $this->dispatcher->connect('view.cache.filter_content', array($this, 'decorateCachedContent'), -99);
   }
 
   /**
@@ -69,42 +102,62 @@ class sfWebDebug extends sfConfigurable
   }
 
   /**
+   * Returns the context
+   *
+   * @return sfContext|null
+   */
+  public function getContext()
+  {
+    return $this->context;
+  }
+
+  /**
+   * Listens to "context.instance_created" event
+   *
+   * @param sfEvent $event
+   */
+  public function listenToContextCreatedEvent(sfEvent $event)
+  {
+    $this->context = $event['context'];
+  }
+
+  /**
    * Configures the web debug toolbar.
    */
   public function configure()
   {
-    $this->setPanel('sift_version', new sfWebDebugPanelSiftVersion($this));
+    $this->setPanel('current_route', new sfWebDebugPanelCurrentRoute($this, $this->getOptionsForPanel('current_route')));
+    $this->setPanel('response', new sfWebDebugPanelResponse($this, $this->getOptionsForPanel('response')));
 
-    if(sfConfig::get('sf_debug') && sfConfig::get('sf_cache'))
+    $this->setPanel('html_validate', new sfWebDebugPanelHtmlValidate($this, $this->getOptionsForPanel('html_validate')));
+
+    if(sfConfig::get('sf_cache'))
     {
-      $this->setPanel('cache', new sfWebDebugPanelCache($this));
+      $this->setPanel('cache', new sfWebDebugPanelCache($this, $this->getOptionsForPanel('cache')));
     }
 
-    $this->setPanel('current_route', new sfWebDebugPanelCurrentRoute($this));
-    $this->setPanel('response', new sfWebDebugPanelResponse($this));
+    $this->setPanel('environment', new sfWebDebugPanelEnvironment($this, $this->getOptionsForPanel('environment')));
 
     if(sfConfig::get('sf_logging_enabled'))
     {
-      $this->setPanel('config', new sfWebDebugPanelConfig($this));
+      $this->setPanel('logs', new sfWebDebugPanelLogs($this, $this->getOptionsForPanel('logs')));
     }
 
-    $this->setPanel('logs', new sfWebDebugPanelLogs($this));
-    $this->setPanel('memory', new sfWebDebugPanelMemory($this));
+    $this->setPanel('memory', new sfWebDebugPanelMemory($this, $this->getOptionsForPanel('memory')));
 
     if(sfConfig::get('sf_debug'))
     {
-      $this->setPanel('time', new sfWebDebugPanelTimer($this));
+      $this->setPanel('time', new sfWebDebugPanelTimer($this, $this->getOptionsForPanel('time')));
     }
 
     if(sfConfig::get('sf_use_database'))
     {
-      $this->setPanel('database', new sfWebDebugPanelDatabase($this));
+      $this->setPanel('database', new sfWebDebugPanelDatabase($this, $this->getOptionsForPanel('database')));
     }
 
-    $this->setPanel('less', new sfWebDebugPanelLessCompiler($this));
-    $this->setPanel('mailer', new sfWebDebugPanelMailer($this));
-    $this->setPanel('user', new sfWebDebugPanelUser($this));
-    $this->setPanel('docs', new sfWebDebugPanelDocumentation($this));
+    $this->setPanel('mailer', new sfWebDebugPanelMailer($this, $this->getOptionsForPanel('mailer')));
+    $this->setPanel('user', new sfWebDebugPanelUser($this, $this->getOptionsForPanel('user')));
+    $this->setPanel('docs', new sfWebDebugPanelDocumentation($this, $this->getOptionsForPanel('docs')));
   }
 
   /**
@@ -145,72 +198,85 @@ class sfWebDebug extends sfConfigurable
    */
   public function getHtml()
   {
-    $current = isset($this->options['request_parameters']['sf-web-debug-panel']) ?
-                     $this->options['request_parameters']['sf-web-debug-panel'] : null;
-    $titles = array();
-    $panels = array();
-    foreach($this->panels as $name => $panel)
+    $status = 999;
+    foreach($this->panels as $panel)
     {
-      if($title = $panel->getTitle())
-      {
-        if(($content = $panel->getPanelContent()) || $panel->getTitleUrl())
-        {
-          $id = sprintf('sfWebDebug%sDetails', $name);
-          $titles[] = sprintf('<li%s><a title="%s" href="%s"%s>%s %s</a></li>',
-            $panel->getStatus() ? ' class="sfWebDebug'.ucfirst($this->getPriority($panel->getStatus())).'"' : '',
-            $panel->getPanelTitle(),
-            $panel->getTitleUrl() ? $panel->getTitleUrl() : '#',
-            $panel->getTitleUrl() ? '' : ' onclick="sfWebDebugShowDetailsFor(\''.$id.'\'); return false;"',
-            $panel->getIcon(),
-            $title
-          );
-          $panels[] = sprintf('<div id="%s" class="sfWebDebugTop" style="display:%s"><h1>%s</h1>%s</div>',
-            $id,
-            $name == $current ? 'block' : 'none',
-            $panel->getPanelTitle(),
-            $content
-          );
-        }
-        else
-        {
-          $titles[] = sprintf('<li>%s</li>', $title);
-        }
-      }
+      $panel->beforeRender();
+      $status = min($status, $panel->getStatus());
     }
 
-    $html = (
-'<div id="sfWebDebug">
-  <div id="sfWebDebugBar">
-    <a href="#" onclick="sfWebDebugToggleMenu(); sfWebDebugToggleCookie();return false;"><img src="'.$this->getLogoSrc().'" alt="Debug toolbar" /></a>
+    // global panel status
+    if($status >= 6)
+    {
+      $status = 'success';
+    }
+    elseif($status >= 4)
+    {
+      $status = 'warning';
+    }
+    else
+    {
+      $status = 'error';
+    }
 
-          <ul id="sfWebDebugDetails" class="sfWebDebugMenu">
-            '.implode("\n", $titles).'
-            <li class="last">
-              <a href="#" onclick="document.getElementById(\'sfWebDebug\').style.display=\'none\'; return false;">close</a>
-            </li>
-          </ul>
-        </div>
+    if(sfConfig::get('sf_logging_enabled'))
+    {
+      sfLogger::getInstance()->debug('{sfWebDebug} Rendering web debug');
+    }
 
-        '.implode("\n", $panels).'
-</div>
-<script type="text/javascript">
-'.$this->getDebugJavascript().'
-</script>
-    ');
-
-    return $html;
+    return $this->render(sfConfig::get('sf_sift_data_dir').'/web_debug/web_debug.php', array(
+      'web_debug_id' => 'web-debug',
+      'options' => $this->getOptionsForJavascript(),
+      'current' => null,
+      'panels' => $this->panels,
+      'web_debug' => $this,
+      'status' => $status
+    ));
   }
 
-  protected function getLogoSrc()
+  /**
+   * Returns options for panel
+   *
+   * @param string $panel
+   * @return array
+   */
+  protected function getOptionsForPanel($panel)
   {
-    return 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABcAAAAUCAYAAABmvqYOAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAQjSURBVHjahFVbTFxVFF0zd+4wUBhwOtIqRDqgQtsptAVEbCBFQqv1QawkCGnVD7EmrTVGkyZ8+Gw0NdUEW/Wj/fGd1lhDfMTY2qHWEB9IBdIKodBaKa9Oh8c8C3MH1zlzhzd6kjVz7z737L3P2mufY2gsx9xhmH5Sia1EIVFCODiXyP8Q0Uc0E78T3xOjWGSYFrEZiaeJOmLjnJmp6QTS+Xu3/tZLfEy8TXjnO5o90vVMPljgeH6Qqem3TOJlfSf5SznPIU5zUQUiXKvNQPqLRDFnRGbshFOuB7bMd76cOE7Hd4QDgDbBCVWFYrFAiYvDVFhnw2hARH8OB+mbgRXVLL8xqpJhK/E54ZzN+Vt0vE5k6Xh4J9LKa5GUsZoLLPD3d6PltWqsf/EozNblaNlfi/HeHmQ8UANH5W4krMiAdiOAa62ncO7gbgaCjf6OEJuF8w3ETo0ayH78BazZdRBayI/r7T8xy0n4+3pxa+mjSC28X2aRVrqdQb9Bfv1nCLn74G5rQnr5Dvj6uiF80Dn0YleamPFDhGpQuLC8hhRMoKkuD9fbemCi8CKTQGpBAbSgDwZS5b3Sidu2PiE9XP76fVw98wXSymqhJiThppy1CAx1sk6aUFS14LxCaFtw6b10HgaTmTt4CalFBeSY3HNvnvMtcD3lxMnHskmNDbdX75PVzHlyP1YWPciMvbCtK0XJIRfrtCxW+FylxoE3+JAoHHk6mmFKsOIW0pBVtRf29SWITPi45U5kbd8De95m/HPqE1hSboY1Kw8XjuzDyIVm8r8Lo12/4dyBOgSHL0VlZIBmjClG0BLyDKP1zWeYYSY6Gp5FclYu7nr9S3JeyYBVyKzag+BAPwvaITvJ3XaGawa51oQbngEM/XKWtIZjXS7yZSvrTRHTdHB4BO3vHkbXh6/Id+sqJ8L+MYQDXtImZGqWdiUunh6iahYBZD/MNJdPFPS07EYabc4NUJclM8gUzCmpcDyyV341evFP1mDbgkY1KAozdyNCKdrWFCPt3gqMdLZg0j8i0u4WYb+TWRP59R/hnndc2NTQhMJXj8NiW4m/jtZj8OdvEZdsl8WSnWdSo5mb4xEYGEf74ec4l4jiAz9IqWpBOX3C0FgmGWoUkrRvLIM5yS450iZCGOtuhe9KP4tMORbdJ2kYOPsVklathjUzF+52cn5tUMo1+c5sNt5ajF1shf/q5S7SVyyci5FB/MomWBHjXYQ0mqNSFEM0iKDTFB/VvpCuaBhRAzERs3HNpFGVR7Ur1v5/iy5VLDghZLnYQajEzzrt1Gjg2cewTCRqe5421/xT8aR+OfQsrBz+e0TnPcQO4r2lznNxJm8iDhFjSzqeaxPn5DH9tvr0/26iIUJosIFOtum7ERdCCmGmTTgb16+6H/XL5Y/FNvSvAAMAwfJtjNjgGVYAAAAASUVORK5CYII=';
+    return array_merge((array)$this->getOption(sprintf('panels.%s', $panel), array()), array(
+      'template_dir' => sfConfig::get('sf_sift_data_dir') . '/web_debug'
+    ));
   }
 
-  protected function getDebugJavascript()
+  /**
+   * Returns an array of options for javascript.
+   * See `web_debug.js` for more information.
+   *
+   * @return array
+   */
+  protected function getOptionsForJavascript()
+  {
+    return $this->getOption('javascript', array());
+  }
+
+  /**
+   * Returns the CSS rules for the debug bar
+   *
+   * @return string
+   */
+  public function getDebugCss()
+  {
+    return file_get_contents(sfConfig::get('sf_sift_data_dir'). '/web_debug/web_debug.min.css');
+  }
+
+  /**
+   * Returns the javascript
+   *
+   * @return string
+   */
+  public function getDebugJavascript()
   {
     $js = array();
-    $js[] = file_get_contents(sfConfig::get('sf_sift_data_dir'). '/data/web_debug.js');
-
+    $js[] = file_get_contents(sfConfig::get('sf_sift_data_dir'). '/web_debug/web_debug.min.js');
     foreach($this->panels as $panel)
     {
       if($panelJs = $panel->getPanelJavascript())
@@ -218,8 +284,7 @@ class sfWebDebug extends sfConfigurable
         $js[] = $panelJs;
       }
     }
-
-    return sprintf("/* <![CDATA[ */\n%s/* ]]> */", join("\n", $js));
+    return  join("\n", $js);
   }
 
   /**
@@ -230,35 +295,11 @@ class sfWebDebug extends sfConfigurable
     sfLoader::loadHelpers(array('Helper', 'Url', 'Asset', 'Tag'));
   }
 
-  /**
-   * Gets the stylesheet code to inject in the head tag.
-   *
-   * @param string The stylesheet code
-   */
-  public function getDebugCss()
-  {
-    $css = array();
-
-    $css[] = file_get_contents(sfConfig::get('sf_sift_data_dir'). '/data/web_debug.css');
-
-    foreach($this->panels as $panel)
-    {
-      if($panelCss = $panel->getPanelCss())
-      {
-        $css[] = $panelCss;
-      }
-    }
-
-    return join("\n", $css);
-  }
-
  /**
    * Decorates a chunk of HTML with cache information.
    *
-   * @param string  The internalUri representing the content
-   * @param string  The HTML content
-   * @param boolean true if the content is new in the cache, false otherwise
-   *
+   * @param sfEvent The event
+   * @param string The content
    * @return string The decorated HTML string
    */
   public function decorateCachedContent(sfEvent $event, $content)
@@ -274,68 +315,31 @@ class sfWebDebug extends sfConfigurable
       return $content;
     }
 
-    $internalUri = $event['uri'];
-    $new = $event['new'];
     $cache = $event['view_cache_manager'];
 
     $this->loadHelpers();
 
-    $class = $new ? 'new' : 'old';
-    $last_modified = $cache->getLastModified($internalUri);
-    $id = md5($internalUri);
-
-    $template = '<div id="sf_cache_%id%" class="sf-web-debug-action-cache %class%">
-      <div id="sf_cache_sub_%id%" class="sf-web-debug-cache %class%">
-      <div>
-        <a href="#" onclick="sfWebDebugToggle(\'sf_cache_info_%id%\');return false;" class="sf-cache-information-link">
-        Cache information
-        </a>
-        <a href="#" onclick="sfWebDebugToggle(\'sf_cache_sub_%id%\'); document.getElementById(\'sf_cache_%id%\').className = \'hidden\'; return false;" class="sf-cache-close"><span>close</span></a>
-      </div>
-      <div style="display:none;" id="sf_cache_info_%id%" class="sf-web-debug-cache-info">
-        <ul>
-          <li><strong>Uri:</strong> %uri%</li>
-          <li><strong>Lifetime:</strong> %lifetime%s</li>
-          <li><strong>Last modified:</strong> %last_modified%s</li>
-        </ul>
-      </div>
-      </div>
-      <div class="sf-cache-content">
-      %content%
-      </div>
-      </div>';
-
-    return strtr($template, array(
-      '%id%'      => $id,
-      '%class%'   => $class,
-      '%lifetime%'  => $cache->getLifeTime($internalUri),
-      '%uri%'  => $internalUri,
-      '%content%' => $content,
-      '%last_modified%' => (time() - $last_modified)
+    return $this->render(sfConfig::get('sf_sift_data_dir'). '/web_debug/cache/_cache_fragment.php', array(
+      'id' => dechex(crc32($event['uri'])),
+      'class' => $event['new'] ? 'new' : 'old',
+      'new' => $event['new'],
+      'lifetime' => $cache->getLifeTime($event['uri'], true),
+      'uri' => $event['uri'],
+      'content' => $content,
+      // human readable format
+      'last_modified' => $cache->getLastModified($event['uri'], true, time())
     ));
   }
 
   /**
-   * Converts a priority value to a string.
+   * Converts the log level value to a string.
    *
-   * @param integer The priority value
-   *
-   * @return string The priority as a string
+   * @param integer The level value
+   * @return string The status class
    */
-  public function getPriority($value)
+  public function getStatusClass($value)
   {
-    if($value >= 6)
-    {
-      return 'info';
-    }
-    elseif($value >= 4)
-    {
-      return 'warning';
-    }
-    else
-    {
-      return 'error';
-    }
+    return $this->getOption(sprintf('status_map.%s', $value), $value);
   }
 
   /**
@@ -346,6 +350,18 @@ class sfWebDebug extends sfConfigurable
   public function getEventDispatcher()
   {
     return $this->dispatcher;
+  }
+
+  /**
+   * Renders the template with given arguments
+   *
+   * @param string $template The path to a template
+   * @param array $variables Array of variables
+   * @return string
+   */
+  public function render(/*$template, array $variables = null*/)
+  {
+    return call_user_func_array(array('sfLimitedScope', 'render'), func_get_args());
   }
 
 }

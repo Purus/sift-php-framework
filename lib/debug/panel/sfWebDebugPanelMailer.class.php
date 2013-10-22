@@ -21,11 +21,10 @@ class sfWebDebugPanelMailer extends sfWebDebugPanel
    *
    * @param sfWebDebug $webDebug The web debug toolbar instance
    */
-  public function __construct(sfWebDebug $webDebug)
+  public function __construct(sfWebDebug $webDebug, $options = array())
   {
-    parent::__construct($webDebug);
-
-    $webDebug->getEventDispatcher()->connect('mailer.configure', array(
+    parent::__construct($webDebug, $options);
+    $this->webDebug->getEventDispatcher()->connect('mailer.configure', array(
       $this, 'listenMailConfigureEvent'
     ));
   }
@@ -44,15 +43,25 @@ class sfWebDebugPanelMailer extends sfWebDebugPanel
     return '';
   }
 
+  /**
+   * @see sfWebDebugPanel
+   */
   public function getIcon()
   {
+    return sfWebDebugIcon::get('email');
   }
 
+  /**
+   * @see sfWebDebugPanel
+   */
   public function getPanelTitle()
   {
     return 'Emails';
   }
 
+  /**
+   * @see sfWebDebugPanel
+   */
   public function getPanelContent()
   {
     if(!$this->mailer)
@@ -62,47 +71,49 @@ class sfWebDebugPanelMailer extends sfWebDebugPanel
 
     $logger = $this->mailer->getLogger();
 
-    if(!$logger || !$messages = $logger->getMessages())
+    if(!$logger || !$logger->countMessages())
     {
       return false;
     }
 
-    $html = array();
-
-    $html[] = '<h2>Configuration</h2>';
-    $html[] = '<ul>';
-    $html[] = '<li>';
-    $html[] = sprintf('Realtime transport: %s', get_class($this->mailer->getRealtimeTransport()));
-    $html[] = '</li>';
-
-    $html[] = '<li>';
-    // are we using spool?
+    // detect spool
     try
     {
-      $spool  = $this->mailer->getSpool();
-      $html[] = sprintf('Spool: %s', get_class($spool));
+      $spool = get_class($this->mailer->getSpool());
     }
     catch(LogicException $e)
     {
-      $html[] ='Spool: no';
+      $spool = false;
     }
 
-    $html[] = '</li>';
-
-    $html[] = '<li>';
-    $html[] = sprintf('Deliver: %s', $this->mailer->getOption('deliver') ? 'yes' : 'no');
-
-    $html[] = '</li>';
-    $html[] = '</ul>';
-
-    // email sent
-    $html[] = '<h2>Email sent</h2>';
-    foreach ($messages as $message)
+    // prepare messages
+    $messages = array();
+    foreach($logger->getMessages() as $message)
     {
-      $html[] = $this->renderMessageInformation($message);
+      $content = $message->toString();
+      $subject = $message->getSubject();
+      // convert charset if not the same as message
+      if(strtolower($message->getCharset()) !== strtolower(sfConfig::get('sf_charset')))
+      {
+        $content = iconv($message->getCharset(), sfConfig::get('sf_charset'), $content);
+        $subject = iconv($message->getCharset(), sfConfig::get('sf_charset'), $subject);
+      }
+
+      $messages[] = array(
+        'to' => null === $message->getTo() ? '' : implode(', ', array_keys($message->getTo())),
+        'bcc' => null === $message->getBcc() ? '' : implode(', ', array_keys($message->getBcc())),
+        'subject' => $subject,
+        'content' => $content,
+        'charset' => $message->getCharset()
+      );
     }
 
-    return implode("\n", $html);
+    return $this->webDebug->render($this->getOption('template_dir').'/panel/mailer.php', array(
+      'realtime_transport' => get_class($this->mailer->getRealtimeTransport()),
+      'spool' => $spool,
+      'deliver' => $this->mailer->getOption('deliver'),
+      'messages' => $messages
+    ));
   }
 
   protected function renderMessageInformation(Swift_Message $message)
