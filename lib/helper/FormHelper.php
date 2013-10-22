@@ -1202,7 +1202,7 @@ function form_debug(sfForm $form)
 
   $debug = array();
   $debug[] = tag('div', array('class' => 'form-debug', 'style' => 'clear:both'));
-  $debug[] = content_tag('pre', $dbg);
+  $debug[] = $dbg;
   $debug[] = '</div>';
 
   return join("\n", $debug);
