@@ -21,7 +21,7 @@
  * @package    Sift
  * @subpackage form
  */
-class sfForm implements ArrayAccess, Iterator, Countable
+class sfForm implements ArrayAccess, Iterator, Countable, sfIUserAware
 {
   /**
    * The event dispatcher
@@ -2182,10 +2182,10 @@ class sfForm implements ArrayAccess, Iterator, Countable
   /**
    * Sets user to this form
    *
-   * @param sfUser $user
+   * @param sfIUser $user The user instance
    * @return myFormBase
    */
-  public function setUser(sfUser $user)
+  public function setUser(sfIUser $user = null)
   {
     $this->user = $user;
     return $this;
