@@ -227,7 +227,7 @@ class sfPDOSessionStorage extends sfSessionStorage {
     {
       $sql = 'SELECT ' . $db_data_col . ' FROM ' . $db_table . ' WHERE ' . $db_id_col . '=?';
       // for update is not supported by sqlite
-      if(!$this->db->getAttribute(PDO::ATTR_DRIVER_NAME) !== 'sqlite')
+      if($this->db->getAttribute(PDO::ATTR_DRIVER_NAME) !== 'sqlite')
       {
         $sql . ' FOR UPDATE';
       }
