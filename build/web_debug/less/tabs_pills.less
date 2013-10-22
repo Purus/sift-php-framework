@@ -1,0 +1,39 @@
+ul.web-debug-pills,
+ul.web-debug-tabs {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  font-size: @baseLineHeight * 1.1;
+  .clearfix();
+  li {
+    display: inline-block;
+    padding: 0 0 0.2em 0;
+    margin: 0;
+    border: 0;
+    > span,
+    a, a:link, a:visited, a:hover {
+      display: block;
+      padding: 0.6em 0.6em 0.3em 0.6em;
+      background-color: #000;
+      .border-top-right-radius(5px);
+      .border-top-left-radius(5px);
+      color: #fff;
+      text-decoration: none;
+    }
+    a.active,
+    a:hover {
+      background: #fff;
+      color: #000;
+    }
+  }
+}
+
+ul.web-debug-pills {
+  margin-bottom: 1em;
+  li {
+    a, a:link, a:visited, a:hover {
+      padding: 0.6em;
+      .border-radius(5px);
+    }
+  }
+}

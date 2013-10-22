@@ -1,0 +1,119 @@
+table {
+  pre {
+    margin: 0;
+  }
+}
+
+table.web-debug-config,
+table.web-debug-logs {
+
+  width: 100%;
+  margin-bottom: @baseLineHeight;
+  max-width: 100%;
+  background-color: @tableBackground;
+  border-collapse: collapse;
+  border-spacing: 0;
+
+  &.small {
+    width: 50%;
+  }
+
+  th.name,
+  td.name {
+    max-width: 10%;
+  }
+
+  // Cells
+  th,
+  td {
+    padding: 5px;
+    line-height: @baseLineHeight;
+    font: inherit;
+    text-align: left;
+    vertical-align: top;
+    border-top: 1px solid @tableBorder;
+  }
+  th {
+    font-weight: bold;
+  }
+  thead th {
+    vertical-align: top;
+    background-color: @tableBackground;
+  }
+  // Remove top border from thead by default
+  caption + thead tr:first-child th,
+  caption + thead tr:first-child td,
+  colgroup + thead tr:first-child th,
+  colgroup + thead tr:first-child td,
+  thead:first-child tr:first-child th,
+  thead:first-child tr:first-child td {
+    border-top: 0;
+  }
+
+  tbody {
+    > tr:nth-child(odd) > td,
+    > tr:nth-child(odd) > th {
+      // background-color: @tableBackgroundAccent;
+    }
+  }
+
+  tr:hover > td,
+  tr:hover > th {
+    // background-color: @tableBackgroundHover;
+  }
+
+  // Account for multiple tbody instances
+  tbody + tbody {
+    border-top: 2px solid @tableBorder;
+  }
+
+}
+
+table.web-debug-config {
+
+}
+
+table.web-debug-logs {
+  tbody {
+    tr {
+      border-left: 10px solid transparent;
+      padding-left: 10px;
+      &.debug {
+        border-left-color: @debugColor;
+      }
+      &.info {
+        border-left-color: @infoColor;
+      }
+      &.notice {
+        border-left-color: @noticeColor;
+      }
+      &.warning {
+        border-left-color: @warningColor;
+      }
+      &.error {
+        border-left-color: @errorColor;
+      }
+      &.critical {
+        border-left-color: @criticalColor;
+      }
+      &.alert {
+        border-left-color: @alertColor;
+      }
+      &.emergency {
+        border-left-color: @emergencyColor;
+      }
+    }
+  }
+
+  @import 'code_highlighter.less';
+
+  .web-debug-log-number {
+    width: 1%;
+    text-align: center;
+  }
+
+  .web-debug-log-message {
+    width: 88%;
+  }
+
+}

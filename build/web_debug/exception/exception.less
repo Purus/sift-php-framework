@@ -1,0 +1,150 @@
+/*
+ * This file is part of the Sift PHP framework.
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+@import '../less/mixins.less';
+@import '../less/variables.less';
+
+body {
+  padding: 0;
+  margin: 0;
+  background-color: @exceptionBodyBackgroundColor;
+  font: 9pt/1.5 Helvetica;
+}
+
+@media(max-width: 800px)
+{
+  #exception-backtrace {
+    ol {
+      padding: 0 0 0 0.3em;
+      margin: 0;
+      li {
+        padding: 0.2em 0;
+      }
+    }
+  }
+}
+
+#exception-backtrace {
+  ol {
+    li {
+      padding: 0.4em 0;
+    }
+  }
+}
+
+.hidden {
+  display: none;
+}
+
+h1 {
+  font-size: 3em;
+  margin: 0.67em 0;
+  padding: 0;
+}
+
+h2 {
+  font-size: 1.5em;
+  margin: 0.83em 0;
+  text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.4);
+}
+
+h3 {
+  font-size: 1.17em;
+  margin: 1em 0;
+}
+
+/* typography */
+body {
+	color: #666;
+	font-family: 'Ubuntu', Arial, Helvetica, sans-serif;
+	font-size: 1em;
+	line-height: 1.4em;
+	font-weight: normal;
+}
+
+h1, h2, h3, h4, h5, h6 {
+	font-weight:normal;
+	font-family: 'Droid Serif', Arial, Helvetica, sans-serif;
+	line-height:1.5em;
+	margin: .45em 0;
+	padding: 0;
+}
+
+.current.line {
+  background: red;
+  color: white;
+}
+
+a,
+a:visited,
+a:active,
+a:hover{color:#0099ff;}
+a:hover{ text-decoration:none;}
+
+/* Box sizing. Awesome thing. Read about it here: http://www.w3schools.com/cssref/css3_pr_box-sizing.asp */
+*{box-sizing:border-box;}
+
+#exception {
+	width: 92%;
+	margin: 0 auto;
+
+  background-color: @exceptionBodyBackgroundColor;
+  text-align: left;
+  max-width: 1200px;
+
+  @import '../less/backtrace.less';
+  @import '../less/code.less';
+  @import '../less/tables.less';
+
+  .keyword {
+    font-size: 1.2em;
+  }
+
+  .file-excerpt {
+    pre {
+      overflow: auto;
+      white-space: pre;
+      word-wrap: normal;
+    }
+  }
+
+  @import '../less/utils.less';
+
+  h2 {
+    overflow: auto;
+    background-color: #F14C23;
+    .border-radius(5px);
+    padding: 0.5em;
+    .box-shadow(inset 0 0 5px #F17C43);
+    color: #fff;
+    a {
+      color: #000;
+    }
+  }
+
+  .debug-backtrace-toggler,
+  .exception-toggler {
+    abbr {
+      text-decoration: none;
+    }
+    abbr:after {
+      content: "►";
+    }
+    &.active {
+      abbr:after {
+        content: "▼";
+      }
+    }
+  }
+}
+
+div#footer {
+  margin: 1em 0 0 0;
+  padding: 1em 1em 0 1em;
+  background: #BBB;
+  color: #000;
+}

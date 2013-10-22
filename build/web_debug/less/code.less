@@ -1,0 +1,48 @@
+/*
+ * This file is part of the Sift PHP framework.
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+pre, code {
+  font-family: 'Bitstream Vera Sans Mono', 'DejaVu Sans Mono', 'Monaco', Courier, monospace !important;
+}
+
+pre {
+  background: @codePreBackgroundColor;
+  margin: 0px;
+  padding: 0px;
+  padding: 10px;
+  color: @codePreColor;
+  font-size: 12px;
+  margin-bottom: 20px;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  .border-radius(5px);
+
+  .line {
+    color: #ccc;
+    text-align: right;
+    vertical-align: top;
+    background-color: #1b2022;
+    padding-left: 0.4em;
+    padding-right: 0.4em;
+    -moz-user-select: -moz-none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+
+  .line:hover {
+    background-color: #171b1c;
+  }
+
+  .line.current {
+    color: #fff;
+    background: #f00;
+  }
+
+  @import 'code_highlighter.less';
+}

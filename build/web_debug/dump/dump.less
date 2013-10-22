@@ -1,0 +1,136 @@
+/*
+ * This file is part of the Sift PHP framework.
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+@import '../less/mixins.less';
+@import '../less/variables.less';
+
+div.debug-dump {
+
+  font-family: 'Bitstream Vera Sans Mono', 'DejaVu Sans Mono', 'Monaco', Courier, monospace !important;
+  font-size: 10pt;
+  max-width: 99%;
+  overflow: auto;
+
+  @import '../less/code.less';
+
+  pre.debug-dump-label {
+    margin: 0;
+    margin-bottom: 0.3em;
+    font-weight: normal;
+    span {
+      font-weight: bold;
+    }
+    a {
+      font-weight: normal;
+    }
+  }
+
+  a, a:link, a:visited, a:active {
+    color: @codePreColor;
+    text-decoration: underline;
+  }
+
+  a:hover {
+    text-decoration: none;
+  }
+
+  a.debug-dump-toggler {
+    text-decoration: none;
+    color: inherit;
+    &:hover {
+      text-decoration: underline;
+    }
+    &:after {
+      content: " ►";
+    }
+    &.opened {
+      &.level-2 {
+        background: darken(@codePreBackgroundColor, 3%);
+      }
+      &.level-3,
+      &.level-4,
+      &.level-5,
+      &.level-6
+      {
+        background: darken(@codePreBackgroundColor, 6%);
+      }
+    }
+
+    &.opened:after {
+      content: " ▼";
+    }
+  }
+
+  .debug-dump-collapsable {
+    &.collapsed {
+      display: none;
+    }
+    &.level-2 {
+      background: darken(@codePreBackgroundColor, 3%);
+    }
+    &.level-3,
+    &.level-4,
+    &.level-5,
+    &.level-6
+    {
+      background: darken(@codePreBackgroundColor, 6%);
+    }
+  }
+
+  .debug-dump-resource,
+  .debug-dump-object {
+    font-weight: bold;
+    color: #665544;
+  }
+
+  .debug-dump-hash {
+    font-weight: normal;
+    color: #665544;
+  }
+
+  .debug-dump-key {
+    color: @white;
+  }
+
+  .debug-dump-indent {
+    color: #444;
+  }
+
+  .debug-dump-array,
+  .debug-dump-null {
+    font-style: italic;
+  }
+
+  .debug-dump-boolean {
+    color: lightblue;
+  }
+
+  .debug-dump-number,
+  .debug-dump-integer {
+    color: @codeIntegerColor;
+  }
+
+  .debug-dump-recursion {
+    font-style: italic;
+    tex-transform: uppercase;
+  }
+
+  // match to keywords
+  .debug-dump-access,
+  .debug-dump-array {
+    color: @codeKeywordColor;
+  }
+
+  .debug-dump-string {
+    color: @codeStringColor;
+  }
+
+  .debug-dump-unknown {
+    color: #ff0000;
+  }
+
+}

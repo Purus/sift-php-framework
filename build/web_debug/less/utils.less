@@ -1,0 +1,87 @@
+
+.is-off {
+  text-decoration: line-through;
+}
+
+.success {
+  color: @green;
+}
+
+.error {
+  color: @red;
+}
+
+.warning {
+  color: @orange;
+}
+
+.hidden {
+  display: none;
+}
+
+.file {
+  color: #222;
+  font-size: @baseFontSize * 0.9;
+}
+
+.file-line {
+  color: #222;
+  font-size: @baseFontSize * 0.9;
+}
+
+a.data-filter {
+  border: 0;
+  border-left: 4px solid transparent;
+  &.debug {
+    border-left-color: @debugColor;
+  }
+  &.info {
+    border-left-color: @infoColor;
+  }
+  &.notice {
+    border-left-color: @noticeColor;
+  }
+  &.warning {
+    border-left-color: @warningColor;
+  }
+  &.error {
+    border-left-color: @errorColor;
+  }
+  &.critical {
+    border-left-color: @criticalColor;
+  }
+  &.alert {
+    border-left-color: @alertColor;
+  }
+  &.emergency {
+    border-left-color: @emergencyColor;
+  }
+}
+
+.scrollable {
+  max-height: 400px;
+  overflow: auto;
+}
+
+.web-debug-backtrace-toggler,
+.web-debug-toggler {
+  abbr {
+    text-decoration: none;
+  }
+  abbr:after {
+    content: "►";
+  }
+  &.opened {
+    abbr:after {
+      content: "▼";
+    }
+  }
+}
+
+span.web-debug-loader {
+  min-width: 20px;
+  display: inline-block;
+  background: transparent url(//~//LOADER_SRC//~//) center center no-repeat;
+  height: 15px;
+  cursor: wait;
+}

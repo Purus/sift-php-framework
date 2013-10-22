@@ -1,0 +1,112 @@
+#web-debug-toolbar {
+  position: fixed;
+  right: 0;
+  top: 2px;
+  height: 30px;
+  font: 12px/28px Tahoma, sans-serif;
+  margin: 0;
+  padding: 0;
+  .opacity(80);
+  z-index: @panelZIndex + 1;
+  background: #eee url("//~//TOOLBAR_SRC//~//") repeat-x bottom;
+  .box-shadow(3px 2px 2px #c5c5c5);
+
+  &.closed {
+    .opacity(60);
+    .box-shadow(none);
+  }
+
+  img {
+    vertical-align: middle;
+    border: 0;
+  }
+
+  li#web-debug-logo a {
+    background: url("//~//LOGO_SRC//~//") center center no-repeat;
+    min-width: 30px;
+    height: 15px;
+    display: inline-block;
+    .ie7-inline-block();
+    margin-top: 5px;
+    outline: none;
+  }
+
+  #web-debug-toolbar-status {
+    width: 5px;
+    height: 30px;
+    float: left;
+    padding: 0;
+    margin: 0;
+    &.success {
+      background: @green;
+    }
+    &.warning {
+      background: @orange;
+    }
+    &.error {
+      background: @red;
+    }
+  }
+
+  ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+
+    li {
+      float: left;
+      margin-top: 2px;
+      margin-right: 4px;
+      line-height: 24px;
+      vertical-align: middle;
+      // only high levels are highlighted
+      &.notice {
+        background: @noticeColor;
+      }
+      &.warning {
+        background: @warningColor;
+      }
+      &.error {
+        background: @errorColor;
+      }
+      &.critical {
+        background: @criticalColor;
+      }
+      &.alert {
+        background: @alertColor;
+      }
+      &.emergency {
+        background: @emergencyColor;
+      }
+
+      > span {
+        color: @gray;
+        cursor: help;
+      }
+
+      > a {
+        color: #000;
+        text-decoration: none;
+        display: inline-block;
+        .ie7-inline-block();
+        padding: 0 4px;
+        &:hover {
+          background: #000;
+          color: #fff;
+        }
+      }
+
+      a.active {
+        background: #222;
+        color: #fff;
+      }
+
+      a.web-debug-toolbar-toggler {
+        &:hover {
+          background: none;
+          color: inherit;
+        }
+      }
+    }
+  }
+}

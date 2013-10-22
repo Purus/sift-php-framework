@@ -1,0 +1,100 @@
+/*
+ * This file is part of the Sift PHP framework.
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+@import 'less/mixins.less';
+@import 'less/variables.less';
+
+@import url("http://fonts.googleapis.com/css?family=Open+Sans:400,600&subset=latin,cyrillic-ext");
+
+
+@media(max-width: 500px) {
+  body {
+    margin-top: 0.2em !important;
+    margin-left: 0.2em !important;
+    width: 98% !important;
+  }
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  font: @font;
+  min-height: 100%;
+}
+
+body {
+  margin-top: 10%;
+  margin-left: 10%;
+  width: 60%;
+}
+
+h1 {
+  // text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.3);
+  padding: 0;
+  margin: 0;
+  margin-bottom: 0.1em;
+  font-weight: normal;
+  font-size: 24pt;
+  margin-left: 0.2em;
+}
+
+div#message {
+  z-index: 1;
+  display: inline-block;
+  .ie7-inline-block();
+  padding: 1em;
+  .border-radius(5px);
+  .border-bottom-right-radius(0);
+}
+
+a, a:link, a:visited, a:hover, a:active {
+  font-weight: normal;
+  padding: 0 0.15em;
+  text-decoration: underline;
+}
+
+a:hover {
+  text-decoration: none;
+}
+
+p {
+  line-height: 120%;
+  padding: 0.3em 0 0.3em 0;
+  margin: 0;
+}
+
+body.error500 {
+  background: @error500BackgroundColor;
+  h1 {
+    color: @error500HeadingColor;
+  }
+
+  a, a:link, a:visited, a:hover, a:active {
+    color: @error500LinkColor;
+  }
+
+  div#message {
+    background: @error500MessageBackground;
+    .box-shadow(@error500MessageDropShadow);
+    color: @error500MessageColor;
+  }
+}
+
+body.unavailable {
+  background: @unavailableBackgroundColor;
+  h1 {
+    color: @unavailableHeadingColor;
+  }
+  a, a:link, a:visited, a:hover, a:active {
+    color: @unavailableLinkColor;
+  }
+  div#message {
+    background: @unavailableMessageBackground;
+    .box-shadow(@unavailableMessageDropShadow);
+    color: @unavailableMessageColor;
+  }
+}

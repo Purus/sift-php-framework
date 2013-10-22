@@ -1,0 +1,33 @@
+padding: 0;
+margin: 0;
+font-family: @debugFontFamily;
+font-size: 12px;
+color: #000;
+text-align: left;
+z-index: 89999999;
+
+h2, h3, h4 {
+  margin: 0 0 0.5em 0;
+  padding: 0;
+  text-transform: none;
+  color: #000;
+  background: none;
+}
+
+// Clearfix
+// --------
+// For clearing floats like a boss h5bp.com/q
+.clearfix {
+  *zoom: 1;
+  &:before,
+  &:after {
+    display: table;
+    content: "";
+    // Fixes Opera/contenteditable bug:
+    // http://nicolasgallagher.com/micro-clearfix-hack/#comment-36952
+    line-height: 0;
+  }
+  &:after {
+    clear: both;
+  }
+}
