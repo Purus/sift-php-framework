@@ -1,4 +1,10 @@
 # ----------------------------------------
+# PHP configuration
+# ----------------------------------------
+# Turn off for security reasons
+php_value mail.add_x_header Off
+
+# ----------------------------------------
 # Apache configuration
 # ----------------------------------------
 <IfModule mod_deflate.c>
