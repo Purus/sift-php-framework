@@ -324,10 +324,11 @@ class sfPDOSessionStorage extends sfSessionStorage {
     }
 
     $currentId = session_id();
+    $data = $this->sessionRead($currentId);
     parent::regenerate($destroy);
     $newId = session_id();
     $this->sessionRead($newId);
-    return $this->sessionWrite($newId, $this->sessionRead($currentId));
+    return $this->sessionWrite($newId, $data);
   }
 
   /**
