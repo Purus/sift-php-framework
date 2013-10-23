@@ -33,8 +33,6 @@ class sfCliPluginPackageTask extends sfCliPluginBaseTask
       new sfCliCommandOption('plugin-stability', null, sfCliCommandOption::PARAMETER_REQUIRED, 'The plugin stability'),
       new sfCliCommandOption('non-interactive', null, sfCliCommandOption::PARAMETER_NONE, 'Skip interactive prompts'),
       new sfCliCommandOption('nocompress', null, sfCliCommandOption::PARAMETER_NONE, 'Do not compress the package'),
-      new sfCliCommandOption('application', null, sfCliCommandOption::PARAMETER_OPTIONAL, 'The application name', true),
-      new sfCliCommandOption('env', null, sfCliCommandOption::PARAMETER_REQUIRED, 'The environment', 'dev'),
     ));
 
     $this->namespace = 'plugin';

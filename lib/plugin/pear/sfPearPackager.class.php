@@ -18,12 +18,12 @@ require_once dirname(__FILE__) . '/PEAR_bootstrap.php';
 class sfPearPackager extends PEAR_Packager {
 
   protected $logger;
-  
+
   public function setLogger(sfILogger $logger = null)
   {
     $this->logger = $logger;
   }
-  
+
   /**
    * Logging method.
    *
@@ -39,12 +39,12 @@ class sfPearPackager extends PEAR_Packager {
   {
     if($this->logger)
     {
-      $this->logger->log('pear-packager: ' . $msg, $priority);
+      $this->logger->log('pear-packager: ' . $msg, $level);
     }
     else
     {
       echo $msg . "\n";
     }
   }
-  
+
 }
