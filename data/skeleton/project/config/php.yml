@@ -2,6 +2,7 @@
 # https://bitbucket.org/mishal/sift-php-framework/wiki/Php
 #set:
   # Session settings
-  #session.hash_function:  0
+  #session.hash_function: 1 # SHA1
+  #session.hash_bits_per_character: 6
   #session.entropy_length: 128
-  #session.entropy_file:   /dev/urandom
+  #session.entropy_file: /dev/urandom
