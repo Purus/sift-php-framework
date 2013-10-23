@@ -643,8 +643,12 @@ class sfLoader {
         }
       }
     }
-    // application
-    $dirs[] = $appModuleDir . DS . $suffix;
+
+    if(is_dir($appModuleDir . DS . $suffix))
+    {
+      // application
+      $dirs[] = $appModuleDir . DS . $suffix;
+    }
     return $dirs;
   }
 

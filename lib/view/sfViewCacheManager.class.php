@@ -13,7 +13,7 @@
  * @package Sift
  * @subpackage view
  */
-class sfViewCacheManager extends sfConfigurable
+class sfViewCacheManager extends sfConfigurable implements sfIService
 {
   protected
     $cache       = null,
@@ -415,7 +415,23 @@ class sfViewCacheManager extends sfConfigurable
       return $defaultValue;
     }
 
-    $this->registerConfiguration($params['module']);
+    if(!isset($this->cacheConfig[$params['module']])
+        && $params['module'] != 'sf_cache_fragment')
+    {
+      // the module does not exist! there are no controllers
+      // FIXME: should we look for template directories instead of controllers?
+      if(!count(sfLoader::getControllerDirs($params['module'])))
+      {
+        // invalid module, cache the result
+        $this->cacheConfig[$params['module']] = false;
+        // there is no need to continue
+        return $defaultValue;
+      }
+      else
+      {
+        $this->registerConfiguration($params['module']);
+      }
+    }
 
     $value = $defaultValue;
 
@@ -445,32 +461,14 @@ class sfViewCacheManager extends sfConfigurable
       return $this->cacheableChecks[$internalUri];
     }
 
-    if($this->request instanceof sfWebRequest && !$this->request->isMethod(sfRequest::GET))
+    if($this->request instanceof sfWebRequest
+        && !$this->request->isMethod(sfRequest::GET))
     {
       return false;
     }
 
-    list(,$params) = $this->controller->convertUrlStringToParameters($internalUri);
-
-    if(!isset($params['module']))
-    {
-      return false;
-    }
-
-    $this->registerConfiguration($params['module']);
-
-    $result = null;
-    if(isset($this->cacheConfig[$params['module']][$params['action']]))
-    {
-      $result = $this->cacheConfig[$params['module']][$params['action']]['lifetime'] > 0;
-    }
-    else if(isset($this->cacheConfig[$params['module']]['DEFAULT']))
-    {
-      $result = $this->cacheConfig[$params['module']]['DEFAULT']['lifetime'] > 0;
-    }
-
+    $result = $this->getCacheConfig($internalUri, 'lifetime');
     $this->cacheableChecks[$internalUri] = $result;
-
     return $result;
   }
 
@@ -714,20 +712,20 @@ class sfViewCacheManager extends sfConfigurable
       return;
     }
 
-    $internalUri = $this->routing->getCurrentInternalUri();
+    $name = md5($name);
+    $internalUri = sprintf('sf_cache_fragment/%s', $name);
 
-    if(!$clientLifeTime)
+    if(!isset($this->cacheConfig['sf_cache_fragment']))
     {
-      $clientLifeTime = $lifeTime;
+      $this->addCache('sf_cache_fragment', $name, array(
+        'with_layout' => false,
+        'lifetime' => $lifeTime,
+        'contextual' => false,
+        'client_lifetime' => is_null($clientLifeTime) ?  $lifeTime : $clientLifeTime,
+        'vary' => $vary
+      ));
     }
 
-    // add cache config to cache manager
-    list(, $params) = $this->controller->convertUrlStringToParameters($internalUri);
-
-    $this->addCache($params['module'], $params['action'], array('with_layout' => false, 'lifetime' => $lifeTime, 'client_lifetime' => $clientLifeTime, 'vary' => $vary));
-
-    $internalUri = $internalUri.(strpos($internalUri, '?') !== false ? '&' : '?').'sf_cache_key='.$name;
-    // get data from cache if available
     $cacheKey = $this->generateCacheKey($internalUri);
 
     if($this->cache->has($cacheKey))
@@ -766,12 +764,13 @@ class sfViewCacheManager extends sfConfigurable
   public function stop($name)
   {
     $data = ob_get_clean();
-    // save content to cache
-    $internalUri = $this->routing->getCurrentInternalUri();
+
+    $name = md5($name);
+    $internalUri = sprintf('sf_cache_fragment/%s', $name);
+    $cacheKey = $this->generateCacheKey($internalUri);
     try
     {
-      $internalUri = $internalUri.(strpos($internalUri, '?') !== false ? '&' : '?').'sf_cache_key='.$name;
-      $this->cache->set($this->generateCacheKey($internalUri), $data, $this->getLifeTime($internalUri));
+      $this->cache->set($cacheKey, $data, $this->getLifeTime($internalUri));
       if(sfConfig::get('sf_web_debug'))
       {
         $data = $this->context->getEventDispatcher()->filter(new sfEvent(
