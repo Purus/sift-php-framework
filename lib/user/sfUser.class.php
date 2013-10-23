@@ -113,16 +113,31 @@ class sfUser extends sfConfigurable implements sfIUser, sfIService, ArrayAccess 
     parent::__construct($options);
   }
 
+  /**
+   * Returns the storage
+   *
+   * @return sfIStorage
+   */
   public function getStorage()
   {
     return $this->storage;
   }
 
+  /**
+   * Returns the request
+   *
+   * @return sfWebRequest
+   */
   public function getRequest()
   {
     return $this->request;
   }
 
+  /**
+   * Returns the event dispatcher
+   *
+   * @return sfEventDispatcher
+   */
   public function getEventDispatcher()
   {
     return $this->dispatcher;
