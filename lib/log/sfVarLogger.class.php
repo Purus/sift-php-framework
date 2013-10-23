@@ -26,7 +26,9 @@ class sfVarLogger extends sfLoggerBase {
    */
   protected $defaultOptions = array(
     // xdebug logging
-    'xdebug_logging' => true
+    'xdebug_logging' => true,
+    // backtrace logging
+    'with_backtrace' => false
   );
 
   /**
@@ -154,7 +156,7 @@ class sfVarLogger extends sfLoggerBase {
       'message' => $message,
       'context' => $context,
       'type' => $type,
-      'debug_backtrace' => $this->getDebugBacktrace(),
+      'debug_backtrace' => $this->getOption('with_backtrace') ? $this->getDebugBacktrace() : array(),
     );
   }
 
