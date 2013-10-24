@@ -539,6 +539,11 @@ class sfUser extends sfConfigurable implements sfIUser, sfIService, ArrayAccess 
     return $this->attributeHolder->set($name, $value, $ns);
   }
 
+  public function removeAttribute($name, $ns = null)
+  {
+    return $this->attributeHolder->remove($name, $ns);
+  }
+
   /**
    * Execute the shutdown procedure.
    *
