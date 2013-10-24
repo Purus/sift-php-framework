@@ -7,17 +7,24 @@
  */
 
 /**
- * Dummy class which simulates user.
+ * Dummy class which simulates the user implementation.
  *
  * @package Sift
  * @subpackage i18n_extract
  */
-abstract class sfI18nExtractUser extends sfUser implements sfISecurityUser {
+abstract class sfI18nExtractUser extends sfBasicSecurityUser {
 
-  public function __construct()
+  /**
+   * Array of options
+   *
+   * @param array $options
+   */
+  public function __construct($options = array())
   {
-    $this->parameterHolder = new sfParameterHolder();
-    $this->attributeHolder = new sfParameterHolder();
+    $dispatcher = new sfEventDispatcher();
+    $storage = new sfNoStorage();
+    $request = new sfWebRequest($dispatcher);
+    parent::__construct($dispatcher, $storage, $request, $options);
   }
 
   // all methods from sfUser which deals with context and
@@ -133,19 +140,15 @@ abstract class sfI18nExtractUser extends sfUser implements sfISecurityUser {
   {
   }
 
-  public function getReferer()
+  public function getReferer($default = null)
   {
   }
 
-  public function initialize()
+  public function setReferer($referer)
   {
   }
 
   public function shutdown()
-  {
-  }
-
-  public function getContext()
   {
   }
 

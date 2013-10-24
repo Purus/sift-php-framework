@@ -387,6 +387,28 @@ class sfUser extends sfConfigurable implements sfIUser, sfIService, ArrayAccess 
   }
 
   /**
+   * Retrieve referer
+   *
+   * @param mixed Default value
+   */
+  public function getReferer($default = null)
+  {
+    $referer = $this->getAttribute('referer', $default);
+    return $referer ? $referer : $default;
+  }
+
+  /**
+   * Sets referer (Uri which the user came from)
+   *
+   * @param string URL the user came from
+   */
+  public function setReferer($referer)
+  {
+    $this->setAttribute('referer', $referer);
+    return $this;
+  }
+
+  /**
    * Sets a flash variable that will be passed to the very next action.
    *
    * @param string $name The name of the flash variable
