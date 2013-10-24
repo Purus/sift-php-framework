@@ -508,10 +508,15 @@ class sfFormField
   /**
    * Returns the error for this field.
    *
+   * @param boolean $asTranslatedString Return as translated string? Usefull for display inside template
    * @return sfValidatorError A sfValidatorError instance
    */
-  public function getError()
+  public function getError($asTranslatedString = false)
   {
+    if($asTranslatedString)
+    {
+      return $this->error ? $this->form->translate($this->error->getMessageFormat(), $this->error->getArguments()) : '';
+    }
     return $this->error;
   }
 
