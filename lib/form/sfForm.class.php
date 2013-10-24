@@ -1683,9 +1683,9 @@ class sfForm implements ArrayAccess, Iterator, Countable, sfIUserAware
         throw new InvalidArgumentException(sprintf('Widget "%s" does not exist.', $name));
       }
 
-      if ($this->isBound)
+      if($this->isBound && isset($this->taintedValues[$name]))
       {
-        $value = isset($this->taintedValues[$name]) ? $this->taintedValues[$name] : null;
+        $value = $this->taintedValues[$name];
       }
       else if (isset($this->defaults[$name]))
       {
