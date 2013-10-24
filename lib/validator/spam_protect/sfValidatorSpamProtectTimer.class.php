@@ -57,4 +57,18 @@ class sfValidatorSpamProtectTimer extends sfValidatorBase {
     return time();
   }
 
+  /**
+   * Returns messages used by the validator. This method is usefull to
+   * i18n extract which extract only those messages which are in use
+   *
+   * @return array Array of messages.
+   */
+  public function getActiveMessages()
+  {
+    $messages = $this->messages;
+    unset($messages['invalid']);
+    unset($messages['required']);
+    return $messages;
+  }
+
 }

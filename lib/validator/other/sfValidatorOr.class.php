@@ -139,4 +139,14 @@ class sfValidatorOr extends sfValidatorBase
 
     return sprintf("%s(%s%s)", str_repeat(' ', $indent), $validators, str_repeat(' ', $indent));
   }
+
+  public function getActiveMessages()
+  {
+    $messages = array_values($this->messages);
+    foreach($this->getValidators() as $validator)
+    {
+      $messages = array_merge($messages, array_values($validator->getActiveMessages()));
+    }
+    return array_unique($messages);
+  }
 }

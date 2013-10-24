@@ -160,14 +160,6 @@ class sfValidatorAnd extends sfValidatorBase {
     return sprintf("%s(%s%s)", str_repeat(' ', $indent), $validators, str_repeat(' ', $indent));
   }
 
-  /**
-   * @see sfValidatorBase
-   */
-  public function getActiveMessages()
-  {
-    return array();
-  }
-
   public function getJavascriptValidationRules()
   {
     $rules = array();
@@ -188,6 +180,16 @@ class sfValidatorAnd extends sfValidatorBase {
       $messages = array_merge($messages, $validator->getJavascriptValidationMessages());
     }
     return $messages;
+  }
+
+  public function getActiveMessages()
+  {
+    $messages = array_values($this->messages);
+    foreach($this->getValidators() as $validator)
+    {
+      $messages = array_merge($messages, array_values($validator->getActiveMessages()));
+    }
+    return array_unique($messages);
   }
 
 }
