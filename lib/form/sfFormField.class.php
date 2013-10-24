@@ -38,7 +38,7 @@ class sfFormField
   public function __construct(sfForm $form,
           sfWidgetForm $widget, sfFormField $parent = null, $name, $value, sfValidatorError $error = null)
   {
-    $this->form   = &$form;
+    $this->form   = $form;
     $this->widget = $widget;
     $this->parent = $parent;
     $this->name   = $name;
