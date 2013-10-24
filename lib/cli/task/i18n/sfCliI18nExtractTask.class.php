@@ -113,11 +113,12 @@ EOF;
     $this->logSection($this->getFullName(), sprintf('Found "%d" new i18n strings', $extract->getNewMessagesCount()));
     $this->logSection($this->getFullName(), sprintf('Found "%d" old i18n strings', $extract->getOldMessagesCount()));
 
-    if ($options['display-new'])
+    if($options['display-new'])
     {
-      $this->logSection($this->getFullName(), sprintf('display new i18n strings', $extract->getNewMessagesCount()));
+      $this->logSection($this->getFullName(), sprintf('Display new i18n strings', $extract->getNewMessagesCount()));
+
       $found = 0;
-      foreach ($extract->getNewMessages() as $domain => $messages)
+      foreach($extract->getNewMessages() as $domain => $messages)
       {
         if(count($messages))
         {
@@ -144,7 +145,7 @@ EOF;
 
     if ($options['display-old'])
     {
-      $this->logSection($this->getFullName(), sprintf('display old i18n strings', $extract->getOldMessagesCount()));
+      $this->logSection($this->getFullName(), sprintf('Display old i18n strings', $extract->getOldMessagesCount()));
       $found = 0;
       foreach($extract->getOldMessages() as $domain => $messages)
       {

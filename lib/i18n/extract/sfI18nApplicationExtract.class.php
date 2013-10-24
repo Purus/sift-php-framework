@@ -391,6 +391,11 @@ class sfI18nApplicationExtract extends sfI18nExtract
 
       foreach($messages as $message)
       {
+        // prevent empty messages to appear here
+        if(empty($message))
+        {
+          continue;
+        }
         $this->allSeenMessages[$key][] = $message;
       }
     }

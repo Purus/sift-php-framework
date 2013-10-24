@@ -148,7 +148,7 @@ abstract class sfI18nExtract extends sfConfigurable {
   final public function getNewMessagesCount()
   {
     $count = 0;
-    foreach($this->newMessages as $source => $messages)
+    foreach($this->newMessages as $messages)
     {
       $count += count($messages);
     }
