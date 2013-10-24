@@ -116,6 +116,7 @@ class sfBasicSecurityFilter extends sfSecurityFilter
     $response->setStatusCode(401);
     if($loginRoute = $this->getLoginRoute())
     {
+      sfLoader::loadHelpers(array('Url'));
       $response->setContentType('application/json');
       $response->setHttpHeader('X-Content-Type-Options', 'nosniff');
       $response->setContent(sfJson::encode(sfAjaxResult::createFromArray(array(
