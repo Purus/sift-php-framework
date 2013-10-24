@@ -5,6 +5,8 @@
 cli:
   storage:
     class: sfNoStorage
+    # null prevents merging with arguments with "default" settings
+    arguments: ~
 
 # test environment
 test:
