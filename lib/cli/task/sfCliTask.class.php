@@ -749,4 +749,45 @@ abstract class sfCliTask {
     return $z->close();
   }
 
+  /**
+   * Dumps variable using the sfDebugDumper. Usefull for debugging the tasks
+   *
+   * @param mixed $variable
+   * @param array $options
+   * @param boolean $echo Echo the dump?
+   * @return string The dump
+   */
+  protected function dumpVar($variable, $options = array(), $echo = true)
+  {
+    $location = null;
+    $dir = dirname(__FILE__);
+    // we need to provide the location where was the dump() called
+    foreach(debug_backtrace(PHP_VERSION_ID >= 50306 ? DEBUG_BACKTRACE_IGNORE_ARGS : false) as $item)
+    {
+      if(isset($item['file']) && strpos($item['file'], $dir) === 0)
+      {
+        continue;
+      }
+      elseif(!isset($item['file'], $item['line']) || !is_file($item['file']))
+      {
+        break;
+      }
+      else
+      {
+        $lines = file($item['file']);
+        $line = $lines[$item['line'] - 1];
+        $location = array(
+          $item['file'],
+          $item['line'],
+          preg_match('#\w*dumpVar(er::\w+)?\((.*)\)#i', $line, $match) ? $match[2] : $line
+        );
+        break;
+      }
+    }
+    $options['location'] = $location;
+    return sfDebugDumper::dump($variable, array_merge(array(
+      'depth' => 2
+    ), $options), $echo);
+  }
+
 }

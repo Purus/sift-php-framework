@@ -151,7 +151,7 @@ class sfDebugDumper {
   public static function dump($var, array $options = null, $echo = true)
   {
     // only available in debug mode
-    if(class_exists('sfConfig', false) && !sfConfig::get('sf_debug'))
+    if(!self::isInCli() && class_exists('sfConfig', false) && !sfConfig::get('sf_debug'))
     {
       return;
     }
