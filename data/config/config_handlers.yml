@@ -75,9 +75,6 @@ modules/*/config/module.yml:
     prefix: mod_
     module: true
 
-config/search_sources.yml:
-  class: sfSearchSourceConfigHandler
-
 config/forms.yml:
   class: sfSimpleYamlConfigHandler
 
