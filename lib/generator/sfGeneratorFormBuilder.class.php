@@ -535,8 +535,10 @@ abstract class sfGeneratorFormBuilder extends sfConfigurable {
           $this->getOptionFor('widget.class', sfGeneratorField::TYPE_TIMESTAMP, $context, 'sfWidgetFormFilterDateTime', false),
           array_merge($this->getOptionFor('widget.options', sfGeneratorField::TYPE_TIMESTAMP, $context, array(), false),
             array(
-              'from' => new sfPhpExpression(sprintf('new %s(%s, %s)', $this->getOption('time.widget.class', 'sfWidgetFormDateTime'), $this->varExport($widgetOptions), $this->varExport($widgetAttributes))),
-              'to' => new sfPhpExpression(sprintf('new %s(%s, %s)', $this->getOption('time.widget.class', 'sfWidgetFormDateTime'), $this->varExport($widgetOptions), $this->varExport($widgetAttributes))),
+              'from' => new sfPhpExpression(sprintf('new %s(%s, %s)', $this->getOption('timestamp.widget.class', 'sfWidgetFormDateTime'), $this->varExport($widgetOptions), $this->varExport($widgetAttributes))),
+              'to' => new sfPhpExpression(sprintf('new %s(%s, %s)', $this->getOption('timestamp.widget.class', 'sfWidgetFormDateTime'), $this->varExport($widgetOptions), $this->varExport($widgetAttributes))),
+              // empty makes sense only for columns which can be null!
+              'with_empty' => $field->isNotNull() ? false : true
             )),
           $this->getOptionFor('widget.attributes', sfGeneratorField::TYPE_TIMESTAMP, $context, array(), false),
           $this->getOptionFor('validator.class', sfGeneratorField::TYPE_TIMESTAMP, $context, 'sfValidatorDateTime', false),
