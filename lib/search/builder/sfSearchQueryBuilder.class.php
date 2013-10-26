@@ -12,39 +12,65 @@
  * @package Sift
  * @subpackage search
  */
-abstract class sfSearchQueryBuilderAbstract implements sfISearchQueryBuilder {
+class sfSearchQueryBuilder implements sfISearchQueryBuilder {
 
   /**
    * sfSearchQueryExpression holder
-   * 
+   *
    * @var sfSearchQueryExpression
    */
   protected $expression;
-  
+
   /**
    * Query holder
-   * 
+   *
    * @var string
    */
   protected $query;
 
   /**
    * Constructs the builder
-   * 
-   * @param sfSearchQueryExpression $expression 
+   *
+   * @param sfSearchQueryExpression $expression
    */
-  public function __construct(sfSearchQueryExpression $expression)
+  public function __construct(sfSearchQueryExpression $expression = null)
   {
-    $this->query = $this->processExpression($expression);
+    if($expression)
+    {
+      $this->setExpression($expression);
+    }
+  }
+
+  /**
+   * Sets the expression
+   *
+   * @param sfSearchQueryExpression $expression
+   * @return sfSearchQueryBuilder
+   */
+  public function setExpression(sfSearchQueryExpression $expression)
+  {
+    $this->expression = $expression;
+    $this->query = $this->processExpression($this->expression);
+    return $this;
+  }
+
+  /**
+   * Returns the expression
+   *
+   * @return sfSearchQueryExpression
+   */
+  public function getExpression()
+  {
+    return $this->expression;
   }
 
   /**
    * Processes the expression and builds the final query string.
-   * 
+   *
    * @param sfSearchQueryExpression $expression
    * @return string
    */
-  public function processExpression(sfSearchQueryExpression $expression)
+  protected function processExpression(sfSearchQueryExpression $expression)
   {
     $query = '';
     $phrases = $expression->getPhrases();
@@ -96,7 +122,7 @@ abstract class sfSearchQueryBuilderAbstract implements sfISearchQueryBuilder {
 
   /**
    * Returns the result
-   * 
+   *
    * @return string
    */
   public function getResult()

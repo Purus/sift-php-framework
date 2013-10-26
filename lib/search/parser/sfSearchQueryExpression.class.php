@@ -10,7 +10,7 @@
  * File containing the sfSearchQueryExpression class.
  *
  * @package Sift
- * @subpackage search 
+ * @subpackage search
  */
 class sfSearchQueryExpression {
 
@@ -23,12 +23,12 @@ class sfSearchQueryExpression {
   const MODE_OR = 'or';
   const MODE_AND = 'and';
   const MODE_EXCLUDE = 'not';
-  
+
   /**
    * Constructs the expression
-   * 
+   *
    * @param sfSearchQueryExpression $parent
-   * @param string $mode 
+   * @param string $mode
    */
   public function __construct(sfSearchQueryExpression $parent = null, $mode = self::MODE_DEFAULT)
   {
@@ -39,12 +39,12 @@ class sfSearchQueryExpression {
   /**
    * Is this expression valid?
    *
-   * @return boolean 
+   * @return boolean
    */
   public function isValid()
   {
     $valid = false;
-    
+
     foreach($this->phrases as $phrase)
     {
       if($phrase->getMode() != sfSearchQueryPhrase::MODE_EXCLUDE)
@@ -52,23 +52,23 @@ class sfSearchQueryExpression {
         return true;
       }
     }
-    
+
     foreach($this->subExpressions as $subExpression)
     {
       $valid = $subExpression->isValid();
       // break on first valid subexpression
-      if($valid) 
+      if($valid)
       {
         return true;
       }
     }
-    
+
     return $valid;
   }
-  
+
   /**
    * Initializes new subexpression
-   * 
+   *
    * @param string $mode Subexpression mode
    * @return sfSearchQueryExpression
    */
@@ -90,7 +90,7 @@ class sfSearchQueryExpression {
 
   /**
    * Returns array of subexpressions
-   * 
+   *
    * @return array
    */
   public function getSubExpressions()
@@ -100,8 +100,8 @@ class sfSearchQueryExpression {
 
   /**
    * Returns parent expression or null if there is no parent expression asigned
-   * 
-   * @return sfSearchQueryExpression|null 
+   *
+   * @return sfSearchQueryExpression|null
    */
   public function getParentExpression()
   {
@@ -110,8 +110,8 @@ class sfSearchQueryExpression {
 
   /**
    * Add a phrase to this expression
-   * 
-   * @param sfSearchQueryPhrase $phrase 
+   *
+   * @param sfSearchQueryPhrase $phrase
    */
   protected function addQueryPhrase(sfSearchQueryPhrase $phrase)
   {
@@ -120,8 +120,8 @@ class sfSearchQueryExpression {
 
   /**
    * Add a string phrase to this expression (with default mode)
-   * 
-   * @param string $input 
+   *
+   * @param string $input
    */
   public function addPhrase($input)
   {
@@ -130,9 +130,9 @@ class sfSearchQueryExpression {
 
   /**
    * Add a string phrase to this expression (with or mode)
-   * 
-   * @param string $input 
-   */  
+   *
+   * @param string $input
+   */
   public function addOrPhrase($input)
   {
     $this->addQueryPhrase(new sfSearchQueryPhrase($input, sfSearchQueryPhrase::MODE_OR));
@@ -140,9 +140,9 @@ class sfSearchQueryExpression {
 
   /**
    * Add a string phrase to this expression (with and mode)
-   * 
-   * @param string $input 
-   */  
+   *
+   * @param string $input
+   */
   public function addAndPhrase($input)
   {
     $this->addQueryPhrase(new sfSearchQueryPhrase($input, sfSearchQueryPhrase::MODE_AND));
@@ -150,17 +150,17 @@ class sfSearchQueryExpression {
 
   /**
    * Add a string phrase to this expression (with not mode)
-   * 
-   * @param string $input 
-   */  
+   *
+   * @param string $input
+   */
   public function addExclusionPhrase($input)
   {
     $this->addQueryPhrase(new sfSearchQueryPhrase($input, sfSearchQueryPhrase::MODE_EXCLUDE));
   }
-  
+
   /**
    * Returns the mode of the expression
-   * 
+   *
    * @return string
    */
   public function getMode()
@@ -170,7 +170,7 @@ class sfSearchQueryExpression {
 
   /**
    * Collects all words from this expression
-   * 
+   *
    * @return array
    */
   public function collectWords()
@@ -182,8 +182,8 @@ class sfSearchQueryExpression {
       switch($phrase->getMode())
       {
         case sfSearchQueryPhrase::MODE_DEFAULT:
-        case sfSearchQueryPhrase::MODE_AND:    
-        case sfSearchQueryPhrase::MODE_OR:         
+        case sfSearchQueryPhrase::MODE_AND:
+        case sfSearchQueryPhrase::MODE_OR:
           $keywords = array_merge($keywords, $phrase->getWords());
         break;
 
@@ -194,10 +194,20 @@ class sfSearchQueryExpression {
     $subExpressions = $this->getSubExpressions();
     foreach($subExpressions as $subExpression)
     {
-      $keywords = array_merge($keywords, $this->collectWords($subExpression));
+      $keywords = array_merge($keywords, $subExpression->collectWords());
     }
-    
-    return $keywords;    
+
+    return $keywords;
   }
-  
+
+  /**
+   * Converts the expression to string
+   *
+   */
+  public function __toString()
+  {
+    $builder = new sfSearchQueryBuilder($this);
+    return $builder->getResult();
+  }
+
 }

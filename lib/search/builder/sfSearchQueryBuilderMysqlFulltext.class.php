@@ -12,7 +12,7 @@
  * @package Sift
  * @subpackage search 
  */
-class sfSearchQueryBuilderMysqlFulltext extends sfSearchQueryBuilderAbstract {
+class sfSearchQueryBuilderMysqlFulltext extends sfSearchQueryBuilder {
   
   /**
    * Proccesses the expression and builds the query for MySQL fulltext.
@@ -21,7 +21,7 @@ class sfSearchQueryBuilderMysqlFulltext extends sfSearchQueryBuilderAbstract {
    * @return string 
    * @see http://dev.mysql.com/doc/refman/5.0/en/fulltext-boolean.html   
    */
-  public function processExpression(sfSearchQueryExpression $expression)
+  protected function processExpression(sfSearchQueryExpression $expression)
   {
     $query = '';
     $phrases = $expression->getPhrases();

@@ -10,21 +10,21 @@
  * File containing the sfSearchQueryLexer class.
  *
  * @package Sift
- * @subpackage search 
+ * @subpackage search
  */
 class sfSearchQueryLexer implements sfISearchQueryLexer {
 
   /**
    * Token stack
-   * 
-   * @var array 
+   *
+   * @var array
    */
   private $tokenStack = array();
 
   /**
    * Executes the query
-   * 
-   * @param string $query 
+   *
+   * @param string $query
    */
   public function execute($query)
   {
@@ -66,10 +66,10 @@ class sfSearchQueryLexer implements sfISearchQueryLexer {
 
   /**
    * Balances the query tokens.
-   * 
+   *
    * @param array $tokens
    * @param string $query
-   * @return string 
+   * @return string
    * @see http://stackoverflow.com/a/11075823/515871
    */
   protected function balanceTokens($tokens, $query)
@@ -84,7 +84,7 @@ class sfSearchQueryLexer implements sfISearchQueryLexer {
       // push opening tokens to the stack (for " and ' only if there is no " or ' opened yet)
       if(isset($tokens[$c]) && (!isset($stringTokens[$c]) || end($stack) != $c))
       {
-        $stack[] = $c;        
+        $stack[] = $c;
         // closing tokens have to be matched up with the stack elements
       }
       elseif(isset($closeTokens[$c]))
@@ -124,8 +124,8 @@ class sfSearchQueryLexer implements sfISearchQueryLexer {
 
   /**
    * Returns an array of tokens
-   * 
-   * @return array 
+   *
+   * @return array
    */
   public function getTokens()
   {

@@ -10,11 +10,22 @@
  * File containing the sfISearchQueryLexer interface.
  *
  * @package Sift
- * @subpackage search 
+ * @subpackage search
  */
 interface sfISearchQueryLexer {
 
+  /**
+   * Executes the lexer
+   *
+   * @param string $query
+   */
   public function execute($query);
+
+  /**
+   * Returns array of tokens
+   *
+   * @return array
+   */
   public function getTokens();
 
 }

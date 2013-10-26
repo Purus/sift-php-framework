@@ -12,24 +12,24 @@
  * @package Sift
  * @subpackage search
  */
-class sfSearchQueryBuilderPgsqlFulltext extends sfSearchQueryBuilderAbstract {
-  
+class sfSearchQueryBuilderPgsqlFulltext extends sfSearchQueryBuilder {
+
   /**
    * Proccesses the expression and builds the query for postgres fulltext.
-   * Query consisst of single tokens separated by the Boolean operators & (AND), | (OR) and ! (NOT). 
+   * The query consists of single tokens separated by the Boolean operators & (AND), | (OR) and ! (NOT).
    * This is compatible with postgresql fulltext search syntax.
-   * 
+   *
    * @param sfSearchQueryExpression $expression
-   * @return string 
+   * @return string
    */
-  public function processExpression(sfSearchQueryExpression $expression)
+  protected function processExpression(sfSearchQueryExpression $expression)
   {
     $query = '';
     $phrases = $expression->getPhrases();
     $subExpressions = $expression->getSubExpressions();
 
     foreach($phrases as $phrase)
-    {      
+    {
       switch($phrase->getMode())
       {
         case sfSearchQueryPhrase::MODE_AND:
@@ -49,7 +49,7 @@ class sfSearchQueryBuilderPgsqlFulltext extends sfSearchQueryBuilderAbstract {
           $phrase->isMultiWord() ? $format = "'%s' " : $format = "%s ";
           break;
       }
-            
+
       $query .= sprintf($format, str_replace("'", "\\'", $phrase));
     }
 
@@ -69,8 +69,8 @@ class sfSearchQueryBuilderPgsqlFulltext extends sfSearchQueryBuilderAbstract {
     }
 
     $query = preg_replace('/^(&|\|)/', '', $query);
-    
+
     return trim($query);
   }
-  
+
 }

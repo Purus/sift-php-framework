@@ -74,6 +74,28 @@ class sfSearchQueryParser implements sfISearchQueryParser {
   }
 
   /**
+   * Sets the query lexer
+   *
+   * @param sfISearchQueryLexer $lexer
+   * @return sfSearchQueryParser
+   */
+  public function setLexer(sfISearchQueryLexer $lexer)
+  {
+    $this->lexer = $lexer;
+    return $this;
+  }
+
+  /**
+   * Returns the lexer
+   *
+   * @return sfISearchQueryLexer
+   */
+  public function getLexer()
+  {
+    return $this->lexer;
+  }
+
+  /**
    * Parses the query
    * 
    * @param string $query
@@ -82,14 +104,10 @@ class sfSearchQueryParser implements sfISearchQueryParser {
   public function parse($query)
   {
     $this->reset();
-
     // execute the lexer
-    $this->lexer->execute($query);
-
+    $this->lexer->execute((string)$query);
     $this->tokenStack = $this->lexer->getTokens();
-
     $expression = new sfSearchQueryExpression();
-
     return $this->processTokens($this->tokenStack, $expression);
   }
 

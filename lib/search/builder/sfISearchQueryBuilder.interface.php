@@ -10,12 +10,29 @@
  * File containing the sfISearchQueryBuilder interface.
  *
  * @package Sift
- * @subpackage search 
+ * @subpackage search
  */
 interface sfISearchQueryBuilder {
-  
-  public function __construct(sfSearchQueryExpression $expression);  
-  public function processExpression(sfSearchQueryExpression $expression);
+
+  /**
+   * Sets the expression
+   *
+   * @param sfSearchQueryExpression $expression
+   */
+  public function setExpression(sfSearchQueryExpression $expression);
+
+  /**
+   * Returns the expression
+   *
+   * @return sfSearchQueryExpression
+   */
+  public function getExpression();
+
+  /**
+   * Returns the result as string
+   *
+   * @return string
+   */
   public function getResult();
-  
+
 }
