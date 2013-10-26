@@ -684,6 +684,16 @@ abstract class sfApplication extends sfProject {
   }
 
   /**
+   * Returns the config cache
+   *
+   * @return sfConfigCache
+   */
+  public function getConfigCache()
+  {
+    return $this->configCache;
+  }
+
+  /**
    * Returns the environment name.
    *
    * @return string The environment name
