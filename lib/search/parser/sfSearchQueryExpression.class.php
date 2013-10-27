@@ -19,6 +19,13 @@ class sfSearchQueryExpression {
   protected $parent;
   protected $mode;
 
+  /**
+   * The original query
+   *
+   * @var string
+   */
+  protected $query;
+
   const MODE_DEFAULT = 'default';
   const MODE_OR = 'or';
   const MODE_AND = 'and';
@@ -27,11 +34,13 @@ class sfSearchQueryExpression {
   /**
    * Constructs the expression
    *
+   * @param string $query The original query
    * @param sfSearchQueryExpression $parent
    * @param string $mode
    */
-  public function __construct(sfSearchQueryExpression $parent = null, $mode = self::MODE_DEFAULT)
+  public function __construct($query, sfSearchQueryExpression $parent = null, $mode = self::MODE_DEFAULT)
   {
+    $this->query = $query;
     $this->parent = $parent;
     $this->mode   = $mode;
   }
@@ -67,6 +76,16 @@ class sfSearchQueryExpression {
   }
 
   /**
+   * Returns the original query
+   *
+   * @return string|null
+   */
+  public function getQuery()
+  {
+    return $this->query;
+  }
+
+  /**
    * Initializes new subexpression
    *
    * @param string $mode Subexpression mode
@@ -74,7 +93,7 @@ class sfSearchQueryExpression {
    */
   public function initiateSubExpression($mode = self::MODE_DEFAULT)
   {
-    $expression = new self($this, $mode);
+    $expression = new self(null, $this, $mode);
     $this->subExpressions[] = $expression;
     return $expression;
   }

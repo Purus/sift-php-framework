@@ -104,10 +104,11 @@ class sfSearchQueryParser implements sfISearchQueryParser {
   public function parse($query)
   {
     $this->reset();
+    $query = (string)$query;
     // execute the lexer
-    $this->lexer->execute((string)$query);
+    $this->lexer->execute($query);
     $this->tokenStack = $this->lexer->getTokens();
-    $expression = new sfSearchQueryExpression();
+    $expression = new sfSearchQueryExpression($query);
     return $this->processTokens($this->tokenStack, $expression);
   }
 
