@@ -144,7 +144,7 @@ abstract class sfApplication extends sfProject {
     $this->configCache->import($this->getOption('sf_app_config_dir_name') . '/settings.yml', false);
 
     // detect relative url root, before setting up the request
-    if(!$this->hasOption('sf_relative_url_root'))
+    if(!sfConfig::get('sf_relative_url_root'))
     {
       $this->setOption('sf_relative_url_root', $this->detectRelativeUrlRoot());
     }
