@@ -97,7 +97,7 @@ class sfHtmlPurifier extends HTMLPurifier {
    */
   public static function instance($type = null)
   {
-    if(!self::$instances[$type])
+    if(!isset(self::$instances[$type]))
     {
       self::$instances[$type] = new sfHtmlPurifier($type);
     }
