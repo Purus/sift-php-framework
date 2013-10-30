@@ -115,7 +115,7 @@ JsAPI.usePackage = function(pckg, complete, callback, test)
     var options = {
       test: test,
       yep: toLoad
-    }
+    };
 
     if(typeof callback === 'function')
     {
