@@ -105,6 +105,9 @@ class sfWebDebug extends sfConfigurable
    */
   public function __construct(sfVarLogger $logger, sfEventDispatcher $dispatcher, array $options = array())
   {
+    // recursive merge with defaults
+    $options = array_merge_recursive($this->defaultOptions, $options);
+
     parent::__construct($options);
 
     $this->logger = $logger;
