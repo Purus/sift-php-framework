@@ -88,7 +88,7 @@ class sfUser extends sfConfigurable implements sfIUser, sfIService, ArrayAccess 
     'timezone_cookie_names' => array(
       'name' => 'timezone_name',
       'offset' => 'timezone_offset',
-      'daylightsavings' => 'timezone_dst'
+      'daylightsavings' => 'timezone_daylightsavings'
     )
   );
 
@@ -188,7 +188,7 @@ class sfUser extends sfConfigurable implements sfIUser, sfIService, ArrayAccess 
         $this->setTimezone($name);
       }
       // do we have an offset?
-      elseif($offset !== null && ($zone = sfDateTimeZone::getNameFromOffset($offset, $daylightsavings)))
+      elseif($offset !== null && ($zone = sfDateTimeZone::getNameFromOffset($offset, (boolean)$daylightsavings)))
       {
         $this->setTimezone($zone);
       }
