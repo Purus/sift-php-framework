@@ -74,7 +74,7 @@ class sfRenderingFilter extends sfFilter {
     // can only for HTML text
     if(!$response->isHeaderOnly()
         && is_string($response->getContent())
-        && preg_match('~(text/html|javascript)+~', $response->getContentType(), $matches))
+        && preg_match('~(text/html|javascript|text/xml)+~', $response->getContentType(), $matches))
     {
       // remove whitespace
       if(!sfConfig::get('sf_test') && $this->getParameter('whitespace_removal_condition') &&
