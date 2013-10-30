@@ -469,7 +469,7 @@ class sfViewCacheManager extends sfConfigurable implements sfIService
 
     $result = $this->getCacheConfig($internalUri, 'lifetime');
     $this->cacheableChecks[$internalUri] = $result;
-    return $result;
+    return $result > 0;
   }
 
   /**
