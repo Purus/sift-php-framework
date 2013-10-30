@@ -2,7 +2,7 @@
 
 require_once(dirname(__FILE__) . '/../../bootstrap/unit.php');
 
-$t = new lime_test(9, new lime_output_color());
+$t = new lime_test(11, new lime_output_color());
 
 $valid = array(
   'Europe/Prague',
@@ -39,5 +39,17 @@ $offsets = array(
 
 foreach($offsets as $offset => $timezone)
 {
-  $t->is_deeply(sfDateTimeZone::getNameFromOffset($offset), $timezone, 'getNameFromOffset() works ok');
+  // daylight savings in action
+  $t->is_deeply(sfDateTimeZone::getNameFromOffset($offset, true), $timezone, 'getNameFromOffset() works ok');
+}
+
+$offsets = array(
+  2 => 'Europe/Helsinki',
+  3 => 'Europe/Moscow',
+);
+
+foreach($offsets as $offset => $timezone)
+{
+  // disabled daylight
+  $t->is_deeply(sfDateTimeZone::getNameFromOffset($offset, false), $timezone, 'getNameFromOffset() works ok');
 }
