@@ -36,7 +36,49 @@ class sfWebDebug extends sfConfigurable
       ),
     ),
     // panels configuration
-    'panels' => array(),
+    'panels' => array(
+      'current_route' => array(
+        'class' => 'sfWebDebugPanelCurrentRoute'
+      ),
+      'response' => array(
+        'class' => 'sfWebDebugPanelResponse'
+      ),
+      'environment' => array(
+        'class' => 'sfWebDebugPanelEnvironment'
+      ),
+      'cache' => array(
+        'class' => 'sfWebDebugPanelCache',
+        'condition' => 'sf_cache'
+      ),
+      'html_validate' => array(
+        'class' => 'sfWebDebugPanelHtmlValidate',
+        //'enabled' => false
+      ),
+      'logs' => array(
+        'class' => 'sfWebDebugPanelLogs',
+        'condition' => 'sf_logging_enabled'
+      ),
+      'memory' => array(
+        'class' => 'sfWebDebugPanelMemory',
+      ),
+      'time' => array(
+        'class' => 'sfWebDebugPanelTimer',
+        'condition' => 'sf_debug'
+      ),
+      'database' => array(
+       'class' => 'sfWebDebugPanelDatabase',
+       'condition' => 'sf_use_database'
+      ),
+      'mailer' => array(
+        'class' => 'sfWebDebugPanelMailer'
+      ),
+      'user' => array(
+        'class' => 'sfWebDebugPanelUser'
+      ),
+      'docs' => array(
+        'class' => 'sfWebDebugPanelDocumentation'
+      )
+    ),
     // status map: level to css class
     'status_map' => array(
       sfILogger::EMERGENCY => 'emergency',
@@ -126,38 +168,31 @@ class sfWebDebug extends sfConfigurable
    */
   public function configure()
   {
-    $this->setPanel('current_route', new sfWebDebugPanelCurrentRoute($this, $this->getOptionsForPanel('current_route')));
-    $this->setPanel('response', new sfWebDebugPanelResponse($this, $this->getOptionsForPanel('response')));
-
-    $this->setPanel('html_validate', new sfWebDebugPanelHtmlValidate($this, $this->getOptionsForPanel('html_validate')));
-
-    if(sfConfig::get('sf_cache'))
+    foreach(array_keys($this->getOption('panels')) as $panel)
     {
-      $this->setPanel('cache', new sfWebDebugPanelCache($this, $this->getOptionsForPanel('cache')));
+      $options = $this->getOptionsForPanel($panel);
+
+      // panel is not enabled
+      if(isset($options['enabled']) && !$options['enabled'])
+      {
+        continue;
+      }
+      // condition
+      elseif(isset($options['condition']) && !sfConfig::get($options['condition']))
+      {
+        continue;
+      }
+
+      if(!isset($options['class']))
+      {
+        throw new sfConfigurationException(sprintf('The debug panel "%s" configuration is missing the class option.', $panel));
+      }
+
+      $class = $options['class'];
+      unset($options['class'], $options['enabled'], $options['condition']);
+
+      $this->setPanel($panel, new $class($this, $options));
     }
-
-    $this->setPanel('environment', new sfWebDebugPanelEnvironment($this, $this->getOptionsForPanel('environment')));
-
-    if(sfConfig::get('sf_logging_enabled'))
-    {
-      $this->setPanel('logs', new sfWebDebugPanelLogs($this, $this->getOptionsForPanel('logs')));
-    }
-
-    $this->setPanel('memory', new sfWebDebugPanelMemory($this, $this->getOptionsForPanel('memory')));
-
-    if(sfConfig::get('sf_debug'))
-    {
-      $this->setPanel('time', new sfWebDebugPanelTimer($this, $this->getOptionsForPanel('time')));
-    }
-
-    if(sfConfig::get('sf_use_database'))
-    {
-      $this->setPanel('database', new sfWebDebugPanelDatabase($this, $this->getOptionsForPanel('database')));
-    }
-
-    $this->setPanel('mailer', new sfWebDebugPanelMailer($this, $this->getOptionsForPanel('mailer')));
-    $this->setPanel('user', new sfWebDebugPanelUser($this, $this->getOptionsForPanel('user')));
-    $this->setPanel('docs', new sfWebDebugPanelDocumentation($this, $this->getOptionsForPanel('docs')));
   }
 
   /**

@@ -52,7 +52,7 @@ class sfWebDebugPanelCache extends sfWebDebugPanel {
 
     $this->webDebug->getEventDispatcher()->connect('view.cache.filter_content', array($this, 'listenToViewCacheFilterContentEvent'), -98);
 
-    parse_str(parse_url($_SERVER['REQUEST_URI'], PHP_URL_QUERY), $query);
+    parse_str(parse_url(@$_SERVER['REQUEST_URI'], PHP_URL_QUERY), $query);
 
     // we are ignoring the cache
     if(isset($query['_sf_ignore_cache'])
