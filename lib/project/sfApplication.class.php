@@ -279,7 +279,7 @@ abstract class sfApplication extends sfProject {
     error_reporting(sfConfig::get('sf_error_reporting'));
 
     // required core classes for the framework
-    if(!$sf_debug && !sfConfig::get('sf_test'))
+    if(!$sf_debug && !sfConfig::get('sf_test') && PHP_SAPI !== 'cli')
     {
       $this->configCache->import($sf_app_config_dir_name . '/core_compile.yml', false);
     }
@@ -305,7 +305,7 @@ abstract class sfApplication extends sfProject {
           'filterTemplateVariables'));
     }
 
-    if(sfConfig::get('sf_environment') != 'cli' || php_sapi_name() != 'cli')
+    if(sfConfig::get('sf_environment') !== 'cli' || PHP_SAPI !== 'cli')
     {
       // start output buffering
       ob_start();

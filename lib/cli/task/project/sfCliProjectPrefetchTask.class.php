@@ -20,14 +20,14 @@ class sfCliProjectPrefetchTask extends sfCliBaseTask {
   protected function configure()
   {
     $this->addArguments(array(
-        new sfCliCommandArgument('app', sfCliCommandArgument::OPTIONAL | sfCliCommandArgument::IS_ARRAY, 'The application name'),
+      new sfCliCommandArgument('app', sfCliCommandArgument::OPTIONAL | sfCliCommandArgument::IS_ARRAY, 'The application name'),
     ));
 
     $this->addOptions(array(
-        new sfCliCommandOption('hostname', 'h', sfCliCommandOption::PARAMETER_OPTIONAL | sfCliCommandOption::IS_ARRAY, 'Hostname'),
-        new sfCliCommandOption('remote-addr', 'r', sfCliCommandOption::PARAMETER_OPTIONAL, 'Remote address', '127.0.0.1'),
-        new sfCliCommandOption('routes', 'rt', sfCliCommandOption::PARAMETER_OPTIONAL | sfCliCommandOption::IS_ARRAY, 'Routes'),
-        new sfCliCommandOption('urls', 'u', sfCliCommandOption::PARAMETER_OPTIONAL | sfCliCommandOption::IS_ARRAY, 'Urls'),
+      new sfCliCommandOption('hostname', 'h', sfCliCommandOption::PARAMETER_OPTIONAL | sfCliCommandOption::IS_ARRAY, 'Hostname'),
+      new sfCliCommandOption('environment', 'e', sfCliCommandOption::PARAMETER_OPTIONAL, 'The environment', 'prod'),
+      new sfCliCommandOption('remote-addr', 'r', sfCliCommandOption::PARAMETER_OPTIONAL, 'Remote address', '127.0.0.1'),
+      new sfCliCommandOption('routes', 'rt', sfCliCommandOption::PARAMETER_OPTIONAL | sfCliCommandOption::IS_ARRAY, 'Routes'),
     ));
 
     $this->namespace = 'project';
@@ -81,11 +81,8 @@ EOF;
   protected function prefetchApplication($application, $options)
   {
     $rootDir = $this->environment->get('sf_root_dir');
-
     $remoteAddress = $options['remote-addr'];
-
-    $sf_sift_lib_dir = $this->environment->get('sf_sift_lib_dir');
-    $sf_sift_data_dir = $this->environment->get('sf_sift_data_dir');
+    $environment = $options['environment'];
 
     // we have a routes to prefetch
     if(count($options['routes']))
@@ -116,24 +113,32 @@ sfCore::bootstrap(\$sf_sift_lib_dir, \$sf_sift_data_dir);
 \$_SERVER['SERVER_NAME'] = '$hostname';
 \$_SERVER['SCRIPT_NAME'] = '';
 
-sfContext::createInstance(
-  sfCore::getApplication('$application', 'prod', false)
-);
-
 \$routes = $routes;
+\$remoteIp = '$remoteAddress';
+\$hostname = '$hostname';
+\$application = '$application';
+\$environment = '$environment';
 
+\$error = false;
+\$browser = new sfPrefetchBrowser(\$application, \$environment, \$hostname, \$remoteIp);
 foreach(\$routes as \$route)
 {
-  \$uris[] = sfContext::getInstance()->getController()->genUrl(\$route);
+  // generate the url
+  \$url = \$browser->getContext()->getController()->genUrl(\$route);
+  \$browser->get(\$url);
+  \$code = \$browser->getResponse()->getStatusCode();
+  if(\$code !== 200)
+  {
+    \$error = true;
+    echo sprintf('Error while fetching "%s" (route: "%s"), response code: %s', \$url, \$route, \$code) . "\\n";
+  }
 }
 
-\$browser = new sfPrefetchBrowser('$hostname', '$remoteAddress');
-foreach(\$uris as \$uri)
+if(!\$error)
 {
-  \$browser->get(\$uri);
+  echo 'OK';
 }
 
-echo 'OK';
 EOF
       );
 
