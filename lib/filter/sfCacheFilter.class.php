@@ -106,7 +106,6 @@ class sfCacheFilter extends sfFilter {
     }
 
     $uri = $this->cacheManager->getCurrentCacheKey();
-
     // save page in cache
     if(isset($this->cache[$uri]) && false === $this->cache[$uri])
     {
@@ -114,7 +113,7 @@ class sfCacheFilter extends sfFilter {
       $this->setCacheValidation($uri);
 
       // set Vary headers
-      foreach($this->cacheManager->getVary($uri, 'page') as $vary)
+      foreach($this->cacheManager->getVary($uri) as $vary)
       {
         $this->response->addVaryHttpHeader($vary);
       }
@@ -137,7 +136,7 @@ class sfCacheFilter extends sfFilter {
     //   * the client lifetime is not set
     //   * the response already has a cache validation (Last-Modified header)
     //   * the Expires header has already been set
-    if(!$lifetime = $this->cacheManager->getClientLifeTime($uri, 'page'))
+    if(!$lifetime = $this->cacheManager->getClientLifeTime($uri))
     {
       return;
     }
@@ -164,7 +163,7 @@ class sfCacheFilter extends sfFilter {
     // don't add cache validation (Last-Modified) if
     //   * the client lifetime is set (cache.yml)
     //   * the response already has a Last-Modified header
-    if($this->cacheManager->getClientLifeTime($uri, 'page'))
+    if($this->cacheManager->getClientLifeTime($uri))
     {
       return;
     }
