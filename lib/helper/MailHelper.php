@@ -22,6 +22,11 @@
  */
 function mail_embeded_image_src($path, sfMailerMessage $message)
 {
+  if(!sfToolkit::isPathAbsolute($path))
+  {
+    $path = sfConfig::get('sf_data_dir') . '/email/images/' . $path;
+  }
+
   return $message->embedImage($path);
 }
 
