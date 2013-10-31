@@ -6,6 +6,11 @@
  * file that was distributed with this source code.
  */
 
+if(!defined('PHP_ROUND_HALF_DOWN'))
+{
+  define('PHP_ROUND_HALF_DOWN', 2);
+}
+
 /**
  * sfRounding provides a proxy to sfMath rounding functions
  *
