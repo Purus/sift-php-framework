@@ -35,29 +35,29 @@
 
 <div id="web-debug-environment-plugins" class="hidden">
   <h3>Plugins</h3>
-  <?php include '_plugins.php'; ?>
+  <?php include dirname(__FILE__).'/_plugins.php'; ?>
 </div>
 <div id="web-debug-environment-request" class="hidden">
   <h3>Request</h3>
-  <?php include '_request.php'; ?>
+  <?php include dirname(__FILE__).'/_request.php'; ?>
 </div>
 <div id="web-debug-environment-response" class="hidden">
   <h3>Response</h3>
-  <?php include '_response.php'; ?>
+  <?php include dirname(__FILE__).'/_response.php'; ?>
 </div>
 <div id="web-debug-environment-user" class="hidden">
   <h3>User</h3>
-  <?php include '_user.php'; ?>
+  <?php include dirname(__FILE__).'/_user.php'; ?>
 </div>
 <div id="web-debug-environment-config" class="hidden">
   <h3>Configuration</h3>
-  <?php include '_configuration.php'; ?>
+  <?php include dirname(__FILE__).'/_configuration.php'; ?>
 </div>
 <div id="web-debug-environment-globals" class="hidden">
   <h3>Globals</h3>
-  <?php include '_globals.php'; ?>
+  <?php include dirname(__FILE__).'/_globals.php'; ?>
 </div>
 <div id="web-debug-environment-php" class="hidden">
   <h3>Php information</h3>
-  <?php include '_php.php'; ?>
+  <?php include dirname(__FILE__).'/_php.php'; ?>
 </div>
