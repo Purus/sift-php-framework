@@ -589,9 +589,10 @@ class sfDebugDumper {
    */
   private static function render(/*$template, $vars = array()*/)
   {
+    $args = func_get_args();
     return call_user_func_array(array(
       'sfLimitedScope', 'render'
-    ), func_get_args());
+    ), $args);
   }
 
 }

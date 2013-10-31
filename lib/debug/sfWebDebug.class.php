@@ -399,7 +399,8 @@ class sfWebDebug extends sfConfigurable
    */
   public function render(/*$template, array $variables = null*/)
   {
-    return call_user_func_array(array('sfLimitedScope', 'render'), func_get_args());
+    $args = func_get_args();
+    return call_user_func_array(array('sfLimitedScope', 'render'), $args);
   }
 
 }

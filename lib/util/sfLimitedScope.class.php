@@ -70,7 +70,8 @@ final class sfLimitedScope {
   public static function render(/* $file, array $vars = NULL */)
   {
     ob_start();
-    call_user_func_array(array('sfLimitedScope', 'load'), func_get_args());
+    $args = func_get_args();
+    call_user_func_array(array('sfLimitedScope', 'load'), $args);
     return ob_get_clean();
   }
 
