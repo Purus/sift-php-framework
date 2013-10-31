@@ -163,9 +163,21 @@ class BasesfJsApiActions extends myActions {
           // less support
           if(isset($options['less']) || preg_match('/\.less$/i', $source))
           {
-            $source = $this->getContext()->getService('less_compiler')->compileStylesheetIfNeeded(
-              stylesheet_path($source)
-            );
+            $source = stylesheet_path($source);
+
+            // is base domain is affecting the path, we need to take care of it
+            if($baseDomain = sfConfig::get('sf_base_domain'))
+            {
+              $source = preg_replace(sprintf('~https?://%s%s~', $baseDomain,
+                  $this->getContext()->getRequest()->getRelativeUrlRoot()), '', $source);
+            }
+
+            $source = $this->getContext()->getService('less_compiler')->compileStylesheetIfNeeded($source);
+
+            if($baseDomain)
+            {
+              $source = stylesheet_path($source);
+            }
           }
           else
           {
