@@ -97,6 +97,8 @@ class sfRenderingFilter extends sfFilter {
         {
           try
           {
+            $length = strlen($content);
+
             $content = $this->compress(
               $content,
               $encoding,
@@ -109,7 +111,9 @@ class sfRenderingFilter extends sfFilter {
             ));
 
             $response->setContent($content);
+            $response->setHttpHeader('X-Uncompressed-Content-Length', $length);
             $response->setHttpHeader('Content-Encoding', $encoding);
+            $response->setHttpHeader('Content-Length', strlen($content));
           }
           // not implemented type of compression, see getClientEncoding()
           catch(LogicException $e)
@@ -150,10 +154,8 @@ class sfRenderingFilter extends sfFilter {
   {
     switch($encoding)
     {
-      case 'x-gzip':
       case 'gzip':
-        $compressed = substr(gzcompress($content, $level), 0, -4);
-        $content = "\x1f\x8b\x08\x00\x00\x00\x00\x00" . $compressed;
+        $content = gzencode($content, $level);
       break;
 
       case 'deflate':
@@ -176,11 +178,7 @@ class sfRenderingFilter extends sfFilter {
   {
     $acceptEncoding = $this->getContext()->getRequest()->getHttpHeader('Accept-Encoding');
     $encoding = false;
-    if(strpos($acceptEncoding, 'x-gzip') !== false)
-    {
-      $encoding = 'x-gzip';
-    }
-    else if(strpos($acceptEncoding, 'gzip') !== false)
+    if(strpos($acceptEncoding, 'gzip') !== false)
     {
       $encoding = 'gzip';
     }
