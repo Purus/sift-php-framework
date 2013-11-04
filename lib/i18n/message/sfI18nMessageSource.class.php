@@ -329,7 +329,7 @@ abstract class sfI18nMessageSource implements sfII18nMessageSource {
    * @param string catalogue name
    * @return array list of all variants for this catalogue.
    */
-  protected function getCatalogueList($catalogue)
+  protected function getCatalogueList($catalogue = null)
   {
     return array();
   }

@@ -120,7 +120,7 @@ class sfI18nMessageSourceGettext extends sfI18nMessageSource {
    * @param string catalogue name
    * @return array list of all variants for this catalogue.
    */
-  protected function getCatalogueList($catalogue)
+  protected function getCatalogueList($catalogue = null)
   {
     $variants = explode('_', $this->culture);
     $source = $catalogue . $this->dataExt;

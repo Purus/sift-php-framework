@@ -122,7 +122,7 @@ class sfI18nMessageSourceAggregate extends sfI18nMessageSource {
    * @param string catalogue name
    * @return array list of all variants for this catalogue.
    */
-  public function getCatalogueList($catalogue)
+  public function getCatalogueList($catalogue = null)
   {
     $variants = array();
     foreach($this->messageSources as $messageSource)

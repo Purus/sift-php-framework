@@ -22,6 +22,13 @@ class sfDebug {
    */
   public static function phpInfoAsArray()
   {
+    $imagickVersion = '';
+    if(class_exists('Imagick'))
+    {
+      $imagick = new Imagick();
+      $imagickVersion = $imagick->getVersion();
+    }
+
     return array(
         'Version' => PHP_VERSION,
         'Ini location' => get_cfg_var('cfg_file_path'),
@@ -42,7 +49,7 @@ class sfDebug {
         'GD' => function_exists('gd_info'),
         'GD info' => function_exists('gd_info') ? gd_info() : '',
         'Imagick' => class_exists('Imagick'),
-        'Imagick info' => class_exists('Imagick') ? Imagick::getVersion() : ''
+        'Imagick info' => $imagickVersion
     );
   }
 
