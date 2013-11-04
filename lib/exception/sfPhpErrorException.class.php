@@ -102,8 +102,12 @@ class sfPhpErrorException extends sfException {
       )
     );
     $ref = new ReflectionProperty('Exception', 'trace');
-    $ref->setAccessible(true);
-    $ref->setValue($exception, $stack);
+
+    if(method_exists($ref, 'setAccessible'))
+    {
+      $ref->setAccessible(true);
+      $ref->setValue($exception, $stack);
+    }
     return $exception;
   }
 
