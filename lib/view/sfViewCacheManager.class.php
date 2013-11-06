@@ -461,8 +461,9 @@ class sfViewCacheManager extends sfConfigurable implements sfIService
       return $this->cacheableChecks[$internalUri];
     }
 
-    if($this->request instanceof sfWebRequest
-        && !$this->request->isMethod(sfRequest::GET))
+    // request is cacheable only for GET and HEAD
+    if($this->request instanceof sfWebRequest && !in_array($this->request->getMethod(),
+        array(sfRequest::GET, sfRequest::HEAD)))
     {
       return false;
     }
@@ -484,7 +485,9 @@ class sfViewCacheManager extends sfConfigurable implements sfIService
    */
   public function isActionCacheable($moduleName, $actionName)
   {
-    if ($this->request instanceof sfWebRequest && !$this->request->isMethod(sfRequest::GET))
+    // request is cacheable only for GET and HEAD
+    if($this->request instanceof sfWebRequest && !in_array($this->request->getMethod(),
+        array(sfRequest::GET, sfRequest::HEAD)))
     {
       return false;
     }
