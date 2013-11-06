@@ -21,6 +21,8 @@ return array(
   'cache_enabled' => true,
   // path to a cache folder
   'cache_dir' => realpath(dirname(__FILE__) . '/../cache/minify'),
+  // client cache time-> last modified + a span
+  'client_cache_time' => '+4 years',
   // web root directory
   'web_root_dir' => realpath(dirname(__FILE__) . '/../'),
   // path aliases

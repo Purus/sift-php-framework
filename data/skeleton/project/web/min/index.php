@@ -39,6 +39,7 @@ $config = require_once dirname(__FILE__) .'/config.php';
 $cacheEnabled = $config['cache_enabled'];
 // cache directory
 $cachedir = $config['cache_dir'];
+$clientCacheTime = $config['client_cache_time'];
 // driver configuration
 $minifierDriverMap = $config['minifier_driver_map'];
 // web root
@@ -126,6 +127,8 @@ $hash = $lastmodified . '-' . md5($_GET['f'] . $v);
 
 header('Vary: Accept-Encoding');
 header(sprintf('Etag: "%s"', $hash));
+header(sprintf('Last-modified: %s', gmdate('D, d M Y H:i:s T', $lastmodified)));
+header(sprintf('Expires: %s', gmdate('D, d M Y H:i:s T', $lastmodified + strtotime($clientCacheTime))));
 
 if(isset($_SERVER['HTTP_IF_NONE_MATCH']) &&
         stripslashes($_SERVER['HTTP_IF_NONE_MATCH']) == '"' . $hash . '"')
