@@ -29,7 +29,7 @@ class sfSimpleErrorPage {
    * @var array
    */
   protected $supportedLanguages = array(
-    'cs', 'en'
+    'cs', 'en', 'sk'
   );
 
   /**
