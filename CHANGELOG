@@ -1,3 +1,142 @@
+08.11.2013 [9d158e6] added slovak translation for 500 and unavailable error page
+06.11.2013 [5dc6346] allow HEAD request in view cache manager
+06.11.2013 [18ecee7] updated the skeleton htaccess - allow caching of resources
+06.11.2013 [acfafc1] updated minifier to allow client caching
+05.11.2013 [425b3a8] added dummy js files which triggers an error in assetPackager filter
+04.11.2013 [3b5b4e5] exception setAccessible() is available only on php > 5.3
+04.11.2013 [3ee882c] fixed compat issues under php 5.2
+04.11.2013 [ff978a7] fixed gzipping the response text
+31.10.2013 [3e0952d] fixed definition undefined rounding constant on php 5.2
+31.10.2013 [f731f59] fixed error when using func_get_args() as arguments on php 5.2
+31.10.2013 [61bf630] fixed bug in compile stylesheets in js_api module when using sf_base_domain
+31.10.2013 [246cf74] fixed openbasedir restriction issues
+30.10.2013 [a30b053] merge debug options with defaults
+30.10.2013 [8d25624] updated web debug, all panels are configurable
+30.10.2013 [1ce240c] fixed prefetch task
+30.10.2013 [58f8090] fixed view cache manager, return boolean
+30.10.2013 [38cc432] added possiblity to compress xml output
+30.10.2013 [2409ff0] removed unused parameters
+30.10.2013 [ec230e9] fixed functional test, daylightsavings
+30.10.2013 [d7fff60] fixed unit test - daylight savings
+30.10.2013 [33ba9e5] added missing ;
+30.10.2013 [12cfeb9] fixed Mail helper, when path is not absolute, look inside data_dir
+30.10.2013 [b5627ee] removed unused property from sfEvent
+28.10.2013 [ae02f49] fixed invalid condition when detecting relative url root
+28.10.2013 [7c0a0d4] fixed #98
+27.10.2013 [a387994] updated search expression to contain info about the original query is has been constructed for
+26.10.2013 [4334159] updated stylings of ui autocomplete
+26.10.2013 [6d10ee6] added getConfigCache() to application
+26.10.2013 [347cc2b] removed search helper
+26.10.2013 [9e5b7be] removed reference to search config handler
+26.10.2013 [6eec08f] removed test for search source
+26.10.2013 [c26b71b] fixed bug in form builder, timestamp widget is not time widget
+26.10.2013 [c1a2bd8] updated copyright
+26.10.2013 [d93c076] added style for ui autocomplete input
+26.10.2013 [0913e36] refactored search, removed search source - will be part of plugin
+25.10.2013 [7ee5208] fixed debug dump when running inside cli, added dumpVar to base cli task
+24.10.2013 [72cf4d1] removed &
+24.10.2013 [374cbd8] fixed #97
+24.10.2013 [49c647e] added $asTranslatedString parameter to getError() to sfFormField
+24.10.2013 [2dee301] fixed i18n extraction from validators
+24.10.2013 [36a38ef] added removeAttribute() to user
+24.10.2013 [5ba721a] fixed i18n extraction
+24.10.2013 [dfb5c67] updated factories.yml to prevent merging with default section
+24.10.2013 [c49aebd] added additional methods to sfIUser interface !BC
+24.10.2013 [be496eb] fixed security filter
+23.10.2013 [765f1d1] updated docs
+23.10.2013 [ff199c0] added base app to project skeleton, updated app class inside app skeleton
+23.10.2013 [efa656a] fixed plugin packaging
+23.10.2013 [f545464] added possibility to enable/disable backtrace in var logger
+23.10.2013 [411b5e7] added empty favicon to project skeleton
+23.10.2013 [894dec1] fixed #96
+23.10.2013 [7264e98] implemented storage session id verification
+23.10.2013 [84e36a4] valid regenerate for pdo session storage
+22.10.2013 [b6e2e72] ufff, pdo fix, going to bed
+22.10.2013 [6b3a1b8] removed invalid condition
+22.10.2013 [a65ac88] fixed the pdo storage with sqlite
+22.10.2013 [3002534] added hash function and bits/char info to debug panel
+22.10.2013 [add92e2] updated session, added support for transaction start when pdo session starts
+22.10.2013 [e9d2067] fixed form debug helper, was generating invalid html
+22.10.2013 [f3165ec] fixed yaml 1.2 in skeleton logging.yml
+22.10.2013 [92e5cc8] disabled mail.add_x_header for security seasons
+22.10.2013 [af1d2c0] added web debug, errors, exception build task
+22.10.2013 [0075578] implemented sfIUserAware to the form
+22.10.2013 [a9ad52c] updated logging in filter chain, service container
+22.10.2013 [28412bc] refactored exceptions, production errors
+22.10.2013 [8e476f0] updated web debug, added debug dumper
+22.10.2013 [d791815] fixed typo in markdown parser
+22.10.2013 [c831ed1] updated loggers
+22.10.2013 [10b4b76] updated the debug backtrace
+22.10.2013 [de8f94e] added log analyzer, fixes #58
+18.10.2013 [b1d4957] added getVersion() to plugin
+18.10.2013 [f6f7b99] fixed html validator
+17.10.2013 [9de6e8d] added debug backtrace + decorators
+17.10.2013 [0d2735b] added syntax highlighters
+16.10.2013 [18d3da2] added sfLimitedScope class
+15.10.2013 [13e519e] fixed #95
+11.10.2013 [9c584a5] updated logging in service container, minor bug fix for undefined variable
+11.10.2013 [72a96e8] updated logging in event dispatcher
+08.10.2013 [c93a216] added skype username validator
+08.10.2013 [80b9811] updated filters, added log() to sfFilter
+08.10.2013 [edb6f8a] updated robots.txt
+08.10.2013 [31322a7] updated web debug panel, panels can access event dispatcher from the web_debug class
+07.10.2013 [05bdc4a] implemented sfIEventDispatcherAware to validators
+07.10.2013 [fe6f4a1] implemented access to event dispatcher to the form
+07.10.2013 [2a885f3] added action setting to app skeleton settings.yml
+07.10.2013 [1c3915d] fixed button :focus state
+07.10.2013 [40338b9] added sfDataUri + sfIDataUriConvertable, updated sfImage to use the data uri convertable intarface
+04.10.2013 [bdf2f5c] fixed #93
+03.10.2013 [b09fce6] fixed asset packaging test
+03.10.2013 [b6c340e] fixed less compiler unit test
+03.10.2013 [6f08dc7] removed compiled less + updated gitignore
+03.10.2013 [12c10c9] fixed dynatree less, which causes problems with compilation with comments
+03.10.2013 [40084cb] fixed #90
+03.10.2013 [facd973] fixed #92
+03.10.2013 [f264adf] fixed #91
+02.10.2013 [d505b6f] updated the canonical_url() helper, needs refactoring of routing
+02.10.2013 [afac4d9] updated sfHtml and sfWidget escaping methods
+02.10.2013 [0d9d05f] the choice widget accepts the choices as string
+02.10.2013 [9162048] added radio input widget
+02.10.2013 [eaa95ae] removed fillin form
+01.10.2013 [580ceda] fixed #87
+30.09.2013 [22cf398] updated codebase to use camelCase methods of the finder
+30.09.2013 [2bf6282] refactored sfFinder, fixed #86
+30.09.2013 [590b53c] updated component __call() to use the local dispatcher object
+30.09.2013 [c43e115] fixed #85
+30.09.2013 [a4d44da] fixed #84
+30.09.2013 [80d2917] fixed #82
+30.09.2013 [dcd3a70] fixed date helper test
+28.09.2013 [52879d7] make the debug toolbar to work with output compression
+28.09.2013 [317f5a6] fixed #81
+28.09.2013 [99cf4fc] fixed #79
+28.09.2013 [1a6d170] fixed #78
+28.09.2013 [282acc3] fixed #77
+28.09.2013 [83b2126] removed nonsense parameter from filters.yml
+28.09.2013 [a8823c1] fixed #74
+28.09.2013 [2d7c096] fixed #75
+27.09.2013 [fa69636] refactored request + response, now requires the dispatcher object
+27.09.2013 [24e1bef] added sf_culture to routing defaults
+27.09.2013 [b3ede20] fixed bug in less compiler usage, regression, connected with #68
+27.09.2013 [f8ccd84] added generator form builder
+27.09.2013 [b59e99a] added missing text macro filter interface to autoloader
+27.09.2013 [1cde48a] updated sfISecurityUser interface, added __toString() as must have method
+27.09.2013 [e642fd4] updated rich editor interface
+27.09.2013 [db8abcb] updated the less compiler, searching for path will log in debug level
+27.09.2013 [8231d0d] fixed #68, #69
+27.09.2013 [d0f7616] fixed #71
+27.09.2013 [276ddcc] removed old and forgotten config value for validate directory
+27.09.2013 [896a08d] fixed #72
+27.09.2013 [40782c9] fixed #70
+27.09.2013 [8f8c226] updated ckeditor configuration
+26.09.2013 [2110f44] removed applyFilters() and addFilter() from core
+26.09.2013 [c85d486] fixed #64, price validator is by default not_strict
+26.09.2013 [7c6ba09] fixed #62
+26.09.2013 [15c285e] updated date helper, fixed docblocks in helpers, removed TabsHelper
+25.09.2013 [cc6877e] updated @subpackage info for typography class
+25.09.2013 [1afef33] updated @subpackage info for text filters and macros
+25.09.2013 [402ec9b] removed get_content() helper function, use apply_filters()
+25.09.2013 [4ab5b54] refactored text filters and macros
+24.09.2013 [4f08ef7] updated changelog
 24.09.2013 [40c786d] fixed sfLessCompiler debug panel
 24.09.2013 [8e79709] added support for disabling filters via disabled_for parameter
 24.09.2013 [42b74ab] removed dead line from execution filter
