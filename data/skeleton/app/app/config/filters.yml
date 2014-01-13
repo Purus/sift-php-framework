@@ -10,8 +10,6 @@ rendering: ~
 #    compression_level: 9
 #    # minimal length of the content to apply the compression
 #    compression_min_length: 2048
-
-i18n:      ~
 web_debug: ~
 security:  ~
 
