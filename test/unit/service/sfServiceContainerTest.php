@@ -55,7 +55,7 @@ sfConfig::set('sf_configured_object', new stdClass());
 sfConfig::set('sf_configured_object_to_string', new ConfiguredObject());
 sfConfig::set('what', 'this_is_what_i_dont_know');
 
-$services = new sfServiceContainer();
+$services = new sfServiceContainer(new sfNoCache());
 
 $services->getDependencies()->set('context', new sfContext());
 

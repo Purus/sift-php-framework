@@ -90,6 +90,8 @@ sfConfig::add(array(
 // simple configuration files
 $t->diag('sfLoader::getConfigDirs()');
 
+sfLoader::resetCache();
+
 // lib directories
 $t->is(get_lib_dirs('foobar'), array(
  'PROJECT/apps/front/modules/foobar/lib',
@@ -171,10 +173,11 @@ $t->is(strip_paths(sfLoader::getTemplateDir('foobar', 'indexSuccess.php')),
 // reset dimensions
 sfConfig::set('sf_dimension_dirs', array());
 
+sfLoader::resetCache();
 $t->is(strip_paths(sfLoader::getTemplatePath('foobar', 'indexSuccess.php')), 'PROJECT/plugins/myFooBarPlugin/modules/foobar/templates/indexSuccess.php', 'sfLoader::getTemplateDir() works ok without dimensions');
 
 $t->is(strip_paths(sfLoader::getI18NDir('foobar')), 'PROJECT/apps/front/modules/foobar/i18n',
-        'sfLoader::getTemplateDir() works ok');
+        'sfLoader::getI18NDir() works ok');
 
 $t->is(get_generator_template_dirs('sfGenerator', 'default'), array(
     'PROJECT/data/generator/sfGenerator/default/template'
@@ -222,42 +225,49 @@ $t->is(function_exists('foobar_helper'), true, 'loadHelpers works ok');
 
 function get_lib_dirs($module)
 {
+  sfLoader::resetCache();
   $dirs = sfLoader::getLibDirs($module);
   return array_map('strip_paths', $dirs);
 }
 
 function get_model_dirs()
 {
+  sfLoader::resetCache();
   $dirs = sfLoader::getModelDirs();
   return array_map('strip_paths', $dirs);
 }
 
 function get_config_dirs($configPath)
 {
+  sfLoader::resetCache();
   $dirs = sfLoader::getConfigPaths($configPath);
   return array_map('strip_paths', $dirs);
 }
 
 function get_template_dirs($module)
 {
+  sfLoader::resetCache();
   $dirs = sfLoader::getTemplateDirs($module);
   return array_map('strip_paths', $dirs);
 }
 
 function get_generator_template_dirs($class, $theme)
 {
+  sfLoader::resetCache();
   $dirs = sfLoader::getGeneratorTemplateDirs($class, $theme);
   return array_map('strip_paths', $dirs);
 }
 
 function get_generator_skeleton_dirs($class, $theme)
 {
+  sfLoader::resetCache();
   $dirs = sfLoader::getGeneratorSkeletonDirs($class, $theme);
   return array_map('strip_paths', $dirs);
 }
 
 function get_controllers_dirs($module)
 {
+  sfLoader::resetCache();
   $dirs = array();
   foreach (sfLoader::getControllerDirs($module) as $dir => $flag)
   {
@@ -268,6 +278,7 @@ function get_controllers_dirs($module)
 
 function get_helper_dirs($module = '')
 {
+  sfLoader::resetCache();
   $dirs = sfLoader::getHelperDirs($module);
   return array_map('strip_paths', $dirs);
 }

@@ -12,7 +12,7 @@ require_once(dirname(__FILE__) . '/stubs/Pear.php');
 
 $t = new lime_test(13, new lime_output_color());
 
-$container = new sfServiceContainer();
+$container = new sfServiceContainer(new sfNoCache());
 $dependencies = new sfDependencyInjectionDependencies($container);
 $maps = new sfDependencyInjectionMaps();
 

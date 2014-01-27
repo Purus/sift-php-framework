@@ -61,13 +61,31 @@ class sfServiceContainer {
   protected $dependencies;
 
   /**
+   * The cache instance
+   *
+   * @var sfCache
+   */
+  protected $cache;
+
+  /**
    * Constructor
    */
-  public function __construct()
+  public function __construct(sfCache $cache)
   {
-    $this->maps = new sfDependencyInjectionMaps();
-    $this->dependencies = new sfDependencyInjectionDependencies($this);
+    $this->cache = $cache;
 
+    if($this->cache->has('di_maps'))
+    {
+      $this->maps = unserialize($this->cache->get('di_maps'));
+    }
+    else
+    {
+      $this->maps = new sfDependencyInjectionMaps();
+    }
+
+          //$this->maps = new sfDependencyInjectionMaps();
+
+    $this->dependencies = new sfDependencyInjectionDependencies($this);
     // register self as a service
     $this->services[self::SELF_NAME] = $this;
   }
@@ -163,6 +181,12 @@ class sfServiceContainer {
    */
   public function clear()
   {
+    if(true)
+    {
+      // save to cache
+      $this->cache->set('di_maps', serialize($this->maps));
+    }
+
     // we need to clear in reverse order, more important services are at the top
     // remove from the bottom
     foreach(array_reverse($this->services) as $serviceName => $service)
@@ -423,10 +447,20 @@ class sfServiceContainer {
       sfLogger::getInstance()->debug('{sfServiceContainer} Creating class "{class_name}"', array(
         'class_name' => $className
       ));
+
+      if(sfConfig::get('sf_debug'))
+      {
+        $timer = sfTimerManager::getTimer('Create object');
+      }
     }
 
     // construct the object
-    $constructor = new sfDependencyInjectionBuilder($className, $this->getDependencies(), $this->getMaps());
+    $constructor = new sfDependencyInjectionBuilder($className, $this->dependencies, $this->maps);
+
+    if(isset($timer))
+    {
+      $timer->addTime();
+    }
 
     return $constructor->constructObject($arguments);
   }

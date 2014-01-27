@@ -184,13 +184,6 @@ class sfI18n extends sfConfigurable {
   {
     $culture = $culture ? $culture : $this->getCulture();
 
-    // to speed the thing up
-    // FIXME: validate if in translation mode!
-    if(isset($this->callCache[$string . $catalogue . $culture]))
-    {
-      return strtr($this->callCache[$string . $catalogue . $culture], (array)$args);
-    }
-
     if($this->getOption('debug'))
     {
       $timer = sfTimerManager::getTimer('Translation');
@@ -228,7 +221,7 @@ class sfI18n extends sfConfigurable {
         }
 
         // we force to given culture
-        $_source['source']->setCulture($culture ? $culture : $this->getCulture());
+        $_source['source']->setCulture($culture);
 
         try
         {
@@ -253,9 +246,6 @@ class sfI18n extends sfConfigurable {
     {
       $timer->addTime();
     }
-
-    // speed things up
-    $this->callCache[$string . $catalogue . $culture] = $string;
 
     return $translated ? $translated : strtr($string, (array)$args);
   }
@@ -435,6 +425,17 @@ class sfI18n extends sfConfigurable {
   public function translate($str, $args = array(), $catalogue = 'messages', $culture = null)
   {
     return $this->__($str, $args, $catalogue, $culture);
+  }
+
+  /**
+   * Resets the call cache
+   *
+   * @return sfI18n
+   */
+  public function resetCache()
+  {
+    $this->callCache = array();
+    return $this;
   }
 
   /**

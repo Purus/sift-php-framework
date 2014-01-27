@@ -64,8 +64,8 @@ $t->is($skipped[0]['line'], 168, 'There are not skipped lines.');
 
 $t->diag('->getStart() ->getEnd()');
 
-$t->is(date('d.m.Y H:i:s', $a->getStart()), '18.10.2013 21:42:10', 'getStart() returns the correct date');
-$t->is(date('d.m.Y H:i:s', $a->getEnd()), '18.10.2013 21:42:27', 'getEnd() returns the correct date');
+$t->is(date('d.m.Y H:i:s', $a->getStart()), '18.10.'.date('Y').' 21:42:10', 'getStart() returns the correct date');
+$t->is(date('d.m.Y H:i:s', $a->getEnd()), '18.10.'.date('Y').' 21:42:27', 'getEnd() returns the correct date');
 
 $t->diag('->getLevels()');
 $t->isa_ok($a->getLevels(), 'array', 'getLevels() returns an array');

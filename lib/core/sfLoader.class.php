@@ -58,7 +58,26 @@ class sfLoader {
    *
    * @var array
    */
-  static $loadedHelpers = array();
+  protected static $loadedHelpers = array();
+
+  /**
+   * Call cache
+   *
+   * @var array
+   */
+  protected static $callCache = array(
+    'config' => array(),
+    'lib' => array(),
+    'controller' => array(),
+    'helper' => array(),
+    'model' => null,
+    'template' => array(),
+    'i18n' => array(),
+    'i18n_dir' => array(),
+    'decorator' => null,
+    'generator_template' => array(),
+    'generator_skeleton' => array()
+  );
 
   /**
    * Gets directories where lib files are stored for a given module.
@@ -68,6 +87,12 @@ class sfLoader {
    */
   public static function getLibDirs($moduleName)
   {
+    // speed things up
+    if(isset(self::$callCache['lib'][$moduleName]))
+    {
+      return self::$callCache['lib'][$moduleName];
+    }
+
     $libDirName = sfConfig::get('sf_app_module_lib_dir_name');
     $moduleDirName = sfConfig::get('sf_app_module_dir_name');
 
@@ -90,6 +115,10 @@ class sfLoader {
 
     // generated templates in cache
     $dirs[] = sfConfig::get('sf_module_cache_dir') . DS . 'auto' . ucfirst($moduleName) . DS . $libDirName;
+
+    // speed things up
+    self::$callCache['lib'][$moduleDirName] = $dirs;
+
     return $dirs;
   }
 
@@ -100,11 +129,22 @@ class sfLoader {
    */
   public static function getModelDirs()
   {
+    // speed things up
+    if(isset(self::$callCache['model']))
+    {
+      return self::$callCache['model'];
+    }
+
     // project
     $dirs = array(sfConfig::get('sf_model_lib_dir'));
+
     // plugins
     $dirs = array_merge($dirs, self::getPluginDirectories(
             sfConfig::get('sf_app_lib_dir_name') . DS . sfConfig::get('sf_model_dir_name'), false));
+
+    // speed things up
+    self::$callCache['model'] = $dirs;
+
     return $dirs;
   }
 
@@ -117,6 +157,12 @@ class sfLoader {
    */
   public static function getControllerDirs($moduleName)
   {
+    // speed things up
+    if(isset(self::$callCache['controller'][$moduleName]))
+    {
+      return self::$callCache['controller'][$moduleName];
+    }
+
     $suffix = $moduleName . DS . sfConfig::get('sf_app_module_action_dir_name');
 
     $dirs = array();
@@ -148,6 +194,9 @@ class sfLoader {
       $dirs[$dir] = true;
     }
 
+    // speed things up
+    self::$callCache['controller'][$moduleName] = $dirs;
+
     return $dirs;
   }
 
@@ -160,6 +209,12 @@ class sfLoader {
    */
   public static function getTemplateDirs($moduleName)
   {
+    // speed things up
+    if(isset(self::$callCache['template'][$moduleName]))
+    {
+      return self::$callCache['template'][$moduleName];
+    }
+
     $suffix = $moduleName . DS . sfConfig::get('sf_app_module_template_dir_name');
     // application
     $dirs = array_merge(array(), self::getApplicationDirectories($suffix));
@@ -171,6 +226,10 @@ class sfLoader {
     $dirs = array_merge($dirs, self::getCoreDirectories(sfConfig::get('sf_app_module_dir_name') . DS . $suffix));
     // generated templates in cache
     $dirs[] = sfConfig::get('sf_module_cache_dir') . DS . 'auto' . ucfirst($suffix);
+
+    // speed things up
+    self::$callCache['template'][$moduleName] = $dirs;
+
     return $dirs;
   }
 
@@ -216,6 +275,12 @@ class sfLoader {
    */
   public static function getDecoratorDirs()
   {
+    // speed things up
+    if(isset(self::$callCache['decorator']))
+    {
+      return self::$callCache['decorator'];
+    }
+
     $dimensionDirs = sfConfig::get('sf_dimension_dirs', array());
     $dirs = array();
     if(is_array($dimensionDirs))
@@ -226,7 +291,12 @@ class sfLoader {
         $dirs[] = $templateDir . DS . $dir;
       }
     }
+
     $dirs[] = sfConfig::get('sf_app_template_dir');
+
+    // speed things up
+    self::$callCache['decorator'] = $dirs;
+
     return $dirs;
   }
 
@@ -256,28 +326,42 @@ class sfLoader {
    */
   public static function getI18NDir($moduleName)
   {
-    $suffix = $moduleName . DS . sfConfig::get('sf_app_module_i18n_dir_name');
-
-    // application
-    if(is_dir($dir = sfConfig::get('sf_app_module_dir') . DS . $suffix))
+    // speed things up
+    if(isset(self::$callCache['i18n_dir'][$moduleName]))
     {
-      return $dir;
+      //return self::$callCache['i18n_dir'][$moduleName];
     }
 
-    $moduleDirName = sfConfig::get('sf_app_module_dir_name');
+    $suffix = $moduleName . DS . sfConfig::get('sf_app_module_i18n_dir_name');
 
-    foreach(sfConfig::get('sf_plugins', array()) as $plugin)
+    $dir = null;
+    // application
+    if(is_dir(sfConfig::get('sf_app_module_dir') . DS . $suffix))
     {
-      if(is_dir($dir = sfConfig::get('sf_plugins_dir') . DS . $plugin . DS . $moduleDirName . DS . $suffix))
+      $dir = sfConfig::get('sf_app_module_dir') . DS . $suffix;
+    }
+    else
+    {
+      $moduleDirName = sfConfig::get('sf_app_module_dir_name');
+      $found = false;
+      foreach(sfConfig::get('sf_plugins', array()) as $plugin)
       {
-        return $dir;
+        if(is_dir($dir = sfConfig::get('sf_plugins_dir') . DS . $plugin . DS . $moduleDirName . DS . $suffix))
+        {
+          $found = true;
+          break;
+        }
+      }
+      if(!$found && is_dir(sfConfig::get('sf_sift_data_dir') . DS . $moduleDirName . DS . $suffix))
+      {
+        $dir = sfConfig::get('sf_sift_data_dir') . DS . $moduleDirName . DS . $suffix;
       }
     }
 
-    if(is_dir($dir = sfConfig::get('sf_sift_data_dir') . DS . $moduleDirName . DS . $suffix))
-    {
-      return $dir;
-    }
+    // speed things up
+    self::$callCache['i18n_dir'][$moduleName] = $dir;
+
+    return $dir;
   }
 
   /**
@@ -289,6 +373,12 @@ class sfLoader {
    */
   public static function getI18NDirs($moduleName)
   {
+    // speed things up
+    if(isset(self::$callCache['i18n'][$moduleName]))
+    {
+      return self::$callCache['i18n'][$moduleName];
+    }
+
     $dirs = array();
 
     $suffix = $moduleName . DS . sfConfig::get('sf_app_module_i18n_dir_name');
@@ -314,6 +404,9 @@ class sfLoader {
       $dirs[] = $dir;
     }
 
+    // speed things up
+    self::$callCache['i18n'][$moduleName] = $dirs;
+
     return $dirs;
   }
 
@@ -327,6 +420,12 @@ class sfLoader {
    */
   public static function getGeneratorTemplateDirs($class, $theme)
   {
+    // speed things up
+    if(isset(self::$callCache['generator_template'][$class . $theme]))
+    {
+      return self::$callCache['generator_template'][$class . $theme];
+    }
+
     // project
     $dirs = array(sfConfig::get('sf_data_dir') . DS . 'generator' . DS . $class . DS . $theme . DS . 'template');
 
@@ -348,6 +447,9 @@ class sfLoader {
       $dirs[] = $dir;
     }
 
+    // speed things up
+    self::$callCache['generator_template'][$class . $theme] = $dirs;
+
     return $dirs;
   }
 
@@ -361,6 +463,12 @@ class sfLoader {
    */
   public static function getGeneratorSkeletonDirs($class, $theme)
   {
+    // speed things up
+    if(isset(self::$callCache['generator_skeleton'][$class . $theme]))
+    {
+      return self::$callCache['generator_skeleton'][$class . $theme];
+    }
+
     // project
     $dirs = array(sfConfig::get('sf_data_dir') . DS . 'generator' . DS . $class . DS . $theme . DS . 'skeleton');
 
@@ -378,6 +486,9 @@ class sfLoader {
     {
       $dirs[] = $dir;
     }
+
+    // speed things up
+    self::$callCache['generator_skeleton'][$class . $theme] = $dirs;
 
     return $dirs;
   }
@@ -416,6 +527,12 @@ class sfLoader {
   {
     // fix for windows paths
     $configPath = str_replace('/', DS, $configPath);
+
+    // speed things up
+    if(isset(self::$callCache['config'][$configPath]))
+    {
+      // return self::$callCache['config'][$configPath];
+    }
 
     $rootDir = sfConfig::get('sf_root_dir');
     $appDir = sfConfig::get('sf_app_dir');
@@ -511,6 +628,9 @@ class sfLoader {
       }
     }
 
+    // speed things up
+    self::$callCache['config'][$configPath] = $configs;
+
     return $configs;
   }
 
@@ -523,8 +643,13 @@ class sfLoader {
    */
   public static function getHelperDirs($moduleName = '')
   {
-    $dirs = array();
+    // speed things up
+    if(isset(self::$callCache['helper'][$moduleName]))
+    {
+      return self::$callCache['helper'][$moduleName];
+    }
 
+    $dirs = array();
     if($moduleName)
     {
       if(is_dir($dir = sfConfig::get('sf_app_module_dir') . DS . $moduleName . DS .
@@ -567,6 +692,10 @@ class sfLoader {
 
     // core
     $dirs[] = sfConfig::get('sf_sift_lib_dir') . DS . 'helper';
+
+    // speed things up
+    self::$callCache['helper'][$moduleName] = $dirs;
+
     return $dirs;
   }
 
@@ -759,6 +888,28 @@ class sfLoader {
     }
 
     return $dirs;
+  }
+
+  /**
+   * Resets the call cache
+   *
+   * @return void
+   */
+  public static function resetCache()
+  {
+    self::$callCache = array(
+      'config' => array(),
+      'lib' => array(),
+      'controller' => array(),
+      'helper' => array(),
+      'model' => null,
+      'template' => array(),
+      'i18n' => array(),
+      'i18n_dir' => array(),
+      'decorator' => null,
+      'generator_template' => array(),
+      'generator_skeleton' => array()
+    );
   }
 
 }

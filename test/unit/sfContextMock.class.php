@@ -123,7 +123,7 @@ class sfContext {
   {
     if(!$this->serviceContainer)
     {
-      $this->serviceContainer = new sfServiceContainer();
+      $this->serviceContainer = new sfServiceContainer(new sfNoCache());
       $this->serviceContainer->set('context', $this);
     }
     return $this->serviceContainer;

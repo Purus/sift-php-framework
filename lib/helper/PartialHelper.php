@@ -50,29 +50,32 @@ function include_component_slot($name, $vars = array())
  */
 function get_component_slot($name, $vars = array())
 {
-  $context = sfContext::getInstance();
-  $actionStackEntry = $context->getController()->getActionStack()->getLastEntry();
+  $actionStackEntry = sfContext::getInstance()->getController()->getActionStack()->getLastEntry();
   $viewInstance = $actionStackEntry->getViewInstance();
 
+  // cannot find component slot
   if(!$viewInstance->hasComponentSlot($name))
   {
-    // cannot find component slot
     throw new sfConfigurationException(sprintf('The component slot "%s" is not set.', $name));
   }
 
+  $result = '';
   if($componentSlot = $viewInstance->getComponentSlot($name))
   {
     if(is_array($componentSlot[0]))
     {
-      $result = '';
       foreach($componentSlot as $slot)
       {
         $result .= get_component($slot[0], $slot[1], $vars);
-      }
-      return $result;
+      }    
     }
-    return get_component($componentSlot[0], $componentSlot[1], $vars);
+    else 
+    {
+      $result = get_component($componentSlot[0], $componentSlot[1], $vars);
+    } 
   }
+
+  return $result;
 }
 
 /**
@@ -83,8 +86,7 @@ function get_component_slot($name, $vars = array())
  */
 function has_component_slot($name)
 {
-  $context = sfContext::getInstance();
-  $actionStackEntry = $context->getController()->getActionStack()->getLastEntry();
+  $actionStackEntry = sfContext::getInstance()->getController()->getActionStack()->getLastEntry();
   $viewInstance = $actionStackEntry->getViewInstance();
   return $viewInstance->hasComponentSlot($name);
 }

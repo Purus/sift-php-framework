@@ -105,11 +105,6 @@ abstract class sfView implements sfIView
    */
   public function initialize($moduleName, $actionName, $viewName)
   {
-    if(sfConfig::get('sf_logging_enabled'))
-    {
-      sfLogger::getInstance()->info(sprintf('{sfView} Initialize view for "%s/%s"', $moduleName, $actionName));
-    }
-
     $this->parameterHolder->add(sfConfig::get('mod_'.strtolower($moduleName).'_view_param', array()));
 
     $this->moduleName = $moduleName;

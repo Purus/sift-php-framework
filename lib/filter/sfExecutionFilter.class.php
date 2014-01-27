@@ -125,7 +125,7 @@ class sfExecutionFilter extends sfFilter
    *
    * @return string The view data
    */
-  protected function executeView($moduleName, $actionName, $viewName, $viewAttributes)
+  protected function executeView($moduleName, $actionName, $viewName, &$viewAttributes)
   {
     $this->log('Executing view for "{module}/{action}".', sfILogger::INFO, array(
       'module' => $moduleName,

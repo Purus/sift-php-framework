@@ -35,7 +35,7 @@ class sfCore
   /**
    * Framework version
    */
-  const VERSION = '1.1.0';
+  const VERSION = '1.1.1';
 
   /**
    * Shorthand for carrige return.

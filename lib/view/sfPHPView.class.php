@@ -74,22 +74,15 @@ class sfPHPView extends sfView
    */
   protected function renderFile($file)
   {
-    if(sfConfig::get('sf_debug'))
-    {
-      $timer = sfTimerManager::getTimer('View');
-    }
-
     if(sfConfig::get('sf_logging_enabled'))
-    {
-      sfLogger::getInstance()->log(sprintf('{sfView} Render "%s"', $file));
+    {    
+      $this->getContext()->getLogger()->log('{sfView} Render "{file}"', array('file' => $file));
     }
-
 
     $this->loadHelpers();
 
     // EXTR_REFS can't be used (see #3595 and #3151)
     $vars = $this->getVariables();
-    extract($vars);
 
     // render
     ob_start();
@@ -97,18 +90,13 @@ class sfPHPView extends sfView
 
     try
     {
-      require($file);
+      sfLimitedScope::load($file, $vars);    
     }
     catch(Exception $e)
     {
       // need to end output buffering before throwing the exception #7596
       ob_end_clean();
       throw $e;
-    }
-
-    if(sfConfig::get('sf_debug'))
-    {
-      $timer->addTime();
     }
 
     return ob_get_clean();
@@ -174,8 +162,9 @@ class sfPHPView extends sfView
     }
 
     // require our configuration
-    $viewConfigFile = $this->moduleName.'/'.sfConfig::get('sf_app_module_config_dir_name').'/view.yml';
-    require(sfConfigCache::getInstance()->checkConfig(sfConfig::get('sf_app_module_dir_name').'/'.$viewConfigFile));
+    require(sfConfigCache::getInstance()->checkConfig(
+      sfConfig::get('sf_app_module_dir_name').'/'.$this->moduleName.'/'.sfConfig::get('sf_app_module_config_dir_name').'/view.yml')
+    );
 
     // set template directory
     if(!$this->directory)
@@ -198,7 +187,7 @@ class sfPHPView extends sfView
 
     if(sfConfig::get('sf_logging_enabled'))
     {
-      sfLogger::getInstance()->info('{sfView} Decorate content with "'.$template.'"');
+      $this->getContext()->getLogger()->info('{sfView} Decorate content with "{template}".', array('template' => $template));
     }
 
     // set the decorator content as an attribute

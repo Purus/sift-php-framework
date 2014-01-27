@@ -54,8 +54,19 @@ class sfDependencyInjectionBuilder {
   {
     if(!$this->maps->has($this->getClassName()))
     {
+      if(sfConfig::get('sf_debug'))
+      {
+        $timer = sfTimerManager::getTimer('Object builder');
+      }
+
       $builder = new sfDependencyInjectionMapBuilderClass($this->getClassName());
       $builder->build();
+
+      if(isset($timer))
+      {
+        $timer->addTime();
+      }
+
       $this->maps->set($this->getClassName(), $builder->getMap());
     }
     $this->map = $this->maps->get($this->getClassName());

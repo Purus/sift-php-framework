@@ -66,7 +66,10 @@ class sfContext {
 
     $this->actionStack = new sfActionStack();
     $this->application = $application;
-    $this->serviceContainer = is_null($serviceContainer) ? new sfServiceContainer() : $serviceContainer;
+
+    $this->serviceContainer = is_null($serviceContainer) ? new sfServiceContainer(new sfFileCache(array(
+      'cache_dir' => $this->application->getOption('sf_cache_dir')
+    ))) : $serviceContainer;
 
     // register dependencies
     $this->serviceContainer->getDependencies()

@@ -38,6 +38,13 @@ class sfConfigCache {
   protected static $instances = array();
 
   /**
+   * Call cache
+   *
+   * @var array
+   */
+  protected $callCache = array();
+
+  /**
    * Constructs the object
    *
    * @param sfApplication|sfProject $parent
@@ -201,6 +208,11 @@ class sfConfigCache {
     // the cache filename we'll be using
     $cache = $this->getCacheName($configPath);
 
+    if(isset($this->callCache[$cache . $optional]))
+    {
+      return $this->callCache[$cache . $optional];
+    }
+
     if(sfConfig::get('sf_in_bootstrap') && is_readable($cache))
     {
       if(sfConfig::get('sf_debug') && sfConfig::get('sf_logging_enabled'))
@@ -208,7 +220,7 @@ class sfConfigCache {
         $timer->addTime();
       }
 
-      return $cache;
+      return $this->callCache[$cache] = $cache;
     }
 
     if(!sfToolkit::isPathAbsolute($configPath))
@@ -258,6 +270,8 @@ class sfConfigCache {
     {
       $timer->addTime();
     }
+
+    $this->callCache[$configPath . $optional] = $cache;
 
     return $cache;
   }

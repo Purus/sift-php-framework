@@ -19,6 +19,13 @@ class sfActionStack
     $stack = array();
 
   /**
+   * Entry count
+   *
+   * @var boolean
+   */
+  protected $count = 0;
+
+  /**
    * Adds an entry to the action stack.
    *
    * @param string   A module name
@@ -33,6 +40,7 @@ class sfActionStack
     $actionEntry = new sfActionStackEntry($moduleName, $actionName, $actionInstance);
 
     $this->stack[] = $actionEntry;
+    $this->count = count($this->stack);
 
     return $actionEntry;
   }
@@ -48,7 +56,7 @@ class sfActionStack
   {
     $retval = null;
 
-    if ($index > -1 && $index < count($this->stack))
+    if ($index > -1 && $index < $this->count)
     {
       $retval = $this->stack[$index];
     }
@@ -65,7 +73,9 @@ class sfActionStack
    */
   public function popEntry()
   {
-    return array_pop($this->stack);
+    $result = array_pop($this->stack);
+    $this->count = count($this->stack);
+    return $result;
   }
 
   /**
@@ -92,12 +102,11 @@ class sfActionStack
    */
   public function getLastEntry()
   {
-    $count  = count($this->stack);
     $retval = null;
 
     if (isset($this->stack[0]))
     {
-      $retval = $this->stack[$count - 1];
+      $retval = $this->stack[$this->count - 1];
     }
 
     return $retval;
@@ -110,6 +119,6 @@ class sfActionStack
    */
   public function getSize()
   {
-    return count($this->stack);
+    return $this->count;
   }
 }

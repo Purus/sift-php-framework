@@ -102,13 +102,14 @@ class sfSimpleAutoload {
     $class = strtolower($class);
 
     // class already exists
+    /*
     if(class_exists($class, false) || interface_exists($class, false))
     {
       return true;
     }
+    */
 
     $found = false;
-
     // we have a class path, let's include it
     if(isset($this->classes[$class]))
     {
