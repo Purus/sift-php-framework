@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit
+    processIsolation="false"
+    stopOnError="false"
+    stopOnFailure="false"
+    stopOnIncomplete="false"
+    stopOnSkipped="false">
+    <testsuites>
+        <testsuite name="Sift Test Suite">
+            <file>./test/AllTest.php</file>
+        </testsuite>
+    </testsuites>
+</phpunit>
