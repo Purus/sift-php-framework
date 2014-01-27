@@ -83,6 +83,13 @@ class sfI18n extends sfConfigurable {
   protected $moduleName;
 
   /**
+   * Call cache
+   *
+   * @var array
+   */
+  protected $callCache = array();
+
+  /**
    * Constructs the I18n
    *
    * @param sfContext $context Context instance
@@ -175,6 +182,15 @@ class sfI18n extends sfConfigurable {
    */
   public function __($string, $args = array(), $catalogue = 'messages', $culture = null)
   {
+    $culture = $culture ? $culture : $this->getCulture();
+
+    // to speed the thing up
+    // FIXME: validate if in translation mode!
+    if(isset($this->callCache[$string . $catalogue . $culture]))
+    {
+      return strtr($this->callCache[$string . $catalogue . $culture], (array)$args);
+    }
+
     if($this->getOption('debug'))
     {
       $timer = sfTimerManager::getTimer('Translation');
@@ -185,7 +201,7 @@ class sfI18n extends sfConfigurable {
     $translated = false;
     if($source)
     {
-      $source['source']->setCulture($culture ? $culture : $this->getCulture());
+      $source['source']->setCulture($culture);
       $translated = $source['formatter']->formatExists($string, $args, $catalogue);
     }
 
@@ -233,10 +249,13 @@ class sfI18n extends sfConfigurable {
       }
     }
 
-    if($this->getOption('debug'))
+    if(isset($timer))
     {
       $timer->addTime();
     }
+
+    // speed things up
+    $this->callCache[$string . $catalogue . $culture] = $string;
 
     return $translated ? $translated : strtr($string, (array)$args);
   }
