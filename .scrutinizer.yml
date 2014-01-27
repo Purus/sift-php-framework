@@ -2,6 +2,17 @@ filter:
     paths:
         - 'lib/*'
 tools:
-    #php_mess_detector: true
-    #php_pdepend: true
+    php_mess_detector: true
+    sensiolabs_security_checker: true
     php_cpd: true
+    php_loc: true
+    php_pdepend:
+        excluded_dirs:
+            - data/web_debug
+            - data/skeleton
+            - data/logger
+            - test
+    php_cs_fixer:
+        config:
+            level: custom
+            fixers: { trailing_spaces: true, php_closing_tag: true }
