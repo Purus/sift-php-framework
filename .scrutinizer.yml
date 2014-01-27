@@ -8,6 +8,7 @@ tools:
     php_loc: true
     php_pdepend:
         excluded_dirs:
+            - lib/vendor            
             - data/web_debug
             - data/skeleton
             - data/logger
