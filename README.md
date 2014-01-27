@@ -10,3 +10,7 @@
 ## Requirements
 
  * PHP > 5.2.3
+
+## About
+
+This is an *old* PHP framework not suitable for new projects! Please beware!
