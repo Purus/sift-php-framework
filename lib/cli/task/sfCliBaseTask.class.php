@@ -370,12 +370,17 @@ abstract class sfCliBaseTask extends sfCliCommandApplicationTask
    *
    * @param string   $dir    The directory to mirror
    * @param sfFinder $finder A sfFinder instance to use for the mirroring
+   * @param boolean $discardPlaceholders Discard .sf placeholders from the dir?
    */
-  protected function installDir($dir, $finder = null)
+  protected function installDir($dir, $finder = null, $discardDirPlaceholders = true)
   {
     if (null === $finder)
     {
-      $finder = sfFinder::type('any')->discard('.sf');
+      $finder = sfFinder::type('any');
+      if($discardDirPlaceholders)
+      {
+        $finder->discard('.sf');
+      }
     }
 
     $this->getFilesystem()->mirror($dir, getcwd(), $finder);

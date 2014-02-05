@@ -89,7 +89,7 @@ EOF;
     $this->logSection($this->getFullName(), 'Creating project...');
 
     // create basic project structure
-    $this->installDir($this->environment->get('sf_sift_data_dir').'/skeleton/project');
+    $this->installDir($this->environment->get('sf_sift_data_dir').'/skeleton/project', null, false);
 
     if(isset($options['nogitstuff']))
     {
