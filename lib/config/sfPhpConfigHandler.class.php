@@ -16,6 +16,20 @@
 class sfPhpConfigHandler extends sfYamlConfigHandler {
 
   /**
+   * Array of directives removed from PHP 5.4 and up
+   *
+   * @var array
+   * @link http://www.php.net/manual/en/migration54.incompatible.php
+   */
+  protected $removed = array(
+    'register_globals',
+    'magic_quotes_gpc',
+    'magic_quotes_runtime',
+    'magic_quotes_sybase',
+    'register_long_arrays'
+  );
+
+  /**
    * Executes this configuration handler
    *
    * @param array An array of absolute filesystem path to a configuration file
@@ -51,6 +65,11 @@ class sfPhpConfigHandler extends sfYamlConfigHandler {
         // key exists?
         if(!array_key_exists($key, $configs))
         {
+          // can be this directive ignored?
+          if($this->canBeIgnored($key))
+          {
+            continue;
+          }
           throw new sfParseException(sprintf('Configuration file "%s" specifies key "%s" which is not a php.ini directive.', $configFiles[0], $key));
         }
 
@@ -76,6 +95,11 @@ class sfPhpConfigHandler extends sfYamlConfigHandler {
         // key exists?
         if(!array_key_exists($key, $configs))
         {
+          // can be this directive ignored?
+          if($this->canBeIgnored($key))
+          {
+            continue;
+          }
           throw new sfParseException(sprintf('Configuration file "%s" specifies key "%s" which is not a php.ini directive.', $configFiles[0], $key));
         }
 
@@ -96,6 +120,11 @@ class sfPhpConfigHandler extends sfYamlConfigHandler {
         // key exists?
         if(!array_key_exists($key, $configs))
         {
+          // can be this directive ignored?
+          if($this->canBeIgnored($key))
+          {
+            continue;
+          }
           throw new sfParseException(sprintf('Configuration file "%s" specifies key "%s" which is not a php.ini directive.', $configFiles[0], $key));
         }
 
@@ -171,6 +200,17 @@ class sfPhpConfigHandler extends sfYamlConfigHandler {
       $ini_path = sprintf('php.ini location: "%s"', $cfg_path);
     }
     return $ini_path;
+  }
+
+  /**
+   * Can be this php.ini directive ignored?
+   *
+   * @param string $directive The directive name like `register_globals`
+   * @return boolean
+   */
+  protected function canBeIgnored($directive)
+  {
+    return in_array($directive, $this->removed) || strpos($directive, 'xdebug.') === 0;
   }
 
 }

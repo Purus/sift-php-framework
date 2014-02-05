@@ -3,6 +3,7 @@
 
 set:
   date.timezone:                   %SF_DEFAULT_TIMEZONE%
+  # removed from 5.4 and up
   magic_quotes_runtime:            false
   log_errors:                      true
   session.use_only_cookies:        true
@@ -16,7 +17,8 @@ set:
   # function. (if php > 5.3.0)
   # http://php.net/session.hash-function
   session.hash_function:           0
-  # Define how many bits are stored in each character when converting  the binary hash data to something readable.
+  # Define how many bits are stored in each character when converting
+  # the binary hash data to something readable.
   # Possible values:
   #   * 4 (4 bits: 0-9, a-f)
   #   * 5 (5 bits: 0-9, a-v)
@@ -33,6 +35,10 @@ set:
   arg_separator.output:            '&'
   # PCRE limit
   pcre.backtrack_limit:            10000000
+  # Xdebug
+  xdebug.var_display_max_depth:    -1
+  xdebug.var_display_max_children: -1
+  xdebug.var_display_max_data:     -1
 
 # Warn when these settings are NOT configured to the following values
 warn:
