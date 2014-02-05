@@ -247,7 +247,8 @@ class sfFileCache extends sfCache {
     }
 
     $result = true;
-    foreach(new RecursiveIteratorIterator(new RecursiveDirectoryIterator($this->getOption('cache_dir'))) as $file)
+    foreach(new RecursiveIteratorIterator(new RecursiveDirectoryIterator($this->getOption('cache_dir'),            
+            FilesystemIterator::SKIP_DOTS)) as $file)
     {
       if(self::MODE_ALL == $mode || !$this->isValid($file))
       {
