@@ -249,10 +249,6 @@ class sfFileCache extends sfCache {
     $result = true;
     foreach(new RecursiveIteratorIterator(new RecursiveDirectoryIterator($this->getOption('cache_dir'))) as $file)
     {
-      if($file->isDot())
-      {
-        continue;
-      }
       if(self::MODE_ALL == $mode || !$this->isValid($file))
       {
         $result = @unlink($file) && $result;
