@@ -37,23 +37,63 @@ require_once(dirname(__FILE__).'/../lib/vendor/lime/lime.php');
  */
 class ProblematicsTests extends PHPUnit_Framework_TestCase {
 
-  public function testAll()
+  protected $buffer;
+
+  public function setUp()
   {
     require_once(dirname(__FILE__).'/bootstrap/unit.php');
     testAutoloader::initialize(true);
+    include_once dirname(__FILE__) . '/../data/bin/check.php';
+  }
 
-    include dirname(__FILE__) . '/../data/bin/check.php';
+  /**
+    * @_runInSeparateProcess
+    * @_preserveGlobalState disabled
+    * @dataProvider getDataForTests
+    */
+  public function testAll($script)
+  {
+    $dir = dirname(__FILE__);
 
+    echo "Launching test " . $script . PHP_EOL;
+    /*
+      $h = new lime_harness();
+      $h->register(array(
+          $dir . '/' . $script
+      ));
+
+      $h->run();
+      */
+
+      include $dir . '/' . $script;
+  }
+
+  public function tearDown()
+  {
+    echo "TEAR DOSNW";
+    echo $this->buffer;
+  }
+
+  public function getDataForTests()
+  {
     $problematic = array(
-      'unit/cache/sfFileCacheTest.php'
+      array('unit/cache/sfFileCacheTest.php'),
+      array('unit/date/sfDateTimeTest.php'),
+      array('unit/helper/DateHelperTest.php'),
+      array('unit/i18n/sfCollatorTest.php'),
+      array('unit/i18n/sfI18nDateFormatterTest.php'),
+      array('unit/i18n/sfI18nTest.php'),
+      // array('unit/image/sfExifTest.php'),
+      array('unit/image/sfImageTest.php'),
+      array('unit/minifier/sfMinifierTest.php'),
+      array('unit/request/sfWebRequestTest.php'),
+      array('unit/security/sfSanitizerTest.php'),
+      array('unit/text/sfTextMacroRegistryTest.php'),
+      array('unit/util/sfMimeTypeTest.php'),
+      array('unit/yaml/sfYamlInlineTest.php')
     );
 
-    $dir = dirname(__FILE__);
-    foreach($problematic as $script)
-    {
-      echo "Launching test " . $script . PHP_EOL;
-      include $dir . '/' . $script;
-    }
+    return $problematic;
   }
 
 }

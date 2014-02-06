@@ -1,6 +1,23 @@
 language: php
 php:
-#  - "5.5"
-#  - "5.4"
-#  - "5.3"
+  #- "5.5"
+  #- "5.4"
+  #- "5.3"
   - "5.2"
+
+script:
+  - php data/bin/check.php
+  - php test/unit/cache/sfFileCacheTest.php
+  - php test/unit/date/sfDateTimeTest.php
+  - php unit/helper/DateHelperTest.php
+  - php unit/i18n/sfCollatorTest.php
+  - php unit/i18n/sfI18nDateFormatterTest.php
+  - php unit/i18n/sfI18nTest.php
+  - php unit/image/sfExifTest.php
+  - php unit/image/sfImageTest.php
+  - php unit/minifier/sfMinifierTest.php
+  - php unit/request/sfWebRequestTest.php
+  - php unit/security/sfSanitizerTest.php
+  - php unit/text/sfTextMacroRegistryTest.php
+  - php unit/util/sfMimeTypeTest.php
+  - php unit/yaml/sfYamlInlineTest.php

@@ -8,10 +8,9 @@
     <testsuites>
         <testsuite name="Sift Test Suite">
             <!--
-            <file>./test/AllTest.php</file>
-            //-->
+            <file>./test/AllTest.php</file>            
             <file>./test/ProblematicTests.php</file>
+            //-->
         </testsuite>
-
     </testsuites>
 </phpunit>
