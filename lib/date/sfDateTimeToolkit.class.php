@@ -68,7 +68,7 @@ class sfDateTimeToolkit {
     }
     else if($value instanceof DateTime)
     {
-      return $value->getTimestamp();
+      return $value->format('U');
     }
     else if(!is_numeric($value))
     {
