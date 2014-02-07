@@ -106,7 +106,7 @@ class sfI18nDateFormatter {
 
     if($time instanceof DateTime)
     {
-      $time = $time->getTimestamp();
+      $time = $time->format('U');
     }
     elseif($time instanceof sfDate)
     {

@@ -39,7 +39,7 @@ $t->is(sfDateTimeToolkit::getTS($timestamp), date('U', strtotime('2013-01-01 00:
 
 $datetime = new DateTime('2012-12-10 00:00:00');
 
-$t->is(sfDateTimeToolkit::getTS($datetime), $datetime->getTimestamp(), 'getTS works ok for DateTime objects');
+$t->is(sfDateTimeToolkit::getTS($datetime), $datetime->format('U'), 'getTS works ok for DateTime objects');
 
 // formatting the values
 $t->diag('format');
