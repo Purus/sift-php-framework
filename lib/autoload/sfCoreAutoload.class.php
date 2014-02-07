@@ -848,6 +848,7 @@ class sfCoreAutoload {
       'sfReflectionClass' => 'util/sfReflectionClass.class.php',
       'sfSafeUrl' => 'util/sfSafeUrl.class.php',
       'sfShutdownScheduler' => 'util/sfShutdownScheduler.class.php',
+      'sfSkipDotsRecursiveDirectoryIterator' => 'util/sfSkipDotsRecursiveDirectoryIterator.class.php',
       'sfToolkit' => 'util/sfToolkit.class.php',
       'sfUuid' => 'util/sfUuid.class.php',
       'sfFileSafeStreamWrapper' => 'util/stream/sfFileSafeStream.class.php',

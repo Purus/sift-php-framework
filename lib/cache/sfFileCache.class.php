@@ -210,7 +210,7 @@ class sfFileCache extends sfCache {
       $pattern = str_replace(self::SEPARATOR, DIRECTORY_SEPARATOR, $pattern) . $this->getOption('suffix');
       $regexp = self::patternToRegexp($pattern);
       $paths = array();
-      foreach(new RecursiveIteratorIterator(new RecursiveDirectoryIterator($this->getOption('cache_dir'))) as $path)
+      foreach(new RecursiveIteratorIterator(new sfSkipDotsRecursiveDirectoryIterator($this->getOption('cache_dir'))) as $path)
       {
         if(preg_match($regexp, str_replace($this->getOption('cache_dir') . DIRECTORY_SEPARATOR, '', $path)))
         {
@@ -247,7 +247,7 @@ class sfFileCache extends sfCache {
     }
 
     $result = true;
-    foreach(new RecursiveIteratorIterator(new RecursiveDirectoryIterator($this->getOption('cache_dir'))) as $file)
+    foreach(new RecursiveIteratorIterator(new sfSkipDotsRecursiveDirectoryIterator($this->getOption('cache_dir'))) as $file)
     {
       if(self::MODE_ALL == $mode || !$this->isValid($file))
       {
@@ -303,6 +303,10 @@ class sfFileCache extends sfCache {
    */
   protected function isValid($path)
   {
+    if(!file_exists($path))
+    {
+      return false;
+    }
     $data = $this->read($path, self::READ_TIMEOUT);
     return time() < $data[self::READ_TIMEOUT];
   }
