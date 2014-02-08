@@ -6,15 +6,15 @@
  * file that was distributed with this source code.
  */
 
-require_once dirname(__FILE__).'/../lib/Base##MODULE_NAME##Actions.class.php';
+require_once dirname(__FILE__) . '/../lib/Base##MODULE_NAME##Actions.class.php';
 
 /**
  * ##MODULE_NAME## actions.
- * 
- * @package ##PLUGIN_NAME##
+ *
+ * @package    ##PLUGIN_NAME##
  * @subpackage ##MODULE_NAME##
- * @author ##AUTHOR_NAME##
+ * @author     ##AUTHOR_NAME##
  */
-class ##MODULE_NAME##Actions extends Base##MODULE_NAME##Actions
+class ##MODULE_NAME##Actions extends Base ##MODULE_NAME##Actions
 {
 }

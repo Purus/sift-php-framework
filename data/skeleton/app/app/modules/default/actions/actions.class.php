@@ -1,7 +1,7 @@
 <?php
 /**
  * This is a part of ##PROJECT_NAME##
- * 
+ *
  */
 
 /**
@@ -13,53 +13,53 @@
  */
 class defaultActions extends myActions
 {
-  /**
-   * Index action
-   *
-   */
-  public function executeIndex()
-  { 
-  }
+    /**
+     * Index action
+     *
+     */
+    public function executeIndex()
+    {
+    }
 
-  /**
-   * "Page not found" action
-   *   
-   */
-  public function executeError404()
-  {
-  }
+    /**
+     * "Page not found" action
+     *
+     */
+    public function executeError404()
+    {
+    }
 
-  /**
-   * Login action
-   *
-   */
-  public function executeLogin()
-  {    
-  }
-  
-  /**
-   * Secure action. 
-   *
-   */
-  public function executeSecure()
-  {
-    $this->getResponse()->setStatusCode(403);    
-  }
-  
-  /**
-   * Module has been disabled
-   *
-   */
-  public function executeDisabled()
-  {
-  }
+    /**
+     * Login action
+     *
+     */
+    public function executeLogin()
+    {
+    }
 
-  /**
-   * Application is unavailable.
-   */
-  public function executeUnavailable()
-  {    
-  }
+    /**
+     * Secure action.
+     *
+     */
+    public function executeSecure()
+    {
+        $this->getResponse()->setStatusCode(403);
+    }
 
-  
+    /**
+     * Module has been disabled
+     *
+     */
+    public function executeDisabled()
+    {
+    }
+
+    /**
+     * Application is unavailable.
+     */
+    public function executeUnavailable()
+    {
+    }
+
+
 }

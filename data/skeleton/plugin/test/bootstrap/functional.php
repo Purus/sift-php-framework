@@ -1,8 +1,7 @@
 <?php
 
-if(!isset($app))
-{
-  $app = '##APP_NAME##';
+if (!isset($app)) {
+    $app = '##APP_NAME##';
 }
 
 // load settings from project config.php
@@ -17,8 +16,8 @@ sfCore::bootstrap($sf_sift_lib_dir, $sf_sift_data_dir, true);
 
 function ##PLUGIN_NAME##_cleanup()
 {
-  sfToolkit::clearDirectory(SF_ROOT_DIR . '/cache');
-  sfToolkit::clearDirectory(SF_ROOT_DIR . '/log');
+    sfToolkit::clearDirectory(SF_ROOT_DIR . '/cache');
+    sfToolkit::clearDirectory(SF_ROOT_DIR . '/log');
 }
 
 // cleanup first
@@ -28,5 +27,5 @@ register_shutdown_function('##PLUGIN_NAME##_cleanup');
 
 // create context instance
 sfContext::createInstance(
-        sfCore::getApplication($app, 'test', isset($debug) ? $debug : true)
+    sfCore::getApplication($app, 'test', isset($debug) ? $debug : true)
 );

@@ -14,7 +14,7 @@ See `sfPluginInstaller` class and custom installer in plugin `/lib/installer` di
 
 ## Migration class
 
-Migration should inherit from `myDoctrineMigrarion` (which inherits from `Doctrine_Migration_Base`) and should look like:
+Migration should inherit from `myDoctrineMigration` (which inherits from `Doctrine_Migration_Base`) and should look like:
 
 
     /**

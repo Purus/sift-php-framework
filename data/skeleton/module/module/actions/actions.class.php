@@ -9,12 +9,12 @@
  */
 class ##MODULE_NAME##Actions extends myActions
 {
- /**
-  * Executes index action
-  *
-  */
-  public function executeIndex()
-  {    
-  }
-  
+    /**
+     * Executes index action
+     *
+     */
+    public function executeIndex()
+    {
+    }
+
 }
