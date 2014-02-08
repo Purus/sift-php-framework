@@ -106,6 +106,7 @@ abstract class sfController implements sfIController
         {
           throw new sfConfigurationException(sprintf('The module "%s" is not enabled.', $moduleName));
         }
+
         return false;
       }
 
@@ -118,6 +119,7 @@ abstract class sfController implements sfIController
         // action class exists
         require_once($file);
         $this->controllerClasses[$moduleName.'_'.$controllerName.'_'.$classSuffix] = $controllerName.$classSuffix;
+
         return true;
       }
 
@@ -149,6 +151,7 @@ abstract class sfController implements sfIController
         }
 
         $this->controllerClasses[$moduleName.'_'.$controllerName.'_'.$classSuffix] = $moduleName.$classSuffix.'s';
+
         return true;
       }
     }

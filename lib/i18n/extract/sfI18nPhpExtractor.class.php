@@ -186,6 +186,7 @@ class sfI18nPhpExtractor extends sfConfigurable implements sfII18nExtractor
       $current_argument_is_just_literal = false;
       $current_argument = null;
     }
+
     return $function_calls;
   }
 }

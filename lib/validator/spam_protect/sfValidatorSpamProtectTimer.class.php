@@ -68,6 +68,7 @@ class sfValidatorSpamProtectTimer extends sfValidatorBase {
     $messages = $this->messages;
     unset($messages['invalid']);
     unset($messages['required']);
+
     return $messages;
   }
 

@@ -47,6 +47,7 @@ class sfUuid {
   public static function v3($namespace, $name)
   {
     if(!self::isValid($namespace))
+
       return false;
 
     // Get hexadecimal components of namespace
@@ -103,6 +104,7 @@ class sfUuid {
   public static function v5($namespace, $name)
   {
     if(!self::isValid($namespace))
+
       return false;
 
     // Get hexadecimal components of namespace

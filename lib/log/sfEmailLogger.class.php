@@ -114,6 +114,7 @@ class sfEmailLogger extends sfVarLogger {
         break;
       }
     }
+
     return $host;
   }
 
@@ -129,6 +130,7 @@ class sfEmailLogger extends sfVarLogger {
     {
       $application = sfConfig::get('sf_app');
     }
+
     return $application;
   }
 
@@ -144,6 +146,7 @@ class sfEmailLogger extends sfVarLogger {
     {
       $env = sfConfig::get('sf_environment');
     }
+
     return $env;
   }
 
@@ -227,6 +230,7 @@ class sfEmailLogger extends sfVarLogger {
     {
       $string = preg_replace_callback('/\'|"([^\\"]+)"|\'/i', array($this, 'removeFilePathsCallback'), $string);
     }
+
     return $string;
   }
 
@@ -289,6 +293,7 @@ class sfEmailLogger extends sfVarLogger {
     }
 
     ksort($values);
+
     return $values;
   }
 
@@ -304,6 +309,7 @@ class sfEmailLogger extends sfVarLogger {
       '%app%' => $this->getApplication(),
       '%env%' => $this->getEnvironment()
     ));
+
     return '=?UTF-8?B?' . base64_encode($subject) . '?=';
   }
 
@@ -469,6 +475,7 @@ class sfEmailLogger extends sfVarLogger {
         }
       }
     }
+
     return $ret;
   }
 }

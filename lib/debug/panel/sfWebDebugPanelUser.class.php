@@ -60,6 +60,7 @@ class sfWebDebugPanelUser extends sfWebDebugPanel {
       return;
     }
     $user = $context->getUser();
+
     return $this->webDebug->render($this->getOption('template_dir').'/panel/user.php', array(
       'culture' => $user->getCulture(),
       'timezone' => $user->getTimezone(),

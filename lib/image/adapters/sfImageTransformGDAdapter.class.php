@@ -332,6 +332,7 @@ class sfImageTransformGDAdapter extends sfImageTransformAdapterAbstract
     if (array_key_exists($mime,$this->loaders))
     {
       $this->mime_type = $mime;
+
       return true;
     }
 
@@ -463,7 +464,6 @@ class sfImageTransformGDAdapter extends sfImageTransformAdapterAbstract
 
     if ('image/png' === $mime)
     {
-
       return 9 - round($quality * (9/100));
     }
 
@@ -543,6 +543,7 @@ class sfImageTransformGDAdapter extends sfImageTransformAdapterAbstract
     $g = $cols['green'];
     $b = $cols['blue'];
     $a = $cols['alpha'];
+
     return array($r, $g, $b, $a);
   }
 

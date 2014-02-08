@@ -52,6 +52,7 @@ class sfDependencyInjectionDependencies {
       {
         return $this->serviceContainer->get((string)$this->dependencies[$name]);
       }
+
       return $this->dependencies[$name];
     }
     else
@@ -70,6 +71,7 @@ class sfDependencyInjectionDependencies {
   public function set($name, $dependency)
   {
     $this->dependencies[$name] = $dependency;
+
     return $this;
   }
 
@@ -81,6 +83,7 @@ class sfDependencyInjectionDependencies {
   public function clear()
   {
     $this->dependencies = array();
+
     return $this;
   }
 

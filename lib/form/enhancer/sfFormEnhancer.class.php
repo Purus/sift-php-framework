@@ -72,6 +72,7 @@ class sfFormEnhancer extends sfConfigurable implements sfIFormEnhancer {
         $this->enhance($variable);
       }
     }
+
     return $variables;
   }
 

@@ -39,6 +39,7 @@ class sfValidatorBlacklistRegex extends sfValidatorBlacklist
         throw new sfValidatorError($this, 'forbidden', array('value' => $value));
       }
     }
+
     return $value;
   }
 }

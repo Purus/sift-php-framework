@@ -92,6 +92,7 @@ class sfTextMacroRegistry implements Countable, sfILoggerAware {
     {
       return $content;
     }
+
     return preg_replace_callback('/' . $regexp . '/s', array($this, 'doMacroTag'), $content);
   }
 
@@ -127,6 +128,7 @@ class sfTextMacroRegistry implements Countable, sfILoggerAware {
       }
     }
     $this->tags[$tag] = $callable;
+
     return $this;
   }
 
@@ -139,6 +141,7 @@ class sfTextMacroRegistry implements Countable, sfILoggerAware {
   public function unregister($tag)
   {
     unset($this->tags[$tag]);
+
     return $this;
   }
 
@@ -185,6 +188,7 @@ class sfTextMacroRegistry implements Countable, sfILoggerAware {
         }
       }
     }
+
     return false;
   }
 
@@ -207,6 +211,7 @@ class sfTextMacroRegistry implements Countable, sfILoggerAware {
   {
     $this->tags = array();
     $this->objectCache = array();
+
     return $this;
   }
 
@@ -311,6 +316,7 @@ class sfTextMacroRegistry implements Countable, sfILoggerAware {
     {
       $atts = ltrim($text);
     }
+
     return $atts;
   }
 

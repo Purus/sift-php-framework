@@ -205,6 +205,7 @@ class sfGlob {
     } else {
       $results[$path] = 0;
     }
+
     return $results;
   }
 
@@ -267,6 +268,7 @@ class sfGlob {
       }
       $ret .= preg_quote($c, '#');
     }
+
     return $ret;
   }
 
@@ -282,6 +284,7 @@ class sfGlob {
     for ($i = count($alternatives); $i--;) {
       $alternatives[$i] = self::convertToRegex($alternatives[$i], $flags);
     }
+
     return '(?:(' . implode(')|(', $alternatives) . '))';
   }
 
@@ -302,6 +305,7 @@ class sfGlob {
     if (strpos($class, '^') !== false) {
       $class = '\^' . strtr($class, array('^' => ''));
     }
+
     return '[' . strtr($class, array('#' => '\#')) . ']';
   }
 
@@ -330,10 +334,13 @@ class sfGlob {
       $base_cmp = strcmp($operands[0]['base'], $operands[1]['base']);
       if ($base_cmp == 0) {
         $ext_cmp = strcmp($operands[0]['ext'], $operands[1]['ext']);
+
         return -$ext_cmp;
       }
+
       return $base_cmp;
     }
+
     return -$dir_cmp;
   }
 
@@ -349,8 +356,10 @@ class sfGlob {
       if ($len_a == $len_b) {
         return -strcmp($a[0], $b[0]);
       }
+
       return ($len_a < $len_b) ? -1 : 1;
     }
+
     return ($a[1] < $b[1]) ? -1 : 1;
   }
 
@@ -367,6 +376,7 @@ class sfGlob {
     {
       return strcmp($a[0], $b[0]);
     }
+
     return ($a[1] < $b[1]) ? -1 : 1;
   }
 

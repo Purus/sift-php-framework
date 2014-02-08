@@ -63,6 +63,7 @@ class sfWidgetFormPartial extends sfWidgetForm
     $attributes['errors'] = $errors;
 
     $variables = array_merge($this->getAttributes(), $attributes);
+
     return get_partial($this->getOption('partial'), $variables, $this->getOption('view_name'));
   }
 

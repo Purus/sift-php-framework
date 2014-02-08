@@ -41,6 +41,7 @@ function file_max_upload_size($format = true)
   {
     $max_size = file_format_size($max_size);
   }
+
   return $max_size;
 }
 

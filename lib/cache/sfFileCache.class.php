@@ -122,6 +122,7 @@ class sfFileCache extends sfCache {
   {
     $this->setOption('cache_dir', $cacheDir);
     $this->setupCacheDir($cacheDir);
+
     return $this;
   }
 
@@ -175,6 +176,7 @@ class sfFileCache extends sfCache {
   public function has($key)
   {
     $path = $this->getFilePath($key);
+
     return file_exists($path) && $this->isValid($path);
   }
 
@@ -271,6 +273,7 @@ class sfFileCache extends sfCache {
     }
 
     $data = $this->read($path, self::READ_TIMEOUT);
+
     return $data[self::READ_TIMEOUT] < time() ? 0 : $data[self::READ_TIMEOUT];
   }
 
@@ -292,6 +295,7 @@ class sfFileCache extends sfCache {
     {
       return 0;
     }
+
     return $data[self::READ_LAST_MODIFIED];
   }
 
@@ -308,6 +312,7 @@ class sfFileCache extends sfCache {
       return false;
     }
     $data = $this->read($path, self::READ_TIMEOUT);
+
     return time() < $data[self::READ_TIMEOUT];
   }
 

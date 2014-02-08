@@ -125,6 +125,7 @@ class sfTextFilterRegistry implements Countable, sfILoggerAware {
     }
 
     $this->filters[$tag][$priority][] = $function;
+
     return $this;
   }
 
@@ -140,6 +141,7 @@ class sfTextFilterRegistry implements Countable, sfILoggerAware {
     {
       unset($this->filters[$tag]);
     }
+
     return $this;
   }
 
@@ -151,6 +153,7 @@ class sfTextFilterRegistry implements Countable, sfILoggerAware {
   public function clear()
   {
     $this->filters = array();
+
     return $this;
   }
 
@@ -186,6 +189,7 @@ class sfTextFilterRegistry implements Countable, sfILoggerAware {
         }
       }
     }
+
     return (string)$content;
   }
 
@@ -246,6 +250,7 @@ class sfTextFilterRegistry implements Countable, sfILoggerAware {
     {
       $value = $this->replaceConstants($value);
     }
+
     return $value;
   }
 
@@ -265,6 +270,7 @@ class sfTextFilterRegistry implements Countable, sfILoggerAware {
         return sfConfig::get($name);
       }
     }
+
     return $value;
   }
 
@@ -301,6 +307,7 @@ class sfTextFilterRegistry implements Countable, sfILoggerAware {
     }
     // sort by priority
     krsort($filters);
+
     return $filters;
   }
 
@@ -320,6 +327,7 @@ class sfTextFilterRegistry implements Countable, sfILoggerAware {
             array_merge($output[$key], $value) : $value;
       }
     }
+
     return $output;
   }
 
@@ -338,6 +346,7 @@ class sfTextFilterRegistry implements Countable, sfILoggerAware {
         $count += count($callbacks);
       }
     }
+
     return $count;
   }
 

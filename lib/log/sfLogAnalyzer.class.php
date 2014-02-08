@@ -95,6 +95,7 @@ class sfLogAnalyzer extends sfConfigurable implements Countable {
     $this->setDatabase($this->getOption('database'));
     $this->doProcess();
     $this->processed = true;
+
     return $this;
   }
 
@@ -206,6 +207,7 @@ class sfLogAnalyzer extends sfConfigurable implements Countable {
     {
       $datetime = $datetime->getTS();
     }
+
     return date('Y-m-d H:i:s', $datetime);
   }
 
@@ -254,6 +256,7 @@ class sfLogAnalyzer extends sfConfigurable implements Countable {
     $this->process();
     $stmt = $this->dbh->query('SELECT MIN(created_at) FROM log_analyzed LIMIT 1');
     $result = $stmt->fetchColumn();
+
     return strtotime($result);
   }
 
@@ -267,6 +270,7 @@ class sfLogAnalyzer extends sfConfigurable implements Countable {
     $this->process();
     $stmt = $this->dbh->query('SELECT MAX(created_at) FROM log_analyzed LIMIT 1');
     $result = $stmt->fetchColumn();
+
     return strtotime($result);
   }
 
@@ -304,6 +308,7 @@ class sfLogAnalyzer extends sfConfigurable implements Countable {
         'level_name' => $level['level']
       );
     }
+
     return $levels;
   }
 
@@ -316,6 +321,7 @@ class sfLogAnalyzer extends sfConfigurable implements Countable {
   {
     $this->process();
     $stmt = $this->dbh->query('SELECT COUNT(id) AS count, type AS type FROM log_analyzed GROUP BY type ORDER BY count DESC');
+
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
   }
 
@@ -365,6 +371,7 @@ class sfLogAnalyzer extends sfConfigurable implements Countable {
     {
       $this->setDatabase($this->getOption('database'));
     }
+
     return $this->dbh;
   }
 
@@ -376,6 +383,7 @@ class sfLogAnalyzer extends sfConfigurable implements Countable {
   public function getSkipped()
   {
     $this->process();
+
     return $this->skipped;
   }
 
@@ -457,6 +465,7 @@ class sfLogAnalyzer extends sfConfigurable implements Countable {
     $this->process();
     $stmt = $this->dbh->prepare('SELECT COUNT(id) FROM log_analyzed');
     $stmt->execute();
+
     return (integer)$stmt->fetchColumn(0);
   }
 
@@ -478,6 +487,7 @@ class sfLogAnalyzer extends sfConfigurable implements Countable {
     {
       $level = strtolower($matches[1]);
       array_unshift($arguments, $level);
+
       return call_user_func_array(array($this, 'getLogs'), $arguments);
     }
 

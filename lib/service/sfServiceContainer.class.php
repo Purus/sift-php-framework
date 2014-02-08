@@ -103,6 +103,7 @@ class sfServiceContainer {
     {
       return $this->services[$serviceName];
     }
+
     return $this->buildService($serviceName);
   }
 
@@ -116,6 +117,7 @@ class sfServiceContainer {
   public function set($serviceName, $service)
   {
     $this->services[$serviceName] = $service;
+
     return $this;
   }
 
@@ -141,6 +143,7 @@ class sfServiceContainer {
     }
 
     $this->definitions[$serviceName] = $service;
+
     return $this;
   }
 
@@ -293,6 +296,7 @@ class sfServiceContainer {
     {
       $value = $this->replaceConstants($value);
     }
+
     return $value;
   }
 
@@ -333,6 +337,7 @@ class sfServiceContainer {
         {
           throw new LogicException(sprintf('Possible misconfiguration of "%s". The returned configuration value for "%s" is an %s.', $value, $match[0][0], gettype($configured)));
         }
+
         return $configured;
       }
 
@@ -346,6 +351,7 @@ class sfServiceContainer {
         $shift += strlen($match[0][0]) - strlen($configured);
       }
     }
+
     return $replaced;
   }
 
@@ -366,6 +372,7 @@ class sfServiceContainer {
       // get the service
       $value = $this->get(substr($value, 1));
     }
+
     return $value;
   }
 
@@ -386,6 +393,7 @@ class sfServiceContainer {
       // get the dependency
       $value = $this->getDependencies()->get(substr($value, 1));
     }
+
     return $value;
   }
 
@@ -413,6 +421,7 @@ class sfServiceContainer {
     }
     unset($this->services[$serviceName]);
     unset($this->definitions[$serviceName]);
+
     return $this;
   }
 

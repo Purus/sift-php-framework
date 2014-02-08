@@ -44,6 +44,7 @@ class sfAssetPackage {
                       self::$config, 'asset_packages.get_config');
       self::$filtered = true;
     }
+
     return self::$config;
   }
 
@@ -90,6 +91,7 @@ class sfAssetPackage {
       }
       $result = array_merge($result, $javascripts);
     }
+
     return $replaceVariables ? self::replaceVariables($result) : $result;
   }
 
@@ -140,6 +142,7 @@ class sfAssetPackage {
       }
       $result = array_merge($result, $stylesheets);
     }
+
     return $replaceVariables ? self::replaceVariables($result) : $result;
   }
 

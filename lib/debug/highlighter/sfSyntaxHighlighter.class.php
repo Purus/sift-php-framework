@@ -98,6 +98,7 @@ abstract class sfSyntaxHighlighter {
         $highlighter = new sfSyntaxHighlighterGeneric($code, $charset, $cssPrefix);
       break;
     }
+
     return $highlighter;
   }
 
@@ -112,6 +113,7 @@ abstract class sfSyntaxHighlighter {
   {
     $this->code = htmlspecialchars((string)$code, ENT_COMPAT, $charset, false);
     $this->processed = false;
+
     return $this;
   }
 
@@ -126,6 +128,7 @@ abstract class sfSyntaxHighlighter {
   public function setCssPrefix($prefix)
   {
     $this->cssPrefix = $prefix;
+
     return $this;
   }
 
@@ -155,6 +158,7 @@ abstract class sfSyntaxHighlighter {
   {
     $this->processed = false;
     $this->html = '';
+
     return $this;
   }
 
@@ -171,6 +175,7 @@ abstract class sfSyntaxHighlighter {
       $this->process();
       $this->processed = true;
     }
+
     return $numberLines ? $this->getHtmlWithLineNumbers($this->html) : $this->html;
   }
 
@@ -205,6 +210,7 @@ abstract class sfSyntaxHighlighter {
                         $lineNumber, $lineContent);
       }
     }
+
     return $out;
   }
 
@@ -268,6 +274,7 @@ abstract class sfSyntaxHighlighter {
     {
       $out .= str_repeat('</span>', $spans);
     }
+
     return $out;
   }
 

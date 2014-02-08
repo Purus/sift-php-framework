@@ -42,6 +42,7 @@ abstract class sfIp2Country extends sfConfigurable implements sfIIp2Country {
       {
         throw new LogicException(sprintf('Driver "%s" does not implement sfIIp2Country interface.', $driver));
       }
+
       return $driverObj;
     }
 

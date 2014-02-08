@@ -29,6 +29,7 @@ class sfBitwise {
     {
       $val |= (int) $flag;
     }
+
     return $val;
   }
 

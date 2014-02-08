@@ -238,6 +238,7 @@ class sfFilesystem
     {
       $finder = sfFinder::type('any');
       $this->mirror($originDir, $targetDir, $finder);
+
       return;
     }
 
@@ -470,8 +471,10 @@ class sfFilesystem
       $relativeDir  = str_repeat("..".DIRECTORY_SEPARATOR, $levelUp);
       // down the remaining $to path
       $relativeDir .= substr($to, $commonLength);
+
       return $relativeDir;
     }
+
     return $to;
   }
 
@@ -499,6 +502,7 @@ class sfFilesystem
     {
       return '';
     }
+
     return substr($filename, $tmp + 1);
   }
 
@@ -515,6 +519,7 @@ class sfFilesystem
     {
       return $filename;
     }
+
     return substr($filename, 0, $tmp);
   }
 
@@ -534,6 +539,7 @@ class sfFilesystem
       $size /= 1024;
       $pos++;
     }
+
     return round($size, $round) . ' ' . $a[$pos];
   }
 
@@ -552,6 +558,7 @@ class sfFilesystem
     {
       $size = self::formatFileSize($size, $round);
     }
+
     return $size;
   }
 

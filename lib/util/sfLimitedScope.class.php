@@ -41,6 +41,7 @@ final class sfLimitedScope {
     {
       throw new sfParseException($error['message']);
     }
+
     return $res;
   }
 
@@ -57,6 +58,7 @@ final class sfLimitedScope {
     {
       extract(func_get_arg(1));
     }
+
     return include func_get_arg(0);
   }
 
@@ -72,6 +74,7 @@ final class sfLimitedScope {
     ob_start();
     $args = func_get_args();
     call_user_func_array(array('sfLimitedScope', 'load'), $args);
+
     return ob_get_clean();
   }
 

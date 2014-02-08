@@ -100,6 +100,7 @@ class sfFileSafeStreamWrapper extends sfStreamWrapper {
     // open file
     if($mode === 'r')
     { // provides only isolation
+
       return $this->checkAndLock($this->tempHandle = fopen($path, 'r' . $flag, $use_path), LOCK_SH);
     }
     elseif($mode === 'r+')
@@ -131,6 +132,7 @@ class sfFileSafeStreamWrapper extends sfStreamWrapper {
     else
     {
       trigger_error(sprintf('Unknown file mode "%s" given.', $mode), E_USER_WARNING);
+
       return false;
     }
 
@@ -139,6 +141,7 @@ class sfFileSafeStreamWrapper extends sfStreamWrapper {
     if(!$this->tempHandle = fopen($path . $tmp, (strpos($mode, '+') ? 'x+' : 'x') . $flag, $use_path))
     {
       $this->clean();
+
       return false;
     }
     $this->tempFile = realpath($path . $tmp);
@@ -152,6 +155,7 @@ class sfFileSafeStreamWrapper extends sfStreamWrapper {
       if($stat['size'] !== 0 && stream_copy_to_stream($this->handle, $this->tempHandle) !== $stat['size'])
       {
         $this->clean();
+
         return false;
       }
 
@@ -178,6 +182,7 @@ class sfFileSafeStreamWrapper extends sfStreamWrapper {
     elseif(!flock($handle, $lock))
     {
       fclose($handle);
+
       return false;
     }
 
@@ -212,6 +217,7 @@ class sfFileSafeStreamWrapper extends sfStreamWrapper {
     { // 'r' mode
       flock($this->tempHandle, LOCK_UN);
       fclose($this->tempHandle);
+
       return;
     }
 
@@ -255,6 +261,7 @@ class sfFileSafeStreamWrapper extends sfStreamWrapper {
       // disk full?
       $this->writeError = true;
     }
+
     return $res;
   }
 
@@ -311,6 +318,7 @@ class sfFileSafeStreamWrapper extends sfStreamWrapper {
   {
     // This is not thread safe
     $path = substr($path, strlen(self::PROTOCOL) + 3);
+
     return ($flags & STREAM_URL_STAT_LINK) ? @lstat($path) : @stat($path); // intentionally @
   }
 
@@ -323,6 +331,7 @@ class sfFileSafeStreamWrapper extends sfStreamWrapper {
   public function unlink($path)
   {
     $path = substr($path, strlen(self::PROTOCOL) + 3);
+
     return unlink($path);
   }
 

@@ -212,6 +212,7 @@ class sfMarkdownParser {
     {
       self::$instances[$key] = new self($options);
     }
+
     return self::$instances[$key];
   }
 
@@ -324,6 +325,7 @@ class sfMarkdownParser {
               )?  # title is optional
               (?:\n+|\Z)
       }xm', array(&$this, 'stripLinkDefinitionsCallback'), $text);
+
     return $text;
   }
 
@@ -494,6 +496,7 @@ class sfMarkdownParser {
   {
     $text = $matches[1];
     $key = $this->hashBlock($text);
+
     return "\n\n$key\n\n";
   }
 
@@ -617,6 +620,7 @@ class sfMarkdownParser {
       }
       $text = $this->$method($text);
     }
+
     return $text;
   }
 
@@ -710,6 +714,7 @@ class sfMarkdownParser {
       }xs', array(&$this, 'doAnchorsReferenceCallback'), $text);
 
     $this->in_anchor = false;
+
     return $text;
   }
 
@@ -754,6 +759,7 @@ class sfMarkdownParser {
     {
       $result = $whole_match;
     }
+
     return $result;
   }
 
@@ -781,6 +787,7 @@ class sfMarkdownParser {
 
     $link_text = $this->runSpanGamut($link_text);
     $result .= sprintf('>%s</a>', $link_text);
+
     return $this->hashPart($result);
   }
 
@@ -903,6 +910,7 @@ class sfMarkdownParser {
       $result .= sprintf(' title="%s"', $title);
     }
     $result .= self::$xhtml ? ' />' : '>';
+
     return $this->hashPart($result);
   }
 
@@ -957,6 +965,7 @@ class sfMarkdownParser {
 
     $level = $matches[2]{0} == '=' ? 1 : 2;
     $block = "<h$level>" . $this->runSpanGamut($matches[1]) . "</h$level>";
+
     return "\n" . $this->hashBlock($block) . "\n\n";
   }
 
@@ -970,6 +979,7 @@ class sfMarkdownParser {
   {
     $level = strlen($matches[1]);
     $block = "<h$level>" . $this->runSpanGamut($matches[2]) . "</h$level>";
+
     return "\n" . $this->hashBlock($block) . "\n\n";
   }
 
@@ -1039,6 +1049,7 @@ class sfMarkdownParser {
           }mx', array(&$this, 'doListsCallback'), $text);
       }
     }
+
     return $text;
   }
 
@@ -1062,6 +1073,7 @@ class sfMarkdownParser {
     $list .= "\n";
     $result = $this->processListItems($list, $marker_any_re);
     $result = $this->hashBlock("<$list_type>\n" . $result . "</$list_type>");
+
     return "\n" . $result . "\n\n";
   }
 
@@ -1113,6 +1125,7 @@ class sfMarkdownParser {
       }xm', array(&$this, 'processListItemsCallback'), $list_str);
 
     $this->listLevel--;
+
     return $list_str;
   }
 
@@ -1186,6 +1199,7 @@ class sfMarkdownParser {
     $codeblock = preg_replace('/\A\n+|\n+\z/', '', $codeblock);
 
     $codeblock = "<pre><code>$codeblock\n</code></pre>";
+
     return "\n\n" . $this->hashBlock($codeblock) . "\n\n";
   }
 
@@ -1198,6 +1212,7 @@ class sfMarkdownParser {
   protected function makeCodeSpan($code)
   {
     $code = htmlspecialchars(trim($code), ENT_NOQUOTES, $this->options['charset'], false);
+
     return $this->hashPart(sprintf('<code>%s</code>', $code));
   }
 
@@ -1374,6 +1389,7 @@ class sfMarkdownParser {
         }
       }
     }
+
     return $text_stack[0];
   }
 
@@ -1412,6 +1428,7 @@ class sfMarkdownParser {
   {
     $pre = $matches[1];
     $pre = preg_replace('/^  /m', '', $pre);
+
     return $pre;
   }
 
@@ -1498,6 +1515,7 @@ class sfMarkdownParser {
   {
     $text = $this->encodeAmpsAndAngles($text);
     $text = str_replace('"', '&quot;', $text);
+
     return $text;
   }
 
@@ -1571,6 +1589,7 @@ class sfMarkdownParser {
   {
     $url = $this->encodeAttribute($matches[1]);
     $link = "<a href=\"$url\">$url</a>";
+
     return $this->hashPart($link);
   }
 
@@ -1583,6 +1602,7 @@ class sfMarkdownParser {
   {
     $address = $matches[1];
     $link = $this->encodeEmailAddress($address);
+
     return $this->hashPart($link);
   }
 
@@ -1710,8 +1730,10 @@ class sfMarkdownParser {
         {
           $str = $matches[2];
           $codespan = $this->makeCodeSpan($matches[1]);
+
           return $this->hashPart($codespan);
         }
+
         return $token; // return as text since no ending marker found.
       default:
         return $this->hashPart($token);
@@ -1766,6 +1788,7 @@ class sfMarkdownParser {
               sfUtf8::len($line) % $this->options['tab_width'];
       $line .= str_repeat(' ', $amount) . $block;
     }
+
     return $line;
   }
 

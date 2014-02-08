@@ -27,6 +27,7 @@ function tag($name, $options = array(), $open = false)
   {
     return '';
   }
+
   return '<'.$name._tag_options($options).(($open) ? '>' : (sfConfig::get('sf_html5', false) ? '>' : ' />'));
 }
 
@@ -36,6 +37,7 @@ function content_tag($name, $content = '', $options = array())
   {
     return '';
   }
+
   return '<'.$name._tag_options($options).'>'.$content.'</'.$name.'>';
 }
 
@@ -54,6 +56,7 @@ function escape_javascript($javascript)
 {
   $javascript = preg_replace('/\r\n|\n|\r/', "\\n", $javascript);
   $javascript = preg_replace('/(["\'])/', '\\\\\1', $javascript);
+
   return $javascript;
 }
 
@@ -122,6 +125,7 @@ function _tag_options($options = array())
   {
     $html .= ' '.$key.'="'.escape_once($value).'"';
   }
+
   return $html;
 }
 
@@ -156,6 +160,7 @@ function _get_option(&$options, $name, $default = null)
   {
     $value = $default;
   }
+
   return $value;
 }
 
@@ -192,6 +197,7 @@ function body_tag($options = array())
   {
     $options['onunload'] = join(';', $onunload);
   }
+
   return tag('body', $options, true) . "\n";
 }
 
@@ -358,5 +364,6 @@ function ie_conditional_comment($condition, $content)
 function jsonize($variable, $escape = true)
 {
   $value = sfJson::encode($variable);
+
   return $escape ? escape_once($value) : $value;
 }

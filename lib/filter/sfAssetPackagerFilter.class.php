@@ -405,6 +405,7 @@ class sfAssetPackagerFilter extends sfFilter {
     {
       $url = sprintf('http:%s', $url);
     }
+
     return parse_url($url);
   }
 
@@ -452,6 +453,7 @@ class sfAssetPackagerFilter extends sfFilter {
                   ->getReturnValue();
       $this->pathAliases = $aliases;
     }
+
     return $this->pathAliases;
   }
 

@@ -32,6 +32,7 @@ abstract class sfCliTestBaseTask extends sfCliBaseTask
     );
 
     $this->dispatcher->filter($event, $tests);
+
     return $event->getReturnValue();
   }
 }

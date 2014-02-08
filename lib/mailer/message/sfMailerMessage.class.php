@@ -280,6 +280,7 @@ class sfMailerMessage extends Swift_Message {
     {
       return true;
     }
+
     return false;
   }
 
@@ -380,6 +381,7 @@ class sfMailerMessage extends Swift_Message {
   protected function loadPartialHelpers()
   {
     sfLoader::loadHelpers(array('Partial'));
+
     return $this;
   }
 
@@ -491,6 +493,7 @@ class sfMailerMessage extends Swift_Message {
     {
       $this->setBody($body, 'text/plain');
     }
+
     return $this;
   }
 
@@ -523,6 +526,7 @@ class sfMailerMessage extends Swift_Message {
     {
       $this->setBody($body, 'text/html');
     }
+
     return $this;
   }
 
@@ -535,6 +539,7 @@ class sfMailerMessage extends Swift_Message {
   public function setIsQueued($boolean)
   {
     $this->isQueued = (boolean) $boolean;
+
     return $this;
   }
 

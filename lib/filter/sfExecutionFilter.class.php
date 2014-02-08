@@ -69,6 +69,7 @@ class sfExecutionFilter extends sfFilter
         return sfView::SUCCESS;
       }
     }
+
     return $this->executeAction($actionInstance, $filterChain);
   }
 
@@ -85,6 +86,7 @@ class sfExecutionFilter extends sfFilter
     $actionInstance->preExecute();
     $viewName = $actionInstance->execute();
     $actionInstance->postExecute();
+
     return null === $viewName ? sfView::SUCCESS : $viewName;
   }
 
@@ -101,6 +103,7 @@ class sfExecutionFilter extends sfFilter
     {
       case sfView::HEADER_ONLY:
         $this->context->getResponse()->setHeaderOnly(true);
+
         return;
       case sfView::NONE:
         return;

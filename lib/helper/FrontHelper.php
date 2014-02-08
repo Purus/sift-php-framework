@@ -26,5 +26,6 @@ function admin_app_url()
   {
     $script = '/';
   }
+
   return 'http://' . $url . $script;
 }

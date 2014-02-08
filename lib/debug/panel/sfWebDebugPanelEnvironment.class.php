@@ -39,6 +39,7 @@ class sfWebDebugPanelEnvironment extends sfWebDebugPanel
   public function getPanelContent()
   {
     $context = sfContext::getInstance();
+
     return $this->webDebug->render($this->getOption('template_dir').'/panel/environment.php', array(
       'app_name' => sfConfig::get('sf_app'),
       'environment' => sfConfig::get('sf_environment'),

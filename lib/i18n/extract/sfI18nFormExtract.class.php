@@ -138,6 +138,7 @@ class sfI18nFormExtract extends sfI18nExtract {
         throw new sfException(sprintf('The form "%s" cannot be extracted. Constructor arguments disallow standard way of extraction. Please implement sfII18nExtractable interface to the form.', $class));
       }
     }
+
     return $reflection;
   }
 

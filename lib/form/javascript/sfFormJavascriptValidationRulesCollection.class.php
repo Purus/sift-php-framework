@@ -45,6 +45,7 @@ class sfFormJavascriptValidationRulesCollection extends sfCollection implements 
     {
       $data[$rule->getFormFieldName()] = $rule->getRules();
     }
+
     return $data;
   }
 

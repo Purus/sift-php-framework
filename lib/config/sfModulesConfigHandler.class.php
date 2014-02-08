@@ -50,6 +50,7 @@ class sfModulesConfigHandler extends sfSimpleYamlConfigHandler
                       "// date: %s\n".
                       "%s",
                       date('Y/m/d H:i:s'), join("\n", $data));
+
     return $retval;
   }
 
@@ -69,6 +70,7 @@ class sfModulesConfigHandler extends sfSimpleYamlConfigHandler
       // because we have the same keys in our array and they are lost with deep merge!
       $config = array_merge($config, self::parseYaml($configFile));
     }
+
     return $config;
   }
 

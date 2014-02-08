@@ -108,6 +108,7 @@ class sfPhpErrorException extends sfException {
       $ref->setAccessible(true);
       $ref->setValue($exception, $stack);
     }
+
     return $exception;
   }
 

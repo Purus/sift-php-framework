@@ -51,6 +51,7 @@ class sfRequestFiltersHolder extends sfParameterHolder implements ArrayAccess, C
   public function offsetGet($key)
   {
     $this->checkKey($key, true);
+
     return $this->parameters[$this->default_namespace][$key];
   }
 
@@ -105,6 +106,7 @@ class sfRequestFiltersHolder extends sfParameterHolder implements ArrayAccess, C
         return false;
       }
     }
+
     return true;
   }
 

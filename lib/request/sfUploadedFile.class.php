@@ -35,6 +35,7 @@ class sfUploadedFile implements ArrayAccess
     {
       $self->error = $file['error'];
     }
+
     return $self;
   }
 
@@ -166,6 +167,7 @@ class sfUploadedFile implements ArrayAccess
     {
       $this->generatedName = $this->generateFilename();
     }
+
     return $this->generatedName;
   }
 
@@ -356,6 +358,7 @@ class sfUploadedFile implements ArrayAccess
     {
       return true;
     }
+
     return false;
   }
 

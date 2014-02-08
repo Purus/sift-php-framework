@@ -97,6 +97,7 @@ class sfCore
     {
       throw new RuntimeException('Sift it not bootstrapped to an existing project');
     }
+
     return self::$project;
   }
 
@@ -129,6 +130,7 @@ class sfCore
   public static function bindProject(sfProject $project)
   {
     self::$project = $project;
+
     return true;
   }
 

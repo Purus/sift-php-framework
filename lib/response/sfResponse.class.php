@@ -63,6 +63,7 @@ abstract class sfResponse extends sfConfigurable implements sfIResponse {
   public function setContent($content)
   {
     $this->content = $content;
+
     return $this;
   }
 

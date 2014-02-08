@@ -41,6 +41,7 @@ class sfCalendarRendererICal extends sfCalendarRenderer {
   public function setName($name)
   {
     $this->name = $name;
+
     return $this;
   }
 
@@ -158,6 +159,7 @@ class sfCalendarRendererICal extends sfCalendarRenderer {
         $value = str_replace(",", "\,", $value);
       break;
     }
+
     return $value;
   }
 

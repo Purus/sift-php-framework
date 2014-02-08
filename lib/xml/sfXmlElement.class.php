@@ -20,6 +20,7 @@ class sfXmlElement extends SimpleXMLElement {
     $dom = new DOMDocument('1.0', 'UTF-8');
     $element = $dom->importNode($ele, true);
     $dom->appendChild($element);
+
     return $dom->saveHTML();
   }
 
@@ -61,6 +62,7 @@ class sfXmlElement extends SimpleXMLElement {
         $array[$r->getName()][] = self::elementToArray($r);
       }
     }
+
     return $array;
   }
 

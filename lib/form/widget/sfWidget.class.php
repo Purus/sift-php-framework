@@ -295,6 +295,7 @@ abstract class sfWidget {
         unset($this->attributes[$i]);
       }
     }
+
     return $this;
   }
 
@@ -313,6 +314,7 @@ abstract class sfWidget {
         $attributes[$i] = $this->attributes[$i];
       }
     }
+
     return $attributes;
   }
 

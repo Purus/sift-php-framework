@@ -88,6 +88,7 @@ function has_component_slot($name)
 {
   $actionStackEntry = sfContext::getInstance()->getController()->getActionStack()->getLastEntry();
   $viewInstance = $actionStackEntry->getViewInstance();
+
   return $viewInstance->hasComponentSlot($name);
 }
 
@@ -173,6 +174,7 @@ function get_component($moduleName, $componentName, $vars = array(), $viewName =
   {
     // render
     $view->getAttributeHolder()->add($allVars);
+
     return $view->render();
   }
 }
@@ -260,6 +262,7 @@ function get_partial($templateName, $variables = array(), $viewName = null)
 
   $view->initialize($moduleName, $actionName, '');
   $view->setPartialVars(true === sfConfig::get('sf_escaping_strategy') ? sfOutputEscaper::unescape($variables) : $variables);
+
   return $view->render();
 }
 
@@ -371,6 +374,7 @@ function get_slot($name, $default = '')
   {
     sfLogger::getInstance()->info(sprintf('{PartialHelper} Get slot "%s"', $name));
   }
+
   return sfContext::getInstance()->getResponse()->getSlot($name, $default);
 }
 

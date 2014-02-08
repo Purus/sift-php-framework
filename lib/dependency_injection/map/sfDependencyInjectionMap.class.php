@@ -47,6 +47,7 @@ class sfDependencyInjectionMap extends sfCollection {
         $return[] = $item;
       }
     }
+
     return $return;
   }
 

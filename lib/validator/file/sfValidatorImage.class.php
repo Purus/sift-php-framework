@@ -217,6 +217,7 @@ class sfValidatorImage extends sfValidatorFile {
         throw new sfException(sprintf('Unable to create "$dir" check permissions of parent directory or create this directory manually and make sure it is writable by the web server', $dir));
       }
     }
+
     return $dir;
   }
 
@@ -235,6 +236,7 @@ class sfValidatorImage extends sfValidatorFile {
         throw new sfException(sprintf('Unable to create "$dir" check permissions of parent directory or create this directory manually and make sure it is writable by the web server', $dir));
       }
     }
+
     return $dir;
   }
 
@@ -247,6 +249,7 @@ class sfValidatorImage extends sfValidatorFile {
   {
     $dir = '/cache/preview';
     $relativeRoot = sfContext::getInstance()->getRequest()->getRelativeUrlRoot();
+
     return $relativeRoot . $dir;
   }
 
@@ -311,6 +314,7 @@ class sfValidatorImage extends sfValidatorFile {
     $messages = parent::getActiveMessages();
     $messages[] = $this->getMessage('too_small');
     $messages[] = $this->getMessage('too_large');
+
     return $messages;
   }
 

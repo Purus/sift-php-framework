@@ -112,6 +112,7 @@ class sfMoneyCurrencyConverter implements sfIMoneyCurrencyValue {
   public static function convert(sfIMoneyCurrencyValue $money, $conversionRate, $sourceCurrency, $targetCurrency)
   {
     $c = new sfMoneyCurrencyConverter($conversionRate, $sourceCurrency, $targetCurrency);
+
     return $c->setMoney($money)->getAmount();
   }
 
@@ -135,6 +136,7 @@ class sfMoneyCurrencyConverter implements sfIMoneyCurrencyValue {
     }
 
     $this->money = $money;
+
     return $this;
   }
 

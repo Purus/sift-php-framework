@@ -95,6 +95,7 @@ class sfSearchQueryExpression {
   {
     $expression = new self(null, $this, $mode);
     $this->subExpressions[] = $expression;
+
     return $expression;
   }
 
@@ -226,6 +227,7 @@ class sfSearchQueryExpression {
   public function __toString()
   {
     $builder = new sfSearchQueryBuilder($this);
+
     return $builder->getResult();
   }
 

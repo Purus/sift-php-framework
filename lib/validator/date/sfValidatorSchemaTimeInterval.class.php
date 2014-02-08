@@ -194,6 +194,7 @@ class sfValidatorSchemaTimeInterval extends sfValidatorSchema {
     {
       $messages[] = $this->getMessage('future_date');
     }
+
     return $messages;
   }
 

@@ -77,6 +77,7 @@ class sfDebugDumper {
     {
       self::$sapi = PHP_SAPI;
     }
+
     return self::$sapi;
   }
 
@@ -405,6 +406,7 @@ class sfDebugDumper {
         }
       }
       unset($var[$marker]);
+
       return $out . '</div>';
     }
     else
@@ -484,6 +486,7 @@ class sfDebugDumper {
             . self::dumpVar($v, $options, $level + 1);
       }
       array_pop($list);
+
       return $out . '</div>';
     }
     else
@@ -512,8 +515,10 @@ class sfDebugDumper {
         $out .= '<span class="debug-dump-indent">   ' . str_repeat('|  ', $level) . '</span>'
             . '<span class="debug-dump-key">' . htmlspecialchars($k) . "</span> => " . self::dumpVar($v, $options, $level + 1);
       }
+
       return $out . '</div>';
     }
+
     return $out . self::EOL;
   }
 
@@ -536,6 +541,7 @@ class sfDebugDumper {
     {
       $s = strtr($s, $table);
     }
+
     return '"' . htmlSpecialChars($s, ENT_NOQUOTES) . '"';
   }
 
@@ -561,6 +567,7 @@ class sfDebugDumper {
       {
         $lines = file($item['file']);
         $line = $lines[$item['line'] - 1];
+
         return array(
           $item['file'],
           $item['line'],
@@ -590,6 +597,7 @@ class sfDebugDumper {
   private static function render(/*$template, $vars = array()*/)
   {
     $args = func_get_args();
+
     return call_user_func_array(array(
       'sfLimitedScope', 'render'
     ), $args);

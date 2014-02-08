@@ -57,6 +57,7 @@ class sfI18nPlainTextExtractor extends sfConfigurable implements sfII18nExtracto
       }
       $result[] = $line;
     }
+
     return $result;
   }
 

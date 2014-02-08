@@ -251,6 +251,7 @@ class sfLoader {
         return $dir;
       }
     }
+
     return null;
   }
 
@@ -265,6 +266,7 @@ class sfLoader {
   public static function getTemplatePath($moduleName, $templateFile)
   {
     $dir = self::getTemplateDir($moduleName, $templateFile);
+
     return $dir ? $dir . DS . $templateFile : null;
   }
 
@@ -778,6 +780,7 @@ class sfLoader {
       // application
       $dirs[] = $appModuleDir . DS . $suffix;
     }
+
     return $dirs;
   }
 
@@ -811,6 +814,7 @@ class sfLoader {
         $dirs[] = $dir;
       }
     }
+
     return $dirs;
   }
 

@@ -69,6 +69,7 @@ function get_current_uri($as_safe_url = false, $with_route_name = true)
   {
     $uri = sfSafeUrl::encode($uri);
   }
+
   return $uri;
 }
 
@@ -82,6 +83,7 @@ function link_to_print($name = 'print')
 {
   $js = sprintf("document.write('<div class=\"print\"><a onclick=\"javascript:window.print();\" title=\"%s\">%s<'+'/a><'+'/div>');", __($name), __($name));
   $content = "\n//<![CDATA[\n" . $js . "\n//]]>\n";
+
   return '<script type="text/javascript">' . $content . '</script>';
 }
 
@@ -217,6 +219,7 @@ function link_to_if($condition, $name = '', $internal_uri = '', $options = array
   if($condition)
   {
     unset($html_options['tag']);
+
     return link_to($name, $internal_uri, $html_options);
   }
   else
@@ -303,6 +306,7 @@ function button_to($name, $internal_uri ='', $options = array())
     $html_options['type'] = 'submit';
     unset($html_options['post']);
     $html_options = _convert_options_to_javascript($html_options);
+
     return form_tag($internal_uri, array('method' => 'post', 'class' => 'button_to')) . content_tag('div', tag('button', $html_options)) . '</form>';
   }
 
@@ -449,6 +453,7 @@ function _confirm_javascript_function($confirm)
   $function = 'confirm';
   $function = sfCore::getEventDispatcher()->filter(new sfEvent('core.javascript.confirm_function'),
           $function)->getReturnValue();
+
   return sprintf("%s('" . escape_javascript($confirm) . "')", $function);
 }
 

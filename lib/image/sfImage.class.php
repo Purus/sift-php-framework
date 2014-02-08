@@ -121,6 +121,7 @@ class sfImage implements sfIDataUriConvertable {
 
       return true;
     }
+
     return false;
   }
 
@@ -367,6 +368,7 @@ class sfImage implements sfIDataUriConvertable {
     {
       // set to prevent multiple tries
       $this->orientationFixed = true;
+
       return;
     }
 
@@ -533,6 +535,7 @@ class sfImage implements sfIDataUriConvertable {
   public function setQuality($quality)
   {
     $this->getAdapter()->setQuality($quality);
+
     return $this;
   }
 
@@ -742,6 +745,7 @@ class sfImage implements sfIDataUriConvertable {
         $isGrayscale = true;
       }
     }
+
     return $isGrayscale;
   }
 
@@ -755,6 +759,7 @@ class sfImage implements sfIDataUriConvertable {
   {
     $copy = $this->copy()->resize(1, 1);
     list($red, $green, $blue) = $copy->getAdapter()->getRGBFromPixel(0, 0);
+
     return new sfColor(array($red, $green, $blue));
   }
 
@@ -764,6 +769,7 @@ class sfImage implements sfIDataUriConvertable {
   public function toDataUri($raw = true)
   {
     $dataUri = new sfDataUri($this->getMIMEType(), $this->__toString(), sfDataUri::ENCODING_BASE64);
+
     return $raw ? $dataUri->toString() : $dataUri;
   }
 

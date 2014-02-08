@@ -62,6 +62,7 @@ class sfValidatorHtml extends sfValidatorString
     {
       return false;
     }
+
     return $option;
   }
 }

@@ -328,6 +328,7 @@ class sfCliCommandManager
       if (!$this->optionSet->hasOption($name))
       {
         $this->errors[] = sprintf('The "--%s" option does not exist.', $name);
+
         return;
       }
 
@@ -346,6 +347,7 @@ class sfCliCommandManager
       if (!$this->optionSet->hasOption($name))
       {
         $this->errors[] = sprintf('The "--%s" option does not exist.', $name);
+
         return;
       }
 

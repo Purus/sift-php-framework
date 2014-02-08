@@ -62,6 +62,7 @@ class sfValidatorSlug extends sfValidatorString {
   {
     $rules = parent::getJavascriptValidationRules();
     $rules[sfFormJavascriptValidation::REGEX_PATTERN] = $this->getOption('pattern');
+
     return $rules;
   }
 

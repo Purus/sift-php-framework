@@ -347,6 +347,7 @@ class sfContext {
     {
       throw new InvalidArgumentException(sprintf('The data retriever class "%s" does not exist'), $retrievingClass);
     }
+
     return call_user_func(array($retrievingClass, 'retrieveObjects'), $class, $peerMethod, $options);
   }
 

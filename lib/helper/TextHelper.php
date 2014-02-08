@@ -138,6 +138,7 @@ function format_zip_code($zip_code)
   $zip_code = preg_replace("~[^0-9]~", '', $zip_code);
   $first_part = substr($zip_code, 0, 3);
   $second_part = substr($zip_code, 3, 5);
+
   return sprintf('%s %s', $first_part, $second_part);
 }
 
@@ -150,6 +151,7 @@ function format_zip_code($zip_code)
 function format_address($address)
 {
   $address = preg_replace('/,/', ',<br />', $address);
+
   return $address;
 }
 
@@ -183,6 +185,7 @@ function toggle($one, $two, $section = 'a')
   }
 
   $toggle[$section] = ($toggle[$section] == $one) ? $two : $one;
+
   return $toggle[$section];
 }
 

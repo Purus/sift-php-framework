@@ -714,6 +714,7 @@ var parent = element.parents(\'.form-field-wrapper:first\');
 if(!parent.length)
 {
   error.insertAfter(element);
+
   return;
 }
 error.appendTo(parent);
@@ -752,6 +753,7 @@ error.css({
   public static function getSubmitHandlerExpression()
   {
     $expression = '';
+
     return $expression;
   }
 
@@ -769,6 +771,7 @@ error.css({
     {
       $replacement[sprintf('%%%s%%', $placeholder)] = $value;
     }
+
     return strtr($string, $replacement);
   }
 

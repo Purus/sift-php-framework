@@ -402,6 +402,7 @@ class sfCulture {
         $array1[$key] = $value;
       }
     }
+
     return $array1;
   }
 
@@ -653,6 +654,7 @@ class sfCulture {
       case sfCulture::ALL:
         $all = array_merge($neutral, $specific);
         sort($all);
+
         return $all;
         break;
       case sfCulture::NEUTRAL:

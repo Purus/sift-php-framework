@@ -101,6 +101,7 @@ class sfFilterChain
         return true;
       }
     }
+
     return false;
   }
 

@@ -122,18 +122,21 @@ class sfFormJavascriptValidationFieldMessages implements ArrayAccess, Iterator {
   public function current()
   {
     $var = current($this->messages);
+
     return $var;
   }
 
   public function key()
   {
     $var = key($this->messages);
+
     return $var;
   }
 
   public function next()
   {
     $var = next($this->messages);
+
     return $var;
   }
 
@@ -141,6 +144,7 @@ class sfFormJavascriptValidationFieldMessages implements ArrayAccess, Iterator {
   {
     $key = key($this->messages);
     $var = ($key !== null && $key !== false);
+
     return $var;
   }
 

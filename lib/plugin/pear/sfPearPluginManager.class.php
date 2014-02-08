@@ -135,6 +135,7 @@ class sfPearPluginManager extends sfConfigurable {
         return true;
       }
     }
+
     return false;
   }
 
@@ -159,6 +160,7 @@ class sfPearPluginManager extends sfConfigurable {
   public function installPlugin($plugin, $options = array(), $force = false)
   {
     $this->installing = array();
+
     return $this->doInstallPlugin($plugin, $options, $force);
   }
 
@@ -262,6 +264,7 @@ class sfPearPluginManager extends sfConfigurable {
       if(version_compare($existing, $version) === 0)
       {
         $this->logger->log('Plugin is already installed');
+
         return true;
       }
 
@@ -385,6 +388,7 @@ class sfPearPluginManager extends sfConfigurable {
     if(null === $existing)
     {
       $this->logger->log(sprintf('Plugin "%s" is not installed', $plugin));
+
       return false;
     }
 

@@ -57,6 +57,7 @@ class sfI18nGettextMo extends sfI18nGettext {
     {
       return fread($this->_handle, $bytes);
     }
+
     return null;
   }
 
@@ -70,6 +71,7 @@ class sfI18nGettextMo extends sfI18nGettext {
   protected function _readInt($bigendian = false)
   {
     $unpacked = unpack($bigendian ? 'N' : 'V', $this->_read(4));
+
     return array_shift($unpacked);
   }
 
@@ -120,6 +122,7 @@ class sfI18nGettextMo extends sfI18nGettext {
   protected function _readStr($params)
   {
     fseek($this->_handle, $params['offset']);
+
     return $this->_read($params['length']);
   }
 
@@ -146,6 +149,7 @@ class sfI18nGettextMo extends sfI18nGettext {
     if(!@flock($this->_handle, LOCK_SH))
     {
       @fclose($this->_handle);
+
       return false;
     }
 
@@ -248,6 +252,7 @@ class sfI18nGettextMo extends sfI18nGettext {
     if(!@flock($this->_handle, LOCK_EX))
     {
       @fclose($this->_handle);
+
       return false;
     }
 
@@ -331,6 +336,7 @@ class sfI18nGettextMo extends sfI18nGettext {
     // done
     @flock($this->_handle, LOCK_UN);
     @fclose($this->_handle);
+
     return true;
   }
 

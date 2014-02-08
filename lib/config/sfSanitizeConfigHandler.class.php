@@ -48,6 +48,7 @@ class sfSanitizeConfigHandler extends sfSimpleYamlConfigHandler {
               "// date: %s\nreturn %s;\n";
 
     $retval = sprintf($retval, __CLASS__, date('Y/m/d H:i:s'), var_export($myConfig, true));
+
     return $retval;
   }
 

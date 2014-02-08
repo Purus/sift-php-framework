@@ -254,6 +254,7 @@ abstract class sfCliTask {
       list($name, $value) = explode('=', $part);
       $result[trim($name)] = trim($value);
     }
+
     return $result;
   }
 
@@ -744,6 +745,7 @@ abstract class sfCliTask {
     $z = new sfZipArchive();
     $z->create($outZipPath);
     $z->addDir($sourcePath, $dirName);
+
     return $z->close();
   }
 
@@ -783,6 +785,7 @@ abstract class sfCliTask {
       }
     }
     $options['location'] = $location;
+
     return sfDebugDumper::dump($variable, array_merge(array(
       'depth' => 2
     ), $options), $echo);

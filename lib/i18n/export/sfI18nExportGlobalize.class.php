@@ -200,6 +200,7 @@ class sfCultureExportGlobalize extends sfCultureExport {
         )
       )
     );
+
     return $data;
   }
 

@@ -207,6 +207,7 @@ class sfMath {
 
     // remove decimal point if an integer ie. 140. becomes 140
     $clean = rtrim($clean, '.');
+
     return $clean[0] == '.' ? '0'. $clean : $clean;
   }
 
@@ -219,6 +220,7 @@ class sfMath {
   public static function isEven($value)
   {
     $value = self::clean($value);
+
     return self::modulus(self::abs($value), 2) == 0;
   }
 
@@ -231,6 +233,7 @@ class sfMath {
   public static function isOdd($value)
   {
     $value = self::clean($value);
+
     return self::modulus(self::abs($value), 2) == 1;
   }
 

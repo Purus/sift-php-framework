@@ -48,6 +48,7 @@ class sfWebDebugPanelTimer extends sfWebDebugPanel {
     {
       $totalTime += $timer->getElapsedTime() * 1000;
     }
+
     return $totalTime;
   }
 

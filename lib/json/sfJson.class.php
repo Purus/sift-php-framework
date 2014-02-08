@@ -161,6 +161,7 @@ class sfJson {
         $value->$k = self::_recursiveJsonExprFinder($value->$k, $javascriptExpressions, $k);
       }
     }
+
     return $value;
   }
 
@@ -179,6 +180,7 @@ class sfJson {
     {
       throw new sfException(sprintf('JSON error occured: %s', $error));
     }
+
     return $result;
   }
 

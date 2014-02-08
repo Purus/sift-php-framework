@@ -381,6 +381,7 @@ class sfValidatorSchema extends sfValidatorBase implements ArrayAccess, Iterator
       case 'k':
         $value *= 1024;
     }
+
     return $value;
   }
 
@@ -394,6 +395,7 @@ class sfValidatorSchema extends sfValidatorBase implements ArrayAccess, Iterator
     {
       $messages[] = $this->getMessage('allow_extra_fields');
     }
+
     return $messages;
   }
 

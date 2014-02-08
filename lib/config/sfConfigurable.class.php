@@ -252,6 +252,7 @@ abstract class sfConfigurable implements sfIConfigurable {
     {
       sfArray::set($this->options, $name, sfToolkit::getValue($value));
     }
+
     return $this;
   }
 
@@ -319,6 +320,7 @@ abstract class sfConfigurable implements sfIConfigurable {
     {
       $this->setOption($o, $v);
     }
+
     return $this;
   }
 

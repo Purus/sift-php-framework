@@ -107,6 +107,7 @@ class sfCollectionSorter  {
     }
 
     $augmenter = ($this->direction == self::DIRECTION_DESC) ? -1 : 1;
+
     return $augmenter * $this->strategy->compareTo($a, $b);
   }
 
@@ -129,6 +130,7 @@ class sfCollectionSorter  {
   public function setDirection($dir)
   {
     $this->direction = $dir;
+
     return $this;
   }
 

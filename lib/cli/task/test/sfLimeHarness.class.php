@@ -29,6 +29,7 @@ class sfLimeHarness extends lime_harness
   protected function get_relative_file($file)
   {
     $file = strtr($file, $this->plugins);
+
     return str_replace(DIRECTORY_SEPARATOR, '/', str_replace(array(realpath($this->base_dir).DIRECTORY_SEPARATOR, $this->extension), '', $file));
   }
 }

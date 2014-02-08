@@ -53,6 +53,7 @@ class sfSyntaxHighlighterGeneric extends sfSyntaxHighlighter {
   {
     $this->patterns = array();
     $this->strings = array();
+
     return parent::reset();
   }
 
@@ -76,6 +77,7 @@ class sfSyntaxHighlighterGeneric extends sfSyntaxHighlighter {
   public function setCode($code, $charset = 'UTF-8')
   {
     $this->reset();
+
     return parent::setCode($code, $charset);
   }
 
@@ -92,10 +94,12 @@ class sfSyntaxHighlighterGeneric extends sfSyntaxHighlighter {
     if(isset($match[0]) && ($match[0] == '/' || $match[0] == '#'))
     {
       $this->strings[$key] = '<span class="' . $this->getCssPrefix() . 'comment">' . $match . '</span>';
+
       return $key;
     }
 
     $this->strings[$key] = '<span class="' . $this->getCssPrefix() . 'string">' . $match . '</span>';
+
     return $key;
   }
 

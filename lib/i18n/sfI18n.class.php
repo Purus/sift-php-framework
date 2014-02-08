@@ -372,8 +372,10 @@ class sfI18n extends sfConfigurable {
     if($to != 'UTF-8')
     {
       $s = iconv('UTF-8', $to, $string);
+
       return $s !== false ? $s : $string;
     }
+
     return $string;
   }
 
@@ -435,6 +437,7 @@ class sfI18n extends sfConfigurable {
   public function resetCache()
   {
     $this->callCache = array();
+
     return $this;
   }
 
@@ -505,6 +508,7 @@ class sfI18n extends sfConfigurable {
         $this->getOption('untranslated_suffix'))
       );
     }
+
     return $messageFormat;
   }
 
@@ -523,6 +527,7 @@ class sfI18n extends sfConfigurable {
     );
 
     $this->sources = array_reverse($this->sources, true);
+
     return $this;
   }
 
@@ -563,6 +568,7 @@ class sfI18n extends sfConfigurable {
         return true;
       }
     }
+
     return false;
   }
 
@@ -576,6 +582,7 @@ class sfI18n extends sfConfigurable {
   public function getCountry($iso, $culture = null)
   {
     $countries = $this->getCultureInstance($culture)->getCountries();
+
     return (array_key_exists($iso, $countries)) ? $countries[$iso] : '';
   }
 
@@ -612,6 +619,7 @@ class sfI18n extends sfConfigurable {
   {
     list($d, $m, $y) = self::getDate($date, $culture);
     list($hour, $minute) = self::getTime($date, $culture);
+
     return mktime($hour, $minute, 0, $m, $d, $y);
   }
 

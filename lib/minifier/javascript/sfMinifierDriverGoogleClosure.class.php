@@ -54,6 +54,7 @@ class sfMinifierDriverGoogleClosure extends sfMinifier {
     {
       $this->replaceFile($file, $result);
     }
+
     return $result;
   }
 
@@ -70,6 +71,7 @@ class sfMinifierDriverGoogleClosure extends sfMinifier {
     file_put_contents($tmp, $string);
     $result = $this->doProcessFile($tmp);
     unlink($tmp);
+
     return $result;
   }
 

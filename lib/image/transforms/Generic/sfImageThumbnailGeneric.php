@@ -197,7 +197,6 @@ class sfImageThumbnailGeneric extends sfImageTransformAbstract
     {
       case 'deflate':
       case 'inflate':
-
         return $image->resize($this->getWidth(), $this->getHeight());
 
       case 'left':

@@ -60,6 +60,7 @@ class sfValidatorI18nNumber extends sfValidatorNumber
         }
       }
     }
+
     return parent::doClean($value);
   }
 

@@ -42,6 +42,7 @@ class sfInternalRoute {
     {
       self::$instances[$route] = self::create($route);
     }
+
     return self::$instances[$route];
   }
 
@@ -104,6 +105,7 @@ class sfInternalRoute {
   public function setParameters(array $params)
   {
     $this->params = $params;
+
     return $this;
   }
 
@@ -126,6 +128,7 @@ class sfInternalRoute {
         unset($this->params[$key]);
       }
     }
+
     return $this;
   }
 
@@ -139,6 +142,7 @@ class sfInternalRoute {
   public function add($name, $value)
   {
     $this->params[$name] = $value;
+
     return;
   }
 
@@ -149,6 +153,7 @@ class sfInternalRoute {
     {
       $this->add($name, $value);
     }
+
     return $this;
   }
 
@@ -171,6 +176,7 @@ class sfInternalRoute {
     }
 
     $this->params[$name] = $newValue;
+
     return $this;
   }
 
@@ -186,6 +192,7 @@ class sfInternalRoute {
     {
       $this->modify($name, $newValue);
     }
+
     return $this;
   }
 
@@ -236,6 +243,7 @@ class sfInternalRoute {
     $pagerParameterName = $pagerParameterName ? $pagerParameterName :
                             $this->getPagerParameterName();
     $this->params[$pagerParameterName] = $value;
+
     return $this;
   }
 
@@ -288,6 +296,7 @@ class sfInternalRoute {
     {
       $pagerParam = call_user_func($pagerParamCallback);
     }
+
     return $pagerParam;
   }
 

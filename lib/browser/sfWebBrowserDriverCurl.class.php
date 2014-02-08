@@ -264,6 +264,7 @@ class sfWebBrowserDriverCurl implements sfIWebBrowserDriver {
   protected function readCurlHeader($curl, $headers)
   {
     $this->headers[] = $headers;
+
     return strlen($headers);
   }
 

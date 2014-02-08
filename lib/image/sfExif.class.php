@@ -64,6 +64,7 @@ class sfExif {
     {
       throw new InvalidArgumentException(sprintf('Exif adapter "%s" not found.', $adapter));
     }
+
     return new $adapterClass($options);
   }
 
@@ -205,6 +206,7 @@ class sfExif {
       {
         $return[$key] = $data['description'];
       }
+
       return $return;
     }
 
@@ -240,6 +242,7 @@ class sfExif {
         $params[$key] = $value->__toString();
       }
     }
+
     return strtr($message, $params);
   }
 
@@ -264,6 +267,7 @@ class sfExif {
         {
           return self::__('%duration% sec', array('%duration%' => sprintf("%4f", $n / $d)));
         }
+
         return self::__('%n% / %d% sec', array('%n%' => sprintf('%s', $n), '%d%' => sprintf('%s', $d)));
       }
     }
@@ -362,6 +366,7 @@ class sfExif {
         if(strpos($data, '/') !== false)
         {
           list($n, $d) = explode('/', $data, 2);
+
           return self::__('%resulution% dots per unit', array('%resolution%' => sprintf('%d', $n)));
         }
 
@@ -412,6 +417,7 @@ class sfExif {
           }
           $data = $n / $d;
         }
+
         return self::_formatExposure($data);
 
       case 'ShutterSpeedValue':
@@ -429,6 +435,7 @@ class sfExif {
         {
           $data = 1 / $data;
         }
+
         return self::formatExposure($data);
 
       case 'ApertureValue':
@@ -446,6 +453,7 @@ class sfExif {
           // Precision is 1 digit.
           $data = round($data, 1);
         }
+
         return 'f/' . $data;
 
       case 'FocalLength':
@@ -471,6 +479,7 @@ class sfExif {
             return 'f/' . round($n / $d, 1);
           }
         }
+
         return 'f/' . $data;
 
       case 'ExposureBiasValue':
@@ -482,6 +491,7 @@ class sfExif {
             return '0 EV';
           }
         }
+
         return $data . ' EV';
 
       case 'MeteringMode':
@@ -572,6 +582,7 @@ class sfExif {
         }
         $s = array('B', 'kB', 'MB', 'GB');
         $e = floor(log($data, 1024));
+
         return round($data / pow(1024, $e), 2) . ' ' . $s[$e];
 
       case 'SensingMethod':

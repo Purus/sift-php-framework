@@ -354,6 +354,7 @@ class sfI18nDateTimeFormat {
     {
       return $this->data['monthNames']['stand-alone']['wide'];
     }
+
     return $this->data['monthNames']['format']['wide'];
   }
 

@@ -31,6 +31,7 @@ class sfDependencyInjectionMaps implements Countable, ArrayAccess {
   public function set($name, sfDependencyInjectionMap $map)
   {
     $this->maps[$name] = $map;
+
     return $this;
   }
 

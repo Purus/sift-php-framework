@@ -34,6 +34,7 @@ class sfBasicSecurityFilter extends sfSecurityFilter
     if(!$actionInstance->isSecure())
     {
       $filterChain->execute();
+
       return;
     }
 
@@ -130,6 +131,7 @@ class sfBasicSecurityFilter extends sfSecurityFilter
     }
 
     $response->send();
+
     return;
   }
 
@@ -144,6 +146,7 @@ class sfBasicSecurityFilter extends sfSecurityFilter
     $response->setStatusCode(403);
     $response->setHeaderOnly(true);
     $response->send();
+
     return;
   }
 
@@ -163,6 +166,7 @@ class sfBasicSecurityFilter extends sfSecurityFilter
     {
       return sprintf('%s/%s', sfConfig::get('sf_login_module'), sfConfig::get('sf_login_action'));
     }
+
     return false;
   }
 

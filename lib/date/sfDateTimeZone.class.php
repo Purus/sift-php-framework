@@ -32,6 +32,7 @@ class sfDateTimeZone extends DateTimeZone {
     {
       return false;
     }
+
     return true;
   }
 
@@ -80,6 +81,7 @@ class sfDateTimeZone extends DateTimeZone {
         }
       }
     }
+
     return $zone;
   }
 

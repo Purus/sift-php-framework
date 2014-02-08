@@ -321,6 +321,7 @@ class sfWebDebug extends sfConfigurable
         $js[] = $panelJs;
       }
     }
+
     return  join("\n", $js);
   }
 
@@ -399,6 +400,7 @@ class sfWebDebug extends sfConfigurable
   public function render(/*$template, array $variables = null*/)
   {
     $args = func_get_args();
+
     return call_user_func_array(array('sfLimitedScope', 'render'), $args);
   }
 

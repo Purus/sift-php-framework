@@ -78,6 +78,7 @@ class sfEventDispatcher implements sfIService {
         if($listener === $callable)
         {
           unset($this->listeners[$name][$priority][$index]);
+
           return true;
         }
       }
@@ -112,6 +113,7 @@ class sfEventDispatcher implements sfIService {
         call_user_func($listener, $event);
       }
     }
+
     return $event;
   }
 
@@ -141,6 +143,7 @@ class sfEventDispatcher implements sfIService {
         }
       }
     }
+
     return $event;
   }
 
@@ -168,6 +171,7 @@ class sfEventDispatcher implements sfIService {
       }
     }
     $event->setReturnValue($value);
+
     return $event;
   }
 
@@ -204,6 +208,7 @@ class sfEventDispatcher implements sfIService {
     $listeners = $this->listeners[$name];
     // sort by priority
     krsort($listeners);
+
     return $listeners;
   }
 
@@ -215,6 +220,7 @@ class sfEventDispatcher implements sfIService {
   public function clear()
   {
     $this->listeners = array();
+
     return $this;
   }
 

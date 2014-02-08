@@ -190,6 +190,7 @@ class sfCommonFilter extends sfFilter
       }
       $content = str_replace($script, '', $content);
     }
+
     return $scripts;
   }
 

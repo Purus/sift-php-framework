@@ -218,6 +218,7 @@ class sfTypography {
   public function setOptions(array $options)
   {
     $this->options = array_merge($this->options, $options);
+
     return $this;
   }
 
@@ -419,6 +420,7 @@ class sfTypography {
 
       $string = preg_replace(array_keys($table), $table, $string);
     }
+
     return trim($string);
   }
 
@@ -792,6 +794,7 @@ class sfTypography {
         }
       }
     }
+
     return $positions;
   }
 
@@ -823,6 +826,7 @@ class sfTypography {
     {
       $string = $this->getCustomizationMarker() . $string;
     }
+
     return $string;
   }
 
@@ -846,6 +850,7 @@ class sfTypography {
     {
       $string = $this->getCustomizationMarker() . $string;
     }
+
     return $string;
   }
 
@@ -876,8 +881,10 @@ class sfTypography {
       {
         $parts[$i] = $this->doHyphenateWord($parts[$i]);
       }
+
       return implode($specialString, $parts);
     }
+
     return false;
   }
 
@@ -896,6 +903,7 @@ class sfTypography {
   public function setSpecialStrings($specialStrings = array())
   {
     $this->specialStrings = (array) $specialStrings;
+
     return $this;
   }
 
@@ -909,6 +917,7 @@ class sfTypography {
   public function setHyphen($char)
   {
     $this->options['hyphen'] = (string) $char;
+
     return $this;
   }
 
@@ -933,6 +942,7 @@ class sfTypography {
   public function setHyphenateLeftMin($count)
   {
     $this->options['hyphenate_left_min'] = (int) $count;
+
     return $this;
   }
 
@@ -947,6 +957,7 @@ class sfTypography {
   public function setHyphenateRightMin($count)
   {
     $this->options['hyphenate_right_min'] = (int) $count;
+
     return $this;
   }
 
@@ -961,6 +972,7 @@ class sfTypography {
   public function setHyphenateWordMin($count)
   {
     $this->options['hyphenate_word_min'] = (int) $count;
+
     return $this;
   }
 
@@ -974,6 +986,7 @@ class sfTypography {
   public function setSpecialChars($chars)
   {
     $this->specialChars = $chars;
+
     return $this;
   }
 
@@ -994,6 +1007,7 @@ class sfTypography {
                   strtoupper($quality)));
     }
     $this->options['hyphenate_quality'] = (int) $quality;
+
     return $this;
   }
 
@@ -1011,6 +1025,7 @@ class sfTypography {
   public function setCustomHyphen($customHyphen = null)
   {
     $this->options['custom_hyphen'] = $customHyphen;
+
     return $this;
   }
 
@@ -1064,6 +1079,7 @@ class sfTypography {
     {
       $this->options['mark_customized'] = (bool) $mark;
     }
+
     return (bool) $this->options['mark_customized'];
   }
 
@@ -1076,6 +1092,7 @@ class sfTypography {
   public function setCustomizationMarker($marker)
   {
     $this->options['customized_marker'] = (string) $marker;
+
     return $this;
   }
 
@@ -1088,6 +1105,7 @@ class sfTypography {
   public function setSkipTags(array $tags)
   {
     $this->skipTags = $tags;
+
     return $this;
   }
 
@@ -1104,6 +1122,7 @@ class sfTypography {
       $array[] = '<' . $t . '>';
       $array[] = '<' . $t;
     }
+
     return $array;
   }
 
@@ -1118,6 +1137,7 @@ class sfTypography {
     {
       $array[] = '</' . $t . '>';
     }
+
     return $array;
   }
 
@@ -1199,7 +1219,6 @@ class sfTypography {
       );
 
     // $table['#\.{3}#'] = '&hellip;';
-
     return preg_replace(array_keys($table), $table, $string);
   }
 
@@ -1341,6 +1360,7 @@ class sfTypography {
           $this->pushAndPopElement($array[$i], $ignoreMacroStack, $skipMacrosExpr, '[', ']');
         }
       }
+
       return join('', $array);
     }
     else

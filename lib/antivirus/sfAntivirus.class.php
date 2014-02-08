@@ -42,6 +42,7 @@ abstract class sfAntivirus extends sfConfigurable implements sfIAntivirus {
       {
         throw new LogicException(sprintf('Driver "%s" does not implement sfIAntivirus interface.', $driver));
       }
+
       return $driverObj;
     }
 

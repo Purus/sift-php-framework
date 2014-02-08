@@ -211,6 +211,7 @@ class sfGoogleAnalytics {
     }
 
     $md5String = md5($message);
+
     return "0x" . substr($md5String, 0, 16);
   }
 

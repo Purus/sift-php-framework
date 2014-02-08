@@ -375,6 +375,7 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess {
     {
       $this->setHelp($name, $help);
     }
+
     return $this;
   }
 
@@ -393,6 +394,7 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess {
         $helps[$name] = $help;
       }
     }
+
     return $helps;
   }
 
@@ -420,6 +422,7 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess {
       // set the help for this widget schema
       parent::setHelp($name);
     }
+
     return $this;
   }
 
@@ -439,6 +442,7 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess {
       {
         throw new InvalidArgumentException(sprintf('Unable to get the help on an unexistant widget ("%s").', $name));
       }
+
       return $this->fields[$name]->getHelp();
     }
     else

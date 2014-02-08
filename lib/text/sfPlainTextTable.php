@@ -843,6 +843,7 @@ class sfPlainTextTable {
         return $ret;
       }
     }
+
     return substr($string, $start, $length);
   }
 

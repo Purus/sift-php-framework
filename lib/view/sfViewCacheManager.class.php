@@ -117,6 +117,7 @@ class sfViewCacheManager extends sfConfigurable implements sfIService
       {
         throw new sfException(sprintf('"%s" cannot be called as a function.', var_export($callable, true)));
       }
+
       return call_user_func($callable, $internalUri, $hostName, $vary, $contextualPrefix, $this);
     }
 
@@ -223,6 +224,7 @@ class sfViewCacheManager extends sfConfigurable implements sfIService
       }
       $vary = implode($varys, '-');
     }
+
     return $vary;
   }
 
@@ -273,6 +275,7 @@ class sfViewCacheManager extends sfConfigurable implements sfIService
     {
       $cacheKey .= sprintf('/%s/%s', $key, $value);
     }
+
     return $cacheKey;
   }
 
@@ -469,6 +472,7 @@ class sfViewCacheManager extends sfConfigurable implements sfIService
 
     $result = $this->getCacheConfig($internalUri, 'lifetime');
     $this->cacheableChecks[$internalUri] = $result;
+
     return $result > 0;
   }
 
@@ -501,6 +505,7 @@ class sfViewCacheManager extends sfConfigurable implements sfIService
     {
       return $this->cacheConfig[$moduleName]['DEFAULT']['lifetime'] > 0;
     }
+
     return false;
   }
 
@@ -561,8 +566,10 @@ class sfViewCacheManager extends sfConfigurable implements sfIService
       {
         sfLogger::getInstance()->info('{sfViewCacheManager} Discard cache (sf_ignore_paremeter is present)');
       }
+
       return true;
     }
+
     return false;
   }
 
@@ -711,6 +718,7 @@ class sfViewCacheManager extends sfConfigurable implements sfIService
     {
       ob_start();
       ob_implicit_flush(0);
+
       return;
     }
 
@@ -1116,6 +1124,7 @@ class sfViewCacheManager extends sfConfigurable implements sfIService
       $cacheKey .= false === strpos($cacheKey, '?') ? '?' : '&';
       $cacheKey .= http_build_query($getParameters, null, '&');
     }
+
     return $cacheKey;
   }
 

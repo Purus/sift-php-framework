@@ -39,6 +39,7 @@ class sfJavascriptPartialView extends sfPartialView
     start_javascript();
     echo parent::render($templateVars);
     end_javascript();
+
     return ob_get_clean();
   }
 

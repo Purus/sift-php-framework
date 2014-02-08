@@ -219,6 +219,7 @@ class sfMimeType {
     {
       $extension = substr($filename, $pos + 1);
     }
+
     return strtolower($extension);
   }
 
@@ -252,6 +253,7 @@ class sfMimeType {
         $mimeType = 'image/jpeg';
       break;
     }
+
     return $mimeType;
   }
 

@@ -66,6 +66,7 @@ class sfCalendar {
       $timezone = new DateTimeZone($timezone);
     }
     $this->timezone = $timezone;
+
     return $this;
   }
 
@@ -90,6 +91,7 @@ class sfCalendar {
     {
       $this->renderer = new sfCalendarRendererHtml();
     }
+
     return $this->renderer;
   }
 
@@ -102,6 +104,7 @@ class sfCalendar {
   public function render($options = array())
   {
     $renderer = $this->getRenderer();
+
     return $renderer->render($this, $options);
   }
 
@@ -117,6 +120,7 @@ class sfCalendar {
     {
       return $renderer->getJavascripts();
     }
+
     return array();
   }
 
@@ -132,6 +136,7 @@ class sfCalendar {
     {
       return $renderer->getStylesheets();
     }
+
     return array();
   }
 
@@ -160,6 +165,7 @@ class sfCalendar {
     }
 
     $this->events[] = $event;
+
     return $this;
   }
 
@@ -175,6 +181,7 @@ class sfCalendar {
     {
       $this->addEvent($event);
     }
+
     return $this;
   }
 
@@ -206,6 +213,7 @@ class sfCalendar {
     }
 
     $this->sortEvents($events);
+
     return $events;
   }
 
@@ -257,6 +265,7 @@ class sfCalendar {
     {
       return 1;
     }
+
     return 0;
   }
 

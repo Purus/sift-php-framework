@@ -64,6 +64,7 @@ class sfSanitizer {
   public static function __callstatic($m, $a)
   {
     array_push($a, $m);
+
     return call_user_func_array(array('sfSanitizer', 'sanitize'), $a);
   }
 

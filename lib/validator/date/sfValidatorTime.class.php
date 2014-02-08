@@ -136,8 +136,10 @@ class sfValidatorTime extends sfValidatorBase {
       {
         // int and string '0' are 'empty' values that are explicitly accepted
         if($val === 0 || $val === '0' || !empty($val))
+
           return false;
       }
+
       return true;
     }
 
@@ -151,6 +153,7 @@ class sfValidatorTime extends sfValidatorBase {
   {
     $messages = parent::getActiveMessages();
     $messages[] = $this->getMessage('bad_format');
+
     return $messages;
   }
 

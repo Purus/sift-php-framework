@@ -288,6 +288,7 @@ abstract class sfWidgetForm extends sfWidget
     {
       $results[$i] = sprintf('%02d', $i);
     }
+
     return $results;
   }
 
@@ -411,6 +412,7 @@ abstract class sfWidgetForm extends sfWidget
         }
       }
     }
+
     return $this;
   }
 

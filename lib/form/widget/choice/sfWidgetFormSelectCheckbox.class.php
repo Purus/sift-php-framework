@@ -127,6 +127,7 @@ class sfWidgetFormSelectCheckbox extends sfWidgetFormChoiceBase
       );
 
     }
+
     return call_user_func($this->getOption('formatter'), $this, $inputs);
   }
 

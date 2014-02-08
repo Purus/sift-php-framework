@@ -153,6 +153,7 @@ class sfMenu extends sfConfigurable implements ArrayAccess, Countable, IteratorA
   public function setName($name)
   {
     $this->name = $name;
+
     return $this;
   }
 
@@ -185,6 +186,7 @@ class sfMenu extends sfConfigurable implements ArrayAccess, Countable, IteratorA
   public function setRoute($route)
   {
     $this->route = $route;
+
     return $this;
   }
 
@@ -199,8 +201,10 @@ class sfMenu extends sfConfigurable implements ArrayAccess, Countable, IteratorA
     if(!is_null($bool))
     {
       $this->requiresAuth = (boolean) $bool;
+
       return $this;
     }
+
     return $this->requiresAuth;
   }
 
@@ -215,8 +219,10 @@ class sfMenu extends sfConfigurable implements ArrayAccess, Countable, IteratorA
     if(!is_null($bool))
     {
       $this->requiresNoAuth = $bool;
+
       return $this;
     }
+
     return $this->requiresNoAuth;
   }
 
@@ -239,6 +245,7 @@ class sfMenu extends sfConfigurable implements ArrayAccess, Countable, IteratorA
   public function setLabel($label)
   {
     $this->setOption('label', $label);
+
     return $this;
   }
 
@@ -252,6 +259,7 @@ class sfMenu extends sfConfigurable implements ArrayAccess, Countable, IteratorA
   {
     $this->credentials = is_string($credentials) ?
             explode(',', $credentials) : (array) $credentials;
+
     return $this;
   }
 
@@ -323,6 +331,7 @@ class sfMenu extends sfConfigurable implements ArrayAccess, Countable, IteratorA
     {
       $this->showChildren = $bool;
     }
+
     return $this->showChildren;
   }
 
@@ -335,6 +344,7 @@ class sfMenu extends sfConfigurable implements ArrayAccess, Countable, IteratorA
   public function setLevel($level)
   {
     $this->level = $level;
+
     return $this;
   }
 
@@ -356,6 +366,7 @@ class sfMenu extends sfConfigurable implements ArrayAccess, Countable, IteratorA
       while($obj = $obj->getParent());
       $this->level = $count;
     }
+
     return $this->level;
   }
 
@@ -376,6 +387,7 @@ class sfMenu extends sfConfigurable implements ArrayAccess, Countable, IteratorA
       while($obj = $obj->getParent());
       $this->root = $found;
     }
+
     return $this->root;
   }
 
@@ -418,6 +430,7 @@ class sfMenu extends sfConfigurable implements ArrayAccess, Countable, IteratorA
   public function setPriority($priority)
   {
     $this->priority = $priority;
+
     return $this;
   }
 
@@ -440,6 +453,7 @@ class sfMenu extends sfConfigurable implements ArrayAccess, Countable, IteratorA
   public function setChildren(array $children)
   {
     $this->children = $children;
+
     return $this;
   }
 
@@ -464,6 +478,7 @@ class sfMenu extends sfConfigurable implements ArrayAccess, Countable, IteratorA
     $child->setNumber($this->count() + 1);
 
     $this->children[$child->getName()] = $child;
+
     return $child;
   }
 
@@ -481,6 +496,7 @@ class sfMenu extends sfConfigurable implements ArrayAccess, Countable, IteratorA
     {
       unset($this->children[$name]);
     }
+
     return $this;
   }
 
@@ -554,6 +570,7 @@ class sfMenu extends sfConfigurable implements ArrayAccess, Countable, IteratorA
         return true;
       }
     }
+
     return false;
   }
 
@@ -579,6 +596,7 @@ class sfMenu extends sfConfigurable implements ArrayAccess, Countable, IteratorA
         }
       }
     }
+
     return $current;
   }
 
@@ -594,6 +612,7 @@ class sfMenu extends sfConfigurable implements ArrayAccess, Countable, IteratorA
     {
       $this->current = $bool;
     }
+
     return $this->current;
   }
 
@@ -650,6 +669,7 @@ class sfMenu extends sfConfigurable implements ArrayAccess, Countable, IteratorA
     {
       $html .= $child->renderChild();
     }
+
     return $html;
   }
 
@@ -718,6 +738,7 @@ class sfMenu extends sfConfigurable implements ArrayAccess, Countable, IteratorA
     {
       $classes[] = 'last';
     }
+
     return array_unique($classes);
   }
 
@@ -745,6 +766,7 @@ class sfMenu extends sfConfigurable implements ArrayAccess, Countable, IteratorA
   {
     $options = $this->getOptions();
     $options['title'] = $this->getOption('title', $this->getLabel());
+
     return link_to($this->renderLabel(), $this->getRoute(), $options);
   }
 
@@ -790,6 +812,7 @@ class sfMenu extends sfConfigurable implements ArrayAccess, Countable, IteratorA
           $withLinks = true, $includeRoot = false)
   {
     $children = $this->getPath($withLinks, $includeRoot);
+
     return implode($separator, $children);
   }
 
@@ -838,6 +861,7 @@ class sfMenu extends sfConfigurable implements ArrayAccess, Countable, IteratorA
   public function setCondition($condition)
   {
     $this->setOption('condition', $condition);
+
     return $this;
   }
 

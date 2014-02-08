@@ -50,11 +50,13 @@ function cache($name, $lifeTime = 86400)
   {
     $request->setAttribute('started', 1, 'sift/action/sfAction/cache');
     $request->setAttribute('current_name', $name, 'sift/action/sfAction/cache');
+
     return false;
   }
   else
   {
     echo $data;
+
     return true;
   }
 }

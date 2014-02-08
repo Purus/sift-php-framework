@@ -76,6 +76,7 @@ class sfValidatorSeparatedTextValues extends sfValidatorBase {
 
     // glue it back to one string
     $clean = join($separator, $values);
+
     return $clean;
   }
 

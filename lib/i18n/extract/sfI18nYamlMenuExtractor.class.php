@@ -120,6 +120,7 @@ class sfI18nYamlMenuExtractor extends sfI18nYamlExtractor
     {
       $catalogue = sprintf('%s/%s', $catalogue, $default);
     }
+
     return $catalogue;
   }
 

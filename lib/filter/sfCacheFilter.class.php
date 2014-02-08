@@ -82,6 +82,7 @@ class sfCacheFilter extends sfFilter {
         return false;
       }
     }
+
     return true;
   }
 

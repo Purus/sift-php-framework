@@ -138,6 +138,7 @@ class sfI18nYamlGeneratorExtractor extends sfI18nYamlExtractor {
 
       $result[] = $string;
     }
+
     return $result;
   }
 

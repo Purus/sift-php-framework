@@ -81,8 +81,10 @@ class myFormBase extends sfForm {
         is_readable(sfConfig::get('sf_app_template_dir') . '/_form_errors.php'))
     {
       sfLoader::loadHelpers('Partial');
+
       return get_partial('global/form_errors', array('form' => $this));
     }
+
     return parent::renderGlobalErrors();
   }
 
@@ -107,6 +109,7 @@ class myFormBase extends sfForm {
       sfLoader::loadHelpers('Partial');
       $template = sprintf('global/%s', $attributes['global_template']);
       $attributes['global_template'] = false;
+
       return get_partial($template,
               array('form' => $this, 'attributes' => $attributes));
     }

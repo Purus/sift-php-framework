@@ -426,6 +426,7 @@ abstract class sfValidatorBase implements sfIEventDispatcherAware {
     {
       $messages[] = $this->getMessage('required');
     }
+
     return $messages;
   }
 
@@ -442,6 +443,7 @@ abstract class sfValidatorBase implements sfIEventDispatcherAware {
           sfFormJavascriptValidation::REQUIRED => $this->getOption('required')
       );
     }
+
     return array();
   }
 
@@ -458,6 +460,7 @@ abstract class sfValidatorBase implements sfIEventDispatcherAware {
       $messages[sfFormJavascriptValidation::REQUIRED] =
               sfFormJavascriptValidation::fixValidationMessage($this, 'required');
     }
+
     return $messages;
   }
 

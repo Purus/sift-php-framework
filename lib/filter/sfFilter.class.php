@@ -81,6 +81,7 @@ abstract class sfFilter implements sfIFilter
     else
     {
       self::$filterCalled[$class] = true;
+
       return true;
     }
   }

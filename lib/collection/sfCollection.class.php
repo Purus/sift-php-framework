@@ -75,6 +75,7 @@ abstract class sfCollection extends ArrayObject implements sfIArrayAccessByRefer
   {
     $this->beforeAppend($item);
     parent::append($item);
+
     return $this;
   }
 
@@ -96,6 +97,7 @@ abstract class sfCollection extends ArrayObject implements sfIArrayAccessByRefer
     else
     {
       parent::offsetUnset($index);
+
       return true;
     }
   }
@@ -112,6 +114,7 @@ abstract class sfCollection extends ArrayObject implements sfIArrayAccessByRefer
     {
       $this->append($item);
     }
+
     return $this;
   }
 
@@ -146,6 +149,7 @@ abstract class sfCollection extends ArrayObject implements sfIArrayAccessByRefer
   {
     $this->checkFreezed();
     $this->data = array();
+
     return $this;
   }
 
@@ -326,6 +330,7 @@ abstract class sfCollection extends ArrayObject implements sfIArrayAccessByRefer
     {
       $ret = parent::offsetGet($offset);
     }
+
     return $ret;
   }
 

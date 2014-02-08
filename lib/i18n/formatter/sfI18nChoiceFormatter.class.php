@@ -101,6 +101,7 @@ class sfI18nChoiceFormatter {
     {
       self::$instance = new sfI18nChoiceFormatter();
     }
+
     return self::$instance;
   }
 
@@ -156,6 +157,7 @@ class sfI18nChoiceFormatter {
     $number = floatval($number);
 
     if($leftBracket == '{' && $rightBracket == '}')
+
       return in_array($number, $elements);
 
     $left = false;
@@ -171,6 +173,7 @@ class sfI18nChoiceFormatter {
       $right = $number < $elements[$total - 1];
 
     if($left && $right)
+
       return true;
 
     return false;
@@ -182,6 +185,7 @@ class sfI18nChoiceFormatter {
     try
     {
       eval($str);
+
       return $result;
     }
     catch(Exception $e)
@@ -214,6 +218,7 @@ class sfI18nChoiceFormatter {
       $end = $i == $n - 1 ? strlen($string) : $offset[$i + 1][1];
       $strings[] = substr($string, $begin, $end - $begin);
     }
+
     return array($sets, $strings);
   }
 
@@ -231,8 +236,10 @@ class sfI18nChoiceFormatter {
     for($i = 0; $i < $total; $i++)
     {
       if($this->isValid($number, $sets[$i]))
+
         return $strings[$i];
     }
+
     return false;
   }
 

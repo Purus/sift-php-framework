@@ -209,6 +209,7 @@ EOF;
         $output .= strtolower($word[$l]);
       }
     }
+
     return $output;
   }
 

@@ -45,6 +45,7 @@ abstract class sfTextMacroWidget implements sfITextMacroWidget {
         $out[$name] = $default;
       }
     }
+
     return $out;
   }
 

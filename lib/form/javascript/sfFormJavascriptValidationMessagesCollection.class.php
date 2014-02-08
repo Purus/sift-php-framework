@@ -55,6 +55,7 @@ class sfFormJavascriptValidationMessagesCollection extends sfCollection implemen
       }
       $data[$message->getFormFieldName()] = $serializableMessages;
     }
+
     return $data;
   }
 

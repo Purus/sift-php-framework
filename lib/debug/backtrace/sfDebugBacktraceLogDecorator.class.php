@@ -69,6 +69,7 @@ class sfDebugBacktraceLogDecorator extends sfDebugBacktraceDecorator {
     {
       $output[] = sprintf('#%s %s|%s', ++$i, $argument['value'], $argument['type']);
     }
+
     return count($output) ? join(',', $output) : '';
   }
 

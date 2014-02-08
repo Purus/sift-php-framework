@@ -85,6 +85,7 @@ class sfSecurity {
       return null;
     }
     list($module, $action) = $parsed;
+
     return self::getModuleSecurityValue($module, $action, 'is_secure', false);
   }
 
@@ -102,6 +103,7 @@ class sfSecurity {
       return null;
     }
     list($module, $action) = $parsed;
+
     return self::getModuleSecurityValue($module, $action, 'credentials');
   }
 
@@ -125,6 +127,7 @@ class sfSecurity {
       return null;
     }
     list($module, $action) = $parsed;
+
     return self::getModuleSecurityValue($module, $action, 'credentials');
   }
 
@@ -148,6 +151,7 @@ class sfSecurity {
       return null;
     }
     list($module, $action) = $parsed;
+
     return self::getModuleSecurityValue($module, $action, 'is_secure', false);
   }
 
@@ -172,6 +176,7 @@ class sfSecurity {
     {
       return true;
     }
+
     return false;
   }
 
@@ -226,6 +231,7 @@ class sfSecurity {
     {
       return true;
     }
+
     return false;
   }
 
@@ -256,6 +262,7 @@ class sfSecurity {
     {
       return self::$securityByModule[$module]['all'][$name];
     }
+
     return $default;
   }
 
@@ -280,8 +287,10 @@ class sfSecurity {
       {
         throw $e;
       }
+
       return false;
     }
+
     return array($route[4]['module'], $route[4]['action']);
   }
 
@@ -436,9 +445,11 @@ class sfSecurity {
       elseif(preg_match($options['cidr_regex'], $ipAddress, $ms))
       {
         $mask = 0xFFFFFFFF << (32 - $ms[2]);
+
         return (ip2long($ip) & $mask) == (ip2long($ms[1]) & $mask);
       }
     }
+
     return false;
   }
 
@@ -473,8 +484,10 @@ class sfSecurity {
           return false;
         }
       }
+
       return true;
     }
+
     return false;
   }
 
@@ -520,6 +533,7 @@ class sfSecurity {
         return true;
       }
     }
+
     return false;
   }
 

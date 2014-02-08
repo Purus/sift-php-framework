@@ -47,6 +47,7 @@ class sfImageReflectionGD extends sfImageTransformAbstract
     if (is_numeric($reflection_height))
     {
       $this->reflection_height = (int)$reflection_height;
+
       return true;
     }
 
@@ -73,6 +74,7 @@ class sfImageReflectionGD extends sfImageTransformAbstract
     if (is_numeric($start_transparency))
     {
       $this->start_transparency = (int)$start_transparency;
+
       return true;
     }
 

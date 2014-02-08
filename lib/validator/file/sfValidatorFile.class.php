@@ -194,6 +194,7 @@ class sfValidatorFile extends sfValidatorBase {
     }
 
     $class = $this->getOption('uploaded_file_class');
+
     return new $class($value['name'], $mimeType, $value['tmp_name'], $value['size'], $this->getOption('path'));
   }
 

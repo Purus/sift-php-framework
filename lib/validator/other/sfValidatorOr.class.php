@@ -146,6 +146,7 @@ class sfValidatorOr extends sfValidatorBase
     {
       $messages = array_merge($messages, array_values($validator->getActiveMessages()));
     }
+
     return array_unique($messages);
   }
 }

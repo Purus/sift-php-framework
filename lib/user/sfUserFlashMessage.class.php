@@ -83,6 +83,7 @@ class sfUserFlashMessage implements Serializable {
   public function setMessage($message)
   {
     $this->message = (string)$message;
+
     return $this;
   }
 
@@ -105,6 +106,7 @@ class sfUserFlashMessage implements Serializable {
   public function setType($type)
   {
     $this->type = (string)$type;
+
     return $this;
   }
 

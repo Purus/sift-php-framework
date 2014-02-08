@@ -180,6 +180,7 @@ class sfPhpConfigHandler extends sfYamlConfigHandler {
     {
       return intval($value);
     }
+
     return sprintf("'%s'", str_replace("'", "\\'", trim($value)));
   }
 
@@ -199,6 +200,7 @@ class sfPhpConfigHandler extends sfYamlConfigHandler {
     {
       $ini_path = sprintf('php.ini location: "%s"', $cfg_path);
     }
+
     return $ini_path;
   }
 

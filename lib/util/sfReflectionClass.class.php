@@ -68,6 +68,7 @@ class sfReflectionClass extends ReflectionClass {
         return true;
       }
     }
+
     return false;
   }
 

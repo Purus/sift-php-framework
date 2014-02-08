@@ -132,6 +132,7 @@ class sfValidatorString extends sfValidatorBase {
     {
       $messages[] = $this->getMessage('max_length');
     }
+
     return $messages;
   }
 
@@ -152,6 +153,7 @@ class sfValidatorString extends sfValidatorBase {
       $messages[sfFormJavascriptValidation::MAX_LENGTH] =
               sfFormJavascriptValidation::fixValidationMessage($this, 'max_length');
     }
+
     return $messages;
   }
 

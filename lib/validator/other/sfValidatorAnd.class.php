@@ -167,6 +167,7 @@ class sfValidatorAnd extends sfValidatorBase {
     {
       $rules = array_merge($rules, $validator->getJavascriptValidationRules());
     }
+
     return $rules;
   }
 
@@ -178,6 +179,7 @@ class sfValidatorAnd extends sfValidatorBase {
     {
       $messages = array_merge($messages, $validator->getJavascriptValidationMessages());
     }
+
     return $messages;
   }
 
@@ -188,6 +190,7 @@ class sfValidatorAnd extends sfValidatorBase {
     {
       $messages = array_merge($messages, array_values($validator->getActiveMessages()));
     }
+
     return array_unique($messages);
   }
 

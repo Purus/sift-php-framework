@@ -82,6 +82,7 @@ class sfGeneratorManager
     }
 
     $generator = new $generatorClass($this, $params);
+
     return $generator->generate();
   }
 
@@ -104,6 +105,7 @@ class sfGeneratorManager
   public function setBasePath($savePath)
   {
     $this->savePath = $savePath;
+
     return $this;
   }
 

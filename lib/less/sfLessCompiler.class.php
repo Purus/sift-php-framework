@@ -180,6 +180,7 @@ class sfLessCompiler extends lessc implements sfIService {
   public function setPathAliases($aliases)
   {
     $this->pathAliases = (array)$aliases;
+
     return $this;
   }
 
@@ -192,6 +193,7 @@ class sfLessCompiler extends lessc implements sfIService {
   public function setDebugMode($flag)
   {
     $this->debugMode = (boolean) $flag;
+
     return $this;
   }
 
@@ -214,6 +216,7 @@ class sfLessCompiler extends lessc implements sfIService {
   public function setCacheName($mask)
   {
     $this->cacheName = $mask;
+
     return $this;
   }
 
@@ -411,6 +414,7 @@ class sfLessCompiler extends lessc implements sfIService {
       {
         return $url;
       }
+
       return null;
     }
 
@@ -430,6 +434,7 @@ class sfLessCompiler extends lessc implements sfIService {
         {
           sfLogger::getInstance()->log(sprintf('{sfLessCompiler} Found "%s"', $file));
         }
+
         return $file;
       }
     }

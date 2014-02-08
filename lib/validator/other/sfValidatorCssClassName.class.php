@@ -54,8 +54,10 @@ class sfValidatorCssClassName extends sfValidatorRegex {
         $value = trim($value);
         $result[] = parent::doClean($value);
       }
+
       return join(' ', $result);
     }
+
     return parent::doClean($value);
   }
 
@@ -86,6 +88,7 @@ class sfValidatorCssClassName extends sfValidatorRegex {
         return false;
       }
     }
+
     return true;
 }', $pattern, $this->getOption('must_match') ? '!' : ''));
 

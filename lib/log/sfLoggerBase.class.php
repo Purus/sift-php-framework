@@ -145,6 +145,7 @@ abstract class sfLoggerBase extends sfConfigurable implements sfILogger {
     {
       throw new InvalidArgumentException(sprintf('The level level "%s" does not exist.', $level));
     }
+
     return self::$logLevelMap[$level];
   }
 

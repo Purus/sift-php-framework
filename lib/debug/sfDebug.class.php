@@ -69,6 +69,7 @@ class sfDebug {
           'root_dir' => self::shortenFilePath($plugin->getRootDir())
       );
     }
+
     return $plugins;
   }
 
@@ -81,6 +82,7 @@ class sfDebug {
   {
     $extensions = get_loaded_extensions();
     asort($extensions);
+
     return $extensions;
   }
 
@@ -116,6 +118,7 @@ class sfDebug {
         break;
       }
     }
+
     return $file;
   }
 

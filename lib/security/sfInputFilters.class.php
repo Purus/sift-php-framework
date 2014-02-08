@@ -135,6 +135,7 @@ class sfInputFilters {
     {
       return array($match[1] => $match[2]);
     }
+
     return array($value);
   }
 
@@ -216,6 +217,7 @@ class sfInputFilters {
       {
         $value[$i] = call_user_func(array('sfInputFilters', $method), $value[$i]);
       }
+
       return $value;
     }
     elseif(is_string($value) && preg_match('/^\w+\[(\w+)\]=(.*)$/', $value, $match))
@@ -282,6 +284,7 @@ class sfInputFilters {
         $value = sfToolkit::arrayMap($filter, $value);
       }
     }
+
     return $value;
   }
 
@@ -308,6 +311,7 @@ class sfInputFilters {
   public static function stripWhitespace($str)
   {
     $r = preg_replace('/[\n\r\t]+/', '', $str);
+
     return preg_replace('/\s{2,}/', ' ', $r);
   }
 
@@ -324,6 +328,7 @@ class sfInputFilters {
     $str = preg_replace('/(<a[^>]*>)(<img[^>]+alt=")([^"]*)("[^>]*>)(<\/a>)/i', '$1$3$5<br />', $str);
     $str = preg_replace('/(<img[^>]+alt=")([^"]*)("[^>]*>)/i', '$2<br />', $str);
     $str = preg_replace('/<img[^>]*>/i', '', $str);
+
     return $str;
   }
 
@@ -345,6 +350,7 @@ class sfInputFilters {
                // '@<![\s\S]*?--[ \t\n\r]*>@',     // Strip multi-line comments including CDATA
                // '/<!--.*?-->/i',
     );
+
     return preg_replace($search, '', $str);
   }
 

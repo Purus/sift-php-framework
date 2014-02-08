@@ -60,6 +60,7 @@ class sfAjaxResult {
   {
     $result = new self();
     $result->fromArray($array);
+
     return $result;
   }
 
@@ -75,6 +76,7 @@ class sfAjaxResult {
     {
       $this->$key = $val;
     }
+
     return $this;
   }
 

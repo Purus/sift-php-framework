@@ -210,6 +210,7 @@ class sfImageTransformImageMagickAdapter extends sfImageTransformAdapterAbstract
     if(is_object($holder) && 'Imagick' === get_class($holder))
     {
       $this->holder = $holder;
+
       return true;
     }
 
@@ -313,6 +314,7 @@ class sfImageTransformImageMagickAdapter extends sfImageTransformAdapterAbstract
   public function getRGBFromPixel($x, $y)
   {
     $color = $this->getHolder()->getImagePixelColor($x, $y)->getColor();
+
     return array($color['r'], $color['g'], $color['b'], $color['a']);
   }
 

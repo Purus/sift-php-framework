@@ -201,6 +201,7 @@ function google_analytics_ua()
   {
     sfLogger::getInstance()->error('{GoogleAnalyticsHelper} Google Analytics is not configured properly. Missing "app_google_analytics_ua" configuration');
   }
+
   return $analytics_ua;
 }
 
@@ -271,5 +272,6 @@ function google_analytics_tag_links($text, $options = array())
     // make the urls hyper links
     $text = preg_replace($reg_exUrl, $url, $text);
   }
+
   return $text;
 }

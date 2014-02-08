@@ -71,6 +71,7 @@ class sfValidatorBlacklist extends sfValidatorBase {
       $messages[] = $this->getMessage('required');
     }
     $messages[] = $this->getMessage('forbidden');
+
     return $messages;
   }
 

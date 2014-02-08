@@ -49,6 +49,7 @@ class sfFormJavascriptValidationMessage implements sfIJsonSerializable {
   public function setMessage($message)
   {
     $this->message = $message;
+
     return $this;
   }
 
@@ -111,6 +112,7 @@ class sfFormJavascriptValidationMessage implements sfIJsonSerializable {
   public function setParameters(array $parameters)
   {
     $this->parameters = $parameters;
+
     return $this;
   }
 

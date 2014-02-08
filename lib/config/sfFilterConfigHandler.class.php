@@ -157,6 +157,7 @@ class sfFilterConfigHandler extends sfYamlConfigHandler {
     $code[] = '}';
     $code[] = '$filter->initialize($this->context, $parameters);';
     $code[] = '$this->register($filter);';
+
     return join("\n", $code) . "\n";
   }
 

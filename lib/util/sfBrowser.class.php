@@ -181,6 +181,7 @@ class sfBrowser extends sfBrowserBase
     {
       throw new Exception('Could not decode GZIPed response');
     }
+
     return $decoded;
   }
 
@@ -193,6 +194,7 @@ class sfBrowser extends sfBrowserBase
   protected function decodeDeflate($text)
   {
     $header = unpack('n', substr($text, 0, 2));
+
     return (0 == $header[1] % 31) ? gzuncompress($text) : gzinflate($text);
   }
 

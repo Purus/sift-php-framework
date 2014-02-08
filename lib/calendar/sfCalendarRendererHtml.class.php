@@ -233,6 +233,7 @@ class sfCalendarRendererHtml extends sfCalendarRenderer {
     }
 
     $html[] = '</tr></tbody></table>';
+
     return join("\n", $html);
   }
 
@@ -247,6 +248,7 @@ class sfCalendarRendererHtml extends sfCalendarRenderer {
     {
       array_push($dayNames, array_shift($dayNames));
     }
+
     return $dayNames;
   }
 

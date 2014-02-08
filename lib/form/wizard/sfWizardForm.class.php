@@ -64,6 +64,7 @@ class sfWizardForm extends myForm
     {
       return current(self::$storageNamespaces);
     }
+
     return self::$storageNamespaces[$formNameMask];
   }
 

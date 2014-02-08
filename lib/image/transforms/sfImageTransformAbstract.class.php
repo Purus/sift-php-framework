@@ -31,6 +31,7 @@ abstract class sfImageTransformAbstract {
     {
       throw new sfImageTransformException(sprintf('Cannot perform transform: %s invalid image resource', get_class($this)));
     }
+
     return $this->transform($image);
   }
 

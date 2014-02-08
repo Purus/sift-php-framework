@@ -26,6 +26,7 @@ class sfWebDebugPanelResponse extends sfWebDebugPanel
     $response = $context->getResponse();
     $code = $response->getStatusCode();
     $title = $response->getStatusText();
+
     return sprintf('<span class="%s" title="%s">%s</span>', $code == 200 ? 'success' : 'error', $title, $code);
   }
 

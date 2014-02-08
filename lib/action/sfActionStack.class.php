@@ -74,6 +74,7 @@ class sfActionStack
   {
     $result = array_pop($this->stack);
     $this->count = count($this->stack);
+
     return $result;
   }
 

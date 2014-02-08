@@ -43,6 +43,7 @@ class sfArray {
       {
         $return[$k] = self::get($array, $k, $default);
       }
+
       return $return;
     }
 
@@ -58,6 +59,7 @@ class sfArray {
 
       $array = $array[$key_part];
     }
+
     return $array;
   }
 
@@ -74,6 +76,7 @@ class sfArray {
     if(is_null($key))
     {
       $array = $value;
+
       return;
     }
 

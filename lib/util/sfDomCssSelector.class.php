@@ -418,6 +418,7 @@ class sfDomCssSelector implements Countable, Iterator
     foreach ($this->split_custom_selector($selector) as $selector) {
       $nodes = $this->matchCustomSelector($nodes, $selector);
     }
+
     return $nodes;
   }
 
@@ -527,6 +528,7 @@ class sfDomCssSelector implements Countable, Iterator
     {
       throw new Exception(sprintf('Unable to split custom selector "%s".', $selectors));
     }
+
     return $matches[0];
   }
 
@@ -547,6 +549,7 @@ class sfDomCssSelector implements Countable, Iterator
     {
       throw new Exception(sprintf('Unable to parse custom selector "%s".', $selector));
     }
+
     return array('selector' => $matches[1], 'parameter' => isset($matches[3]) ? ($matches[3] ? $matches[3] : $matches[4]) : '');
   }
 

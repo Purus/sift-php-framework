@@ -123,6 +123,7 @@ abstract class sfI18nMessageSource implements sfII18nMessageSource {
       {
         $reflection = new sfReflectionClass($class);
         array_unshift($arguments, $source);
+
         return $reflection->newInstanceArgs($arguments);
       }
       else
@@ -191,6 +192,7 @@ abstract class sfI18nMessageSource implements sfII18nMessageSource {
         unset($data);
       }
     }
+
     return $this;
   }
 
@@ -235,6 +237,7 @@ abstract class sfI18nMessageSource implements sfII18nMessageSource {
   public function setCache(sfICache $cache = null)
   {
     $this->cache = $cache;
+
     return $this;
   }
 
@@ -264,6 +267,7 @@ abstract class sfI18nMessageSource implements sfII18nMessageSource {
   public function setCulture($culture)
   {
     $this->culture = $culture;
+
     return $this;
   }
 

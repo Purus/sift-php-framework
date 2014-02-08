@@ -116,6 +116,7 @@ class sfCalendarEvent implements sfICalendarEvent, ArrayAccess {
       {
         case 'set':
           $this->data[$property] = $args[0];
+
           return $this;
           break;
 
@@ -143,6 +144,7 @@ class sfCalendarEvent implements sfICalendarEvent, ArrayAccess {
     {
       $return[] = $this->data['name'];
     }
+
     return join(' ', $return);
   }
 

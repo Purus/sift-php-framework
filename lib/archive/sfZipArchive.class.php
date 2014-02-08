@@ -41,6 +41,7 @@ class sfZipArchive extends ZipArchive {
       $zip->open($file);
       $result = $zip->extractTo($extractPath);
       $zip->close();
+
       return $result;
     }
     catch(sfPhpErrorException $e)
@@ -84,6 +85,7 @@ class sfZipArchive extends ZipArchive {
       $size = 100;
     }
     $this->_newAddedFilesSize = $size;
+
     return $this;
   }
 
@@ -104,6 +106,7 @@ class sfZipArchive extends ZipArchive {
     {
       throw new sfPhpErrorException(sprintf('{sfZipArchive} Cannot open file "%s", error "%s"', $fileName, $r));
     }
+
     return $r;
   }
 
@@ -120,6 +123,7 @@ class sfZipArchive extends ZipArchive {
       $result = $this->open($fileName, $flags);
       // chmod our file
       @chmod($fileName, $fileMode);
+
       return $result;
     }
     catch(sfPhpException $e)
@@ -138,6 +142,7 @@ class sfZipArchive extends ZipArchive {
   {
     $this->_archiveFileName = null;
     $this->_newAddedFilesCounter = 0;
+
     return parent::close();
   }
 
@@ -153,6 +158,7 @@ class sfZipArchive extends ZipArchive {
     {
       return false;
     }
+
     return $this->open($archiveFileName, self::CREATE);
   }
 
@@ -182,6 +188,7 @@ class sfZipArchive extends ZipArchive {
     {
       $this->_newAddedFilesCounter++;
     }
+
     return $added;
   }
 

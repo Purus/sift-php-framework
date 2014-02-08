@@ -105,6 +105,7 @@ class sfDebugBacktrace extends sfConfigurable implements Serializable, sfIJsonSe
     {
       $this->processTrace();
     }
+
     return $this->processed;
   }
 
@@ -222,6 +223,7 @@ class sfDebugBacktrace extends sfConfigurable implements Serializable, sfIJsonSe
         return true;
       }
     }
+
     return false;
   }
 
@@ -238,6 +240,7 @@ class sfDebugBacktrace extends sfConfigurable implements Serializable, sfIJsonSe
     {
       return '';
     }
+
     return strtr($linkFormat, array('%file%' => $file, '%line%' => $line));
   }
 
@@ -344,6 +347,7 @@ class sfDebugBacktrace extends sfConfigurable implements Serializable, sfIJsonSe
     {
       $highlighter = sfSyntaxHighlighter::factory('php');
     }
+
     return $highlighter->setCode(file_get_contents($file))->getExcerpt($limitLines, $line);
   }
 
@@ -377,6 +381,7 @@ class sfDebugBacktrace extends sfConfigurable implements Serializable, sfIJsonSe
   public function __toString()
   {
     $decorator = new sfDebugBacktraceLogDecorator($this);
+
     return $decorator->toString();
   }
 

@@ -113,6 +113,7 @@ class sfI18nMessageFormatter {
   {
     $this->messages = array();
     $this->catalogues = array();
+
     return $this;
   }
 
@@ -183,6 +184,7 @@ class sfI18nMessageFormatter {
     }
 
     $s = $this->getFormattedString(sfI18n::i18n2Utf8($string, $charset), $args, $catalogue);
+
     return sfI18n::i18n2Encoding($s, $charset);
   }
 

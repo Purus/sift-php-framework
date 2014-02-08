@@ -276,6 +276,7 @@ class sfISO639 {
     {
       return null;
     }
+
     return self::$nameToCode2[$lang];
   }
 
@@ -293,6 +294,7 @@ class sfISO639 {
     {
       return null;
     }
+
     return self::$nameToCode3[$lang];
   }
 
@@ -310,6 +312,7 @@ class sfISO639 {
     {
       return null;
     }
+
     return self::$code2ToName[$code];
   }
 
@@ -327,6 +330,7 @@ class sfISO639 {
     {
       return null;
     }
+
     return self::$code3ToName[$code];
   }
 

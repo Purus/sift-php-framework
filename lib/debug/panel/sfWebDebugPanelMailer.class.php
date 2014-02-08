@@ -40,6 +40,7 @@ class sfWebDebugPanelMailer extends sfWebDebugPanel
     {
       return sprintf('%s %s', $count, $count > 1 ? 'emails' : 'email');
     }
+
     return '';
   }
 

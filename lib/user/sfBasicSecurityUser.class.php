@@ -129,6 +129,7 @@ class sfBasicSecurityUser extends sfUser implements sfISecurityUser, sfIService 
   public function clearCredentials()
   {
     $this->credentials = array();
+
     return $this;
   }
 
@@ -165,6 +166,7 @@ class sfBasicSecurityUser extends sfUser implements sfISecurityUser, sfIService 
         }
       }
     }
+
     return $this;
   }
 
@@ -177,6 +179,7 @@ class sfBasicSecurityUser extends sfUser implements sfISecurityUser, sfIService 
   public function addCredential($credential)
   {
     $this->addCredentials(func_get_args());
+
     return $this;
   }
 
@@ -325,6 +328,7 @@ class sfBasicSecurityUser extends sfUser implements sfISecurityUser, sfIService 
   public function setTimedOut($flag = true)
   {
     $this->timedout = $flag;
+
     return $this;
   }
 
@@ -351,6 +355,7 @@ class sfBasicSecurityUser extends sfUser implements sfISecurityUser, sfIService 
   public function setId($id)
   {
     $this->id = $id;
+
     return $this;
   }
 

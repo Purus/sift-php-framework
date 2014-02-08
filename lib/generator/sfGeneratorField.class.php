@@ -234,6 +234,7 @@ abstract class sfGeneratorField extends sfConfigurable implements sfIGeneratorFi
   public function setGenerator(sfIGenerator $generator)
   {
     $this->generator = $generator;
+
     return $this;
   }
 
@@ -258,6 +259,7 @@ abstract class sfGeneratorField extends sfConfigurable implements sfIGeneratorFi
     {
       return $name;
     }
+
     return str_replace('_', ' ', ucfirst($this->name));
   }
 
@@ -365,6 +367,7 @@ abstract class sfGeneratorField extends sfConfigurable implements sfIGeneratorFi
     }
 
     $this->flags = $flags;
+
     return $this;
   }
 
@@ -387,6 +390,7 @@ abstract class sfGeneratorField extends sfConfigurable implements sfIGeneratorFi
   public function setRenderer($renderer)
   {
     $this->renderer = $renderer;
+
     return $this;
   }
 
@@ -409,6 +413,7 @@ abstract class sfGeneratorField extends sfConfigurable implements sfIGeneratorFi
   public function setRendererArguments(array $arguments)
   {
     $this->rendererArguments = $arguments;
+
     return $this;
   }
 
@@ -477,6 +482,7 @@ abstract class sfGeneratorField extends sfConfigurable implements sfIGeneratorFi
       $flags[] = $field[0];
       $field = substr($field, 1);
     }
+
     return array($field, $flags);
   }
 

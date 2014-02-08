@@ -28,6 +28,7 @@ class sfFormManager {
     {
       throw new sfException(sprintf('The form manager has no "%s" form.', $formClass));
     }
+
     return new $formClass($defaults, $options, $CSRFSecret);
   }
 

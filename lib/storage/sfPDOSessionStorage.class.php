@@ -164,6 +164,7 @@ class sfPDOSessionStorage extends sfSessionStorage {
     try
     {
       $this->db->query($sql);
+
       return true;
     }
     catch(PDOException $e)
@@ -304,6 +305,7 @@ class sfPDOSessionStorage extends sfSessionStorage {
       $stmt->bindParam(1, $data, PDO::PARAM_STR); // setString(1, $data);
       $stmt->bindParam(2, $id, PDO::PARAM_STR); // setString(2, $id);
       $stmt->execute();
+
       return true;
     }
     catch(PDOException $e)
@@ -332,6 +334,7 @@ class sfPDOSessionStorage extends sfSessionStorage {
     parent::regenerate($destroy);
     $newId = session_id();
     $this->sessionRead($newId);
+
     return $this->sessionWrite($newId, $data);
   }
 

@@ -268,6 +268,7 @@ function select_currency_tag($name, $selected = null, $options = array(), $cultu
   $option_tags = options_for_select($currencies, $selected, $options);
 
   unset($options['include_blank'], $options['include_custom']);
+
   return select_tag($name, $option_tags, $options);
 }
 
@@ -342,6 +343,7 @@ function select_language_tag($name, $selected = null, $options = array())
 function input_tag($name, $value = null, $options = array())
 {
   $options = _parse_attributes($options);
+
   return tag('input', array_merge(array('type' => 'text', 'name' => $name, 'id' => get_id_from_name($name, $value), 'value' => $value), _convert_options($options)));
 }
 
@@ -367,6 +369,7 @@ function input_hidden_tag($name, $value = null, $options = array())
   $options = _parse_attributes($options);
 
   $options['type'] = 'hidden';
+
   return input_tag($name, $value, $options);
 }
 
@@ -394,6 +397,7 @@ function input_file_tag($name, $options = array())
 {
   $options = _parse_attributes($options);
   $options['type'] = 'file';
+
   return input_tag($name, null, $options);
 }
 
@@ -423,6 +427,7 @@ function input_password_tag($name = 'password', $value = null, $options = array(
 {
   $options = _parse_attributes($options);
   $options['type'] = 'password';
+
   return input_tag($name, $value, $options);
 }
 
@@ -475,6 +480,7 @@ function textarea_tag($name, $content = null, $options = array())
 
     // FIXME: add support for driver options
     $sfEditor = sfRichTextEditor::factory($driver);
+
     return $sfEditor->toHTML($name, $content, $options);
   }
 
@@ -924,6 +930,7 @@ function get_id_from_name($name, $value = null)
 function form_required_star()
 {
   trigger_error('Usage of form_required_star() is deprecated. Use form_required_label_markup($form) instead.', E_USER_DEPRECATED);
+
   return '<span class="required"><span>*</span></span>';
 }
 
@@ -971,6 +978,7 @@ function get_javascripts_for_form(sfForm $form)
 
     $html .= javascript_include_tag($file, $options);
   }
+
   return $html;
 }
 
@@ -1139,6 +1147,7 @@ function get_form_field_widget_type(sfFormField $field)
 function get_form_widget_type(sfWidget $widget)
 {
   $class = get_class($widget);
+
   return sfInflector::underscore(str_replace('sfWidgetFormInput', '', $class));
 }
 

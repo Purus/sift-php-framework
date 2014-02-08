@@ -130,6 +130,7 @@ class sfWebResponse extends sfResponse
   public function setHeaderOnly($value = true)
   {
     $this->headerOnly = (boolean) $value;
+
     return $this;
   }
 
@@ -203,6 +204,7 @@ class sfWebResponse extends sfResponse
   public function setCompressedCookie($name, $value, $expire = null, $path = '/', $domain = '', $secure = false, $httpOnly = false)
   {
     $value = sfSafeUrl::encode(gzcompress($value, 9));
+
     return $this->setCookie($name, $value, $expire, $path, $domain, $secure, $httpOnly);
   }
 
@@ -217,6 +219,7 @@ class sfWebResponse extends sfResponse
   {
     $this->statusCode = $code;
     $this->statusText = null !== $name ? $name : $this->statusTexts[$code];
+
     return $this;
   }
 
@@ -268,6 +271,7 @@ class sfWebResponse extends sfResponse
       {
         $this->setContentType($value);
       }
+
       return;
     }
 
@@ -278,6 +282,7 @@ class sfWebResponse extends sfResponse
     }
 
     $this->setParameter($name, $value, 'sift/response/http/headers');
+
     return $this;
   }
 
@@ -320,6 +325,7 @@ class sfWebResponse extends sfResponse
     }
 
     $this->setParameter('Content-Type', $value, 'sift/response/http/headers');
+
     return $this;
   }
 
@@ -500,6 +506,7 @@ class sfWebResponse extends sfResponse
       $currentHeaders[] = $header;
       $this->setHttpHeader('Vary', implode(', ', $currentHeaders));
     }
+
     return $this;
   }
 
@@ -530,6 +537,7 @@ class sfWebResponse extends sfResponse
       $headers[] = $key.(null !== $value ? '='.$value : '');
     }
     $this->setHttpHeader('Cache-Control', implode(', ', $headers));
+
     return $this;
   }
 
@@ -608,6 +616,7 @@ class sfWebResponse extends sfResponse
         $stylesheets[$file] = $options;
       }
     }
+
     return $stylesheets;
   }
 
@@ -622,6 +631,7 @@ class sfWebResponse extends sfResponse
   public function addStylesheet($css, $position = '', $options = array())
   {
     $this->setParameter($css, $options, 'helper/asset/auto/stylesheet'.($position ? '/'.$position : ''));
+
     return $this;
   }
 
@@ -637,6 +647,7 @@ class sfWebResponse extends sfResponse
     {
       $this->getParameterHolder()->remove($file, 'helper/asset/auto/stylesheet'.($position ? '/'.$position : ''));
     }
+
     return $this;
   }
 
@@ -666,6 +677,7 @@ class sfWebResponse extends sfResponse
         $javascripts[$file] = $options;
       }
     }
+
     return $javascripts;
   }
 
@@ -680,6 +692,7 @@ class sfWebResponse extends sfResponse
   public function addJavascript($js, $position = '', $options = array())
   {
     $this->setParameter($js, $options, 'helper/asset/auto/javascript'.($position ? '/'.$position : ''));
+
     return $this;
   }
 
@@ -695,6 +708,7 @@ class sfWebResponse extends sfResponse
     {
       $this->getParameterHolder()->remove($file, 'helper/asset/auto/javascript'.($position ? '/'.$position : ''));
     }
+
     return $this;
   }
 
@@ -708,6 +722,7 @@ class sfWebResponse extends sfResponse
     $this->clearAutoDiscoveryLinks();
     $this->clearJavascripts();
     $this->clearStylesheets();
+
     return $this;
   }
 
@@ -723,6 +738,7 @@ class sfWebResponse extends sfResponse
     {
       $cookies[$cookie['name']] = $cookie;
     }
+
     return $cookies;
   }
 
@@ -744,6 +760,7 @@ class sfWebResponse extends sfResponse
   public function clearHttpHeaders()
   {
     $this->getParameterHolder()->removeNamespace('sift/response/http/headers');
+
     return $this;
   }
 
@@ -816,6 +833,7 @@ class sfWebResponse extends sfResponse
         }
       }
     }
+
     return $title;
   }
 
@@ -843,6 +861,7 @@ class sfWebResponse extends sfResponse
       }
       $this->setParameter('title', $title, 'helper/asset/auto/title');
     }
+
     return $this;
   }
 
@@ -865,6 +884,7 @@ class sfWebResponse extends sfResponse
       throw new InvalidArgumentException(sprintf('Invalid title mode "%s" given. Valid modes are: %s', $policy,
           join(',',  array(self::TITLE_MODE_APPEND, self::TITLE_MODE_PREPEND, self::TITLE_MODE_REPLACE))));
     }
+
     return $this;
   }
 
@@ -920,6 +940,7 @@ class sfWebResponse extends sfResponse
       return;
     }
     $this->setParameter('id', $id, 'helper/asset/auto/body');
+
     return $this;
   }
 
@@ -945,6 +966,7 @@ class sfWebResponse extends sfResponse
     $onLoad = $this->getParameter('onload', array(), 'helper/asset/auto/body');
     $onLoad[] = $command;
     $this->setParameter('onload', $onLoad, 'helper/asset/auto/body');
+
     return $this;
   }
 
@@ -966,6 +988,7 @@ class sfWebResponse extends sfResponse
   public function clearBodyOnLoad()
   {
     $this->setParameter('onload', array(), 'helper/asset/auto/body');
+
     return $this;
   }
 
@@ -980,6 +1003,7 @@ class sfWebResponse extends sfResponse
     $onLoad = $this->getParameter('onunload', array(), 'helper/asset/auto/body');
     $onLoad[] = $command;
     $this->setParameter('onunload', $onLoad, 'helper/asset/auto/body');
+
     return $this;
   }
 
@@ -1001,6 +1025,7 @@ class sfWebResponse extends sfResponse
   public function clearBodyOnUnLoad()
   {
     $this->setParameter('onunload', array(), 'helper/asset/auto/body');
+
     return $this;
   }
 
@@ -1016,6 +1041,7 @@ class sfWebResponse extends sfResponse
     $classes[] = $class;
     $classes = array_unique($classes);
     $this->setParameter('classes', $classes, 'helper/asset/auto/body');
+
     return $this;
   }
 
@@ -1040,6 +1066,7 @@ class sfWebResponse extends sfResponse
       }
     }
     $this->setParameter('classes', $classes, 'helper/asset/auto/body_class');
+
     return $this;
   }
 
@@ -1051,6 +1078,7 @@ class sfWebResponse extends sfResponse
   public function clearBodyClasses()
   {
     $this->setParameter('classes', array(), 'helper/asset/auto/body');
+
     return $this;
   }
 
@@ -1084,6 +1112,7 @@ class sfWebResponse extends sfResponse
     );
     // url is the key, so we preserve not to include the links more than once
     $this->setParameter($url, $link, 'helper/asset/auto/discovery_links');
+
     return $this;
   }
 
@@ -1095,6 +1124,7 @@ class sfWebResponse extends sfResponse
   public function clearAutoDiscoveryLinks()
   {
     $this->getParameterHolder()->removeNamespace('helper/asset/auto/discovery_links');
+
     return $this;
   }
 
@@ -1124,6 +1154,7 @@ class sfWebResponse extends sfResponse
       $description = $current . ' ' . $description;
     }
     $this->addMeta('description', trim($description));
+
     return $this;
   }
 
@@ -1136,6 +1167,7 @@ class sfWebResponse extends sfResponse
   public function setMetaDescription($description)
   {
     $this->addMetaDescription($description, true);
+
     return $this;
   }
 
@@ -1147,6 +1179,7 @@ class sfWebResponse extends sfResponse
   public function clearMetaDescription()
   {
     $this->setParameter('description', null, 'helper/asset/auto/meta');
+
     return $this;
   }
 
@@ -1237,6 +1270,7 @@ class sfWebResponse extends sfResponse
     $keywords = array_map('trim', $keywords);
     // replace the keywords with new set
     $this->addMeta('keywords', trim(join(',', $keywords), ','), true);
+
     return $this;
   }
 
@@ -1248,6 +1282,7 @@ class sfWebResponse extends sfResponse
   public function clearMetaKeywords()
   {
     $this->setParameter('keywords', null, 'helper/asset/auto/meta');
+
     return $this;
   }
 
@@ -1303,6 +1338,7 @@ class sfWebResponse extends sfResponse
   public function setCanonicalUrl($url)
   {
     $this->setParameter('canonical', $url, 'helper/asset/auto/canonical');
+
     return $this;
   }
 
@@ -1325,6 +1361,7 @@ class sfWebResponse extends sfResponse
   public function clearCanonicalUrl()
   {
     $this->setParameter('canonical', null, 'helper/asset/auto/canonical');
+
     return $this;
   }
 
@@ -1344,6 +1381,7 @@ class sfWebResponse extends sfResponse
     {
       $this->getParameterHolder()->removeNamespace($namespace);
     }
+
     return $this;
   }
 
@@ -1368,6 +1406,7 @@ class sfWebResponse extends sfResponse
     $slots = $this->getSlots();
     $slots[$name] = $content;
     $this->setParameter('slots', $slots, 'helper/view/slot');
+
     return $this;
   }
 
@@ -1392,6 +1431,7 @@ class sfWebResponse extends sfResponse
   public function getSlot($name, $default = null)
   {
     $slots = $this->getSlots();
+
     return array_key_exists($name, $slots) ?$slots[$name] : $default;
   }
 
@@ -1404,6 +1444,7 @@ class sfWebResponse extends sfResponse
   public function clearSlots()
   {
     $this->getParameterHolder()->removeNamespace('helper/view/slot');
+
     return $this;
   }
 
@@ -1448,6 +1489,7 @@ class sfWebResponse extends sfResponse
   public function mergeProperties(sfWebResponse $response)
   {
     $this->parameterHolder = clone $response->getParameterHolder();
+
     return $this;
   }
 

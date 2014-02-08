@@ -203,8 +203,10 @@ abstract class sfCliBaseTask extends sfCliCommandApplicationTask
       {
         throw new sfException(sprintf('Application "%s" does not exist', $app));
       }
+
       return false;
     }
+
     return true;
   }
 
@@ -224,8 +226,10 @@ abstract class sfCliBaseTask extends sfCliCommandApplicationTask
       {
         throw new sfException(sprintf('Plugin "%s" does not exist', $plugin));
       }
+
       return false;
     }
+
     return true;
   }
 
@@ -257,6 +261,7 @@ abstract class sfCliBaseTask extends sfCliCommandApplicationTask
   {
     $this->checkAppExists($application);
     $this->application = $this->commandApplication->getProject()->getApplication($application, $env, true);
+
     return $this->application;
   }
 
@@ -417,6 +422,7 @@ abstract class sfCliBaseTask extends sfCliCommandApplicationTask
     {
       $this->phpCli = sfToolkit::getPhpCli();
     }
+
     return $this->phpCli;
   }
 

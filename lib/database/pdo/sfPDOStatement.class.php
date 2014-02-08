@@ -156,6 +156,7 @@ class sfPDOStatement extends PDOStatement {
         $params[$key] = '[resource]';
       }
     }
+
     return $params;
   }
 

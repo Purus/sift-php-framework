@@ -58,5 +58,6 @@ function format_currency($amount, $currency = null, $culture = null)
   }
 
   $numberFormat = new sfI18nNumberFormatter($culture);
+
   return $numberFormat->format($amount, 'c', $currency);
 }

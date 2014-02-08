@@ -96,6 +96,7 @@ class sfMoneyCurrency {
     {
       self::$instances[$key] = self::create($name, $scale);
     }
+
     return self::$instances[$key];
   }
 

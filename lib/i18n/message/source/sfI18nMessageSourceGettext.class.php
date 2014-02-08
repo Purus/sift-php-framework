@@ -140,6 +140,7 @@ class sfI18nMessageSourceGettext extends sfI18nMessageSource {
 
     $byDir = $this->getCatalogueByDir($catalogue);
     $catalogues = array_merge($byDir, array_reverse($catalogues));
+
     return $catalogues;
   }
 
@@ -397,6 +398,7 @@ class sfI18nMessageSourceGettext extends sfI18nMessageSource {
           {
             $this->cache->clean($variant, $this->culture);
           }
+
           return true;
         }
         else
@@ -405,6 +407,7 @@ class sfI18nMessageSourceGettext extends sfI18nMessageSource {
         }
       }
     }
+
     return false;
   }
 

@@ -181,6 +181,7 @@ class sfWidgetFormI18nAggregate extends sfWidgetForm
         ));
       }
     }
+
     return '';
   }
 

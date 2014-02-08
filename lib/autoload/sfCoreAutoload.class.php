@@ -107,6 +107,7 @@ class sfCoreAutoload {
     if($path = $this->getClassPath($class))
     {
       require $path;
+
       return true;
     }
 

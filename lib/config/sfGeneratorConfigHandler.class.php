@@ -96,6 +96,7 @@ class sfGeneratorConfigHandler extends sfYamlConfigHandler {
     {
       $value = sfGeneratorConfigHandler::replaceConstantsForExpressions($value);
     }
+
     return $value;
   }
 
@@ -119,6 +120,7 @@ class sfGeneratorConfigHandler extends sfYamlConfigHandler {
         $value = new sfPhpExpression(sprintf('sfConfig::get(\'%s\')', strtolower($matches[1])));
       }
     }
+
     return $value;
   }
 

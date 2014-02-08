@@ -106,6 +106,7 @@ class sfProcessCache
     {
       case 'apc':
         $value = apc_fetch(self::getPrefix().$key);
+
         return false === $value ? null : $value;
       case 'xcache':
         return xcache_isset(self::getPrefix().$key) ? xcache_get(self::getPrefix().$key) : null;

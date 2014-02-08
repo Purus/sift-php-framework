@@ -108,6 +108,7 @@ class sfDependencyInjectionMapItem {
   public static function createFromArray($array)
   {
     $array = array_merge(self::getDefaultOptions(), $array);
+
     return new self($array['dependency_name'], $array['inject_with'], $array['inject_as'], $array['force'], $array['new_class'], $array['required']);
   }
 
@@ -120,6 +121,7 @@ class sfDependencyInjectionMapItem {
   public function setDependencyName($dependencyName)
   {
     $this->dependencyName = $dependencyName;
+
     return $this;
   }
 
@@ -132,6 +134,7 @@ class sfDependencyInjectionMapItem {
   public function setInjectWith($injectWith)
   {
     $this->injectWith = $injectWith;
+
     return $this;
   }
 
@@ -144,6 +147,7 @@ class sfDependencyInjectionMapItem {
   public function setInjectAs($injectAs)
   {
     $this->injectAs = $injectAs;
+
     return $this;
   }
 
@@ -156,6 +160,7 @@ class sfDependencyInjectionMapItem {
   public function setForce($force)
   {
     $this->force = $force;
+
     return $this;
   }
 
@@ -167,6 +172,7 @@ class sfDependencyInjectionMapItem {
   public function setNewClass($newClass)
   {
     $this->newClass = $newClass;
+
     return $this;
   }
 
@@ -227,6 +233,7 @@ class sfDependencyInjectionMapItem {
   public function setRequired($flag = true)
   {
     $this->required = self::convertToBoolean($flag);
+
     return $this;
   }
 
@@ -273,6 +280,7 @@ class sfDependencyInjectionMapItem {
     {
       return false;
     }
+
     return (boolean)$value;
   }
 

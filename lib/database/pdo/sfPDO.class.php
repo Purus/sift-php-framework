@@ -117,6 +117,7 @@ class sfPDO extends PDO {
     {
       return 'NULL';
     }
+
     return parent::quote($value, $parameter_type);
   }
 

@@ -60,6 +60,7 @@ class sfI18nGettext {
     {
       throw new sfException(sprintf('Class "%s" not found', $className));
     }
+
     return new $className($file);
   }
 
@@ -113,6 +114,7 @@ class sfI18nGettext {
     {
       $smap = array('"', "\n", "\t", "\r");
       $rmap = array('\"', '\\n"' . "\n" . '"', '\\t', '\\r');
+
       return (string) str_replace($smap, $rmap, $string);
     }
     else
@@ -120,6 +122,7 @@ class sfI18nGettext {
       $string = preg_replace('/"\s+"/', '', $string);
       $smap = array('\\n', '\\r', '\\t', '\"');
       $rmap = array("\n", "\r", "\t", '"');
+
       return (string) str_replace($smap, $rmap, $string);
     }
   }
@@ -143,6 +146,7 @@ class sfI18nGettext {
         $array[trim($key)] = trim($value);
       }
     }
+
     return $array;
   }
 
@@ -218,6 +222,7 @@ class sfI18nGettext {
       $this->meta = @$array['meta'];
       $this->strings = @$array['strings'];
     }
+
     return true;
   }
 
@@ -231,6 +236,7 @@ class sfI18nGettext {
   {
     $mo = new sfI18nGettextMo();
     $mo->fromArray($this->toArray());
+
     return $mo;
   }
 
@@ -244,6 +250,7 @@ class sfI18nGettext {
   {
     $po = new sfI18nGettextPo();
     $po->fromArray($this->toArray());
+
     return $po;
   }
 

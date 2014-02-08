@@ -51,6 +51,7 @@ class sfSearchQueryBuilder implements sfISearchQueryBuilder {
   {
     $this->expression = $expression;
     $this->query = $this->processExpression($this->expression);
+
     return $this;
   }
 
@@ -117,6 +118,7 @@ class sfSearchQueryBuilder implements sfISearchQueryBuilder {
     }
 
     $query = preg_replace('/^(AND|OR) /', '', $query);
+
     return trim($query);
   }
 

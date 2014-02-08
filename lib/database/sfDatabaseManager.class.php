@@ -93,6 +93,7 @@ class sfDatabaseManager implements sfIService {
   public function getDatabases()
   {
     $this->loadDatabases();
+
     return $this->databases;
   }
 

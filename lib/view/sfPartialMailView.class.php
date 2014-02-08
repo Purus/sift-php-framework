@@ -189,6 +189,7 @@ class sfPartialMailView extends sfPartialView
     {
       return preg_replace("/(\r?\n){2,}/", "\n\n", $text);
     }
+
     return $text;
   }
 

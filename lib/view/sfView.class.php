@@ -511,6 +511,7 @@ abstract class sfView implements sfIView
     if(false === $template)
     {
       $this->setDecorator(false);
+
       return;
     }
     elseif(null === $template)
@@ -629,6 +630,7 @@ abstract class sfView implements sfIView
   public function setExtension($ext)
   {
     $this->extension = $ext;
+
     return $this;
   }
 

@@ -78,6 +78,7 @@ class sfWizardActions extends myActions {
           break;
         }
       }
+
       return $this->redirect($route.'?step='.($validated));
     }
   }
@@ -134,6 +135,7 @@ class sfWizardActions extends myActions {
     if($overwrite)
     {
       $this->getUser()->getAttributeHolder()->removeNamespace($this->getWizardStorageNamespace().'/'.$this->step);
+
       return $this->getUser()->getAttributeHolder()->add($values, $this->getWizardStorageNamespace().'/'.$this->step);
     }
     else
@@ -166,10 +168,12 @@ class sfWizardActions extends myActions {
     if(!is_null($boolean))
     {
       $this->getUser()->getAttributeHolder()->add(array('is_valid' => $boolean), $this->getWizardStorageNamespace().'/'.$step);
+
       return $this;
     }
 
     $valid = $this->getUser()->getAttribute('is_valid', false, $this->getWizardStorageNamespace().'/'.$step);
+
     return $valid;
   }
 
@@ -236,6 +240,7 @@ class sfWizardActions extends myActions {
     {
       $data[$step] = $this->getStepValues($step);
     }
+
     return $data;
   }
 

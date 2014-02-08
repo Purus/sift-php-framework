@@ -289,6 +289,7 @@ class sfValidatorPhoneNumber extends sfValidatorBase {
   var cleanNumber = function(number)
   {
     var cleanedNumber = number.%s;
+
     return cleanedNumber;
   }
 
@@ -309,11 +310,13 @@ class sfValidatorPhoneNumber extends sfValidatorBase {
     {
     }
   }
+
   return result;
 }',
     join(".", $replacements),
     join(',', $patterns)
     )));
+
     return $rules;
   }
 
@@ -322,6 +325,7 @@ class sfValidatorPhoneNumber extends sfValidatorBase {
     $messages = parent::getJavascriptValidationMessages();
     $messages[sfFormJavascriptValidation::CUSTOM_CALLBACK] =
             sfFormJavascriptValidation::fixValidationMessage($this, 'invalid');
+
     return $messages;
   }
 

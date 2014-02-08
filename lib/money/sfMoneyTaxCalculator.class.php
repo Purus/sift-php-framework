@@ -78,6 +78,7 @@ class sfMoneyTaxCalculator implements sfIMoneyTaxCalculator {
   public function getPriceWithTax(sfIMoneyCurrencyValue $price, $tax, $scale = null, $roundingMode = sfRounding::HALF_EVEN)
   {
     $amount = sfMath::multiply($price->getAmount(), sfMath::add(1, sfMath::divide($tax, '100', 10), strlen($tax)), 10);
+
     return new sfMoneyCurrencyValue(
         sfRounding::round($amount, !is_null($scale) ? $scale : $price->getCurrency()->getScale(), $roundingMode),
         $price->getCurrency());

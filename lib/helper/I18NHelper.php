@@ -48,6 +48,7 @@ function format_country($country_iso, $culture = null)
   $countries = sfCulture::getInstance($culture === null ?
                   sfContext::getInstance()->getUser()->getCulture() : $culture)
                   ->getCountries();
+
   return isset($countries[$country_iso]) ? $countries[$country_iso] : '';
 }
 
@@ -65,6 +66,7 @@ function format_language($language_iso, $culture = null)
   $languages = sfCulture::getInstance($culture === null ?
                   sfContext::getInstance()->getUser()->getCulture() : $culture)
                 ->getLanguages();
+
   return isset($languages[$language_iso]) ? $languages[$language_iso] : '';
 }
 
@@ -200,5 +202,6 @@ function get_enabled_cultures($format = true)
   {
     $cultures[$culture] = $format ? format_language($culture) : $culture;
   }
+
   return $cultures;
 }

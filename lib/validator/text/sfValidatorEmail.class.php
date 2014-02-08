@@ -72,6 +72,7 @@ class sfValidatorEmail extends sfValidatorRegex
         throw new sfValidatorError($this, 'mx_fail', array('value' => $value));
       }
     }
+
     return $value;
   }
 
@@ -99,6 +100,7 @@ class sfValidatorEmail extends sfValidatorRegex
           return true;
         }
       }
+
       return false;
     }
     elseif(function_exists('checkdnsrr'))
@@ -130,6 +132,7 @@ class sfValidatorEmail extends sfValidatorRegex
     $messages = parent::getActiveMessages();
     $messages[] = $this->getMessage('required');
     $messages[] = $this->getMessage('mx_fail');
+
     return $messages;
   }
 }

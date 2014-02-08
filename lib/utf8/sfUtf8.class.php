@@ -560,6 +560,7 @@ class sfUtf8 {
       return $string;
     }
     $string = strtr($string, self::$utf8_to_ascii);
+
     return preg_replace('#[^\x00-\x7F]#', '', $string);
   }
 
@@ -750,6 +751,7 @@ class sfUtf8 {
     {
       $value[$keys[$i]] = self::clean($value[$keys[$i]]);
     }
+
     return $value;
   }
 
@@ -865,6 +867,7 @@ class sfUtf8 {
 
     // If no delimiter was passed, we explode the characters into an array
     preg_match_all('#.|^\z#us', $string, $matches);
+
     return $matches[0];
   }
 
@@ -966,6 +969,7 @@ class sfUtf8 {
     {
       $search = '#' . preg_quote($search, '#') . '#ui';
     }
+
     return preg_replace(
             $search,
             strtr($replace, array('\\' => '\\\\', '$' => '\\$')),
@@ -1114,6 +1118,7 @@ class sfUtf8 {
     $search = preg_quote($charlist, '#');
     $search = str_replace('-', '\-', $search);
     $search = str_replace('\.\.', '-', $search);
+
     return preg_replace('#^[' . $search . ']+#Du', '', $string);
   }
 
@@ -1217,6 +1222,7 @@ class sfUtf8 {
     }
 
     $hex = strtoupper(dechex(bindec($bin)));
+
     return 'U+' . str_pad($hex, 4, '0', STR_PAD_LEFT);
   }
 
@@ -1249,6 +1255,7 @@ class sfUtf8 {
                   'right' => STR_PAD_RIGHT,
                   'both' => STR_PAD_BOTH
       );
+
       return str_pad($string, $pad_length, $pad_string, $type_map[$pad_type]);
     }
 
@@ -1452,6 +1459,7 @@ class sfUtf8 {
     $search = preg_quote($charlist, '#');
     $search = str_replace('-', '\-', $search);
     $search = str_replace('\.\.', '-', $search);
+
     return preg_replace('#[' . $search . ']+$#Du', '', $string);
   }
 
@@ -1525,6 +1533,7 @@ class sfUtf8 {
           $length = abs($start);
         }
       }
+
       return mb_substr($string, $start, $length, 'UTF-8');
     }
 
@@ -1542,6 +1551,7 @@ class sfUtf8 {
           $length = abs($start);
         }
       }
+
       return substr($string, $start, $length);
     }
 
@@ -1571,6 +1581,7 @@ class sfUtf8 {
     }
 
     $length = self::convertOffsetToBytes($string, $length);
+
     return substr($string, 0, $length);
   }
 
@@ -1601,6 +1612,7 @@ class sfUtf8 {
                           is_array($start) ? $start[$key] : $start,
                           is_array($length) ? $length[$key] : $length);
       }
+
       return $string;
     }
 
@@ -1649,6 +1661,7 @@ class sfUtf8 {
     $search = preg_quote($charlist, '#');
     $search = str_replace('-', '\-', $search);
     $search = str_replace('\.\.', '-', $search);
+
     return preg_replace('#^[' . $search . ']+|[' . $search . ']+$#Du', '', $string);
   }
 

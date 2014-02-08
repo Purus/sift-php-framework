@@ -137,6 +137,7 @@ class sfWebBrowser {
     {
       $uri .= ((false !== strpos($uri, '?')) ? '&' : '?') . http_build_query($parameters, '', '&');
     }
+
     return $this->call($uri, 'GET', array(), $headers);
   }
 
@@ -155,6 +156,7 @@ class sfWebBrowser {
     {
       $uri .= ((false !== strpos($uri, '?')) ? '&' : '?') . http_build_query($parameters, '', '&');
     }
+
     return $this->call($uri, 'HEAD', array(), $headers);
   }
 
@@ -476,6 +478,7 @@ class sfWebBrowser {
       throw new Exception('You are already on the first page.');
     }
     --$this->stackPosition;
+
     return $this->call($this->stack[$this->stackPosition]['uri'], $this->stack[$this->stackPosition]['method'], $this->stack[$this->stackPosition]['parameters'], $this->stack[$this->stackPosition]['headers'], false);
   }
 
@@ -491,6 +494,7 @@ class sfWebBrowser {
       throw new Exception('You are already on the last page.');
     }
     ++$this->stackPosition;
+
     return $this->call($this->stack[$this->stackPosition]['uri'], $this->stack[$this->stackPosition]['method'], $this->stack[$this->stackPosition]['parameters'], $this->stack[$this->stackPosition]['headers'], false);
   }
 
@@ -756,6 +760,7 @@ class sfWebBrowser {
   public function getResponseHeader($key)
   {
     $normalized_key = $this->normalizeHeaderName($key);
+
     return (isset($this->responseHeaders[$normalized_key])) ? $this->responseHeaders[$normalized_key] : '';
   }
 
@@ -773,6 +778,7 @@ class sfWebBrowser {
     {
       throw new Exception(sprintf('Could not decode GZIPed response from "%s"', $this->getUrlInfoAsUrl()));
     }
+
     return $decoded;
   }
 
@@ -807,6 +813,7 @@ class sfWebBrowser {
   protected function decodeDeflate($deflate_text)
   {
     $header = unpack('n', substr($deflate_text, 0, 2));
+
     return (0 == $header[1] % 31) ? gzuncompress($deflate_text) : gzinflate($deflate_text);
   }
 

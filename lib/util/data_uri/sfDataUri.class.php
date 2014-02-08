@@ -164,6 +164,7 @@ class sfDataUri {
   public function setMediaType($mediaType)
   {
     $this->mediaType = $mediaType;
+
     return $this;
   }
 
@@ -207,6 +208,7 @@ class sfDataUri {
     $this->assertEncoding($encoding);
     $this->encoding = $encoding;
     $this->encodedData = $data;
+
     return $this;
   }
 
@@ -303,6 +305,7 @@ class sfDataUri {
         // NOP
       break;
     }
+
     return false;
   }
 
@@ -327,6 +330,7 @@ class sfDataUri {
     }
 
     $output .= ',' . $this->getEncodedData();
+
     return $output;
   }
 
@@ -367,6 +371,7 @@ class sfDataUri {
       {
         throw new sfParseException(sprintf('The data uri "%s" could not be parsed', strlen($dataUriString) > 128 ? substr($dataUriString, 0, 128) : $dataUriString));
       }
+
       return false;
     }
 

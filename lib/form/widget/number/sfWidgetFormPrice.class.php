@@ -38,6 +38,7 @@ class sfWidgetFormPrice extends sfWidgetFormI18nNumber
     {
       $value += 0;
     }
+
     return parent::render($name, $value, $attributes, $errors);
   }
 

@@ -409,6 +409,7 @@ class sfYamlParser
       {
         throw new InvalidArgumentException(sprintf('Reference "%s" does not exist (%s).', $value, $this->currentLine));
       }
+
       return $this->refs[$value];
     }
 
@@ -570,6 +571,7 @@ class sfYamlParser
   {
     //checking explicitly the first char of the trim is faster than loops or strpos
     $ltrimmedLine = ltrim($this->currentLine, ' ');
+
     return $ltrimmedLine[0] === '#';
   }
 

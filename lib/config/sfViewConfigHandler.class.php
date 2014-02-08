@@ -218,6 +218,7 @@ class sfViewConfigHandler extends sfYamlConfigHandler {
     {
       $data[] = "  \$response->setBodyId('$id', false);";
     }
+
     return implode("\n", $data) . "\n";
   }
 
@@ -265,6 +266,7 @@ class sfViewConfigHandler extends sfYamlConfigHandler {
       }
       $data[] = sprintf("  \$this->setComponentSlot('%s', %s);", $name, $this->varExport($component));
     }
+
     return join("\n", $data) . "\n";
   }
 
@@ -525,8 +527,10 @@ EOF;
     if($helpers)
     {
       $data[] = sprintf("  \$this->addHelpers(%s);", $this->varExport($helpers));
+
       return implode("\n", $data) . "\n";
     }
+
     return '';
   }
 }

@@ -252,6 +252,7 @@ class sfImageRectangleImageMagick extends sfImageTransformAbstract
 
       return true;
     }
+
     return false;
   }
 

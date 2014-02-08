@@ -84,6 +84,7 @@ class sfStringStreamWrapper extends sfStreamWrapper {
     {
       $this->position += strlen($result);
     }
+
     return $result;
   }
 
@@ -94,6 +95,7 @@ class sfStringStreamWrapper extends sfStreamWrapper {
   {
     $length = strlen($data);
     $this->data = substr($this->data, 0, $this->position) . $data . substr($this->data, $this->position += $length);
+
     return $length;
   }
 
@@ -121,6 +123,7 @@ class sfStringStreamWrapper extends sfStreamWrapper {
     {
       return true;
     }
+
     return false;
   }
 
@@ -150,6 +153,7 @@ class sfStringStreamWrapper extends sfStreamWrapper {
     {
       $this->position = $newPos;
     }
+
     return $return;
   }
 

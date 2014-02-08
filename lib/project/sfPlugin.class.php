@@ -132,6 +132,7 @@ abstract class sfPlugin extends sfConfigurable {
     {
       return file_get_contents($version);
     }
+
     return 'UNKNOWN';
   }
 

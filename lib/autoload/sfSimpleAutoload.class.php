@@ -128,6 +128,7 @@ class sfSimpleAutoload {
     try
     {
       require_once $found;
+
       return true;
     }
     catch(sfException $e)

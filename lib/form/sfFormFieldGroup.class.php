@@ -54,6 +54,7 @@ class sfFormFieldGroup implements ArrayAccess, Countable {
       }
       $return[$fieldName] = $this->form[$fieldName];
     }
+
     return $return;
   }
 
@@ -66,6 +67,7 @@ class sfFormFieldGroup implements ArrayAccess, Countable {
   public function setLabel($label)
   {
     $this->label = $label;
+
     return $this;
   }
 
@@ -88,6 +90,7 @@ class sfFormFieldGroup implements ArrayAccess, Countable {
   public function setPriority($priority)
   {
     $this->priority = (int)$prority;
+
     return $this;
   }
 

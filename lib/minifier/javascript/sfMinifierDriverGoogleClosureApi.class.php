@@ -97,6 +97,7 @@ class sfMinifierDriverGoogleClosureApi extends sfMinifier {
     {
       $this->browser = new sfWebBrowser();
     }
+
     return $this->browser;
   }
 

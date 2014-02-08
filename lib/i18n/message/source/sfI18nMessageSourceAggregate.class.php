@@ -67,6 +67,7 @@ class sfI18nMessageSourceAggregate extends sfI18nMessageSource {
         $messages = array_merge($data, $messages);
       }
     }
+
     return $messages;
   }
 
@@ -111,8 +112,10 @@ class sfI18nMessageSourceAggregate extends sfI18nMessageSource {
       {
         continue;
       }
+
       return true;
     }
+
     return false;
   }
 
@@ -132,6 +135,7 @@ class sfI18nMessageSourceAggregate extends sfI18nMessageSource {
         $variants[] = $messageSource->getId().$variant;
       }
     }
+
     return $variants;
   }
 
@@ -167,6 +171,7 @@ class sfI18nMessageSourceAggregate extends sfI18nMessageSource {
     {
       $id .= $messageSource->getId();
     }
+
     return md5($id);
   }
 

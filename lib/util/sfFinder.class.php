@@ -165,6 +165,7 @@ class sfFinder {
   public function maxDepth($level)
   {
     $this->maxDepth = $level;
+
     return $this;
   }
 
@@ -177,6 +178,7 @@ class sfFinder {
   public function minDepth($level)
   {
     $this->minDepth = $level;
+
     return $this;
   }
 
@@ -237,6 +239,7 @@ class sfFinder {
   {
     $args = func_get_args();
     $this->names = array_merge($this->names, $this->argumentsToArray($args));
+
     return $this;
   }
 
@@ -250,6 +253,7 @@ class sfFinder {
   {
     $args = func_get_args();
     $this->names = array_merge($this->names, $this->argumentsToArray($args, true));
+
     return $this;
   }
 
@@ -270,6 +274,7 @@ class sfFinder {
     {
       $this->sizes[] = new sfNumberCompare($args[$i]);
     }
+
     return $this;
   }
 
@@ -283,6 +288,7 @@ class sfFinder {
   {
     $args = func_get_args();
     $this->prunes = array_merge($this->prunes, $this->argumentsToArray($args));
+
     return $this;
   }
 
@@ -296,6 +302,7 @@ class sfFinder {
   {
     $args = func_get_args();
     $this->discards = array_merge($this->discards, $this->argumentsToArray($args));
+
     return $this;
   }
 
@@ -311,6 +318,7 @@ class sfFinder {
   public function ignoreVersionControl($ignore = true)
   {
     $this->ignoreVersionControl = $ignore;
+
     return $this;
   }
 
@@ -322,6 +330,7 @@ class sfFinder {
   public function sortByName()
   {
     $this->sort = 'name';
+
     return $this;
   }
 
@@ -333,6 +342,7 @@ class sfFinder {
   public function sortByType()
   {
     $this->sort = 'type';
+
     return $this;
   }
 
@@ -360,6 +370,7 @@ class sfFinder {
       }
       $this->execChecks[] = $args[$i];
     }
+
     return $this;
   }
 
@@ -371,6 +382,7 @@ class sfFinder {
   public function relative()
   {
     $this->relative = true;
+
     return $this;
   }
 
@@ -383,6 +395,7 @@ class sfFinder {
   public function followLink($follow = true)
   {
     $this->followLink = filter_var($follow, FILTER_VALIDATE_BOOLEAN);
+
     return $this;
   }
 
@@ -598,6 +611,7 @@ class sfFinder {
     {
       return false;
     }
+
     return true;
   }
 
@@ -627,6 +641,7 @@ class sfFinder {
         return false;
       }
     }
+
     return true;
   }
 
@@ -649,6 +664,7 @@ class sfFinder {
         return true;
       }
     }
+
     return false;
   }
 
@@ -671,6 +687,7 @@ class sfFinder {
         return true;
       }
     }
+
     return false;
   }
 
@@ -695,6 +712,7 @@ class sfFinder {
         return false;
       }
     }
+
     return true;
   }
 
@@ -711,6 +729,7 @@ class sfFinder {
     {
       return true;
     }
+
     return false;
   }
 
@@ -726,6 +745,7 @@ class sfFinder {
     {
       return $str;
     }
+
     return sfGlobToRegex::toRegex($str);
   }
 
@@ -753,6 +773,7 @@ class sfFinder {
         $list[] = array($not, $this->toRegex($arguments[$i]));
       }
     }
+
     return $list;
   }
 

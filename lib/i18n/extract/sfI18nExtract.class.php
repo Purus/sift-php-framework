@@ -151,6 +151,7 @@ abstract class sfI18nExtract extends sfConfigurable {
     {
       $count += count($messages);
     }
+
     return $count;
   }
 
@@ -176,6 +177,7 @@ abstract class sfI18nExtract extends sfConfigurable {
     {
       $count += count($messages);
     }
+
     return $count;
   }
 
@@ -201,6 +203,7 @@ abstract class sfI18nExtract extends sfConfigurable {
     {
       $count += count($messages);
     }
+
     return $count;
   }
 
@@ -232,6 +235,7 @@ abstract class sfI18nExtract extends sfConfigurable {
     {
       $count += count($messages);
     }
+
     return $count;
   }
 

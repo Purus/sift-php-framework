@@ -141,6 +141,7 @@ class sfWebDebugLogger extends sfVarLogger implements sfIEventDispatcherAware {
 
     $content = str_ireplace('</body>', $this->webDebug->getHtml() . '</body>', $content);
     $content = str_ireplace('</head>', "<style type=\"text/css\" id=\"web-debug-style\">\n".$this->webDebug->getDebugCss().'</style>' . '</head>', $content);
+
     return $content;
   }
 

@@ -98,6 +98,7 @@ class sfCrypt {
     {
       self::$instance = new sfCrypt();
     }
+
     return self::$instance;
   }
 
@@ -243,6 +244,7 @@ class sfCrypt {
 
     // right trim zero-padding (caused by CBC mode)
     $decrypted = rtrim($decrypted, "\0");
+
     return $decrypted;
   }
 

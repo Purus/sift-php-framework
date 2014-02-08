@@ -615,6 +615,7 @@ function get_javascripts()
       }
     }
   }
+
   return $html;
 }
 
@@ -694,6 +695,7 @@ function get_auto_discovery_links()
   {
     $html[] = auto_discovery_link_tag($link['type'], $link['url'], $link['tag_options']);
   }
+
   return join("\n", $html) . "\n";
 }
 
@@ -759,6 +761,7 @@ function get_canonical_url($raw = true, $detect = true)
       $url = sfContext::getInstance()->getRequest()->getUri();
     }
   }
+
   return $raw ? $url : tag('link', array('rel' => 'canonical', 'href' => $url));
 }
 
@@ -996,6 +999,7 @@ function apply_filters($tag, $string)
             ->getService('text_filters_registry')
             ->apply($tag, $string);
   }
+
   return $string;
 }
 
@@ -1011,5 +1015,6 @@ function _replace_constants($value)
   {
     return sfAssetPackage::replaceVariables($value);
   }
+
   return $value;
 }

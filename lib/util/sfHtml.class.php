@@ -103,6 +103,7 @@ class sfHtml {
     {
       return sprintf(' %s="%s"', $k, self::escapeOnce($v));
     }
+
     return false === $v || null === $v || ('' === $v && 'value' != $k) ? '' : sprintf(' %s="%s"', $k, self::escapeOnce($v));
   }
 
@@ -178,6 +179,7 @@ class sfHtml {
     {
       $class = array((string)$class);
     }
+
     return trim(join(' ', array_unique(array_merge($class, explode(' ', $another)))));
   }
 

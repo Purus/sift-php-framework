@@ -218,6 +218,7 @@ class sfTesterMailer extends sfTester {
         {
           $this->tester->pass(sprintf('attachment "%s" is attached to the message', $attachmentName));
         }
+
         return $this->getObjectToReturn();
       }
     }

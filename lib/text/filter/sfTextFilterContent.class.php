@@ -41,6 +41,7 @@ class sfTextFilterContent {
   public function setText($text)
   {
     $this->text = (string)$text;
+
     return $this;
   }
 
@@ -67,6 +68,7 @@ class sfTextFilterContent {
       return !$this->bubble;
     }
     $this->bubble = !(boolean)$flag;
+
     return $this;
   }
 

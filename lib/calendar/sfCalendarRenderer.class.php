@@ -165,6 +165,7 @@ abstract class sfCalendarRenderer implements sfICalendarRenderer {
       }
     }
     $this->translationCatalogue = $catalogue;
+
     return $this;
   }
 

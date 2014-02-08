@@ -104,6 +104,7 @@ class sfPrefetchBrowser extends sfBrowser
       );
       $this->context = sfContext::getInstance();
     }
+
     return $this->context;
   }
 

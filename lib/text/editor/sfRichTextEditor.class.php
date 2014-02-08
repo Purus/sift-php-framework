@@ -41,6 +41,7 @@ abstract class sfRichTextEditor extends sfConfigurable implements sfIRichTextEdi
       {
         throw new LogicException(sprintf('Driver "%s" does not implement sfIRichTextEditor interface.', $driver));
       }
+
       return $driverObj;
     }
     throw new InvalidArgumentException(sprintf('Invalid rich editor driver "%s".', $driver));
@@ -76,6 +77,7 @@ abstract class sfRichTextEditor extends sfConfigurable implements sfIRichTextEdi
   {
     $config = include sfConfigCache::getInstance()->checkConfig('config/rich_editor.yml');
     array_walk_recursive($config, create_function('&$config', '$config = sfToolkit::replaceConstantsWithModifiers($config);'));
+
     return $config;
   }
 

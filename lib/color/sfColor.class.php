@@ -319,6 +319,7 @@ class sfColor {
     if($hsv['sat'] == 0)
     {
       $hsv['hue'] = 0;
+
       return $hsv;
     }
 
@@ -380,6 +381,7 @@ class sfColor {
     if($hsv['sat'] == 0)
     {
       $hsv['hue'] = 0;
+
       return $hsv;
     }
 
@@ -436,6 +438,7 @@ class sfColor {
     {
       $str = str_pad($str, 6, '0', STR_PAD_LEFT);
     }
+
     return strtolower("#{$str}");
   }
 
@@ -457,6 +460,7 @@ class sfColor {
 
     // Sum of RGB differences
     $diff = $rDiff + $gDiff + $bDiff;
+
     return $diff;
   }
 
@@ -503,6 +507,7 @@ class sfColor {
         $matchKey = $key;
       }
     }
+
     return $matchKey;
   }
 
@@ -548,6 +553,7 @@ class sfColor {
   public function invert()
   {
     $this->color = (~$this->color) & (self::$maskRed + self::$maskGreen + self::$maskBlue);
+
     return $this;
   }
 
@@ -596,6 +602,7 @@ class sfColor {
   public function getBrightness()
   {
     $rgb = $this->toRgbInt();
+
     return sqrt((pow($rgb['red'], 2) * .241) + (pow($rgb['green'], 2) * .691) + (pow($rgb['blue'], 2) * .068));
   }
 
@@ -607,6 +614,7 @@ class sfColor {
   public function getLuminance()
   {
     $rgb = $this->toRgbInt();
+
     return(min($rgb['red'], $rgb['green'], $rgb['blue']) + max($rgb['red'], $rgb['green'], $rgb['blue'])) >> 1;
   }
 
@@ -646,6 +654,7 @@ class sfColor {
       }
       $rgb[$name] = $color;
     }
+
     return $this->fromRgbArray($rgb);
   }
 

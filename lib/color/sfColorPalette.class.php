@@ -35,6 +35,7 @@ abstract class sfColorPalette implements sfIColorPallete {
       $index = $myColor->getClosestMatch($swatches);
       $myColor = new sfColor($swatches[$index]);
     }
+
     return $myColor;
   }
 

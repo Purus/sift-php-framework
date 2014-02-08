@@ -82,6 +82,7 @@ class sfSearchQueryParser implements sfISearchQueryParser {
   public function setLexer(sfISearchQueryLexer $lexer)
   {
     $this->lexer = $lexer;
+
     return $this;
   }
 
@@ -109,6 +110,7 @@ class sfSearchQueryParser implements sfISearchQueryParser {
     $this->lexer->execute($query);
     $this->tokenStack = $this->lexer->getTokens();
     $expression = new sfSearchQueryExpression($query);
+
     return $this->processTokens($this->tokenStack, $expression);
   }
 
@@ -140,6 +142,7 @@ class sfSearchQueryParser implements sfISearchQueryParser {
     {
       $expression = $this->processToken($token, $expression);
     }
+
     return $expression;
   }
 
@@ -239,11 +242,13 @@ class sfSearchQueryParser implements sfISearchQueryParser {
 
             $this->stackLevel++;
             $this->stackType[$this->stackLevel] = 'default';
+
             return $expression->initiateSubExpression($mode);
             break;
 
           case sfSearchQueryToken::BRACE_CLOSE:
             $this->stackLevel--;
+
             return $expression->getParentExpression();
             break;
 

@@ -197,6 +197,7 @@ abstract class sfProject extends sfConfigurable {
   {
     parent::setOption($name, $value);
     sfConfig::set($name, $value);
+
     return $this;
   }
 
@@ -212,6 +213,7 @@ abstract class sfProject extends sfConfigurable {
     // clear
     sfConfig::clear();
     sfConfig::add($this->getOptions());
+
     return $this;
   }
 
@@ -225,6 +227,7 @@ abstract class sfProject extends sfConfigurable {
   {
     parent::addOptions($options);
     sfConfig::add($this->getOptions());
+
     return $this;
   }
 
@@ -430,6 +433,7 @@ abstract class sfProject extends sfConfigurable {
               $this->getEventDispatcher(),
               $this->getShutdownScheduler());
     }
+
     return $this->applications[$application];
   }
 
@@ -669,6 +673,7 @@ abstract class sfProject extends sfConfigurable {
   {
     $event = new sfEvent($eventName, $params);
     $this->getEventDispatcher()->filter($event, $value);
+
     return $event->getReturnValue();
   }
 

@@ -31,6 +31,7 @@ class sfWordHtmlCleaner {
     {
       $html = self::convertToUtf8($html);
     }
+
     return self::fixNewLines(
       sfSanitizer::sanitize($html, 'word')
     );

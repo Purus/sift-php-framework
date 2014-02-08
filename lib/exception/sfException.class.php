@@ -58,6 +58,7 @@ class sfException extends Exception {
     $exception = new sfException(sprintf('Wrapped %s: %s', get_class($e), $e->getMessage()));
     $exception->setWrappedException($e);
     self::$lastException = $e;
+
     return $exception;
   }
 
@@ -216,6 +217,7 @@ class sfException extends Exception {
 
       // we need to display the error
       $this->displayErrorPage($format);
+
       return;
     }
 

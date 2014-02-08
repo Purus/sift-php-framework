@@ -82,6 +82,7 @@ class sfImagePolygonGD extends sfImageTransformAbstract
   public function setPoints($points)
   {
     $this->points = $points;
+
     return true;
   }
 
@@ -134,8 +135,10 @@ class sfImagePolygonGD extends sfImageTransformAbstract
     if (preg_match('/#[\d\w]{6}/',$color))
     {
       $this->color = $color;
+
       return true;
     }
+
     return false;
   }
 
@@ -160,8 +163,10 @@ class sfImagePolygonGD extends sfImageTransformAbstract
     if (preg_match('/#[\d\w]{6}/',$fill))
     {
       $this->fill = $fill;
+
       return true;
     }
+
     return false;
   }
 

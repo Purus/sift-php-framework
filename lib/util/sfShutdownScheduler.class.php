@@ -87,6 +87,7 @@ class sfShutdownScheduler implements Countable {
     }
 
     $this->callbacks[$priority][] = array(&$callback, $arguments);
+
     return $this;
   }
 
@@ -102,6 +103,7 @@ class sfShutdownScheduler implements Countable {
     {
       $count += count($this->callbacks[$priority]);
     }
+
     return $count;
   }
 

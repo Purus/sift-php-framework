@@ -249,8 +249,10 @@ class sfImageRectangleGD extends sfImageTransformAbstract
     if (preg_match('/#[\d\w]{6}/',$color))
     {
       $this->color = $color;
+
       return true;
     }
+
     return false;
   }
 
@@ -275,8 +277,10 @@ class sfImageRectangleGD extends sfImageTransformAbstract
     if (preg_match('/#[\d\w]{6}/',$fill) || (is_object($fill) && class_name($fill) === 'sfImage'))
     {
       $this->fill = $fill;
+
       return true;
     }
+
     return false;
   }
 

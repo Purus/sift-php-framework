@@ -90,6 +90,7 @@ class sfVarLogger extends sfLoggerBase {
     }
 
     sort($types);
+
     return $types;
   }
 
@@ -110,6 +111,7 @@ class sfVarLogger extends sfLoggerBase {
     }
 
     sort($priorities);
+
     return $priorities;
   }
 
@@ -128,6 +130,7 @@ class sfVarLogger extends sfLoggerBase {
         $level = $log['level'];
       }
     }
+
     return $level;
   }
 

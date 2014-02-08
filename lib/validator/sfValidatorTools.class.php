@@ -55,6 +55,7 @@ class sfValidatorTools {
       $c = 0;
     else
       $c = 11 - $a;
+
     return (int) $in[7] === $c;
   }
 

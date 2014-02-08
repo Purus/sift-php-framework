@@ -52,6 +52,7 @@ function rating_stars($avg_rating, $options = array())
   $html     = array();
   $html[]   = sprintf('<span class="star-rating-state%s" title="%s/%s">', $class ? (' ' . $class) : '', round($avg_rating, 1), $options['max']);
   $html[]   = sprintf('<span class="star-rating-current" style="width:%s%%"></span></span>', $width);
+
   return join('', $html);
 }
 
@@ -107,6 +108,7 @@ function rating_stars_votable($rating, $options = array())
   }
 
   $html[] = '</ul>';
+
   return join("\n", $html);
 }
 
@@ -122,6 +124,7 @@ function rating_ratio($avg_rating, $max = 5)
   {
     throw new sfException("{RatingHelper} Rating supports only max 10 stars!");
   }
+
   return sprintf('%s/%s', round($avg_rating, 1), $max);
 }
 
@@ -140,5 +143,6 @@ function rating_class($i)
     throw new sfException("{RatingHelper} Rating supports only max 10 stars!");
   }
   $suffix = $i > 1 ? 'stars' : 'star';
+
   return sprintf('star-rating-%s-%s', $nwords[$i-1], $suffix);
 }

@@ -37,6 +37,7 @@ class sfIntegerEncoder {
       $converted = substr(self::CODESET, bcmod($n, $base), 1) . $converted;
       $n = self::bcFloor(bcdiv($n, $base));
     }
+
     return (string)$converted;
   }
 
@@ -54,6 +55,7 @@ class sfIntegerEncoder {
     {
       $c = bcadd($c, bcmul(strpos(self::CODESET, substr($code, (-1 * ( $i - strlen($code) )), 1)), bcpow($base, $i - 1)));
     }
+
     return (integer)bcmul($c, 1, 0);
   }
 

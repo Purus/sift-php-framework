@@ -102,6 +102,7 @@ class sfImageMergeGD extends sfImageOverlayGD
     $image->getAdapter()->setHolder($new);
     // tidy up
     imagedestroy($resource);
+
     return $image;
   }
 

@@ -111,6 +111,7 @@ class sfValidatorFirstName extends sfValidatorAnd {
     {
       $messages[] = $this->getMessage('required');
     }
+
     return $messages;
   }
 

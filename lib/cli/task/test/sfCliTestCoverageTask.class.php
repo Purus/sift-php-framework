@@ -78,6 +78,7 @@ EOF;
     $project = $this->commandApplication->getProject();
     $harness->addPlugins(array_map(array($project, 'getPluginConfiguration'), $project->getPlugins()));
     $harness->base_dir = $this->environment->get('sf_root_dir');
+
     return $harness;
   }
 

@@ -52,6 +52,7 @@ class sfValidatorPassword extends sfValidatorString {
         throw new sfValidatorError($this, 'strength_error');
       }
     }
+
     return $value;
   }
 
@@ -223,6 +224,7 @@ class sfValidatorPassword extends sfValidatorString {
       }
       $last = $current;
     }
+
     return false;
   }
 
@@ -255,8 +257,10 @@ class sfValidatorPassword extends sfValidatorString {
         $ret[] = function_exists('mb_substr') ? mb_substr($string, $i, $length, self::getCharset()) :
           substr($string, $i, $length);
       }
+
       return $ret;
     }
+
     return preg_split("//u", $string, -1, PREG_SPLIT_NO_EMPTY);
   }
 
@@ -363,6 +367,7 @@ class sfValidatorPassword extends sfValidatorString {
     {
       $messages[] = $this->getMessage('strength_error');
     }
+
     return $messages;
   }
 

@@ -287,6 +287,7 @@ class sfMailer extends Swift_Mailer implements sfIConfigurable {
 
       $transports[$transportName] = $transport;
     }
+
     return $transports;
   }
 
@@ -492,6 +493,7 @@ class sfMailer extends Swift_Mailer implements sfIConfigurable {
     {
       sfArray::set($this->options, $name, sfToolkit::getValue($value));
     }
+
     return $this;
   }
 
@@ -507,6 +509,7 @@ class sfMailer extends Swift_Mailer implements sfIConfigurable {
     {
       return isset($this->options[$name]);
     }
+
     return sfArray::keyExists($this->options, $name);
   }
 
@@ -593,6 +596,7 @@ class sfMailer extends Swift_Mailer implements sfIConfigurable {
   public function sendNextImmediately()
   {
     $this->force = true;
+
     return $this;
   }
 
@@ -687,6 +691,7 @@ class sfMailer extends Swift_Mailer implements sfIConfigurable {
     {
       throw new LogicException('You can send messages to the spool only if spool is enabled in your configuration.');
     }
+
     return $this->spool;
   }
 
@@ -709,6 +714,7 @@ class sfMailer extends Swift_Mailer implements sfIConfigurable {
   public function setRealtimeTransport(Swift_Transport $transport)
   {
     $this->realtimeTransport = $transport;
+
     return $this;
   }
 
@@ -741,6 +747,7 @@ class sfMailer extends Swift_Mailer implements sfIConfigurable {
   public function setLogger(Swift_Events_SendListener $logger)
   {
     $this->logger = $logger;
+
     return $this;
   }
 

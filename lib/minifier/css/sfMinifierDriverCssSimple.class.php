@@ -53,6 +53,7 @@ class sfMinifierDriverCssSimple extends sfMinifier {
     $buffer = preg_replace(array('(( )+{)','({( )+)'), '{', $buffer);
     $buffer = preg_replace(array('(( )+})','(}( )+)','(;( )*})'), '}', $buffer);
     $buffer = preg_replace(array('(;( )+)','(( )+;)'), ';', $buffer);
+
     return $buffer . "\n";
   }
 

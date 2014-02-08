@@ -44,6 +44,7 @@ class sfWidgetFormInputRadio extends sfWidgetFormInput {
     {
       $attributes['id'] = $this->generateId(sprintf('%s[]', $name), $value);
     }
+
     return parent::render($name, $value, $attributes, $errors);
   }
 

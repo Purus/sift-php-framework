@@ -87,6 +87,7 @@ class sfUserAgentDetector {
   public static function guess($userAgent)
   {
     $detector = new sfUserAgentDetector();
+
     return $detector->execute($userAgent);
   }
 

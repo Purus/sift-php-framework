@@ -98,6 +98,7 @@ class sfFormJavascriptValidationFieldRules implements ArrayAccess, sfIJsonSerial
   public function setRules($rules)
   {
     $this->rules = $rules;
+
     return $this;
   }
 

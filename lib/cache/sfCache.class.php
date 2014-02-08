@@ -126,6 +126,7 @@ abstract class sfCache extends sfConfigurable implements sfICache
     {
       $data[$key] = $this->get($key);
     }
+
     return $data;
   }
 
@@ -154,6 +155,7 @@ abstract class sfCache extends sfConfigurable implements sfICache
       array('.+?',    '[^'.preg_quote(sfICache::SEPARATOR, '#').']+'),
       preg_quote($pattern, '#')
     );
+
     return '#^'.$regexp.'$#';
   }
 

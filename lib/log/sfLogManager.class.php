@@ -233,6 +233,7 @@ class sfLogManager extends sfConfigurable
   {
     $filePrefix = substr($file, 0, strrpos($file, '.'));
     $fileSuffix = substr($file, strrpos($file, '.'), strlen($file));
+
     return $filePrefix . $datePrefix . ($date) . $fileSuffix;
   }
 

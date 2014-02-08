@@ -161,6 +161,7 @@ class sfFeed {
     {
       $this->items = array_slice($this->items, 0, $count);
     }
+
     return $this;
   }
 
@@ -325,6 +326,7 @@ class sfFeed {
     {
       $updates = array_unique($updates);
       sort($updates, SORT_NUMERIC);
+
       return $updates[count($updates)-1];
       return array_pop($updates);
     }

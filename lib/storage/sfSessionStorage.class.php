@@ -57,6 +57,7 @@ class sfSessionStorage extends sfStorage {
       'session_cookie_httponly' => isset($cookieDefaults['httponly']) ? $cookieDefaults['httponly'] : false,
       'session_cache_limiter'   => '',
     ), $defaultOptions);
+
     return $options;
   }
 
@@ -115,6 +116,7 @@ class sfSessionStorage extends sfStorage {
       $retval = $_SESSION[$key];
       unset($_SESSION[$key]);
     }
+
     return $retval;
   }
 

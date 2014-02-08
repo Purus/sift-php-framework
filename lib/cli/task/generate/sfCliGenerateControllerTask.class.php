@@ -118,6 +118,7 @@ EOF;
         '  die(\'You are not allowed to access this file. Check \'.basename(__FILE__).\' for more information.\');'.PHP_EOL.
         '}'.PHP_EOL;
     }
+
     return $code;
   }
 

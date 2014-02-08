@@ -137,6 +137,7 @@ abstract class sfMinifier extends sfConfigurable implements sfIMinifier {
     {
       throw new RuntimeException(sprintf('Unable to replace file "%s" with optimized contents', $file));
     }
+
     return $file;
   }
 
@@ -151,6 +152,7 @@ abstract class sfMinifier extends sfConfigurable implements sfIMinifier {
     $this->optimizedSize = null;
     $this->originalSize = null;
     $this->processed = false;
+
     return $this;
   }
 

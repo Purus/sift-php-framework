@@ -75,6 +75,7 @@ class sfDimensions {
     // reset
     $this->currentDimensionDirectories = array();
     $this->currentDimension = $dimension;
+
     return $this;
   }
 
@@ -104,6 +105,7 @@ class sfDimensions {
         return false;
       }
     }
+
     return true;
   }
 
@@ -186,6 +188,7 @@ class sfDimensions {
         $flat_array[] = $element;
       }
     }
+
     return $flat_array;
   }
 
@@ -206,6 +209,7 @@ class sfDimensions {
       $return .= $divider . $val;
       $i++;
     }
+
     return $return;
   }
 

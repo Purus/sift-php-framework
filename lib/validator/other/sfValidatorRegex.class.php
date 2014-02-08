@@ -93,6 +93,7 @@ class sfValidatorRegex extends sfValidatorString {
     {
       $rules[sfFormJavascriptValidation::REGEX_PATTERN_NEGATIVE] = $this->getPattern();
     }
+
     return $rules;
   }
 
@@ -104,6 +105,7 @@ class sfValidatorRegex extends sfValidatorString {
     $messages = parent::getJavascriptValidationMessages();
     $messages[sfFormJavascriptValidation::REGEX_PATTERN] =
             sfFormJavascriptValidation::fixValidationMessage($this, 'invalid');
+
     return $messages;
   }
 

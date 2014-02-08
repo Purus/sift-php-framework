@@ -480,6 +480,7 @@ class sfFormField
   public function setValue($value)
   {
     $this->value = $value;
+
     return $this;
   }
 
@@ -515,6 +516,7 @@ class sfFormField
     {
       return $this->error ? $this->form->translate($this->error->getMessageFormat(), $this->error->getArguments()) : '';
     }
+
     return $this->error;
   }
 

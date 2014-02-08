@@ -143,6 +143,7 @@ abstract class sfGenerator extends sfConfigurable implements sfIGenerator {
 
     $data = sprintf("require_once('%s/%s/actions/actions.class.php');\n",
                     $this->getGeneratorManager()->getSavePath(), $this->getGeneratedModuleName());
+
     return $data;
   }
 
@@ -356,6 +357,7 @@ abstract class sfGenerator extends sfConfigurable implements sfIGenerator {
   public function underscore($name)
   {
     $name = str_replace('\\', '_', $name);
+
     return sfInflector::underscore($name);
   }
 
@@ -369,6 +371,7 @@ abstract class sfGenerator extends sfConfigurable implements sfIGenerator {
   {
     $name = str_replace('\\', '_', $name);
     $name = sfInflector::camelize($name);
+
     return strtolower($name[0]) . substr($name, 1);
   }
 

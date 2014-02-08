@@ -93,6 +93,7 @@ class sfValidatorCompanyVat extends sfValidatorBase {
     {
       return false;
     }
+
     return true;
   };
 
@@ -128,6 +129,7 @@ class sfValidatorCompanyVat extends sfValidatorBase {
     {
       return false;
     }
+
     return true;
   };
 
@@ -169,6 +171,7 @@ class sfValidatorCompanyVat extends sfValidatorBase {
     $messages = parent::getJavascriptValidationMessages();
     $messages[sfFormJavascriptValidation::CUSTOM_CALLBACK] =
             sfFormJavascriptValidation::fixValidationMessage($this, 'invalid');
+
     return $messages;
   }
 

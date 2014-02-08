@@ -76,6 +76,7 @@ class sfSQLiteCache extends sfCache
       $key, time()
     ));
     $data = $stmt->fetchColumn();
+
     return $data !== false ? $data : $default;
   }
 
@@ -88,6 +89,7 @@ class sfSQLiteCache extends sfCache
     $stmt->execute(array(
       $key, time()
     ));
+
     return $stmt->fetchColumn() > 0;
   }
 
@@ -119,6 +121,7 @@ class sfSQLiteCache extends sfCache
     $stmt->execute(array(
       $key
     ));
+
     return (boolean)$stmt->rowCount();
   }
 
@@ -131,6 +134,7 @@ class sfSQLiteCache extends sfCache
     $stmt->execute(array(
       $this->patternToRegexp($pattern)
     ));
+
     return (boolean)$stmt->rowCount();
   }
 
@@ -143,12 +147,14 @@ class sfSQLiteCache extends sfCache
     {
       case self::MODE_ALL:
         $stmt = $this->dbh->query('DELETE FROM cache');
+
         return $stmt->rowCount();
       break;
 
       case self::MODE_OLD:
         $stmt = $this->dbh->prepare('DELETE FROM cache WHERE timeout < ?');
         $stmt->execute(array(time()));
+
         return $stmt->rowCount();
       break;
     }
@@ -164,6 +170,7 @@ class sfSQLiteCache extends sfCache
       $key, time()
     ));
     $result = $stmt->fetch(PDO::FETCH_COLUMN);
+
     return ($result !== false) ? intval($result) : 0;
   }
 
@@ -177,6 +184,7 @@ class sfSQLiteCache extends sfCache
         $key, time()
     ));
     $result = $stmt->fetch(PDO::FETCH_COLUMN);
+
     return ($result !== false) ? intval($result) : 0;
   }
 

@@ -96,6 +96,7 @@ class sfMinifierDriverUglifyApi extends sfMinifier {
     {
       $this->browser = new sfWebBrowser();
     }
+
     return $this->browser;
   }
 

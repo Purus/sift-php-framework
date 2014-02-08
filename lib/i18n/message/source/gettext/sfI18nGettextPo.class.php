@@ -105,6 +105,7 @@ class sfI18nGettextPo extends sfI18nGettext {
     if(!flock($fh, LOCK_EX))
     {
       fclose($fh);
+
       return false;
     }
     // write meta info
@@ -129,6 +130,7 @@ class sfI18nGettextPo extends sfI18nGettext {
     //done
     @flock($fh, LOCK_UN);
     @fclose($fh);
+
     return true;
   }
 

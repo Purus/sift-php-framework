@@ -56,6 +56,7 @@ class sfHtml2Text {
     $output = preg_replace("/[ \t]*\n[ \t]*/im", "\n", $output);
     // remove leading and trailing whitespace
     $output = trim($output);
+
     return $output;
   }
 
@@ -73,6 +74,7 @@ class sfHtml2Text {
     $text = str_replace("\r\n", "\n", $text);
     // remove \rs
     $text = str_replace("\r", "\n", $text);
+
     return $text;
   }
 
@@ -223,6 +225,7 @@ class sfHtml2Text {
       // do nothing
 
     }
+
     return $output;
   }
 
@@ -243,6 +246,7 @@ class sfHtml2Text {
     {
       $nextName = strtolower($nextNode->nodeName);
     }
+
     return $nextName;
   }
 
@@ -263,6 +267,7 @@ class sfHtml2Text {
     {
       $nextName = strtolower($nextNode->nodeName);
     }
+
     return $nextName;
   }
 

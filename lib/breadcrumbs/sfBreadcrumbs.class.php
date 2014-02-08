@@ -49,6 +49,7 @@ class sfBreadcrumbs {
     {
       self::$instance = new self();
     }
+
     return self::$instance;
   }
 
@@ -90,6 +91,7 @@ class sfBreadcrumbs {
       'url'  => $url,
       'options' => $options
     );
+
     return $this;
   }
 
@@ -101,6 +103,7 @@ class sfBreadcrumbs {
   public function clearHome()
   {
     $this->home = array();
+
     return $this;
   }
 
@@ -122,6 +125,7 @@ class sfBreadcrumbs {
   public function clear()
   {
     $this->response->setParameter('breadcrumbs', array(), self::RESPONSE_NAMESPACE);
+
     return $this;
   }
 
@@ -154,6 +158,7 @@ class sfBreadcrumbs {
     ));
 
     $this->response->setParameter('breadcrumbs', $crumbs, self::RESPONSE_NAMESPACE);
+
     return $this;
   }
 

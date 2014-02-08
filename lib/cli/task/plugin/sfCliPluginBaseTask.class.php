@@ -39,6 +39,7 @@ abstract class sfCliPluginBaseTask extends sfCliBaseTask
       ));
 
     }
+
     return $this->pluginManager;
   }
 

@@ -183,6 +183,7 @@ class sfI18nNumberFormat {
       self::$invariant = $culture->getNumberFormat();
       self::$invariant->setPattern($type);
     }
+
     return self::$invariant;
   }
 
@@ -220,6 +221,7 @@ class sfI18nNumberFormat {
       $sfCulture = new sfCulture();
       $formatInfo = $sfCulture->getNumberFormat();
       $formatInfo->setPattern($type);
+
       return $formatInfo;
     }
   }
@@ -347,6 +349,7 @@ class sfI18nNumberFormat {
         }
       }
     }
+
     return false;
   }
 
@@ -616,6 +619,7 @@ class sfI18nNumberFormat {
   {
     $regexp = '/[#,\.0]+/';
     $result = preg_split($regexp, $pattern);
+
     return array($result[0], $result[1]);
   }
 
@@ -782,6 +786,7 @@ class sfI18nNumberFormat {
     {
       return $this->data['currencies'][$currency][0];
     }
+
     return $currency;
   }
 

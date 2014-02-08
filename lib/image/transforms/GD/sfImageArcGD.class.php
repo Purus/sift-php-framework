@@ -287,6 +287,7 @@ class sfImageArcGD extends sfImageTransformAbstract
     if (is_numeric($thickness))
     {
       $this->thickness = (int)$thickness;
+
       return true;
     }
 
@@ -314,8 +315,10 @@ class sfImageArcGD extends sfImageTransformAbstract
     if (preg_match('/#[\d\w]{6}/',$color))
     {
       $this->color = $color;
+
       return true;
     }
+
     return false;
   }
 

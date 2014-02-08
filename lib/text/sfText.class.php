@@ -163,6 +163,7 @@ class sfText {
         $truncate .= '</' . $tag . '>';
       }
     }
+
     return $truncate;
   }
 
@@ -253,6 +254,7 @@ class sfText {
           $excerpt = preg_replace('/\s+?(\S+)?$/', ' ', $excerpt);
         }
       }
+
       return $prefix . $excerpt . $postfix;
     }
   }
@@ -347,6 +349,7 @@ class sfText {
     sfLoader::loadHelpers('Tag');
 
     $href_options = _tag_options($href_options);
+
     return preg_replace_callback(
       self::AUTO_LINK_RE,
       create_function('$matches', '
@@ -382,6 +385,7 @@ class sfText {
   public static function getWordsCount($text)
   {
     preg_match_all("/\p{L}[\p{L}\p{Mn}\p{Pd}'\x{2019}]*/u", $text, $matches);
+
     return count($matches[0]);
   }
 

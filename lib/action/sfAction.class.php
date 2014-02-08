@@ -621,6 +621,7 @@ abstract class sfAction extends sfComponent
   {
     $response = $this->getResponse();
     $response->setContentType($contentType);
+
     return $this->renderText($image->toString());
   }
 
@@ -633,6 +634,7 @@ abstract class sfAction extends sfComponent
   {
     $response = $this->getResponse();
     $response->setContentType('text/xml');
+
     return $this->renderText($xml);
   }
 
@@ -697,6 +699,7 @@ abstract class sfAction extends sfComponent
   {
     sfLoader::loadHelpers('Partial');
     $vars = !is_null($vars) ? $vars : $this->varHolder->getAll();
+
     return get_partial($templateName, $vars, $viewName);
   }
 
@@ -738,6 +741,7 @@ abstract class sfAction extends sfComponent
   {
     sfLoader::loadHelpers('Partial');
     $vars = !is_null($vars) ? $vars : $this->varHolder->getAll();
+
     return get_component($moduleName, $componentName, $vars, $viewName);
   }
 
@@ -815,6 +819,7 @@ abstract class sfAction extends sfComponent
     $downloader = new sfHttpDownload($options, $this->getRequest(), $this->getResponse(),
                                      $this->getEventDispatcher(), $this->getLogger());
     $downloader->setFile($file);
+
     return $this->renderCallable(array($downloader, 'send'));
   }
 
@@ -829,6 +834,7 @@ abstract class sfAction extends sfComponent
     $downloader = new sfHttpDownload($options, $this->getRequest(), $this->getResponse(),
                                      $this->getEventDispatcher(), $this->getLogger());
     $downloader->setData($data);
+
     return $this->renderCallable(array($downloader, 'send'));
   }
 

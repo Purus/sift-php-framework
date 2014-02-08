@@ -247,6 +247,7 @@ abstract class sfApplication extends sfProject {
               $args[$key] = $value->__toString();
             }
           }
+
           return strtr($string, $args);
         }
       }
@@ -440,6 +441,7 @@ abstract class sfApplication extends sfProject {
         $this->formEnhancer = sfFormEnhancer::factory($class, $config);
       }
     }
+
     return $this->formEnhancer;
   }
 
@@ -527,6 +529,7 @@ abstract class sfApplication extends sfProject {
       default:
         throw new sfConfigurationException(sprintf('Invalid configuration value "%s" for "sf_path_info_array". Valid values are "SERVER" or "ENV"', $pathInfo));
     }
+
     return preg_replace('#/[^/]+\.php5?$#', '', $scriptName);
   }
 
@@ -725,6 +728,7 @@ abstract class sfApplication extends sfProject {
     {
       $helpers[] = 'Debug';
     }
+
     return $helpers;
   }
 
@@ -740,6 +744,7 @@ abstract class sfApplication extends sfProject {
     {
       throw new RuntimeException('Application dimensions are not loaded yet.');
     }
+
     return $this->dimensions;
   }
 

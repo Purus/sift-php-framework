@@ -81,6 +81,7 @@ class sfDependencyInjectionBuilder {
   public function setClassName($className)
   {
     $this->className = $className;
+
     return $this;
   }
 
@@ -138,6 +139,7 @@ class sfDependencyInjectionBuilder {
 
     $this->injectMethods($object, $reflector);
     $this->injectProperties($object, $reflector);
+
     return $object;
   }
 
@@ -214,6 +216,7 @@ class sfDependencyInjectionBuilder {
     {
       $dependency = $this->dependencies->get($item->getDependencyName());
     }
+
     return $dependency;
   }
 

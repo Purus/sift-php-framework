@@ -70,6 +70,7 @@ abstract class sfComponent {
     $this->response = $context->getResponse();
     $this->requestParameterHolder = $this->request->getParameterHolder();
     $this->dispatcher = $context->getEventDispatcher();
+
     return true;
   }
 

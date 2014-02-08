@@ -309,6 +309,7 @@ class sfUser extends sfConfigurable implements sfIUser, sfIService, ArrayAccess 
   public function getBrowserName()
   {
     $browser = $this->getBrowser();
+
     return $browser['name'];
   }
 
@@ -319,6 +320,7 @@ class sfUser extends sfConfigurable implements sfIUser, sfIService, ArrayAccess 
   public function getBrowserVersion()
   {
     $browser = $this->getBrowser();
+
     return $browser['version'];
   }
 
@@ -334,6 +336,7 @@ class sfUser extends sfConfigurable implements sfIUser, sfIService, ArrayAccess 
       $guess = sfUserAgentDetector::guess($this->getUserAgent());
       $this->setAttribute('browser_guessed', $guess, self::ATTRIBUTE_NAMESPACE);
     }
+
     return $this->getAttribute('browser_guessed', null, self::ATTRIBUTE_NAMESPACE);
   }
 
@@ -345,6 +348,7 @@ class sfUser extends sfConfigurable implements sfIUser, sfIService, ArrayAccess 
   public function isBot()
   {
     $browser = $this->getBrowser();
+
     return $browser['is_bot'];
   }
 
@@ -356,6 +360,7 @@ class sfUser extends sfConfigurable implements sfIUser, sfIService, ArrayAccess 
   public function isMobile()
   {
     $browser = $this->getBrowser();
+
     return $browser['is_mobile'];
   }
 
@@ -394,6 +399,7 @@ class sfUser extends sfConfigurable implements sfIUser, sfIService, ArrayAccess 
   public function getReferer($default = null)
   {
     $referer = $this->getAttribute('referer', $default);
+
     return $referer ? $referer : $default;
   }
 
@@ -405,6 +411,7 @@ class sfUser extends sfConfigurable implements sfIUser, sfIService, ArrayAccess 
   public function setReferer($referer)
   {
     $this->setAttribute('referer', $referer);
+
     return $this;
   }
 
@@ -429,6 +436,7 @@ class sfUser extends sfConfigurable implements sfIUser, sfIService, ArrayAccess 
     {
       $this->setAttribute($name, true, self::FLASH_NAMESPACE.'/remove');
     }
+
     return $this;
   }
 
@@ -450,6 +458,7 @@ class sfUser extends sfConfigurable implements sfIUser, sfIService, ArrayAccess 
         return $flash;
       }
     }
+
     return $default;
   }
 
@@ -466,6 +475,7 @@ class sfUser extends sfConfigurable implements sfIUser, sfIService, ArrayAccess 
     {
       return true;
     }
+
     return false;
   }
 

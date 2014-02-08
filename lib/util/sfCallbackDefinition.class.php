@@ -64,6 +64,7 @@ class sfCallbackDefinition extends sfObjectCallbackDefinition {
       throw new InvalidArgumentException('Invalid function given.');
     }
     $this->function = $function;
+
     return $this;
   }
 
@@ -123,6 +124,7 @@ class sfCallbackDefinition extends sfObjectCallbackDefinition {
     {
       return $function instanceof Closure ? 'Anonymous function' : $function;
     }
+
     return sprintf('%s::%s()', $this->getClass(),
         $this->getConstructor() ? $this->getConstructor() : 'filter');
   }

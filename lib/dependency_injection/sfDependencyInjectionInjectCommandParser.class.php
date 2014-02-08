@@ -50,6 +50,7 @@ class sfDependencyInjectionInjectCommandParser {
   public function setString($string)
   {
     $this->string = (string)$string;
+
     return $this;
   }
 
@@ -64,6 +65,7 @@ class sfDependencyInjectionInjectCommandParser {
   public function setDebugInformation($information)
   {
     $this->debugInformation = $information;
+
     return $this;
   }
 
@@ -171,6 +173,7 @@ class sfDependencyInjectionInjectCommandParser {
     {
       $commands[] = $this->parseCommand($command);
     }
+
     return $commands;
   }
 

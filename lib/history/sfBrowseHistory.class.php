@@ -95,6 +95,7 @@ class sfBrowseHistory implements Serializable, Countable {
   public function setMaxItems($nb)
   {
     $this->maxItems = $nb;
+
     return $this;
   }
 
@@ -228,6 +229,7 @@ class sfBrowseHistory implements Serializable, Countable {
   public function serialize()
   {
     $vars = get_object_vars($this);
+
     return serialize($vars);
   }
 

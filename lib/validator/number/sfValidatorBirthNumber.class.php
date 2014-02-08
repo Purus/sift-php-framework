@@ -32,6 +32,7 @@ class sfValidatorBirthNumber extends sfValidatorBase {
     {
       throw new sfValidatorError($this, 'invalid', array('value' => $value));
     }
+
     return $value;
   }
 

@@ -202,6 +202,7 @@ abstract class sfWebDebugPanel extends sfConfigurable
     {
       return '';
     }
+
     return strtr($linkFormat, array('%file%' => $file, '%line%' => $line));
   }
 
@@ -229,6 +230,7 @@ abstract class sfWebDebugPanel extends sfConfigurable
     {
       $highlighter = sfSyntaxHighlighter::factory('sql');
     }
+
     return $highlighter->setCode($sql)->getHtml();
   }
 

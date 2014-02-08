@@ -101,6 +101,7 @@ class sfHtmlPurifier extends HTMLPurifier {
     {
       self::$instances[$type] = new sfHtmlPurifier($type);
     }
+
     return self::$instances[$type];
   }
 

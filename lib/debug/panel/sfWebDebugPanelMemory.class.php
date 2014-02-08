@@ -61,6 +61,7 @@ class sfWebDebugPanelMemory extends sfWebDebugPanel {
       $usage /= 1024;
       $pos++;
     }
+
     return round($usage, $round) . ' ' . $this->units[$pos];
   }
 

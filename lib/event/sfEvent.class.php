@@ -61,6 +61,7 @@ class sfEvent implements ArrayAccess {
   public function setReturnValue($value)
   {
     $this->value = $value;
+
     return $this;
   }
 
@@ -83,6 +84,7 @@ class sfEvent implements ArrayAccess {
   public function setProcessed($processed)
   {
     $this->processed = (boolean) $processed;
+
     return $this;
   }
 

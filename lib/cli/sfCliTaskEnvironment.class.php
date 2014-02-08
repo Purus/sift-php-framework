@@ -48,6 +48,7 @@ class sfCliTaskEnvironment {
   public function set($name, $value)
   {
     $this->variables[$name] = $value;
+
     return $this;
   }
 
@@ -63,6 +64,7 @@ class sfCliTaskEnvironment {
     {
       $this->set($name, $value);
     }
+
     return $this;
   }
 
@@ -84,6 +86,7 @@ class sfCliTaskEnvironment {
   public function clear()
   {
     $this->variables = array();
+
     return $this;
   }
 

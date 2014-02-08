@@ -155,6 +155,7 @@ class sfI18nJavascriptExtractor extends sfConfigurable implements sfII18nExtract
     $this->regs[$this->regsCounter] = $match[1];
     $id = "<<reg{$this->regsCounter}>>";
     $this->regsCounter++;
+
     return $id;
   }
 
@@ -163,6 +164,7 @@ class sfI18nJavascriptExtractor extends sfConfigurable implements sfII18nExtract
     $this->strings[$this->stringsCounter] = $this->importRegExps($match[0]);
     $id = "<<s{$this->stringsCounter}>>";
     $this->stringsCounter++;
+
     return $id;
   }
 

@@ -64,6 +64,7 @@ class sfBrowseHistoryItem implements Serializable {
   public function setId($id)
   {
     $this->id = $id;
+
     return $this;
   }
 
@@ -86,6 +87,7 @@ class sfBrowseHistoryItem implements Serializable {
   public function setName($name)
   {
     $this->name = (string)$name;
+
     return $this;
   }
 
@@ -135,6 +137,7 @@ class sfBrowseHistoryItem implements Serializable {
   public function setParameter($name, $value, $ns = null)
   {
     $this->parameter_holder->set($name, $value, $ns);
+
     return $this;
   }
 
@@ -146,6 +149,7 @@ class sfBrowseHistoryItem implements Serializable {
   public function serialize()
   {
     $vars = get_object_vars($this);
+
     return serialize($vars);
   }
 

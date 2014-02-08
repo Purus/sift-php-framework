@@ -165,6 +165,7 @@ class sfValidatorZip extends sfValidatorBase {
       result = false;
     }
   }
+
   return result;
 }', join(',', $patterns)
     )));
@@ -177,6 +178,7 @@ class sfValidatorZip extends sfValidatorBase {
     $messages = parent::getJavascriptValidationMessages();
     $messages[sfFormJavascriptValidation::CUSTOM_CALLBACK] =
             sfFormJavascriptValidation::fixValidationMessage($this, 'invalid');
+
     return $messages;
   }
 

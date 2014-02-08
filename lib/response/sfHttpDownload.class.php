@@ -364,6 +364,7 @@ class sfHttpDownload extends sfConfigurable implements sfIEventDispatcherAware, 
           $this->log('Download is cached, setting 304 (not modified) header.', sfILogger::INFO);
           $this->response->setStatusCode(304);
           $this->response->setHeaderOnly(true);
+
           return;
         }
 
@@ -495,6 +496,7 @@ class sfHttpDownload extends sfConfigurable implements sfIEventDispatcherAware, 
   public function setETag($etag)
   {
     $this->setOption('etag', $etag);
+
     return $this;
   }
 
@@ -521,6 +523,7 @@ class sfHttpDownload extends sfConfigurable implements sfIEventDispatcherAware, 
       $vary = array($vary);
     }
     $this->setOption('vary', $vary);
+
     return $this;
   }
 
@@ -645,6 +648,7 @@ class sfHttpDownload extends sfConfigurable implements sfIEventDispatcherAware, 
         $this->response->setHttpHeader('Content-Range', sprintf('bytes */%s', $this->size));
         $this->response->setHeaderOnly(true);
         $this->response->sendHttpHeaders();
+
         return;
       }
 
@@ -753,6 +757,7 @@ class sfHttpDownload extends sfConfigurable implements sfIEventDispatcherAware, 
         $this->setBufferSize(round($limit * 1000 * 1000));
       }
     }
+
     return $value;
   }
 
@@ -773,6 +778,7 @@ class sfHttpDownload extends sfConfigurable implements sfIEventDispatcherAware, 
     $this->file = $file;
     $this->size = filesize($file);
     $this->setLastModified(filemtime($file));
+
     return $this;
   }
 
@@ -789,6 +795,7 @@ class sfHttpDownload extends sfConfigurable implements sfIEventDispatcherAware, 
     {
       $this->setOption('use_resume', (bool) $flag);
     }
+
     return $value;
   }
 
@@ -810,6 +817,7 @@ class sfHttpDownload extends sfConfigurable implements sfIEventDispatcherAware, 
       throw new InvalidArgumentException(sprintf('Buffer size must be greater than 0 bytes ("%s" given)', $bytes));
     }
     $this->setOption('buffer_size', $bytes);
+
     return $this;
   }
 
@@ -851,6 +859,7 @@ class sfHttpDownload extends sfConfigurable implements sfIEventDispatcherAware, 
     {
       $this->setOption('allow_cache', (bool)$flag);
     }
+
     return $value;
   }
 
@@ -882,6 +891,7 @@ class sfHttpDownload extends sfConfigurable implements sfIEventDispatcherAware, 
     }
 
     $this->lastModified = $lastModified;
+
     return $this;
   }
 
@@ -946,6 +956,7 @@ class sfHttpDownload extends sfConfigurable implements sfIEventDispatcherAware, 
       throw new InvalidArgumentException(sprintf('Invalid content type "%s" given.', $contentType));
     }
     $this->setOption('content_type', $contentType);
+
     return $this;
   }
 
@@ -968,6 +979,7 @@ class sfHttpDownload extends sfConfigurable implements sfIEventDispatcherAware, 
   public function setFilename($filename)
   {
     $this->setOption('filename', $filename);
+
     return $this;
   }
 
@@ -1015,6 +1027,7 @@ class sfHttpDownload extends sfConfigurable implements sfIEventDispatcherAware, 
     {
       $this->setLastModified(time());
     }
+
     return $this;
   }
 
@@ -1048,6 +1061,7 @@ class sfHttpDownload extends sfConfigurable implements sfIEventDispatcherAware, 
     }
 
     $this->setOption('cache_control', $cacheControl);
+
     return $this;
   }
 
@@ -1065,6 +1079,7 @@ class sfHttpDownload extends sfConfigurable implements sfIEventDispatcherAware, 
       throw new InvalidArgumentException(sprintf('Invalid client lifetime value "%s" given. Should be greater than zero', $lifetime));
     }
     $this->setOption('client_lifetime', $lifetime);
+
     return $this;
   }
 
@@ -1107,6 +1122,7 @@ class sfHttpDownload extends sfConfigurable implements sfIEventDispatcherAware, 
   public function setResponse(sfWebResponse $response)
   {
     $this->response = $response;
+
     return $this;
   }
 
@@ -1129,6 +1145,7 @@ class sfHttpDownload extends sfConfigurable implements sfIEventDispatcherAware, 
   public function setRequest(sfWebRequest $request)
   {
     $this->request = $request;
+
     return $this;
   }
 
@@ -1151,6 +1168,7 @@ class sfHttpDownload extends sfConfigurable implements sfIEventDispatcherAware, 
   public function setEventDispatcher(sfEventDispatcher $dispatcher = null)
   {
     $this->dispatcher = $dispatcher;
+
     return $this;
   }
 
@@ -1173,6 +1191,7 @@ class sfHttpDownload extends sfConfigurable implements sfIEventDispatcherAware, 
   public function setLogger(sfILogger $logger = null)
   {
     $this->logger = $logger;
+
     return $this;
   }
 
@@ -1223,6 +1242,7 @@ class sfHttpDownload extends sfConfigurable implements sfIEventDispatcherAware, 
     {
       $contentType = sfMimeType::getTypeFromExtension($filename);
     }
+
     return $contentType;
   }
 
@@ -1242,6 +1262,7 @@ class sfHttpDownload extends sfConfigurable implements sfIEventDispatcherAware, 
       $fst = stat($this->file);
       $md5 = md5($fst['mtime'] . '=' . $fst['size']);
     }
+
     return '"' . $md5 . '-' . crc32($md5) . '"';
   }
 
@@ -1261,6 +1282,7 @@ class sfHttpDownload extends sfConfigurable implements sfIEventDispatcherAware, 
         return true;
       }
     }
+
     return false;
   }
 
@@ -1305,6 +1327,7 @@ class sfHttpDownload extends sfConfigurable implements sfIEventDispatcherAware, 
     {
       $fileName = iconv($inputEncoding, 'windows-1250', $fileName);
     }
+
     return $fileName;
   }
 
@@ -1343,6 +1366,7 @@ class sfHttpDownload extends sfConfigurable implements sfIEventDispatcherAware, 
     {
       $this->logger->log(sprintf('{sfHttpDownload} %s', $message), $level, $context);
     }
+
     return $this;
   }
 
@@ -1367,6 +1391,7 @@ class sfHttpDownload extends sfConfigurable implements sfIEventDispatcherAware, 
   {
     // human readable format -- powers of 1024
     $unit = array('B','kB','MB','GB','TB','PB','EB');
+
     return sprintf('%s %s', @round($bytes / pow(1024, ($i = floor(log($bytes, 1024)))), $precision), $unit[$i]);
   }
 

@@ -56,6 +56,7 @@ class sfI18nPhoneNumberFormatter {
     {
       self::$instance = new sfI18nPhoneNumberFormatter();
     }
+
     return self::$instance;
   }
 

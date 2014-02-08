@@ -385,6 +385,7 @@ abstract class sfBrowserBase
     }
 
     --$this->stackPosition;
+
     return $this->call($this->stack[$this->stackPosition]['uri'], $this->stack[$this->stackPosition]['method'], $this->stack[$this->stackPosition]['parameters'], false);
   }
 
@@ -401,6 +402,7 @@ abstract class sfBrowserBase
     }
 
     ++$this->stackPosition;
+
     return $this->call($this->stack[$this->stackPosition]['uri'], $this->stack[$this->stackPosition]['method'], $this->stack[$this->stackPosition]['parameters'], false);
   }
 

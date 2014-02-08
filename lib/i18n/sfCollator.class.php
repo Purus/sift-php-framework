@@ -47,6 +47,7 @@ class sfCollator {
     {
       self::$instances[$culture] = new sfCollator($culture);
     }
+
     return self::$instances[$culture];
   }
 
@@ -122,6 +123,7 @@ class sfCollator {
     }
 
     setlocale(LC_COLLATE, $old);
+
     return $result;
   }
 

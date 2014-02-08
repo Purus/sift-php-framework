@@ -60,6 +60,7 @@ class sfSyntaxHighlighterHtml extends sfSyntaxHighlighterGeneric {
     $php->setCssPrefix($this->getCssPrefix());
     $html = $code[1] . $php->getHtml() . $code[3];
     $this->phpBlocks[$token] = '<span class="' . $this->getCssPrefix() . 'default">' . $html . '</span>';
+
     return $token;
   }
 

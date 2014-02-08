@@ -80,6 +80,7 @@ if(!function_exists('dump'))
       }
     }
     $options['location'] = $location;
+
     return sfDebugDumper::dump($var, $options, $echo);
   }
 }

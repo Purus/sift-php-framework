@@ -186,6 +186,7 @@ class sfRenderingFilter extends sfFilter {
     {
       $encoding = 'deflate';
     }
+
     return $encoding;
   }
 
@@ -272,6 +273,7 @@ class sfRenderingFilter extends sfFilter {
     {
       throw new sfRegexpException(null, $error, $pattern);
     }
+
     return $matches;
   }
 

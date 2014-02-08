@@ -304,6 +304,7 @@ class sfToolkit {
               $args[2][$key] = $args[1][$key];
             }
           }
+
           return $args[2];
         }
         else
@@ -314,6 +315,7 @@ class sfToolkit {
         $args = func_get_args();
         $args[1] = sfToolkit::arrayDeepMerge($args[0], $args[1]);
         array_shift($args);
+
         return call_user_func_array(array('sfToolkit', 'arrayDeepMerge'), $args);
         break;
     }
@@ -348,6 +350,7 @@ class sfToolkit {
         $a[$k] = $v;
       }
     }
+
     return $a;
   }
 
@@ -510,6 +513,7 @@ class sfToolkit {
         break;
       }
     }
+
     return $value;
   }
 
@@ -722,6 +726,7 @@ class sfToolkit {
     if($to != 'UTF-8')
     {
       $s = iconv('UTF-8', $to, $string);
+
       return $s !== false ? $s : $string;
     }
 
@@ -803,6 +808,7 @@ class sfToolkit {
         $results[$key] = call_user_func_array($callback, $temp);
       }
     }
+
     return $results;
   }
 
@@ -886,6 +892,7 @@ class sfToolkit {
     {
       return $_domain[1] . '.' . $_domain[0];
     }
+
     return $domain;
   }
 
@@ -896,6 +903,7 @@ class sfToolkit {
     {
       $values[] = $item[$property];
     }
+
     return $values;
   }
 
@@ -935,6 +943,7 @@ class sfToolkit {
       case 'k':
         $val *= 1024;
     }
+
     return $val;
   }
 
@@ -985,6 +994,7 @@ class sfToolkit {
     {
       return null;
     }
+
     return $mem - memory_get_usage();
   }
 
@@ -1023,6 +1033,7 @@ class sfToolkit {
     {
       $canSystemCall = false;
     }
+
     return false;
   }
 
@@ -1116,6 +1127,7 @@ class sfToolkit {
         $value->$k = self::_recursivePhpExprFinder($value->$k, $phpExpressions, $k);
       }
     }
+
     return $value;
   }
 
@@ -1149,6 +1161,7 @@ class sfToolkit {
     {
       return false;
     }
+
     return in_array($callback, explode(',', ini_get('disable_functions')));
   }
 

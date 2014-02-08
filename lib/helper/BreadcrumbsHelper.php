@@ -135,6 +135,7 @@ function breadcrumbs($options = array())
   }
 
   $html = content_tag('div', $content, $options);
+
   return $html;
 }
 

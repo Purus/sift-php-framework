@@ -132,6 +132,7 @@ class sfAntivirusDriverClamavSocket extends sfAntivirus {
     if(!is_resource($this->connection))
     {
       $this->connected = false;
+
       return true;
     }
 
@@ -163,6 +164,7 @@ class sfAntivirusDriverClamavSocket extends sfAntivirus {
     }
 
     $this->disconnect();
+
     return $buffer;
   }
 
@@ -191,6 +193,7 @@ class sfAntivirusDriverClamavSocket extends sfAntivirus {
     if(!$this->write($command))
     {
       $this->disconnect();
+
       return false;
     }
 
@@ -239,6 +242,7 @@ class sfAntivirusDriverClamavSocket extends sfAntivirus {
         return false;
       }
     }
+
     return @fwrite($this->connection, $data, strlen($data));
   }
 

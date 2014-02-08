@@ -81,6 +81,7 @@ class sfParameterHolder implements Serializable, sfIJsonSerializable {
   {
     $this->parameters = null;
     $this->parameters = array();
+
     return $this;
   }
 
@@ -314,6 +315,7 @@ class sfParameterHolder implements Serializable, sfIJsonSerializable {
     }
 
     $this->parameters[$ns][$name] = $value;
+
     return $this;
   }
 
@@ -340,6 +342,7 @@ class sfParameterHolder implements Serializable, sfIJsonSerializable {
     }
 
     $this->parameters[$ns][$name] = & $value;
+
     return $this;
   }
 

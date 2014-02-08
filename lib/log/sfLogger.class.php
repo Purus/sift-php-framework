@@ -59,6 +59,7 @@ class sfLogger implements sfILogger {
       $class = __CLASS__;
       self::$logger = new $class();
     }
+
     return self::$logger;
   }
 
@@ -152,6 +153,7 @@ class sfLogger implements sfILogger {
         return constant($constant);
       }
     }
+
     return $level;
   }
 
@@ -265,6 +267,7 @@ class sfLogger implements sfILogger {
   public function clear()
   {
     $this->loggers = array();
+
     return $this;
   }
 

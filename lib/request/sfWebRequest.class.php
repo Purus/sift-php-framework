@@ -133,6 +133,7 @@ class sfWebRequest extends sfRequest {
     }
     $ip = $this->getHttpHeader('REMOTE_ADDR', '');
     $this->ip = $this->getFirstIp($ip);
+
     return $this->ip;
   }
 
@@ -173,6 +174,7 @@ class sfWebRequest extends sfRequest {
       }
     }
     $this->ip_forwarded_for = $ip;
+
     return $this->ip_forwarded_for;
   }
 
@@ -219,6 +221,7 @@ class sfWebRequest extends sfRequest {
         }
       }
     }
+
     return $retval;
   }
 
@@ -231,12 +234,14 @@ class sfWebRequest extends sfRequest {
       {
         $tmp[$name] = sfToolkit::stripslashesDeep($value);
       }
+
       return $tmp;
     }
     else
     {
       return $_COOKIE;
     }
+
     return $_COOKIE;
   }
 
@@ -274,6 +279,7 @@ class sfWebRequest extends sfRequest {
     $base_domain = $matches[0];
     // remove any www*. prefix:
     $base_domain = preg_replace('~^(www (\w|-|_)* \. )~xi', '', $base_domain);
+
     return $base_domain;
   }
 
@@ -305,6 +311,7 @@ class sfWebRequest extends sfRequest {
   public function getProtocol()
   {
     $pathInfo = $this->getPathInfoArray();
+
     return strtolower(substr($pathInfo['SERVER_PROTOCOL'], 0, 5)) == 'https' ? 'https' : 'http';
   }
 
@@ -399,6 +406,7 @@ class sfWebRequest extends sfRequest {
   public function getFile($name)
   {
     $file = ($this->hasFile($name) ? $this->getFileValues($name) : null);
+
     return sfUploadedFile::create($file);
   }
 
@@ -1224,6 +1232,7 @@ class sfWebRequest extends sfRequest {
   public function serialize()
   {
     $vars = get_object_vars($this);
+
     return serialize($vars);
   }
 

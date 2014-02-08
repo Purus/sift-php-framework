@@ -218,6 +218,7 @@ class sfForm implements ArrayAccess, Iterator, Countable, sfIUserAware
       }
     }
     $this->translationCatalogue = $catalogue;
+
     return $this;
   }
 
@@ -315,6 +316,7 @@ class sfForm implements ArrayAccess, Iterator, Countable, sfIUserAware
                 'name' => 'submit',
                 'value' => 'submit',
                 'type' => 'submit'), $attributes);
+
     return sprintf('<button%s><span>%s</span></button>', $this->getWidgetSchema()->attributesToHtml($attributes), $value);
   }
 
@@ -640,6 +642,7 @@ class sfForm implements ArrayAccess, Iterator, Countable, sfIUserAware
     {
       $this->setNameFormat($name . '[%s]');
     }
+
     return $this;
   }
 
@@ -653,6 +656,7 @@ class sfForm implements ArrayAccess, Iterator, Countable, sfIUserAware
   public function setNameFormat($format)
   {
     $this->widgetSchema->setNameFormat($format);
+
     return $this;
   }
 
@@ -923,6 +927,7 @@ class sfForm implements ArrayAccess, Iterator, Countable, sfIUserAware
     $schema = new sfValidatorSchema($validators);
     $schema->setEventDispatcher($this->getEventDispatcher());
     $this->setValidatorSchema($schema);
+
     return $this;
   }
 
@@ -939,6 +944,7 @@ class sfForm implements ArrayAccess, Iterator, Countable, sfIUserAware
     $validator->setEventDispatcher($this->getEventDispatcher());
     $this->validatorSchema[$name] = $validator;
     $this->resetFormFields();
+
     return $this;
   }
 
@@ -972,6 +978,7 @@ class sfForm implements ArrayAccess, Iterator, Countable, sfIUserAware
   public function setValidatorOption($name, $option, $newValue, $deep = true)
   {
     $this->__setValidatorOption($this->getValidator($name), $option, $newValue, $deep);
+
     return $this;
   }
 
@@ -1021,6 +1028,7 @@ class sfForm implements ArrayAccess, Iterator, Countable, sfIUserAware
     $validatorSchema->setEventDispatcher($this->getEventDispatcher());
     $this->validatorSchema = $validatorSchema;
     $this->resetFormFields();
+
     return $this;
   }
 
@@ -1046,6 +1054,7 @@ class sfForm implements ArrayAccess, Iterator, Countable, sfIUserAware
     $this->setWidgetSchema(new sfWidgetFormSchema($widgets));
     // prevent loosing form name
     $this->setName($this->name);
+
     return $this;
   }
 
@@ -1107,6 +1116,7 @@ class sfForm implements ArrayAccess, Iterator, Countable, sfIUserAware
   public function setLabel($field, $label)
   {
     $this->widgetSchema->setLabel($field, $label);
+
     return $this;
   }
 
@@ -1121,6 +1131,7 @@ class sfForm implements ArrayAccess, Iterator, Countable, sfIUserAware
   public function setHelp($field, $help)
   {
     $this->widgetSchema->setHelp($field, $help);
+
     return $this;
   }
 
@@ -1134,6 +1145,7 @@ class sfForm implements ArrayAccess, Iterator, Countable, sfIUserAware
   {
     $validator->setEventDispatcher($this->getEventDispatcher());
     $this->validatorSchema->setPostValidator($validator);
+
     return $this;
   }
 
@@ -1157,6 +1169,7 @@ class sfForm implements ArrayAccess, Iterator, Countable, sfIUserAware
   {
     $validator->setEventDispatcher($this->getEventDispatcher());
     $this->validatorSchema->setPreValidator($validator);
+
     return $this;
   }
 
@@ -1417,6 +1430,7 @@ class sfForm implements ArrayAccess, Iterator, Countable, sfIUserAware
     {
       unset($this[self::$CSRFFieldName]);
     }
+
     return $this;
   }
 
@@ -1985,6 +1999,7 @@ class sfForm implements ArrayAccess, Iterator, Countable, sfIUserAware
   public function addGroup($name, $label, $fields, $priority = 1)
   {
     $this->groups[$name] = new sfFormFieldGroup($this, $label, $fields, $priority);
+
     return $this;
   }
 
@@ -2032,6 +2047,7 @@ class sfForm implements ArrayAccess, Iterator, Countable, sfIUserAware
     {
       throw new InvalidArgumentException(sprintf('Group "%s" does not exist.', $name));
     }
+
     return $this->groups[$name];
   }
 
@@ -2067,6 +2083,7 @@ class sfForm implements ArrayAccess, Iterator, Countable, sfIUserAware
     {
       uasort($this->groups, array($this, '_sortGroups'));
     }
+
     return $this->groups;
   }
 
@@ -2079,6 +2096,7 @@ class sfForm implements ArrayAccess, Iterator, Countable, sfIUserAware
   public function changeToHidden($fieldName)
   {
     $this->widgetSchema[$fieldName] = new sfWidgetFormInputHidden();
+
     return $this;
   }
 
@@ -2095,6 +2113,7 @@ class sfForm implements ArrayAccess, Iterator, Countable, sfIUserAware
     {
       $this->widgetSchema[$fieldName]->setAttribute('aria-disabled', 'true');
     }
+
     return $this;
   }
 
@@ -2111,6 +2130,7 @@ class sfForm implements ArrayAccess, Iterator, Countable, sfIUserAware
     {
       $this->widgetSchema[$fieldName]->setAttribute('aria-readonly', 'true');
     }
+
     return $this;
   }
 
@@ -2123,6 +2143,7 @@ class sfForm implements ArrayAccess, Iterator, Countable, sfIUserAware
   public function changeToEmail($fieldName)
   {
     $this->validatorSchema[$fieldName] = new sfValidatorEmail($this->validatorSchema[$fieldName]->getOptions());
+
     return $this;
   }
 
@@ -2164,6 +2185,7 @@ class sfForm implements ArrayAccess, Iterator, Countable, sfIUserAware
         return true;
       }
     }
+
     return false;
   }
 
@@ -2186,6 +2208,7 @@ class sfForm implements ArrayAccess, Iterator, Countable, sfIUserAware
   public function setUser(sfIUser $user = null)
   {
     $this->user = $user;
+
     return $this;
   }
 
@@ -2207,6 +2230,7 @@ class sfForm implements ArrayAccess, Iterator, Countable, sfIUserAware
       if($key == $this->getCSRFFieldName()) continue;
       $string .= '<p>' . $key . ': ' . $error . '</p>';
     }
+
     return $string;
   }
 

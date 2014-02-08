@@ -61,6 +61,7 @@ class sfDependencyInjectionMapBuilderClass extends sfDependencyInjectionMapBuild
   {
     $this->className = $className;
     $this->reflection = new sfReflectionClass($className);
+
     return $this;
   }
 

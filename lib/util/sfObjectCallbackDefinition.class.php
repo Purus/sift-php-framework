@@ -75,6 +75,7 @@ class sfObjectCallbackDefinition {
       // not an absolute path so we'll prepend to it
       $path = sfConfig::get('sf_app_dir') . '/' . $path;
     }
+
     return $path;
   }
 
@@ -99,6 +100,7 @@ class sfObjectCallbackDefinition {
   public function setConstructor($method)
   {
     $this->constructor = $method;
+
     return $this;
   }
 

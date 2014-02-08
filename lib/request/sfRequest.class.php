@@ -97,6 +97,7 @@ abstract class sfRequest implements sfIRequest, Serializable {
         $array[$key] = & $value;
       }
     }
+
     return $array;
   }
 
@@ -117,6 +118,7 @@ abstract class sfRequest implements sfIRequest, Serializable {
     if(in_array($methodCode, $available_methods))
     {
       $this->method = $methodCode;
+
       return $this;
     }
     else
@@ -138,6 +140,7 @@ abstract class sfRequest implements sfIRequest, Serializable {
         $this->content = false;
       }
     }
+
     return $this->content;
   }
 
@@ -474,6 +477,7 @@ abstract class sfRequest implements sfIRequest, Serializable {
     $vars = get_object_vars($this);
     // we don't serialize the dispatcher!
     unset($vars['dispatcher']);
+
     return (string) @serialize($vars);
   }
 
