@@ -19,13 +19,13 @@
  *     'integer' => 9,
  *     'string'  => 'test string',
  *     'function' => sfJsonExpression(
- *         'function(){ window.alert("javascript function encoded by sfJson") }'
+ *         'function() { window.alert("javascript function encoded by sfJson"); }'
  *     ),
  * );
  *
  * sfJson::encode($foo, true));
  * // it will returns json encoded string:
- * // {"integer":9,"string":"test string","function":function(){window.alert("javascript function encoded by sfJson")}}
+ * // {"integer":9,"string":"test string","function":function() { window.alert("javascript function encoded by sfJson"); }}
  * </code>
  *
  * @package    Sift
@@ -40,7 +40,7 @@ class sfJsonExpression {
    *
    * @var string
    */
-  protected $_expression;
+  protected $expression;
 
   /**
    * Constructor
@@ -50,7 +50,7 @@ class sfJsonExpression {
    */
   public function __construct($expression)
   {
-    $this->_expression = (string) $expression;
+    $this->expression = (string) $expression;
   }
 
   /**
@@ -60,7 +60,7 @@ class sfJsonExpression {
    */
   public function __toString()
   {
-    return $this->_expression;
+    return $this->expression;
   }
 
 }

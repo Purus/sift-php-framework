@@ -2,7 +2,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(11, new lime_output_color());
+$t = new lime_test(12, new lime_output_color());
 
 $string = 'Toto je string';
 $encodedString = '"Toto je string"';
@@ -36,6 +36,14 @@ $array = array(
 );
 
 $t->is(sfJson::encode($array, true), '{"valid":true,"callback":function() { alert("this is my message"); $(\'#foobar\').show(\'fast\'); }}', 'encode() encodes array with javascript expressions objects correctly');
+
+$array = array(
+    'valid' => true,
+    'callback' => 'function (a, b) { alert("this is my message"); $(\'#foobar\').show(\'fast\'); }'
+);
+
+$t->is(sfJson::encode($array, true), '{"valid":true,"callback":function (a, b) { alert("this is my message"); $(\'#foobar\').show(\'fast\'); }}', 'encode() encodes array with javascript expressions correctly');
+
 
 class FooBar implements sfIJsonSerializable {
 

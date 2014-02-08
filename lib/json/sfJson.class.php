@@ -125,7 +125,7 @@ class sfJson {
   protected static function _recursiveJsonExprFinder(
       &$value, array &$javascriptExpressions, $currentKey = null)
   {
-    if((is_string($value) && strpos($value, 'function(') === 0)
+    if((is_string($value) && preg_match('/^\s?function\s?\(/', $value))
        || $value instanceof sfJsonExpression)
     {
       $magicKey = '____' . $currentKey . '_' . (count($javascriptExpressions));
