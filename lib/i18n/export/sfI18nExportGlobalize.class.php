@@ -63,10 +63,10 @@ class sfCultureExportGlobalize extends sfCultureExport {
 
     $data['numberFormat'] = array(
       ',' => $this->numberFormat->getGroupSeparator(),
-  		'.' => $this->numberFormat->getDecimalSeparator(),
+      '.' => $this->numberFormat->getDecimalSeparator(),
       'NaN' => $this->numberFormat->getNaNSymbol(),
-  		'negativeInfinity' => $this->numberFormat->getPositiveInfinitySymbol(),
-    	'positiveInfinity' => $this->numberFormat->getNegativeInfinitySymbol(),
+        'negativeInfinity' => $this->numberFormat->getPositiveInfinitySymbol(),
+        'positiveInfinity' => $this->numberFormat->getNegativeInfinitySymbol(),
       'groupSizes' => array($pattern['groupSize1']),
       'percent' => array(
         'pattern' => array(
@@ -85,7 +85,6 @@ class sfCultureExportGlobalize extends sfCultureExport {
           ),
           ',' => $currency->getGroupSeparator(),
           '.' => $currency->getDecimalSeparator(),
-
           // Symbol -> THIS is nonsense, I should pass the currency code to forma function
           // not use currency for the culture as default
           'symbol' => $symbol

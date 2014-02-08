@@ -400,31 +400,31 @@ class sfText {
    * @see http://codeigniter.com/user_guide/helpers/text_helper.html
    */
   public static function ellipsize($str, $max_length, $position = 1, $ellipsis = '&hellip;')
-	{
-		// Strip tags
-		$str = trim(strip_tags($str));
+  {
+      // Strip tags
+      $str = trim(strip_tags($str));
 
-		// Is the string long enough to ellipsize?
-		if(sfUtf8::len($str) <= $max_length)
-		{
-			return $str;
-		}
+      // Is the string long enough to ellipsize?
+      if(sfUtf8::len($str) <= $max_length)
+      {
+        return $str;
+      }
 
-		$beg = sfUtf8::sub($str, 0, floor($max_length * $position));
+      $beg = sfUtf8::sub($str, 0, floor($max_length * $position));
 
-		$position = ($position > 1) ? 1 : $position;
+      $position = ($position > 1) ? 1 : $position;
 
-		if ($position === 1)
-		{
-			$end = sfUtf8::sub($str, 0, -($max_length - sfUtf8::len($beg)));
-		}
-		else
-		{
-			$end = sfUtf8::sub($str, -($max_length - sfUtf8::len($beg)));
-		}
+      if($position === 1)
+      {
+        $end = sfUtf8::sub($str, 0, -($max_length - sfUtf8::len($beg)));
+      }
+      else
+      {
+        $end = sfUtf8::sub($str, -($max_length - sfUtf8::len($beg)));
+      }
 
-		return $beg.$ellipsis.$end;
-	}
+      return $beg.$ellipsis.$end;
+  }
 
   /**
    * Does the given $string contain HTML?

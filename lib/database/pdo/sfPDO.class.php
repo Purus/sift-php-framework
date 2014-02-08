@@ -43,7 +43,7 @@ class sfPDO extends PDO {
     $this->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);     
   }
 
-	/**
+  /**
    * Configures the PDOStatement class for this connection.
    * 
    * @param      boolean $suppressError Whether to suppress an exception if the statement class cannot be set.

@@ -958,17 +958,18 @@ function get_javascripts_for_form(sfForm $form)
         $file = key($file);
       }
     }
- 	  if(!is_array($options))
+
+    if(!is_array($options))
     {
       $options = array();
     }
 
- 	  if(isset($options['position']))
+    if(isset($options['position']))
     {
       unset($options['position']);
     }
 
- 	  $html .= javascript_include_tag($file, $options);
+    $html .= javascript_include_tag($file, $options);
   }
   return $html;
 }
@@ -989,19 +990,19 @@ function use_javascripts_for_form(sfForm $form)
       }
     }
 
- 	  if(!is_array($options))
+      if(!is_array($options))
     {
       $options = array();
     }
 
- 	  $position = '';
- 	  if(isset($options['position']))
+      $position = '';
+      if(isset($options['position']))
     {
       $position = $options['position'];
       unset($options['position']);
     }
 
- 	  $response->addJavascript($file, $position, $options);
+      $response->addJavascript($file, $position, $options);
   }
 }
 
@@ -1031,7 +1032,7 @@ function get_stylesheets_for_form(sfForm $form)
       $file = $options;
       $options = array();
     }
- 	  if(is_string($options))
+      if(is_string($options))
     {
       $options = array('media' => $options);
     }
@@ -1057,7 +1058,7 @@ function use_stylesheets_for_form(sfForm $form)
   foreach($form->getStylesheets() as $file => $options)
   {
     if(is_integer($file) && is_string($options))
- 		{
+    {
       $file = $options;
       $options = array();
     }

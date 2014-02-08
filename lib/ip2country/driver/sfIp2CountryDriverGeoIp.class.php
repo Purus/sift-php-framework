@@ -97,7 +97,7 @@ class sfIp2CountryDriverGeoIp extends sfIp2Country {
   {
     $this->connect();
 
-		$ip = $this->ip2int($ip);
+    $ip = $this->ip2int($ip);
 
     $statement = $this->dbh->prepare('SELECT code FROM ip2country WHERE ? BETWEEN ip_from AND ip_to');
     $statement->bindParam(1, $ip);
