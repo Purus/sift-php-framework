@@ -25,8 +25,7 @@ abstract class sfI18nExtract extends sfConfigurable {
    */
   const GLOBAL_APPLICATION_DOMAIN = '__GLOBAL_APPLICATION_DOMAIN__';
 
-  protected
-    $sources = array(),
+  protected $sources = array(),
     $allSeenMessages = array(),
     $currentMessages = array(),
     $oldMessages = array(),

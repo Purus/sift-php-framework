@@ -46,7 +46,7 @@ interface sfIView {
   /**
    * Executes any presentation logic and set template attributes.
    */
-  function execute();
+  public function execute();
 
   /**
    * Configures template.

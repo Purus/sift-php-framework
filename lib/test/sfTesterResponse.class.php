@@ -14,8 +14,7 @@
  */
 class sfTesterResponse extends sfTester
 {
-  protected
-    $response       = null,
+  protected $response       = null,
     $dom            = null,
     $domCssSelector = null;
 

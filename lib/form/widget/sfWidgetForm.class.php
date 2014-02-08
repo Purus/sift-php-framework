@@ -14,8 +14,7 @@
  */
 abstract class sfWidgetForm extends sfWidget
 {
-  protected
-    $parent   = null;
+  protected $parent   = null;
 
   /**
    * Constructor.
@@ -282,7 +281,7 @@ abstract class sfWidgetForm extends sfWidget
    * @param  int  $stop
    * @return array
    */
-  static protected function generateTwoCharsRange($start, $stop)
+  protected static function generateTwoCharsRange($start, $stop)
   {
     $results = array();
     for ($i = $start; $i <= $stop; $i++)

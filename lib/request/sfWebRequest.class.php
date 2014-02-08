@@ -482,7 +482,7 @@ class sfWebRequest extends sfRequest {
    *
    * @return array An array of re-ordered uploaded file information
    */
-  static public function convertFileInformation(array $taintedFiles)
+  public static function convertFileInformation(array $taintedFiles)
   {
     $files = array();
     foreach($taintedFiles as $key => $data)
@@ -493,7 +493,7 @@ class sfWebRequest extends sfRequest {
     return $files;
   }
 
-  static protected function fixPhpFilesArray($data)
+  protected static function fixPhpFilesArray($data)
   {
     $fileKeys = array('error', 'name', 'size', 'tmp_name', 'type');
     $keys = array_keys($data);

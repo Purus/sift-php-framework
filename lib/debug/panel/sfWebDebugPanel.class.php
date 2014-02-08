@@ -14,8 +14,7 @@
  */
 abstract class sfWebDebugPanel extends sfConfigurable
 {
-  protected
-    $webDebug = null,
+  protected $webDebug = null,
     $status = sfILogger::INFO;
 
   /**

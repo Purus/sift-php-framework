@@ -14,8 +14,7 @@
  */
 class sfWidgetFormSchemaDecorator extends sfWidgetFormSchema
 {
-  protected
-    $widget    = null,
+  protected $widget    = null,
     $decorator = '';
 
   /**

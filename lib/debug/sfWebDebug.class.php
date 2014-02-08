@@ -14,8 +14,7 @@
  */
 class sfWebDebug extends sfConfigurable
 {
-  protected
-    $logger     = null,
+  protected $logger     = null,
     $dispatcher = null,
     $context    = null,
     $panels     = array();

@@ -14,8 +14,7 @@
  */
 abstract class sfFormObject extends myForm
 {
-  protected
-    $isNew  = true,
+  protected $isNew  = true,
     $object = null;
 
   /**

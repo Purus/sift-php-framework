@@ -14,8 +14,7 @@
  */
 class sfFeedItem {
 
-  private
-          $title,
+  private $title,
           $link,
           $description,
           $content,

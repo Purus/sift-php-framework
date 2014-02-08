@@ -14,8 +14,7 @@
  */
 class sfCliCommandArgumentSet
 {
-  protected
-    $arguments          = array(),
+  protected $arguments          = array(),
     $requiredCount      = 0,
     $hasAnArrayArgument = false,
     $hasOptional        = false;

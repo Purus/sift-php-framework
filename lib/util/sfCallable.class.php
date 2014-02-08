@@ -14,8 +14,7 @@
  */
 class sfCallable {
 
-  protected
-  $callable = null;
+  protected $callable = null;
 
   /**
    * Constructor.

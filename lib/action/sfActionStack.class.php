@@ -15,8 +15,7 @@
  */
 class sfActionStack
 {
-  protected
-    $stack = array();
+  protected $stack = array();
 
   /**
    * Entry count

@@ -59,13 +59,13 @@ class sfUtf8 {
    *
    * @var boolean
    */
-  static private $can_ignore_invalid = NULL;
+  private static $can_ignore_invalid = NULL;
   /**
    * All lowercase UTF-8 characters mapped to uppercase characters
    *
    * @var array
    */
-  static private $lower_to_upper = array(
+  private static $lower_to_upper = array(
       'a' => 'A', 'b' => 'B', 'c' => 'C', 'd' => 'D', 'e' => 'E', 'f' => 'F',
       'g' => 'G', 'h' => 'H', 'i' => 'I', 'j' => 'J', 'k' => 'K', 'l' => 'L',
       'm' => 'M', 'n' => 'N', 'o' => 'O', 'p' => 'P', 'q' => 'Q', 'r' => 'R',
@@ -184,7 +184,7 @@ class sfUtf8 {
    *
    * @var array
    */
-  static private $mb_lower_to_upper_fix = array(
+  private static $mb_lower_to_upper_fix = array(
       'ɘ' => 'Ǝ', 'ǲ' => 'Ǳ', 'ა' => 'Ⴀ', 'ბ' => 'Ⴁ', 'გ' => 'Ⴂ', 'დ' => 'Ⴃ',
       'ე' => 'Ⴄ', 'ვ' => 'Ⴅ', 'ზ' => 'Ⴆ', 'თ' => 'Ⴇ', 'ი' => 'Ⴈ', 'კ' => 'Ⴉ',
       'ლ' => 'Ⴊ', 'მ' => 'Ⴋ', 'ნ' => 'Ⴌ', 'ო' => 'Ⴍ', 'პ' => 'Ⴎ', 'ჟ' => 'Ⴏ',
@@ -202,7 +202,7 @@ class sfUtf8 {
    *
    * @var array
    */
-  static private $mb_upper_to_lower_fix = array(
+  private static $mb_upper_to_lower_fix = array(
       'ǝ' => 'ɘ', 'ǅ' => 'ǆ', 'ǈ' => 'ǉ', 'ǋ' => 'ǌ', 'Ⴀ' => 'ა', 'Ⴁ' => 'ბ',
       'Ⴂ' => 'გ', 'Ⴃ' => 'დ', 'Ⴄ' => 'ე', 'Ⴅ' => 'ვ', 'Ⴆ' => 'ზ', 'Ⴇ' => 'თ',
       'Ⴈ' => 'ი', 'Ⴉ' => 'კ', 'Ⴊ' => 'ლ', 'Ⴋ' => 'მ', 'Ⴌ' => 'ნ', 'Ⴍ' => 'ო',
@@ -225,7 +225,7 @@ class sfUtf8 {
    *
    * @var array
    */
-  static private $upper_to_lower = array(
+  private static $upper_to_lower = array(
       'A' => 'a', 'B' => 'b', 'C' => 'c', 'D' => 'd', 'E' => 'e', 'F' => 'f',
       'G' => 'g', 'H' => 'h', 'I' => 'i', 'J' => 'j', 'K' => 'k', 'L' => 'l',
       'M' => 'm', 'N' => 'n', 'O' => 'o', 'P' => 'p', 'Q' => 'q', 'R' => 'r',
@@ -355,7 +355,7 @@ class sfUtf8 {
    *
    * @var array
    */
-  static private $utf8_to_ascii = array(
+  private static $utf8_to_ascii = array(
       // Latin-1 Supplement
       '©' => '(c)', '«' => '<<', '®' => '(R)', '»' => '>>', '¼' => '1/4',
       '½' => '1/2', '¾' => '3/4', 'À' => 'A', 'Á' => 'A', 'Â' => 'A',
@@ -527,7 +527,7 @@ class sfUtf8 {
    *
    * @var boolean
    */
-  static private $mbstring_available = NULL;
+  private static $mbstring_available = NULL;
 
   /**
    * Maps UTF-8 ASCII-based latin characters, puntuation, symbols and number forms to ASCII
@@ -553,7 +553,7 @@ class sfUtf8 {
    * @param  string $string  The string to convert
    * @return string  The input string in pure ASCII
    */
-  static public function ascii($string)
+  public static function ascii($string)
   {
     if(!self::detect($string))
     {
@@ -571,7 +571,7 @@ class sfUtf8 {
    * @param boolean $clean Clean invalid UTF-8 chars out of the string
    * @return string
    */
-  static public function convertToUtf8($string, $inputCharset = null, $clean = false)
+  public static function convertToUtf8($string, $inputCharset = null, $clean = false)
   {
     if(self::isUtf8($string))
     {
@@ -595,7 +595,7 @@ class sfUtf8 {
    * @return string
    * @see http://knowhow.dgx.cz/charset/autoczech.phps
    */
-  static public function detectCharset($string)
+  public static function detectCharset($string)
   {
     if(self::isUtf8($string))
     {
@@ -632,7 +632,7 @@ class sfUtf8 {
    * @see http://stackoverflow.com/questions/910793/php-detect-encoding-and-make-everything-utf-8
    * @return bool true if $string is valid UTF-8 and false otherwise.
    */
-  static public function isUtf8($string)
+  public static function isUtf8($string)
   {
     return preg_match('%(?:
           [\xC2-\xDF][\x80-\xBF]             # non-overlong 2-byte
@@ -651,7 +651,7 @@ class sfUtf8 {
    *
    * @return void
    */
-  static private function checkMbString()
+  private static function checkMbString()
   {
     self::$mbstring_available = extension_loaded('mbstring');
   }
@@ -662,7 +662,7 @@ class sfUtf8 {
    * @param  mixed $unicode_code_point  The character to create, either the `U+hex` or decimal code point
    * @return string  The UTF-8 character
    */
-  static public function chr($unicode_code_point)
+  public static function chr($unicode_code_point)
   {
     if(is_string($unicode_code_point) && substr($unicode_code_point, 0, 2) == 'U+')
     {
@@ -720,7 +720,7 @@ class sfUtf8 {
    * @param  array|string $value  The string or array of strings to clean
    * @return string  The cleaned string
    */
-  static public function clean($value)
+  public static function clean($value)
   {
     if(!is_array($value))
     {
@@ -765,7 +765,7 @@ class sfUtf8 {
    * @param  string $str2  The second string to compare
    * @return integer  < 0 if $str1 < $str2, 0 if they are equal, > 0 if $str1 > $str2
    */
-  static public function cmp($str1, $str2)
+  public static function cmp($str1, $str2)
   {
     $ascii_str1 = strtr($str1, self::$utf8_to_ascii);
     $ascii_str2 = strtr($str2, self::$utf8_to_ascii);
@@ -788,7 +788,7 @@ class sfUtf8 {
    * @param  integer $offset  The character offset to conver to bytes
    * @return integer  The converted offset
    */
-  static private function convertOffsetToBytes($string, $offset)
+  private static function convertOffsetToBytes($string, $offset)
   {
     if($offset == 0)
     {
@@ -840,7 +840,7 @@ class sfUtf8 {
    * @param  string $string  The string to check
    * @return boolean  If the string contains any non-ASCII characters
    */
-  static private function detect($string)
+  private static function detect($string)
   {
     return (boolean) preg_match('#[^\x00-\x7F]#', $string);
   }
@@ -855,7 +855,7 @@ class sfUtf8 {
    * @param  string  $delimiter  The string to explode on. If `NULL` or `''` this method will return one character per array index.
    * @return array  The exploded string
    */
-  static public function explode($string, $delimiter = null)
+  public static function explode($string, $delimiter = null)
   {
     // If a delimiter was passed, we just do an explode
     if($delimiter || (!$delimiter && is_numeric($delimiter)))
@@ -880,7 +880,7 @@ class sfUtf8 {
    * @param  string $str2  The second string to compare
    * @return integer  < 0 if $str1 < $str2, 0 if they are equal, > 0 if $str1 > $str2
    */
-  static public function icmp($str1, $str2)
+  public static function icmp($str1, $str2)
   {
     $str1 = self::lower($str1);
     $str2 = self::lower($str2);
@@ -900,7 +900,7 @@ class sfUtf8 {
    * @param  string $str2  The second string to compare
    * @return integer  `< 0` if `$str1 < $str2`, `0` if they are equal, `> 0` if `$str1 > $str2`
    */
-  static public function inatcmp($str1, $str2)
+  public static function inatcmp($str1, $str2)
   {
     $str1 = self::lower($str1);
     $str2 = self::lower($str2);
@@ -916,7 +916,7 @@ class sfUtf8 {
    * @param  integer $offset    The character position to start searching from
    * @return mixed  The integer character position of the first occurence of the needle or `FALSE` if no match
    */
-  static public function ipos($haystack, $needle, $offset=0)
+  public static function ipos($haystack, $needle, $offset=0)
   {
     // We get better performance falling back for ASCII strings
     if(!self::detect($haystack))
@@ -953,7 +953,7 @@ class sfUtf8 {
    * @param  mixed  $replace  The string (or array of strings) to replace with - see method description for details
    * @return string  The input string with the specified replacements
    */
-  static public function ireplace($string, $search, $replace)
+  public static function ireplace($string, $search, $replace)
   {
     if(is_array($search))
     {
@@ -981,7 +981,7 @@ class sfUtf8 {
    * @param  integer $offset    The character position to start searching from. A negative value will stop looking that many characters from the end of the string
    * @return mixed  The integer character position of the last occurence of the needle or `FALSE` if no match
    */
-  static public function irpos($haystack, $needle, $offset=0)
+  public static function irpos($haystack, $needle, $offset=0)
   {
     // We get better performance falling back for ASCII strings
     if(!self::detect($haystack))
@@ -1016,7 +1016,7 @@ class sfUtf8 {
    * @param  boolean $before_needle  If a substring of the haystack before the needle should be returned instead of the substring from the needle to the end of the haystack
    * @return mixed  The specified part of the haystack, or `FALSE` if the needle was not found
    */
-  static public function istr($haystack, $needle, $before_needle = false)
+  public static function istr($haystack, $needle, $before_needle = false)
   {
     // We get better performance falling back for ASCII strings
     if($before_needle == false && !self::detect($haystack))
@@ -1053,7 +1053,7 @@ class sfUtf8 {
    * @param  string $string  The string to measure
    * @return integer  The number of characters in the string
    */
-  static public function len($string)
+  public static function len($string)
   {
     if(self::$mbstring_available === NULL)
     {
@@ -1074,7 +1074,7 @@ class sfUtf8 {
    * @param  string $string  The string to convert
    * @return string  The input string with all uppercase characters in lowercase
    */
-  static public function lower($string)
+  public static function lower($string)
   {
     // We get better performance falling back for ASCII strings
     if(!self::detect($string))
@@ -1104,7 +1104,7 @@ class sfUtf8 {
    * @param  string $charlist  The characters to trim
    * @return string  The trimmed string
    */
-  static public function ltrim($string, $charlist=NULL)
+  public static function ltrim($string, $charlist=NULL)
   {
     if(strlen($charlist) === 0)
     {
@@ -1129,7 +1129,7 @@ class sfUtf8 {
    * @param  string $str2  The second string to compare
    * @return integer  `< 0` if `$str1 < $str2`, `0` if they are equal, `> 0` if `$str1 > $str2`
    */
-  static public function natcmp($str1, $str2)
+  public static function natcmp($str1, $str2)
   {
     $ascii_str1 = strtr($str1, self::$utf8_to_ascii);
     $ascii_str2 = strtr($str2, self::$utf8_to_ascii);
@@ -1151,7 +1151,7 @@ class sfUtf8 {
    * @param  string $character  The character to decode
    * @return string  The U+hex unicode code point for the character
    */
-  static public function ord($character)
+  public static function ord($character)
   {
     $b = array_map('ord', str_split($character));
     $invalid = FALSE;
@@ -1229,7 +1229,7 @@ class sfUtf8 {
    * @param  string  $pad_type    The type of padding to do: `'left'`, `'right'`, `'both'`
    * @return string  The input string padded to the specified character width
    */
-  static public function pad($string, $pad_length, $pad_string = ' ', $pad_type = 'right')
+  public static function pad($string, $pad_length, $pad_string = ' ', $pad_type = 'right')
   {
     $valid_pad_types = array('right', 'left', 'both');
     if(!in_array($pad_type, $valid_pad_types))
@@ -1304,7 +1304,7 @@ class sfUtf8 {
    * @param  integer $offset    The character position to start searching from
    * @return mixed  The integer character position of the first occurence of the needle or `FALSE` if no match
    */
-  static public function pos($haystack, $needle, $offset=0)
+  public static function pos($haystack, $needle, $offset=0)
   {
     if(self::$mbstring_available === NULL)
     {
@@ -1341,7 +1341,7 @@ class sfUtf8 {
    * @param  mixed  $replace  The string (or array of strings) to replace with - see method description for details
    * @return string  The input string with the specified replacements
    */
-  static public function replace($string, $search, $replace)
+  public static function replace($string, $search, $replace)
   {
     return str_replace($search, $replace, $string);
   }
@@ -1353,7 +1353,7 @@ class sfUtf8 {
    *
    * @return void
    */
-  static public function reset()
+  public static function reset()
   {
     self::$mbstring_available = NULL;
   }
@@ -1364,7 +1364,7 @@ class sfUtf8 {
    * @param  string $string   The string to reverse
    * @return string  The reversed string
    */
-  static public function rev($string)
+  public static function rev($string)
   {
     $output = '';
     $len = strlen($string);
@@ -1413,7 +1413,7 @@ class sfUtf8 {
    * @param  integer $offset    The character position to start searching from. A negative value will stop looking that many characters from the end of the string
    * @return mixed  The integer character position of the last occurence of the needle or `FALSE` if no match
    */
-  static public function rpos($haystack, $needle, $offset=0)
+  public static function rpos($haystack, $needle, $offset=0)
   {
     // We get better performance falling back for ASCII strings
     if(!self::detect($haystack))
@@ -1442,7 +1442,7 @@ class sfUtf8 {
    * @param  string $charlist  The characters to trim
    * @return string  The trimmed string
    */
-  static public function rtrim($string, $charlist=NULL)
+  public static function rtrim($string, $charlist=NULL)
   {
     if(strlen($charlist) === 0)
     {
@@ -1465,7 +1465,7 @@ class sfUtf8 {
    * @param  boolean $before_needle  If a substring of the haystack before the needle should be returned instead of the substring from the needle to the end of the haystack
    * @return mixed  The specified part of the haystack, or `FALSE` if the needle was not found
    */
-  static public function str($haystack, $needle, $before_needle=FALSE)
+  public static function str($haystack, $needle, $before_needle=FALSE)
   {
     if(self::$mbstring_available === NULL)
     {
@@ -1500,7 +1500,7 @@ class sfUtf8 {
    * @param  integer $length  The length of the string to extract. If an empty value is provided, the remainder of the string will be returned.
    * @return mixed  The extracted subtring or `FALSE` if the start is out of bounds
    */
-  static public function sub($string, $start, $length=NULL)
+  public static function sub($string, $start, $length=NULL)
   {
     if(self::$mbstring_available === NULL)
     {
@@ -1591,7 +1591,7 @@ class sfUtf8 {
    * @return string
    * @see http://www.php.net/manual/en/ref.mbstring.php#94220
    */
-  static public function subReplace($string, $replacement, $start = null, $length = null)
+  public static function subReplace($string, $replacement, $start = null, $length = null)
   {
     if(is_array($string))
     {
@@ -1639,7 +1639,7 @@ class sfUtf8 {
    * @param  string $charlist  The characters to trim, .. indicates a range
    * @return string  The trimmed string
    */
-  static public function trim($string, $charlist=NULL)
+  public static function trim($string, $charlist=NULL)
   {
     if(strlen($charlist) === 0)
     {
@@ -1658,7 +1658,7 @@ class sfUtf8 {
    * @param  string $string  The string to process
    * @return string  The processed string
    */
-  static public function ucfirst($string)
+  public static function ucfirst($string)
   {
     return self::upper(self::sub($string, 0, 1)) . self::sub($string, 1);
   }
@@ -1672,7 +1672,7 @@ class sfUtf8 {
    * @param  string $string  The string to process
    * @return string  The processed string
    */
-  static public function ucwords($string)
+  public static function ucwords($string)
   {
     return preg_replace_callback(
             '#(?<=^|\s|[\x{2000}-\x{200A}]|/|-|\(|\[|\{|\||"|^\'|\s\'|‘|“)(.)#u',
@@ -1687,7 +1687,7 @@ class sfUtf8 {
    * @param array $match  The regex match from ::ucwords()
    * @return string  The uppercase character
    */
-  static private function ucwordsCallback($match)
+  private static function ucwordsCallback($match)
   {
     return self::upper($match[1]);
   }
@@ -1698,7 +1698,7 @@ class sfUtf8 {
    * @param  string $string  The string to convert
    * @return string  The input string with all lowercase characters in uppercase
    */
-  static public function upper($string)
+  public static function upper($string)
   {
     // We get better performance falling back for ASCII strings
     if(!self::detect($string))
@@ -1730,7 +1730,7 @@ class sfUtf8 {
    * @param  boolean $cut     If words longer than the character width should be split to fit
    * @return string  The input string with all lowercase characters in uppercase
    */
-  static public function wordwrap($string, $width = 75, $break = "\n", $cut = false)
+  public static function wordwrap($string, $width = 75, $break = "\n", $cut = false)
   {
     // We get better performance falling back for ASCII strings
     if(!self::detect($string))

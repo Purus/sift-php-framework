@@ -14,8 +14,7 @@
  */
 class sfConfig
 {
-  protected static
-    $config = array();
+  protected static $config = array();
 
   /**
    * Retrieves a config parameter.

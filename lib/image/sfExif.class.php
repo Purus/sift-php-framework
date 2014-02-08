@@ -103,7 +103,7 @@ class sfExif {
    *
    * @return array
    */
-  static public function getCategories()
+  public static function getCategories()
   {
     return array(
         'IPTC' => array(
@@ -175,7 +175,7 @@ class sfExif {
    * @param $driver
    * @return unknown_type
    */
-  static public function getFields($driver = null, $description_only = false)
+  public static function getFields($driver = null, $description_only = false)
   {
     if(!is_null($driver) && is_array($driver))
     {
@@ -248,7 +248,7 @@ class sfExif {
    *
    * @param
    */
-  static protected function formatExposure($data)
+  protected static function formatExposure($data)
   {
     if($data > 0)
     {
@@ -279,7 +279,7 @@ class sfExif {
    *
    * (Ported from the Exifer library).
    */
-  static protected function convertToFraction($v, &$n, &$d)
+  protected static function convertToFraction($v, &$n, &$d)
   {
     $MaxTerms = 15;         // Limit to prevent infinite loop
     $MinDivisor = 0.000001; // Limit to prevent divide by zero
@@ -330,7 +330,7 @@ class sfExif {
    *
    * @return string  The converted data.
    */
-  static public function getHumanReadable($field, $data)
+  public static function getHumanReadable($field, $data)
   {
     switch($field)
     {

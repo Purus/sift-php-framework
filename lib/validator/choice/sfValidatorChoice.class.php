@@ -118,7 +118,7 @@ class sfValidatorChoice extends sfValidatorBase {
    *
    * @return Boolean
    */
-  static protected function inChoices($value, array $choices = array())
+  protected static function inChoices($value, array $choices = array())
   {
     foreach($choices as $choice)
     {

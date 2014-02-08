@@ -14,8 +14,7 @@
  */
 class sfCacheFilter extends sfFilter {
 
-  protected
-    $cacheManager = null,
+  protected $cacheManager = null,
     $request = null,
     $response = null,
     $routing = null,

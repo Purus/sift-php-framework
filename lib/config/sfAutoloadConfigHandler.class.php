@@ -122,7 +122,7 @@ class sfAutoloadConfigHandler extends sfYamlConfigHandler {
     return $mappings;
   }
 
-  static public function parseFile($path, $file, $prefix)
+  public static function parseFile($path, $file, $prefix)
   {
     $mapping = array();
     preg_match_all('~^\s*(?:abstract\s+|final\s+)?(?:class|interface)\s+(\w+)~mi', file_get_contents($file), $classes);

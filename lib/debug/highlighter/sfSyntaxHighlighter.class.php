@@ -276,7 +276,7 @@ abstract class sfSyntaxHighlighter {
    *
    * @return string
    */
-  public final function __toString()
+  final public function __toString()
   {
     return $this->getHtml();
   }

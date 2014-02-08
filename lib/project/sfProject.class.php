@@ -92,7 +92,7 @@ abstract class sfProject extends sfConfigurable {
    *
    * @var sfApplication
    */
-  static protected $active = null;
+  protected static $active = null;
 
   /**
    * Constructor.

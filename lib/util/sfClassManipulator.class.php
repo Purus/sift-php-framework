@@ -14,7 +14,7 @@
  */
 class sfClassManipulator {
 
-  static protected $signatureTokens = array(
+  protected static $signatureTokens = array(
       T_FINAL,
       T_ABSTRACT,
       T_STATIC,

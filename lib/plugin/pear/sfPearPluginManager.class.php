@@ -14,8 +14,7 @@
  */
 class sfPearPluginManager extends sfConfigurable {
 
-  protected
-    $dispatcher = null,
+  protected $dispatcher = null,
     $environment = null,
     $logger      = null,
     $installing = array();

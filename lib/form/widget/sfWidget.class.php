@@ -14,12 +14,10 @@
  */
 abstract class sfWidget {
 
-  protected
-          $requiredOptions = array(),
+  protected $requiredOptions = array(),
           $attributes = array(),
           $options = array();
-  protected static
-          $xhtml = true,
+  protected static $xhtml = true,
           $ariaEnabled = true,
           $charset = 'UTF-8';
 
@@ -347,7 +345,7 @@ abstract class sfWidget {
    *
    * @param string $charset  The charset
    */
-  static public function setCharset($charset)
+  public static function setCharset($charset)
   {
     self::$charset = $charset;
   }
@@ -357,7 +355,7 @@ abstract class sfWidget {
    *
    * @return string The charset (defaults to UTF-8)
    */
-  static public function getCharset()
+  public static function getCharset()
   {
     return self::$charset;
   }
@@ -367,7 +365,7 @@ abstract class sfWidget {
    *
    * @param bool $boolean  true if widgets must be generated as XHTML, false otherwise
    */
-  static public function setXhtml($boolean)
+  public static function setXhtml($boolean)
   {
     self::$xhtml = (boolean) $boolean;
   }
@@ -377,7 +375,7 @@ abstract class sfWidget {
    *
    * @return bool true if widgets must be generated as XHTML, false otherwise
    */
-  static public function isXhtml()
+  public static function isXhtml()
   {
     return self::$xhtml;
   }
@@ -387,7 +385,7 @@ abstract class sfWidget {
    *
    * @param boolean $boolean true if widgets must generate WAI ARIA attributes
    */
-  static public function setAria($boolean)
+  public static function setAria($boolean)
   {
     self::$ariaEnabled = (boolean) $boolean;
   }
@@ -397,7 +395,7 @@ abstract class sfWidget {
    *
    * @return bool true if widgets must generate WAI ARIA attributes
    */
-  static public function isAriaEnabled()
+  public static function isAriaEnabled()
   {
     return self::$ariaEnabled;
   }
@@ -492,7 +490,7 @@ abstract class sfWidget {
    * @param  string $value  string to escape
    * @return string escaped string
    */
-  static public function escapeOnce($value)
+  public static function escapeOnce($value)
   {
     return sfHtml::escapeOnce($value);
   }
@@ -503,7 +501,7 @@ abstract class sfWidget {
    * @param  string $escaped  string to fix
    * @return string single escaped string
    */
-  static public function fixDoubleEscape($escaped)
+  public static function fixDoubleEscape($escaped)
   {
     return sfHtml::fixDoubleEscape($escaped);
   }

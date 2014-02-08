@@ -1215,7 +1215,7 @@ class sfTypography {
    * @param  array $match
    * @return  string
    */
-  function protectCharacters($match)
+  public function protectCharacters($match)
   {
     return str_replace(array("'", '"', '--', '  '),
             array('{@SQ}', '{@DQ}', '{@DD}', '{@NBS}'), $match[0]);

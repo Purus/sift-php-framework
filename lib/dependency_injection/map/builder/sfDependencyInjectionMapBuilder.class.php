@@ -33,7 +33,7 @@ abstract class sfDependencyInjectionMapBuilder {
    *
    * @return sfDependencyInjectionMapBuilder
    */
-  protected abstract function build();
+  abstract protected function build();
 
   /**
    * The map

@@ -75,7 +75,7 @@ class sfGeneratorConfigHandler extends sfYamlConfigHandler {
     return $retval;
   }
 
-  static public function getContent(sfGeneratorManager $generatorManager, $class, $parameters)
+  public static function getContent(sfGeneratorManager $generatorManager, $class, $parameters)
   {
     return $generatorManager->generate($class, $parameters);
   }
@@ -125,7 +125,7 @@ class sfGeneratorConfigHandler extends sfYamlConfigHandler {
   /**
    * @see sfConfigHandler
    */
-  static public function getConfiguration(array $configFiles)
+  public static function getConfiguration(array $configFiles)
   {
     return self::parseYamls($configFiles);
   }

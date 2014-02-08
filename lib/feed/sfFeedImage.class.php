@@ -18,8 +18,7 @@
  */
 class sfFeedImage {
 
-  private
-          $favicon,
+  private $favicon,
           $image,
           $faviconX,
           $faviconY,

@@ -84,7 +84,7 @@ class sfWebBrowserDriverFopen implements sfIWebBrowserDriver {
    *
    * @see  http://php.net/set_error_handler
    */
-  function handleRuntimeError($errno, $errstr, $errfile = null, $errline = null, $errcontext = array())
+  public function handleRuntimeError($errno, $errstr, $errfile = null, $errline = null, $errcontext = array())
   {
     $error_types = array(
         E_ERROR => 'Error',

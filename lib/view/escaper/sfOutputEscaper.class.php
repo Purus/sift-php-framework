@@ -29,7 +29,7 @@ abstract class sfOutputEscaper
    */
   protected $escapingMethod;
 
-  static protected $safeClasses = array();
+  protected static $safeClasses = array();
 
   /**
    * Constructor stores the escaping method and value.
@@ -139,7 +139,7 @@ abstract class sfOutputEscaper
    *
    * @throws InvalidArgumentException If the escaping fails
    */
-  static public function unescape($value)
+  public static function unescape($value)
   {
     if (null === $value || is_bool($value))
     {
@@ -174,7 +174,7 @@ abstract class sfOutputEscaper
    *
    * @return bool true if the class if safe, false otherwise
    */
-  static public function isClassMarkedAsSafe($class)
+  public static function isClassMarkedAsSafe($class)
   {
     if (in_array($class, self::$safeClasses))
     {
@@ -197,7 +197,7 @@ abstract class sfOutputEscaper
    *
    * @param array $classes  An array of class names
    */
-  static public function markClassesAsSafe(array $classes)
+  public static function markClassesAsSafe(array $classes)
   {
     self::$safeClasses = array_unique(array_merge(self::$safeClasses, $classes));
   }
@@ -207,7 +207,7 @@ abstract class sfOutputEscaper
    *
    * @param string $class  A class name
    */
-  static public function markClassAsSafe($class)
+  public static function markClassAsSafe($class)
   {
     self::markClassesAsSafe(array($class));
   }

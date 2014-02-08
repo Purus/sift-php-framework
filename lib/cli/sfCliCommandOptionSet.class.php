@@ -14,8 +14,7 @@
  */
 class sfCliCommandOptionSet
 {
-  protected
-    $options   = array(),
+  protected $options   = array(),
     $shortcuts = array();
 
   /**

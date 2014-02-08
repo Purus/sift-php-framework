@@ -22,10 +22,8 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess {
           BEFORE = 'before',
           AFTER = 'after';
 
-  protected static
-          $defaultFormatterName = 'table';
-  protected
-          $formFormatters = array(),
+  protected static $defaultFormatterName = 'table';
+  protected $formFormatters = array(),
           $fields = array(),
           $positions = array(),
           $helps = array();
@@ -170,7 +168,7 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess {
    *
    * @param string $name New default formatter name
    */
-  static public function setDefaultFormFormatterName($name)
+  public static function setDefaultFormFormatterName($name)
   {
     self::$defaultFormatterName = $name;
   }

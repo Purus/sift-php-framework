@@ -155,7 +155,7 @@ class sfCoreAutoload {
    *
    * This method overrides this file (__FILE__)
    */
-  static public function make()
+  public static function make()
   {
     $libDir = str_replace(DIRECTORY_SEPARATOR, '/', realpath(dirname(__FILE__) . DIRECTORY_SEPARATOR . '..'));
     require_once $libDir . '/util/sfFinder.class.php';

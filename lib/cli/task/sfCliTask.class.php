@@ -14,8 +14,7 @@
  */
 abstract class sfCliTask {
 
-  protected
-    $namespace           = '',
+  protected $namespace           = '',
     $name                = null,
     $aliases             = array(),
     $briefDescription    = '',
@@ -26,8 +25,7 @@ abstract class sfCliTask {
     $formatter           = null,
     $logger              = null;
 
-  public
-    $environment         = null;
+  public $environment         = null;
 
   /**
    * Constructor.
@@ -323,7 +321,7 @@ abstract class sfCliTask {
    *
    * @return string The fully qualified task name
    */
-  final function getFullName()
+  final public function getFullName()
   {
     return $this->getNamespace() ? $this->getNamespace().':'.$this->getName() : $this->getName();
   }

@@ -14,11 +14,9 @@
  */
 class sfFormField
 {
-  protected static
-    $toStringException = null;
+  protected static $toStringException = null;
 
-  protected
-    $form   = null,
+  protected $form   = null,
     $widget = null,
     $parent = null,
     $name   = '',
@@ -83,7 +81,7 @@ class sfFormField
    *
    * @return boolean
    */
-  static public function hasToStringException()
+  public static function hasToStringException()
   {
     return null !== self::$toStringException;
   }
@@ -95,7 +93,7 @@ class sfFormField
    *
    * @return Exception
    */
-  static public function getToStringException()
+  public static function getToStringException()
   {
     return self::$toStringException;
   }
@@ -107,7 +105,7 @@ class sfFormField
    *
    * @param Exception $e The exception thrown by __toString()
    */
-  static public function setToStringException(Exception $e)
+  public static function setToStringException(Exception $e)
   {
     if (null === self::$toStringException)
     {

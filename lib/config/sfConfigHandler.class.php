@@ -16,8 +16,7 @@
  */
 abstract class sfConfigHandler {
 
-  protected
-  $parameterHolder = null;
+  protected $parameterHolder = null;
 
   /**
    * Executes this configuration handler

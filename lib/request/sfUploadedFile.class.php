@@ -14,8 +14,7 @@
  */
 class sfUploadedFile implements ArrayAccess
 {
-  protected
-    $originalName   = '',
+  protected $originalName   = '',
     $generatedName  = '',
     $error          = UPLOAD_ERR_OK,
     $tempName       = '',

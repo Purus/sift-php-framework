@@ -15,8 +15,7 @@
  */
 class sfPartialView extends sfPHPView implements sfIPartialView
 {
-  protected
-    $viewCache   = null,
+  protected $viewCache   = null,
     $checkCache  = false,
     $cacheKey    = null,
     $partialVars = array();

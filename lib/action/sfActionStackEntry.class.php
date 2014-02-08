@@ -14,8 +14,7 @@
  */
 class sfActionStackEntry
 {
-  protected
-    $actionInstance = null,
+  protected $actionInstance = null,
     $actionName     = null,
     $moduleName     = null,
     $presentation   = null,

@@ -17,8 +17,7 @@
  */
 class sfRssFeed extends sfFeed {
 
-  protected
-          $context,
+  protected $context,
           $version = '2.0';
 
   protected function initContext()

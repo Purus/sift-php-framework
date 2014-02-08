@@ -23,8 +23,7 @@ class sfSessionTestStorage extends sfStorage {
     'session_path'
   );
 
-  protected
-    $sessionId = null,
+  protected $sessionId = null,
     $sessionData = array(),
     $sessionPath = null;
 

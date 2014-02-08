@@ -9,7 +9,6 @@
 // define dummy translation function
 if(!function_exists('__'))
 {
-
   /**
    * Translate function. Leaves the message untouched.
    *
@@ -23,7 +22,6 @@ if(!function_exists('__'))
   {
     return $string;
   }
-
 }
 
 /**
@@ -36,8 +34,7 @@ if(!function_exists('__'))
  */
 class sfI18nFormExtract extends sfI18nExtract {
 
-  protected
-          $form,
+  protected $form,
           $catalogueName,
           $cataloguePath,
           $content;

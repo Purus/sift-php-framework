@@ -14,10 +14,9 @@
  */
 class sfBrowser extends sfBrowserBase
 {
-  protected
-    $listeners        = array(),
-    $context          = null,
-    $currentException = null;
+  protected $listeners = array();
+  protected $context;
+  protected $currentException;
 
   /**
    * Calls a request to a uri.

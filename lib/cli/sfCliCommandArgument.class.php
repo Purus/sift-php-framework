@@ -19,8 +19,7 @@ class sfCliCommandArgument
 
   const IS_ARRAY = 4;
 
-  protected
-    $name    = null,
+  protected $name    = null,
     $mode    = null,
     $default = null,
     $help    = '';

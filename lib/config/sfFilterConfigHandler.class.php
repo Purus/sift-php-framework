@@ -193,7 +193,7 @@ class sfFilterConfigHandler extends sfYamlConfigHandler {
   /**
    * @see sfConfigHandler
    */
-  static public function getConfiguration(array $configFiles)
+  public static function getConfiguration(array $configFiles)
   {
     $config = self::parseYaml($configFiles[0]);
     foreach(array_slice($configFiles, 1) as $i => $configFile)

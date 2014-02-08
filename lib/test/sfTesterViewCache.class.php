@@ -14,8 +14,7 @@
  */
 class sfTesterViewCache extends sfTester
 {
-  protected
-    $viewCacheManager = null,
+  protected $viewCacheManager = null,
     $response         = null,
     $routing          = null;
 

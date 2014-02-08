@@ -14,8 +14,7 @@
  */
 class sfCliProjectPermissionsTask extends sfCliBaseTask
 {
-  protected
-    $current = null,
+  protected $current = null,
     $failed  = array();
 
   /**

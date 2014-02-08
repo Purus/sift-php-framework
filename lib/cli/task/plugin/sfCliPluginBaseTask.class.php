@@ -14,8 +14,7 @@
  */
 abstract class sfCliPluginBaseTask extends sfCliBaseTask
 {
-  protected
-    $pluginManager = null;
+  protected $pluginManager = null;
 
   /**
    * Returns a plugin manager instance.

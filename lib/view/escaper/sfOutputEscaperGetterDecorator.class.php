@@ -24,7 +24,7 @@ abstract class sfOutputEscaperGetterDecorator extends sfOutputEscaper
    *
    * @return mixed The value
    */
-  public abstract function getRaw($key);
+  abstract public function getRaw($key);
 
   /**
    * Returns the escaped value associated with the key supplied.

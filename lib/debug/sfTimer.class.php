@@ -14,8 +14,7 @@
  */
 class sfTimer
 {
-  protected
-    $startTime = null,
+  protected $startTime = null,
     $totalTime = null,
     $name = '',
     $calls = 0;

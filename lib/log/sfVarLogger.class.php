@@ -15,8 +15,7 @@
  */
 class sfVarLogger extends sfLoggerBase {
 
-  protected
-    $logs = array(),
+  protected $logs = array(),
     $xdebugLogging = false;
 
   /**

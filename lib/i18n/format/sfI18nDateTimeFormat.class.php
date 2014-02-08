@@ -82,7 +82,7 @@ class sfI18nDateTimeFormat {
    *
    * @return mixed
    */
-  function __get($name)
+  public function __get($name)
   {
     $getProperty = 'get' . $name;
     if(in_array($getProperty, $this->properties))
@@ -99,7 +99,7 @@ class sfI18nDateTimeFormat {
    * Allows functions that begins with 'set' to be called directly
    * as an attribute/property to set the value.
    */
-  function __set($name, $value)
+  public function __set($name, $value)
   {
     $setProperty = 'set' . $name;
     if(in_array($setProperty, $this->properties))
@@ -122,7 +122,7 @@ class sfI18nDateTimeFormat {
    * @param array   $data CLDR data for date time formatting.
    * @see getInstance()
    */
-  function __construct($data = array())
+  public function __construct($data = array())
   {
     $this->properties = get_class_methods($this);
 
@@ -167,7 +167,7 @@ class sfI18nDateTimeFormat {
    * @param sfCulture $culture The culture
    * @return sfDateTimeFormat sfDateTimeFormat for the specified culture.
    */
-  static function getInstance($culture = null)
+  public static function getInstance($culture = null)
   {
     if($culture instanceof sfCulture)
     {

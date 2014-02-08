@@ -14,8 +14,7 @@
  */
 class sfFormFieldSchema extends sfFormField implements ArrayAccess, Iterator, Countable
 {
-  protected
-    $count      = 0,
+  protected $count      = 0,
     $fieldNames = array(),
     $fields     = array();
 

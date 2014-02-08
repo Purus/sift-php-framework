@@ -14,11 +14,9 @@
  */
 abstract class sfWidgetFormSchemaFormatter
 {
-  protected static
-    $translationCallable       = null;
+  protected static $translationCallable       = null;
 
-  protected
-    $rowFormat                 = '',
+  protected $rowFormat                 = '',
     $helpFormat                = '%help%',
     $errorRowFormat            = '%errors%',
     $errorListFormatInARow     = "  <ul class=\"error_list\">\n%errors%  </ul>\n",
@@ -110,7 +108,7 @@ abstract class sfWidgetFormSchemaFormatter
    *
    * @return mixed
    */
-  static public function getTranslationCallable()
+  public static function getTranslationCallable()
   {
     return self::$translationCallable;
   }
@@ -122,7 +120,7 @@ abstract class sfWidgetFormSchemaFormatter
    *
    * @throws InvalidArgumentException if an invalid php callable or sfCallable has been provided
    */
-  static public function setTranslationCallable($callable)
+  public static function setTranslationCallable($callable)
   {
     if (!$callable instanceof sfCallable && !sfToolkit::isCallable($callable))
     {
@@ -132,7 +130,7 @@ abstract class sfWidgetFormSchemaFormatter
     self::$translationCallable = $callable;
   }
 
-  static public function removeTranslationCallable()
+  public static function removeTranslationCallable()
   {
     self::$translationCallable = null;
   }

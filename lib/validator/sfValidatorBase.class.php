@@ -23,15 +23,13 @@ abstract class sfValidatorBase implements sfIEventDispatcherAware {
    */
   protected $dispatcher;
 
-  protected static
-    $charset = 'UTF-8',
+  protected static $charset = 'UTF-8',
     $globalDefaultMessages = array(
       'invalid' => 'This value is invalid.',
       'required' => 'This value is required.'
     );
 
-  protected
-    $requiredOptions = array(),
+  protected $requiredOptions = array(),
     $defaultMessages = array(),
     $defaultOptions = array(),
     $messages = array(),
@@ -293,7 +291,7 @@ abstract class sfValidatorBase implements sfIEventDispatcherAware {
    * @param string $name    The name of the message
    * @param string $message The default message string
    */
-  static public function setDefaultMessage($name, $message)
+  public static function setDefaultMessage($name, $message)
   {
     self::$globalDefaultMessages[$name] = $message;
   }
@@ -352,7 +350,7 @@ abstract class sfValidatorBase implements sfIEventDispatcherAware {
    *
    * @param string $charset  The charset
    */
-  static public function setCharset($charset)
+  public static function setCharset($charset)
   {
     self::$charset = $charset;
   }
@@ -362,7 +360,7 @@ abstract class sfValidatorBase implements sfIEventDispatcherAware {
    *
    * @return string The charset (default to UTF-8)
    */
-  static public function getCharset()
+  public static function getCharset()
   {
     return self::$charset;
   }

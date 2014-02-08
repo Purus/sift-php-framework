@@ -14,8 +14,7 @@
  */
 abstract class sfController implements sfIController
 {
-  protected
-    $context                  = null,
+  protected $context          = null,
     $controllerClasses        = array(),
     $maxForwards              = 5,
     $renderMode               = sfView::RENDER_CLIENT,

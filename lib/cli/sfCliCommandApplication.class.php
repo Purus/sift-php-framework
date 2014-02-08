@@ -14,8 +14,7 @@
  */
 abstract class sfCliCommandApplication {
 
-  protected
-    $project = null,
+  protected $project = null,
     $commandManager = null,
     $trace = false,
     $verbose = true,

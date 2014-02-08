@@ -25,8 +25,7 @@
  */
 class sfSessionStorage extends sfStorage {
 
-  static protected
-    $sessionIdRegenerated = false,
+  protected static $sessionIdRegenerated = false,
     $sessionStarted       = false;
 
   /**

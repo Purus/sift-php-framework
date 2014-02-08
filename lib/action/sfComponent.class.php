@@ -14,8 +14,7 @@
  */
 abstract class sfComponent {
 
-  private
-    $context = null,
+  private $context = null,
     $dispatcher,
     $request = null,
     $response = null,
@@ -35,7 +34,7 @@ abstract class sfComponent {
    *
    * @return mixed A string containing the view name associated with this action
    */
-  abstract function execute();
+  abstract public function execute();
 
   /**
    * Gets the module name associated with this component.
@@ -79,7 +78,7 @@ abstract class sfComponent {
    *
    * @return sfContext The current sfContext instance
    */
-  public final function getContext()
+  final public function getContext()
   {
     return $this->context;
   }
@@ -89,7 +88,7 @@ abstract class sfComponent {
    *
    * @return sfLogger The current sfLogger instance
    */
-  public final function getLogger()
+  final public function getLogger()
   {
     return sfLogger::getInstance();
   }

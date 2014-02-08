@@ -17,8 +17,7 @@ require_once dirname(__FILE__) . '/PEAR_bootstrap.php';
  */
 class sfPearEnvironment extends sfConfigurable {
 
-  protected
-    $dispatcher = null,
+  protected $dispatcher = null,
     $config = null,
     $registry = null,
     $rest = null,

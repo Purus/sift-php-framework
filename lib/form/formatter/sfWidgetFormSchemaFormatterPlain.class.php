@@ -14,8 +14,7 @@
  */
 class sfWidgetFormSchemaFormatterPlain extends sfWidgetFormSchemaFormatter
 {
-  protected
-    $rowFormat       = "%label%<br /> %help%\n  %error%\n  %field%<br />\n  \n%hidden_fields%\n",
+  protected $rowFormat       = "%label%<br /> %help%\n  %error%\n  %field%<br />\n  \n%hidden_fields%\n",
     $errorRowFormat  = "%errors%\n",
     $errorListFormatInARow = "%errors%\n",
     $errorRowFormatInARow =  "%error%",

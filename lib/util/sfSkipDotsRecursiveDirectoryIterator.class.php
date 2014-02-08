@@ -12,8 +12,9 @@
  * Manually skips '.' and '..' directories, since no existing method is
  * available in PHP 5.2.
  *
- * @todo Depreciate in favor of RecursiveDirectoryIterator::SKIP_DOTS once PHP
- *   5.3 or later is required.
+ * @todo Depreciate in favor of RecursiveDirectoryIterator::SKIP_DOTS once PHP 5.3 or later is required.
+ * @package Sift
+ * @subpackage util
  */
 class sfSkipDotsRecursiveDirectoryIterator extends RecursiveDirectoryIterator
 {
@@ -22,19 +23,19 @@ class sfSkipDotsRecursiveDirectoryIterator extends RecursiveDirectoryIterator
      *
      * @param $path The path of the directory to be iterated over.
      */
-    function __construct($path)
+    public function __construct($path)
     {
         parent::__construct($path);
         $this->skipDots();
     }
 
-    function rewind()
+    public function rewind()
     {
         parent::rewind();
         $this->skipDots();
     }
 
-    function next()
+    public function next()
     {
         parent::next();
         $this->skipDots();

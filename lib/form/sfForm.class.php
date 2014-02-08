@@ -30,14 +30,12 @@ class sfForm implements ArrayAccess, Iterator, Countable, sfIUserAware
    */
   protected static $dispatcher;
 
-  protected static
-    $CSRFSecret         = false,
+  protected static $CSRFSecret         = false,
     $CSRFFieldName      = '_csrf_token',
     $toStringException  = null,
     $counter            = 0;
 
-  protected
-    $widgetSchema    = null,
+  protected $widgetSchema    = null,
     $validatorSchema = null,
     $errorSchema     = null,
     $formFieldSchema = null,
@@ -1455,7 +1453,7 @@ class sfForm implements ArrayAccess, Iterator, Countable, sfIUserAware
    *
    * @param string $name The CSRF field name
    */
-  static public function setCSRFFieldName($name)
+  public static function setCSRFFieldName($name)
   {
     self::$CSRFFieldName = $name;
   }
@@ -1465,7 +1463,7 @@ class sfForm implements ArrayAccess, Iterator, Countable, sfIUserAware
    *
    * @return string The CSRF field name
    */
-  static public function getCSRFFieldName()
+  public static function getCSRFFieldName()
   {
     return self::$CSRFFieldName;
   }
@@ -1497,7 +1495,7 @@ class sfForm implements ArrayAccess, Iterator, Countable, sfIUserAware
    *
    * @param string $secret A secret to use when computing the CSRF token
    */
-  static public function enableCSRFProtection($secret = null)
+  public static function enableCSRFProtection($secret = null)
   {
     self::$CSRFSecret = $secret;
   }
@@ -1505,7 +1503,7 @@ class sfForm implements ArrayAccess, Iterator, Countable, sfIUserAware
   /**
    * Disables CSRF protection for all forms.
    */
-  static public function disableCSRFProtection()
+  public static function disableCSRFProtection()
   {
     self::$CSRFSecret = false;
   }
@@ -1858,7 +1856,7 @@ class sfForm implements ArrayAccess, Iterator, Countable, sfIUserAware
    *
    * @return array An array of re-ordered uploaded file information
    */
-  static public function convertFileInformation(array $taintedFiles)
+  public static function convertFileInformation(array $taintedFiles)
   {
     $files = array();
     foreach ($taintedFiles as $key => $data)
@@ -1869,7 +1867,7 @@ class sfForm implements ArrayAccess, Iterator, Countable, sfIUserAware
     return $files;
   }
 
-  static protected function fixPhpFilesArray($data)
+  protected static function fixPhpFilesArray($data)
   {
     $fileKeys = array('error', 'name', 'size', 'tmp_name', 'type');
     $keys = array_keys($data);
@@ -1906,7 +1904,7 @@ class sfForm implements ArrayAccess, Iterator, Countable, sfIUserAware
    *
    * @return boolean
    */
-  static public function hasToStringException()
+  public static function hasToStringException()
   {
     return null !== self::$toStringException;
   }
@@ -1918,7 +1916,7 @@ class sfForm implements ArrayAccess, Iterator, Countable, sfIUserAware
    *
    * @return Exception
    */
-  static public function getToStringException()
+  public static function getToStringException()
   {
     return self::$toStringException;
   }
@@ -1930,7 +1928,7 @@ class sfForm implements ArrayAccess, Iterator, Countable, sfIUserAware
    *
    * @param Exception $e The exception thrown by __toString()
    */
-  static public function setToStringException(Exception $e)
+  public static function setToStringException(Exception $e)
   {
     if (null === self::$toStringException)
     {
@@ -1958,7 +1956,7 @@ class sfForm implements ArrayAccess, Iterator, Countable, sfIUserAware
    *
    * @return array The merged array
    */
-  static protected function deepArrayUnion($array1, $array2)
+  protected static function deepArrayUnion($array1, $array2)
   {
     foreach ($array2 as $key => $value)
     {

@@ -14,8 +14,7 @@
  */
 class sfWidgetFormSchemaFormatterUnorderedList extends sfWidgetFormSchemaFormatter
 {
-  protected
-    $rowFormat       = "<li>%label%   %field%%hidden_fields%</li>\n",
+  protected $rowFormat       = "<li>%label%   %field%%hidden_fields%</li>\n",
     $errorRowFormat  = '',
     $helpFormat      = '<br />%help%',
     $decoratorFormat = '';

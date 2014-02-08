@@ -29,7 +29,7 @@ class sfPasswordTools {
    *
    * @var array
    */
-  static protected $vowels = array(
+  protected static $vowels = array(
     'a', 'e', 'i', 'o', 'u', 'ae',
     'ou', 'io', 'ea', 'ou', 'ia', 'ai');
 
@@ -38,7 +38,7 @@ class sfPasswordTools {
    *
    * @var array
    */
-  static protected $consonants = array(
+  protected static $consonants = array(
     'b', 'c', 'd', 'g', 'h', 'j', 'k', 'l', 'm',
     'n', 'p', 'r', 's', 't', 'u', 'v', 'w',
     'tr', 'cr', 'fr', 'dr', 'wr', 'pr', 'th',

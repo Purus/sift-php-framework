@@ -264,7 +264,7 @@ class sfPlainTextTable {
    *
    * @return void
    */
-  function addRow($row, $append = true)
+  public function addRow($row, $append = true)
   {
     if($append)
     {
@@ -288,7 +288,7 @@ class sfPlainTextTable {
    *
    * @return void
    */
-  function insertRow($row, $row_id = 0)
+  public function insertRow($row, $row_id = 0)
   {
     array_splice($this->_data, $row_id, 0, array($row));
     $this->_updateRowsCols($row);

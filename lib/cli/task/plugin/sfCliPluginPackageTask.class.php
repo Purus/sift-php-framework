@@ -14,8 +14,7 @@
  */
 class sfCliPluginPackageTask extends sfCliPluginBaseTask
 {
-  protected
-    $pluginDir   = null,
+  protected $pluginDir   = null,
     $interactive = true;
 
   /**

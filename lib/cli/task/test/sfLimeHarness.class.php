@@ -16,8 +16,7 @@ require_once dirname(__FILE__).'/../../../vendor/lime/lime.php';
  */
 class sfLimeHarness extends lime_harness
 {
-  protected
-    $plugins = array();
+  protected $plugins = array();
 
   public function addPlugins($plugins)
   {

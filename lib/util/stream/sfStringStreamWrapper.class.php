@@ -61,7 +61,7 @@ class sfStringStreamWrapper extends sfStreamWrapper {
   /**
    * @see sfIStreamWrapper
    */
-  function stream_open($path, $mode, $options, &$opened_path)
+  public function stream_open($path, $mode, $options, &$opened_path)
   {
     return true;
   }
@@ -69,7 +69,7 @@ class sfStringStreamWrapper extends sfStreamWrapper {
   /**
    * @see sfIStreamWrapper
    */
-  function stream_stat()
+  public function stream_stat()
   {
     return false;
   }
@@ -77,7 +77,7 @@ class sfStringStreamWrapper extends sfStreamWrapper {
   /**
    * @see sfIStreamWrapper
    */
-  function stream_read($count)
+  public function stream_read($count)
   {
     $result = substr($this->data, $this->position, $count);
     if($result)
@@ -107,7 +107,7 @@ class sfStringStreamWrapper extends sfStreamWrapper {
   /**
    * @see sfIStreamWrapper
    */
-  function stream_tell()
+  public function stream_tell()
   {
     return $this->position;
   }
@@ -115,7 +115,7 @@ class sfStringStreamWrapper extends sfStreamWrapper {
   /**
    * @see sfIStreamWrapper
    */
-  function stream_eof()
+  public function stream_eof()
   {
     if($this->position > $this->length)
     {
@@ -127,7 +127,7 @@ class sfStringStreamWrapper extends sfStreamWrapper {
   /**
    * @see sfIStreamWrapper
    */
-  function stream_seek($offset, $whence)
+  public function stream_seek($offset, $whence)
   {
     $length = strlen($this->data);
     switch($whence)

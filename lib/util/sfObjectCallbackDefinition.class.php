@@ -8,15 +8,14 @@
 
 /**
  * sfObjectCallbackDefinition defines a object which will be created when needed.
- * This is usefull when there is a need to initiate the object only on demand not beforehand.
+ * This is useful when there is a need to initiate the object only on demand not beforehand.
  *
  * @package    Sift
  * @subpackage util
  */
 class sfObjectCallbackDefinition {
 
-  protected
-    $class        = null,
+  protected $class        = null,
     $file         = null,
     $constructor  = null,
     $shared       = true,

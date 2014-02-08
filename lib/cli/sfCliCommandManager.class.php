@@ -14,8 +14,7 @@
  */
 class sfCliCommandManager
 {
-  protected
-    $arguments            = '',
+  protected $arguments            = '',
     $errors               = array(),
     $optionSet            = null,
     $argumentSet          = array(),

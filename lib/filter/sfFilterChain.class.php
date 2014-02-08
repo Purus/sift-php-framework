@@ -14,8 +14,7 @@
  */
 class sfFilterChain
 {
-  protected
-    $context = null,
+  protected $context = null,
     $chain = array(),
     $index = -1;
 

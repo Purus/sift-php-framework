@@ -17,8 +17,7 @@ class sfCrypt {
   // child classes should use ::getInstance()
   private static $instance;
 
-  protected
-    $cryptModule = false,
+  protected $cryptModule = false,
     $mode,
     $algorithm,
     $key,

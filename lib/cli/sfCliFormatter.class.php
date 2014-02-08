@@ -14,10 +14,9 @@
  */
 class sfCliFormatter
 {
-  protected
-    $size = null;
+  protected $size = null;
 
-  function __construct($maxLineSize = null)
+  public function __construct($maxLineSize = null)
   {
     if (null === $maxLineSize)
     {

@@ -68,7 +68,7 @@ class sfCore
    *
    * @var sfProject
    */
-  static protected $project = null;
+  protected static $project = null;
 
   /**
    * Returns an instance of given application

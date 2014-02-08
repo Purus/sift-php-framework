@@ -14,8 +14,7 @@
  */
 class sfTesterForm extends sfTester
 {
-  protected
-    $form = null;
+  protected $form = null;
 
   /**
    * Constructor.

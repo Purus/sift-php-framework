@@ -15,8 +15,7 @@
  */
 class sfTesterMailer extends sfTester {
 
-  protected
-      $logger = null,
+  protected $logger = null,
       $message = null;
 
   /**

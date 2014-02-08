@@ -14,8 +14,7 @@
  */
 class sfValidatorError extends Exception implements Serializable {
 
-  protected
-          $validator = null,
+  protected $validator = null,
           $arguments = array();
 
   /**

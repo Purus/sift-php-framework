@@ -17,8 +17,7 @@ require_once dirname(__FILE__) . '/PEAR_bootstrap.php';
  */
 class sfPearFrontendPlugin extends PEAR_Frontend_CLI {
 
-  protected
-  $dispatcher = null,
+  protected $dispatcher = null,
   $logger     = null;
 
   /**

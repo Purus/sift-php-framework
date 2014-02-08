@@ -255,7 +255,7 @@ class sfCulture {
    * @param string $culture a culture
    * @return boolean true if valid, false otherwise.
    */
-  static public function validCulture($culture)
+  public static function validCulture($culture)
   {
     return is_file(self::dataDir() . $culture . self::fileExt());
   }
@@ -622,7 +622,7 @@ class sfCulture {
    * or sfCulture::SPECIFIC.
    * @return array list of culture information available.
    */
-  static function getCultures($type = sfCulture::ALL)
+  public static function getCultures($type = sfCulture::ALL)
   {
     $dataDir = sfCulture::dataDir();
     $dataExt = sfCulture::fileExt();

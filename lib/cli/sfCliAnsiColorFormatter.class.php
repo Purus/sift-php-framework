@@ -14,8 +14,7 @@
  */
 class sfCliAnsiColorFormatter extends sfCliFormatter {
 
-  protected
-          $styles = array(
+  protected $styles = array(
               'ERROR' => array('bg' => 'red', 'fg' => 'yellow', 'bold' => true),
               'INFO' => array('fg' => 'green', 'bold' => true),
               'COMMENT' => array('fg' => 'yellow'),

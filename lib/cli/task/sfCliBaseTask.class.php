@@ -14,8 +14,7 @@
  */
 abstract class sfCliBaseTask extends sfCliCommandApplicationTask
 {
-  protected
-    $application   = null,
+  protected $application   = null,
     $phpCli        = null,
     $databases     = null;
 

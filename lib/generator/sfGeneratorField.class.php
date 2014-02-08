@@ -469,7 +469,7 @@ abstract class sfGeneratorField extends sfConfigurable implements sfIGeneratorFi
    * @param $field
    * @return array ($field, $flags)
    */
-  static public function splitFieldWithFlag($field)
+  public static function splitFieldWithFlag($field)
   {
     $flags = array();
     while(in_array($field[0], array('=', '_', '~')))

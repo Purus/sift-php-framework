@@ -21,8 +21,7 @@
  */
 class sfMarkdownParser {
 
-  static protected
-      $xhtml = true;
+  protected static $xhtml = true;
 
   /**
    * Array of options
@@ -177,7 +176,7 @@ class sfMarkdownParser {
    *
    * @param array $options
    */
-  function __construct($options = array())
+  public function __construct($options = array())
   {
     // merge options
     $this->options = array_merge($this->options, $options);

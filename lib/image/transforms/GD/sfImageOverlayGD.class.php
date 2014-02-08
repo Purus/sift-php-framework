@@ -79,7 +79,7 @@ class sfImageOverlayGD extends sfImageTransformAbstract
    *
    * @param sfImage
    */
-  function setOverlay(sfImage $overlay)
+  public function setOverlay(sfImage $overlay)
   {
     $this->overlay = $overlay;
   }
@@ -89,7 +89,7 @@ class sfImageOverlayGD extends sfImageTransformAbstract
    *
    * @return sfImage
    */
-  function getOverlay()
+  public function getOverlay()
   {
     return $this->overlay;
   }

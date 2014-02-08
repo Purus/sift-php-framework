@@ -23,7 +23,7 @@ class sfYamlInline
    *
    * @return array A PHP array representing the YAML string
    */
-  static public function load($value)
+  public static function load($value)
   {
     $value = trim($value);
 
@@ -65,7 +65,7 @@ class sfYamlInline
    *
    * @return string The YAML string representing the PHP array
    */
-  static public function dump($value)
+  public static function dump($value)
   {
     if ('1.1' === sfYaml::getSpecVersion())
     {
@@ -122,7 +122,7 @@ class sfYamlInline
    *
    * @return string The YAML string representing the PHP array
    */
-  static protected function dumpArray($value)
+  protected static function dumpArray($value)
   {
     // array
     $keys = array_keys($value);
@@ -161,7 +161,7 @@ class sfYamlInline
    *
    * @return string A YAML string
    */
-  static public function parseScalar($scalar, $delimiters = null, $stringDelimiters = array('"', "'"), &$i = 0, $evaluate = true)
+  public static function parseScalar($scalar, $delimiters = null, $stringDelimiters = array('"', "'"), &$i = 0, $evaluate = true)
   {
     if (in_array($scalar[$i], $stringDelimiters))
     {
@@ -206,7 +206,7 @@ class sfYamlInline
    *
    * @return string A YAML string
    */
-  static protected function parseQuotedScalar($scalar, &$i)
+  protected static function parseQuotedScalar($scalar, &$i)
   {
     if (!preg_match('/'.self::REGEX_QUOTED_STRING.'/Au', substr($scalar, $i), $match))
     {
@@ -239,7 +239,7 @@ class sfYamlInline
    *
    * @return string A YAML string
    */
-  static protected function parseSequence($sequence, &$i = 0)
+  protected static function parseSequence($sequence, &$i = 0)
   {
     $output = array();
     $len = strlen($sequence);
@@ -299,7 +299,7 @@ class sfYamlInline
    *
    * @return string A YAML string
    */
-  static protected function parseMapping($mapping, &$i = 0)
+  protected static function parseMapping($mapping, &$i = 0)
   {
     $output = array();
     $len = strlen($mapping);
@@ -365,7 +365,7 @@ class sfYamlInline
    *
    * @return string A YAML string
    */
-  static protected function evaluateScalar($scalar)
+  protected static function evaluateScalar($scalar)
   {
     $scalar = trim($scalar);
 
@@ -416,7 +416,7 @@ class sfYamlInline
     }
   }
 
-  static protected function getTimestampRegex()
+  protected static function getTimestampRegex()
   {
     return <<<EOF
     ~^

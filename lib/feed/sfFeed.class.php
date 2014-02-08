@@ -16,8 +16,7 @@
  */
 class sfFeed {
 
-  protected
-          $items = array(),
+  protected $items = array(),
           $image,
           $title,
           $link,

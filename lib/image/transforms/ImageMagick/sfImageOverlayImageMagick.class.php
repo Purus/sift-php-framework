@@ -91,7 +91,7 @@ class sfImageOverlayImageMagick extends sfImageTransformAbstract
    *
    * @param sfImage
    */
-  function setOverlay(sfImage $overlay)
+  public function setOverlay(sfImage $overlay)
   {
     $this->overlay = $overlay;
 
@@ -101,7 +101,7 @@ class sfImageOverlayImageMagick extends sfImageTransformAbstract
    *
    * @return sfImage
    */
-  function getOverlay()
+  public function getOverlay()
   {
     return $this->overlay;
   }
@@ -281,7 +281,7 @@ class sfImageOverlayImageMagick extends sfImageTransformAbstract
    *
    * @param integer
    */
-  function setOpacity($opacity)
+  public function setOpacity($opacity)
   {
     if(is_numeric($opacity) && $opacity > 1)
     {
@@ -304,7 +304,7 @@ class sfImageOverlayImageMagick extends sfImageTransformAbstract
    *
    * @return mixed
    */
-  function getOpacity()
+  public function getOpacity()
   {
     return $this->opacity;
   }

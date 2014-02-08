@@ -18,8 +18,7 @@
  */
 abstract class sfValidatorDecorator extends sfValidatorBase {
 
-  protected
-          $validator = null;
+  protected $validator = null;
 
   /**
    * @see sfValidatorBase

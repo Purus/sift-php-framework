@@ -14,8 +14,7 @@
  */
 class sfFeedEnclosure {
 
-  private
-          $url,
+  private $url,
           $length,
           $mimeType;
 

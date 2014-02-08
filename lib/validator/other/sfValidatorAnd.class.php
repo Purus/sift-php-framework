@@ -14,8 +14,7 @@
  */
 class sfValidatorAnd extends sfValidatorBase {
 
-  protected
-          $validators = array();
+  protected $validators = array();
 
   /**
    * Constructor.

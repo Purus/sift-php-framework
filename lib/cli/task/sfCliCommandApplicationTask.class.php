@@ -14,8 +14,7 @@
  */
 abstract class sfCliCommandApplicationTask extends sfCliTask
 {
-  protected
-    $commandApplication = null;
+  protected $commandApplication = null;
 
   /**
    * Sets the command application instance for this task.

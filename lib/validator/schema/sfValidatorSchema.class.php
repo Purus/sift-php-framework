@@ -16,8 +16,7 @@
  */
 class sfValidatorSchema extends sfValidatorBase implements ArrayAccess, IteratorAggregate, Countable {
 
-  protected
-    $fields = array(),
+  protected $fields = array(),
     $preValidator = null,
     $postValidator = null;
 

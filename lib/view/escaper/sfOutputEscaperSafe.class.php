@@ -14,8 +14,7 @@
  */
 class sfOutputEscaperSafe extends ArrayIterator
 {
-  protected
-    $value = null;
+  protected $value = null;
 
   /**
    * Constructor.

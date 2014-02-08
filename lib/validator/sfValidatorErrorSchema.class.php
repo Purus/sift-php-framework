@@ -14,8 +14,7 @@
  */
 class sfValidatorErrorSchema extends sfValidatorError implements ArrayAccess, Iterator, Countable {
 
-  protected
-          $errors = array(),
+  protected $errors = array(),
           $globalErrors = array(),
           $namedErrors = array(),
           $count = 0;

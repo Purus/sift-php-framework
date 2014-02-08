@@ -15,8 +15,7 @@
  */
 class sfViewCacheManager extends sfConfigurable implements sfIService
 {
-  protected
-    $cache       = null,
+  protected $cache       = null,
     $cacheConfig = array(),
     $context     = null,
     $dispatcher  = null,

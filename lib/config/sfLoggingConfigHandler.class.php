@@ -14,8 +14,7 @@
  */
 class sfLoggingConfigHandler extends sfDefineEnvironmentConfigHandler {
 
-  protected
-    $enabled = true,
+  protected $enabled = true,
     $loggers = array();
 
   /**

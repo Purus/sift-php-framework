@@ -14,8 +14,7 @@
  */
 abstract class sfMinifier extends sfConfigurable implements sfIMinifier {
 
-  protected
-    $optimizedContent = null,
+  protected $optimizedContent = null,
     $optimizedSize = null,
     $originalSize = null,
     $processed = false;

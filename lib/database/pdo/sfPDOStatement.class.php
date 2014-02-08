@@ -143,7 +143,7 @@ class sfPDOStatement extends PDOStatement {
    *
    * @return array
    */
-  static public function fixParams($params)
+  public static function fixParams($params)
   {
     foreach($params as $key => $param)
     {

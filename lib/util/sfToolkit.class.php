@@ -692,7 +692,7 @@ class sfToolkit {
    *
    * @return string UTF-8 encoded string, original string if iconv failed.
    */
-  static public function i18NtoUTF8($string, $from)
+  public static function i18NtoUTF8($string, $from)
   {
     $from = strtoupper($from);
     if($from != 'UTF-8')
@@ -716,7 +716,7 @@ class sfToolkit {
    *
    * @return string encoded string.
    */
-  static public function i18NtoEncoding($string, $to)
+  public static function i18NtoEncoding($string, $to)
   {
     $to = strtoupper($to);
     if($to != 'UTF-8')
@@ -736,7 +736,7 @@ class sfToolkit {
    *
    * @return  string The old include path
    */
-  static public function addIncludePath($path, $position = 'front')
+  public static function addIncludePath($path, $position = 'front')
   {
     if(is_array($path))
     {

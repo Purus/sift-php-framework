@@ -14,11 +14,9 @@
  */
 class sfSimpleAutoload {
 
-  static protected
-          $registered = false,
+  protected static $registered = false,
           $instance = null;
-  protected
-          $cacheFile = null,
+  protected $cacheFile = null,
           $cacheLoaded = false,
           $cacheChanged = false,
           $dirs = array(),
@@ -43,7 +41,7 @@ class sfSimpleAutoload {
    *
    * @return sfSimpleAutoload   A sfSimpleAutoload implementation instance.
    */
-  static public function getInstance($cacheFile = null)
+  public static function getInstance($cacheFile = null)
   {
     if(!isset(self::$instance))
     {
@@ -58,7 +56,7 @@ class sfSimpleAutoload {
    *
    * @return void
    */
-  static public function register()
+  public static function register()
   {
     if(self::$registered)
     {
@@ -84,7 +82,7 @@ class sfSimpleAutoload {
    *
    * @return void
    */
-  static public function unregister()
+  public static function unregister()
   {
     spl_autoload_unregister(array(self::getInstance(), 'autoload'));
     self::$registered = false;

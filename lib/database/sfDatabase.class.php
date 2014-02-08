@@ -15,8 +15,7 @@
  */
 abstract class sfDatabase implements sfIService {
 
-  protected
-    $connection = null,
+  protected $connection = null,
     $parameterHolder = null,
     $resource = null;
 
@@ -36,7 +35,7 @@ abstract class sfDatabase implements sfIService {
    *
    * @throws sfDatabaseException If a connection could not be created
    */
-  abstract function connect();
+  abstract public function connect();
 
   /**
    * Retrieves the database connection associated with this sfDatabase implementation.

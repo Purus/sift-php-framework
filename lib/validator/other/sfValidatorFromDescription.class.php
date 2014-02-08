@@ -14,8 +14,7 @@
  */
 class sfValidatorFromDescription extends sfValidatorDecorator
 {
-  protected
-    $tokens = array(),
+  protected $tokens = array(),
     $string = '';
 
   /**
@@ -284,8 +283,7 @@ class sfValidatorFromDescription extends sfValidatorDecorator
  */
 class sfValidatorFDToken
 {
-  protected
-    $class,
+  protected $class,
     $arguments;
 
   public function __construct($class, $arguments = array())
@@ -315,8 +313,7 @@ class sfValidatorFDToken
  */
 class sfValidatorFDTokenFilter
 {
-  protected
-    $field,
+  protected $field,
     $token;
 
   public function __construct($field, sfValidatorFDToken $token)
@@ -344,8 +341,7 @@ class sfValidatorFDTokenFilter
  */
 class sfValidatorFDTokenOperator
 {
-  protected
-    $class,
+  protected $class,
     $operator,
     $token;
 

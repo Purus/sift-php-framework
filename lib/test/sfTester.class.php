@@ -14,8 +14,7 @@
  */
 abstract class sfTester
 {
-  protected
-    $inABlock = false,
+  protected $inABlock = false,
     $browser  = null,
     $tester   = null;
 

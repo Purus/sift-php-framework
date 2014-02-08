@@ -75,7 +75,7 @@ class sfI18nMessageFormatter {
    * @param MessageSource the source of translation messages.
    * @param string charset for the message output.
    */
-  function __construct(sfII18NMessageSource $source, $charset = 'UTF-8')
+  public function __construct(sfII18NMessageSource $source, $charset = 'UTF-8')
   {
     $this->source = &$source;
     if($charset)

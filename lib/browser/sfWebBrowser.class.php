@@ -14,8 +14,7 @@
  */
 class sfWebBrowser {
 
-  protected
-    $defaultHeaders = array(),
+  protected $defaultHeaders = array(),
     $stack = array(),
     $stackPosition = -1,
     $responseHeaders = array(),

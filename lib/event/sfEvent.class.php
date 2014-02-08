@@ -14,8 +14,7 @@
  */
 class sfEvent implements ArrayAccess {
 
-  protected
-  $value = null,
+  protected $value = null,
   $processed = false,
   $name = '',
   $parameters = null;

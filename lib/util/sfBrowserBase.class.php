@@ -16,8 +16,7 @@
  */
 abstract class sfBrowserBase
 {
-  protected
-    $hostname           = null,
+  protected $hostname           = null,
     $remote             = null,
     $dom                = null,
     $stack              = array(),

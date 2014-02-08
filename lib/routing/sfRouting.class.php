@@ -20,11 +20,9 @@
  */
 class sfRouting
 {
-  protected static
-    $instances         = array();
+  protected static $instances         = array();
 
-  protected
-    $current_route_name = '',
+  protected $current_route_name = '',
     $routes             = array();
 
   /**

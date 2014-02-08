@@ -72,7 +72,7 @@ class sfValidatorCompanyVat extends sfValidatorBase {
     $rules[sfFormJavascriptValidation::CUSTOM_CALLBACK] = array('callback' => (
 "function(value, element, params) {
 
-  function testICO(x)
+  public function testICO(x)
   {
     try
     {
@@ -96,7 +96,7 @@ class sfValidatorCompanyVat extends sfValidatorBase {
     return true;
   };
 
-  function testRC(x, age)
+  public function testRC(x, age)
   {
     if(!age) age = 0;
     try

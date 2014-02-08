@@ -61,8 +61,7 @@ abstract class sfView implements sfIView
    */
   const RENDER_VAR = 4;
 
-  protected
-    $context            = null,
+  protected $context            = null,
     $decorator          = false,
     $decoratorDirectory = null,
     $decoratorTemplate  = null,
@@ -122,7 +121,7 @@ abstract class sfView implements sfIView
    *
    * @return sfContext The current sfContext instance
    */
-  public final function getContext()
+  final public function getContext()
   {
     return $this->context;
   }

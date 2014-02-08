@@ -132,7 +132,7 @@ abstract class sfFilter implements sfIFilter
    *
    * @return sfContext The current sfContext instance
    */
-  public final function getContext()
+  final public function getContext()
   {
     return $this->context;
   }

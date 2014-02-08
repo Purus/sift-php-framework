@@ -14,8 +14,7 @@
  */
 class sfCacheConfigHandler extends sfYamlConfigHandler {
 
-  protected
-      $cacheConfig = array();
+  protected $cacheConfig = array();
 
   /**
    * Executes this configuration handler.

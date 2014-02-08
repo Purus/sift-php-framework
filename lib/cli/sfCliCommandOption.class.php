@@ -20,8 +20,7 @@ class sfCliCommandOption
 
   const IS_ARRAY = 8;
 
-  protected
-    $name     = null,
+  protected $name     = null,
     $shortcut = null,
     $mode     = null,
     $default  = null,

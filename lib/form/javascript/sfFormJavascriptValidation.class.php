@@ -633,11 +633,11 @@ class sfFormJavascriptValidation {
 'function(element, errorClass, validClass) {
   if(element.type === \'radio\')
   {
-    var $element = this.findByName(element.name);
+    public $element = this.findByName(element.name);
   }
   else
   {
-    var $element = $(element);
+    public $element = $(element);
   }
 
   var countInvalid = 0;
@@ -706,7 +706,7 @@ class sfFormJavascriptValidation {
     $placement = '
 error.click(function(e)
 {
-  var $that = $(this);
+  public $that = $(this);
   element.trigger(\'myfocus.from_error_label\', [$that]);
 });
 // place after element

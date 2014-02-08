@@ -14,8 +14,7 @@
  */
 class sfCliCacheClearTask extends sfCliBaseTask
 {
-  protected
-    $config = null;
+  protected $config = null;
 
   /**
    * @see sfCliTask

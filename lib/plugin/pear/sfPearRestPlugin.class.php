@@ -14,8 +14,7 @@
  */
 class sfPearRestPlugin extends sfPearRest11
 {
-  protected
-    $config,
+  protected $config,
     $rest10,
     $restBase,
     $channel;

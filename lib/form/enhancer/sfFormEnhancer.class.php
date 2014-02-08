@@ -372,7 +372,7 @@ class sfFormEnhancer extends sfConfigurable implements sfIFormEnhancer {
    *
    * @return array
    */
-  static public function getLineage($class)
+  public static function getLineage($class)
   {
     if(is_object($class))
     {

@@ -14,8 +14,7 @@
  */
 class sfHtml {
 
-  protected static
-    $xhtml = true,
+  protected static $xhtml = true,
     $charset = 'UTF-8';
 
   /**
@@ -23,7 +22,7 @@ class sfHtml {
    *
    * @param bool $boolean  true if widgets must be generated as XHTML, false otherwise
    */
-  static public function setXhtml($boolean)
+  public static function setXhtml($boolean)
   {
     self::$xhtml = (boolean) $boolean;
   }
@@ -33,7 +32,7 @@ class sfHtml {
    *
    * @return bool true if widgets must be generated as XHTML, false otherwise
    */
-  static public function isXhtml()
+  public static function isXhtml()
   {
     return self::$xhtml;
   }
@@ -43,7 +42,7 @@ class sfHtml {
    *
    * @param string $tag Tag name like li, strong...
    * @param string $content Content
-   * @param arrray $attributes Array of attributes
+   * @param array $attributes Array of attributes
    * @return string
    */
   public static function contentTag($tag, $content = null, $attributes = array())
@@ -123,7 +122,7 @@ class sfHtml {
    *
    * @param string $charset  The charset
    */
-  static public function setCharset($charset)
+  public static function setCharset($charset)
   {
     self::$charset = $charset;
   }
@@ -133,7 +132,7 @@ class sfHtml {
    *
    * @return string The charset (defaults to UTF-8)
    */
-  static public function getCharset()
+  public static function getCharset()
   {
     return self::$charset;
   }
@@ -157,7 +156,7 @@ class sfHtml {
    * @return string
    * @see http://msdn.microsoft.com/en-us/library/ms537512(VS.85).aspx
    */
-  static public function ieConditionalComment($condition, $content)
+  public static function ieConditionalComment($condition, $content)
   {
     return sprintf('<!--[if %s]>%s<![endif]-->', $condition, $content);
   }

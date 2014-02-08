@@ -38,8 +38,7 @@
  */
 class sfValidatorSchemaTimeInterval extends sfValidatorSchema {
 
-  protected
-          $dateStart = null,
+  protected $dateStart = null,
           $dateEnd = null;
 
   /**

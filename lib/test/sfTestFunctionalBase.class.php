@@ -16,14 +16,12 @@ require_once(dirname(__FILE__).'/../vendor/lime/lime.php');
  */
 abstract class sfTestFunctionalBase
 {
-  protected
-    $testers       = array(),
+  protected $testers       = array(),
     $blockTester   = null,
     $currentTester = null,
     $browser       = null;
 
-  protected static
-    $test = null;
+  protected static $test = null;
 
   /**
    * Initializes the browser tester instance.
@@ -440,7 +438,7 @@ abstract class sfTestFunctionalBase
    * @param string $errfile  Error file
    * @param mixed  $errline  Error line
    */
-  static public function handlePhpError($errno, $errstr, $errfile, $errline)
+  public static function handlePhpError($errno, $errstr, $errfile, $errline)
   {
     if (($errno & error_reporting()) == 0)
     {
@@ -476,7 +474,7 @@ abstract class sfTestFunctionalBase
    *
    * @param Exception $exception The exception
    */
-  function handleException(Exception $exception)
+  public function handleException(Exception $exception)
   {
     $this->test()->error(sprintf('%s: %s', get_class($exception), $exception->getMessage()));
 
