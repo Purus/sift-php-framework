@@ -135,7 +135,6 @@ class sfValidatorImage extends sfValidatorFile {
       }
     }
 
-
     // image is valid
     // persistent
     if($this->getOption('persistent'))

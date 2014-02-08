@@ -1198,13 +1198,10 @@ class sfTypography {
           '#\?{2,}#u' => '?',
       );
 
-
-
     // $table['#\.{3}#'] = '&hellip;';
 
     return preg_replace(array_keys($table), $table, $string);
   }
-
 
   /**
    * Protect Characters

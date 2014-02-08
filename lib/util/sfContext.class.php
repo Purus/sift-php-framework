@@ -175,7 +175,6 @@ class sfContext {
     return isset(self::$instances[$name]);
   }
 
-
   /**
    * Sets the current context to something else
    *

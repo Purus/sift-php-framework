@@ -150,7 +150,6 @@ class sfTesterMailer extends sfTester {
       break;
     }
 
-
     return $this->getObjectToReturn();
   }
 

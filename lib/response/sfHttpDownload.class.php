@@ -1186,7 +1186,6 @@ class sfHttpDownload extends sfConfigurable implements sfIEventDispatcherAware, 
     return $this->logger;
   }
 
-
   /**
    * Guesses the filename of the download
    *

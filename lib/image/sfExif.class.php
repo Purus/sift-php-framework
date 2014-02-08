@@ -619,7 +619,6 @@ class sfExif {
         //       method to take an optional charset to convert to
         $data = trim(substr($data, 7));
 
-
       default:
         return !empty($data) ? $data : '---';
     }

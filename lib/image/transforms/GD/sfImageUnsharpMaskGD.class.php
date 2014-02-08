@@ -212,7 +212,6 @@ class sfImageUnsharpMaskGD extends sfImageTransformAbstract
               $gNew = max(0, min(255, ($amount * ($gOrig - $gBlur)) + $gOrig));
             }
 
-
             $bNew = $bOrig;
             if (abs($bOrig - $bBlur) >= $threshold)
             {

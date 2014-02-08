@@ -106,7 +106,6 @@ class sfCalendarEvent implements sfICalendarEvent, ArrayAccess {
     return $this->end - $this->start;
   }
 
-
   public function __call($methodName, $args)
   {
     if(preg_match('~^(set|get)([A-Z])(.*)$~', $methodName, $matches))

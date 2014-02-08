@@ -87,7 +87,6 @@ class sfLogManager extends sfConfigurable
     // get todays date
     $today = date($this->getOption('date_format'));
 
-
     $logFile = sprintf('%s%s%s', $app, $this->getOption('app_env_separator'), $env);
 
     // check history folder exists

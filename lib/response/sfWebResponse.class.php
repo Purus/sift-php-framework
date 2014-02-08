@@ -846,7 +846,6 @@ class sfWebResponse extends sfResponse
     return $this;
   }
 
-
   /**
    * Sets title mode
    *

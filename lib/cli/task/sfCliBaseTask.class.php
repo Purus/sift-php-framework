@@ -332,7 +332,6 @@ abstract class sfCliBaseTask extends sfCliCommandApplicationTask
     return $default;
   }
 
-
   /**
    * Reloads all autoloaders.
    *

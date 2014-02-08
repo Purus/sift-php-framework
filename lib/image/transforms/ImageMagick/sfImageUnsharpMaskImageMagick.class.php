@@ -48,7 +48,6 @@ class sfImageUnsharpMaskImageMagick extends sfImageTransformAbstract
    */
   protected $channel = Imagick::CHANNEL_ALL;
 
-
   public function __construct($radius, $threshold, $amount, $sigma, $channel = Imagick::CHANNEL_ALL)
   {
     $this->setRadius($radius);

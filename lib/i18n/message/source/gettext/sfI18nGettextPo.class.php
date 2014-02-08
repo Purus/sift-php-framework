@@ -52,7 +52,6 @@ class sfI18nGettextPo extends sfI18nGettext {
             '/(msgid\s+("(.*)*?"\s*)+)\s+' .
             '(msgstr\s+("(.*)*?"\s*)+)/';
 
-
     // match all msgid/msgstr entries
     $matched = preg_match_all($pattern, $contents, $matches);
     unset($contents);

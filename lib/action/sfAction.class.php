@@ -232,7 +232,6 @@ abstract class sfAction extends sfComponent
     throw new sfStopException();
   }
 
-
   /**
    * Redirects current request to a new URL, unless specified condition is true.
    *

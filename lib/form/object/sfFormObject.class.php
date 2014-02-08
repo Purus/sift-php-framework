@@ -93,7 +93,6 @@ abstract class sfFormObject extends myForm
     return false;
   }
 
-
   /**
    * Saves the current object to the database.
    *

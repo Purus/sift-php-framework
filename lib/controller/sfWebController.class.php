@@ -184,7 +184,6 @@ abstract class sfWebController extends sfController {
       $url = substr($url, 1);
     }
 
-
     // route_name?
     if($url[0] == '@')
     {

@@ -141,7 +141,6 @@ class sfI18nYamlGeneratorExtractor extends sfI18nYamlExtractor {
     return $result;
   }
 
-
   /**
    * Extact strings from array of actions
    *

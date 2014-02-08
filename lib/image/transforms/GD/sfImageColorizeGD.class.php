@@ -175,7 +175,6 @@ class sfImageColorizeGD  extends sfImageTransformAbstract
   {
     $resource = $image->getAdapter()->getHolder();
 
-
     // Use GD's built in filter
     if (function_exists('imagefilter'))
     {

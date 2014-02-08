@@ -497,7 +497,6 @@ class sfI18nNumberFormat {
       $regex[$pkey] .= '$/u';
     }
 
-
     return $regex;
   }
 

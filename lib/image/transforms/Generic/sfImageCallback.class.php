@@ -76,7 +76,6 @@ class sfImageCallbackGeneric extends sfImageTransformAbstract
     return $this->function;
   }
 
-
   /**
    *
    * @param mixed $arguments

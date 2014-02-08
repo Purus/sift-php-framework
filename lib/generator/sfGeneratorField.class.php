@@ -160,7 +160,6 @@ abstract class sfGeneratorField extends sfConfigurable implements sfIGeneratorFi
    */
   protected $isRelationAlias = false;
 
-
   public $relationName;
 
   /**

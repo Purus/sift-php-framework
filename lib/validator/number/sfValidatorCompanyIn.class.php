@@ -62,7 +62,6 @@ class sfValidatorCompanyIn extends sfValidatorBase
     return $value;
   }
 
-
   public function getJavascriptValidationRules()
   {
     $rules = parent::getJavascriptValidationRules();

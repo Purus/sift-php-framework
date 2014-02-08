@@ -48,7 +48,6 @@ class sfImageOverlayGD extends sfImageTransformAbstract
                             'bottom-left', 'bottom-right', 'bottom-center',
                            );
 
-
   /**
    * Construct an sfImageOverlay object.
    *

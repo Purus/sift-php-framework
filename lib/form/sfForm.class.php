@@ -2212,7 +2212,6 @@ class sfForm implements ArrayAccess, Iterator, Countable, sfIUserAware
     return $string;
   }
 
-
   /**
    * Calls methods defined via sfEventDispatcher.
    *

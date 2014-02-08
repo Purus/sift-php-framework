@@ -330,7 +330,6 @@ EOF
     return false;
   }
 
-
   public function __clone()
   {
     if($this->getOption('choices') instanceof sfCallable)

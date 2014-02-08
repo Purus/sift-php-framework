@@ -332,7 +332,6 @@ class sfImageOverlayImageMagick extends sfImageTransformAbstract
     return $this->compose;
   }
 
-
   /**
    * Apply the transform to the sfImage object.
    *

@@ -91,7 +91,6 @@ abstract class sfI18nExtractUser extends sfBasicSecurityUser {
   {
   }
 
-
   public function getIp()
   {
   }
