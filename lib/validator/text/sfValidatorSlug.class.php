@@ -12,8 +12,8 @@
  * @package    Sift
  * @subpackage validator
  */
-class sfValidatorSlug extends sfValidatorString {
-
+class sfValidatorSlug extends sfValidatorString
+{
   /**
    * @see sfValidatorString
    */
@@ -35,8 +35,7 @@ class sfValidatorSlug extends sfValidatorString {
     // sanitize the value
     $clean = $this->sanitizeValue($value);
 
-    if(!preg_match($this->getOption('pattern'), $clean))
-    {
+    if (!preg_match($this->getOption('pattern'), $clean)) {
       throw new sfValidatorError($this, 'invalid', array('value' => $value));
     }
 

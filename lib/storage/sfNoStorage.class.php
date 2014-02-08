@@ -17,8 +17,8 @@
  * @package    Sift
  * @subpackage storage
  */
-class sfNoStorage extends sfStorage {
-
+class sfNoStorage extends sfStorage
+{
   /**
    * @see sfIStorage
    */

@@ -12,8 +12,8 @@
  * @package    Sift
  * @subpackage validator
  */
-class sfValidatorTime extends sfValidatorBase {
-
+class sfValidatorTime extends sfValidatorBase
+{
   /**
    * Configures the current validator.
    *
@@ -48,29 +48,20 @@ class sfValidatorTime extends sfValidatorBase {
    */
   protected function doClean($value)
   {
-    if(is_array($value))
-    {
+    if (is_array($value)) {
       $clean = $this->convertTimeArrayToTimestamp($value);
-    }
-    else if($regex = $this->getOption('time_format'))
-    {
-      if(!preg_match($regex, $value, $match))
-      {
+    } else if ($regex = $this->getOption('time_format')) {
+      if (!preg_match($regex, $value, $match)) {
         throw new sfValidatorError($this, 'bad_format', array('value' => $value, 'time_format' => $this->getOption('time_format_error') ? $this->getOption('time_format_error') : $this->getOption('time_format')));
       }
 
       $clean = $this->convertTimeArrayToTimestamp($match);
-    }
-    else if(!ctype_digit($value))
-    {
+    } else if (!ctype_digit($value)) {
       $clean = strtotime($value);
-      if(false === $clean)
-      {
+      if (false === $clean) {
         throw new sfValidatorError($this, 'invalid', array('value' => $value));
       }
-    }
-    else
-    {
+    } else {
       $clean = (integer) $value;
     }
 
@@ -89,10 +80,8 @@ class sfValidatorTime extends sfValidatorBase {
   protected function convertTimeArrayToTimestamp($value)
   {
     // all elements must be empty or a number
-    foreach(array('hour', 'minute', 'second') as $key)
-    {
-      if(isset($value[$key]) && !preg_match('#^\d+$#', $value[$key]) && !empty($value[$key]))
-      {
+    foreach (array('hour', 'minute', 'second') as $key) {
+      if (isset($value[$key]) && !preg_match('#^\d+$#', $value[$key]) && !empty($value[$key])) {
         throw new sfValidatorError($this, 'invalid', array('value' => $value));
       }
     }
@@ -111,8 +100,7 @@ class sfValidatorTime extends sfValidatorBase {
             isset($value['hour']) ? intval($value['hour']) : 0, isset($value['minute']) ? intval($value['minute']) : 0, isset($value['second']) ? intval($value['second']) : 0
     );
 
-    if(false === $clean)
-    {
+    if (false === $clean) {
       throw new sfValidatorError($this, 'invalid', array('value' => var_export($value, true)));
     }
 
@@ -129,11 +117,9 @@ class sfValidatorTime extends sfValidatorBase {
    */
   protected function isEmpty($value)
   {
-    if(is_array($value))
-    {
+    if (is_array($value)) {
       // array is not empty when a value is found
-      foreach($value as $key => $val)
-      {
+      foreach ($value as $key => $val) {
         // int and string '0' are 'empty' values that are explicitly accepted
         if($val === 0 || $val === '0' || !empty($val))
 

@@ -13,8 +13,8 @@
  * @package    Sift
  * @subpackage i18n_extract
  */
-interface sfII18nExtractableForm {
-
+interface sfII18nExtractableForm
+{
   /**
    * Construct the form for extraction
    *

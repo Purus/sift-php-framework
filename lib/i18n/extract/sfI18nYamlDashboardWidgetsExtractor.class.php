@@ -21,25 +21,21 @@ class sfI18nYamlDasboardWidgetsExtractor extends sfI18nYamlMenuExtractor
    */
   protected function getFromItem($item)
   {
-    if(isset($item['catalogue']))
-    {
+    if (isset($item['catalogue'])) {
       $this->domain = $this->fixCatalogue($item['catalogue'], $this->getOption('default_catalogue_name', 'messages'));
     }
     // extract from component
-    else
-    {
+    else {
       // domain is module
       // it looks like: component: [myModule, componentName]
       $this->domain = $this->fixCatalogue($item['component'][0], $this->getOption('default_catalogue_name', 'messages'));
     }
 
-    if(isset($item['name']))
-    {
+    if (isset($item['name'])) {
       $this->strings[$this->domain][] = $item['name'];
     }
 
-    if(isset($item['description']))
-    {
+    if (isset($item['description'])) {
       $this->strings[$this->domain][] = $item['description'];
     }
   }

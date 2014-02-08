@@ -61,8 +61,8 @@
  * @package Sift
  * @subpackage i18n
  */
-class sfI18nDateTimeFormat {
-
+class sfI18nDateTimeFormat
+{
   const SHORT_DATE = 'd';
   const LONG_DATE = 'D';
 
@@ -85,12 +85,9 @@ class sfI18nDateTimeFormat {
   public function __get($name)
   {
     $getProperty = 'get' . $name;
-    if(in_array($getProperty, $this->properties))
-    {
+    if (in_array($getProperty, $this->properties)) {
       return $this->$getProperty();
-    }
-    else
-    {
+    } else {
       throw new sfException(sprintf('Property %s does not exists.', $name));
     }
   }
@@ -102,12 +99,9 @@ class sfI18nDateTimeFormat {
   public function __set($name, $value)
   {
     $setProperty = 'set' . $name;
-    if(in_array($setProperty, $this->properties))
-    {
+    if (in_array($setProperty, $this->properties)) {
       $this->$setProperty($value);
-    }
-    else
-    {
+    } else {
       throw new sfException(sprintf('Property %s can not be set.', $name));
     }
   }
@@ -126,8 +120,7 @@ class sfI18nDateTimeFormat {
   {
     $this->properties = get_class_methods($this);
 
-    if(empty($data))
-    {
+    if (empty($data)) {
       throw new sfException('Please provide the CLDR data to initialize.');
     }
 
@@ -153,8 +146,7 @@ class sfI18nDateTimeFormat {
   {
     static $invariant;
 
-    if(null === $invariant)
-    {
+    if (null === $invariant) {
       $invariant = sfCulture::getInvariantCulture()->getDateTimeFormat();
     }
 
@@ -169,16 +161,11 @@ class sfI18nDateTimeFormat {
    */
   public static function getInstance($culture = null)
   {
-    if($culture instanceof sfCulture)
-    {
+    if ($culture instanceof sfCulture) {
       return $culture->getDateTimeFormat();
-    }
-    elseif(is_string($culture))
-    {
+    } elseif (is_string($culture)) {
       return sfCulture::getInstance($culture)->getDateTimeFormat();
-    }
-    else
-    {
+    } else {
       return sfCulture::getInvariantCulture()->getDateTimeFormat();
     }
   }
@@ -300,12 +287,9 @@ class sfI18nDateTimeFormat {
    */
   public function getAbbreviatedMonthNames()
   {
-    if(isset($this->data['monthNames']['format']['abbreviated']))
-    {
+    if (isset($this->data['monthNames']['format']['abbreviated'])) {
       return $this->data['monthNames']['format']['abbreviated'];
-    }
-    else
-    {
+    } else {
       return $this->data['monthNames']['format']['wide'];
     }
   }

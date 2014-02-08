@@ -12,8 +12,8 @@
  * @package Sift
  * @subpackage project
  */
-abstract class sfProject extends sfConfigurable {
-
+abstract class sfProject extends sfConfigurable
+{
   /**
    * Array of initialized plugins
    *
@@ -108,8 +108,7 @@ abstract class sfProject extends sfConfigurable {
 
     parent::__construct($options);
 
-    if(null === self::$active && $this instanceof sfApplication)
-    {
+    if (null === self::$active && $this instanceof sfApplication) {
       self::$active = $this;
     }
 
@@ -134,38 +133,31 @@ abstract class sfProject extends sfConfigurable {
    */
   public function setup()
   {
-    if(!$this->getOption('sf_apps_dir'))
-    {
+    if (!$this->getOption('sf_apps_dir')) {
       $this->setOption('sf_apps_dir', $this->getOption('sf_root_dir').DS.$this->getOption('sf_apps_dir_name'));
     }
 
-    if(!$this->getOption('sf_config_dir'))
-    {
+    if (!$this->getOption('sf_config_dir')) {
       $this->setOption('sf_config_dir', $this->getOption('sf_root_dir').DS.$this->getOption('sf_config_dir_name'));
     }
 
-    if(!$this->getOption('sf_lib_dir'))
-    {
+    if (!$this->getOption('sf_lib_dir')) {
       $this->setOption('sf_lib_dir', $this->getOption('sf_root_dir').DS.$this->getOption('sf_lib_dir_name'));
     }
 
-    if(!$this->getOption('sf_bin_dir'))
-    {
+    if (!$this->getOption('sf_bin_dir')) {
       $this->setOption('sf_bin_dir', $this->getOption('sf_root_dir').DS.$this->getOption('sf_bin_dir_name'));
     }
 
-    if(!$this->getOption('sf_log_dir'))
-    {
+    if (!$this->getOption('sf_log_dir')) {
       $this->setOption('sf_log_dir', $this->getOption('sf_root_dir').DS.$this->getOption('sf_log_dir_name'));
     }
 
-    if(!$this->getOption('sf_model_lib_dir'))
-    {
+    if (!$this->getOption('sf_model_lib_dir')) {
       $this->setOption('sf_model_lib_dir', $this->getOption('sf_lib_dir').DS.$this->getOption('sf_model_dir_name'));
     }
 
-    if(!$this->getOption('sf_image_font_dir'))
-    {
+    if (!$this->getOption('sf_image_font_dir')) {
       $this->setOption('sf_image_font_dir', $this->getOption('sf_root_dir').DS.$this->getOption('sf_data_dir_name') . DS . 'fonts');
     }
 
@@ -238,16 +230,12 @@ abstract class sfProject extends sfConfigurable {
    */
   public function initializeAutoload($reload = false)
   {
-    if($this instanceof sfApplication)
-    {
+    if ($this instanceof sfApplication) {
       // environment specific autoload
       $cacheFile = $this->getOption('sf_base_cache_dir') . DS .
               $this->getOption('sf_environment') . DS . 'autoload.cache';
-    }
-    else
-    {
-      if(!$cacheDir = $this->getOption('sf_root_cache_dir'))
-      {
+    } else {
+      if (!$cacheDir = $this->getOption('sf_root_cache_dir')) {
         throw new sfInitializationException('Cannot initialize autoload. Missing "sf_root_cache_dir" setting.');
       }
 
@@ -257,16 +245,12 @@ abstract class sfProject extends sfConfigurable {
 
     // force the reload
     // clear the cache
-    if($reload && is_readable($cacheFile))
-    {
+    if ($reload && is_readable($cacheFile)) {
       $finder = sfFinder::type('file')->name('*autoload.cache');
 
-      if($this instanceof sfApplication)
-      {
+      if ($this instanceof sfApplication) {
         $where = $this->getOption('sf_base_cache_dir');
-      }
-      else
-      {
+      } else {
         $where = $this->getOption('sf_root_cache_dir');
       }
 
@@ -276,8 +260,7 @@ abstract class sfProject extends sfConfigurable {
 
     $autoload = sfSimpleAutoload::getInstance($cacheFile);
 
-    if(!is_readable($cacheFile))
-    {
+    if (!is_readable($cacheFile)) {
       // Sift
       $files = array(
         $this->getOption('sf_sift_data_dir') . '/config/autoload.yml'
@@ -291,11 +274,9 @@ abstract class sfProject extends sfConfigurable {
       }
 
       // plugins
-      foreach($this->getPlugins() as $plugin)
-      {
+      foreach ($this->getPlugins() as $plugin) {
         // load from plugins
-        if(is_readable($file = $plugin->getRootDir().'/'.$this->getOption('sf_config_dir_name').'/autoload.yml'))
-        {
+        if (is_readable($file = $plugin->getRootDir().'/'.$this->getOption('sf_config_dir_name').'/autoload.yml')) {
           $files[] = $file;
         }
       }
@@ -378,8 +359,7 @@ abstract class sfProject extends sfConfigurable {
    */
   public function shutdown()
   {
-    foreach($this->getPlugins() as $plugin)
-    {
+    foreach ($this->getPlugins() as $plugin) {
       $plugin->shutdown();
     }
   }
@@ -396,30 +376,23 @@ abstract class sfProject extends sfConfigurable {
    */
   public function getApplication($application, $environment, $debug = false, $forceReload = false)
   {
-    if(!isset($this->applications[$application]) || $forceReload)
-    {
+    if (!isset($this->applications[$application]) || $forceReload) {
       $class = sprintf('my%sApplication', sfInflector::camelize($application));
-      if(!class_exists($class, false))
-      {
+      if (!class_exists($class, false)) {
         $appFile = sprintf('%s/%s/%s/%s.class.php', $this->getOption('sf_apps_dir'),
                            $application, $this->getOption('sf_lib_dir_name'),
                            $class);
-        if(is_readable($appFile))
-        {
+        if (is_readable($appFile)) {
           require_once $appFile;
-          if(!class_exists($class, false))
-          {
+          if (!class_exists($class, false)) {
             throw new RuntimeException(sprintf('The application "%s" does not exist.', $application));
           }
-        }
-        else
-        {
+        } else {
           $class = 'sfGenericApplication';
         }
       }
 
-      if(!is_dir($this->getOption('sf_apps_dir') . '/' . $application))
-      {
+      if (!is_dir($this->getOption('sf_apps_dir') . '/' . $application)) {
         throw new sfConfigurationException(sprintf('Application "%s" does not exist in the app directory "%s"',
                   $application, $this->getOption('sf_apps_dir') . '/' . $application));
       }
@@ -445,8 +418,7 @@ abstract class sfProject extends sfConfigurable {
    */
   public function getActiveApplication()
   {
-    if (!$this->hasActive())
-    {
+    if (!$this->hasActive()) {
       throw new RuntimeException('There is no active application.');
     }
 
@@ -483,27 +455,21 @@ abstract class sfProject extends sfConfigurable {
    */
   public function getPlugin($plugin, $options = array())
   {
-    if(!isset($this->plugins[$plugin]))
-    {
-      if(!is_dir($this->getOption('sf_plugins_dir') . '/' . $plugin))
-      {
+    if (!isset($this->plugins[$plugin])) {
+      if (!is_dir($this->getOption('sf_plugins_dir') . '/' . $plugin)) {
         throw new RuntimeException(sprintf('The plugin "%s" does not exists', $plugin));
       }
 
       $class = $plugin;
       $pluginFile = $this->getOption('sf_plugins_dir') . '/' . $plugin . '/lib/' . $plugin . '.class.php';
 
-      if(is_readable($pluginFile))
-      {
+      if (is_readable($pluginFile)) {
         require_once $pluginFile;
-      }
-      else
-      {
+      } else {
         $class = 'sfGenericPlugin';
       }
 
-      if(!class_exists($class))
-      {
+      if (!class_exists($class)) {
         throw new RuntimeException(sprintf('The plugin "%s" does not exists', $plugin));
       }
 
@@ -536,19 +502,15 @@ abstract class sfProject extends sfConfigurable {
    */
   public function loadPlugins()
   {
-    if($this->pluginsLoaded)
-    {
+    if ($this->pluginsLoaded) {
       return false;
     }
 
-    if($this instanceof sfApplication)
-    {
+    if ($this instanceof sfApplication) {
       $cacheFile = $this->getOption('sf_cache_dir') . DS .
                    $this->getOption('sf_config_dir_name') .
                    DS . 'config_plugins.yml.php';
-    }
-    else
-    {
+    } else {
       $cacheFile = $this->getOption('sf_root_cache_dir') .
                    DS . 'config_plugins.yml.php';
     }
@@ -556,31 +518,24 @@ abstract class sfProject extends sfConfigurable {
     $compile = false;
 
     // create the file if it does not exits
-    if(is_readable($cacheFile))
-    {
-      if($this instanceof sfApplication && $this->isDebug())
-      {
+    if (is_readable($cacheFile)) {
+      if ($this instanceof sfApplication && $this->isDebug()) {
         $time = 0;
 
         // check if the file has been modified
-        foreach($this->getPluginsConfigurationFiles() as $file)
-        {
+        foreach ($this->getPluginsConfigurationFiles() as $file) {
           $time = max($time, filemtime($file));
         }
 
-        if($time > filemtime($cacheFile))
-        {
+        if ($time > filemtime($cacheFile)) {
           $compile = true;
         }
       }
-    }
-    else // cache file does not exist
-    {
+    } else { // cache file does not exist
       $compile = true;
     }
 
-    if($compile)
-    {
+    if ($compile) {
       $pluginHandler = new sfPluginsConfigHandler();
       $result = $pluginHandler->execute($this->getPluginsConfigurationFiles());
       // put to cache
@@ -590,8 +545,7 @@ abstract class sfProject extends sfConfigurable {
     $result = include $cacheFile;
 
     $classLoader = new sfClassLoader();
-    foreach($result as $pluginName => $options)
-    {
+    foreach ($result as $pluginName => $options) {
       $plugin = $this->getPlugin($pluginName, $options);
       $plugin->initializeAutoload($classLoader);
       $this->plugins[$pluginName] = $plugin;
@@ -642,8 +596,7 @@ abstract class sfProject extends sfConfigurable {
    */
   public function initHtmlTagConfiguration()
   {
-    if(sfConfig::get('sf_html5'))
-    {
+    if (sfConfig::get('sf_html5')) {
       sfHtml::setXhtml(false);
       sfWidget::setXhtml(false);
     }
@@ -690,8 +643,7 @@ abstract class sfProject extends sfConfigurable {
     $event = $this->dispatcher->notifyUntil(new sfEvent('configuration.method_not_found',
             array('subject' => $this, 'method' => $method, 'arguments' => $arguments)));
 
-    if (!$event->isProcessed())
-    {
+    if (!$event->isProcessed()) {
       throw new sfException(sprintf('Call to undefined method %s::%s.', get_class($this), $method));
     }
 

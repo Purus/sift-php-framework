@@ -12,8 +12,8 @@
  * @package Sift
  * @subpackage form_javascript
  */
-class sfFormJavascriptValidationMessage implements sfIJsonSerializable {
-
+class sfFormJavascriptValidationMessage implements sfIJsonSerializable
+{
   /**
    * Message
    *
@@ -36,8 +36,8 @@ class sfFormJavascriptValidationMessage implements sfIJsonSerializable {
    */
   public function __construct($message, $parameters = array())
   {
-    $this->message = (string)$message;
-    $this->parameters = (array)($parameters);
+    $this->message = (string) $message;
+    $this->parameters = (array) ($parameters);
   }
 
   /**

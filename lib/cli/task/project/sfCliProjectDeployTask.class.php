@@ -93,27 +93,23 @@ EOF;
     $env = $arguments['server'];
 
     $ini = $this->environment->get('sf_config_dir').'/properties.ini';
-    if (!file_exists($ini))
-    {
+    if (!file_exists($ini)) {
       throw new sfCliCommandException('You must create a config/properties.ini file');
     }
 
     $properties = parse_ini_file($ini, true);
 
-    if (!isset($properties[$env]))
-    {
+    if (!isset($properties[$env])) {
       throw new sfCliCommandException(sprintf('You must define the configuration for server "%s" in config/properties.ini', $env));
     }
 
     $properties = $properties[$env];
 
-    if (!isset($properties['host']) || empty($properties['host']))
-    {
+    if (!isset($properties['host']) || empty($properties['host'])) {
       throw new sfCliCommandException('You must define a "host" entry.');
     }
 
-    if (!isset($properties['dir']) || empty($properties['dir']))
-    {
+    if (!isset($properties['dir']) || empty($properties['dir'])) {
       throw new sfCliCommandException('You must define a "dir" entry.');
     }
 
@@ -121,48 +117,37 @@ EOF;
     $dir  = $properties['dir'];
     $user = isset($properties['user']) ? $properties['user'].'@' : '';
 
-    if (substr($dir, -1) != '/')
-    {
+    if (substr($dir, -1) != '/') {
       $dir .= '/';
     }
 
     $ssh = 'ssh';
 
-    if (isset($properties['port']) && !empty($properties['port']))
-    {
+    if (isset($properties['port']) && !empty($properties['port'])) {
       $port = $properties['port'];
       $ssh = '"ssh -p'.$port.'"';
     }
 
-    if (isset($properties['parameters']))
-    {
+    if (isset($properties['parameters'])) {
       $parameters = $properties['parameters'];
-    }
-    else
-    {
+    } else {
       $parameters = $options['rsync-options'];
-      if (file_exists($options['rsync-dir'].'/rsync_include.txt'))
-      {
+      if (file_exists($options['rsync-dir'].'/rsync_include.txt')) {
         $parameters .= sprintf(' --include-from=%s/rsync_include.txt', $options['rsync-dir']);
       }
 
-      if (file_exists($options['rsync-dir'].'/rsync_exclude.txt'))
-      {
+      if (file_exists($options['rsync-dir'].'/rsync_exclude.txt')) {
         $parameters .= sprintf(' --exclude-from=%s/rsync_exclude.txt', $options['rsync-dir']);
       }
 
-      if (file_exists($options['rsync-dir'].'/rsync.txt'))
-      {
+      if (file_exists($options['rsync-dir'].'/rsync.txt')) {
         $parameters .= sprintf(' --files-from=%s/rsync.txt', $options['rsync-dir']);
       }
     }
 
-    if(isset($properties['src']))
-    {
+    if (isset($properties['src'])) {
       $src = $properties['src'];
-    }
-    else
-    {
+    } else {
       $src = './';
     }
 
@@ -172,10 +157,8 @@ EOF;
     $this->logSection($this->getFullName(), sprintf('Executing %s', $command));
 
     exec($command, $output);
-    foreach($output as $line)
-    {
-      if(!empty($line))
-      {
+    foreach ($output as $line) {
+      if (!empty($line)) {
         $this->log($line);
       }
     }

@@ -44,14 +44,12 @@ EOF;
 
     $uploadDir = $this->environment->get('sf_upload_dir');
 
-    if(is_dir($uploadDir))
-    {
+    if (is_dir($uploadDir)) {
       $this->chmod($uploadDir, 0777);
     }
 
     $persistentUpload = $this->environment->get('sf_data_dir') . '/persistent_upload';
-    if(is_dir($persistentUpload))
-    {
+    if (is_dir($persistentUpload)) {
       $this->chmod($uploadDir, 0777);
     }
 
@@ -66,8 +64,7 @@ EOF;
 
     $webCacheDir = $this->environment->get('sf_web_dir').'/cache';
 
-    if(is_dir($webCacheDir))
-    {
+    if (is_dir($webCacheDir)) {
       $this->chmod($webCacheDir, 0777);
       $dirs[] = $webCacheDir;
     }
@@ -75,24 +72,20 @@ EOF;
     $dirFinder = sfFinder::type('dir');
     $fileFinder = sfFinder::type('file');
 
-    foreach($dirs as $dir)
-    {
+    foreach ($dirs as $dir) {
       $this->chmod($dirFinder->in($dir), 0777);
       $this->chmod($fileFinder->in($dir), 0666);
     }
 
     // note those files that failed
-    if (count($this->failed))
-    {
+    if (count($this->failed)) {
       $this->logBlock(array_merge(
         array('Permissions on the following file(s) could not be fixed:', ''),
         array_map(create_function('$f', 'return \' - \'.sfDebug::shortenFilePath($f);'), $this->failed)
       ), 'ERROR_LARGE');
 
       $this->logSection($this->getFullName(), 'Done. but with errors.');
-    }
-    else
-    {
+    } else {
       $this->logSection($this->getFullName(), 'Done.');
     }
 
@@ -109,15 +102,11 @@ EOF;
    */
   protected function chmod($file, $mode, $umask = 0000)
   {
-    if (is_array($file))
-    {
-      foreach ($file as $f)
-      {
+    if (is_array($file)) {
+      foreach ($file as $f) {
         $this->chmod($f, $mode, $umask);
       }
-    }
-    else
-    {
+    } else {
       set_error_handler(array($this, 'handleError'));
 
       $this->current = $file;

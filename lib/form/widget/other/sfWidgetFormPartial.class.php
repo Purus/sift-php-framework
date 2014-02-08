@@ -22,8 +22,7 @@ class sfWidgetFormPartial extends sfWidgetForm
    */
   public function __construct($options = array(), $attributes = array())
   {
-    if(!is_array($options))
-    {
+    if (!is_array($options)) {
       $options = array(
           'partial' => $options
       );

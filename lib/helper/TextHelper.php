@@ -179,8 +179,7 @@ function format_phone_number($phoneNumber, $culture = null)
 function toggle($one, $two, $section = 'a')
 {
   static $toggle;
-  if(!isset($toggle[$section]))
-  {
+  if (!isset($toggle[$section])) {
     $toggle[$section] = array();
   }
 
@@ -204,8 +203,7 @@ function get_words_count($text)
  */
 function hyphenate_text($text, $options = array())
 {
-  if(sfConfig::get('sf_logging_enabled'))
-  {
+  if (sfConfig::get('sf_logging_enabled')) {
     sfLogger::getInstance()->warning('hyphenate_text() is deprecated. Use typography_text() instead');
   }
 
@@ -229,8 +227,7 @@ function typography_text($text, $options = array())
   // hyphenate text, true by default
   $hyphenate = _get_option($options, 'hyphenate', true);
 
-  if(!isset($options['hyphen']))
-  {
+  if (!isset($options['hyphen'])) {
     // @see http://www.utf8-chartable.de/unicode-utf8-table.pl?utf8=dec
     $options['hyphen'] = chr(194).chr(173);
   }
@@ -242,8 +239,7 @@ function typography_text($text, $options = array())
                 array_map('sfInflector::camelize', array_flip($options)
             )));
 
-  if(sfConfig::get('sf_debug'))
-  {
+  if (sfConfig::get('sf_debug')) {
     sfTimerManager::getTimer('{sfTypography} typography_text');
   }
 
@@ -256,23 +252,19 @@ function typography_text($text, $options = array())
   // correct the text before hyphenating?
   $wrapWords = _get_option($options, 'wrap_words', true);
 
-  if($hyphenate)
-  {
+  if ($hyphenate) {
     $text = $typography->hyphenate($text);
   }
 
-  if($correct)
-  {
+  if ($correct) {
     // $text = $typography->correct($text, $options);
   }
 
-  if($wrapWords)
-  {
+  if ($wrapWords) {
     // $text = $typography->wrapWords($text, $options);
   }
 
-  if(sfConfig::get('sf_debug'))
-  {
+  if (sfConfig::get('sf_debug')) {
     sfTimerManager::getTimer('{sfTypography} typography_text')->addTime();
   }
 

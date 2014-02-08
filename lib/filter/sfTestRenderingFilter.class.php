@@ -12,8 +12,8 @@
  * @package    Sift
  * @subpackage filter
  */
-class sfTestRenderingFilter extends sfRenderingFilter {
-
+class sfTestRenderingFilter extends sfRenderingFilter
+{
   /**
    * Executes the filter
    *
@@ -24,12 +24,9 @@ class sfTestRenderingFilter extends sfRenderingFilter {
     $filterChain->execute();
 
     // rethrow sfForm and|or sfFormField __toString() exceptions (see sfForm and sfFormField)
-    if(sfForm::hasToStringException())
-    {
+    if (sfForm::hasToStringException()) {
       throw sfForm::getToStringException();
-    }
-    elseif(sfFormField::hasToStringException())
-    {
+    } elseif (sfFormField::hasToStringException()) {
       throw sfFormField::getToStringException();
     }
 

@@ -93,16 +93,14 @@ class sfImageRotateImageMagick extends sfImageTransformAbstract
   protected function transform(sfImage $image)
   {
     // No need to do anything
-    if ($this->angle == 0)
-    {
+    if ($this->angle == 0) {
       return $image;
     }
 
     $resource = $image->getAdapter()->getHolder();
 
     // By default use the background of the top left corner
-    if ($this->background === '')
-    {
+    if ($this->background === '') {
       $this->background = $resource->getImagePixelColor(0, 0);
     }
 

@@ -12,8 +12,8 @@
  * @package    Sift
  * @subpackage form_enhancer
  */
-class sfFormEnhancerRich extends sfFormEnhancer {
-
+class sfFormEnhancerRich extends sfFormEnhancer
+{
   /**
    * Enhances widget. Tries to find method for widget class.
    * sfWidgetFormDate will be enhanced by method name: enhanceWidgetDate()
@@ -28,8 +28,7 @@ class sfFormEnhancerRich extends sfFormEnhancer {
     $class = str_replace('sfWidgetForm', '', get_class($widget));
     $method = sprintf('enhanceWidget%s', $class);
 
-    if(method_exists($this, $method))
-    {
+    if (method_exists($this, $method)) {
       return call_user_func_array(array($this, $method), array($widget, $validator));
     }
 
@@ -77,21 +76,17 @@ class sfFormEnhancerRich extends sfFormEnhancer {
   {
     $options = array();
 
-    if($validator)
-    {
-      if(($max = $validator->getOption('max')) !== null)
-      {
+    if ($validator) {
+      if (($max = $validator->getOption('max')) !== null) {
         $options['max'] = $max;
       }
 
-      if(($min = $validator->getOption('min')) !== null)
-      {
+      if (($min = $validator->getOption('min')) !== null) {
         $options['min'] = $min;
       }
     }
 
-    if($step = $widget->getOption('step'))
-    {
+    if ($step = $widget->getOption('step')) {
       $options['step'] = $step;
     }
 
@@ -116,25 +111,20 @@ class sfFormEnhancerRich extends sfFormEnhancer {
       'dateFormat' => $dateFormat
     );
 
-    if($widget instanceof sfWidgetFormDateTime)
-    {
+    if ($widget instanceof sfWidgetFormDateTime) {
       $options['timeFormat'] = $timeFormat;
     }
 
-    if($validator)
-    {
-      switch(get_class($validator))
-      {
+    if ($validator) {
+      switch (get_class($validator)) {
         case 'sfValidatorDate':
 
-          if($min = $validator->getOption('min'))
-          {
+          if ($min = $validator->getOption('min')) {
             // export as miliseconds so the javascript date can be succesfully created
             $options['minDate'] = strtotime($min) * 1000;
           }
 
-          if($max = $validator->getOption('max'))
-          {
+          if ($max = $validator->getOption('max')) {
             // export as miliseconds so the javascript date can be succesfully created
             $options['maxDate'] = strtotime($max) * 1000;
           }
@@ -159,15 +149,12 @@ class sfFormEnhancerRich extends sfFormEnhancer {
 
     // we mark multiple checkboxes as rich, so the are more user friendly
     $class = $widget->getAttribute('class');
-    if($class)
-    {
+    if ($class) {
       // preserve existing classes
       $class = join(' ', array_unique(array_merge(explode(' ', $class), array(
         'rich'
       ))));
-    }
-    else
-    {
+    } else {
       $class = 'rich';
     }
 
@@ -197,8 +184,7 @@ class sfFormEnhancerRich extends sfFormEnhancer {
       'd.M.yyyy H:mm' => array('d.m.yy', 'H:mm'),
     );
 
-    if(isset($knownFormats[$format]))
-    {
+    if (isset($knownFormats[$format])) {
       return $knownFormats[$format];
     }
 

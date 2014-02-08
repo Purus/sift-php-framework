@@ -12,20 +12,18 @@
  * @package    Sift
  * @subpackage validator
  */
-class sfValidatorTrilean extends sfValidatorBoolean {
-
+class sfValidatorTrilean extends sfValidatorBoolean
+{
   /**
    * @see sfValidatorBase
    */
   public function doClean($value)
   {
-    if(in_array($value, $this->getOption('true_values')))
-    {
+    if (in_array($value, $this->getOption('true_values'))) {
       return true;
     }
 
-    if(in_array($value, $this->getOption('false_values')))
-    {
+    if (in_array($value, $this->getOption('false_values'))) {
       return false;
     }
 

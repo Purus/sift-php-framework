@@ -23,8 +23,7 @@ class sfStopException extends sfException
   public function __construct($message = null, $code = 0)
   {
     // disable xdebug to avoid backtrace in error log
-    if(function_exists('xdebug_disable'))
-    {
+    if (function_exists('xdebug_disable')) {
       xdebug_disable();
     }
 

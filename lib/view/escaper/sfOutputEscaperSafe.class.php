@@ -25,8 +25,7 @@ class sfOutputEscaperSafe extends ArrayIterator
   {
     $this->value = $value;
 
-    if (is_array($value) || is_object($value))
-    {
+    if (is_array($value) || is_object($value)) {
       parent::__construct($value);
     }
   }

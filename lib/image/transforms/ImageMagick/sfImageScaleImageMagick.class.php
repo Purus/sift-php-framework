@@ -42,9 +42,8 @@ class sfImageScaleImageMagick extends sfImageTransformAbstract
    */
   public function setScale($scale)
   {
-    if (is_numeric($scale))
-    {
-      $this->scale = (float)$scale;
+    if (is_numeric($scale)) {
+      $this->scale = (float) $scale;
     }
   }
 

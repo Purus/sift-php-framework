@@ -39,16 +39,14 @@ class sfCliRootCommandApplication extends sfCliCommandApplication
     $this->handleOptions($options);
     $arguments = $this->commandManager->getArgumentValues();
 
-    if (!isset($arguments['task']))
-    {
+    if (!isset($arguments['task'])) {
       $arguments['task'] = 'list';
       $this->commandOptions .= $arguments['task'];
     }
 
     $this->currentTask = $this->getTaskToExecute($arguments['task']);
 
-    if ($this->currentTask instanceof sfCliCommandApplicationTask)
-    {
+    if ($this->currentTask instanceof sfCliCommandApplicationTask) {
       $this->currentTask->setCommandApplication($this);
     }
 
@@ -72,27 +70,22 @@ class sfCliRootCommandApplication extends sfCliCommandApplication
     $dirs = array($this->environment->get('sf_sift_lib_dir').'/cli/task');
 
     // plugin tasks
-    foreach($this->getProject()->getPlugins() as $plugin)
-    {
+    foreach ($this->getProject()->getPlugins() as $plugin) {
       $rootDir = $plugin->getRootDir();
-      if(is_dir($taskPath = $rootDir.'/lib/cli/task'))
-      {
+      if (is_dir($taskPath = $rootDir.'/lib/cli/task')) {
         $dirs[] = $taskPath;
       }
-      if(is_dir($taskPath = $rootDir.'/lib/task'))
-      {
+      if (is_dir($taskPath = $rootDir.'/lib/task')) {
         $dirs[] = $taskPath;
       }
     }
 
-    if(is_dir($taskPath = $this->environment->get('sf_root_dir').'/lib/cli/task'))
-    {
+    if (is_dir($taskPath = $this->environment->get('sf_root_dir').'/lib/cli/task')) {
       $dirs[] = $taskPath;
     }
 
     // Backward compatibility
-    if(is_dir($taskPath = $this->environment->get('sf_root_dir').'/lib/task'))
-    {
+    if (is_dir($taskPath = $this->environment->get('sf_root_dir').'/lib/task')) {
       $dirs[] = $taskPath;
     }
 
@@ -100,8 +93,7 @@ class sfCliRootCommandApplication extends sfCliCommandApplication
 
     $finder = sfFinder::type('file')->name('*Task.class.php');
 
-    foreach($finder->in($dirs) as $file)
-    {
+    foreach ($finder->in($dirs) as $file) {
       $this->taskFiles[basename($file, '.class.php')] = $file;
     }
 
@@ -109,8 +101,7 @@ class sfCliRootCommandApplication extends sfCliCommandApplication
     spl_autoload_register(array($this, 'autoloadTask'));
 
     // require tasks
-    foreach($this->taskFiles as $task => $file)
-    {
+    foreach ($this->taskFiles as $task => $file) {
       // forces autoloading of each task class
       class_exists($task, true);
     }
@@ -128,8 +119,7 @@ class sfCliRootCommandApplication extends sfCliCommandApplication
    */
   public function autoloadTask($class)
   {
-    if (isset($this->taskFiles[$class]))
-    {
+    if (isset($this->taskFiles[$class])) {
       require_once $this->taskFiles[$class];
 
       return true;

@@ -52,12 +52,9 @@ EOF;
   protected function execute($arguments = array(), $options = array())
   {
     // we have to bind to an application
-    if(!isset($options['application']))
-    {
+    if (!isset($options['application'])) {
       $application = $this->getFirstApplication();
-    }
-    else
-    {
+    } else {
       $application = $options['application'];
     }
 
@@ -88,15 +85,12 @@ error_reporting(0);
 require_once(\$app_config);
 
 \$mailer = sfContext::getInstance()->getMailer();
-try
-{
+try {
   \$spool = \$mailer->getSpool();
   \$spool->setMessageLimit({$messageLimit});
   \$spool->setTimeLimit({$timeLimit});
   \$sent = \$mailer->flushQueue();
-}
-catch(LogicException \$e)
-{
+} catch (LogicException \$e) {
   echo 'SPOOL DISABLED';
   die(1);
 }
@@ -113,13 +107,10 @@ EOF
     // remove the file
     unlink($testFile);
 
-    if($result == 'SPOOL DISABLED')
-    {
+    if ($result == 'SPOOL DISABLED') {
       $this->logSection($this->getFullName(), 'Spool is disabled. Cannot send emails.');
       $this->logSection($this->getFullName(), 'Check your mail.yml configuration.');
-    }
-    elseif(preg_match('/\d+/', $result, $matches))
-    {
+    } elseif (preg_match('/\d+/', $result, $matches)) {
       $this->logSection($this->getFullName(), sprintf('Done. Sent %s emails', $matches[0]));
     }
   }

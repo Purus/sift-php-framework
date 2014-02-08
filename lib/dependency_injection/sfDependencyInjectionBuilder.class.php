@@ -12,8 +12,8 @@
  * @package Sift
  * @subpackage dependency_injection
  */
-class sfDependencyInjectionBuilder {
-
+class sfDependencyInjectionBuilder
+{
   /**
    * @var sfDependencyInjectionMaps
    */
@@ -52,18 +52,15 @@ class sfDependencyInjectionBuilder {
    */
   protected function setup()
   {
-    if(!$this->maps->has($this->getClassName()))
-    {
-      if(sfConfig::get('sf_debug'))
-      {
+    if (!$this->maps->has($this->getClassName())) {
+      if (sfConfig::get('sf_debug')) {
         $timer = sfTimerManager::getTimer('Object builder');
       }
 
       $builder = new sfDependencyInjectionMapBuilderClass($this->getClassName());
       $builder->build();
 
-      if(isset($timer))
-      {
+      if (isset($timer)) {
         $timer->addTime();
       }
 
@@ -105,34 +102,24 @@ class sfDependencyInjectionBuilder {
   {
     $reflector = new sfReflectionClass($this->getClassName());
 
-    if(is_array($arguments) && count($arguments))
-    {
+    if (is_array($arguments) && count($arguments)) {
       // FIXME: this silently dies if the arguments does not contain the required arguments for the constructor!
       $object = null === $reflector->getConstructor() ? $reflector->newInstance() : $reflector->newInstanceArgs($arguments);
-    }
-    elseif($this->map->has(sfDependencyInjectionMapItem::INJECT_WITH_CONSTRUCTOR))
-    {
+    } elseif ($this->map->has(sfDependencyInjectionMapItem::INJECT_WITH_CONSTRUCTOR)) {
       $constructWith = array();
-      foreach($this->map->getItemsFor(sfDependencyInjectionMapItem::INJECT_WITH_CONSTRUCTOR) as $item)
-      {
+      foreach ($this->map->getItemsFor(sfDependencyInjectionMapItem::INJECT_WITH_CONSTRUCTOR) as $item) {
         $dependency = $this->getDependencyForItem($item);
-        if($item->isRequired() && is_null($dependency))
-        {
+        if ($item->isRequired() && is_null($dependency)) {
           throw new LogicException(sprintf('Missing dependency "%s" for construction of object instance "%s".', $item->getDependencyName(), $this->getClassName()));
         }
         $constructWith[] = $dependency;
       }
 
       $object = $reflector->newInstanceArgs($constructWith);
-    }
-    else
-    {
-      if($reflector->isInstantiable())
-      {
+    } else {
+      if ($reflector->isInstantiable()) {
         $object = $reflector->newInstance();
-      }
-      else
-      {
+      } else {
         throw new sfInitializationException(sprintf('The object of class "%s" cannot be initialized.', $this->className));
       }
     }
@@ -151,15 +138,12 @@ class sfDependencyInjectionBuilder {
    */
   private function injectMethods(&$object, $reflector)
   {
-    foreach($this->map->getItemsFor(sfDependencyInjectionMapItem::INJECT_WITH_METHOD) as $item)
-    {
+    foreach ($this->map->getItemsFor(sfDependencyInjectionMapItem::INJECT_WITH_METHOD) as $item) {
       /* @var $item sfDependencyInjectionMapItem */
       // only inject if the class has the method, or the item allows forcing
-      if($reflector->hasMethod($item->getInjectAs()) || $item->getForce())
-      {
+      if ($reflector->hasMethod($item->getInjectAs()) || $item->getForce()) {
         $dependency = $this->getDependencyForItem($item);
-        if($item->isRequired() && !$dependency)
-        {
+        if ($item->isRequired() && !$dependency) {
           throw new LogicException(sprintf('Missing dependency "%s" for method injection "%s" of object instance "%s".',
               $item->getDependencyName(),
               $item->getInjectAs(),
@@ -180,14 +164,11 @@ class sfDependencyInjectionBuilder {
   private function injectProperties(&$object, $reflector)
   {
     /* @var $item sfDependencyInjectionMapItem */
-    foreach($this->map->getItemsFor('property') as $item)
-    {
+    foreach ($this->map->getItemsFor('property') as $item) {
       // only inject if the class has the property, or the item allows forcing
-      if($reflector->hasProperty($item->getInjectAs()) || $item->getForce())
-      {
+      if ($reflector->hasProperty($item->getInjectAs()) || $item->getForce()) {
         $dependency = $this->getDependencyForItem($item);
-        if($item->isRequired() && !$dependency)
-        {
+        if ($item->isRequired() && !$dependency) {
           throw new LogicException(sprintf('Missing dependency "%s" for property injection "%s" of object instance "%s".',
               $item->getDependencyName(),
               $item->getInjectAs(),
@@ -207,13 +188,10 @@ class sfDependencyInjectionBuilder {
    */
   protected function getDependencyForItem(sfDependencyInjectionMapItem $item)
   {
-    if($newClass = $item->getNewClass())
-    {
+    if ($newClass = $item->getNewClass()) {
       $builder = new self($newClass, $this->dependencies, $this->maps);
       $dependency = $builder->constructObject();
-    }
-    else
-    {
+    } else {
       $dependency = $this->dependencies->get($item->getDependencyName());
     }
 

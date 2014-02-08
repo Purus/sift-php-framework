@@ -14,8 +14,8 @@
  * @package    Sift
  * @subpackage debug_panel
  */
-class sfWebDebugPanelCache extends sfWebDebugPanel {
-
+class sfWebDebugPanelCache extends sfWebDebugPanel
+{
   /**
    * Array of data about the cached content
    *
@@ -59,9 +59,7 @@ class sfWebDebugPanelCache extends sfWebDebugPanel {
         && $query['_sf_ignore_cache'])
     {
       $this->cacheIgnored = true;
-    }
-    else
-    {
+    } else {
       $this->cacheIgnored = false;
     }
 
@@ -83,8 +81,7 @@ class sfWebDebugPanelCache extends sfWebDebugPanel {
   {
     $cache = $event['view_cache_manager'];
 
-    if(!$content)
-    {
+    if (!$content) {
       return '';
     }
 

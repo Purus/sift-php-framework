@@ -12,8 +12,8 @@
  * @package    Sift
  * @subpackage i18n
  */
-class sfI18nGettextPo extends sfI18nGettext {
-
+class sfI18nGettextPo extends sfI18nGettext
+{
   /**
    * Constructor
    *
@@ -35,14 +35,12 @@ class sfI18nGettextPo extends sfI18nGettext {
    */
   public function load($file = null)
   {
-    if(!isset($file))
-    {
+    if (!isset($file)) {
       $file = $this->file;
     }
 
     // load file
-    if(!$contents = @file($file))
-    {
+    if (!$contents = @file($file)) {
       return false;
     }
 
@@ -56,14 +54,12 @@ class sfI18nGettextPo extends sfI18nGettext {
     $matched = preg_match_all($pattern, $contents, $matches);
     unset($contents);
 
-    if(!$matched)
-    {
+    if (!$matched) {
       return false;
     }
 
     // get all msgids and msgtrs
-    for($i = 0; $i < $matched; $i++)
-    {
+    for ($i = 0; $i < $matched; $i++) {
       $msgid = preg_replace(
               '/\s*msgid\s*"(.*)"\s*/s', '\\1', $matches[1][$i]);
       $msgstr = preg_replace(
@@ -72,8 +68,7 @@ class sfI18nGettextPo extends sfI18nGettext {
     }
 
     // check for meta info
-    if(isset($this->strings['']))
-    {
+    if (isset($this->strings[''])) {
       $this->meta = parent::meta2array($this->strings['']);
       unset($this->strings['']);
     }
@@ -90,38 +85,32 @@ class sfI18nGettextPo extends sfI18nGettext {
    */
   public function save($file = null)
   {
-    if(!isset($file))
-    {
+    if (!isset($file)) {
       $file = $this->file;
     }
 
     // open PO file
-    if(!is_resource($fh = @fopen($file, 'w')))
-    {
+    if (!is_resource($fh = @fopen($file, 'w'))) {
       return false;
     }
 
     // lock PO file exclusively
-    if(!flock($fh, LOCK_EX))
-    {
+    if (!flock($fh, LOCK_EX)) {
       fclose($fh);
 
       return false;
     }
     // write meta info
-    if(count($this->meta))
-    {
+    if (count($this->meta)) {
       $meta = 'msgid ""' . "\nmsgstr " . '""' . "\n";
-      foreach($this->meta as $k => $v)
-      {
+      foreach ($this->meta as $k => $v) {
         $meta .= '"' . $k . ': ' . $v . '\n"' . "\n";
       }
       fwrite($fh, $meta . "\n");
     }
 
     // write strings
-    foreach($this->strings as $o => $t)
-    {
+    foreach ($this->strings as $o => $t) {
       fwrite($fh, 'msgid "' . parent::prepare($o, true) . '"' . "\n" .
               'msgstr "' . parent::prepare($t, true) . '"' . "\n\n"
       );

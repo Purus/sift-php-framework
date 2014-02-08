@@ -12,8 +12,8 @@
  * @package    Sift
  * @subpackage util
  */
-class sfToolkit {
-
+class sfToolkit
+{
   /**
    * Extract the class or interface name from filename.
    *
@@ -25,15 +25,13 @@ class sfToolkit {
   {
     $retval = null;
 
-    if(self::isPathAbsolute($filename))
-    {
+    if (self::isPathAbsolute($filename)) {
       $filename = basename($filename);
     }
 
     $pattern = '/(.*?)(\.(class|interface))?\.php/i';
 
-    if(preg_match($pattern, $filename, $match))
-    {
+    if (preg_match($pattern, $filename, $match)) {
       $retval = $match[1];
     }
 
@@ -48,16 +46,14 @@ class sfToolkit {
    */
   public static function extractClasses($file)
   {
-    if(!is_readable($file))
-    {
+    if (!is_readable($file)) {
       throw new sfFileException(sprintf('File "%s" does not exist or is not readable.', $file));
     }
 
     preg_match_all('~^\s*(?:abstract\s+|final\s+)?(?:class|interface)\s+(\w+)~mi',
                   file_get_contents($file), $matches);
 
-    if(isset($matches[1]))
-    {
+    if (isset($matches[1])) {
       return $matches[1];
     }
 
@@ -73,8 +69,7 @@ class sfToolkit {
    */
   public static function clearDirectory($directory)
   {
-    if(!is_dir($directory))
-    {
+    if (!is_dir($directory)) {
       return;
     }
 
@@ -84,25 +79,18 @@ class sfToolkit {
     // ignore names
     $ignore = array('.', '..', 'CVS', '.svn', '.git');
 
-    while(($file = readdir($fp)) !== false)
-    {
-      if(!in_array($file, $ignore))
-      {
-        if(is_link($directory . '/' . $file))
-        {
+    while (($file = readdir($fp)) !== false) {
+      if (!in_array($file, $ignore)) {
+        if (is_link($directory . '/' . $file)) {
           // delete symlink
           @unlink($directory . '/' . $file);
-        }
-        else if(is_dir($directory . '/' . $file))
-        {
+        } else if (is_dir($directory . '/' . $file)) {
           // recurse through directory
           self::clearDirectory($directory . '/' . $file);
 
           // delete the directory
           @rmdir($directory . '/' . $file);
-        }
-        else
-        {
+        } else {
           // delete the file
           @unlink($directory . '/' . $file);
         }
@@ -124,23 +112,18 @@ class sfToolkit {
   {
     $files = glob($pattern);
 
-    if(!$files)
-    {
+    if (!$files) {
       return;
     }
 
     // order is important when removing directories
     sort($files);
 
-    foreach($files as $file)
-    {
-      if(is_dir($file))
-      {
+    foreach ($files as $file) {
+      if (is_dir($file)) {
         // delete directory
         self::clearDirectory($file);
-      }
-      else
-      {
+      } else {
         // delete file
         unlink($file);
       }
@@ -155,8 +138,7 @@ class sfToolkit {
    */
   public static function isPathAbsolute($path)
   {
-    if(empty($path))
-    {
+    if (empty($path)) {
       return false;
     }
 
@@ -180,17 +162,13 @@ class sfToolkit {
   public static function hasLockFile($lockFile, $maxLockFileLifeTime = 0)
   {
     $isLocked = false;
-    if(is_readable($lockFile) && ($last_access = fileatime($lockFile)))
-    {
+    if (is_readable($lockFile) && ($last_access = fileatime($lockFile))) {
       $now = time();
       $timeDiff = $now - $last_access;
 
-      if(!$maxLockFileLifeTime || $timeDiff < $maxLockFileLifeTime)
-      {
+      if (!$maxLockFileLifeTime || $timeDiff < $maxLockFileLifeTime) {
         $isLocked = true;
-      }
-      else
-      {
+      } else {
         $isLocked = @unlink($lockFile) ? false : true;
       }
     }
@@ -200,8 +178,7 @@ class sfToolkit {
 
   public static function stripComments($source)
   {
-    if(!function_exists('token_get_all'))
-    {
+    if (!function_exists('token_get_all')) {
       return $source;
     }
 
@@ -210,18 +187,14 @@ class sfToolkit {
     $set = '!"#$&\'()*+,-./:;<=>?@[\]^`{|}';
     $set = array_flip(preg_split('//',$set));
 
-    foreach(token_get_all($source) as $token)
-    {
-      if(!is_array($token))
-      {
+    foreach (token_get_all($source) as $token) {
+      if (!is_array($token)) {
         $token = array(0, $token);
       }
-      switch($token[0])
-      {
+      switch ($token[0]) {
         case T_DOC_COMMENT:
           // leave annotations and inject statements in place
-          if(preg_match('# (@inject|@annotation)+#i', $token[1]))
-          {
+          if (preg_match('# (@inject|@annotation)+#i', $token[1])) {
             $output .= $token[1];
           }
         break;
@@ -272,8 +245,7 @@ class sfToolkit {
    */
   public static function arrayDeepMerge()
   {
-    switch(func_num_args())
-    {
+    switch (func_num_args()) {
       case 0:
         return false;
       case 1:
@@ -281,34 +253,23 @@ class sfToolkit {
       case 2:
         $args = func_get_args();
         $args[2] = array();
-        if(is_array($args[0]) && is_array($args[1]))
-        {
-          foreach(array_unique(array_merge(array_keys($args[0]), array_keys($args[1]))) as $key)
-          {
+        if (is_array($args[0]) && is_array($args[1])) {
+          foreach (array_unique(array_merge(array_keys($args[0]), array_keys($args[1]))) as $key) {
             $isKey0 = array_key_exists($key, $args[0]);
             $isKey1 = array_key_exists($key, $args[1]);
-            if($isKey0 && $isKey1 && is_array($args[0][$key]) && is_array($args[1][$key]))
-            {
+            if ($isKey0 && $isKey1 && is_array($args[0][$key]) && is_array($args[1][$key])) {
               $args[2][$key] = self::arrayDeepMerge($args[0][$key], $args[1][$key]);
-            }
-            else if($isKey0 && $isKey1)
-            {
+            } else if ($isKey0 && $isKey1) {
               $args[2][$key] = $args[1][$key];
-            }
-            else if(!$isKey1)
-            {
+            } else if (!$isKey1) {
               $args[2][$key] = $args[0][$key];
-            }
-            else if(!$isKey0)
-            {
+            } else if (!$isKey0) {
               $args[2][$key] = $args[1][$key];
             }
           }
 
           return $args[2];
-        }
-        else
-        {
+        } else {
           return $args[1];
         }
       default :
@@ -332,21 +293,14 @@ class sfToolkit {
    */
   public static function arrayExtend($a, $b)
   {
-    foreach($b as $k => $v)
-    {
-      if(is_array($v))
-      {
-        if(!isset($a[$k]))
-        {
+    foreach ($b as $k => $v) {
+      if (is_array($v)) {
+        if (!isset($a[$k])) {
           $a[$k] = $v;
-        }
-        else
-        {
+        } else {
           $a[$k] = self::arrayExtend($a[$k], $v);
         }
-      }
-      else
-      {
+      } else {
         $a[$k] = $v;
       }
     }
@@ -368,8 +322,7 @@ class sfToolkit {
     /x', $string, $matches, PREG_SET_ORDER);
 
     $attributes = array();
-    foreach($matches as $val)
-    {
+    foreach ($matches as $val) {
       $attributes[$val[1]] = self::literalize($val[3]);
     }
 
@@ -388,31 +341,19 @@ class sfToolkit {
     $value = trim($value);
     $lvalue = strtolower($value);
 
-    if(in_array($lvalue, array('null', '~', '')))
-    {
+    if (in_array($lvalue, array('null', '~', ''))) {
       $value = null;
-    }
-    else if(in_array($lvalue, array('true', 'on', '+', 'yes')))
-    {
+    } else if (in_array($lvalue, array('true', 'on', '+', 'yes'))) {
       $value = true;
-    }
-    else if(in_array($lvalue, array('false', 'off', '-', 'no')))
-    {
+    } else if (in_array($lvalue, array('false', 'off', '-', 'no'))) {
       $value = false;
-    }
-    else if(ctype_digit($value))
-    {
+    } else if (ctype_digit($value)) {
       $value = (int) $value;
-    }
-    else if(is_numeric($value))
-    {
+    } else if (is_numeric($value)) {
       $value = (float) $value;
-    }
-    else
-    {
+    } else {
       $value = self::replaceConstants($value);
-      if($quoted)
-      {
+      if ($quoted) {
         $value = '\'' . str_replace('\'', '\\\'', $value) . '\'';
       }
     }
@@ -474,8 +415,7 @@ class sfToolkit {
   protected static function replaceConstantsWithModifiersCallback($v)
   {
     // nothing found
-    if(!sfConfig::has(strtolower($v[1])))
-    {
+    if (!sfConfig::has(strtolower($v[1]))) {
       return $v[0];
     }
 
@@ -483,21 +423,17 @@ class sfToolkit {
     $expressions = explode('|', $v[2]);
 
     // we have expressions
-    foreach($expressions as $s)
-    {
-      switch($s)
-      {
+    foreach ($expressions as $s) {
+      switch ($s) {
         case 'slugify':
           $value = str_replace(array(' ', '_'), '-', $value);
         break;
 
         default:
 
-          if(strpos($s, ',') !== false)
-          {
+          if (strpos($s, ',') !== false) {
             $parts = explode(',', $s);
-            switch(count($parts))
-            {
+            switch (count($parts)) {
               case 1:
                 $value = sfUtf8::sub($value, $parts[0]);
               break;
@@ -505,9 +441,7 @@ class sfToolkit {
                 $value = sfUtf8::sub($value, $parts[0], $parts[1]);
               break;
             }
-          }
-          else
-          {
+          } else {
             throw new LogicException(sprintf('Modifier exporession "%s" in "%s" not understood.', $s, $v[0]));
           }
         break;
@@ -531,11 +465,9 @@ class sfToolkit {
   public static function isArrayValuesEmpty($array)
   {
     static $isEmpty = true;
-    foreach($array as $value)
-    {
+    foreach ($array as $value) {
       $isEmpty = (is_array($value)) ? self::isArrayValuesEmpty($value) : (strlen($value) == 0);
-      if(!$isEmpty)
-      {
+      if (!$isEmpty) {
         break;
       }
     }
@@ -556,31 +488,21 @@ class sfToolkit {
 
   public static function &getArrayValueForPathByRef(&$values, $name, $default = null)
   {
-    if(false !== ($offset = strpos($name, '[')))
-    {
-      if(isset($values[substr($name, 0, $offset)]))
-      {
+    if (false !== ($offset = strpos($name, '['))) {
+      if (isset($values[substr($name, 0, $offset)])) {
         $array = &$values[substr($name, 0, $offset)];
 
-        while($pos = strpos($name, '[', $offset))
-        {
+        while ($pos = strpos($name, '[', $offset)) {
           $end = strpos($name, ']', $pos);
-          if($end == $pos + 1)
-          {
+          if ($end == $pos + 1) {
             // reached a []
             break;
-          }
-          else if(!isset($array[substr($name, $pos + 1, $end - $pos - 1)]))
-          {
+          } else if (!isset($array[substr($name, $pos + 1, $end - $pos - 1)])) {
             return $default;
-          }
-          else if(is_array($array))
-          {
+          } else if (is_array($array)) {
             $array = &$array[substr($name, $pos + 1, $end - $pos - 1)];
             $offset = $end;
-          }
-          else
-          {
+          } else {
             return $default;
           }
         }
@@ -594,31 +516,21 @@ class sfToolkit {
 
   public static function getArrayValueForPath($values, $name, $default = null)
   {
-    if(false !== ($offset = strpos($name, '[')))
-    {
-      if(isset($values[substr($name, 0, $offset)]))
-      {
+    if (false !== ($offset = strpos($name, '['))) {
+      if (isset($values[substr($name, 0, $offset)])) {
         $array = $values[substr($name, 0, $offset)];
 
-        while($pos = strpos($name, '[', $offset))
-        {
+        while ($pos = strpos($name, '[', $offset)) {
           $end = strpos($name, ']', $pos);
-          if($end == $pos + 1)
-          {
+          if ($end == $pos + 1) {
             // reached a []
             break;
-          }
-          else if(!isset($array[substr($name, $pos + 1, $end - $pos - 1)]))
-          {
+          } else if (!isset($array[substr($name, $pos + 1, $end - $pos - 1)])) {
             return $default;
-          }
-          else if(is_array($array))
-          {
+          } else if (is_array($array)) {
             $array = $array[substr($name, $pos + 1, $end - $pos - 1)];
             $offset = $end;
-          }
-          else
-          {
+          } else {
             return $default;
           }
         }
@@ -638,35 +550,26 @@ class sfToolkit {
    */
   public static function getPhpCli()
   {
-    if(getenv('PHP_PATH'))
-    {
+    if (getenv('PHP_PATH')) {
       $php_cli = getenv('PHP_PATH');
-      if(!is_executable($php_cli))
-      {
+      if (!is_executable($php_cli)) {
         throw new sfException('The defined PHP_PATH environment variable is not a valid PHP executable.');
       }
-    }
-    else
-    {
+    } else {
       $php_cli = PHP_BINDIR . DIRECTORY_SEPARATOR . 'php';
     }
 
-    if(is_executable($php_cli))
-    {
+    if (is_executable($php_cli)) {
       return $php_cli;
     }
 
     $path = getenv('PATH') ? getenv('PATH') : getenv('Path');
     $exe_suffixes = DIRECTORY_SEPARATOR == '\\' ? (getenv('PATHEXT') ? explode(PATH_SEPARATOR, getenv('PATHEXT')) : array('.exe', '.bat', '.cmd', '.com')) : array('');
-    foreach(array('php5', 'php') as $php_cli)
-    {
-      foreach($exe_suffixes as $suffix)
-      {
-        foreach(explode(PATH_SEPARATOR, $path) as $dir)
-        {
+    foreach (array('php5', 'php') as $php_cli) {
+      foreach ($exe_suffixes as $suffix) {
+        foreach (explode(PATH_SEPARATOR, $path) as $dir) {
           $file = $dir . DIRECTORY_SEPARATOR . $php_cli . $suffix;
-          if(is_executable($file))
-          {
+          if (is_executable($file)) {
             return $file;
           }
         }
@@ -699,8 +602,7 @@ class sfToolkit {
   public static function i18NtoUTF8($string, $from)
   {
     $from = strtoupper($from);
-    if($from != 'UTF-8')
-    {
+    if ($from != 'UTF-8') {
       $s = iconv($from, 'UTF-8', $string);  // to UTF-8
 
       return $s !== false ? $s : $string; // it could return false
@@ -723,8 +625,7 @@ class sfToolkit {
   public static function i18NtoEncoding($string, $to)
   {
     $to = strtoupper($to);
-    if($to != 'UTF-8')
-    {
+    if ($to != 'UTF-8') {
       $s = iconv('UTF-8', $to, $string);
 
       return $s !== false ? $s : $string;
@@ -743,10 +644,8 @@ class sfToolkit {
    */
   public static function addIncludePath($path, $position = 'front')
   {
-    if(is_array($path))
-    {
-      foreach('front' == $position ? array_reverse($path) : $path as $p)
-      {
+    if (is_array($path)) {
+      foreach ('front' == $position ? array_reverse($path) : $path as $p) {
         self::addIncludePath($p, $position);
       }
 
@@ -756,13 +655,11 @@ class sfToolkit {
     $paths = explode(PATH_SEPARATOR, get_include_path());
 
     // remove what's already in the include_path
-    if(false !== $key = array_search(realpath($path), array_map('realpath', $paths)))
-    {
+    if (false !== $key = array_search(realpath($path), array_map('realpath', $paths))) {
       unset($paths[$key]);
     }
 
-    switch($position)
-    {
+    switch ($position) {
       case 'front':
         array_unshift($paths, $path);
         break;
@@ -790,21 +687,16 @@ class sfToolkit {
   {
     $results = array();
     $args = array();
-    if(func_num_args() > 2)
-    {
+    if (func_num_args() > 2) {
       $args = array_slice(func_get_args(), 2);
     }
-    foreach($arr1 as $key => $value)
-    {
+    foreach ($arr1 as $key => $value) {
       $temp = $args;
       array_unshift($temp, $value);
-      if(is_array($value))
-      {
+      if (is_array($value)) {
         array_unshift($temp, $callback);
         $results[$key] = call_user_func_array(array('sfToolkit', 'arrayMap'), $temp);
-      }
-      else
-      {
+      } else {
         $results[$key] = call_user_func_array($callback, $temp);
       }
     }
@@ -866,14 +758,12 @@ class sfToolkit {
     $_domain = array_reverse($_domain);
 
     // first check for ip address
-    if(count($_domain) == 4 && is_numeric($_domain[0]) && is_numeric($_domain[3]))
-    {
+    if (count($_domain) == 4 && is_numeric($_domain[0]) && is_numeric($_domain[3])) {
       return $domain;
     }
 
     // if only 2 domain parts, that must be our domain
-    if(count($_domain) <= 2)
-    {
+    if (count($_domain) <= 2) {
       return $domain;
     }
 
@@ -884,12 +774,9 @@ class sfToolkit {
      * else domain = D1.D0
      * these rules are simplified below
      */
-    if(in_array($_domain[0], self::$C_TLD) && in_array($_domain[1], self::$G_TLD) && $_domain[2] != 'www')
-    {
+    if (in_array($_domain[0], self::$C_TLD) && in_array($_domain[1], self::$G_TLD) && $_domain[2] != 'www') {
       return $_domain[2] . '.' . $_domain[1] . '.' . $_domain[0];
-    }
-    else
-    {
+    } else {
       return $_domain[1] . '.' . $_domain[0];
     }
 
@@ -899,8 +786,7 @@ class sfToolkit {
   public static function collect($collection, $property)
   {
     $values = array();
-    foreach($collection as $item)
-    {
+    foreach ($collection as $item) {
       $values[] = $item[$property];
     }
 
@@ -933,8 +819,7 @@ class sfToolkit {
   {
     $val = trim($val);
     $last = strtolower($val{strlen($val) - 1});
-    switch($last)
-    {
+    switch ($last) {
       // The 'G' modifier is available since PHP 5.1.0
       case 'g':
         $val *= 1024;
@@ -955,27 +840,21 @@ class sfToolkit {
    */
   public static function setTimeLimit($time = 0)
   {
-    if(!function_exists('ini_get'))
-    {
+    if (!function_exists('ini_get')) {
       return false;
     }
 
-    if((int) @ini_get('max_execution_time') === $time)
-    {
+    if ((int) @ini_get('max_execution_time') === $time) {
       return true;
     }
 
-    if(function_exists('set_time_limit'))
-    {
+    if (function_exists('set_time_limit')) {
       @set_time_limit($time);
-    }
-    elseif(function_exists('ini_set'))
-    {
+    } elseif (function_exists('ini_set')) {
       @ini_set('max_execution_time', $time);
     }
 
-    if((int) @ini_get('max_execution_time') === $time)
-    {
+    if ((int) @ini_get('max_execution_time') === $time) {
       return true;
     }
 
@@ -990,8 +869,7 @@ class sfToolkit {
   public static function getAvailableMemory()
   {
     $mem = self::convertPhpConfigValueToBytes(ini_get('memory_limit'));
-    if($mem == 0)
-    {
+    if ($mem == 0) {
       return null;
     }
 
@@ -1018,19 +896,13 @@ class sfToolkit {
    */
   public static function canSystemCall()
   {
-    if(function_exists('exec'))
-    {
-      try
-      {
-        $canSystemCall = (boolean)sfToolkit::getPhpCli();
-      }
-      catch(sfException $e)
-      {
+    if (function_exists('exec')) {
+      try {
+        $canSystemCall = (boolean) sfToolkit::getPhpCli();
+      } catch (sfException $e) {
         $canSystemCall = false;
       }
-    }
-    else
-    {
+    } else {
       $canSystemCall = false;
     }
 
@@ -1049,8 +921,7 @@ class sfToolkit {
     // Pre-encoding look for function calls and replacing by tmp ids
     $phpExpressions = array();
 
-    if($expressions)
-    {
+    if ($expressions) {
       // strip expressions from the variable
       $var = self::_recursivePhpExprFinder($var, $phpExpressions);
     }
@@ -1058,14 +929,11 @@ class sfToolkit {
     // export variable
     $var = var_export($var, true);
 
-    if($expressions)
-    {
+    if ($expressions) {
       $count = count($phpExpressions);
       // put expressions back
-      if(count($phpExpressions) > 0)
-      {
-        for($i = 0; $i < $count; $i++)
-        {
+      if (count($phpExpressions) > 0) {
+        for ($i = 0; $i < $count; $i++) {
           $magicKey = $phpExpressions[$i]['magicKey'];
           $value    = $phpExpressions[$i]['value'];
           $var = str_replace(
@@ -1104,26 +972,19 @@ class sfToolkit {
   protected static function _recursivePhpExprFinder(
       &$value, array &$phpExpressions, $currentKey = null)
   {
-    if($value instanceof sfPhpExpression)
-    {
+    if ($value instanceof sfPhpExpression) {
       $magicKey = '____php_expr_' . $currentKey . '_' . (count($phpExpressions));
       $phpExpressions[] = array(
           'magicKey' => $magicKey,
           'value'    => is_object($value) ? $value->__toString() : $value
       );
       $value = $magicKey;
-    }
-    elseif(is_array($value))
-    {
-      foreach ($value as $k => $v)
-      {
+    } elseif (is_array($value)) {
+      foreach ($value as $k => $v) {
         $value[$k] = self::_recursivePhpExprFinder($value[$k], $phpExpressions, $k);
       }
-    }
-    elseif(is_object($value))
-    {
-      foreach ($value as $k => $v)
-      {
+    } elseif (is_object($value)) {
+      foreach ($value as $k => $v) {
         $value->$k = self::_recursivePhpExprFinder($value->$k, $phpExpressions, $k);
       }
     }
@@ -1157,8 +1018,7 @@ class sfToolkit {
    */
   public static function isFunctionDisabled($callback)
   {
-    if(!is_string($callback))
-    {
+    if (!is_string($callback)) {
       return false;
     }
 

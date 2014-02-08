@@ -63,10 +63,9 @@ class sfImageUnsharpMaskImageMagick extends sfImageTransformAbstract
    */
   public function setRadius($radius)
   {
-    if(is_numeric($radius))
-    {
+    if (is_numeric($radius)) {
 
-      $this->radius = (float)$radius;
+      $this->radius = (float) $radius;
 
       return true;
     }
@@ -94,8 +93,7 @@ class sfImageUnsharpMaskImageMagick extends sfImageTransformAbstract
    */
   public function setThreshold($threshold)
   {
-    if(is_numeric($threshold))
-    {
+    if (is_numeric($threshold)) {
       $this->threshold = $threshold;
 
       return true;
@@ -121,9 +119,8 @@ class sfImageUnsharpMaskImageMagick extends sfImageTransformAbstract
    */
   public function setAmount($amount)
   {
-    if(is_numeric($amount))
-    {
-      $this->amount = (float)$amount;
+    if (is_numeric($amount)) {
+      $this->amount = (float) $amount;
 
       return true;
     }
@@ -148,9 +145,8 @@ class sfImageUnsharpMaskImageMagick extends sfImageTransformAbstract
    */
   public function setSigma($sigma)
   {
-    if(is_numeric($sigma))
-    {
-      $this->sigma = (float)$sigma;
+    if (is_numeric($sigma)) {
+      $this->sigma = (float) $sigma;
 
       return true;
     }

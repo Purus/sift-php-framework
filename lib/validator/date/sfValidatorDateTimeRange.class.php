@@ -12,8 +12,8 @@
  * @package    Sift
  * @subpackage validator
  */
-class sfValidatorDateTimeRange extends sfValidatorBase {
-
+class sfValidatorDateTimeRange extends sfValidatorBase
+{
   /**
    * Configures the current validator.
    *
@@ -50,8 +50,7 @@ class sfValidatorDateTimeRange extends sfValidatorBase {
     $value[$fromField] = $this->getOption('from_date')->clean(isset($value[$fromField]) ? $value[$fromField] : null);
     $value[$toField] = $this->getOption('to_date')->clean(isset($value[$toField]) ? $value[$toField] : null);
 
-    if($value[$fromField] && $value[$toField])
-    {
+    if ($value[$fromField] && $value[$toField]) {
       $v = new sfValidatorSchemaCompare($fromField, sfValidatorSchemaCompare::LESS_THAN_EQUAL, $toField, array('throw_global_error' => true), array('invalid' => $this->getMessage('invalid')));
       $v->clean($value);
     }

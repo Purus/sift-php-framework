@@ -26,8 +26,7 @@ class sfExecutionFilter extends sfFilter
     $actionInstance = $this->context->getController()->getActionStack()->getLastEntry()->getActionInstance();
 
     // execute the action, execute and render the view
-    if(sfConfig::get('sf_debug') && sfConfig::get('sf_logging_enabled'))
-    {
+    if (sfConfig::get('sf_debug') && sfConfig::get('sf_logging_enabled')) {
       $timer = sfTimerManager::getTimer(sprintf('Action "%s/%s"', $actionInstance->getModuleName(), $actionInstance->getActionName()));
 
       $viewName = $this->handleAction($filterChain, $actionInstance);
@@ -39,9 +38,7 @@ class sfExecutionFilter extends sfFilter
       $this->handleView($filterChain, $actionInstance, $viewName);
 
       $timer->addTime();
-    }
-    else
-    {
+    } else {
       $viewName = $this->handleAction($filterChain, $actionInstance);
       $this->handleView($filterChain, $actionInstance, $viewName);
     }
@@ -60,11 +57,9 @@ class sfExecutionFilter extends sfFilter
    */
   protected function handleAction($filterChain, $actionInstance)
   {
-    if(sfConfig::get('sf_cache'))
-    {
+    if (sfConfig::get('sf_cache')) {
       $uri = $this->context->getViewCacheManager()->getCurrentCacheKey();
-      if(null !== $uri && $this->context->getViewCacheManager()->hasActionCache($uri))
-      {
+      if (null !== $uri && $this->context->getViewCacheManager()->hasActionCache($uri)) {
         // action in cache, so go to the view
         return sfView::SUCCESS;
       }
@@ -99,8 +94,7 @@ class sfExecutionFilter extends sfFilter
    */
   protected function handleView($filterChain, $actionInstance, $viewName)
   {
-    switch($viewName)
-    {
+    switch ($viewName) {
       case sfView::HEADER_ONLY:
         $this->context->getResponse()->setHeaderOnly(true);
 
@@ -147,8 +141,7 @@ class sfExecutionFilter extends sfFilter
     $view->getAttributeHolder()->add($viewAttributes);
 
     // render the view
-    switch($controller->getRenderMode())
-    {
+    switch ($controller->getRenderMode()) {
       case sfView::RENDER_NONE:
         break;
 

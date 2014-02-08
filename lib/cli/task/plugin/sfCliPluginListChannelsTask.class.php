@@ -12,8 +12,8 @@
  * @package    Sift
  * @subpackage cli_task
  */
-class sfCliPluginListChannelsTask extends sfCliPluginBaseTask {
-
+class sfCliPluginListChannelsTask extends sfCliPluginBaseTask
+{
   /**
    * Array of hidden channels
    *
@@ -53,19 +53,15 @@ EOF;
     $channels = $this->getPluginManager()->getEnvironment()->getRegistry()->listChannels();
     $channels = array_diff($channels, $this->hiddenChannels);
 
-    if(count($channels))
-    {
+    if (count($channels)) {
       $this->logSection($this->getFullName(), sprintf('%s registered channel(s)', count($channels)));
       $this->log('');
-      foreach($channels as $channel)
-      {
+      foreach ($channels as $channel) {
         $info = $this->getPluginManager()->getEnvironment()->getRegistry()->channelInfo($channel);
 
         $this->log(sprintf('  %s (%s) %s', $channel, $info['suggestedalias'], $info['summary']));
       }
-    }
-    else
-    {
+    } else {
       $this->logSection($this->getFullName(), 'There are no registered channel(s)');
     }
 

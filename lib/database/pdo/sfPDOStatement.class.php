@@ -12,8 +12,8 @@
  * @package Sift
  * @subpackage database
  */
-class sfPDOStatement extends PDOStatement {
-
+class sfPDOStatement extends PDOStatement
+{
   /**
    * @var sfPdo connection
    */
@@ -54,13 +54,11 @@ class sfPDOStatement extends PDOStatement {
   public function bindParam($parameter, &$variable, $data_type = PDO::PARAM_STR,
           $length = null, $driver_options = null)
   {
-    if(!parent::bindParam($parameter, $variable, $data_type, $length, $driver_options))
-    {
+    if (!parent::bindParam($parameter, $variable, $data_type, $length, $driver_options)) {
       return false;
     }
 
-    if($this->options['logging'])
-    {
+    if ($this->options['logging']) {
       $this->logParam($parameter, $variable);
     }
 
@@ -73,13 +71,11 @@ class sfPDOStatement extends PDOStatement {
    */
   public function bindValue($parameter, $value, $data_type = PDO::PARAM_STR)
   {
-    if(!parent::bindValue($parameter, $value, $data_type))
-    {
+    if (!parent::bindValue($parameter, $value, $data_type)) {
       return false;
     }
 
-    if($this->options['logging'])
-    {
+    if ($this->options['logging']) {
       $this->logValue($parameter, $value);
     }
 
@@ -93,12 +89,9 @@ class sfPDOStatement extends PDOStatement {
    */
   public function execute($params = null)
   {
-    if($this->options['logging'])
-    {
-      if($params)
-      {
-        foreach($params as $parameter => $value)
-        {
+    if ($this->options['logging']) {
+      if ($params) {
+        foreach ($params as $parameter => $value) {
           $this->logValue($parameter, $value);
         }
       }
@@ -106,10 +99,8 @@ class sfPDOStatement extends PDOStatement {
       $query = array();
 
       // interpolate parameters
-      foreach((array)self::fixParams($this->params) as $param)
-      {
-        if(is_string($param))
-        {
+      foreach ((array) self::fixParams($this->params) as $param) {
+        if (is_string($param)) {
           $param = htmlspecialchars($param, ENT_QUOTES, sfConfig::get('sf_charset'));
         }
         $query[] = var_export(is_scalar($param) ? $param : (string) $param, true);
@@ -117,16 +108,14 @@ class sfPDOStatement extends PDOStatement {
 
       $this->connection->log(sprintf('%s (%s)', $this->queryString, join(', ', $query)));
 
-      if(sfConfig::get('sf_debug'))
-      {
+      if (sfConfig::get('sf_debug')) {
         sfTimerManager::getTimer('Database');
       }
     }
 
     $result = parent::execute($params);
 
-    if(sfConfig::get('sf_debug'))
-    {
+    if (sfConfig::get('sf_debug')) {
       sfTimerManager::getTimer('Database')->addTime();
     }
 
@@ -145,14 +134,10 @@ class sfPDOStatement extends PDOStatement {
    */
   public static function fixParams($params)
   {
-    foreach($params as $key => $param)
-    {
-      if(is_string($param) && strlen($param) >= 255)
-      {
+    foreach ($params as $key => $param) {
+      if (is_string($param) && strlen($param) >= 255) {
         $params[$key] = '[' . round(strlen($param) / 1024) .' kB]';
-      }
-      elseif(is_resource($param))
-      {
+      } elseif (is_resource($param)) {
         $params[$key] = '[resource]';
       }
     }
@@ -168,8 +153,7 @@ class sfPDOStatement extends PDOStatement {
    */
   public function logParam($parameter, $value)
   {
-    if(isset($this->params[$parameter]))
-    {
+    if (isset($this->params[$parameter])) {
       unset($this->params[$parameter]);
     }
     $this->params[$parameter] = $value;
@@ -183,8 +167,7 @@ class sfPDOStatement extends PDOStatement {
    */
   public function logValue($parameter, $value)
   {
-    if(isset($this->params[$parameter]))
-    {
+    if (isset($this->params[$parameter])) {
       unset($this->params[$parameter]);
     }
     $this->params[$parameter] = $value;

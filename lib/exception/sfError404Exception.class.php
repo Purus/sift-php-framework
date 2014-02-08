@@ -22,11 +22,9 @@ class sfError404Exception extends sfException
    */
   public function __construct($message = null, $code = 0)
   {
-    if($message == null && sfContext::hasInstance())
-    {
+    if ($message == null && sfContext::hasInstance()) {
       $request = sfContext::getInstance()->getRequest();
-      if(method_exists($request, 'getUri'))
-      {
+      if (method_exists($request, 'getUri')) {
         $message = sprintf('Url: "%s"', $request->getUri());
       }
     }

@@ -44,8 +44,8 @@
  * @package    Sift
  * @subpackage i18n
  */
-abstract class sfI18nMessageSource implements sfII18nMessageSource {
-
+abstract class sfI18nMessageSource implements sfII18nMessageSource
+{
   /**
    * The culture name for this message source.
    * @var string
@@ -107,27 +107,20 @@ abstract class sfI18nMessageSource implements sfII18nMessageSource {
   public static function factory($type, $source = '.', $arguments = array())
   {
     $class = false;
-    if(class_exists($className = sprintf('sfI18nMessageSource%s', ucfirst(strtolower($type)))))
-    {
+    if (class_exists($className = sprintf('sfI18nMessageSource%s', ucfirst(strtolower($type))))) {
       $class = $className;
-    }
-    elseif(class_exists($type))
-    {
+    } elseif (class_exists($type)) {
       $class = $type;
     }
 
-    if($class)
-    {
+    if ($class) {
       // we have any additional arguments, we wil use reflection
-      if(count($arguments))
-      {
+      if (count($arguments)) {
         $reflection = new sfReflectionClass($class);
         array_unshift($arguments, $source);
 
         return $reflection->newInstanceArgs($arguments);
-      }
-      else
-      {
+      } else {
         return new $class($source);
       }
     }
@@ -158,34 +151,27 @@ abstract class sfI18nMessageSource implements sfII18nMessageSource {
 
     $this->messages = array();
 
-    foreach($variants as $variant)
-    {
+    foreach ($variants as $variant) {
       $source = $this->getSource($variant);
       // skip invalid sources
-      if(!$this->isValidSource($source))
-      {
+      if (!$this->isValidSource($source)) {
         continue;
       }
       $loadData = true;
-      if($this->cache && $this->cache->has($variant))
-      {
+      if ($this->cache && $this->cache->has($variant)) {
         $data = unserialize($this->cache->get($variant));
-        if(is_array($data))
-        {
+        if (is_array($data)) {
           $this->messages[$variant] = $data;
           $loadData = false;
         }
         unset($data);
       }
 
-      if($loadData)
-      {
+      if ($loadData) {
         $data = &$this->loadData($source);
-        if(is_array($data))
-        {
+        if (is_array($data)) {
           $this->messages[$variant] = $data;
-          if($this->cache)
-          {
+          if ($this->cache) {
             $this->cache->set($variant, serialize($data));
           }
         }
@@ -250,8 +236,7 @@ abstract class sfI18nMessageSource implements sfII18nMessageSource {
    */
   public function append($message)
   {
-    if(!empty($message) && !in_array($message, $this->untranslated))
-    {
+    if (!empty($message) && !in_array($message, $this->untranslated)) {
       $this->untranslated[] = $message;
     }
 

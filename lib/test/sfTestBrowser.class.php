@@ -25,21 +25,15 @@ class sfTestBrowser extends sfTestFunctional
    */
   public function __construct($hostname = null, $remote = null, $options = array())
   {
-    if (is_object($hostname))
-    {
+    if (is_object($hostname)) {
       // new signature
       parent::__construct($hostname, $remote);
-    }
-    else
-    {
+    } else {
       $browser = new sfBrowser($hostname, $remote, $options);
 
-      if (null === self::$test)
-      {
+      if (null === self::$test) {
         $lime = new lime_test(null, isset($options['output']) ? $options['output'] : null);
-      }
-      else
-      {
+      } else {
         $lime = null;
       }
 

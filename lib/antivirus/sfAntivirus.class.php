@@ -12,8 +12,8 @@
  * @package Sift
  * @subpackage antivirus
  */
-abstract class sfAntivirus extends sfConfigurable implements sfIAntivirus {
-
+abstract class sfAntivirus extends sfConfigurable implements sfIAntivirus
+{
   /**
    * Creates an instance of driver with given options
    *
@@ -27,19 +27,14 @@ abstract class sfAntivirus extends sfConfigurable implements sfIAntivirus {
   {
     $driverObj = false;
 
-    if(class_exists($class = sprintf('sfAntivirusDriver%s', ucfirst($driver))))
-    {
+    if (class_exists($class = sprintf('sfAntivirusDriver%s', ucfirst($driver)))) {
       $driverObj = new $class($options);
-    }
-    else if(class_exists($class = $driver))
-    {
+    } else if (class_exists($class = $driver)) {
       $driverObj = new $class($options);
     }
 
-    if($driverObj)
-    {
-      if(!$driverObj instanceof sfIAntivirus)
-      {
+    if ($driverObj) {
+      if (!$driverObj instanceof sfIAntivirus) {
         throw new LogicException(sprintf('Driver "%s" does not implement sfIAntivirus interface.', $driver));
       }
 

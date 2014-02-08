@@ -79,16 +79,14 @@ class sfForm implements ArrayAccess, Iterator, Countable, sfIUserAware
     $this->configure();
 
     // setup translation catalogue
-    if($this->translationCatalogue)
-    {
+    if ($this->translationCatalogue) {
       $this->setTranslationCatalogue($this->translationCatalogue);
     }
 
     $this->addCSRFProtection($this->localCSRFSecret);
     $this->resetFormFields();
 
-    if(self::$dispatcher)
-    {
+    if (self::$dispatcher) {
       $this->validatorSchema->setEventDispatcher(self::$dispatcher);
 
       // generic event
@@ -133,12 +131,9 @@ class sfForm implements ArrayAccess, Iterator, Countable, sfIUserAware
    */
   public function __toString()
   {
-    try
-    {
+    try {
       return $this->render();
-    }
-    catch (Exception $e)
-    {
+    } catch (Exception $e) {
       self::setToStringException($e);
 
       // we return a simple Exception message in case the form framework is used out of Sift framework.
@@ -177,11 +172,9 @@ class sfForm implements ArrayAccess, Iterator, Countable, sfIUserAware
   {
     $formatter = $this->widgetSchema->getFormFormatter();
 
-    if(!is_null($formatter))
-    {
+    if (!is_null($formatter)) {
       $formatter->setValidatorSchema($this->getValidatorSchema());
-      if(sfConfig::get('sf_i18n') && ($catalogue = $this->getTranslationCatalogue()))
-      {
+      if (sfConfig::get('sf_i18n') && ($catalogue = $this->getTranslationCatalogue())) {
         $formatter->setTranslationCallable('__');
         $formatter->setTranslationCatalogue($catalogue);
       }
@@ -199,15 +192,12 @@ class sfForm implements ArrayAccess, Iterator, Countable, sfIUserAware
    */
   public function setTranslationCatalogue($catalogue)
   {
-    if($catalogue)
-    {
+    if ($catalogue) {
       $catalogue = sfToolkit::replaceConstants($catalogue);
-      if(!sfToolkit::isPathAbsolute($catalogue))
-      {
+      if (!sfToolkit::isPathAbsolute($catalogue)) {
         // we have to do some detection
         $parts = explode('/', $catalogue);
-        if(count($parts) != 2)
-        {
+        if (count($parts) != 2) {
           throw new sfException(sprintf(
             'Invalid translation catalogue "%s" given to the form "%s"',
                   $catalogue, get_class($this)));
@@ -307,8 +297,7 @@ class sfForm implements ArrayAccess, Iterator, Countable, sfIUserAware
    */
   public function renderSubmitTag($value = 'Submit', $attributes = array())
   {
-    if(isset($this->submitButtonNames[$value]))
-    {
+    if (isset($this->submitButtonNames[$value])) {
       $value = $this->submitButtonNames[$value];
     }
 
@@ -369,31 +358,24 @@ class sfForm implements ArrayAccess, Iterator, Countable, sfIUserAware
     $errors = array();
 
     // individual widget errors
-    foreach($this as $form_field)
-    {
-      if($form_field->hasError())
-      {
+    foreach ($this as $form_field) {
+      if ($form_field->hasError()) {
         $error_obj = $form_field->getError();
         // @var $error_obj sfValidatorError
-        if($error_obj instanceof sfValidatorErrorSchema)
-        {
-          foreach($error_obj->getErrors() as $error)
-          {
+        if ($error_obj instanceof sfValidatorErrorSchema) {
+          foreach ($error_obj->getErrors() as $error) {
             // @var $error sfValidatorError
             // if a field has more than 1 error, it'll be over-written
             $errors[] = $this->translate($error->getMessageFormat(), $error->getArguments());
           }
-        }
-        else
-        {
+        } else {
           $errors[] = $this->translate($error_obj->getMessageFormat(), $error_obj->getArguments());
         }
       }
     }
 
     // global errors
-    foreach($this->getGlobalErrors() as $validator_error)
-    {
+    foreach ($this->getGlobalErrors() as $validator_error) {
       $errors[] = $this->translate($validator_error->getMessageFormat(), $validator_error->getArguments());
     }
 
@@ -415,31 +397,25 @@ class sfForm implements ArrayAccess, Iterator, Countable, sfIUserAware
     $this->isBound = true;
     $this->resetFormFields();
 
-    if (null === $this->taintedValues)
-    {
+    if (null === $this->taintedValues) {
       $this->taintedValues = array();
     }
 
-    if (null === $this->taintedFiles)
-    {
-      if ($this->isMultipart())
-      {
+    if (null === $this->taintedFiles) {
+      if ($this->isMultipart()) {
         throw new InvalidArgumentException('This form is multipart, which means you need to supply a files array as the bind() method second argument.');
       }
 
       $this->taintedFiles = array();
     }
 
-    try
-    {
+    try {
       $this->doBind(self::deepArrayUnion($this->taintedValues, self::convertFileInformation($this->taintedFiles)));
       $this->errorSchema = new sfValidatorErrorSchema($this->validatorSchema);
 
       // remove CSRF token
       unset($this->values[self::$CSRFFieldName]);
-    }
-    catch (sfValidatorErrorSchema $e)
-    {
+    } catch (sfValidatorErrorSchema $e) {
       $this->values = array();
       $this->errorSchema = $e;
     }
@@ -470,35 +446,26 @@ class sfForm implements ArrayAccess, Iterator, Countable, sfIUserAware
     $allowExtra = $validatorSchema->getOption('allow_extra_fields');
 
     // we don't have the values as array but separated values
-    if($nameFormat === false || $nameFormat == '%s')
-    {
+    if ($nameFormat === false || $nameFormat == '%s') {
       // we assume that we want to bind post parameters
-      if($request->isPost())
-      {
+      if ($request->isPost()) {
         $params = $request->getPostParameters();
-      }
-      else
-      {
+      } else {
         $all = $request->getParameterHolder()->getAll();
         unset($all['module'], $all['action']);
         $params = array_merge($all, $request->getGetParameters());
       }
       $files = $request->getFiles();
-    }
-    else
-    {
+    } else {
       $params = $request->getParameter($this->name);
       $files = $request->getFiles($this->name);
     }
 
     // filter out extra parameters, since the form does not allow it!
     // FIXME: This should be configured via method parameter
-    if(!$allowExtra)
-    {
-      foreach($params as $p => $v)
-      {
-        if(!isset($this->widgetSchema[$p]))
-        {
+    if (!$allowExtra) {
+      foreach ($params as $p => $v) {
+        if (!isset($this->widgetSchema[$p])) {
           unset($params[$p]);
         }
       }
@@ -516,28 +483,21 @@ class sfForm implements ArrayAccess, Iterator, Countable, sfIUserAware
    */
   protected function doBind(array $values)
   {
-    if(self::$dispatcher)
-    {
+    if (self::$dispatcher) {
       // filters the values via event dispatcher
       $values = self::$dispatcher->filter(new sfEvent('form.filter_values', array('form' => $this)), $values)->getReturnValue();
     }
 
-    try
-    {
+    try {
       $this->values = $this->validatorSchema->clean($values);
-      if($this->values)
-      {
-        foreach($this->values as $field => $value)
-        {
+      if ($this->values) {
+        foreach ($this->values as $field => $value) {
           if(!isset($this[$field])) continue;
           $this[$field]->setValue($value);
         }
       }
-    }
-    catch(sfValidatorError $error)
-    {
-      if(self::$dispatcher)
-      {
+    } catch (sfValidatorError $error) {
+      if (self::$dispatcher) {
         self::$dispatcher->notify(new sfEvent('form.validation_error', array('error' => $error, 'form' => $this)));
       }
 
@@ -562,8 +522,7 @@ class sfForm implements ArrayAccess, Iterator, Countable, sfIUserAware
    */
   public function getTaintedValues()
   {
-    if (!$this->isBound)
-    {
+    if (!$this->isBound) {
       return array();
     }
 
@@ -579,8 +538,7 @@ class sfForm implements ArrayAccess, Iterator, Countable, sfIUserAware
    */
   public function isValid()
   {
-    if (!$this->isBound)
-    {
+    if (!$this->isBound) {
       return false;
     }
 
@@ -596,8 +554,7 @@ class sfForm implements ArrayAccess, Iterator, Countable, sfIUserAware
    */
   public function hasErrors()
   {
-    if (!$this->isBound)
-    {
+    if (!$this->isBound) {
       return false;
     }
 
@@ -638,8 +595,7 @@ class sfForm implements ArrayAccess, Iterator, Countable, sfIUserAware
   public function setName($name)
   {
     $this->name = $name;
-    if($name)
-    {
+    if ($name) {
       $this->setNameFormat($name . '[%s]');
     }
 
@@ -680,8 +636,7 @@ class sfForm implements ArrayAccess, Iterator, Countable, sfIUserAware
    */
   public function getName()
   {
-    if ('[%s]' != substr($nameFormat = $this->widgetSchema->getNameFormat(), -4))
-    {
+    if ('[%s]' != substr($nameFormat = $this->widgetSchema->getNameFormat(), -4)) {
       return false;
     }
 
@@ -718,8 +673,7 @@ class sfForm implements ArrayAccess, Iterator, Countable, sfIUserAware
   public function embedForm($name, sfForm $form, $decorator = null)
   {
     $name = (string) $name;
-    if (true === $this->isBound() || true === $form->isBound())
-    {
+    if (true === $this->isBound() || true === $form->isBound()) {
       throw new LogicException('A bound form cannot be embedded');
     }
 
@@ -754,8 +708,7 @@ class sfForm implements ArrayAccess, Iterator, Countable, sfIUserAware
    */
   public function embedFormForEach($name, sfForm $form, $n, $decorator = null, $innerDecorator = null, $options = array(), $attributes = array(), $labels = array())
   {
-    if (true === $this->isBound() || true === $form->isBound())
-    {
+    if (true === $this->isBound() || true === $form->isBound()) {
       throw new LogicException('A bound form cannot be embedded');
     }
 
@@ -768,8 +721,7 @@ class sfForm implements ArrayAccess, Iterator, Countable, sfIUserAware
 
     // generate default values
     $defaults = array();
-    for ($i = 0; $i < $n; $i++)
-    {
+    for ($i = 0; $i < $n; $i++) {
       $defaults[$i] = $form->getDefaults();
 
       $this->embeddedForms[$name]->embedForm($i, $form);
@@ -784,10 +736,8 @@ class sfForm implements ArrayAccess, Iterator, Countable, sfIUserAware
     $this->validatorSchema[$name] = new sfValidatorSchemaForEach($form->getValidatorSchema(), $n);
 
     // generate labels
-    for ($i = 0; $i < $n; $i++)
-    {
-      if (!isset($labels[$i]))
-      {
+    for ($i = 0; $i < $n; $i++) {
+      if (!isset($labels[$i])) {
         $labels[$i] = sprintf('%s (%s)', $this->widgetSchema->getFormFormatter()->generateLabelName($name), $i);
       }
     }
@@ -818,8 +768,7 @@ class sfForm implements ArrayAccess, Iterator, Countable, sfIUserAware
    */
   public function getEmbeddedForm($name)
   {
-    if (!isset($this->embeddedForms[$name]))
-    {
+    if (!isset($this->embeddedForms[$name])) {
       throw new InvalidArgumentException(sprintf('There is no embedded "%s" form.', $name));
     }
 
@@ -836,8 +785,7 @@ class sfForm implements ArrayAccess, Iterator, Countable, sfIUserAware
    */
   public function mergeForm(sfForm $form)
   {
-    if (true === $this->isBound() || true === $form->isBound())
-    {
+    if (true === $this->isBound() || true === $form->isBound()) {
       throw new LogicException('A bound form cannot be merged');
     }
 
@@ -846,13 +794,11 @@ class sfForm implements ArrayAccess, Iterator, Countable, sfIUserAware
 
     $this->defaults = $form->getDefaults() + $this->defaults;
 
-    foreach ($form->getWidgetSchema()->getPositions() as $field)
-    {
+    foreach ($form->getWidgetSchema()->getPositions() as $field) {
       $this->widgetSchema[$field] = $form->getWidget($field);
     }
 
-    foreach ($form->getValidatorSchema()->getFields() as $field => $validator)
-    {
+    foreach ($form->getValidatorSchema()->getFields() as $field => $validator) {
       $this->validatorSchema[$field] = $validator;
     }
 
@@ -872,17 +818,13 @@ class sfForm implements ArrayAccess, Iterator, Countable, sfIUserAware
    */
   public function mergePreValidator(sfValidatorBase $validator = null)
   {
-    if (null === $validator)
-    {
+    if (null === $validator) {
       return;
     }
 
-    if (null === $this->validatorSchema->getPreValidator())
-    {
+    if (null === $this->validatorSchema->getPreValidator()) {
       $this->validatorSchema->setPreValidator($validator);
-    }
-    else
-    {
+    } else {
       $this->validatorSchema->setPreValidator(new sfValidatorAnd(array(
         $this->validatorSchema->getPreValidator(),
         $validator,
@@ -897,17 +839,13 @@ class sfForm implements ArrayAccess, Iterator, Countable, sfIUserAware
    */
   public function mergePostValidator(sfValidatorBase $validator = null)
   {
-    if(null === $validator)
-    {
+    if (null === $validator) {
       return;
     }
 
-    if(null === $this->validatorSchema->getPostValidator())
-    {
+    if (null === $this->validatorSchema->getPostValidator()) {
       $this->validatorSchema->setPostValidator($validator);
-    }
-    else
-    {
+    } else {
       $this->validatorSchema->setPostValidator(new sfValidatorAnd(array(
         $this->validatorSchema->getPostValidator(),
         $validator,
@@ -957,8 +895,7 @@ class sfForm implements ArrayAccess, Iterator, Countable, sfIUserAware
    */
   public function getValidator($name)
   {
-    if (!isset($this->validatorSchema[$name]))
-    {
+    if (!isset($this->validatorSchema[$name])) {
       throw new InvalidArgumentException(sprintf('The validator "%s" does not exist.', $name));
     }
 
@@ -992,14 +929,11 @@ class sfForm implements ArrayAccess, Iterator, Countable, sfIUserAware
    */
   protected function __setValidatorOption(sfValidatorBase $validator, $option, $value, $deep = true)
   {
-    if($validator->hasOption($option))
-    {
+    if ($validator->hasOption($option)) {
       $validator->setOption($option, $value);
     }
-    if($deep && method_exists($validator, 'getValidators'))
-    {
-      foreach($validator->getValidators() as $subValidator)
-      {
+    if ($deep && method_exists($validator, 'getValidators')) {
+      foreach ($validator->getValidators() as $subValidator) {
         $this->__setValidatorOption($subValidator, $option, $value, $deep);
       }
     }
@@ -1088,8 +1022,7 @@ class sfForm implements ArrayAccess, Iterator, Countable, sfIUserAware
    */
   public function switchWidget($name, sfWidgetForm $widget, $throwException = true)
   {
-    if(!isset($this->widgetSchema[$name]) && $throwException)
-    {
+    if (!isset($this->widgetSchema[$name]) && $throwException) {
       throw new InvalidArgumentException(sprintf('The widget "%s" does not exist.', $name));
     }
 
@@ -1192,8 +1125,7 @@ class sfForm implements ArrayAccess, Iterator, Countable, sfIUserAware
    */
   public function getWidget($name)
   {
-    if (!isset($this->widgetSchema[$name]))
-    {
+    if (!isset($this->widgetSchema[$name])) {
       throw new InvalidArgumentException(sprintf('The widget "%s" does not exist.', $name));
     }
 
@@ -1360,8 +1292,7 @@ class sfForm implements ArrayAccess, Iterator, Countable, sfIUserAware
   {
     $this->defaults = null === $defaults ? array() : $defaults;
 
-    if ($this->isCSRFProtected())
-    {
+    if ($this->isCSRFProtected()) {
       $this->setDefault(self::$CSRFFieldName, $this->getCSRFToken($this->localCSRFSecret ? $this->localCSRFSecret : self::$CSRFSecret));
     }
 
@@ -1389,20 +1320,16 @@ class sfForm implements ArrayAccess, Iterator, Countable, sfIUserAware
    */
   public function addCSRFProtection($secret = null)
   {
-    if (null === $secret)
-    {
+    if (null === $secret) {
       $secret = $this->localCSRFSecret;
     }
 
-    if (false === $secret || (null === $secret && false === self::$CSRFSecret))
-    {
+    if (false === $secret || (null === $secret && false === self::$CSRFSecret)) {
       return $this;
     }
 
-    if (null === $secret)
-    {
-      if (null === self::$CSRFSecret)
-      {
+    if (null === $secret) {
+      if (null === self::$CSRFSecret) {
         self::$CSRFSecret = md5(__FILE__.php_uname());
       }
 
@@ -1426,8 +1353,7 @@ class sfForm implements ArrayAccess, Iterator, Countable, sfIUserAware
   public function removeCsrfProtection()
   {
     $this->localCSRFSecret = false;
-    if ($this->isCSRFProtected())
-    {
+    if ($this->isCSRFProtected()) {
       unset($this[self::$CSRFFieldName]);
     }
 
@@ -1446,8 +1372,7 @@ class sfForm implements ArrayAccess, Iterator, Countable, sfIUserAware
    */
   public function getCSRFToken($secret = null)
   {
-    if (null === $secret)
-    {
+    if (null === $secret) {
       $secret = $this->localCSRFSecret ? $this->localCSRFSecret : self::$CSRFSecret;
     }
 
@@ -1547,13 +1472,11 @@ class sfForm implements ArrayAccess, Iterator, Countable, sfIUserAware
 
     $class = array();
     // form has file upload
-    if($this->hasFileUpload())
-    {
+    if ($this->hasFileUpload()) {
       $class[] = 'has-file-upload';
     }
 
-    if(isset($opt['class']))
-    {
+    if (isset($opt['class'])) {
       $class[] = $opt['class'];
       unset($opt['class']);
     }
@@ -1567,37 +1490,29 @@ class sfForm implements ArrayAccess, Iterator, Countable, sfIUserAware
     $opt = array_merge($defaults, $opt);
     $url = '';
 
-    if(!empty($route))
-    {
+    if (!empty($route)) {
       $url = url_for($route);
     }
 
-    if(isset($opt['query_string']))
-    {
+    if (isset($opt['query_string'])) {
       $url .= '?' . $opt['query_string'];
       unset($opt['query_string']);
     }
 
-    if(array_key_exists('anchor', $opt))
-    {
-      if(!empty($opt['anchor']) && strpos($action, '#') === false)
-      {
+    if (array_key_exists('anchor', $opt)) {
+      if (!empty($opt['anchor']) && strpos($action, '#') === false) {
         $action .= '#' . (is_string($opt['anchor']) ? $opt['anchor'] : $this->getKey());
       }
       unset($opt['anchor']);
     }
 
-    if(!isset($opt['method']))
-    {
+    if (!isset($opt['method'])) {
       $opt['method'] = 'post';
     }
 
-    if(!isset($opt['accept_charset']))
-    {
+    if (!isset($opt['accept_charset'])) {
       $opt['accept-charset'] = strtoupper(sfConfig::get('sf_charset'));
-    }
-    else
-    {
+    } else {
       $opt['accept-charset'] = strtoupper($opt['accept_charset']);
       unset($opt['accept_charset']);
     }
@@ -1646,14 +1561,12 @@ class sfForm implements ArrayAccess, Iterator, Countable, sfIUserAware
   {
     $attributes['action'] = $url;
     $attributes['method'] = isset($attributes['method']) ? strtolower($attributes['method']) : 'post';
-    if ($this->isMultipart())
-    {
+    if ($this->isMultipart()) {
       $attributes['enctype'] = 'multipart/form-data';
     }
 
     $html = '';
-    if (!in_array($attributes['method'], array('get', 'post')))
-    {
+    if (!in_array($attributes['method'], array('get', 'post'))) {
       $html = $this->getWidgetSchema()->renderTag('input', array('type' => 'hidden', 'name' => 'sf_method', 'value' => $attributes['method'], 'id' => false));
       $attributes['method'] = 'post';
     }
@@ -1688,31 +1601,23 @@ class sfForm implements ArrayAccess, Iterator, Countable, sfIUserAware
    */
   public function offsetGet($name)
   {
-    if (!isset($this->formFields[$name]))
-    {
-      if (!$widget = $this->widgetSchema[$name])
-      {
+    if (!isset($this->formFields[$name])) {
+      if (!$widget = $this->widgetSchema[$name]) {
         throw new InvalidArgumentException(sprintf('Widget "%s" does not exist.', $name));
       }
 
-      if($this->isBound && isset($this->taintedValues[$name]))
-      {
+      if ($this->isBound && isset($this->taintedValues[$name])) {
         $value = $this->taintedValues[$name];
-      }
-      else if (isset($this->defaults[$name]))
-      {
+      } else if (isset($this->defaults[$name])) {
         $value = $this->defaults[$name];
-      }
-      else
-      {
+      } else {
         $value = $widget instanceof sfWidgetFormSchema ? $widget->getDefaults() : $widget->getDefault();
       }
 
       $class = $widget instanceof sfWidgetFormSchema ? 'sfFormFieldSchema' : 'sfFormField';
 
       $this->formFields[$name] = new $class($this, $widget, $this->getFormFieldSchema(), $name, $value, $this->errorSchema[$name]);
-      if(isset($this->validatorSchema[$name]))
-      {
+      if (isset($this->validatorSchema[$name])) {
         $this->formFields[$name]->setValidator($this->validatorSchema[$name]);
       }
     }
@@ -1766,20 +1671,15 @@ class sfForm implements ArrayAccess, Iterator, Countable, sfIUserAware
   {
     $hidden = array();
 
-    foreach ($this as $name => $field)
-    {
-      if ($field->isHidden())
-      {
+    foreach ($this as $name => $field) {
+      if ($field->isHidden()) {
         $hidden[] = $name;
-      }
-      else if (!in_array($name, $fields))
-      {
+      } else if (!in_array($name, $fields)) {
         unset($this[$name]);
       }
     }
 
-    if ($ordered)
-    {
+    if ($ordered) {
       $this->widgetSchema->setPositions(array_merge($fields, $hidden));
     }
   }
@@ -1791,8 +1691,7 @@ class sfForm implements ArrayAccess, Iterator, Countable, sfIUserAware
    */
   public function getFormFieldSchema()
   {
-    if (null === $this->formFieldSchema)
-    {
+    if (null === $this->formFieldSchema) {
       $values = $this->isBound ? $this->taintedValues : $this->defaults + $this->widgetSchema->getDefaults();
 
       $this->formFieldSchema = new sfFormFieldSchema($this, $this->widgetSchema, null, null, $values, $this->errorSchema);
@@ -1873,8 +1772,7 @@ class sfForm implements ArrayAccess, Iterator, Countable, sfIUserAware
   public static function convertFileInformation(array $taintedFiles)
   {
     $files = array();
-    foreach ($taintedFiles as $key => $data)
-    {
+    foreach ($taintedFiles as $key => $data) {
       $files[$key] = self::fixPhpFilesArray($data);
     }
 
@@ -1887,18 +1785,15 @@ class sfForm implements ArrayAccess, Iterator, Countable, sfIUserAware
     $keys = array_keys($data);
     sort($keys);
 
-    if ($fileKeys != $keys || !isset($data['name']) || !is_array($data['name']))
-    {
+    if ($fileKeys != $keys || !isset($data['name']) || !is_array($data['name'])) {
       return $data;
     }
 
     $files = $data;
-    foreach ($fileKeys as $k)
-    {
+    foreach ($fileKeys as $k) {
       unset($files[$k]);
     }
-    foreach (array_keys($data['name']) as $key)
-    {
+    foreach (array_keys($data['name']) as $key) {
       $files[$key] = self::fixPhpFilesArray(array(
         'error'    => $data['error'][$key],
         'name'     => $data['name'][$key],
@@ -1944,8 +1839,7 @@ class sfForm implements ArrayAccess, Iterator, Countable, sfIUserAware
    */
   public static function setToStringException(Exception $e)
   {
-    if (null === self::$toStringException)
-    {
+    if (null === self::$toStringException) {
       self::$toStringException = $e;
     }
   }
@@ -1956,8 +1850,7 @@ class sfForm implements ArrayAccess, Iterator, Countable, sfIUserAware
     $this->validatorSchema = clone $this->validatorSchema;
 
     // we rebind the cloned form because Exceptions are not clonable
-    if ($this->isBound())
-    {
+    if ($this->isBound()) {
       $this->bind($this->taintedValues, $this->taintedFiles);
     }
   }
@@ -1972,14 +1865,10 @@ class sfForm implements ArrayAccess, Iterator, Countable, sfIUserAware
    */
   protected static function deepArrayUnion($array1, $array2)
   {
-    foreach ($array2 as $key => $value)
-    {
-      if (is_array($value) && isset($array1[$key]) && is_array($array1[$key]))
-      {
+    foreach ($array2 as $key => $value) {
+      if (is_array($value) && isset($array1[$key]) && is_array($array1[$key])) {
         $array1[$key] = self::deepArrayUnion($array1[$key], $value);
-      }
-      else
-      {
+      } else {
         $array1[$key] = $value;
       }
     }
@@ -2012,15 +1901,12 @@ class sfForm implements ArrayAccess, Iterator, Countable, sfIUserAware
   {
     try {
       $group = $this->getGroup($name);
-      foreach($group->getFields() as $f => $field)
-      {
+      foreach ($group->getFields() as $f => $field) {
         unset($this[$f]);
       }
       // remove the group
       unset($this->groups[$name]);
-    }
-    catch(Exception $e)
-    {
+    } catch (Exception $e) {
     }
   }
 
@@ -2043,8 +1929,7 @@ class sfForm implements ArrayAccess, Iterator, Countable, sfIUserAware
    */
   public function getGroup($name)
   {
-    if(!isset($this->groups[$name]))
-    {
+    if (!isset($this->groups[$name])) {
       throw new InvalidArgumentException(sprintf('Group "%s" does not exist.', $name));
     }
 
@@ -2079,8 +1964,7 @@ class sfForm implements ArrayAccess, Iterator, Countable, sfIUserAware
    */
   public function getGroups($sort = true)
   {
-    if($sort)
-    {
+    if ($sort) {
       uasort($this->groups, array($this, '_sortGroups'));
     }
 
@@ -2109,8 +1993,7 @@ class sfForm implements ArrayAccess, Iterator, Countable, sfIUserAware
   public function changeToDisabled($fieldName)
   {
     $this->widgetSchema[$fieldName]->setAttribute('disabled', 'disabled');
-    if(sfWidget::isAriaEnabled())
-    {
+    if (sfWidget::isAriaEnabled()) {
       $this->widgetSchema[$fieldName]->setAttribute('aria-disabled', 'true');
     }
 
@@ -2126,8 +2009,7 @@ class sfForm implements ArrayAccess, Iterator, Countable, sfIUserAware
   public function changeToReadOnly($fieldName)
   {
     $this->widgetSchema[$fieldName]->setAttribute('readonly', 'readonly');
-    if(sfWidget::isAriaEnabled())
-    {
+    if (sfWidget::isAriaEnabled()) {
       $this->widgetSchema[$fieldName]->setAttribute('aria-readonly', 'true');
     }
 
@@ -2178,10 +2060,8 @@ class sfForm implements ArrayAccess, Iterator, Countable, sfIUserAware
    */
   public function hasFileUpload()
   {
-    foreach($this as $field)
-    {
-      if($field->getWidget() instanceof sfWidgetFormInputFile)
-      {
+    foreach ($this as $field) {
+      if ($field->getWidget() instanceof sfWidgetFormInputFile) {
         return true;
       }
     }
@@ -2218,15 +2098,13 @@ class sfForm implements ArrayAccess, Iterator, Countable, sfIUserAware
    */
   public function debug()
   {
-    if(sfConfig::get('sf_environment') != 'dev')
-    {
+    if (sfConfig::get('sf_environment') != 'dev') {
       return;
     }
 
     $string = '';
     // debug errors
-    foreach($this->getErrorSchema()->getErrors() as $key => $error)
-    {
+    foreach ($this->getErrorSchema()->getErrors() as $key => $error) {
       if($key == $this->getCSRFFieldName()) continue;
       $string .= '<p>' . $key . ': ' . $error . '</p>';
     }
@@ -2244,14 +2122,12 @@ class sfForm implements ArrayAccess, Iterator, Countable, sfIUserAware
    */
   public function __call($method, $arguments)
   {
-    if(self::$dispatcher)
-    {
+    if (self::$dispatcher) {
       $event = self::$dispatcher->notifyUntil(new sfEvent('form.method_not_found',
                         array('method' => $method,
                             'arguments' => $arguments)));
       /* @var $event sfEvent */
-      if($event->isProcessed())
-      {
+      if ($event->isProcessed()) {
         return $event->getReturnValue();
       }
     }

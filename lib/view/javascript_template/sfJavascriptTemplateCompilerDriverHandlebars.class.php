@@ -12,8 +12,8 @@
  * @package    Sift
  * @subpackage view
  */
-class sfJavascriptTemplateCompilerDriverHandlebars extends sfJavascriptTemplateCompiler {
-
+class sfJavascriptTemplateCompilerDriverHandlebars extends sfJavascriptTemplateCompiler
+{
   /**
    * Array of default options
    */
@@ -28,8 +28,7 @@ class sfJavascriptTemplateCompilerDriverHandlebars extends sfJavascriptTemplateC
    */
   public function setup()
   {
-    if(!sfToolkit::isCallable('exec'))
-    {
+    if (!sfToolkit::isCallable('exec')) {
       throw new InvalidArgumentException('Php cannot execute command line scripts. Enable "exec" in your php.ini.');
     }
   }
@@ -59,8 +58,7 @@ class sfJavascriptTemplateCompilerDriverHandlebars extends sfJavascriptTemplateC
     unlink($tmpInFile);
 
     // something went wrong
-    if($return_var)
-    {
+    if ($return_var) {
       throw new RuntimeException('Compilation of the template failed.');
     }
 

@@ -44,8 +44,7 @@ class sfWidgetFormI18nChoiceLanguage extends sfWidgetFormChoice
     $languages = sfCulture::getInstance($culture)->getLanguages(isset($options['languages']) ? $options['languages'] : null);
 
     $addEmpty = isset($options['add_empty']) ? $options['add_empty'] : false;
-    if (false !== $addEmpty)
-    {
+    if (false !== $addEmpty) {
       $languages = array_merge(array('' => true === $addEmpty ? '' : $addEmpty), $languages);
     }
 

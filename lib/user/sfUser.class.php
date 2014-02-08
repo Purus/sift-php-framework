@@ -15,8 +15,8 @@
  * @package    Sift
  * @subpackage user
  */
-class sfUser extends sfConfigurable implements sfIUser, sfIService, ArrayAccess {
-
+class sfUser extends sfConfigurable implements sfIUser, sfIService, ArrayAccess
+{
   /**
    * Attributes namespace
    */
@@ -152,60 +152,49 @@ class sfUser extends sfConfigurable implements sfIUser, sfIService, ArrayAccess 
     $this->attributeHolder->clear();
 
     // start the storage if its not started
-    if(!$this->storage->isStarted())
-    {
+    if (!$this->storage->isStarted()) {
       $this->storage->start();
     }
 
     // read attributes from storage
     $attributes = $this->storage->read(self::ATTRIBUTE_NAMESPACE);
-    if(is_array($attributes))
-    {
-      foreach($attributes as $namespace => $values)
-      {
+    if (is_array($attributes)) {
+      foreach ($attributes as $namespace => $values) {
         $this->attributeHolder->add($values, $namespace);
       }
     }
 
     // use the culture defined in the user session
     // or use the default_culture option
-    if(null === ($culture = $this->storage->read(self::CULTURE_NAMESPACE)))
-    {
+    if (null === ($culture = $this->storage->read(self::CULTURE_NAMESPACE))) {
       $culture = $this->getOption('default_culture');
     }
 
     $this->setCulture($culture);
 
-    if($this->getOption('timezone_enabled'))
-    {
+    if ($this->getOption('timezone_enabled')) {
       // setup timezone
       $offset = $this->request->getCookie($this->getOption('timezone_cookie_names.offset'));
       $daylightsavings = $this->request->getCookie($this->getOption('timezone_cookie_names.daylightsavings'));
       $name = $this->request->getCookie($this->getOption('timezone_cookie_names.name'));
       // we have a timezone name
-      if(sfDateTimeZone::isValid($name))
-      {
+      if (sfDateTimeZone::isValid($name)) {
         $this->setTimezone($name);
       }
       // do we have an offset?
-      elseif($offset !== null && ($zone = sfDateTimeZone::getNameFromOffset($offset, (boolean)$daylightsavings)))
-      {
+      elseif ($offset !== null && ($zone = sfDateTimeZone::getNameFromOffset($offset, (boolean) $daylightsavings))) {
         $this->setTimezone($zone);
       }
     }
 
-    if($this->getOption('use_flash'))
-    {
+    if ($this->getOption('use_flash')) {
       // flag current flash to be removed after the execution filter
       $names = $this->attributeHolder->getNames(self::FLASH_NAMESPACE);
-      if($names)
-      {
-        foreach($names as $name)
-        {
+      if ($names) {
+        foreach ($names as $name) {
           $this->attributeHolder->set($name, true, sfUser::FLASH_NAMESPACE.'/remove');
         }
-        if(sfConfig::get('sf_logging_enabled'))
-        {
+        if (sfConfig::get('sf_logging_enabled')) {
           sfLogger::getInstance()->info('{sfUser} Flagged old flash messages ("' . implode('", "', $names) . '")');
         }
       }
@@ -219,14 +208,12 @@ class sfUser extends sfConfigurable implements sfIUser, sfIService, ArrayAccess 
    */
   public function setCulture($culture)
   {
-    if($culture === null)
-    {
+    if ($culture === null) {
       $culture = $this->getOption('default_culture');
     }
 
     // dispatch event only if current culture is not the same as new culture
-    if($this->culture && ($this->culture !== $culture))
-    {
+    if ($this->culture && ($this->culture !== $culture)) {
       $this->dispatcher->notify(new sfEvent('user.change_culture', array(
         'previous' => $this->culture,
         'culture' => $culture)
@@ -331,8 +318,7 @@ class sfUser extends sfConfigurable implements sfIUser, sfIService, ArrayAccess 
    */
   public function getBrowser()
   {
-    if(!$this->hasAttribute('browser_guessed', self::ATTRIBUTE_NAMESPACE))
-    {
+    if (!$this->hasAttribute('browser_guessed', self::ATTRIBUTE_NAMESPACE)) {
       $guess = sfUserAgentDetector::guess($this->getUserAgent());
       $this->setAttribute('browser_guessed', $guess, self::ATTRIBUTE_NAMESPACE);
     }
@@ -427,13 +413,10 @@ class sfUser extends sfConfigurable implements sfIUser, sfIService, ArrayAccess 
   {
     $flash = new sfUserFlashMessage($value, $name, sfConfig::get('sf_app'));
     $this->setAttribute($name, $flash, self::FLASH_NAMESPACE);
-    if($persist)
-    {
+    if ($persist) {
       // clear removal flag
       $this->attributeHolder->remove($name, null, self::FLASH_NAMESPACE.'/remove');
-    }
-    else
-    {
+    } else {
       $this->setAttribute($name, true, self::FLASH_NAMESPACE.'/remove');
     }
 
@@ -450,11 +433,9 @@ class sfUser extends sfConfigurable implements sfIUser, sfIService, ArrayAccess 
    */
   public function getFlash($name, $default = null, $ignoreApplication = false)
   {
-    if($this->hasAttribute($name, self::FLASH_NAMESPACE))
-    {
+    if ($this->hasAttribute($name, self::FLASH_NAMESPACE)) {
       $flash = $this->getAttribute($name, null, self::FLASH_NAMESPACE);
-      if($ignoreApplication || $flash->getApplication() == sfConfig::get('sf_app'))
-      {
+      if ($ignoreApplication || $flash->getApplication() == sfConfig::get('sf_app')) {
         return $flash;
       }
     }
@@ -471,8 +452,7 @@ class sfUser extends sfConfigurable implements sfIUser, sfIService, ArrayAccess 
    */
   public function hasFlash($name, $ignoreApplication = false)
   {
-    if($this->getFlash($name, false, $ignoreApplication))
-    {
+    if ($this->getFlash($name, false, $ignoreApplication)) {
       return true;
     }
 
@@ -562,23 +542,19 @@ class sfUser extends sfConfigurable implements sfIUser, sfIService, ArrayAccess 
   public function shutdown()
   {
     // remove flash that are tagged to be removed
-    if($this->getOption('use_flash') && ($names = $this->attributeHolder->getNames(sfUser::FLASH_NAMESPACE.'/remove')))
-    {
-      foreach($names as $name)
-      {
+    if ($this->getOption('use_flash') && ($names = $this->attributeHolder->getNames(sfUser::FLASH_NAMESPACE.'/remove'))) {
+      foreach ($names as $name) {
         $this->attributeHolder->remove($name, sfUser::FLASH_NAMESPACE);
         $this->attributeHolder->remove($name, sfUser::FLASH_NAMESPACE.'/remove');
       }
 
-      if(sfConfig::get('sf_logging_enabled'))
-      {
+      if (sfConfig::get('sf_logging_enabled')) {
         sfLogger::getInstance()->info('{sfFilter} Removed old flash messages ("' . implode('", "', $names) . '")');
       }
     }
 
     $attributes = array();
-    foreach($this->attributeHolder->getNamespaces() as $namespace)
-    {
+    foreach ($this->attributeHolder->getNamespaces() as $namespace) {
       $attributes[$namespace] = $this->attributeHolder->getAll($namespace);
     }
 
@@ -607,8 +583,7 @@ class sfUser extends sfConfigurable implements sfIUser, sfIService, ArrayAccess 
         'method' => $method,
         'arguments' => $arguments)));
 
-    if(!$event->isProcessed())
-    {
+    if (!$event->isProcessed()) {
       throw new sfException(sprintf('Call to undefined method %s::%s.', get_class($this), $method));
     }
 

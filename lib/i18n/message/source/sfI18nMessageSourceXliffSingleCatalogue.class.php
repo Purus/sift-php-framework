@@ -13,8 +13,8 @@
  * @package Sift
  * @subpackage i18n
  */
-class sfI18nMessageSourceXliffSingleCatalogue extends sfI18nMessageSourceXliff {
-
+class sfI18nMessageSourceXliffSingleCatalogue extends sfI18nMessageSourceXliff
+{
   /**
    * Catalogue name
    * @var string
@@ -30,7 +30,7 @@ class sfI18nMessageSourceXliffSingleCatalogue extends sfI18nMessageSourceXliff {
    */
   public function __construct($source, $catalogue)
   {
-    $this->source = (string)$source;
+    $this->source = (string) $source;
     $this->catalogue = $catalogue;
   }
 

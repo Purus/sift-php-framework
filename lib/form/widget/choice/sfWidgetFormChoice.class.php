@@ -12,8 +12,8 @@
  * @package    Sift
  * @subpackage form_widget
  */
-class sfWidgetFormChoice extends sfWidgetFormChoiceBase {
-
+class sfWidgetFormChoice extends sfWidgetFormChoiceBase
+{
   /**
    * Constructor.
    *
@@ -72,18 +72,15 @@ class sfWidgetFormChoice extends sfWidgetFormChoiceBase {
    */
   public function render($name, $value = null, $attributes = array(), $errors = array())
   {
-    if($this->getOption('multiple'))
-    {
+    if ($this->getOption('multiple')) {
       $attributes['multiple'] = 'multiple';
 
-      if('[]' != substr($name, -2))
-      {
+      if ('[]' != substr($name, -2)) {
         $name .= '[]';
       }
     }
 
-    if(!$this->getOption('renderer') && !$this->getOption('renderer_class') && $this->getOption('expanded'))
-    {
+    if (!$this->getOption('renderer') && !$this->getOption('renderer_class') && $this->getOption('expanded')) {
       unset($attributes['multiple']);
     }
 
@@ -112,13 +109,11 @@ class sfWidgetFormChoice extends sfWidgetFormChoiceBase {
 
   public function getRenderer()
   {
-    if($this->getOption('renderer'))
-    {
+    if ($this->getOption('renderer')) {
       return $this->getOption('renderer');
     }
 
-    if(!$class = $this->getOption('renderer_class'))
-    {
+    if (!$class = $this->getOption('renderer_class')) {
       $type = !$this->getOption('expanded') ? '' : ($this->getOption('multiple') ? 'checkbox' : 'radio');
       $class = sprintf('sfWidgetFormSelect%s', ucfirst($type));
     }

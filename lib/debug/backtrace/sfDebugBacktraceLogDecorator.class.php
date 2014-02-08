@@ -12,8 +12,8 @@
  * @package Sift
  * @subpackage debug
  */
-class sfDebugBacktraceLogDecorator extends sfDebugBacktraceDecorator {
-
+class sfDebugBacktraceLogDecorator extends sfDebugBacktraceDecorator
+{
   /**
    * Array of default options
    *
@@ -37,16 +37,13 @@ class sfDebugBacktraceLogDecorator extends sfDebugBacktraceDecorator {
     $maxLines = $this->getOption('max_lines');
     $withArguments = $this->getOption('with_arguments');
     $i = 0;
-    foreach($this->getBacktrace()->get() as $t)
-    {
+    foreach ($this->getBacktrace()->get() as $t) {
       ++$i;
-      if($maxLines > 0 && $i > $maxLines)
-      {
+      if ($maxLines > 0 && $i > $maxLines) {
         break;
       }
       $arguments = '';
-      if($withArguments && count($t['arguments']))
-      {
+      if ($withArguments && count($t['arguments'])) {
         $arguments = sprintf("%s arguments: [%s]", $this->getOption('arguments_separator'), $this->formatArguments($t['arguments']));
       }
       $trace[] = sprintf('#%s %s in %s (%s)%s', $i, $t['function'], $t['file'], $t['line'], $arguments);
@@ -65,8 +62,7 @@ class sfDebugBacktraceLogDecorator extends sfDebugBacktraceDecorator {
   {
     $output = array();
     $i = 0;
-    foreach($arguments as $argument)
-    {
+    foreach ($arguments as $argument) {
       $output[] = sprintf('#%s %s|%s', ++$i, $argument['value'], $argument['type']);
     }
 

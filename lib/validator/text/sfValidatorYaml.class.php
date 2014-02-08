@@ -12,8 +12,8 @@
  * @package    Sift
  * @subpackage validator
  */
-class sfValidatorYaml extends sfValidatorString {
-
+class sfValidatorYaml extends sfValidatorString
+{
   /**
    * Configures the current validator.
    *
@@ -45,25 +45,18 @@ class sfValidatorYaml extends sfValidatorString {
 
     $parser = new sfYamlParser();
 
-    try
-    {
+    try {
       $yaml = $parser->parse($clean);
 
-      if($type = $this->getOption('type'))
-      {
-        if(gettype($yaml) != $type)
-        {
+      if ($type = $this->getOption('type')) {
+        if (gettype($yaml) != $type) {
           throw new sfValidatorError($this, 'invalid_type', array('value' => $value, 'type' => $type));
         }
       }
 
-    }
-    catch(sfValidatorError $e)
-    {
+    } catch (sfValidatorError $e) {
       throw $e;
-    }
-    catch(Exception $e)
-    {
+    } catch (Exception $e) {
       throw new sfValidatorError($this, 'invalid', array('value' => $value));
     }
 

@@ -50,8 +50,7 @@ class sfSQLiteCache extends sfCache
    */
   public function setup()
   {
-    if(!extension_loaded('pdo_SQLite'))
-    {
+    if (!extension_loaded('pdo_SQLite')) {
       throw new sfConfigurationException('sfSQLiteCache class needs "pdo_sqlite" extension to be loaded.');
     }
 
@@ -109,7 +108,7 @@ class sfSQLiteCache extends sfCache
       $key, $data, time() + $this->getLifetime($lifetime), time()
     ));
 
-    return (boolean)$stmt->rowCount();
+    return (boolean) $stmt->rowCount();
   }
 
   /**
@@ -122,7 +121,7 @@ class sfSQLiteCache extends sfCache
       $key
     ));
 
-    return (boolean)$stmt->rowCount();
+    return (boolean) $stmt->rowCount();
   }
 
   /**
@@ -135,7 +134,7 @@ class sfSQLiteCache extends sfCache
       $this->patternToRegexp($pattern)
     ));
 
-    return (boolean)$stmt->rowCount();
+    return (boolean) $stmt->rowCount();
   }
 
   /**
@@ -143,8 +142,7 @@ class sfSQLiteCache extends sfCache
    */
   public function clean($mode = self::MODE_ALL)
   {
-    switch($mode)
-    {
+    switch ($mode) {
       case self::MODE_ALL:
         $stmt = $this->dbh->query('DELETE FROM cache');
 
@@ -196,33 +194,27 @@ class sfSQLiteCache extends sfCache
   protected function setDatabase($database)
   {
     $new = false;
-    if(':memory:' == $database)
-    {
+    if (':memory:' == $database) {
       $new = true;
-    }
-    else if(!is_file($database))
-    {
+    } else if (!is_file($database)) {
       $new = true;
       // create cache dir if needed
       $dir = dirname($database);
       $current_umask = umask(0000);
-      if (!is_dir($dir))
-      {
+      if (!is_dir($dir)) {
         @mkdir($dir, 0777, true);
       }
       touch($database);
       umask($current_umask);
     }
 
-    if(!$this->dbh = new sfPDO(sprintf('sqlite:%s', $this->getOption('database'))))
-    {
+    if (!$this->dbh = new sfPDO(sprintf('sqlite:%s', $this->getOption('database')))) {
       throw new sfCacheException(sprintf('Unable to connect to SQLite database: %s.'));
     }
 
     $this->dbh->sqliteCreateFunction('regexp', array($this, 'removePatternRegexpCallback'), 2);
 
-    if($new)
-    {
+    if ($new) {
       $this->createSchema();
     }
   }
@@ -250,8 +242,7 @@ class sfSQLiteCache extends sfCache
     $stmt->execute($params);
 
     $data = array();
-    while($row = $stmt->fetch(PDO::FETCH_ASSOC))
-    {
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
       $data[$row['key']] = $row['data'];
     }
 
@@ -275,10 +266,8 @@ class sfSQLiteCache extends sfCache
       'CREATE UNIQUE INDEX [cache_unique] ON [cache] ([key])',
     );
 
-    foreach($statements as $statement)
-    {
-      if(!$this->dbh->query($statement))
-      {
+    foreach ($statements as $statement) {
+      if (!$this->dbh->query($statement)) {
         throw new sfCacheException($this->dbh->lastError());
       }
     }

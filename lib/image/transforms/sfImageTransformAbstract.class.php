@@ -16,8 +16,8 @@
  * @package Sift
  * @subpackage image
  */
-abstract class sfImageTransformAbstract {
-
+abstract class sfImageTransformAbstract
+{
   /**
    * Apply the transform to the sfImage object.
    *
@@ -27,8 +27,7 @@ abstract class sfImageTransformAbstract {
   public function execute(sfImage $image)
   {
     // Check we have a valid image holder
-    if(false === $image->getAdapter()->hasHolder())
-    {
+    if (false === $image->getAdapter()->hasHolder()) {
       throw new sfImageTransformException(sprintf('Cannot perform transform: %s invalid image resource', get_class($this)));
     }
 

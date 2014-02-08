@@ -12,8 +12,8 @@
  * @package Sift
  * @subpackage config
  */
-class sfRichEditorConfigHandler extends sfSimpleYamlConfigHandler {
-
+class sfRichEditorConfigHandler extends sfSimpleYamlConfigHandler
+{
   /**
    * Executes the compilation process for given array of files
    *
@@ -25,21 +25,18 @@ class sfRichEditorConfigHandler extends sfSimpleYamlConfigHandler {
     // parse the yaml
     $myConfig = $this->parseYamls($configFiles);
 
-    if(isset($myConfig['override']))
-    {
+    if (isset($myConfig['override'])) {
       $myConfig = $this->mergeOveridesConfig($myConfig, $myConfig['override']);
       unset($myConfig['override']);
     }
 
     $all = array();
-    if(isset($myConfig['all']))
-    {
+    if (isset($myConfig['all'])) {
       $all = $this->replaceConstants($myConfig['all']);
       unset($myConfig['all']);
     }
 
-    foreach($myConfig as $section => $value)
-    {
+    foreach ($myConfig as $section => $value) {
       $myConfig[$section] = sfToolkit::arrayDeepMerge($all, self::replaceConstants($value));
     }
 
@@ -62,8 +59,7 @@ class sfRichEditorConfigHandler extends sfSimpleYamlConfigHandler {
   public static function parseYamls($configFiles)
   {
     $config = array();
-    foreach($configFiles as $configFile)
-    {
+    foreach ($configFiles as $configFile) {
       $config = array_merge_recursive($config, self::replaceConstants(self::parseYaml($configFile)));
     }
 
@@ -85,14 +81,11 @@ class sfRichEditorConfigHandler extends sfSimpleYamlConfigHandler {
     // handle the arguments, merge one by one
     $args = func_get_args();
     $array = $args[0];
-    if(!is_array($array))
-    {
+    if (!is_array($array)) {
       return $array;
     }
-    for($i = 1; $i < count($args); $i++)
-    {
-      if(is_array($args[$i]))
-      {
+    for ($i = 1; $i < count($args); $i++) {
+      if (is_array($args[$i])) {
         $array = self::arrayRecurse($array, $args[$i]);
       }
     }
@@ -102,18 +95,14 @@ class sfRichEditorConfigHandler extends sfSimpleYamlConfigHandler {
 
   protected static function arrayRecurse($array, $array1, $override = false)
   {
-    foreach($array1 as $key => $value)
-    {
+    foreach ($array1 as $key => $value) {
       // create new key in $array, if it is empty or not an array
-      if(!isset($array[$key]) || (isset($array[$key]) && !is_array($array[$key])))
-      {
+      if (!isset($array[$key]) || (isset($array[$key]) && !is_array($array[$key]))) {
         $array[$key] = array();
       }
       // overwrite the value in the base array
-      if(is_array($value) && count($value))
-      {
-        if(!$override)
-        {
+      if (is_array($value) && count($value)) {
+        if (!$override) {
           $value = self::arrayRecurse($array[$key], $value, true);
         }
       }

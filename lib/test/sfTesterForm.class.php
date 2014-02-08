@@ -42,14 +42,11 @@ class sfTesterForm extends sfTester
    */
   public function initialize()
   {
-    if (null === $this->form)
-    {
+    if (null === $this->form) {
       $action = $this->browser->getContext()->getActionStack()->getLastEntry()->getActionInstance();
 
-      foreach ($action->getVarHolder()->getAll() as $name => $value)
-      {
-        if ($value instanceof sfForm && $value->isBound())
-        {
+      foreach ($action->getVarHolder()->getAll() as $name => $value) {
+        if ($value instanceof sfForm && $value->isBound()) {
           $this->form = $value;
           break;
         }
@@ -76,17 +73,13 @@ class sfTesterForm extends sfTester
    */
   public function hasErrors($value = true)
   {
-    if (null === $this->form)
-    {
+    if (null === $this->form) {
       throw new LogicException('no form has been submitted.');
     }
 
-    if (is_int($value))
-    {
+    if (is_int($value)) {
       $this->tester->is(count($this->form->getErrorSchema()), $value, sprintf('the submitted form has "%s" errors.', $value));
-    }
-    else
-    {
+    } else {
       $this->tester->is($this->form->hasErrors(), $value, sprintf('the submitted form %s.', ($value) ? 'has some errors' : 'is valid'));
     }
 
@@ -115,58 +108,36 @@ class sfTesterForm extends sfTester
    */
   public function isError($field, $value = true)
   {
-    if (null === $this->form)
-    {
+    if (null === $this->form) {
       throw new LogicException('no form has been submitted.');
     }
 
-    if (null === $field)
-    {
+    if (null === $field) {
       $error = new sfValidatorErrorSchema(new sfValidatorPass(), $this->form->getGlobalErrors());
-    }
-    else
-    {
+    } else {
       $error = $this->getFormField($field)->getError();
     }
 
-    if (false === $value)
-    {
+    if (false === $value) {
       $this->tester->ok(!$error || 0 == count($error), sprintf('the submitted form has no "%s" error.', $field));
-    }
-    else if (true === $value)
-    {
+    } else if (true === $value) {
       $this->tester->ok($error && count($error) > 0, sprintf('the submitted form has a "%s" error.', $field));
-    }
-    else if (is_int($value))
-    {
+    } else if (is_int($value)) {
       $this->tester->ok($error && count($error) == $value, sprintf('the submitted form has %s "%s" error(s).', $value, $field));
-    }
-    else if (preg_match('/^(!)?([^a-zA-Z0-9\\\\]).+?\\2[ims]?$/', $value, $match))
-    {
-      if (!$error)
-      {
+    } else if (preg_match('/^(!)?([^a-zA-Z0-9\\\\]).+?\\2[ims]?$/', $value, $match)) {
+      if (!$error) {
         $this->tester->fail(sprintf('the submitted form has a "%s" error.', $field));
-      }
-      else
-      {
-        if ($match[1] == '!')
-        {
+      } else {
+        if ($match[1] == '!') {
           $this->tester->unlike($error->getCode(), substr($value, 1), sprintf('the submitted form has a "%s" error that does not match "%s".', $field, $value));
-        }
-        else
-        {
+        } else {
           $this->tester->like($error->getCode(), $value, sprintf('the submitted form has a "%s" error that matches "%s".', $field, $value));
         }
       }
-    }
-    else
-    {
-      if (!$error)
-      {
+    } else {
+      if (!$error) {
         $this->tester->fail(sprintf('the submitted form has a "%s" error (%s).', $field, $value));
-      }
-      else
-      {
+      } else {
         $this->tester->is($error->getCode(), $value, sprintf('the submitted form has a "%s" error (%s).', $field, $value));
       }
     }
@@ -179,8 +150,7 @@ class sfTesterForm extends sfTester
    */
   public function debug()
   {
-    if (null === $this->form)
-    {
+    if (null === $this->form) {
       throw new LogicException('no form has been submitted.');
     }
 
@@ -202,17 +172,13 @@ class sfTesterForm extends sfTester
    */
   public function filterTemplateParameters(sfEvent $event, $parameters)
   {
-    if (!isset($parameters['sf_type']))
-    {
+    if (!isset($parameters['sf_type'])) {
       return $parameters;
     }
 
-    if ('action' == $parameters['sf_type'])
-    {
-      foreach ($parameters as $key => $value)
-      {
-        if ($value instanceof sfForm && $value->isBound())
-        {
+    if ('action' == $parameters['sf_type']) {
+      foreach ($parameters as $key => $value) {
+        if ($value instanceof sfForm && $value->isBound()) {
           $this->form = $value;
           break;
         }
@@ -229,19 +195,14 @@ class sfTesterForm extends sfTester
 
   public function getFormField($path)
   {
-    if (false !== $pos = strpos($path, '['))
-    {
+    if (false !== $pos = strpos($path, '[')) {
       $field = $this->form[substr($path, 0, $pos)];
-    }
-    else
-    {
+    } else {
       return $this->form[$path];
     }
 
-    if (preg_match_all('/\[(?P<part>[^]]+)\]/', $path, $matches))
-    {
-      foreach($matches['part'] as $part)
-      {
+    if (preg_match_all('/\[(?P<part>[^]]+)\]/', $path, $matches)) {
+      foreach ($matches['part'] as $part) {
         $field = $field[$part];
       }
     }

@@ -12,8 +12,8 @@
  * @package     Sift
  * @subpackage  debug
  */
-class sfWebDebugPanelHtmlValidate extends sfWebDebugPanel {
-
+class sfWebDebugPanelHtmlValidate extends sfWebDebugPanel
+{
   /**
    * The response object
    *
@@ -87,8 +87,7 @@ class sfWebDebugPanelHtmlValidate extends sfWebDebugPanel {
    */
   public function getPanelContent()
   {
-    if(!$this->toBeValidated)
-    {
+    if (!$this->toBeValidated) {
       return;
     }
 

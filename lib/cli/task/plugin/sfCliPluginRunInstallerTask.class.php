@@ -12,8 +12,8 @@
  * @package    Sift
  * @subpackage cli_task
  */
-class sfCliPluginRunInstallerTask extends sfCliPluginBaseTask {
-
+class sfCliPluginRunInstallerTask extends sfCliPluginBaseTask
+{
   /**
    * @see sfCliTask
    */
@@ -56,12 +56,9 @@ EOF;
     $this->checkPluginExists($plugin);
 
     $install = true;
-    if(!$options['install'] && !$options['uninstall'])
-    {
+    if (!$options['install'] && !$options['uninstall']) {
       $install = true;
-    }
-    elseif($options['uninstall'])
-    {
+    } elseif ($options['uninstall']) {
       $install = false;
     }
 
@@ -73,14 +70,11 @@ EOF;
 
     $installer = $this->getInstaller($plugin, $options);
 
-    if($install)
-    {
+    if ($install) {
       $this->logSection($this->getFullName(), sprintf('Installing plugin "%s"', $arguments['name']));
 
       $result = $installer->install();
-    }
-    else
-    {
+    } else {
       $this->logSection($this->getFullName(), sprintf('Uninstalling plugin "%s"', $arguments['name']));
 
       $result = $installer->uninstall();
@@ -116,30 +110,24 @@ EOF;
 
     // pass to installer, which support options with underscores
     // FIXME: maybe convert all simply by replacing - with _
-    if($options['previous-release'])
-    {
+    if ($options['previous-release']) {
       $options['previous_release'] = $options['previous-release'];
       unset($options['previous-release']);
     }
 
-    if(is_readable($installer))
-    {
+    if (is_readable($installer)) {
       require_once $installer;
 
-      if(!class_exists($installerClass, false))
-      {
+      if (!class_exists($installerClass, false)) {
         throw new sfException(sprintf('Installer file does not contain plugin installer class "%s"', $installerClass));
       }
 
       $installer = new $installerClass($this, $options);
 
-      if(!$installer instanceof sfIPluginInstaller)
-      {
+      if (!$installer instanceof sfIPluginInstaller) {
         throw new LogicException(sprintf('Plugin installer class "%s" is invalid. It should implement sfIPluginInstaller interface.', get_class($installer)));
       }
-    }
-    else
-    {
+    } else {
       $installer = new sfPluginInstaller($this, $options);
     }
 

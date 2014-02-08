@@ -71,8 +71,7 @@ EOF;
     $module = $arguments['module'];
 
     // Validate the module name
-    if(!preg_match('/^[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*$/', $module))
-    {
+    if (!preg_match('/^[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*$/', $module)) {
       throw new sfCliCommandException(sprintf('The module name "%s" is invalid.', $module));
     }
 
@@ -81,8 +80,7 @@ EOF;
     $moduleDir = $this->environment->get('sf_apps_dir'). '/' . $app. '/' .
                  $this->environment->get('sf_app_module_dir_name') . '/' . $module;
 
-    if(is_dir($moduleDir))
-    {
+    if (is_dir($moduleDir)) {
       throw new sfCliCommandException(sprintf('The module "%s" already exists in the "%s" application.', $module, $app));
     }
 
@@ -91,14 +89,13 @@ EOF;
     $projectName = '';
 
     // fallback for projectName
-    if(!$projectName)
-    {
+    if (!$projectName) {
       // base on directory name
       $projectName = ucfirst(str_replace('.', '', basename($this->environment->get('sf_root_dir'))));
     }
 
     // module credentials
-    $credentials = isset($options['credentials']) ? (array)$options['credentials'] : array();
+    $credentials = isset($options['credentials']) ? (array) $options['credentials'] : array();
 
     $constants = array(
       'PROJECT_NAME' => $projectName,
@@ -108,12 +105,9 @@ EOF;
       'CREDENTIALS'  => 'credentials: ' . sfYamlInline::dump($credentials)
     );
 
-    if (is_readable($this->environment->get('sf_data_dir').'/skeleton/module'))
-    {
+    if (is_readable($this->environment->get('sf_data_dir').'/skeleton/module')) {
       $skeletonDir = $this->environment->get('sf_data_dir').'/skeleton/module';
-    }
-    else
-    {
+    } else {
       // FIXME: load from sf_sift_data_dir
       $skeletonDir = $this->environment->get('sf_sift_data_dir').'/skeleton/module';
     }
@@ -132,22 +126,19 @@ EOF;
     $finder = sfFinder::type('file')->name('*.php', '*.yml');
     $this->getFilesystem()->replaceTokens($finder->in($moduleDir), '##', '##', $constants);
 
-    if(!$options['secured'])
-    {
+    if (!$options['secured']) {
       $this->getFilesystem()->remove($moduleDir . '/config/security.yml');
       // FIXME: check if there are any files left, if yes, discard the dir!
     }
 
     $moduleYaml = array();
 
-    if($options['internal'])
-    {
+    if ($options['internal']) {
       $moduleYaml[] = 'all:';
       $moduleYaml[] = '  is_internal: true';
     }
 
-    if(count($moduleYaml))
-    {
+    if (count($moduleYaml)) {
       file_put_contents($moduleDir . '/config/module.yml', join("\n", $moduleYaml));
     }
 

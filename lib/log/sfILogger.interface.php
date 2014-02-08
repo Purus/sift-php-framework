@@ -12,8 +12,8 @@
  * @package Sift
  * @subpackage log
  */
-interface sfILogger extends sfIService {
-
+interface sfILogger extends sfIService
+{
   /**
    * System is unusable
    */

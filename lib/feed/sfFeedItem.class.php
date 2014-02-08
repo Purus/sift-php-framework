@@ -12,8 +12,8 @@
  * @package    Sift
  * @subpackage feed
  */
-class sfFeedItem {
-
+class sfFeedItem
+{
   private $title,
           $link,
           $description,
@@ -30,8 +30,7 @@ class sfFeedItem {
 
   public function __construct($item_array = array())
   {
-    if($item_array)
-    {
+    if ($item_array) {
       $this->initialize($item_array);
     }
   }
@@ -90,22 +89,15 @@ class sfFeedItem {
   public function getDescription($maxLength = null, $ending = '[...]')
   {
     $description = '';
-    if($this->description)
-    {
+    if ($this->description) {
       $description = $this->description;
-    }
-    else if($this->content)
-    {
-      try
-      {
+    } else if ($this->content) {
+      try {
         $content = sfText::stripLinks($this->content);
-        if(!empty($content))
-        {
+        if (!empty($content)) {
           $description = sfHtml2Text::convert($content);
         }
-      }
-      catch(Exception $e)
-      {
+      } catch (Exception $e) {
       }
     }
 
@@ -155,7 +147,7 @@ class sfFeedItem {
 
   public function setPubdate($pubdate)
   {
-    $this->pubdate = (integer)$pubdate;
+    $this->pubdate = (integer) $pubdate;
   }
 
   public function getPubdate()

@@ -6,8 +6,7 @@
  * file that was distributed with this source code.
  */
 
-if(!defined('PHP_ROUND_HALF_DOWN'))
-{
+if (!defined('PHP_ROUND_HALF_DOWN')) {
   define('PHP_ROUND_HALF_DOWN', 2);
 }
 
@@ -17,8 +16,8 @@ if(!defined('PHP_ROUND_HALF_DOWN'))
  * @package Sift
  * @subpackage math
  */
-class sfRounding {
-
+class sfRounding
+{
   /**
    * No rounding
    */
@@ -82,8 +81,7 @@ class sfRounding {
    */
   public static function round($value, $precision = 0, $mode = self::HALF_UP, $nearest = null, $nearestMode = self::HALF_UP)
   {
-    switch($mode)
-    {
+    switch ($mode) {
       case self::NONE:
         return $value;
 
@@ -122,7 +120,7 @@ class sfRounding {
     $r = new sfReflectionClass('sfRounding');
 
     throw new InvalidArgumentException(sprintf('Invalid rounding mode "%s" given. Valid modes are: %s', $mode, join(', ',
-      array_keys((array)$r->getConstants())
+      array_keys((array) $r->getConstants())
     )));
   }
 

@@ -62,9 +62,8 @@ class sfImageResizeGeneric extends sfImageTransformAbstract
    */
   public function setHeight($height)
   {
-    if(is_numeric($height) && $height > 0)
-    {
-      $this->height = (int)$height;
+    if (is_numeric($height) && $height > 0) {
+      $this->height = (int) $height;
 
       return true;
     }
@@ -90,9 +89,8 @@ class sfImageResizeGeneric extends sfImageTransformAbstract
    */
   public function setWidth($width)
   {
-    if(is_numeric($width) && $width > 0)
-    {
-      $this->width = (int)$width;
+    if (is_numeric($width) && $width > 0) {
+      $this->width = (int) $width;
 
       return false;
     }
@@ -116,8 +114,7 @@ class sfImageResizeGeneric extends sfImageTransformAbstract
    */
   public function setInflate($inflate)
   {
-    if($inflate === true || $inflate === false)
-    {
+    if ($inflate === true || $inflate === false) {
       $this->inflate = $inflate;
 
       return true;
@@ -144,8 +141,7 @@ class sfImageResizeGeneric extends sfImageTransformAbstract
    */
   public function setProportional($proportional)
   {
-    if($proportional === true || $proportional === false)
-    {
+    if ($proportional === true || $proportional === false) {
       $this->proportional = $proportional;
 
       return true;
@@ -186,44 +182,36 @@ class sfImageResizeGeneric extends sfImageTransformAbstract
     $target_w = $source_w;
     $target_h = $source_h;
 
-    if (null !== $this->width)
-    {
+    if (null !== $this->width) {
       $target_w = $this->width;
-      if (!$this->inflate && $target_w > $source_w)
-      {
+      if (!$this->inflate && $target_w > $source_w) {
         $target_w = $source_w;
       }
 
-      if ($this->proportional && $source_w > 0)
-      {
+      if ($this->proportional && $source_w > 0) {
         // Compute the new height in order to keep the aspect ratio
         // and clamp it to the maximum height
         $target_h = round(($source_h / $source_w) * $target_w);
 
-        if (null !== $this->height && $this->height < $target_h && $source_h > 0)
-        {
+        if (null !== $this->height && $this->height < $target_h && $source_h > 0) {
           $target_h = $this->height;
           $target_w = round(($source_w / $source_h) * $target_h);
         }
       }
     }
 
-    if (null !== $this->height)
-    {
+    if (null !== $this->height) {
       $target_h = $this->height;
-      if (!$this->inflate && $target_h > $source_h)
-      {
+      if (!$this->inflate && $target_h > $source_h) {
         $target_h = $source_h;
       }
 
-      if ($this->proportional && $source_h > 0)
-      {
+      if ($this->proportional && $source_h > 0) {
         // Compute the new width in order to keep the aspect ratio
         // and clamp it to the maximum width
         $target_w = round(($source_w / $source_h) * $target_h);
 
-        if (null !== $this->width && $this->width < $target_w && $target_w > 0)
-        {
+        if (null !== $this->width && $this->width < $target_w && $target_w > 0) {
           $target_w = $this->width;
           $target_h = round(($source_h / $source_w) * $target_w);
         }

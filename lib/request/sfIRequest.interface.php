@@ -12,8 +12,8 @@
  * @package    Sift
  * @subpackage request
  */
-interface sfIRequest extends sfIService {
-
+interface sfIRequest extends sfIService
+{
   /**
    * GET
    */

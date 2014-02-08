@@ -12,8 +12,8 @@
  * @package Sift
  * @subpackage date
  */
-class sfDateTimeToolkit {
-
+class sfDateTimeToolkit
+{
   /**
    * Breaks down the individual components of the timestamp.
    *
@@ -23,8 +23,7 @@ class sfDateTimeToolkit {
   public static function breakdown($ts = null)
   {
     // default to now
-    if($ts === null)
-    {
+    if ($ts === null) {
       $ts = sfDateTimeToolkit::now();
     }
 
@@ -58,24 +57,15 @@ class sfDateTimeToolkit {
    */
   public static function getTS($value = null)
   {
-    if($value === null)
-    {
+    if ($value === null) {
       return sfDateTimeToolkit::now();
-    }
-    else if($value instanceof sfDate)
-    {
+    } else if ($value instanceof sfDate) {
       return $value->get();
-    }
-    else if($value instanceof DateTime)
-    {
+    } else if ($value instanceof DateTime) {
       return $value->format('U');
-    }
-    else if(!is_numeric($value))
-    {
+    } else if (!is_numeric($value)) {
       return strtotime($value);
-    }
-    else if(is_numeric($value))
-    {
+    } else if (is_numeric($value)) {
       return $value;
     }
 

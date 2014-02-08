@@ -14,8 +14,8 @@
  * @package    Sift
  * @subpackage form_widget
  */
-class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess {
-
+class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess
+{
   const
           FIRST = 'first',
           LAST = 'last',
@@ -58,15 +58,11 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess {
 
     parent::__construct($options, $attributes);
 
-    if(is_array($fields))
-    {
-      foreach($fields as $name => $widget)
-      {
+    if (is_array($fields)) {
+      foreach ($fields as $name => $widget) {
         $this[$name] = $widget;
       }
-    }
-    else if(null !== $fields)
-    {
+    } else if (null !== $fields) {
       throw new InvalidArgumentException('sfWidgetFormSchema constructor takes an array of sfWidget objects.');
     }
 
@@ -110,10 +106,8 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess {
    */
   public function setDefaults(array $values)
   {
-    foreach($this->fields as $name => $widget)
-    {
-      if(array_key_exists($name, $values))
-      {
+    foreach ($this->fields as $name => $widget) {
+      if (array_key_exists($name, $values)) {
         $widget->setDefault($values[$name]);
       }
     }
@@ -130,8 +124,7 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess {
   {
     $defaults = array();
 
-    foreach($this->fields as $name => $widget)
-    {
+    foreach ($this->fields as $name => $widget) {
       $defaults[$name] = $widget instanceof sfWidgetFormSchema ? $widget->getDefaults() : $widget->getDefault();
     }
 
@@ -208,18 +201,12 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess {
   {
     $name = $this->getFormFormatterName();
 
-    if(!isset($this->formFormatters[$name]))
-    {
-      if(class_exists($class = 'sfWidgetFormSchemaFormatter' . ucfirst($name)))
-      {
+    if (!isset($this->formFormatters[$name])) {
+      if (class_exists($class = 'sfWidgetFormSchemaFormatter' . ucfirst($name))) {
         $this->formFormatters[$name] = new $class($this);
-      }
-      elseif(class_exists($name))
-      {
+      } elseif (class_exists($name)) {
         $this->formFormatters[$name] = new $name($this);
-      }
-      else
-      {
+      } else {
         throw new InvalidArgumentException(sprintf('The form formatter "%s" does not exist.', $name));
       }
     }
@@ -248,8 +235,7 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess {
    */
   public function setNameFormat($format)
   {
-    if(false !== $format && false === strpos($format, '%s'))
-    {
+    if (false !== $format && false === strpos($format, '%s')) {
       throw new InvalidArgumentException(sprintf('The name format must contain %%s ("%s" given)', $format));
     }
 
@@ -277,10 +263,8 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess {
    */
   public function setLabels(array $labels)
   {
-    foreach($this->fields as $name => $widget)
-    {
-      if(array_key_exists($name, $labels))
-      {
+    foreach ($this->fields as $name => $widget) {
+      if (array_key_exists($name, $labels)) {
         $widget->setLabel($labels[$name]);
       }
     }
@@ -297,8 +281,7 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess {
   {
     $labels = array();
 
-    foreach($this->fields as $name => $widget)
-    {
+    foreach ($this->fields as $name => $widget) {
       $labels[$name] = $widget->getLabel();
     }
 
@@ -317,17 +300,13 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess {
    */
   public function setLabel($name, $value = null)
   {
-    if(2 == func_num_args())
-    {
-      if(!isset($this->fields[$name]))
-      {
+    if (2 == func_num_args()) {
+      if (!isset($this->fields[$name])) {
         throw new InvalidArgumentException(sprintf('Unable to set the label on an unexistant widget ("%s").', $name));
       }
 
       $this->fields[$name]->setLabel($value);
-    }
-    else
-    {
+    } else {
       // set the label for this widget schema
       parent::setLabel($name);
     }
@@ -346,17 +325,13 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess {
    */
   public function getLabel($name = null)
   {
-    if(1 == func_num_args())
-    {
-      if(!isset($this->fields[$name]))
-      {
+    if (1 == func_num_args()) {
+      if (!isset($this->fields[$name])) {
         throw new InvalidArgumentException(sprintf('Unable to get the label on an unexistant widget ("%s").', $name));
       }
 
       return $this->fields[$name]->getLabel();
-    }
-    else
-    {
+    } else {
       // label for this widget schema
       return parent::getLabel();
     }
@@ -371,8 +346,7 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess {
    */
   public function setHelps(array $helps)
   {
-    foreach($helps as $name => $help)
-    {
+    foreach ($helps as $name => $help) {
       $this->setHelp($name, $help);
     }
 
@@ -387,10 +361,8 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess {
   public function getHelps()
   {
     $helps = array();
-    foreach($this->fields as $name => $widget)
-    {
-      if($help = $widget->getHelp())
-      {
+    foreach ($this->fields as $name => $widget) {
+      if ($help = $widget->getHelp()) {
         $helps[$name] = $help;
       }
     }
@@ -409,16 +381,12 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess {
    */
   public function setHelp($name, $value = null)
   {
-    if(2 == func_num_args())
-    {
-      if(!isset($this->fields[$name]))
-      {
+    if (2 == func_num_args()) {
+      if (!isset($this->fields[$name])) {
         throw new InvalidArgumentException(sprintf('Unable to set the help on an unexistant widget ("%s").', $name));
       }
       $this->fields[$name]->setHelp($value);
-    }
-    else
-    {
+    } else {
       // set the help for this widget schema
       parent::setHelp($name);
     }
@@ -436,17 +404,13 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess {
    */
   public function getHelp($name = null)
   {
-    if($name !== null)
-    {
-      if(!isset($this->fields[$name]))
-      {
+    if ($name !== null) {
+      if (!isset($this->fields[$name])) {
         throw new InvalidArgumentException(sprintf('Unable to get the help on an unexistant widget ("%s").', $name));
       }
 
       return $this->fields[$name]->getHelp();
-    }
-    else
-    {
+    } else {
       // help for this widget schema
       return parent::getHelp();
     }
@@ -461,8 +425,7 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess {
   {
     $stylesheets = array();
 
-    foreach($this->fields as $field)
-    {
+    foreach ($this->fields as $field) {
       $stylesheets = array_merge($stylesheets, $field->getStylesheets());
     }
 
@@ -478,8 +441,7 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess {
   {
     $javascripts = array();
 
-    foreach($this->fields as $field)
-    {
+    foreach ($this->fields as $field) {
       $javascripts = array_merge($javascripts, $field->getJavaScripts());
     }
 
@@ -493,10 +455,8 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess {
    */
   public function needsMultipartForm()
   {
-    foreach($this->fields as $field)
-    {
-      if($field->needsMultipartForm())
-      {
+    foreach ($this->fields as $field) {
+      if ($field->needsMultipartForm()) {
         return true;
       }
     }
@@ -518,13 +478,11 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess {
    */
   public function renderField($name, $value = null, $attributes = array(), $errors = array())
   {
-    if(null === $widget = $this[$name])
-    {
+    if (null === $widget = $this[$name]) {
       throw new InvalidArgumentException(sprintf('The field named "%s" does not exist.', $name));
     }
 
-    if($widget instanceof sfWidgetFormSchema && $errors && !$errors instanceof sfValidatorErrorSchema)
-    {
+    if ($widget instanceof sfWidgetFormSchema && $errors && !$errors instanceof sfValidatorErrorSchema) {
       $errors = new sfValidatorErrorSchema($errors->getValidator(), array($errors));
     }
 
@@ -549,13 +507,11 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess {
    */
   public function render($name, $values = array(), $attributes = array(), $errors = array())
   {
-    if(null === $values)
-    {
+    if (null === $values) {
       $values = array();
     }
 
-    if(!is_array($values) && !$values instanceof ArrayAccess)
-    {
+    if (!is_array($values) && !$values instanceof ArrayAccess) {
       throw new InvalidArgumentException('You must pass an array of values to render a widget schema');
     }
 
@@ -568,24 +524,18 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess {
     $errorRows = array();
 
     // render each field
-    foreach($this->positions as $name)
-    {
+    foreach ($this->positions as $name) {
       $widget = $this[$name];
       $value = isset($values[$name]) ? $values[$name] : null;
       $error = isset($errors[$name]) ? $errors[$name] : array();
       $widgetAttributes = isset($attributes[$name]) ? $attributes[$name] : array();
 
-      if($widget instanceof sfWidgetForm && $widget->isHidden())
-      {
+      if ($widget instanceof sfWidgetForm && $widget->isHidden()) {
         $hiddenRows[] = $this->renderField($name, $value, $widgetAttributes);
-      }
-      else
-      {
-        if(count($error) && $errorCssClass)
-        {
+      } else {
+        if (count($error) && $errorCssClass) {
           $classes = array($errorCssClass);
-          if(isset($attributes['class']))
-          {
+          if (isset($attributes['class'])) {
             $classes[] = $attributes['class'];
           }
           $attributes['class'] = trim(implode(' ', array_merge(explode(' ', ($this->parent ? $this->parent->getAttribute('class') : '')
@@ -608,16 +558,12 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess {
       }
     }
 
-    if($rows)
-    {
+    if ($rows) {
       // insert hidden fields in the last row
-      for($i = 0, $max = count($rows); $i < $max; $i++)
-      {
+      for ($i = 0, $max = count($rows); $i < $max; $i++) {
         $rows[$i] = strtr($rows[$i], array('%hidden_fields%' => $i == $max - 1 ? implode("\n", $hiddenRows) : ''));
       }
-    }
-    else
-    {
+    } else {
       // only hidden fields
       $rows[0] = implode("\n", $hiddenRows);
     }
@@ -637,24 +583,18 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess {
     $globalErrors = array();
 
     // global errors and errors for non existent fields
-    if(null !== $errors)
-    {
-      foreach($errors as $name => $error)
-      {
-        if(!isset($this->fields[$name]))
-        {
+    if (null !== $errors) {
+      foreach ($errors as $name => $error) {
+        if (!isset($this->fields[$name])) {
           $globalErrors[] = $error;
         }
       }
     }
 
     // errors for hidden fields
-    foreach($this->positions as $name)
-    {
-      if($this[$name] instanceof sfWidgetForm && $this[$name]->isHidden())
-      {
-        if(isset($errors[$name]))
-        {
+    foreach ($this->positions as $name) {
+      if ($this[$name] instanceof sfWidgetForm && $this[$name]->isHidden()) {
+        if (isset($errors[$name])) {
           $globalErrors[$this->getFormFormatter()->generateLabelName($name)] = $errors[$name];
         }
       }
@@ -674,17 +614,13 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess {
   {
     $format = $this->getNameFormat();
 
-    if('[%s]' == substr($format, -4) && preg_match('/^(.+?)\[(.+)?\]$/', $name, $match))
-    {
+    if ('[%s]' == substr($format, -4) && preg_match('/^(.+?)\[(.+)?\]$/', $name, $match)) {
       $name = sprintf('%s[%s][%s]', substr($format, 0, -4), $match[1], isset($match[2]) ? $match[2] : '');
-    }
-    else if(false !== $format)
-    {
+    } else if (false !== $format) {
       $name = sprintf($format, $name);
     }
 
-    if($parent = $this->getParent())
-    {
+    if ($parent = $this->getParent()) {
       $name = $parent->generateName($name);
     }
 
@@ -725,21 +661,18 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess {
    */
   public function offsetSet($name, $widget)
   {
-    if(!$widget instanceof sfWidget)
-    {
+    if (!$widget instanceof sfWidget) {
       throw new InvalidArgumentException('A field must be an instance of sfWidget.');
     }
 
-    if(!isset($this->fields[$name]))
-    {
+    if (!isset($this->fields[$name])) {
       $this->positions[] = (string) $name;
     }
 
     $this->fields[$name] = clone $widget;
     $this->fields[$name]->setParent($this);
 
-    if($widget instanceof sfWidgetFormSchema)
-    {
+    if ($widget instanceof sfWidgetFormSchema) {
       $this->fields[$name]->setNameFormat($name . '[%s]');
     }
   }
@@ -752,8 +685,7 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess {
   public function offsetUnset($name)
   {
     unset($this->fields[$name]);
-    if(false !== $position = array_search((string) $name, $this->positions))
-    {
+    if (false !== $position = array_search((string) $name, $this->positions)) {
       unset($this->positions[$position]);
 
       $this->positions = array_values($this->positions);
@@ -798,18 +730,15 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess {
     $positions = array_unique(array_values($positions));
     $current = array_keys($this->fields);
 
-    if($diff = array_diff($positions, $current))
-    {
+    if ($diff = array_diff($positions, $current)) {
       throw new InvalidArgumentException('Widget schema does not include the following field(s): ' . implode(', ', $diff));
     }
 
-    if($diff = array_diff($current, $positions))
-    {
+    if ($diff = array_diff($current, $positions)) {
       throw new InvalidArgumentException('Positions array must include all fields. Missing: ' . implode(', ', $diff));
     }
 
-    foreach($positions as &$position)
-    {
+    foreach ($positions as &$position) {
       $position = (string) $position;
     }
 
@@ -840,24 +769,20 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess {
   public function moveField($field, $action, $pivot = null)
   {
     $field = (string) $field;
-    if(false === $fieldPosition = array_search($field, $this->positions))
-    {
+    if (false === $fieldPosition = array_search($field, $this->positions)) {
       throw new InvalidArgumentException(sprintf('Field "%s" does not exist.', $field));
     }
     unset($this->positions[$fieldPosition]);
     $this->positions = array_values($this->positions);
 
-    if(null !== $pivot)
-    {
+    if (null !== $pivot) {
       $pivot = (string) $pivot;
-      if(false === $pivotPosition = array_search($pivot, $this->positions))
-      {
+      if (false === $pivotPosition = array_search($pivot, $this->positions)) {
         throw new InvalidArgumentException(sprintf('Field "%s" does not exist.', $pivot));
       }
     }
 
-    switch($action)
-    {
+    switch ($action) {
       case sfWidgetFormSchema::FIRST:
         array_unshift($this->positions, $field);
         break;
@@ -865,8 +790,7 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess {
         array_push($this->positions, $field);
         break;
       case sfWidgetFormSchema::BEFORE:
-        if(null === $pivot)
-        {
+        if (null === $pivot) {
           throw new LogicException(sprintf('Unable to move field "%s" without a relative field.', $field));
         }
         $this->positions = array_merge(
@@ -874,8 +798,7 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess {
         );
         break;
       case sfWidgetFormSchema::AFTER:
-        if(null === $pivot)
-        {
+        if (null === $pivot) {
           throw new LogicException(sprintf('Unable to move field "%s" without a relative field.', $field));
         }
         $this->positions = array_merge(
@@ -889,14 +812,12 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess {
 
   public function __clone()
   {
-    foreach($this->fields as $name => $field)
-    {
+    foreach ($this->fields as $name => $field) {
       // offsetSet will clone the field and change the parent
       $this[$name] = $field;
     }
 
-    foreach($this->formFormatters as &$formFormatter)
-    {
+    foreach ($this->formFormatters as &$formFormatter) {
       $formFormatter = clone $formFormatter;
       $formFormatter->setWidgetSchema($this);
     }

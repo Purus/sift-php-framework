@@ -15,8 +15,8 @@
  * @package    Sift
  * @subpackage user
  */
-class sfUserAgentDetector {
-
+class sfUserAgentDetector
+{
   protected $userAgent = '';
   protected $name = null;
   protected $version = null;
@@ -130,33 +130,28 @@ class sfUserAgentDetector {
     $pattern = '#(' . join('|', $this->getKnownBrowsers()) . ')[/ ]+([0-9]+(?:\.[0-9]+)?)#';
 
     // Find all phrases (or return empty array if none found)
-    if(preg_match_all($pattern, $this->userAgent, $matches))
-    {
+    if (preg_match_all($pattern, $this->userAgent, $matches)) {
       // Since some UAs have more than one phrase (e.g Firefox has a Gecko phrase,
       // Opera 7,8 have a MSIE phrase), use the last one found (the right-most one
       // in the UA).  That's usually the most correct.
       $i = count($matches[1]) - 1;
 
-      if(isset($matches[1][$i]))
-      {
+      if (isset($matches[1][$i])) {
         $this->name = $matches[1][$i];
       }
-      if(isset($matches[2][$i]))
-      {
+      if (isset($matches[2][$i])) {
         $this->version = $matches[2][$i];
       }
     }
 
     // search bot
-    if(preg_match('#(' . implode($this->getKnownBots(), ')|(') . ')#i', $this->userAgent, $matches))
-    {
+    if (preg_match('#(' . implode($this->getKnownBots(), ')|(') . ')#i', $this->userAgent, $matches)) {
       $this->isBot = true;
       $this->name = $matches[0];
       // FIXME: try to detect bot version?
     }
     // mobile device
-    elseif(preg_match('#(' . implode($this->getKnownMobiles(), ')|(') . ')#i', $this->userAgent, $matches))
-    {
+    elseif (preg_match('#(' . implode($this->getKnownMobiles(), ')|(') . ')#i', $this->userAgent, $matches)) {
       $this->isMobile = true;
       $this->mobileName = $matches[0];
     }
@@ -170,8 +165,7 @@ class sfUserAgentDetector {
   protected function fixGoogleChrome()
   {
     // Google chrome has a safari like signature
-    if('safari' === $this->name && strpos($this->userAgent, 'chrome/'))
-    {
+    if ('safari' === $this->name && strpos($this->userAgent, 'chrome/')) {
       $this->name = 'chrome';
       $this->version = preg_replace('|.+chrome/([0-9]+(?:\.[0-9]+)?).+|', '$1', $this->userAgent);
     }
@@ -185,8 +179,7 @@ class sfUserAgentDetector {
   protected function fixSafariVersion()
   {
     // Safari version is not encoded "normally"
-    if('safari' === $this->name && strpos($this->userAgent, ' version/'))
-    {
+    if ('safari' === $this->name && strpos($this->userAgent, ' version/')) {
       $this->version = preg_replace('|.+\sversion/([0-9]+(?:\.[0-9]+)?).+|', '$1', $this->userAgent);
     }
   }

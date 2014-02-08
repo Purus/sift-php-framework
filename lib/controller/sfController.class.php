@@ -36,18 +36,14 @@ abstract class sfController implements sfIController
    */
   protected function setup()
   {
-    if('HEAD' == $this->context->getRequest()->getMethodName())
-    {
+    if ('HEAD' == $this->context->getRequest()->getMethodName()) {
       $this->context->getResponse()->setHeaderOnly(true);
     }
 
-    if(sfConfig::get('sf_i18n'))
-    {
+    if (sfConfig::get('sf_i18n')) {
       // request has culture parameter
-      if(($culture = $this->context->getRequest()->getParameter('sf_culture')))
-      {
-        if(in_array($culture, sfConfig::get('sf_i18n_enabled_cultures')))
-        {
+      if (($culture = $this->context->getRequest()->getParameter('sf_culture'))) {
+        if (in_array($culture, sfConfig::get('sf_i18n_enabled_cultures'))) {
           $this->context->getUser()->setCulture($culture);
         }
       }
@@ -97,13 +93,10 @@ abstract class sfController implements sfIController
   protected function controllerExists($moduleName, $controllerName, $extension, $throwExceptions)
   {
     $dirs = sfLoader::getControllerDirs($moduleName);
-    foreach($dirs as $dir => $checkEnabled)
-    {
+    foreach ($dirs as $dir => $checkEnabled) {
       // plugin module enabled?
-      if($checkEnabled && !in_array($moduleName, sfConfig::get('sf_enabled_modules', array())) && is_readable($dir))
-      {
-        if(sfConfig::get('sf_debug'))
-        {
+      if ($checkEnabled && !in_array($moduleName, sfConfig::get('sf_enabled_modules', array())) && is_readable($dir)) {
+        if (sfConfig::get('sf_debug')) {
           throw new sfConfigurationException(sprintf('The module "%s" is not enabled.', $moduleName));
         }
 
@@ -114,8 +107,7 @@ abstract class sfController implements sfIController
       $classFile   = strtolower($extension);
       $classSuffix = ucfirst(strtolower($extension));
       $file        = $dir.'/'.$controllerName.$classSuffix.'.class.php';
-      if(is_readable($file))
-      {
+      if (is_readable($file)) {
         // action class exists
         require_once($file);
         $this->controllerClasses[$moduleName.'_'.$controllerName.'_'.$classSuffix] = $controllerName.$classSuffix;
@@ -124,15 +116,12 @@ abstract class sfController implements sfIController
       }
 
       $module_file = $dir.'/'.$classFile.'s.class.php';
-      if(is_readable($module_file))
-      {
+      if (is_readable($module_file)) {
         // module class exists
         require_once($module_file);
 
-        if(!class_exists($moduleName.$classSuffix.'s', false))
-        {
-          if($throwExceptions)
-          {
+        if (!class_exists($moduleName.$classSuffix.'s', false)) {
+          if ($throwExceptions) {
             throw new sfControllerException(sprintf('There is no "%s" class in your action file "%s".', $moduleName.$classSuffix.'s', $module_file));
           }
 
@@ -140,10 +129,8 @@ abstract class sfController implements sfIController
         }
 
         // action is defined in this class?
-        if (!in_array('execute'.ucfirst($controllerName), get_class_methods($moduleName.$classSuffix.'s')))
-        {
-          if ($throwExceptions)
-          {
+        if (!in_array('execute'.ucfirst($controllerName), get_class_methods($moduleName.$classSuffix.'s'))) {
+          if ($throwExceptions) {
             throw new sfControllerException(sprintf('There is no "%s" method in your action class "%s"', 'execute'.ucfirst($controllerName), $moduleName.$classSuffix.'s'));
           }
 
@@ -157,13 +144,11 @@ abstract class sfController implements sfIController
     }
 
     // send an exception if debug
-    if($throwExceptions && sfConfig::get('sf_debug'))
-    {
+    if ($throwExceptions && sfConfig::get('sf_debug')) {
       $dirs = array_keys($dirs);
 
       // remove sf_root_dir from dirs
-      foreach($dirs as &$dir)
-      {
+      foreach ($dirs as &$dir) {
         $dir = str_replace(sfConfig::get('sf_root_dir'), '%SF_ROOT_DIR%', $dir);
       }
 
@@ -190,8 +175,7 @@ abstract class sfController implements sfIController
     $moduleName = preg_replace('/[^a-z0-9\-_]+/i', '', $moduleName);
     $actionName = preg_replace('/[^a-z0-9\-_]+/i', '', $actionName);
 
-    if($this->getActionStack()->getSize() >= $this->maxForwards)
-    {
+    if ($this->getActionStack()->getSize() >= $this->maxForwards) {
       // let's kill this party before it turns into cpu cycle hell
       throw new sfForwardException(sprintf('Too many forwards have been detected for this request (> %d)', $this->maxForwards));
     }
@@ -199,14 +183,12 @@ abstract class sfController implements sfIController
     $app = sfConfig::get('sf_app');
     $env = sfConfig::get('sf_environment');
 
-    if (!sfConfig::get('sf_available') || sfToolkit::hasLockFile(sfConfig::get('sf_data_dir').'/'.$app.'_'.$env.'.lck'))
-    {
+    if (!sfConfig::get('sf_available') || sfToolkit::hasLockFile(sfConfig::get('sf_data_dir').'/'.$app.'_'.$env.'.lck')) {
       // application is unavailable
       $moduleName = sfConfig::get('sf_unavailable_module');
       $actionName = sfConfig::get('sf_unavailable_action');
 
-      if (!$this->actionExists($moduleName, $actionName))
-      {
+      if (!$this->actionExists($moduleName, $actionName)) {
         // cannot find unavailable module/action
         throw new sfConfigurationException(sprintf('Invalid configuration settings: [sf_unavailable_module] "%s", [sf_unavailable_action] "%s"', $moduleName, $actionName));
       }
@@ -215,11 +197,9 @@ abstract class sfController implements sfIController
     // check for a module generator config file
     sfConfigCache::getInstance()->import(sfConfig::get('sf_app_module_dir_name').'/'.$moduleName.'/'.sfConfig::get('sf_app_module_config_dir_name').'/generator.yml', true, true);
 
-    if(!$this->actionExists($moduleName, $actionName))
-    {
+    if (!$this->actionExists($moduleName, $actionName)) {
       // the requested action doesn't exist
-      if(sfConfig::get('sf_logging_enabled'))
-      {
+      if (sfConfig::get('sf_logging_enabled')) {
         sfLogger::getInstance()->info(sprintf('{sfController} The action "%s/%s" does not exist', $moduleName, $actionName));
       }
 
@@ -231,8 +211,7 @@ abstract class sfController implements sfIController
       $moduleName = sfConfig::get('sf_error_404_module');
       $actionName = sfConfig::get('sf_error_404_action');
 
-      if(!$this->actionExists($moduleName, $actionName))
-      {
+      if (!$this->actionExists($moduleName, $actionName)) {
         // cannot find unavailable module/action
         throw new sfConfigurationException(sprintf('Invalid configuration settings: [sf_error_404_module] "%s", [sf_error_404_action] "%s"', $moduleName, $actionName));
       }
@@ -248,25 +227,21 @@ abstract class sfController implements sfIController
     require(sfConfigCache::getInstance()->checkConfig(sfConfig::get('sf_app_module_dir_name').'/'.$moduleName.'/'.sfConfig::get('sf_app_module_config_dir_name').'/module.yml'));
 
     // check if this module is internal
-    if($this->getActionStack()->getSize() == 1 && sfConfig::get('mod_'.strtolower($moduleName).'_is_internal') && !sfConfig::get('sf_test'))
-    {
+    if ($this->getActionStack()->getSize() == 1 && sfConfig::get('mod_'.strtolower($moduleName).'_is_internal') && !sfConfig::get('sf_test')) {
       throw new sfConfigurationException(sprintf('Action "%s" from module "%s" cannot be called directly', $actionName, $moduleName));
     }
 
-    if(sfConfig::get('mod_'.strtolower($moduleName).'_enabled'))
-    {
+    if (sfConfig::get('mod_'.strtolower($moduleName).'_enabled')) {
       // module is enabled
 
       // check for a module config.php
       $moduleConfig = sfConfig::get('sf_app_module_dir').'/'.$moduleName.'/'.sfConfig::get('sf_app_module_config_dir_name').'/config.php';
-      if(is_readable($moduleConfig))
-      {
+      if (is_readable($moduleConfig)) {
         require_once($moduleConfig);
       }
 
       // initialize the action
-      if($actionInstance->initialize($this->context))
-      {
+      if ($actionInstance->initialize($this->context)) {
         // create a new filter chain
         $filterChain = new sfFilterChain($this->context);
         $filterChain->load($actionInstance);
@@ -275,8 +250,7 @@ abstract class sfController implements sfIController
                 new sfEvent('controller.change_action',
                         array('module' => $moduleName, 'action' => $actionName, 'controller' => &$this)));
 
-        if($moduleName == sfConfig::get('sf_error_404_module') && $actionName == sfConfig::get('sf_error_404_action'))
-        {
+        if ($moduleName == sfConfig::get('sf_error_404_module') && $actionName == sfConfig::get('sf_error_404_action')) {
           sfCore::getEventDispatcher()->notify(
                   new sfEvent('controller.page_not_found', array(
                         'controller'  => $this,
@@ -289,21 +263,16 @@ abstract class sfController implements sfIController
 
         // process the filter chain
         $filterChain->execute();
-      }
-      else
-      {
+      } else {
         // action failed to initialize
         throw new sfInitializationException(sprintf('Action initialization failed for module "%s", action "%s"', $moduleName, $actionName));
       }
-    }
-    else
-    {
+    } else {
       // module is disabled
       $moduleName = sfConfig::get('sf_module_disabled_module');
       $actionName = sfConfig::get('sf_module_disabled_action');
 
-      if(!$this->actionExists($moduleName, $actionName))
-      {
+      if (!$this->actionExists($moduleName, $actionName)) {
         // cannot find mod disabled module/action
         throw new sfConfigurationException(sprintf('Invalid configuration settings: [sf_module_disabled_module] "%s", [sf_module_disabled_action] "%s"', $moduleName, $actionName));
       }
@@ -352,8 +321,7 @@ abstract class sfController implements sfIController
   protected function getController($moduleName, $controllerName, $extension)
   {
     $classSuffix = ucfirst(strtolower($extension));
-    if (!isset($this->controllerClasses[$moduleName.'_'.$controllerName.'_'.$classSuffix]))
-    {
+    if (!isset($this->controllerClasses[$moduleName.'_'.$controllerName.'_'.$classSuffix])) {
       $this->controllerExists($moduleName, $controllerName, $extension, true);
     }
 
@@ -362,8 +330,7 @@ abstract class sfController implements sfIController
     // fix for same name classes
     $moduleClass = $moduleName.'_'.$class;
 
-    if (class_exists($moduleClass, false))
-    {
+    if (class_exists($moduleClass, false)) {
       $class = $moduleClass;
     }
 
@@ -416,19 +383,15 @@ abstract class sfController implements sfIController
     // user view exists?
     $file = sfConfig::get('sf_app_module_dir').'/'.$moduleName.'/'.sfConfig::get('sf_app_module_view_dir_name').'/'.$actionName.$viewName.'View.class.php';
 
-    if(is_readable($file))
-    {
+    if (is_readable($file)) {
       require_once($file);
       $class = $actionName.$viewName.'View';
       // fix for same name classes
       $moduleClass = $moduleName.'_'.$class;
-      if(class_exists($moduleClass, false))
-      {
+      if (class_exists($moduleClass, false)) {
         $class = $moduleClass;
       }
-    }
-    else
-    {
+    } else {
       $class = sprintf('%sView', // view class (as configured in module.yml or defined in action)
                   $this->getContext()->getRequest()->getAttribute($moduleName.'_'.$actionName.'_view_name',
                   sfConfig::get('mod_'.strtolower($moduleName).'_view_class'), 'sift/action/view')
@@ -437,8 +400,7 @@ abstract class sfController implements sfIController
 
     $view = $this->context->getServiceContainer()->createObject($class);
 
-    if(!$view instanceof sfIView)
-    {
+    if (!$view instanceof sfIView) {
       throw new LogicException(sprintf('The "%s" class does not implement sfIView interface.', $class));
     }
 
@@ -458,8 +420,7 @@ abstract class sfController implements sfIController
    */
   public function getPresentationFor($module, $action, $viewName = null)
   {
-    if(sfConfig::get('sf_logging_enabled'))
-    {
+    if (sfConfig::get('sf_logging_enabled')) {
       sfLogger::getInstance()->info('{sfController} Get presentation for action "'.$module.'/'.$action.'" (view class: "'.$viewName.'")');
     }
 
@@ -476,26 +437,21 @@ abstract class sfController implements sfIController
     $index = $actionStack->getSize();
 
     // set viewName if needed
-    if($viewName)
-    {
+    if ($viewName) {
       // $currentViewName = sfConfig::get('mod_'.strtolower($module).'_view_class');
       // sfConfig::set('mod_'.strtolower($module).'_view_class', $viewName);
       $this->getContext()->getRequest()->setAttribute($module.'_'.$action.'_view_name', $viewName, 'sift/action/view');
     }
 
-    try
-    {
+    try {
       // forward to the action
       $this->forward($module, $action);
-    }
-    catch (Exception $e)
-    {
+    } catch (Exception $e) {
       // put render mode back
       $this->setRenderMode($renderMode);
 
       // remove viewName
-      if ($viewName)
-      {
+      if ($viewName) {
         // sfConfig::set('mod_'.strtolower($module).'_view_class', $currentViewName);
         $this->getContext()->getRequest()->getAttributeHolder()->remove($module.'_'.$action.'_view_name', 'sift/action/view');
       }
@@ -514,23 +470,18 @@ abstract class sfController implements sfIController
 
     // remove the action entry
     $nb = $actionStack->getSize() - $index;
-    while($nb-- > 0)
-    {
+    while ($nb-- > 0) {
       $actionEntry = $actionStack->popEntry();
 
-      if($actionEntry->getModuleName() == sfConfig::get('sf_login_module') && $actionEntry->getActionName() == sfConfig::get('sf_login_action'))
-      {
+      if ($actionEntry->getModuleName() == sfConfig::get('sf_login_module') && $actionEntry->getActionName() == sfConfig::get('sf_login_action')) {
         throw new sfException('Your action is secured, but the user is not authenticated.');
-      }
-      elseif($actionEntry->getModuleName() == sfConfig::get('sf_secure_module') && $actionEntry->getActionName() == sfConfig::get('sf_secure_action'))
-      {
+      } elseif ($actionEntry->getModuleName() == sfConfig::get('sf_secure_module') && $actionEntry->getActionName() == sfConfig::get('sf_secure_action')) {
         throw new sfException('Your action is secured, but the user does not have access.');
       }
     }
 
     // remove viewName
-    if($viewName)
-    {
+    if ($viewName) {
       // sfConfig::set('mod_'.strtolower($module).'_view_class', $currentViewName);
       $this->getContext()->getRequest()->getAttributeHolder()->remove($module.'_'.$action.'_view_name', 'sift/action/view');
     }
@@ -547,8 +498,7 @@ abstract class sfController implements sfIController
    */
   public function setRenderMode($mode)
   {
-    if ($mode == sfView::RENDER_CLIENT || $mode == sfView::RENDER_VAR || $mode == sfView::RENDER_NONE)
-    {
+    if ($mode == sfView::RENDER_CLIENT || $mode == sfView::RENDER_VAR || $mode == sfView::RENDER_NONE) {
       $this->renderMode = $mode;
 
       return;
@@ -586,8 +536,7 @@ abstract class sfController implements sfIController
                         'arguments'   => $arguments,
                         'controller'  => $this)));
 
-    if(!$event->isProcessed())
-    {
+    if (!$event->isProcessed()) {
       throw new sfException(sprintf('Call to undefined method %s::%s.', get_class($this), $method));
     }
 

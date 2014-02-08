@@ -13,8 +13,8 @@
  * @package Sift
  * @subpackage cache
  */
-class sfNoCache extends sfCache {
-
+class sfNoCache extends sfCache
+{
   /**
    * @see sfICache
    */

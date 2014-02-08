@@ -19,8 +19,8 @@
  * @package    Sift
  * @subpackage text
  */
-class sfMarkdownParser {
-
+class sfMarkdownParser
+{
   protected static $xhtml = true;
 
   /**
@@ -208,8 +208,7 @@ class sfMarkdownParser {
   public static function getInstance($options = array())
   {
     $key = md5(serialize($options));
-    if(!isset(self::$instances[$key]))
-    {
+    if (!isset(self::$instances[$key])) {
       self::$instances[$key] = new self($options);
     }
 
@@ -248,8 +247,7 @@ class sfMarkdownParser {
    */
   public function transform($text)
   {
-    if(empty($text))
-    {
+    if (empty($text)) {
       return $text;
     }
 
@@ -278,10 +276,8 @@ class sfMarkdownParser {
     $text = preg_replace('/^[ ]+$/m', '', $text);
 
     // Run document gamut methods.
-    foreach($this->documentGamut as $method => $priority)
-    {
-      if(!is_callable(array($this, $method)))
-      {
+    foreach ($this->documentGamut as $method => $priority) {
+      if (!is_callable(array($this, $method))) {
         throw new Exception(sprintf('Invalid document gamut "%s".', $method));
       }
       $text = $this->$method($text);
@@ -364,8 +360,7 @@ class sfMarkdownParser {
    */
   protected function hashHTMLBlocks($text)
   {
-    if($this->options['no_markup'])
-    {
+    if ($this->options['no_markup']) {
       return $text;
     }
 
@@ -569,10 +564,8 @@ class sfMarkdownParser {
    */
   protected function runBasicBlockGamut($text)
   {
-    foreach($this->blockGamut as $method => $priority)
-    {
-      if(!is_callable(array($this, $method)))
-      {
+    foreach ($this->blockGamut as $method => $priority) {
+      if (!is_callable(array($this, $method))) {
         throw new Exception(sprintf('Invalid block gamut "%s".', $method));
       }
       $text = $this->$method($text);
@@ -612,10 +605,8 @@ class sfMarkdownParser {
    */
   protected function runSpanGamut($text)
   {
-    foreach($this->spanGamut as $method => $priority)
-    {
-      if(!is_callable(array($this, $method)))
-      {
+    foreach ($this->spanGamut as $method => $priority) {
+      if (!is_callable(array($this, $method))) {
         throw new Exception(sprintf('Invalid span gamut "%s".', $method));
       }
       $text = $this->$method($text);
@@ -653,8 +644,7 @@ class sfMarkdownParser {
    */
   protected function doAnchors($text)
   {
-    if($this->in_anchor)
-    {
+    if ($this->in_anchor) {
       return $text;
     }
 
@@ -730,8 +720,7 @@ class sfMarkdownParser {
     $link_text = $matches[2];
     $link_id = &$matches[3];
 
-    if($link_id == '')
-    {
+    if ($link_id == '') {
       // for shortcut links like [this][] or [this].
       $link_id = $link_text;
     }
@@ -739,13 +728,11 @@ class sfMarkdownParser {
     // lower-case and turn embedded newlines into spaces
     $link_id = preg_replace('{[ ]?\n}', ' ', strtolower($link_id));
 
-    if(isset($this->urls[$link_id]))
-    {
+    if (isset($this->urls[$link_id])) {
       $result = sprintf('<a href="%s"',
                   $this->encodeAttribute($this->urls[$link_id]));
 
-      if(isset($this->titles[$link_id]))
-      {
+      if (isset($this->titles[$link_id])) {
         $title = $this->encodeAttribute($this->titles[$link_id]);
         $result .= sprintf(' title="%s"', $title);
       }
@@ -754,9 +741,7 @@ class sfMarkdownParser {
       $result .= sprintf('>%s</a>', $link_text);
 
       $result = $this->hashPart($result);
-    }
-    else
-    {
+    } else {
       $result = $whole_match;
     }
 
@@ -779,8 +764,7 @@ class sfMarkdownParser {
     $url = $this->encodeAttribute($url);
 
     $result = sprintf('<a href="%s"', $url);
-    if(isset($title))
-    {
+    if (isset($title)) {
       $title = $this->encodeAttribute($title);
       $result .= sprintf(' title="%s"', $title);
     }
@@ -857,29 +841,24 @@ class sfMarkdownParser {
     $alt_text = $matches[2];
     $link_id = strtolower($matches[3]);
 
-    if($link_id == '')
-    {
+    if ($link_id == '') {
       // for shortcut links like ![this][].
       $link_id = strtolower($alt_text);
     }
 
     $alt_text = $this->encodeAttribute($alt_text);
-    if(isset($this->urls[$link_id]))
-    {
+    if (isset($this->urls[$link_id])) {
       $url = $this->encodeAttribute($this->urls[$link_id]);
       $result = sprintf('<img src="%s" alt="%s"', $url, $alt_text);
 
-      if(isset($this->titles[$link_id]))
-      {
+      if (isset($this->titles[$link_id])) {
         $title = $this->encodeAttribute($this->titles[$link_id]);
         $result .= sprintf(' title="%s"', $title);
       }
 
       $result .= self::$xhtml ? ' />' : '>';
       $result = $this->hashPart($result);
-    }
-    else
-    {
+    } else {
       // If there's no such link ID, leave intact:
       $result = $whole_match;
     }
@@ -903,8 +882,7 @@ class sfMarkdownParser {
     $alt_text = $this->encodeAttribute($alt_text);
     $url = $this->encodeAttribute($url);
     $result = sprintf('<img src="%s" alt="%s"', $url, $alt_text);
-    if(isset($title))
-    {
+    if (isset($title)) {
       $title = $this->encodeAttribute($title);
       // $title already quoted
       $result .= sprintf(' title="%s"', $title);
@@ -958,8 +936,7 @@ class sfMarkdownParser {
   protected function doHeadersCallbackSetext($matches)
   {
     // Terrible hack to check we haven't found an empty list item.
-    if($matches[2] == '-' && preg_match('{^-(?: |$)}', $matches[1]))
-    {
+    if ($matches[2] == '-' && preg_match('{^-(?: |$)}', $matches[1])) {
       return $matches[0];
     }
 
@@ -1002,8 +979,7 @@ class sfMarkdownParser {
         $marker_ol_re => $marker_ul_re,
     );
 
-    foreach($markers_relist as $marker_re => $other_marker_re)
-    {
+    foreach ($markers_relist as $marker_re => $other_marker_re) {
       # Re-usable pattern to match any entirel ul or ol list:
       $whole_list_re = '
         (                # $1 = whole list
@@ -1034,15 +1010,12 @@ class sfMarkdownParser {
       // We use a different prefix before nested lists than top-level lists.
       // See extended comment in _ProcessListItems().
 
-      if($this->listLevel)
-      {
+      if ($this->listLevel) {
         $text = preg_replace_callback('{
             ^
             ' . $whole_list_re . '
           }mx', array(&$this, 'doListsCallback'), $text);
-      }
-      else
-      {
+      } else {
         $text = preg_replace_callback('{
             (?:(?<=\n)\n|\A\n?) # Must eat the newline
             ' . $whole_list_re . '
@@ -1149,9 +1122,7 @@ class sfMarkdownParser {
       // Replace marker with the appropriate whitespace indentation
       $item = $leading_space . str_repeat(' ', strlen($marker_space)) . $item;
       $item = $this->runBlockGamut($this->outdent($item) . "\n");
-    }
-    else
-    {
+    } else {
       // Recursion for sub-lists:
       $item = $this->doLists($this->outdent($item));
       $item = preg_replace('/\n+$/', '', $item);
@@ -1222,14 +1193,11 @@ class sfMarkdownParser {
    */
   protected function prepareItalicsAndBold()
   {
-    foreach($this->em_relist as $em => $em_re)
-    {
-      foreach($this->strong_relist as $strong => $strong_re)
-      {
+    foreach ($this->em_relist as $em => $em_re) {
+      foreach ($this->strong_relist as $strong => $strong_re) {
         // Construct list of allowed token expressions.
         $token_relist = array();
-        if(isset($this->em_strong_relist["$em$strong"]))
-        {
+        if (isset($this->em_strong_relist["$em$strong"])) {
           $token_relist[] = $this->em_strong_relist["$em$strong"];
         }
         $token_relist[] = $em_re;
@@ -1254,8 +1222,7 @@ class sfMarkdownParser {
     $strong = '';
     $tree_char_em = false;
 
-    while(1)
-    {
+    while (1) {
       // Get prepared regular expression for seraching emphasis tokens
       // in current context.
       $token_re = $this->em_strong_prepared_relist["$em$strong"];
@@ -1267,12 +1234,10 @@ class sfMarkdownParser {
       $token = & $parts[1];
       $text = & $parts[2];
 
-      if(empty($token))
-      {
+      if (empty($token)) {
         // Reached end of text span: empty stack without emitting.
         // any more emphasis.
-        while($token_stack[0])
-        {
+        while ($token_stack[0]) {
           $text_stack[1] .= array_shift($token_stack);
           $text_stack[0] .= array_shift($text_stack);
         }
@@ -1280,11 +1245,9 @@ class sfMarkdownParser {
       }
 
       $token_len = strlen($token);
-      if($tree_char_em)
-      {
+      if ($tree_char_em) {
         // Reached closing marker while inside a three-char emphasis.
-        if($token_len == 3)
-        {
+        if ($token_len == 3) {
           // Three-char closing marker, close em and strong.
           array_shift($token_stack);
           $span = array_shift($text_stack);
@@ -1293,9 +1256,7 @@ class sfMarkdownParser {
           $text_stack[0] .= $this->hashPart($span);
           $em = '';
           $strong = '';
-        }
-        else
-        {
+        } else {
           // Other closing marker: close one em or strong and
           // change current token state to match the other
           $token_stack[0] = str_repeat($token{0}, 3 - $token_len);
@@ -1307,15 +1268,11 @@ class sfMarkdownParser {
           $$tag = ''; // $$tag stands for $em or $strong
         }
         $tree_char_em = false;
-      }
-      else if($token_len == 3)
-      {
-        if($em)
-        {
+      } else if ($token_len == 3) {
+        if ($em) {
           // Reached closing marker for both em and strong.
           // Closing strong marker:
-          for($i = 0; $i < 2; ++$i)
-          {
+          for ($i = 0; $i < 2; ++$i) {
             $shifted_token = array_shift($token_stack);
             $tag = strlen($shifted_token) == 2 ? "strong" : "em";
             $span = array_shift($text_stack);
@@ -1324,9 +1281,7 @@ class sfMarkdownParser {
             $text_stack[0] .= $this->hashPart($span);
             $$tag = ''; // $$tag stands for $em or $strong
           }
-        }
-        else
-        {
+        } else {
           // Reached opening three-char emphasis marker. Push on token
           // stack; will be handled by the special condition above.
           $em = $token{0};
@@ -1335,14 +1290,10 @@ class sfMarkdownParser {
           array_unshift($text_stack, '');
           $tree_char_em = true;
         }
-      }
-      else if($token_len == 2)
-      {
-        if($strong)
-        {
+      } else if ($token_len == 2) {
+        if ($strong) {
           // Unwind any dangling emphasis marker:
-          if(strlen($token_stack[0]) == 1)
-          {
+          if (strlen($token_stack[0]) == 1) {
             $text_stack[1] .= array_shift($token_stack);
             $text_stack[0] .= array_shift($text_stack);
           }
@@ -1353,21 +1304,15 @@ class sfMarkdownParser {
           $span = "<strong>$span</strong>";
           $text_stack[0] .= $this->hashPart($span);
           $strong = '';
-        }
-        else
-        {
+        } else {
           array_unshift($token_stack, $token);
           array_unshift($text_stack, '');
           $strong = $token;
         }
-      }
-      else
-      {
+      } else {
         // Here $token_len == 1
-        if($em)
-        {
-          if(strlen($token_stack[0]) == 1)
-          {
+        if ($em) {
+          if (strlen($token_stack[0]) == 1) {
             // Closing emphasis marker:
             array_shift($token_stack);
             $span = array_shift($text_stack);
@@ -1375,14 +1320,10 @@ class sfMarkdownParser {
             $span = "<em>$span</em>";
             $text_stack[0] .= $this->hashPart($span);
             $em = '';
-          }
-          else
-          {
+          } else {
             $text_stack[0] .= $token;
           }
-        }
-        else
-        {
+        } else {
           array_unshift($token_stack, $token);
           array_unshift($text_stack, '');
           $em = $token;
@@ -1445,18 +1386,14 @@ class sfMarkdownParser {
     $grafs = preg_split('/\n{2,}/', $text, -1, PREG_SPLIT_NO_EMPTY);
 
     // Wrap <p> tags and unhashify HTML blocks
-    foreach($grafs as $key => $value)
-    {
-      if(!preg_match('/^B\x1A[0-9]+B$/', $value))
-      {
+    foreach ($grafs as $key => $value) {
+      if (!preg_match('/^B\x1A[0-9]+B$/', $value)) {
         # Is a paragraph.
         $value = $this->runSpanGamut($value);
         $value = preg_replace('/^([ ]*)/', "<p>", $value);
         $value .= "</p>";
         $grafs[$key] = $this->unhash($value);
-      }
-      else
-      {
+      } else {
         # Is a block.
         # Modify elements of @grafs in-place...
         $graf = $value;
@@ -1529,12 +1466,9 @@ class sfMarkdownParser {
    */
   protected function encodeAmpsAndAngles($text)
   {
-    if($this->options['no_entities'])
-    {
+    if ($this->options['no_entities']) {
       $text = str_replace('&', '&amp;', $text);
-    }
-    else
-    {
+    } else {
       # Ampersand-encoding based entirely on Nat Irons's Amputator
       # MT plugin: <http://bumppo.net/projects/amputator/>
       $text = preg_replace('/&(?!#?[xX]?(?:[0-9a-fA-F]+|\w+);)/', '&amp;', $text);
@@ -1624,14 +1558,12 @@ class sfMarkdownParser {
     $addr = sprintf('mailto:%s', $addr);
     $chars = preg_split('/(?<!^)(?!$)/', $addr);
     // Deterministic seed.
-    $seed = (int)abs(crc32($addr) / strlen($addr));
+    $seed = (int) abs(crc32($addr) / strlen($addr));
 
-    foreach($chars as $key => $char)
-    {
+    foreach ($chars as $key => $char) {
       $ord = ord($char);
       // Ignore non-ascii chars.
-      if($ord < 128)
-      {
+      if ($ord < 128) {
         // Pseudo-random function.
         $r = ($seed * (1 + $key)) % 100;
         // roughly 10% raw, 45% hex, 45% dec
@@ -1684,25 +1616,20 @@ class sfMarkdownParser {
         )
         }xs';
 
-    while(1)
-    {
+    while (1) {
       // Each loop iteration seach for either the next tag, the next
       // openning code span marker, or the next escaped character.
       // Each token is then passed to handleSpanToken.
       $parts = preg_split($span_re, $str, 2, PREG_SPLIT_DELIM_CAPTURE);
       // Create token from text preceding tag.
-      if($parts[0] != "")
-      {
+      if ($parts[0] != "") {
         $output .= $parts[0];
       }
       // Check if we reach the end.
-      if(isset($parts[1]))
-      {
+      if (isset($parts[1])) {
         $output .= $this->handleSpanToken($parts[1], $parts[2]);
         $str = $parts[2];
-      }
-      else
-      {
+      } else {
         break;
       }
     }
@@ -1720,14 +1647,12 @@ class sfMarkdownParser {
    */
   protected function handleSpanToken($token, &$str)
   {
-    switch($token{0})
-    {
+    switch ($token{0}) {
       case "\\":
         return $this->hashPart("&#" . ord($token{1}) . ";");
       case "`":
         // Search for end marker in remaining text.
-        if(preg_match('/^(.*?[^`])' . preg_quote($token) . '(?!`)(.*)$/sm', $str, $matches))
-        {
+        if (preg_match('/^(.*?[^`])' . preg_quote($token) . '(?!`)(.*)$/sm', $str, $matches)) {
           $str = $matches[2];
           $codespan = $this->makeCodeSpan($matches[1]);
 
@@ -1781,8 +1706,7 @@ class sfMarkdownParser {
     $line = $blocks[0];
     // Do not add first block twice.
     unset($blocks[0]);
-    foreach($blocks as $block)
-    {
+    foreach ($blocks as $block) {
       // Calculate amount of space, insert spaces, insert block.
       $amount = $this->options['tab_width'] -
               sfUtf8::len($line) % $this->options['tab_width'];

@@ -12,8 +12,8 @@
  * @package Sift
  * @subpackage debug_highlighter
  */
-class sfSyntaxHighlighterGeneric extends sfSyntaxHighlighter {
-
+class sfSyntaxHighlighterGeneric extends sfSyntaxHighlighter
+{
   /**
    * Array of patterns
    *
@@ -91,8 +91,7 @@ class sfSyntaxHighlighterGeneric extends sfSyntaxHighlighter {
   {
     $key = '##' . uniqid() . '##';
 
-    if(isset($match[0]) && ($match[0] == '/' || $match[0] == '#'))
-    {
+    if (isset($match[0]) && ($match[0] == '/' || $match[0] == '#')) {
       $this->strings[$key] = '<span class="' . $this->getCssPrefix() . 'comment">' . $match . '</span>';
 
       return $key;

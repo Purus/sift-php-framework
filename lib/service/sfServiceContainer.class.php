@@ -13,8 +13,8 @@
  * @package    Sift
  * @subpackage service
  */
-class sfServiceContainer {
-
+class sfServiceContainer
+{
   /**
    * Service identifier
    *
@@ -74,12 +74,9 @@ class sfServiceContainer {
   {
     $this->cache = $cache;
 
-    if($this->cache->has('di_maps'))
-    {
+    if ($this->cache->has('di_maps')) {
       $this->maps = unserialize($this->cache->get('di_maps'));
-    }
-    else
-    {
+    } else {
       $this->maps = new sfDependencyInjectionMaps();
     }
 
@@ -99,8 +96,7 @@ class sfServiceContainer {
    */
   public function get($serviceName)
   {
-    if(isset($this->services[$serviceName]))
-    {
+    if (isset($this->services[$serviceName])) {
       return $this->services[$serviceName];
     }
 
@@ -130,14 +126,10 @@ class sfServiceContainer {
    */
   public function register($serviceName, $service)
   {
-    if(!$service instanceof sfServiceDefinition)
-    {
-      if(is_array($service))
-      {
+    if (!$service instanceof sfServiceDefinition) {
+      if (is_array($service)) {
         $service = sfServiceDefinition::createFromArray($service);
-      }
-      else
-      {
+      } else {
         throw new InvalidArgumentException('Invalid service definition given. Should be an array of sfServiceDefinition object.');
       }
     }
@@ -184,16 +176,14 @@ class sfServiceContainer {
    */
   public function clear()
   {
-    if(true)
-    {
+    if (true) {
       // save to cache
       $this->cache->set('di_maps', serialize($this->maps));
     }
 
     // we need to clear in reverse order, more important services are at the top
     // remove from the bottom
-    foreach(array_reverse($this->services) as $serviceName => $service)
-    {
+    foreach (array_reverse($this->services) as $serviceName => $service) {
       $this->remove($serviceName);
     }
 
@@ -215,13 +205,11 @@ class sfServiceContainer {
    */
   protected function buildService($serviceName)
   {
-    if(!isset($this->definitions[$serviceName]))
-    {
+    if (!isset($this->definitions[$serviceName])) {
       throw new InvalidArgumentException(sprintf('The given service "%s" is not set.', $serviceName));
     }
 
-    if(sfConfig::get('sf_logging_enabled'))
-    {
+    if (sfConfig::get('sf_logging_enabled')) {
       sfLogger::getInstance()->debug('{sfServiceContainer} Building service "{name}"', array(
         'name' => $serviceName
       ));
@@ -242,29 +230,22 @@ class sfServiceContainer {
     $arguments = $this->resolveDependencies($this->resolveServices($this->resolveValue($definition->getArguments())));
 
     // static call
-    if(null !== $definition->getConstructor())
-    {
+    if (null !== $definition->getConstructor()) {
       $object = call_user_func_array(array($this->resolveValue($definition->getClass()), $definition->getConstructor()), $arguments);
-    }
-    else
-    {
+    } else {
       $object = $this->createObject($definition->getClass(), $arguments);
     }
 
-    foreach($definition->getMethodCalls() as $call)
-    {
+    foreach ($definition->getMethodCalls() as $call) {
       call_user_func_array(array($object, $call[0]), $this->resolveDependencies($this->resolveServices($this->resolveValue($call[1]))));
     }
 
-    if($callable = $definition->getConfigurator())
-    {
-      if(is_array($callable))
-      {
+    if ($callable = $definition->getConfigurator()) {
+      if (is_array($callable)) {
         $callable[0] = $this->resolveValue($callable[0]);
       }
 
-      if(!sfToolkit::isCallable($callable, false, $callableName))
-      {
+      if (!sfToolkit::isCallable($callable, false, $callableName)) {
         throw new InvalidArgumentException(sprintf('The configured callable "%s" for class "%s" is not callable.', $callableName, get_class($object)));
       }
 
@@ -283,17 +264,13 @@ class sfServiceContainer {
    */
   public function resolveValue($value)
   {
-    if(is_array($value))
-    {
+    if (is_array($value)) {
       $args = array();
-      foreach($value as $k => $v)
-      {
+      foreach ($value as $k => $v) {
         $args[$this->resolveValue($k)] = $this->resolveValue($v);
       }
       $value = $args;
-    }
-    elseif(is_string($value))
-    {
+    } elseif (is_string($value)) {
       $value = $this->replaceConstants($value);
     }
 
@@ -308,8 +285,7 @@ class sfServiceContainer {
    */
   public function replaceConstants($value)
   {
-    if(strpos($value, '%') === false)
-    {
+    if (strpos($value, '%') === false) {
       return $value;
     }
 
@@ -318,13 +294,11 @@ class sfServiceContainer {
 
     $replaced = $value;
     $shift = 0;
-    foreach($matches as $match)
-    {
+    foreach ($matches as $match) {
       $found = false;
       $name = strtolower($match[1][0]);
       $configured = $match[0][0];
-      if(sfConfig::has($name))
-      {
+      if (sfConfig::has($name)) {
         $configured = sfConfig::get($name);
         $found = true;
       }
@@ -333,8 +307,7 @@ class sfServiceContainer {
           (is_object($configured) && !method_exists($configured, '__toString')))
       {
         // this is a misconfigured value
-        if(count($matches) > 1)
-        {
+        if (count($matches) > 1) {
           throw new LogicException(sprintf('Possible misconfiguration of "%s". The returned configuration value for "%s" is an %s.', $value, $match[0][0], gettype($configured)));
         }
 
@@ -342,9 +315,8 @@ class sfServiceContainer {
       }
 
       // force string
-      $configured = (string)$configured;
-      if($found)
-      {
+      $configured = (string) $configured;
+      if ($found) {
         $start = $match[0][1] - $shift;
         $replaced = substr_replace($replaced, $configured, $start, strlen($match[0][0]));
         // offset shift (length of the placeholder - length of the replacement text)
@@ -363,12 +335,9 @@ class sfServiceContainer {
    */
   public function resolveServices($value)
   {
-    if(is_array($value))
-    {
+    if (is_array($value)) {
       $value = array_map(array($this, 'resolveServices'), $value);
-    }
-    elseif(is_string($value) && 0 === strpos($value, self::SERVICE_IDENTIFIER))
-    {
+    } elseif (is_string($value) && 0 === strpos($value, self::SERVICE_IDENTIFIER)) {
       // get the service
       $value = $this->get(substr($value, 1));
     }
@@ -384,12 +353,9 @@ class sfServiceContainer {
    */
   public function resolveDependencies($value)
   {
-    if(is_array($value))
-    {
+    if (is_array($value)) {
       $value = array_map(array($this, 'resolveDependencies'), $value);
-    }
-    elseif(is_string($value) && 0 === strpos($value, self::DEPENDENCY_IDENTIFIER))
-    {
+    } elseif (is_string($value) && 0 === strpos($value, self::DEPENDENCY_IDENTIFIER)) {
       // get the dependency
       $value = $this->getDependencies()->get(substr($value, 1));
     }
@@ -405,13 +371,11 @@ class sfServiceContainer {
    */
   public function remove($serviceName)
   {
-    if(isset($this->services[$serviceName]))
-    {
+    if (isset($this->services[$serviceName])) {
       if($this->services[$serviceName] instanceof sfIService
         || method_exists($this->services[$serviceName], 'shutdown'))
       {
-        if(sfConfig::get('sf_logging_enabled'))
-        {
+        if (sfConfig::get('sf_logging_enabled')) {
           sfLogger::getInstance()->debug('{sfServiceContainer} Shutting down service "{name}"', array(
             'name' => $serviceName
           ));
@@ -433,12 +397,9 @@ class sfServiceContainer {
    */
   public function has($serviceName)
   {
-    if(isset($this->services[$serviceName]) || isset($this->definitions[$serviceName]))
-    {
+    if (isset($this->services[$serviceName]) || isset($this->definitions[$serviceName])) {
       return true;
-    }
-    else
-    {
+    } else {
       return false;
     }
   }
@@ -451,14 +412,12 @@ class sfServiceContainer {
    */
   public function createObject($className, $arguments = null)
   {
-    if(sfConfig::get('sf_logging_enabled'))
-    {
+    if (sfConfig::get('sf_logging_enabled')) {
       sfLogger::getInstance()->debug('{sfServiceContainer} Creating class "{class_name}"', array(
         'class_name' => $className
       ));
 
-      if(sfConfig::get('sf_debug'))
-      {
+      if (sfConfig::get('sf_debug')) {
         $timer = sfTimerManager::getTimer('Create object');
       }
     }
@@ -466,8 +425,7 @@ class sfServiceContainer {
     // construct the object
     $constructor = new sfDependencyInjectionBuilder($className, $this->dependencies, $this->maps);
 
-    if(isset($timer))
-    {
+    if (isset($timer)) {
       $timer->addTime();
     }
 

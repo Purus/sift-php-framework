@@ -64,14 +64,12 @@ class sfImageTransparencyGD extends sfImageTransformAbstract
     $resource = $image->getAdapter()->getHolder();
 
     // Set the defined color as transparent
-    if ($this->color !== '')
-    {
+    if ($this->color !== '') {
       $color = $image->getAdapter()->getColorByHex($resource, $this->color);
     }
 
     // Or default to the color at the top left
-    else
-    {
+    else {
       $color = imagecolorat($resource, 0, 0);
     }
 

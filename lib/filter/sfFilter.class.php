@@ -74,12 +74,9 @@ abstract class sfFilter implements sfIFilter
   protected function isFirstCall()
   {
     $class = get_class($this);
-    if(isset(self::$filterCalled[$class]))
-    {
+    if (isset(self::$filterCalled[$class])) {
       return false;
-    }
-    else
-    {
+    } else {
       self::$filterCalled[$class] = true;
 
       return true;
@@ -98,17 +95,14 @@ abstract class sfFilter implements sfIFilter
   {
     $disabledFor = $this->getParameter('disabled_for', array());
 
-    if(!is_array($disabledFor))
-    {
+    if (!is_array($disabledFor)) {
       $disabledFor = array($disabledFor);
     }
 
     $isDisabled = false;
-    foreach($disabledFor as $disabled)
-    {
+    foreach ($disabledFor as $disabled) {
       // handle special cases
-      if(in_array($disabled, array('*', '*/*')))
-      {
+      if (in_array($disabled, array('*', '*/*'))) {
         $isDisabled = true;
         break;
       }
@@ -206,8 +200,7 @@ abstract class sfFilter implements sfIFilter
    */
   protected function log($message, $level = sfILogger::INFO, array $context = array())
   {
-    if(sfConfig::get('sf_logging_enabled'))
-    {
+    if (sfConfig::get('sf_logging_enabled')) {
       sfLogger::getInstance()->log(sprintf('{%s} %s', get_class($this), $message), $level, $context);
     }
   }

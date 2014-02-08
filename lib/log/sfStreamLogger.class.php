@@ -10,7 +10,7 @@
  * Log messages to a PHP stream. Available options:
  *
  * * stream (the php stream) [REQUIRED]
- * * close_stream (boolean)  [OPTIONAL] Close the stream on shutdown?
+ * * close_stream (boolean) [OPTIONAL] Close the stream on shutdown?
  *
  * @package    Sift
  * @subpackage log
@@ -47,14 +47,10 @@ class sfStreamLogger extends sfLoggerBase
    */
   public function setup()
   {
-    if(!$stream = $this->getOption('stream'))
-    {
+    if (!$stream = $this->getOption('stream')) {
       throw new sfConfigurationException('You must provide a "stream" option for this logger.');
-    }
-    else
-    {
-      if(is_resource($stream) && 'stream' != get_resource_type($stream))
-      {
+    } else {
+      if (is_resource($stream) && 'stream' != get_resource_type($stream)) {
         throw new sfConfigurationException('The provided "stream" option is not a stream.');
       }
     }
@@ -87,8 +83,7 @@ class sfStreamLogger extends sfLoggerBase
    */
   public function shutdown()
   {
-    if($this->getOption('close_stream') && $this->stream)
-    {
+    if ($this->getOption('close_stream') && $this->stream) {
       fclose($this->stream);
     }
   }

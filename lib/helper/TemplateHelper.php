@@ -25,15 +25,13 @@ function start_template($id, $options = array(), $type = 'text/html')
   $request = sfContext::getInstance()->getRequest();
 
   // prevent concurrent buffer
-  if(!is_null($request->getAttribute('started', null, 'template_javascript')))
-  {
+  if (!is_null($request->getAttribute('started', null, 'template_javascript'))) {
     throw new LogicException(sprintf('Template buffering already started. Buffering template id: "%s"',
             $request->getAttribute('id', '?', 'template_javascript')));
   }
 
   // validate id
-  if(preg_match('/\s+/', $id) || !strlen($id))
-  {
+  if (preg_match('/\s+/', $id) || !strlen($id)) {
     throw new InvalidArgumentException('The template id "%s" is not valid. Should be without spaces and long at least one character');
   }
 
@@ -41,8 +39,7 @@ function start_template($id, $options = array(), $type = 'text/html')
   $request->setAttribute('id', $id, 'template_javascript');
   $request->setAttribute('type', $type, 'template_javascript');
 
-  if(!empty($options))
-  {
+  if (!empty($options)) {
     $request->setAttribute('options', _parse_attributes($options), 'template_javascript');
   }
 
@@ -62,15 +59,13 @@ function end_template()
   // output
   $result = false;
   // we have javascript, so we need to output correct script tag
-  if(sfConfig::get('sf_javascript_templates.precompile_enabled'))
-  {
+  if (sfConfig::get('sf_javascript_templates.precompile_enabled')) {
     $options = $request->getAttribute('options', array(), 'template_javascript');
     $id = $request->getAttribute('id', null, 'template_javascript');
 
     // we have to deside if to put as <script src=""> or inline scrip tag
     // inline
-    if(isset($options['inline']) && $options['inline'])
-    {
+    if (isset($options['inline']) && $options['inline']) {
       // compile template
       $compiled = _compile_template($template);
 
@@ -84,8 +79,7 @@ function end_template()
     }
     // linked file
     // we will put the compiled template to cache
-    else
-    {
+    else {
       $cache = dechex(crc32($id));
 
       // cache on the disk
@@ -95,8 +89,7 @@ function end_template()
       $cacheWebFile = sprintf('%s/cache/js/%s.js', $request->getRelativeUrlRoot(), $cache);
 
       // cache does not exist
-      if(!file_exists($cacheFile) || sfConfig::get('sf_environment') == 'dev')
-      {
+      if (!file_exists($cacheFile) || sfConfig::get('sf_environment') == 'dev') {
         // compile template
         $compiled = _compile_template($template);
         // create a call to Template (see core/template.js for more info about the API)
@@ -104,8 +97,7 @@ function end_template()
         sfJavascriptTemplateCompiler::writeCache($cacheFile, $script);
       }
 
-      if(sfConfig::get('sf_logging_enabled'))
-      {
+      if (sfConfig::get('sf_logging_enabled')) {
         sfLogger::getInstance()->info(
                 sprintf('{TemplateHelper} Adding compiled template "%s"("%s") to response.',
                         $id,
@@ -115,17 +107,14 @@ function end_template()
       // include the template to response
       sfContext::getInstance()->getResponse()->addJavascript($cacheWebFile);
     }
-  }
-  else
-  {
+  } else {
     $result = content_tag('script', $template, array(
         'id' => $request->getAttribute('id', '', 'template_javascript'),
         'type' => $request->getAttribute('type', '', 'template_javascript')
     )) . "\n";
   }
 
-  if($result)
-  {
+  if ($result) {
     echo $result;
   }
 
@@ -141,14 +130,12 @@ function end_template()
  */
 function _compile_template($buffer)
 {
-  if(!sfConfig::get('sf_javascript_templates.precompile_enabled', true))
-  {
+  if (!sfConfig::get('sf_javascript_templates.precompile_enabled', true)) {
     return $buffer;
   }
 
   // cache is enabled we will look for cached version of the buffer
-  if(sfConfig::get('sf_cache'))
-  {
+  if (sfConfig::get('sf_cache')) {
     $context = sfContext::getInstance();
     $request = $context->getRequest();
 
@@ -161,36 +148,30 @@ function _compile_template($buffer)
     $key = _get_option($options, 'cache_key');
 
     // skip cache
-    if($key !== false)
-    {
-      if(!$key)
-      {
+    if ($key !== false) {
+      if (!$key) {
         $key = md5('template_javascript' . $context->getModuleName() . $context->getActionName() . $buffer . serialize($options));
       }
 
-      if($cache->has($key))
-      {
+      if ($cache->has($key)) {
         return $cache->get($key);
       }
     }
   }
 
-  if(sfConfig::get('sf_logging_enabled'))
-  {
+  if (sfConfig::get('sf_logging_enabled')) {
     sfLogger::getInstance()->info('{TemplateHelper} Compiling javascript template.');
   }
 
   // compile the template
   $result = compile_javascript_template($buffer, isset($options['compile_options']) ?
-          (array)$options['compile_options'] : array());
+          (array) $options['compile_options'] : array());
 
-  if(sfConfig::get('sf_javascript_minify.enabled'))
-  {
+  if (sfConfig::get('sf_javascript_minify.enabled')) {
     $result = minify_javascript($result);
   }
 
-  if(sfConfig::get('sf_cache') && $key)
-  {
+  if (sfConfig::get('sf_cache') && $key) {
     $cache->set($key, $result, $lifetime);
   }
 
@@ -210,8 +191,7 @@ function compile_javascript_template($string, $options = array())
 {
   static $compiler;
 
-  if(!$compiler)
-  {
+  if (!$compiler) {
     // create compiler
     $compiler = sfJavascriptTemplateCompiler::factory(
                   sfConfig::get('sf_javavascript_templates.driver', 'handlebars'),
@@ -219,15 +199,13 @@ function compile_javascript_template($string, $options = array())
                 );
   }
 
-  if(sfConfig::get('sf_web_debug'))
-  {
+  if (sfConfig::get('sf_web_debug')) {
     $timer = sfTimerManager::getTimer('Compile javascript template');
   }
 
   $return = $compiler->compile($string, $options);
 
-  if(sfConfig::get('sf_web_debug'))
-  {
+  if (sfConfig::get('sf_web_debug')) {
     $timer->addTime();
   }
 

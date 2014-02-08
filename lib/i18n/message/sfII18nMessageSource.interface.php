@@ -17,8 +17,8 @@
  * @package Sift
  * @subpackage i18n
  */
-interface sfII18nMessageSource extends sfICacheAware {
-
+interface sfII18nMessageSource extends sfICacheAware
+{
   /**
    * Loads the translation table for this particular catalogue.
    * The translation should be loaded in the following order.

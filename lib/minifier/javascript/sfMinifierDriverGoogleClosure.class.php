@@ -12,8 +12,8 @@
  * @package    Sift
  * @subpackage minifier
  */
-class sfMinifierDriverGoogleClosure extends sfMinifier {
-
+class sfMinifierDriverGoogleClosure extends sfMinifier
+{
   /**
    * Array of default options
    */
@@ -27,15 +27,13 @@ class sfMinifierDriverGoogleClosure extends sfMinifier {
    */
   public function setup()
   {
-    if(!sfToolkit::isCallable('shell_exec'))
-    {
+    if (!sfToolkit::isCallable('shell_exec')) {
       throw new sfConfigurationException('Shell scripts cannot be executed. Enabled function "shell_exec" in your php.ini or use another driver.');
     }
 
     $compilerJar = $this->getOption('compiler_path');
 
-    if(!file_exists($compilerJar))
-    {
+    if (!file_exists($compilerJar)) {
       throw new sfConfigurationException(sprintf('Compiler path "%s" does not point to a compiler jar.', $compilerJar));
     }
   }
@@ -50,8 +48,7 @@ class sfMinifierDriverGoogleClosure extends sfMinifier {
   {
     $command = sprintf('java -jar %s --js %s', escapeshellarg($this->getOption('compiler_path')), escapeshellarg($file));
     $result = shell_exec($command);
-    if($replace)
-    {
+    if ($replace) {
       $this->replaceFile($file, $result);
     }
 

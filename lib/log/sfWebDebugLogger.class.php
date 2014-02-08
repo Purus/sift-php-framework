@@ -12,8 +12,8 @@
  * @package    Sift
  * @subpackage log
  */
-class sfWebDebugLogger extends sfVarLogger implements sfIEventDispatcherAware {
-
+class sfWebDebugLogger extends sfVarLogger implements sfIEventDispatcherAware
+{
   /**
    * Web debug holder
    *
@@ -77,8 +77,7 @@ class sfWebDebugLogger extends sfVarLogger implements sfIEventDispatcherAware {
    */
   public function setupEvents()
   {
-    if(!$this->dispatcher)
-    {
+    if (!$this->dispatcher) {
       return;
     }
 
@@ -98,7 +97,7 @@ class sfWebDebugLogger extends sfVarLogger implements sfIEventDispatcherAware {
     $debugClass = $this->getOption('web_debug.class');
     $debugOptions = array_merge(array(
       'request_parameters' => $event['context']->getRequest()->getParameterHolder()->getAll(),
-    ), (array)$this->getOption('web_debug.options', array()));
+    ), (array) $this->getOption('web_debug.options', array()));
 
     $this->webDebug = new $debugClass($this, $this->dispatcher, $debugOptions);
   }
@@ -134,8 +133,7 @@ class sfWebDebugLogger extends sfVarLogger implements sfIEventDispatcherAware {
    */
   public function filterExceptionContent(sfEvent $event, $content)
   {
-    if(!$this->webDebug)
-    {
+    if (!$this->webDebug) {
       return $content;
     }
 

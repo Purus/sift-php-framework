@@ -13,8 +13,8 @@
  * @package    Sift
  * @subpackage validator
  */
-class sfValidatorBirthNumber extends sfValidatorBase {
-
+class sfValidatorBirthNumber extends sfValidatorBase
+{
   /**
    * @see sfValidatorBase
    */
@@ -28,8 +28,7 @@ class sfValidatorBirthNumber extends sfValidatorBase {
    */
   public function doClean($value)
   {
-    if(!sfValidatorTools::verifyBirthNumber($value))
-    {
+    if (!sfValidatorTools::verifyBirthNumber($value)) {
       throw new sfValidatorError($this, 'invalid', array('value' => $value));
     }
 

@@ -13,8 +13,8 @@
  * @package Sift
  * @subpackage dependency_injection
  */
-abstract class sfDependencyInjectionMapBuilder {
-
+abstract class sfDependencyInjectionMapBuilder
+{
   /**
    * @var sfDependencyInjectionMap
    */

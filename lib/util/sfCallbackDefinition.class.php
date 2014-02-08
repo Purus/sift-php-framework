@@ -12,8 +12,8 @@
  * @package    Sift
  * @subpackage util
  */
-class sfCallbackDefinition extends sfObjectCallbackDefinition {
-
+class sfCallbackDefinition extends sfObjectCallbackDefinition
+{
   /**
    * The function to call
    *
@@ -29,12 +29,9 @@ class sfCallbackDefinition extends sfObjectCallbackDefinition {
    */
   public function __construct($classOrFunction, array $arguments = array())
   {
-    if(is_callable($classOrFunction))
-    {
+    if (is_callable($classOrFunction)) {
       $this->function = $classOrFunction;
-    }
-    else
-    {
+    } else {
       $this->class = $classOrFunction;
     }
     $this->arguments = $arguments;
@@ -59,8 +56,7 @@ class sfCallbackDefinition extends sfObjectCallbackDefinition {
    */
   public function setFunction($function)
   {
-    if(!$this->isFunction($function))
-    {
+    if (!$this->isFunction($function)) {
       throw new InvalidArgumentException('Invalid function given.');
     }
     $this->function = $function;
@@ -78,35 +74,29 @@ class sfCallbackDefinition extends sfObjectCallbackDefinition {
    */
   public static function createFromArray(array $array, $class = __CLASS__)
   {
-    if(!isset($array['class']) && !isset($array['function']))
-    {
+    if (!isset($array['class']) && !isset($array['function'])) {
       throw new InvalidArgumentException('Missing "class/function" key in the text filter definition');
     }
 
     $definition = new $class(isset($array['class']) ? $array['class'] : $array['function'], (isset($array['arguments']) ? $array['arguments'] : array()));
 
-    if(isset($array['constructor']))
-    {
+    if (isset($array['constructor'])) {
       $definition->setConstructor($array['constructor']);
     }
 
-    if(isset($array['file']))
-    {
+    if (isset($array['file'])) {
       $definition->setFile(self::replacePath($array['file']));
     }
 
-    if(isset($array['calls']))
-    {
+    if (isset($array['calls'])) {
       $definition->setMethodCalls($array['calls']);
     }
 
-    if(isset($array['configurator']))
-    {
+    if (isset($array['configurator'])) {
       $definition->setConfigurator($array['configurator']);
     }
 
-    if(isset($array['shared']))
-    {
+    if (isset($array['shared'])) {
       $definition->setShared($array['shared']);
     }
 
@@ -120,8 +110,7 @@ class sfCallbackDefinition extends sfObjectCallbackDefinition {
    */
   public function __toString()
   {
-    if(($function = $this->getFunction()))
-    {
+    if (($function = $this->getFunction())) {
       return $function instanceof Closure ? 'Anonymous function' : $function;
     }
 

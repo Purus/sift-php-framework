@@ -61,9 +61,8 @@ class sfImageCropGD extends sfImageTransformAbstract
    */
   public function setLeft($left)
   {
-    if (is_numeric($left))
-    {
-      $this->left = (int)$left;
+    if (is_numeric($left)) {
+      $this->left = (int) $left;
 
       return true;
     }
@@ -88,9 +87,8 @@ class sfImageCropGD extends sfImageTransformAbstract
    */
   public function setTop($top)
   {
-    if (is_numeric($top))
-    {
-      $this->top = (int)$top;
+    if (is_numeric($top)) {
+      $this->top = (int) $top;
 
       return true;
     }
@@ -115,9 +113,8 @@ class sfImageCropGD extends sfImageTransformAbstract
    */
   public function setWidth($width)
   {
-    if (is_numeric($width))
-    {
-      $this->width = (int)$width;
+    if (is_numeric($width)) {
+      $this->width = (int) $width;
 
       return true;
     }
@@ -142,9 +139,8 @@ class sfImageCropGD extends sfImageTransformAbstract
    */
   public function setHeight($height)
   {
-    if (is_numeric($height))
-    {
-      $this->height = (int)$height;
+    if (is_numeric($height)) {
+      $this->height = (int) $height;
 
       return true;
     }

@@ -12,8 +12,8 @@
  * @package    Sift
  * @subpackage json
  */
-class sfJson {
-
+class sfJson
+{
   /**
    * Returns the JSON representation of a value
    *
@@ -35,31 +35,24 @@ class sfJson {
     // Pre-encoding look for function calls and replacing by tmp ids
     $javascriptExpressions = array();
 
-    if($fixExpressions)
-    {
+    if ($fixExpressions) {
       $valueToEncode = self::_recursiveJsonExprFinder($valueToEncode, $javascriptExpressions);
     }
 
-    if(version_compare(PHP_VERSION, '5.3', '>'))
-    {
+    if (version_compare(PHP_VERSION, '5.3', '>')) {
       $encodedResult = json_encode($valueToEncode, $bitmask);
-    }
-    else
-    {
+    } else {
       $encodedResult = json_encode($valueToEncode);
     }
 
     $error = self::getLastError();
-    if($error)
-    {
+    if ($error) {
       throw new sfException(sprintf('JSON error occured: %s', $error));
     }
 
-    if($fixExpressions && count($javascriptExpressions) > 0)
-    {
+    if ($fixExpressions && count($javascriptExpressions) > 0) {
       $count = count($javascriptExpressions);
-      for($i = 0; $i < $count; $i++)
-      {
+      for ($i = 0; $i < $count; $i++) {
         $magicKey = $javascriptExpressions[$i]['magicKey'];
         $value    = $javascriptExpressions[$i]['value'];
         $encodedResult = str_replace(
@@ -81,25 +74,17 @@ class sfJson {
    */
   protected static function _recursiveJsonSerializableFinder(&$value)
   {
-    if($value instanceof sfIJsonSerializable)
-    {
+    if ($value instanceof sfIJsonSerializable) {
       $value = $value->jsonSerialize();
-    }
-    elseif(is_array($value) || $value instanceof Traversable)
-    {
+    } elseif (is_array($value) || $value instanceof Traversable) {
       // fixes issues with ArrayAccess, ArrayObject under php < 5.3.4
-      if($value instanceof sfIArrayAccessByReference)
-      {
-        foreach($value as $k => $v)
-        {
+      if ($value instanceof sfIArrayAccessByReference) {
+        foreach ($value as $k => $v) {
           $_v = self::_recursiveJsonSerializableFinder($value->offsetGetByReference($k));
           $value->offsetSetByReference($k, $_v);
         }
-      }
-      else
-      {
-        foreach($value as $k => $v)
-        {
+      } else {
+        foreach ($value as $k => $v) {
           $value[$k] = self::_recursiveJsonSerializableFinder($v);
         }
       }
@@ -134,30 +119,20 @@ class sfJson {
           'value'    => is_object($value) ? $value->__toString() : $value
       );
       $value = $magicKey;
-    }
-    elseif(is_array($value) || $value instanceof Traversable)
-    {
+    } elseif (is_array($value) || $value instanceof Traversable) {
       // fixes issues with ArrayAccess, ArrayObject under php < 5.3.4
-      if($value instanceof sfIArrayAccessByReference)
-      {
-        foreach($value as $k => $v)
-        {
+      if ($value instanceof sfIArrayAccessByReference) {
+        foreach ($value as $k => $v) {
           $_v = self::_recursiveJsonExprFinder($value->offsetGetByReference($k), $javascriptExpressions, $k);
           $value->offsetSetByReference($k, $_v);
         }
-      }
-      else
-      {
-        foreach($value as $k => $v)
-        {
+      } else {
+        foreach ($value as $k => $v) {
           $value[$k] = self::_recursiveJsonExprFinder($value[$k], $javascriptExpressions, $k);
         }
       }
-    }
-    elseif(is_object($value))
-    {
-      foreach($value as $k => $v)
-      {
+    } elseif (is_object($value)) {
+      foreach ($value as $k => $v) {
         $value->$k = self::_recursiveJsonExprFinder($value->$k, $javascriptExpressions, $k);
       }
     }
@@ -176,8 +151,7 @@ class sfJson {
   {
     $result = json_decode($json, $toAssoc);
     $error  = self::getLastError();
-    if($error)
-    {
+    if ($error) {
       throw new sfException(sprintf('JSON error occured: %s', $error));
     }
 
@@ -191,13 +165,11 @@ class sfJson {
    */
   public static function getLastError()
   {
-    if(!function_exists('json_last_error'))
-    {
+    if (!function_exists('json_last_error')) {
       return false;
     }
 
-    switch(json_last_error())
-    {
+    switch (json_last_error()) {
       case JSON_ERROR_NONE:
         $error = false;
       break;

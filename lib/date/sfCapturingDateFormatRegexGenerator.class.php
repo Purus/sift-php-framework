@@ -65,8 +65,7 @@ class sfCapturingDateFormatRegexGenerator extends sfDateFormatRegexGenerator
    */
   public static function getInstance()
   {
-    if(empty(self::$instance))
-    {
+    if (empty(self::$instance)) {
       self::$instance = new sfCapturingDateFormatRegexGenerator();
     }
 

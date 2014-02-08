@@ -47,8 +47,7 @@ class sfValidatorFromDescription extends sfValidatorDecorator
    */
   public function getValidator()
   {
-    if (null === $this->validator)
-    {
+    if (null === $this->validator) {
       $this->validator = $this->reduceTokens($this->tokens, 'getValidator');
     }
 
@@ -67,10 +66,8 @@ class sfValidatorFromDescription extends sfValidatorDecorator
     $tokens = array();
     $len = strlen($string);
     $i = 0;
-    while ($i < $len)
-    {
-      if (preg_match('/^([a-z0-9_\-]+)\s*(<=|>=|<|>|==|!=)/i', substr($string, $i), $match))
-      {
+    while ($i < $len) {
+      if (preg_match('/^([a-z0-9_\-]+)\s*(<=|>=|<|>|==|!=)/i', substr($string, $i), $match)) {
         // schema compare validator
         $i += strlen($match[0]);
 
@@ -81,8 +78,7 @@ class sfValidatorFromDescription extends sfValidatorDecorator
         $arguments = $this->parseArguments($string, $i);
 
         // rightField
-        if (!preg_match('/\s*([a-z0-9_\-]+)/', substr($string, $i), $match))
-        {
+        if (!preg_match('/\s*([a-z0-9_\-]+)/', substr($string, $i), $match)) {
           throw new DomainException('Parsing problem.');
         }
 
@@ -90,9 +86,7 @@ class sfValidatorFromDescription extends sfValidatorDecorator
         $rightField = $match[1];
 
         $tokens[] = new sfValidatorFDToken('sfValidatorSchemaCompare', array($leftField, $operator, $rightField, $arguments[0], isset($arguments[1]) ? $arguments[1] : array()));
-      }
-      else if (preg_match('/^(and|or)/i', substr($string, $i), $match))
-      {
+      } else if (preg_match('/^(and|or)/i', substr($string, $i), $match)) {
         // all, any validador
         $i += strlen($match[0]);
 
@@ -100,38 +94,27 @@ class sfValidatorFromDescription extends sfValidatorDecorator
         $arguments = $this->parseArguments($string, $i);
 
         $tokens[] = new sfValidatorFDTokenOperator(strtolower($match[1]), $arguments);
-      }
-      else if (preg_match('/^(?:([a-z0-9_\-]+)\:)?([a-z0-9_\-]+)/i', substr($string, $i), $match))
-      {
+      } else if (preg_match('/^(?:([a-z0-9_\-]+)\:)?([a-z0-9_\-]+)/i', substr($string, $i), $match)) {
         // single validator (optionally filtered)
         $i += strlen($match[0]);
 
         $class = 'sfValidator'.$match[2];
         $arguments = $this->parseArguments($string, $i);
         $token = new sfValidatorFDToken($class, array($arguments[0], isset($arguments[1]) ? $arguments[1] : array()));
-        if ($match[1])
-        {
+        if ($match[1]) {
           $token = new sfValidatorFDTokenFilter($match[1], $token);
         }
 
         $tokens[] = $token;
-      }
-      else if ('(' == $string[$i])
-      {
+      } else if ('(' == $string[$i]) {
         $tokens[] = new sfValidatorFDTokenLeftBracket();
         ++$i;
-      }
-      else if (')' == $string[$i])
-      {
+      } else if (')' == $string[$i]) {
         $tokens[] = new sfValidatorFDTokenRightBracket();
         ++$i;
-      }
-      else if (in_array($string[$i], array(' ', "\t", "\r", "\n")))
-      {
+      } else if (in_array($string[$i], array(' ', "\t", "\r", "\n"))) {
         ++$i;
-      }
-      else
-      {
+      } else {
         throw new DomainException(sprintf('Unable to parse string (%s).', $string));
       }
     }
@@ -151,8 +134,7 @@ class sfValidatorFromDescription extends sfValidatorDecorator
   {
     $len = strlen($string);
 
-    if ($i + 1 > $len || '(' != $string[$i])
-    {
+    if ($i + 1 > $len || '(' != $string[$i]) {
       return array(array(), array());
     }
 
@@ -160,16 +142,11 @@ class sfValidatorFromDescription extends sfValidatorDecorator
 
     $args = '';
     $opened = 0;
-    while ($i < $len)
-    {
-      if ('(' == $string[$i])
-      {
+    while ($i < $len) {
+      if ('(' == $string[$i]) {
         ++$opened;
-      }
-      else if (')' == $string[$i])
-      {
-        if (!$opened)
-        {
+      } else if (')' == $string[$i]) {
+        if (!$opened) {
           break;
         }
 
@@ -198,10 +175,8 @@ class sfValidatorFromDescription extends sfValidatorDecorator
     $precedences = array('and' => 2, 'or' => 1, '(' => 0);
 
     // based on the shunting yard algorithm
-    foreach ($tokens as $token)
-    {
-      switch (get_class($token))
-      {
+    foreach ($tokens as $token) {
+      switch (get_class($token)) {
         case 'sfValidatorFDToken':
           $outputStack[] = $token;
           break;
@@ -209,15 +184,13 @@ class sfValidatorFromDescription extends sfValidatorDecorator
           $operatorStack[] = $token;
           break;
         case 'sfValidatorFDTokenRightBracket':
-          while (!$operatorStack[count($operatorStack) - 1] instanceof sfValidatorFDTokenLeftBracket)
-          {
+          while (!$operatorStack[count($operatorStack) - 1] instanceof sfValidatorFDTokenLeftBracket) {
             $outputStack[] = array_pop($operatorStack);
           }
           array_pop($operatorStack);
           break;
         case 'sfValidatorFDTokenOperator':
-          while (count($operatorStack) && $precedences[$token->__toString()] <= $precedences[$operatorStack[count($operatorStack) - 1]->__toString()])
-          {
+          while (count($operatorStack) && $precedences[$token->__toString()] <= $precedences[$operatorStack[count($operatorStack) - 1]->__toString()]) {
             $outputStack[] = array_pop($operatorStack);
           }
           $operatorStack[] = $token;
@@ -227,11 +200,9 @@ class sfValidatorFromDescription extends sfValidatorDecorator
       }
     }
 
-    while (count($operatorStack))
-    {
+    while (count($operatorStack)) {
       $token = array_pop($operatorStack);
-      if ($token instanceof sfValidatorFDTokenLeftBracket || $token instanceof sfValidatorFDTokenRightBracket)
-      {
+      if ($token instanceof sfValidatorFDTokenLeftBracket || $token instanceof sfValidatorFDTokenRightBracket) {
         throw new DomainException(sprintf('Uneven parenthesis in string (%s).', $this->string));
       }
 
@@ -251,17 +222,14 @@ class sfValidatorFromDescription extends sfValidatorDecorator
    */
   protected function reduceTokens($tokens, $method)
   {
-    if (1 == count($tokens))
-    {
+    if (1 == count($tokens)) {
       return $tokens[0]->$method();
     }
 
     // reduce to a single validator
-    while (count($tokens) > 1)
-    {
+    while (count($tokens) > 1) {
       $i = 0;
-      while (isset($tokens[$i]) && !$tokens[$i] instanceof sfValidatorFDTokenOperator)
-      {
+      while (isset($tokens[$i]) && !$tokens[$i] instanceof sfValidatorFDTokenOperator) {
         $i++;
       }
 

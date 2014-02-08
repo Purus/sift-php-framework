@@ -16,8 +16,8 @@ if(!defined('E_USER_DEPRECATED')) define('E_USER_DEPRECATED', 16384);
  * @package    Sift
  * @subpackage exception
  */
-class sfPhpErrorException extends sfException {
-
+class sfPhpErrorException extends sfException
+{
   /**
    * Callback used as error handler
    *
@@ -35,8 +35,7 @@ class sfPhpErrorException extends sfException {
   public static function handleErrorCallback($code, $string, $file, $line, $context)
   {
     // Do not throw an exception if this is a suppressed error @func()
-    if(error_reporting() === 0)
-    {
+    if (error_reporting() === 0) {
       return;
     }
 
@@ -46,8 +45,7 @@ class sfPhpErrorException extends sfException {
         E_STRICT
     )))
     {
-      if(sfConfig::get('sf_logging_enabled'))
-      {
+      if (sfConfig::get('sf_logging_enabled')) {
         sfLogger::getInstance()->warning('{sfPhpErrorException} {error}, file: "{file}", line: {line}', array(
           'file' => $file,
           'line' => $line,
@@ -73,8 +71,7 @@ class sfPhpErrorException extends sfException {
   public static function fatalErrorShutdownHandler()
   {
     $error = error_get_last();
-    if(in_array($error['type'], array(E_ERROR, E_CORE_ERROR, E_COMPILE_ERROR, E_PARSE)))
-    {
+    if (in_array($error['type'], array(E_ERROR, E_CORE_ERROR, E_COMPILE_ERROR, E_PARSE))) {
       $e = new self(sprintf('%s (in file "%s", on line %s)',
                     $error['message'], $error['file'],
                     $error['line'], $error['type']));
@@ -103,8 +100,7 @@ class sfPhpErrorException extends sfException {
     );
     $ref = new ReflectionProperty('Exception', 'trace');
 
-    if(method_exists($ref, 'setAccessible'))
-    {
+    if (method_exists($ref, 'setAccessible')) {
       $ref->setAccessible(true);
       $ref->setValue($exception, $stack);
     }

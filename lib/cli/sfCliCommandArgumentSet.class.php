@@ -49,10 +49,8 @@ class sfCliCommandArgumentSet
    */
   public function addArguments($arguments = array())
   {
-    if (null !== $arguments)
-    {
-      foreach ($arguments as $argument)
-      {
+    if (null !== $arguments) {
+      foreach ($arguments as $argument) {
         $this->addArgument($argument);
       }
     }
@@ -65,32 +63,25 @@ class sfCliCommandArgumentSet
    */
   public function addArgument(sfCliCommandArgument $argument)
   {
-    if (isset($this->arguments[$argument->getName()]))
-    {
+    if (isset($this->arguments[$argument->getName()])) {
       throw new sfCliCommandException(sprintf('An argument with name "%s" already exist.', $argument->getName()));
     }
 
-    if ($this->hasAnArrayArgument)
-    {
+    if ($this->hasAnArrayArgument) {
       throw new sfCliCommandException('Cannot add an argument after an array argument.');
     }
 
-    if ($argument->isRequired() && $this->hasOptional)
-    {
+    if ($argument->isRequired() && $this->hasOptional) {
       throw new sfCliCommandException('Cannot add a required argument after an optional one.');
     }
 
-    if ($argument->isArray())
-    {
+    if ($argument->isArray()) {
       $this->hasAnArrayArgument = true;
     }
 
-    if ($argument->isRequired())
-    {
+    if ($argument->isRequired()) {
       ++$this->requiredCount;
-    }
-    else
-    {
+    } else {
       $this->hasOptional = true;
     }
 
@@ -106,8 +97,7 @@ class sfCliCommandArgumentSet
    */
   public function getArgument($name)
   {
-    if (!$this->hasArgument($name))
-    {
+    if (!$this->hasArgument($name)) {
       throw new sfCliCommandException(sprintf('The "%s" argument does not exist.', $name));
     }
 
@@ -164,8 +154,7 @@ class sfCliCommandArgumentSet
   public function getDefaults()
   {
     $values = array();
-    foreach ($this->arguments as $argument)
-    {
+    foreach ($this->arguments as $argument) {
       $values[$argument->getName()] = $argument->getDefault();
     }
 

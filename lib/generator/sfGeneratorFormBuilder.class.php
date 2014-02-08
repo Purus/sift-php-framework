@@ -12,8 +12,8 @@
  * @package    Sift
  * @subpackage generator
  */
-abstract class sfGeneratorFormBuilder extends sfConfigurable {
-
+abstract class sfGeneratorFormBuilder extends sfConfigurable
+{
   /**
    * Array of default options
    *
@@ -127,37 +127,25 @@ abstract class sfGeneratorFormBuilder extends sfConfigurable {
    */
   public function getWidgetAndValidator(sfIGeneratorField $field, $context = 'edit')
   {
-    if($field->getOption('type') == 'plain')
-    {
+    if ($field->getOption('type') == 'plain') {
       return $this->getWidgetAndValidatorNoInput($field, $context);
-    }
-    elseif($field->isPartial())
-    {
+    } elseif ($field->isPartial()) {
       return $this->getWidgetAndValidatorPartial($field, $context);
-    }
-    elseif($field->isComponent())
-    {
+    } elseif ($field->isComponent()) {
       return $this->getWidgetAndValidatorComponent($field, $context);
-    }
-    elseif($field->isForeignKey())
-    {
+    } elseif ($field->isForeignKey()) {
       return $this->getWidgetAndValidatorForeignKey($field, $context);
-    }
-    elseif($field->isRelationAlias())
-    {
+    } elseif ($field->isRelationAlias()) {
       return $this->getWidgetAndValidatorRelationAlias($field, $context);
     }
     // we have real column
-    elseif($field->isReal())
-    {
+    elseif ($field->isReal()) {
       // handle special cases
-      if($field->isIpAddress())
-      {
+      if ($field->isIpAddress()) {
         return $this->getWidgetAndValidatorIpAddress($field, $context);
       }
 
-      switch($field->getType())
-      {
+      switch ($field->getType()) {
         case sfGeneratorField::TYPE_BOOLEAN:
           return $this->getWidgetAndValidatorBoolean($field, $context);
           break;
@@ -265,36 +253,26 @@ abstract class sfGeneratorFormBuilder extends sfConfigurable {
 
     $length = $field->getLength();
 
-    if($length > 255)
-    {
+    if ($length > 255) {
       $widgetClass = 'sfWidgetFormTextarea';
     }
 
     // we have it fixed to some length
-    if($length && $field->isFixedLength())
-    {
+    if ($length && $field->isFixedLength()) {
       $validatorOptions['min_length'] = $length;
       $validatorOptions['max_length'] = $length;
-    }
-    elseif($minLength = $field->getMinLength())
-    {
+    } elseif ($minLength = $field->getMinLength()) {
       $validatorOptions['min_length'] = $minLength;
-    }
-    elseif($maxLength = $field->getMaxLength())
-    {
+    } elseif ($maxLength = $field->getMaxLength()) {
       $validatorOptions['max_length'] = $maxLength;
-    }
-    elseif($length && $length < 1000)
-    {
+    } elseif ($length && $length < 1000) {
       $validatorOptions['max_length'] = $length;
     }
 
     // validator
-    if($field->isEmail())
-    {
+    if ($field->isEmail()) {
       $validatorClass = 'sfValidatorEmail';
-    }
-    elseif($field->isRegularExpression() &&
+    } elseif($field->isRegularExpression() &&
       ($regexp = $field->getRegularExpression()))
     {
       $validatorOptions['pattern'] = $regexp;
@@ -318,8 +296,7 @@ abstract class sfGeneratorFormBuilder extends sfConfigurable {
    */
   protected function getWidgetAndValidatorBoolean(sfIGeneratorField $field, $context)
   {
-    switch($context)
-    {
+    switch ($context) {
       case sfGenerator::CONTEXT_FILTER:
         // return defaults but without fallback to column type!
         return array(
@@ -467,8 +444,7 @@ abstract class sfGeneratorFormBuilder extends sfConfigurable {
     $widgetOptions = $this->getOption(sprintf('%s.widget.options',  sfGeneratorField::TYPE_DATE), array());
     $widgetAttributes = $this->getOption(sprintf('%s.widget.attributes',  sfGeneratorField::TYPE_DATE), array());
 
-    switch($context)
-    {
+    switch ($context) {
       // filter context
       case sfGenerator::CONTEXT_FILTER:
         // return defaults but without fallback to column type!
@@ -526,8 +502,7 @@ abstract class sfGeneratorFormBuilder extends sfConfigurable {
     $validatorMessages = $this->getOptionFor('validator.messages', sfGeneratorField::TYPE_TIMESTAMP, $context, array());
 
     // manage contexts
-    switch($context)
-    {
+    switch ($context) {
       // in filter context, we want to display
       // from: [] to: [] filters
       case sfGenerator::CONTEXT_FILTER:
@@ -579,8 +554,7 @@ abstract class sfGeneratorFormBuilder extends sfConfigurable {
     $widgetAttributes = $this->getOption(sprintf('%s.widget.attributes',  sfGeneratorField::TYPE_TIME), array());
 
     // manage contexts
-    switch($context)
-    {
+    switch ($context) {
       // in filter context, we want to display
       // from: [] to: [] filters
       case sfGenerator::CONTEXT_FILTER:
@@ -901,12 +875,9 @@ abstract class sfGeneratorFormBuilder extends sfConfigurable {
    */
   public function addValidationOptions(sfIGeneratorField $field, $context, $options)
   {
-    if($field->isNotNull())
-    {
+    if ($field->isNotNull()) {
       $options['required'] = true;
-    }
-    elseif($field->isNull())
-    {
+    } elseif ($field->isNull()) {
       $options['required'] = false;
     }
 
@@ -937,8 +908,7 @@ abstract class sfGeneratorFormBuilder extends sfConfigurable {
    */
   protected function getOptionFor($key, $fieldType, $context, $default, $fallback = true)
   {
-    if($fallback)
-    {
+    if ($fallback) {
       return $this->getOption(sprintf('%s.%s.%s', $context, $fieldType, $key),
              $this->getOption(sprintf('%s.%s', $fieldType, $key), $default));
     }

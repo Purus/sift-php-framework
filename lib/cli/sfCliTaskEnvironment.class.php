@@ -12,8 +12,8 @@
  * @package    Sift
  * @subpackage cli
  */
-class sfCliTaskEnvironment {
-
+class sfCliTaskEnvironment
+{
   protected $variables = array();
 
   /**
@@ -60,8 +60,7 @@ class sfCliTaskEnvironment {
    */
   public function add($variables)
   {
-    foreach($variables as $name => $value)
-    {
+    foreach ($variables as $name => $value) {
       $this->set($name, $value);
     }
 

@@ -22,8 +22,7 @@
  */
 function debug_message($message, $level = 'info', array $context = array())
 {
-  if(sfConfig::get('sf_web_debug'))
-  {
+  if (sfConfig::get('sf_web_debug')) {
     return log_message($message, $level, $context);
   }
 }
@@ -37,14 +36,12 @@ function debug_message($message, $level = 'info', array $context = array())
  */
 function log_message($message, $level = 'info', array $context = array())
 {
-  if(sfConfig::get('sf_logging_enabled'))
-  {
+  if (sfConfig::get('sf_logging_enabled')) {
     sfLogger::getInstance()->log($message, $level, $context);
   }
 }
 
-if(!function_exists('dump'))
-{
+if (!function_exists('dump')) {
   /**
    * Dumps variable to the output.
    *
@@ -57,18 +54,12 @@ if(!function_exists('dump'))
     $dir = dirname(__FILE__);
     $location = null;
     // we need to provide the location where was the dump() called
-    foreach(debug_backtrace(PHP_VERSION_ID >= 50306 ? DEBUG_BACKTRACE_IGNORE_ARGS : false) as $item)
-    {
-      if(isset($item['file']) && strpos($item['file'], $dir) === 0)
-      {
+    foreach (debug_backtrace(PHP_VERSION_ID >= 50306 ? DEBUG_BACKTRACE_IGNORE_ARGS : false) as $item) {
+      if (isset($item['file']) && strpos($item['file'], $dir) === 0) {
         continue;
-      }
-      elseif(!isset($item['file'], $item['line']) || !is_file($item['file']))
-      {
+      } elseif (!isset($item['file'], $item['line']) || !is_file($item['file'])) {
         break;
-      }
-      else
-      {
+      } else {
         $lines = file($item['file']);
         $line = $lines[$item['line'] - 1];
         $location = array(
@@ -83,8 +74,6 @@ if(!function_exists('dump'))
 
     return sfDebugDumper::dump($var, $options, $echo);
   }
-}
-else
-{
+} else {
   log_message('The dump() function already exists. Are you including Debug helper in production environment?', 'warning');
 }

@@ -60,9 +60,8 @@ class sfImageColorizeGD  extends sfImageTransformAbstract
    */
   public function setRed($red)
   {
-    if (is_numeric($red))
-    {
-      $this->red_tint = (int)$red;
+    if (is_numeric($red)) {
+      $this->red_tint = (int) $red;
 
       return true;
     }
@@ -88,9 +87,8 @@ class sfImageColorizeGD  extends sfImageTransformAbstract
    */
   public function setGreen($green)
   {
-    if (is_numeric($green))
-    {
-      $this->green_tint = (int)$green;
+    if (is_numeric($green)) {
+      $this->green_tint = (int) $green;
 
       return true;
     }
@@ -116,9 +114,8 @@ class sfImageColorizeGD  extends sfImageTransformAbstract
    */
   public function setBlue($blue)
   {
-    if (is_numeric($blue))
-    {
-      $this->blue_tint = (int)$blue;
+    if (is_numeric($blue)) {
+      $this->blue_tint = (int) $blue;
 
       return true;
     }
@@ -144,9 +141,8 @@ class sfImageColorizeGD  extends sfImageTransformAbstract
    */
   public function setAlpha($alpha)
   {
-    if (is_numeric($alpha))
-    {
-      $this->alpha = (int)$alpha;
+    if (is_numeric($alpha)) {
+      $this->alpha = (int) $alpha;
 
       return true;
     }
@@ -176,15 +172,11 @@ class sfImageColorizeGD  extends sfImageTransformAbstract
     $resource = $image->getAdapter()->getHolder();
 
     // Use GD's built in filter
-    if (function_exists('imagefilter'))
-    {
+    if (function_exists('imagefilter')) {
       // we have to check for the php version as alpha support was added to imagefilter/IMG_FILTER_COLORIZE in 5.2.5
-      if (strnatcmp(phpversion(), '5.2.5') >= 0)
-      {
+      if (strnatcmp(phpversion(), '5.2.5') >= 0) {
         imagefilter($resource, IMG_FILTER_COLORIZE, $this->red_tint, $this->green_tint, $this->blue_tint, $this->alpha);
-      }
-      else
-      {
+      } else {
         imagefilter($resource, IMG_FILTER_COLORIZE, $this->red_tint, $this->green_tint, $this->blue_tint);
       }
 
@@ -192,20 +184,17 @@ class sfImageColorizeGD  extends sfImageTransformAbstract
 
     // Else do filter in code
     // Alpha not supported
-    else
-    {
+    else {
       $resourcex = imagesx($resource);
       $resourcey = imagesy($resource);
 
-      for ($x = 0; $x < $resourcex; ++$x)
-      {
-        for ($y = 0; $y < $resourcey; ++$y)
-        {
+      for ($x = 0; $x < $resourcex; ++$x) {
+        for ($y = 0; $y < $resourcey; ++$y) {
           $rgb = imagecolorat($resource, $x, $y);
           $red = ($rgb >> 16) & 0xFF;
           $green = ($rgb >> 8) & 0xFF;
           $blue = $rgb & 0xFF;
-          $red = (int)(($red+$green+$blue)/3);
+          $red = (int) (($red+$green+$blue)/3);
           $green = $red + $this->green_tint;
           $blue = $red + $this->blue_tint;
           $red += $this->red_tint;
@@ -213,33 +202,27 @@ class sfImageColorizeGD  extends sfImageTransformAbstract
           // Max value is 255
           // Min value is 0
 
-          if ($red > 255)
-          {
+          if ($red > 255) {
             $red = 255;
           }
 
-          if ($green > 255)
-          {
+          if ($green > 255) {
             $green = 255;
           }
 
-          if ($blue > 255)
-          {
+          if ($blue > 255) {
             $blue = 255;
           }
 
-          if ($red < 0)
-          {
+          if ($red < 0) {
             $red = 0;
           }
 
-          if ($green < 0)
-          {
+          if ($green < 0) {
             $green = 0;
           }
 
-          if ($blue < 0)
-          {
+          if ($blue < 0) {
             $blue = 0;
           }
 

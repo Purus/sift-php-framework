@@ -59,8 +59,7 @@ EOF;
 
     $testFiles = $this->getFiles($this->environment->get('sf_root_dir').'/'.$arguments['test_name']);
     $max = count($testFiles);
-    foreach ($testFiles as $i => $file)
-    {
+    foreach ($testFiles as $i => $file) {
       $this->logSection('coverage', sprintf('running %s (%d/%d)', $file, $i + 1, $max));
       $coverage->process($file);
     }
@@ -93,16 +92,11 @@ EOF;
 
   protected function getFiles($directory)
   {
-    if (is_dir($directory))
-    {
+    if (is_dir($directory)) {
       return sfFinder::type('file')->name('*.php')->in($directory);
-    }
-    else if (file_exists($directory))
-    {
+    } else if (file_exists($directory)) {
       return array($directory);
-    }
-    else
-    {
+    } else {
       throw new sfCliCommandException(sprintf('File or directory "%s" does not exist.', $directory));
     }
   }

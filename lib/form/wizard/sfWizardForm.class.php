@@ -60,8 +60,7 @@ class sfWizardForm extends myForm
    */
   public static function getStorageNamespace($formNameMask = null)
   {
-    if(is_null($formNameMask))
-    {
+    if (is_null($formNameMask)) {
       return current(self::$storageNamespaces);
     }
 

@@ -66,8 +66,8 @@
  * @package    Sift
  * @subpackage response
  */
-class sfHttpDownload extends sfConfigurable implements sfIEventDispatcherAware, sfILoggerAware {
-
+class sfHttpDownload extends sfConfigurable implements sfIEventDispatcherAware, sfILoggerAware
+{
   /**
    * Donwload attachment
    */
@@ -246,58 +246,46 @@ class sfHttpDownload extends sfConfigurable implements sfIEventDispatcherAware, 
   {
     $options = $this->getOptions();
 
-    if(isset($options['speed_limit']))
-    {
+    if (isset($options['speed_limit'])) {
       $this->limitSpeed($options['speed_limit']);
     }
 
-    if(isset($options['filename']))
-    {
+    if (isset($options['filename'])) {
       $this->setFilename($options['filename']);
     }
 
-    if(isset($options['content_disposition']))
-    {
+    if (isset($options['content_disposition'])) {
       $this->setContentDisposition($options['content_disposition']);
     }
 
-    if(isset($options['use_resume']))
-    {
+    if (isset($options['use_resume'])) {
       $this->useResume($options['use_resume']);
     }
 
     // BC compatibility
-    if(isset($options['mime']))
-    {
+    if (isset($options['mime'])) {
       $this->setContentType($options['mime']);
-    }
-    elseif(isset($options['content_type']))
-    {
+    } elseif (isset($options['content_type'])) {
       $this->setContentType($options['content_type']);
     }
 
-    if(isset($options['etag']))
-    {
+    if (isset($options['etag'])) {
       $this->setEtag($options['etag']);
     }
 
-    if(isset($options['allow_cache']))
-    {
+    if (isset($options['allow_cache'])) {
       $this->allowCache($options['allow_cache']);
     }
 
-    if(isset($options['cache_control']))
-    {
+    if (isset($options['cache_control'])) {
       $this->setCacheControl($options['cache_control']);
     }
 
-    if(isset($options['client_lifetime']))
-    {
+    if (isset($options['client_lifetime'])) {
       $this->setClientLifetime($options['client_lifetime']);
     }
 
-    if(isset($options['vary']))
-    {
+    if (isset($options['vary'])) {
       $this->setVary($options['vary']);
     }
   }
@@ -315,8 +303,7 @@ class sfHttpDownload extends sfConfigurable implements sfIEventDispatcherAware, 
     ignore_user_abort(true);
 
     // set the time limit
-    if(!sfToolkit::setTimeLimit(0))
-    {
+    if (!sfToolkit::setTimeLimit(0)) {
       $this->log('Script execution time limit could not be set.', sfILogger::WARNING);
     }
 
@@ -332,8 +319,7 @@ class sfHttpDownload extends sfConfigurable implements sfIEventDispatcherAware, 
   {
     $this->response->clearHttpHeaders();
 
-    switch(($cacheControl = $this->getCacheControl()))
-    {
+    switch (($cacheControl = $this->getCacheControl())) {
       // cache is allowed for this control types:
       case self::CACHE_CONTROL_PUBLIC:
       case self::CACHE_CONTROL_PRIVATE:
@@ -341,26 +327,21 @@ class sfHttpDownload extends sfConfigurable implements sfIEventDispatcherAware, 
 
         $isCached = false;
 
-        if(($modifiedSince = $this->getRequest()->getHttpHeader('IF_MODIFIED_SINCE')))
-        {
-          if($this->lastModified == strtotime(current(explode(';', $modifiedSince))))
-          {
+        if (($modifiedSince = $this->getRequest()->getHttpHeader('IF_MODIFIED_SINCE'))) {
+          if ($this->lastModified == strtotime(current(explode(';', $modifiedSince)))) {
             $isCached = true;
           }
         }
 
-        if(($etag = $this->getEtag()) !== false && ($noneMatch = $this->getRequest()->getHttpHeader('IF_NONE_MATCH')))
-        {
-          if(!$etag)
-          {
+        if (($etag = $this->getEtag()) !== false && ($noneMatch = $this->getRequest()->getHttpHeader('IF_NONE_MATCH'))) {
+          if (!$etag) {
             $etag = $this->generateETag();
           }
           $isCached = $this->compareAsterisk($noneMatch, $etag);
         }
 
         // the download is cached on client side, return
-        if($isCached)
-        {
+        if ($isCached) {
           $this->log('Download is cached, setting 304 (not modified) header.', sfILogger::INFO);
           $this->response->setStatusCode(304);
           $this->response->setHeaderOnly(true);
@@ -374,23 +355,20 @@ class sfHttpDownload extends sfConfigurable implements sfIEventDispatcherAware, 
     $this->response->setHttpHeader('Content-Disposition',
         sprintf('%s; filename="%s"', $this->getContentDisposition(), $this->fixFilename($this->getFilename() ? $this->getFilename() : $this->guessFilename())));
 
-    if(!($contentType = $this->getContentType()))
-    {
+    if (!($contentType = $this->getContentType())) {
       $contentType = $this->guessContentType();
     }
 
     $this->response->setHttpHeader('Content-Type', $contentType);
 
-    if($this->useResume())
-    {
+    if ($this->useResume()) {
       $this->response->setHttpHeader('Accept-Ranges', 'bytes');
     }
 
     $lifetime = $this->getClientLifetime();
 
     // cache control
-    switch($cacheControl)
-    {
+    switch ($cacheControl) {
       // Public cache control:
       // Expires: (sometime in the future, according to client_lifetime)
       // Cache-Control: public, no-transform, max-age=(sometime in the future, according to client_lifetime)
@@ -400,8 +378,7 @@ class sfHttpDownload extends sfConfigurable implements sfIEventDispatcherAware, 
 
         $this->response->addCacheControlHttpHeader('public, no-transform, must-revalidate');
 
-        if($lifetime)
-        {
+        if ($lifetime) {
           $this->response->addCacheControlHttpHeader('max-age', $lifetime);
           $this->response->addCacheControlHttpHeader('s-maxage', $lifetime);
           $this->response->setHttpHeader('Expires', $this->response->getDate(time() + $lifetime));
@@ -409,8 +386,7 @@ class sfHttpDownload extends sfConfigurable implements sfIEventDispatcherAware, 
 
         $this->response->setHttpHeader('Last-Modified', $this->response->getDate($this->getLastModified()));
 
-        if(($etag = $this->getEtag()) !== false)
-        {
+        if (($etag = $this->getEtag()) !== false) {
           $this->response->setHttpHeader('ETag', $etag ? $etag : $this->generateETag());
         }
 
@@ -425,8 +401,7 @@ class sfHttpDownload extends sfConfigurable implements sfIEventDispatcherAware, 
 
         $this->response->addCacheControlHttpHeader('private, no-transform, must-revalidate, proxy-revalidate');
 
-        if($lifetime)
-        {
+        if ($lifetime) {
           $this->response->addCacheControlHttpHeader('max-age', $lifetime);
           $this->response->addCacheControlHttpHeader('smax-age', $lifetime);
           $this->response->addCacheControlHttpHeader('pre-check', $lifetime);
@@ -435,8 +410,7 @@ class sfHttpDownload extends sfConfigurable implements sfIEventDispatcherAware, 
         $this->response->setHttpHeader('Expires', $this->response->getDate(strtotime('-10 years')));
         $this->response->setHttpHeader('Last-Modified', $this->response->getDate($this->getLastModified()));
 
-        if(($etag = $this->getEtag()) !== false)
-        {
+        if (($etag = $this->getEtag()) !== false) {
           $this->response->setHttpHeader('ETag', $etag ? $etag : $this->generateETag());
         }
 
@@ -448,15 +422,13 @@ class sfHttpDownload extends sfConfigurable implements sfIEventDispatcherAware, 
 
         $this->response->addCacheControlHttpHeader('private, no-transform, must-revalidate, proxy-revalidate');
 
-        if($lifetime)
-        {
+        if ($lifetime) {
           $this->response->addCacheControlHttpHeader('max-age', $lifetime);
           $this->response->addCacheControlHttpHeader('smax-age', $lifetime);
           $this->response->addCacheControlHttpHeader('pre-check', $lifetime);
         }
 
-        if(($etag = $this->getEtag()) !== false)
-        {
+        if (($etag = $this->getEtag()) !== false) {
           $this->response->setHttpHeader('ETag', $etag ? $etag : $this->generateETag());
         }
 
@@ -478,10 +450,8 @@ class sfHttpDownload extends sfConfigurable implements sfIEventDispatcherAware, 
 
     // vary headers
     // This causes most of browsers
-    if(($vary = $this->getVary()))
-    {
-      foreach($vary as $varyHeader)
-      {
+    if (($vary = $this->getVary())) {
+      foreach ($vary as $varyHeader) {
         $this->response->addVaryHttpHeader($varyHeader);
       }
     }
@@ -518,8 +488,7 @@ class sfHttpDownload extends sfConfigurable implements sfIEventDispatcherAware, 
    */
   public function setVary($vary)
   {
-    if(!is_array($vary))
-    {
+    if (!is_array($vary)) {
       $vary = array($vary);
     }
     $this->setOption('vary', $vary);
@@ -545,12 +514,9 @@ class sfHttpDownload extends sfConfigurable implements sfIEventDispatcherAware, 
     $this->prepareSending();
     $this->preSend();
 
-    if(!$this->response->isHeaderOnly())
-    {
+    if (!$this->response->isHeaderOnly()) {
       $this->sendDownload();
-    }
-    else
-    {
+    } else {
       $this->response->sendHttpHeaders();
     }
 
@@ -566,10 +532,8 @@ class sfHttpDownload extends sfConfigurable implements sfIEventDispatcherAware, 
   {
     // do some clean up
     // cleanup all buffers
-    if(!sfConfig::get('sf_test'))
-    {
-      if(ob_get_level())
-      {
+    if (!sfConfig::get('sf_test')) {
+      if (ob_get_level()) {
         while(@ob_end_clean());
       }
       ob_implicit_flush(true);
@@ -597,18 +561,14 @@ class sfHttpDownload extends sfConfigurable implements sfIEventDispatcherAware, 
   protected function postSend()
   {
     // something has been sent
-    if($this->getBandwidth() > 0 || $this->response->isHeaderOnly())
-    {
+    if ($this->getBandwidth() > 0 || $this->response->isHeaderOnly()) {
       $this->log('Post send, connection status {status}', sfILogger::DEBUG, array('status' => connection_status()));
-      if(!$this->aborted)
-      {
+      if (!$this->aborted) {
         $this->log('Download successfully finished.');
         $this->dispatchEvent('download.finished', array(
           'range_request' => $this->isRangeRequest()
         ));
-      }
-      else
-      {
+      } else {
         $this->log('Sending aborted by user.');
         $this->dispatchEvent('download.aborted', array(
           'range_request' => $this->isRangeRequest()
@@ -632,13 +592,11 @@ class sfHttpDownload extends sfConfigurable implements sfIEventDispatcherAware, 
         ($range = $this->getRequest()->getHttpHeader('RANGE')))
     {
       // this does not look like valid range
-      if(($range = $this->getStartEndPointsFromRange($range)) !== false)
-      {
+      if (($range = $this->getStartEndPointsFromRange($range)) !== false) {
         list($startPoint, $endPoint) = $range;
       }
       // invalid range
-      else
-      {
+      else {
         $this->log('Range request invalid "{range}".', sfILogger::WARNING, array(
           'range' => $this->getRequest()->getHttpHeader('RANGE')
         ));
@@ -658,19 +616,14 @@ class sfHttpDownload extends sfConfigurable implements sfIEventDispatcherAware, 
       $this->response->setHttpHeader('Content-Length', ($endPoint - $startPoint + 1));
       // mark as range request
       $this->isRangeRequest = true;
-    }
-    else
-    {
+    } else {
       $this->response->setHttpHeader('Content-Length', $this->size);
     }
 
-    if($this->file)
-    {
+    if ($this->file) {
       // open file
       $handle = fopen($this->file, 'rb');
-    }
-    else
-    {
+    } else {
       sfStringStreamWrapper::register();
       $handle = fopen('string://', 'r+');
       fputs($handle, $this->data);
@@ -678,8 +631,7 @@ class sfHttpDownload extends sfConfigurable implements sfIEventDispatcherAware, 
 
     rewind($handle);
 
-    if($startPoint > 0)
-    {
+    if ($startPoint > 0) {
       fseek($handle, $startPoint);
     }
 
@@ -690,25 +642,21 @@ class sfHttpDownload extends sfConfigurable implements sfIEventDispatcherAware, 
     // send the headers
     $this->response->sendHttpHeaders();
 
-    if(($speedLimit = $this->limitSpeed()))
-    {
+    if (($speedLimit = $this->limitSpeed())) {
       $this->log('Limitting speed to {limit}', sfILogger::INFO, array('limit' => $this->formatBytes($this->getBufferSize())));
     }
 
     $this->log('Sending total {size}', sfILogger::INFO, array('size' => $this->formatBytes($this->remaining)));
 
     $currentPosition = $startPoint;
-    while(!feof($handle) && $currentPosition <= $endPoint)
-    {
-      if(connection_aborted() || connection_status() != CONNECTION_NORMAL)
-      {
+    while (!feof($handle) && $currentPosition <= $endPoint) {
+      if (connection_aborted() || connection_status() != CONNECTION_NORMAL) {
         $this->aborted = true;
         break;
       }
 
       $chunkSize = $this->getBufferSize();
-      if($currentPosition + $chunkSize > $endPoint + 1)
-      {
+      if ($currentPosition + $chunkSize > $endPoint + 1) {
         $chunkSize = $endPoint - $currentPosition + 1;
       }
 
@@ -723,8 +671,7 @@ class sfHttpDownload extends sfConfigurable implements sfIEventDispatcherAware, 
       // increment download point
       $currentPosition += $chunkSize;
       // speed limit
-      if($speedLimit)
-      {
+      if ($speedLimit) {
         $this->sleep(1);
       }
     }
@@ -742,17 +689,13 @@ class sfHttpDownload extends sfConfigurable implements sfIEventDispatcherAware, 
   public function limitSpeed($limit = null)
   {
     $value = $this->getOption('speed_limit');
-    if(!is_null($limit))
-    {
+    if (!is_null($limit)) {
       // disable speed limit
-      if($limit === false)
-      {
+      if ($limit === false) {
         $this->setOption('speed_limit', false);
         // reset the buffer size?
         $this->setBufferSize($this->defaultOptions['buffer_size']);
-      }
-      else
-      {
+      } else {
         $this->setOption('speed_limit', true);
         $this->setBufferSize(round($limit * 1000 * 1000));
       }
@@ -770,8 +713,7 @@ class sfHttpDownload extends sfConfigurable implements sfIEventDispatcherAware, 
    */
   public function setFile($file)
   {
-    if(!is_readable($file))
-    {
+    if (!is_readable($file)) {
       throw new sfFileException(sprintf('File "%s" does not exist or is not readable.', $file));
     }
 
@@ -791,8 +733,7 @@ class sfHttpDownload extends sfConfigurable implements sfIEventDispatcherAware, 
   public function useResume($flag = null)
   {
     $value = $this->getOption('use_resume');
-    if(!is_null($flag))
-    {
+    if (!is_null($flag)) {
       $this->setOption('use_resume', (bool) $flag);
     }
 
@@ -812,8 +753,7 @@ class sfHttpDownload extends sfConfigurable implements sfIEventDispatcherAware, 
    */
   public function setBufferSize($bytes)
   {
-    if(0 >= $bytes)
-    {
+    if (0 >= $bytes) {
       throw new InvalidArgumentException(sprintf('Buffer size must be greater than 0 bytes ("%s" given)', $bytes));
     }
     $this->setOption('buffer_size', $bytes);
@@ -855,9 +795,8 @@ class sfHttpDownload extends sfConfigurable implements sfIEventDispatcherAware, 
   public function allowCache($flag = null)
   {
     $value = $this->getOption('allow_cache');
-    if(!is_null($flag))
-    {
-      $this->setOption('allow_cache', (bool)$flag);
+    if (!is_null($flag)) {
+      $this->setOption('allow_cache', (bool) $flag);
     }
 
     return $value;
@@ -876,17 +815,13 @@ class sfHttpDownload extends sfConfigurable implements sfIEventDispatcherAware, 
    */
   public function setLastModified($lastModified)
   {
-    if($lastModified instanceof DateTime)
-    {
+    if ($lastModified instanceof DateTime) {
       $lastModified = $lastModified->format('U');
-    }
-    elseif($lastModified instanceof sfDate)
-    {
+    } elseif ($lastModified instanceof sfDate) {
       $lastModified = $lastModified->format('U');
     }
 
-    if($lastModified <= 0)
-    {
+    if ($lastModified <= 0) {
       throw new InvalidArgumentException(sprintf('Invalid last modified time "%s" given. The value should be greater than zero', $last_modified));
     }
 
@@ -914,13 +849,11 @@ class sfHttpDownload extends sfConfigurable implements sfIEventDispatcherAware, 
    */
   public function setContentDisposition($disposition, $filename = null)
   {
-    switch($disposition = strtolower($disposition))
-    {
+    switch ($disposition = strtolower($disposition)) {
       case self::DOWNLOAD_ATTACHMENT:
       case self::DOWNLOAD_INLINE:
         $this->setOption('content_disposition', $disposition);
-        if($filename)
-        {
+        if ($filename) {
           $this->setFilename($filename);
         }
       break;
@@ -951,8 +884,7 @@ class sfHttpDownload extends sfConfigurable implements sfIEventDispatcherAware, 
    */
   public function setContentType($contentType)
   {
-    if(!preg_match('#^[-\w\+]+/[-\w\+.]+$#', $contentType))
-    {
+    if (!preg_match('#^[-\w\+]+/[-\w\+.]+$#', $contentType)) {
       throw new InvalidArgumentException(sprintf('Invalid content type "%s" given.', $contentType));
     }
     $this->setOption('content_type', $contentType);
@@ -1023,8 +955,7 @@ class sfHttpDownload extends sfConfigurable implements sfIEventDispatcherAware, 
   {
     $this->data = $data;
     $this->size = strlen($data);
-    if(!$this->lastModified)
-    {
+    if (!$this->lastModified) {
       $this->setLastModified(time());
     }
 
@@ -1074,8 +1005,7 @@ class sfHttpDownload extends sfConfigurable implements sfIEventDispatcherAware, 
    */
   public function setClientLifetime($lifetime)
   {
-    if($lifetime < 0)
-    {
+    if ($lifetime < 0) {
       throw new InvalidArgumentException(sprintf('Invalid client lifetime value "%s" given. Should be greater than zero', $lifetime));
     }
     $this->setOption('client_lifetime', $lifetime);
@@ -1212,12 +1142,9 @@ class sfHttpDownload extends sfConfigurable implements sfIEventDispatcherAware, 
    */
   protected function guessFilename()
   {
-    if($this->file)
-    {
+    if ($this->file) {
       return basename($this->file);
-    }
-    else
-    {
+    } else {
       return sprintf('download-%s.bin', time());
     }
   }
@@ -1230,16 +1157,11 @@ class sfHttpDownload extends sfConfigurable implements sfIEventDispatcherAware, 
   protected function guessContentType()
   {
     $contentType = 'application/octet-stream';
-    if($this->file)
-    {
+    if ($this->file) {
       $contentType = sfMimeType::getTypeFromFile($this->file);
-    }
-    elseif($this->data)
-    {
+    } elseif ($this->data) {
       $contentType = sfMimeType::getTypeFromString($this->data);
-    }
-    elseif(($filename = $this->getFilename()))
-    {
+    } elseif (($filename = $this->getFilename())) {
       $contentType = sfMimeType::getTypeFromExtension($filename);
     }
 
@@ -1253,12 +1175,9 @@ class sfHttpDownload extends sfConfigurable implements sfIEventDispatcherAware, 
    */
   protected function generateETag()
   {
-    if($this->data)
-    {
+    if ($this->data) {
       $md5 = md5($this->data);
-    }
-    else
-    {
+    } else {
       $fst = stat($this->file);
       $md5 = md5($fst['mtime'] . '=' . $fst['size']);
     }
@@ -1275,10 +1194,8 @@ class sfHttpDownload extends sfConfigurable implements sfIEventDispatcherAware, 
    */
   protected function compareAsterisk($variable, $compare)
   {
-    foreach(array_map('trim', explode(',', $variable)) as $request)
-    {
-      if($request === '*' || $request === $compare)
-      {
+    foreach (array_map('trim', explode(',', $variable)) as $request) {
+      if ($request === '*' || $request === $compare) {
         return true;
       }
     }
@@ -1295,8 +1212,7 @@ class sfHttpDownload extends sfConfigurable implements sfIEventDispatcherAware, 
   protected function getStartEndPointsFromRange($range)
   {
     //if(!preg_match('/^bytes=((\d*-\d*,? ?)+)$/', $range))
-    if(strpos($range, 'bytes=') !== 0)
-    {
+    if (strpos($range, 'bytes=') !== 0) {
       return false;
     }
 
@@ -1304,8 +1220,7 @@ class sfHttpDownload extends sfConfigurable implements sfIEventDispatcherAware, 
     $startPoint = intval($range[0]);
     $endPoint = !empty($range[1]) ? intval($range[1]) : $this->size;
 
-    if($startPoint < $endPoint)
-    {
+    if ($startPoint < $endPoint) {
       return array($startPoint, $endPoint);
     }
 
@@ -1323,8 +1238,7 @@ class sfHttpDownload extends sfConfigurable implements sfIEventDispatcherAware, 
   protected function fixFilename($fileName, $inputEncoding = 'UTF-8')
   {
     $userAgent = $this->getRequest()->getHttpHeader('USER_AGENT');
-    if($userAgent && function_exists('iconv') && preg_match('|MSIE\s*[1-8]|', $userAgent))
-    {
+    if ($userAgent && function_exists('iconv') && preg_match('|MSIE\s*[1-8]|', $userAgent)) {
       $fileName = iconv($inputEncoding, 'windows-1250', $fileName);
     }
 
@@ -1339,13 +1253,11 @@ class sfHttpDownload extends sfConfigurable implements sfIEventDispatcherAware, 
    */
   protected function dispatchEvent($eventName, $parameters = array())
   {
-    if(!$this->dispatcher)
-    {
+    if (!$this->dispatcher) {
       return;
     }
 
-    if(!isset($parameters['download']))
-    {
+    if (!isset($parameters['download'])) {
       $parameters['download'] = $this;
     }
 
@@ -1362,8 +1274,7 @@ class sfHttpDownload extends sfConfigurable implements sfIEventDispatcherAware, 
    */
   protected function log($message, $level = sfILogger::INFO, array $context = array())
   {
-    if($this->logger)
-    {
+    if ($this->logger) {
       $this->logger->log(sprintf('{sfHttpDownload} %s', $message), $level, $context);
     }
 

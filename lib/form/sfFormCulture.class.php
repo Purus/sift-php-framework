@@ -32,8 +32,8 @@
  * @package    Sift
  * @subpackage form
  */
-class sfFormCulture extends myForm {
-
+class sfFormCulture extends myForm
+{
   /**
    * sfUser instance
    *
@@ -54,8 +54,7 @@ class sfFormCulture extends myForm {
   {
     $this->user = $user;
 
-    if(!isset($options['languages']))
-    {
+    if (!isset($options['languages'])) {
       throw new RuntimeException(sprintf('%s requires a "languages" option.', get_class($this)));
     }
 
@@ -80,15 +79,13 @@ class sfFormCulture extends myForm {
   public function process(sfRequest $request)
   {
     $data = array('language' => $request->getParameter('language'));
-    if($request->hasParameter(self::$CSRFFieldName))
-    {
+    if ($request->hasParameter(self::$CSRFFieldName)) {
       $data[self::$CSRFFieldName] = $request->getParameter(self::$CSRFFieldName);
     }
 
     $this->bind($data);
 
-    if($isValid = $this->isValid())
-    {
+    if ($isValid = $this->isValid()) {
       $this->save();
     }
 

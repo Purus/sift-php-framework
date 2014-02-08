@@ -47,8 +47,7 @@ EOF;
 
     $finder = sfFinder::type('file');
     // clear also history?
-    if(!$history)
-    {
+    if (!$history) {
       $finder->maxdepth(0);
     }
 

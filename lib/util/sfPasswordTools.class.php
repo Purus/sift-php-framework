@@ -12,8 +12,8 @@
  * @package Sift
  * @subpackage util
  */
-class sfPasswordTools {
-
+class sfPasswordTools
+{
   /**
    * Pronounceable password
    */
@@ -55,15 +55,13 @@ class sfPasswordTools {
   {
     $password = '';
 
-    switch($type)
-    {
+    switch ($type) {
       case self::PASSWORD_PRONOUNCEABLE:
 
         $v_count = count(self::$vowels);
         $c_count = count(self::$consonants);
 
-        for($i = 0; $i < $length; $i++)
-        {
+        for ($i = 0; $i < $length; $i++) {
           $password .= self::$consonants[mt_rand(0, $c_count - 1)] . self::$vowels[mt_rand(0, $v_count - 1)];
         }
 
@@ -76,8 +74,7 @@ class sfPasswordTools {
 
         $pass_rnd = array_merge(range('a', 'z'), range('A', 'Z'), range(0, 9));
         shuffle($pass_rnd);
-        for($i = 0; $i < $length; $i++)
-        {
+        for ($i = 0; $i < $length; $i++) {
           $password .= $pass_rnd[array_rand($pass_rnd)];
         }
 

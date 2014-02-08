@@ -14,8 +14,8 @@
  * @subpackage i18n
  * @see http://publications.europa.eu/code/en/en-390300.htm
  */
-class sfI18nPhoneNumberFormatter {
-
+class sfI18nPhoneNumberFormatter
+{
   /**
    * Instance holder
    *
@@ -38,8 +38,7 @@ class sfI18nPhoneNumberFormatter {
   public function __construct()
   {
     $codes = array();
-    foreach(sfCulture::getInstance()->getPhoneNumbers() as $validation)
-    {
+    foreach (sfCulture::getInstance()->getPhoneNumbers() as $validation) {
       $codes[] = $validation['code'];
     }
     $this->codeExpression = sprintf('/^(\+(%s))+/', join('|', array_unique($codes)));
@@ -52,8 +51,7 @@ class sfI18nPhoneNumberFormatter {
    */
   public static function getInstance()
   {
-    if(!isset(self::$instance))
-    {
+    if (!isset(self::$instance)) {
       self::$instance = new sfI18nPhoneNumberFormatter();
     }
 
@@ -69,24 +67,20 @@ class sfI18nPhoneNumberFormatter {
    */
   public function format($phoneNumber, $culture = null)
   {
-    if(!$culture)
-    {
+    if (!$culture) {
       $culture = sfConfig::get('sf_culture');
     }
 
-    if(preg_match($this->codeExpression, $phoneNumber, $matches, PREG_OFFSET_CAPTURE))
-    {
+    if (preg_match($this->codeExpression, $phoneNumber, $matches, PREG_OFFSET_CAPTURE)) {
       $number = substr($phoneNumber, $matches[0][1] + strlen($matches[0][0]));
       $prefix = substr($phoneNumber, $matches[0][1], strlen($matches[0][0]));
 
       // culture like en_GB -> en
-      if(($pos = strpos($culture, '_')) !== false)
-      {
+      if (($pos = strpos($culture, '_')) !== false) {
         $culture = substr($culture, 0, 2);
       }
 
-      if(class_exists($class = sprintf('sfI18nPhoneNumberCultureFormatter%s', strtoupper($culture))))
-      {
+      if (class_exists($class = sprintf('sfI18nPhoneNumberCultureFormatter%s', strtoupper($culture)))) {
         // format only the number part
         $number = call_user_func(array($class, 'format'), $number);
       }

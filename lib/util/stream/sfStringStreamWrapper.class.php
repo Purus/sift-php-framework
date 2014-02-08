@@ -13,8 +13,8 @@
  * @package    Sift
  * @subpackage util_stream
  */
-class sfStringStreamWrapper extends sfStreamWrapper {
-
+class sfStringStreamWrapper extends sfStreamWrapper
+{
   /**
    * Name of stream protocol - string://
    */
@@ -80,8 +80,7 @@ class sfStringStreamWrapper extends sfStreamWrapper {
   public function stream_read($count)
   {
     $result = substr($this->data, $this->position, $count);
-    if($result)
-    {
+    if ($result) {
       $this->position += strlen($result);
     }
 
@@ -119,8 +118,7 @@ class sfStringStreamWrapper extends sfStreamWrapper {
    */
   public function stream_eof()
   {
-    if($this->position > $this->length)
-    {
+    if ($this->position > $this->length) {
       return true;
     }
 
@@ -133,8 +131,7 @@ class sfStringStreamWrapper extends sfStreamWrapper {
   public function stream_seek($offset, $whence)
   {
     $length = strlen($this->data);
-    switch($whence)
-    {
+    switch ($whence) {
       case SEEK_SET:
         $newPos = $offset;
       break;
@@ -149,8 +146,7 @@ class sfStringStreamWrapper extends sfStreamWrapper {
         return false;
     }
     $return = ($newPos >= 0 && $newPos <= $length);
-    if($return)
-    {
+    if ($return) {
       $this->position = $newPos;
     }
 

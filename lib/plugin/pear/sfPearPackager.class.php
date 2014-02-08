@@ -15,8 +15,8 @@ require_once dirname(__FILE__) . '/PEAR_bootstrap.php';
  * @package    Sift
  * @subpackage plugin
  */
-class sfPearPackager extends PEAR_Packager {
-
+class sfPearPackager extends PEAR_Packager
+{
   protected $logger;
 
   public function setLogger(sfILogger $logger = null)
@@ -37,12 +37,9 @@ class sfPearPackager extends PEAR_Packager {
    */
   public function log($level, $msg, $append_crlf = true)
   {
-    if($this->logger)
-    {
+    if ($this->logger) {
       $this->logger->log('pear-packager: ' . $msg, $level);
-    }
-    else
-    {
+    } else {
       echo $msg . "\n";
     }
   }

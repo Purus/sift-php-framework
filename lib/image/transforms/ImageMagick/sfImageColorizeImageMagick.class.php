@@ -60,9 +60,8 @@ class sfImageColorizeImageMagick  extends sfImageTransformAbstract
    */
   public function setRed($red)
   {
-    if (is_numeric($red))
-    {
-      $this->red_tint = (int)$red;
+    if (is_numeric($red)) {
+      $this->red_tint = (int) $red;
 
       return true;
     }
@@ -88,9 +87,8 @@ class sfImageColorizeImageMagick  extends sfImageTransformAbstract
    */
   public function setGreen($green)
   {
-    if (is_numeric($green))
-    {
-      $this->green_tint = (int)$green;
+    if (is_numeric($green)) {
+      $this->green_tint = (int) $green;
 
       return true;
     }
@@ -116,9 +114,8 @@ class sfImageColorizeImageMagick  extends sfImageTransformAbstract
    */
   public function setBlue($blue)
   {
-    if (is_numeric($blue))
-    {
-      $this->blue_tint = (int)$blue;
+    if (is_numeric($blue)) {
+      $this->blue_tint = (int) $blue;
 
       return true;
     }
@@ -144,9 +141,8 @@ class sfImageColorizeImageMagick  extends sfImageTransformAbstract
    */
   public function setAlpha($alpha)
   {
-    if (is_numeric($alpha))
-    {
-      $this->alpha = (int)$alpha;
+    if (is_numeric($alpha)) {
+      $this->alpha = (int) $alpha;
 
       return true;
     }

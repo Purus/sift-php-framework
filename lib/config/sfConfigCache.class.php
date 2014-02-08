@@ -14,8 +14,8 @@
  * @package    Sift
  * @subpackage config
  */
-class sfConfigCache {
-
+class sfConfigCache
+{
   /**
    * Parent holder
    *
@@ -75,36 +75,26 @@ class sfConfigCache {
   public static function getInstance($application = null)
   {
     $key = false;
-    if($application === null && sfCore::hasProject())
-    {
-      if(sfCore::getProject()->hasActive())
-      {
+    if ($application === null && sfCore::hasProject()) {
+      if (sfCore::getProject()->hasActive()) {
         $application = sfCore::getProject()->getActiveApplication();
         $key = $application->getName();
-      }
-      else
-      {
+      } else {
         // we need to get
         $key = '_project_';
         $application = sfCore::getProject();
       }
-    }
-    elseif($application instanceof sfApplication)
-    {
+    } elseif ($application instanceof sfApplication) {
       $key = $application->getName();
-    }
-    elseif($application instanceof sfProject)
-    {
+    } elseif ($application instanceof sfProject) {
       $key = '_project_';
     }
 
-    if(!$key)
-    {
+    if (!$key) {
       throw new sfInitializationException('Invalid usage of getInstance(). No active application is present.');
     }
 
-    if(!isset(self::$instances[$key]))
-    {
+    if (!isset(self::$instances[$key])) {
       self::$instances[$key] = new sfConfigCache($application);
     }
 
@@ -122,8 +112,7 @@ class sfConfigCache {
    */
   protected function callHandler($handler, $configs, $cache)
   {
-    if(count($this->handlers) == 0)
-    {
+    if (count($this->handlers) == 0) {
       // we need to load the handlers first
       $this->loadConfigHandlers();
     }
@@ -135,28 +124,21 @@ class sfConfigCache {
 
     // grab the base name of the handler
     $basename = basename($handler);
-    if(isset($this->handlers[$handler]))
-    {
+    if (isset($this->handlers[$handler])) {
       // we have a handler associated with the full configuration path
       $handlerToCall = $this->handlers[$handler];
-    }
-    else if(isset($this->handlers[$basename]))
-    {
+    } else if (isset($this->handlers[$basename])) {
       // we have a handler associated with the configuration base name
       $handlerToCall = $this->handlers[$basename];
-    }
-    else
-    {
+    } else {
       // let's see if we have any wildcard handlers registered that match
       // this basename
-      foreach($this->handlers as $key => $handlerInstance)
-      {
+      foreach ($this->handlers as $key => $handlerInstance) {
         // replace wildcard chars in the configuration
         $pattern = strtr($key, array('.' => '\.', '*' => '.*?'));
 
         // create pattern from config
-        if(preg_match('#' . $pattern . '#', $handler))
-        {
+        if (preg_match('#' . $pattern . '#', $handler)) {
           // we found a match!
           $handlerToCall = $this->handlers[$key];
 
@@ -165,15 +147,12 @@ class sfConfigCache {
       }
     }
 
-    if($handlerToCall)
-    {
+    if ($handlerToCall) {
       // call the handler and retrieve the cache data
       $data = $handlerToCall->execute($configs);
 
       self::writeCacheFile($cache, $data);
-    }
-    else
-    {
+    } else {
       // we do not have a registered handler for this file
       throw new sfConfigurationException(sprintf('Configuration file "%s" does not have a registered handler', implode(', ', $configs)));
     }
@@ -200,42 +179,33 @@ class sfConfigCache {
   {
     static $process_cache_cleared = false;
 
-    if(sfConfig::get('sf_debug') && sfConfig::get('sf_logging_enabled'))
-    {
+    if (sfConfig::get('sf_debug') && sfConfig::get('sf_logging_enabled')) {
       $timer = sfTimerManager::getTimer('Configuration');
     }
 
     // the cache filename we'll be using
     $cache = $this->getCacheName($configPath);
 
-    if(isset($this->callCache[$cache . $optional]))
-    {
+    if (isset($this->callCache[$cache . $optional])) {
       return $this->callCache[$cache . $optional];
     }
 
-    if(sfConfig::get('sf_in_bootstrap') && is_readable($cache))
-    {
-      if(sfConfig::get('sf_debug') && sfConfig::get('sf_logging_enabled'))
-      {
+    if (sfConfig::get('sf_in_bootstrap') && is_readable($cache)) {
+      if (sfConfig::get('sf_debug') && sfConfig::get('sf_logging_enabled')) {
         $timer->addTime();
       }
 
       return $this->callCache[$cache] = $cache;
     }
 
-    if(!sfToolkit::isPathAbsolute($configPath))
-    {
+    if (!sfToolkit::isPathAbsolute($configPath)) {
       $files = sfLoader::getConfigPaths($configPath);
-    }
-    else
-    {
+    } else {
       $files = is_readable($configPath) ? array($configPath) : array();
     }
 
-    if(!isset($files[0]))
-    {
-      if($optional)
-      {
+    if (!isset($files[0])) {
+      if ($optional) {
         return null;
       }
 
@@ -245,29 +215,24 @@ class sfConfigCache {
 
     // find the more recent configuration file last modification time
     $mtime = 0;
-    foreach($files as $file)
-    {
-      if(filemtime($file) > $mtime)
-      {
+    foreach ($files as $file) {
+      if (filemtime($file) > $mtime) {
         $mtime = filemtime($file);
       }
     }
 
-    if(!is_readable($cache) || $mtime > filemtime($cache))
-    {
+    if (!is_readable($cache) || $mtime > filemtime($cache)) {
       // configuration has changed so we need to reparse it
       $this->callHandler($configPath, $files, $cache);
 
       // clear process cache
-      if('config/config_handlers.yml' != $configPath && sfConfig::get('sf_use_process_cache') && !$process_cache_cleared)
-      {
+      if ('config/config_handlers.yml' != $configPath && sfConfig::get('sf_use_process_cache') && !$process_cache_cleared) {
         sfProcessCache::clear();
         $process_cache_cleared = true;
       }
     }
 
-    if(sfConfig::get('sf_debug') && sfConfig::get('sf_logging_enabled'))
-    {
+    if (sfConfig::get('sf_debug') && sfConfig::get('sf_logging_enabled')) {
       $timer->addTime();
     }
 
@@ -293,8 +258,7 @@ class sfConfigCache {
    */
   public function getCacheName($config)
   {
-    if(strlen($config) > 3 && ctype_alpha($config[0]) && $config[1] == ':' && ($config[2] == '\\' || $config[2] == '/'))
-    {
+    if (strlen($config) > 3 && ctype_alpha($config[0]) && $config[1] == ':' && ($config[2] == '\\' || $config[2] == '/')) {
       // file is a windows absolute path, strip off the drive letter
       $config = substr($config, 3);
     }
@@ -303,12 +267,9 @@ class sfConfigCache {
     $config = str_replace(array('\\', '/', ' '), '_', $config);
     $config .= '.php';
 
-    if($this->parent instanceof sfApplication)
-    {
+    if ($this->parent instanceof sfApplication) {
       $dir = $this->getOption('sf_config_cache_dir');
-    }
-    else
-    {
+    } else {
       $dir = $this->getOption('sf_root_cache_dir');
     }
 
@@ -327,18 +288,14 @@ class sfConfigCache {
   {
     $cache = $this->checkConfig($config, $optional);
 
-    if($optional && !$cache)
-    {
+    if ($optional && !$cache) {
       return;
     }
 
     // include cache file
-    if($once)
-    {
+    if ($once) {
       include_once($cache);
-    }
-    else
-    {
+    } else {
       include($cache);
     }
   }
@@ -361,8 +318,7 @@ class sfConfigCache {
 
     // module level configuration handlers
     // make sure our modules directory exists
-    if($sf_app_module_dir && is_readable($sf_app_module_dir))
-    {
+    if ($sf_app_module_dir && is_readable($sf_app_module_dir)) {
       // ignore names
       $ignore = array('.', '..', 'CVS', '.svn', '.git');
 
@@ -370,14 +326,11 @@ class sfConfigCache {
       $fp = opendir($sf_app_module_dir);
 
       // loop through the directory and grab the modules
-      while(($directory = readdir($fp)) !== false)
-      {
-        if(!in_array($directory, $ignore))
-        {
+      while (($directory = readdir($fp)) !== false) {
+        if (!in_array($directory, $ignore)) {
           $configPath = $sf_app_module_dir . '/' . $directory . '/' . $this->getOption('sf_app_module_config_dir_name') . '/config_handlers.yml';
 
-          if(is_readable($configPath))
-          {
+          if (is_readable($configPath)) {
             // initialize the root configuration handler with this module name
             $params = array('module_level' => true, 'module_name' => $directory);
 
@@ -408,24 +361,20 @@ class sfConfigCache {
   public static function writeCacheFile($cache, &$data)
   {
     // strip comments (not in debug mode)
-    if(!sfConfig::get('sf_debug'))
-    {
+    if (!sfConfig::get('sf_debug')) {
       $data = sfToolkit::stripComments($data);
     }
 
     $current_umask = umask(0000);
-    if(!is_dir(dirname($cache)))
-    {
-      if(false === @mkdir(dirname($cache), 0777, true))
-      {
+    if (!is_dir(dirname($cache))) {
+      if (false === @mkdir(dirname($cache), 0777, true)) {
         throw new sfCacheException(sprintf('Failed to make cache directory "%s".', dirname($cache)));
       }
     }
 
     $tmpFile = tempnam(dirname($cache), basename($cache));
 
-    if(!$fp = @fopen($tmpFile, 'wb'))
-    {
+    if (!$fp = @fopen($tmpFile, 'wb')) {
       throw new sfCacheException(sprintf('Failed to write cache file "%s".', $tmpFile));
     }
 
@@ -435,10 +384,8 @@ class sfConfigCache {
     // Hack from Agavi (http://trac.agavi.org/changeset/3979)
     // With php < 5.2.6 on win32, renaming to an already existing file doesn't work, but copy does,
     // so we simply assume that when rename() fails that we are on win32 and try to use copy()
-    if(!@rename($tmpFile, $cache))
-    {
-      if(copy($tmpFile, $cache))
-      {
+    if (!@rename($tmpFile, $cache)) {
+      if (copy($tmpFile, $cache)) {
         unlink($tmpFile);
       }
     }

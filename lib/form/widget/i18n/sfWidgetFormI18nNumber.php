@@ -44,13 +44,11 @@ class sfWidgetFormI18nNumber extends sfWidgetFormInput
    */
   public function render($name, $value = null, $attributes = array(), $errors = array())
   {
-    if($value instanceof sfMoneyCurrencyValue)
-    {
+    if ($value instanceof sfMoneyCurrencyValue) {
       $value = $value->getAmount();
     }
 
-    if(!is_null($value) && is_numeric($value))
-    {
+    if (!is_null($value) && is_numeric($value)) {
       $value = sfI18nNumberFormatter::getInstance($this->getCulture())->format($value);
     }
 

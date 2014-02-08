@@ -12,8 +12,8 @@
  * @package    Sift
  * @subpackage browser
  */
-interface sfIWebBrowserDriver {
-
+interface sfIWebBrowserDriver
+{
   public function call($browser, $uri, $method = 'GET', $parameters = array(), $headers = array());
 
 }

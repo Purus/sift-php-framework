@@ -13,8 +13,8 @@
  * @package Sift
  * @subpackage response
  */
-class sfAjaxResult {
-
+class sfAjaxResult
+{
   /**
    * Success or error flag
    *
@@ -36,7 +36,7 @@ class sfAjaxResult {
    */
   public function __construct($success = true, $html = '')
   {
-    $this->success = (boolean)$success;
+    $this->success = (boolean) $success;
     $this->html = $html;
   }
 
@@ -72,8 +72,7 @@ class sfAjaxResult {
    */
   public function fromArray($array)
   {
-    foreach($array as $key => $val)
-    {
+    foreach ($array as $key => $val) {
       $this->$key = $val;
     }
 

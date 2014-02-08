@@ -47,13 +47,11 @@ class sfI18nModuleExtract extends sfI18nExtract
 
     // Extract from generator.yml files
     $generator = $moduleDir.'/'.$this->getOption('config_dir_name').'/generator.yml';
-    if(file_exists($generator))
-    {
+    if (file_exists($generator)) {
       $yamlExtractor = new sfI18nYamlGeneratorExtractor();
       $generatorMessages = $yamlExtractor->extract(file_get_contents($generator));
 
-      if(!isset($messages[sfI18nExtract::UNKNOWN_DOMAIN]))
-      {
+      if (!isset($messages[sfI18nExtract::UNKNOWN_DOMAIN])) {
         $messages[sfI18nExtract::UNKNOWN_DOMAIN] = array();
       }
 
@@ -63,15 +61,12 @@ class sfI18nModuleExtract extends sfI18nExtract
 
     // Extract from validate/*.yml files
     $validateFiles = glob($moduleDir.'/'.$this->getOption('validate_dir_name').'/*.yml');
-    if (is_array($validateFiles))
-    {
-      foreach ($validateFiles as $validateFile)
-      {
+    if (is_array($validateFiles)) {
+      foreach ($validateFiles as $validateFile) {
         $yamlExtractor = new sfI18nYamlValidateExtractor();
         $validatorMessages = ($yamlExtractor->extract(file_get_contents($validateFile)));
 
-        if(!isset($messages[sfI18nExtract::UNKNOWN_DOMAIN]))
-        {
+        if (!isset($messages[sfI18nExtract::UNKNOWN_DOMAIN])) {
           $messages[sfI18nExtract::UNKNOWN_DOMAIN] = array();
         }
         $messages[sfI18nExtract::UNKNOWN_DOMAIN] = array_merge($messages[sfI18nExtract::UNKNOWN_DOMAIN],

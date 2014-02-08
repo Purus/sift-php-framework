@@ -12,8 +12,8 @@
  * @package Sift
  * @subpackage search
  */
-class sfSearchQueryToken {
-
+class sfSearchQueryToken
+{
   const STRING = 1;
   const SPACE = 2;
   const QUOTE = 3;

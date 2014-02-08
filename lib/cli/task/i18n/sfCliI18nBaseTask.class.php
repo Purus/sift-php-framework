@@ -12,8 +12,8 @@
  * @package    Sift
  * @subpackage cli_task
  */
-abstract class sfCliI18nBaseTask extends sfCliBaseTask {
-
+abstract class sfCliI18nBaseTask extends sfCliBaseTask
+{
   /**
    * @see sfCliTask
    */

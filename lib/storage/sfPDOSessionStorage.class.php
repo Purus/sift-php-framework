@@ -18,8 +18,8 @@
  * @package    Sift
  * @subpackage storage
  */
-class sfPDOSessionStorage extends sfSessionStorage {
-
+class sfPDOSessionStorage extends sfSessionStorage
+{
   /**
    * Default options
    *
@@ -95,15 +95,11 @@ class sfPDOSessionStorage extends sfSessionStorage {
   {
     // manually call garbage collector
     // 10% chance
-    if(rand(1, 100) < 10)
-    {
-      try
-      {
+    if (rand(1, 100) < 10) {
+      try {
         // manually call garbage collection
         $this->sessionGC(ini_get('session.gc_maxlifetime'));
-      }
-      catch(sfDatabaseException $e)
-      {
+      } catch (sfDatabaseException $e) {
       }
     }
     // do nothing
@@ -128,14 +124,11 @@ class sfPDOSessionStorage extends sfSessionStorage {
     // delete the record associated with this id
     $sql = 'DELETE FROM ' . $db_table . ' WHERE ' . $db_id_col . '= ?';
 
-    try
-    {
+    try {
       $stmt = $this->db->prepare($sql);
       $stmt->bindParam(1, $id, PDO::PARAM_STR); // setString(1, $id);
       $stmt->execute();
-    }
-    catch(PDOException $e)
-    {
+    } catch (PDOException $e) {
       throw new sfDatabaseException(sprintf('PDOException was thrown when trying to manipulate session data. Message: %s', $e->getMessage()));
     }
   }
@@ -161,14 +154,11 @@ class sfPDOSessionStorage extends sfSessionStorage {
     // delete the record associated with this id
     $sql = 'DELETE FROM ' . $db_table . ' WHERE ' . $db_time_col . ' < ' . $time;
 
-    try
-    {
+    try {
       $this->db->query($sql);
 
       return true;
-    }
-    catch(PDOException $e)
-    {
+    } catch (PDOException $e) {
       throw new sfDatabaseException(sprintf('PDOException was thrown when trying to manipulate session data. Message: %s', $e->getMessage()));
     }
   }
@@ -185,16 +175,12 @@ class sfPDOSessionStorage extends sfSessionStorage {
   public function sessionOpen($path, $name)
   {
     $e = null;
-    try
-    {
+    try {
       $this->db = $this->manager->getDatabase($this->getOption('database'))->getConnection();
-    }
-    catch(Exception $e)
-    {
+    } catch (Exception $e) {
     }
 
-    if($this->db == null || !$this->db instanceof PDO)
-    {
+    if ($this->db == null || !$this->db instanceof PDO) {
       throw new sfDatabaseException(
           sprintf('PDO dabatase connection "%s" doesn\'t exist. Unable to open session.', $this->getOption('database')), sfDatabaseException::SESSION_ERROR);
     }
@@ -228,12 +214,10 @@ class sfPDOSessionStorage extends sfSessionStorage {
       $this->transactionStarted = true;
     }
 
-    try
-    {
+    try {
       $sql = 'SELECT ' . $db_data_col . ' FROM ' . $db_table . ' WHERE ' . $db_id_col . '=?';
       // for update is not supported by sqlite
-      if($this->db->getAttribute(PDO::ATTR_DRIVER_NAME) !== 'sqlite')
-      {
+      if ($this->db->getAttribute(PDO::ATTR_DRIVER_NAME) !== 'sqlite') {
         $sql .= ' FOR UPDATE';
       }
 
@@ -245,12 +229,9 @@ class sfPDOSessionStorage extends sfSessionStorage {
       // we anyway expect either no rows, or one row with one column. fetchColumn, seems to be buggy #4777
       $sessionRows = $stmt->fetchAll(PDO::FETCH_NUM);
 
-      if(count($sessionRows) == 1)
-      {
+      if (count($sessionRows) == 1) {
         return base64_decode($sessionRows[0][0]);
-      }
-      else
-      {
+      } else {
         // session does not exist, create it
         $sql = 'INSERT INTO ' . $db_table . '(' . $db_id_col . ', ' . $db_data_col . ', ' . $db_time_col . ') VALUES (?, ?, ?)';
 
@@ -262,9 +243,7 @@ class sfPDOSessionStorage extends sfSessionStorage {
 
         return '';
       }
-    }
-    catch(PDOException $e)
-    {
+    } catch (PDOException $e) {
       // If the insertion fails, it may be due to a race condition that
       // exists between multiple instances of this session handler in the
       // case where a new session is created by multiple script instances
@@ -298,8 +277,7 @@ class sfPDOSessionStorage extends sfSessionStorage {
 
     $sql = 'UPDATE ' . $db_table . ' SET ' . $db_data_col . ' = ?, ' . $db_time_col . ' = ' . time() . ' WHERE ' . $db_id_col . '= ?';
 
-    try
-    {
+    try {
       $stmt = $this->db->prepare($sql);
       $data = base64_encode($data);
       $stmt->bindParam(1, $data, PDO::PARAM_STR); // setString(1, $data);
@@ -307,9 +285,7 @@ class sfPDOSessionStorage extends sfSessionStorage {
       $stmt->execute();
 
       return true;
-    }
-    catch(PDOException $e)
-    {
+    } catch (PDOException $e) {
       throw new sfDatabaseException(sprintf('PDOException was thrown when trying to manipulate session data. Message: %s', $e->getMessage()));
     }
 
@@ -324,8 +300,7 @@ class sfPDOSessionStorage extends sfSessionStorage {
    */
   public function regenerate($destroy = false)
   {
-    if(self::$sessionIdRegenerated)
-    {
+    if (self::$sessionIdRegenerated) {
       return;
     }
 

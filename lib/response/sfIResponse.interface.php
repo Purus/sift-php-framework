@@ -12,8 +12,8 @@
  * @package Sift
  * @subpackage response
  */
-interface sfIResponse extends Serializable, sfIService, sfIConfigurable {
-
+interface sfIResponse extends Serializable, sfIService, sfIConfigurable
+{
   /**
    * Sets the response content
    *

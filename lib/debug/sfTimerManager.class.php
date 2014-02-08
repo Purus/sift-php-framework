@@ -27,8 +27,7 @@ class sfTimerManager
    */
   public static function getTimer($name)
   {
-    if (!isset(self::$timers[$name]))
-    {
+    if (!isset(self::$timers[$name])) {
       self::$timers[$name] = new sfTimer($name);
     }
 

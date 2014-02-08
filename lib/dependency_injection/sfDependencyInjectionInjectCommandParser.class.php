@@ -13,8 +13,8 @@
  * @package Sift
  * @subpackage dependency_injection
  */
-class sfDependencyInjectionInjectCommandParser {
-
+class sfDependencyInjectionInjectCommandParser
+{
   /**
    * Debug information
    *
@@ -49,7 +49,7 @@ class sfDependencyInjectionInjectCommandParser {
    */
   public function setString($string)
   {
-    $this->string = (string)$string;
+    $this->string = (string) $string;
 
     return $this;
   }
@@ -99,19 +99,14 @@ class sfDependencyInjectionInjectCommandParser {
     $result = array();
     $params = array_map('trim', explode(' ', $command));
 
-    for($i = 0; $i < count($params); $i++)
-    {
+    for ($i = 0; $i < count($params); $i++) {
       $parts = array_map('trim', explode(':', $params[$i]));
-      if(count($parts) != 2)
-      {
-        if($i == 0)
-        {
+      if (count($parts) != 2) {
+        if ($i == 0) {
           // dependency name
           $result['dependency_name'] = $params[$i];
           continue;
-        }
-        else
-        {
+        } else {
           throw new sfParseException(sprintf('Invalid option "%s" for command "%s". Correct syntax is Option:Value. %s', $params[$i], $command, $this->debugInformation));
         }
       }
@@ -119,8 +114,7 @@ class sfDependencyInjectionInjectCommandParser {
       $key = $parts[0];
       $value = $parts[1];
 
-      switch($key)
-      {
+      switch ($key) {
         case 'new':
           $result['new_class'] = $value;
         break;
@@ -137,8 +131,7 @@ class sfDependencyInjectionInjectCommandParser {
       }
     }
 
-    if(empty($result['dependency_name']) && empty($result['new_class']))
-    {
+    if (empty($result['dependency_name']) && empty($result['new_class'])) {
       throw new sfParseException(sprintf('Invalid command "%s"', $command, $this->debugInformation));
     }
 
@@ -163,14 +156,12 @@ class sfDependencyInjectionInjectCommandParser {
    */
   public function parse()
   {
-    if(!preg_match_all('/@inject(.*?)(\n|$)/i', $this->string, $matches))
-    {
+    if (!preg_match_all('/@inject(.*?)(\n|$)/i', $this->string, $matches)) {
       return false;
     }
 
     $commands = array();
-    foreach($matches[1] as $command)
-    {
+    foreach ($matches[1] as $command) {
       $commands[] = $this->parseCommand($command);
     }
 

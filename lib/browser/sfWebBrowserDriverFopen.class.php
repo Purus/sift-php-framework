@@ -13,8 +13,8 @@
  * @subpackage browser
  * @link       http://cz2.php.net/manual/en/function.fopen.php
  */
-class sfWebBrowserDriverFopen implements sfIWebBrowserDriver {
-
+class sfWebBrowserDriverFopen implements sfIWebBrowserDriver
+{
   protected $options = array();
   protected $adapterErrorMessage = null;
   protected $browser = null;
@@ -55,8 +55,7 @@ class sfWebBrowserDriverFopen implements sfIWebBrowserDriver {
     // -- browser instance must be accessible from handleRuntimeError()
     $this->browser = $browser;
     set_error_handler(array($this, 'handleRuntimeError'), E_WARNING);
-    if($handle = fopen($uri, 'r', false, $context))
-    {
+    if ($handle = fopen($uri, 'r', false, $context)) {
       $response_headers = stream_get_meta_data($handle);
       $browser->setResponseCode(array_shift($response_headers['wrapper_data']));
       $browser->setResponseHeaders($response_headers['wrapper_data']);
@@ -66,8 +65,7 @@ class sfWebBrowserDriverFopen implements sfIWebBrowserDriver {
 
     restore_error_handler();
 
-    if($this->adapterErrorMessage == true)
-    {
+    if ($this->adapterErrorMessage == true) {
       $msg = $this->adapterErrorMessage;
       $this->adapterErrorMessage = null;
       throw new Exception($msg);
@@ -105,15 +103,12 @@ class sfWebBrowserDriverFopen implements sfIWebBrowserDriver {
     $msg = sprintf('%s : "%s" occured in %s on line %d', $error_types[$errno], $errstr, $errfile, $errline);
 
     $matches = array();
-    if(preg_match('/HTTP\/\d\.\d (\d{3}) (.*)$/', $errstr, $matches))
-    {
+    if (preg_match('/HTTP\/\d\.\d (\d{3}) (.*)$/', $errstr, $matches)) {
       $this->browser->setResponseCode($matches[1]);
       $this->browser->setResponseMessage($matches[2]);
       $body = sprintf('The %s adapter cannot handle error responses body. Try using another adapter.', __CLASS__);
       $this->browser->setResponseText($body);
-    }
-    else
-    {
+    } else {
       $this->adapterErrorMessage = $msg;
     }
   }

@@ -36,8 +36,8 @@
  * @package    Sift
  * @subpackage validator
  */
-class sfValidatorSchemaTimeInterval extends sfValidatorSchema {
-
+class sfValidatorSchemaTimeInterval extends sfValidatorSchema
+{
   protected $dateStart = null,
           $dateEnd = null;
 
@@ -84,64 +84,50 @@ class sfValidatorSchemaTimeInterval extends sfValidatorSchema {
    */
   protected function doClean($values)
   {
-    if(is_null($values))
-    {
+    if (is_null($values)) {
       $values = array();
     }
 
-    if(!is_array($values))
-    {
+    if (!is_array($values)) {
       throw new InvalidArgumentException('You must pass an array parameter to the clean() method');
     }
 
     $this->dateStart = isset($values[$this->getOption('date_start_field')]) ? strtotime($values[$this->getOption('date_start_field')]) : null;
     $this->dateEnd = isset($values[$this->getOption('date_end_field')]) ? strtotime($values[$this->getOption('date_end_field')]) : null;
 
-    if($this->getOption('disallow_future_dates'))
-    {
-      if(!is_null($this->dateStart) && $this->dateStart > time())
-      {
+    if ($this->getOption('disallow_future_dates')) {
+      if (!is_null($this->dateStart) && $this->dateStart > time()) {
         $this->throwError('future_date', $this->getOption('date_start_field'));
-      }
-      else if(!is_null($this->dateEnd) && $this->dateEnd > time())
-      {
+      } else if (!is_null($this->dateEnd) && $this->dateEnd > time()) {
         $this->throwError('future_date', $this->getOption('date_end_field'));
       }
     }
 
-    if($this->getOption('disallow_past_dates'))
-    {
-      if(!is_null($this->dateStart) && $this->dateStart < time())
-      {
+    if ($this->getOption('disallow_past_dates')) {
+      if (!is_null($this->dateStart) && $this->dateStart < time()) {
         $this->throwError('past_date', $this->getOption('date_start_field'));
-      }
-      else if(!is_null($this->dateEnd) && $this->dateEnd < time())
-      {
+      } else if (!is_null($this->dateEnd) && $this->dateEnd < time()) {
         $this->throwError('past_date', $this->getOption('date_end_field'));
       }
     }
 
     // At this point, if either the start or end date is not set we can return values
-    if(is_null($this->dateStart) or is_null($this->dateEnd))
-    {
+    if (is_null($this->dateStart) or is_null($this->dateEnd)) {
       return $values;
     }
 
     // Duration
     $duration = $this->dateEnd - $this->dateStart;
 
-    if($this->hasOption('min_duration') && $duration < $this->getOption('min_duration'))
-    {
+    if ($this->hasOption('min_duration') && $duration < $this->getOption('min_duration')) {
       $this->throwError('too_short', $this->getOption('date_end_field'));
     }
 
-    if($this->hasOption('max_duration') && $duration > $this->getOption('max_duration'))
-    {
+    if ($this->hasOption('max_duration') && $duration > $this->getOption('max_duration')) {
       $this->throwError('too_long', $this->getOption('date_end_field'));
     }
 
-    if($this->dateStart > $this->dateEnd)
-    {
+    if ($this->dateStart > $this->dateEnd) {
       $this->throwError('start_not_prior', $this->getOption('date_start_field'));
     }
 
@@ -163,8 +149,7 @@ class sfValidatorSchemaTimeInterval extends sfValidatorSchema {
         'date_end' => date('Y-m-d', $this->dateEnd),
     ));
 
-    if($this->getOption('throw_global_error'))
-    {
+    if ($this->getOption('throw_global_error')) {
       throw $error;
     }
 
@@ -178,20 +163,16 @@ class sfValidatorSchemaTimeInterval extends sfValidatorSchema {
   {
     $messages = parent::getActiveMessages();
     $messages[] = $this->getMessage('start_not_prior');
-    if($this->getOption('max_duration'))
-    {
+    if ($this->getOption('max_duration')) {
       $messages[] = $this->getMessage('too_long');
     }
-    if($this->getOption('min_duration'))
-    {
+    if ($this->getOption('min_duration')) {
       $messages[] = $this->getMessage('too_short');
     }
-    if($this->getOption('disallow_past_dates'))
-    {
+    if ($this->getOption('disallow_past_dates')) {
       $messages[] = $this->getMessage('past_date');
     }
-    if($this->getOption('disallow_future_dates'))
-    {
+    if ($this->getOption('disallow_future_dates')) {
       $messages[] = $this->getMessage('future_date');
     }
 

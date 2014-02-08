@@ -69,8 +69,7 @@ class sfTimer
    */
   public function getElapsedTime()
   {
-    if (null === $this->totalTime)
-    {
+    if (null === $this->totalTime) {
       $this->addTime();
     }
 

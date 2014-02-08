@@ -12,8 +12,8 @@
  * @package    Sift
  * @subpackage cli
  */
-class sfCliAnsiColorFormatter extends sfCliFormatter {
-
+class sfCliAnsiColorFormatter extends sfCliFormatter
+{
   protected $styles = array(
               'ERROR' => array('bg' => 'red', 'fg' => 'yellow', 'bold' => true),
               'INFO' => array('fg' => 'green', 'bold' => true),
@@ -45,29 +45,23 @@ class sfCliAnsiColorFormatter extends sfCliFormatter {
    */
   public function format($text = '', $parameters = array())
   {
-    if(!is_array($parameters) && 'NONE' == $parameters)
-    {
+    if (!is_array($parameters) && 'NONE' == $parameters) {
       return $text;
     }
 
-    if(!is_array($parameters) && isset($this->styles[$parameters]))
-    {
+    if (!is_array($parameters) && isset($this->styles[$parameters])) {
       $parameters = $this->styles[$parameters];
     }
 
     $codes = array();
-    if(isset($parameters['fg']))
-    {
+    if (isset($parameters['fg'])) {
       $codes[] = $this->foreground[$parameters['fg']];
     }
-    if(isset($parameters['bg']))
-    {
+    if (isset($parameters['bg'])) {
       $codes[] = $this->background[$parameters['bg']];
     }
-    foreach($this->options as $option => $value)
-    {
-      if(isset($parameters[$option]) && $parameters[$option])
-      {
+    foreach ($this->options as $option => $value) {
+      if (isset($parameters[$option]) && $parameters[$option]) {
         $codes[] = $value;
       }
     }
@@ -85,8 +79,7 @@ class sfCliAnsiColorFormatter extends sfCliFormatter {
    */
   public function formatSection($section, $text, $size = null, $style = 'INFO')
   {
-    if(null === $size)
-    {
+    if (null === $size) {
       $size = $this->size;
     }
 
@@ -106,13 +99,11 @@ class sfCliAnsiColorFormatter extends sfCliFormatter {
    */
   public function excerpt($text, $size = null)
   {
-    if(!$size)
-    {
+    if (!$size) {
       $size = $this->size;
     }
 
-    if(strlen($text) < $size)
-    {
+    if (strlen($text) < $size) {
       return $text;
     }
 

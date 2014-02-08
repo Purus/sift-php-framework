@@ -12,8 +12,8 @@
  * @package    Sift
  * @subpackage ip2country
  */
-interface sfIIp2Country {
-
+interface sfIIp2Country
+{
   /**
    * Return the a two-character ISO 3166-1 country code for the country associated with the IP address.
    *

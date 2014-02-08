@@ -16,8 +16,8 @@ require_once dirname(__FILE__) . '/../vendor/lessphp/lessc.inc.php';
  * @package    Sift
  * @subpackage less
  * */
-class sfLessCompiler extends lessc implements sfIService {
-
+class sfLessCompiler extends lessc implements sfIService
+{
   /**
    * Array of default options
    *
@@ -74,13 +74,11 @@ class sfLessCompiler extends lessc implements sfIService {
     $this->dispatcher = $eventDispatcher;
     $this->options = array_merge($this->defaultOptions, $options);
 
-    if(!isset($this->options['cache_dir']) || empty($this->options['cache_dir']))
-    {
+    if (!isset($this->options['cache_dir']) || empty($this->options['cache_dir'])) {
       throw new sfConfigurationException('Missing "cache_dir" configuration value.');
     }
 
-    if(!isset($this->options['web_cache_dir']) || empty($this->options['web_cache_dir']))
-    {
+    if (!isset($this->options['web_cache_dir']) || empty($this->options['web_cache_dir'])) {
       throw new sfConfigurationException('Missing "web_cache_dir" configuration value.');
     }
 
@@ -89,8 +87,7 @@ class sfLessCompiler extends lessc implements sfIService {
     // make it less readable for rummagers
     $this->options['web_cache_dir_suffix'] = dechex(crc32($this->options['web_cache_dir_suffix']));
 
-    if(!is_dir($this->options['web_cache_dir'] . '/' . $this->options['web_cache_dir_suffix']))
-    {
+    if (!is_dir($this->options['web_cache_dir'] . '/' . $this->options['web_cache_dir_suffix'])) {
       $current_umask = umask(0000);
       mkdir($this->options['web_cache_dir'] . '/' . $this->options['web_cache_dir_suffix'], 0777, true);
       umask($current_umask);
@@ -151,21 +148,17 @@ class sfLessCompiler extends lessc implements sfIService {
     $importDir = $this->options['import_dirs'];
     $importDir = $this->dispatcher->filter(new sfEvent('less.compile.import_dir'), $importDir)->getReturnValue();
 
-    foreach($importDir as $dir)
-    {
+    foreach ($importDir as $dir) {
       $this->addImportDir($dir);
     }
 
-    if(sfConfig::get('sf_web_debug'))
-    {
+    if (sfConfig::get('sf_web_debug')) {
       $this->setCacheName('%s.css');
       // preserve comments in the stylesheets
       $this->setPreserveComments(true);
       $this->setFormatter('classic');
       $this->setDebugMode(true);
-    }
-    else
-    {
+    } else {
       $this->setFormatter('compressed');
       $this->setCacheName('%s.min.css');
     }
@@ -179,7 +172,7 @@ class sfLessCompiler extends lessc implements sfIService {
    */
   public function setPathAliases($aliases)
   {
-    $this->pathAliases = (array)$aliases;
+    $this->pathAliases = (array) $aliases;
 
     return $this;
   }
@@ -257,42 +250,32 @@ class sfLessCompiler extends lessc implements sfIService {
     $cache = $this->getCacheFileName($source);
 
     // sift webdirectory
-    if(strpos($source, sfConfig::get('sf_sift_web_dir')) !== false)
-    {
+    if (strpos($source, sfConfig::get('sf_sift_web_dir')) !== false) {
       $part = str_replace(sfConfig::get('sf_sift_web_dir'), '', $source);
       $source = sfConfig::get('sf_web_dir') . sfConfig::get('sf_sift_web_dir') . $part;
 
       // file is not present in web dir, so we are using Alias to data directory
-      if(!is_readable($source))
-      {
+      if (!is_readable($source)) {
         $source = sfConfig::get('sf_sift_data_dir') . DIRECTORY_SEPARATOR . 'web' . DIRECTORY_SEPARATOR .
                 'sf' . DIRECTORY_SEPARATOR . $part;
       }
-    }
-    else
-    {
+    } else {
       $found = false;
-      foreach($this->pathAliases as $alias => $path)
-      {
-        if(preg_match('/^'.preg_quote($alias, '/').'/', $source, $matches))
-        {
+      foreach ($this->pathAliases as $alias => $path) {
+        if (preg_match('/^'.preg_quote($alias, '/').'/', $source, $matches)) {
           $found = true;
           $source = $path . DIRECTORY_SEPARATOR . $source;
           break;
         }
       }
-      if(!$found)
-      {
+      if (!$found) {
         $source = sfConfig::get('sf_web_dir') . DIRECTORY_SEPARATOR . $source;
       }
     }
 
-    try
-    {
+    try {
       $this->compileIfNeeded($source, $this->options['web_cache_dir'] . '/' . $this->options['web_cache_dir_suffix'] . '/' . $cache);
-    }
-    catch(Exception $e)
-    {
+    } catch (Exception $e) {
       throw sfLessCompilerException::createFromException($e);
     }
 
@@ -310,8 +293,7 @@ class sfLessCompiler extends lessc implements sfIService {
   {
     $cacheDir = $this->options['cache_dir'];
 
-    if(!is_dir($cacheDir))
-    {
+    if (!is_dir($cacheDir)) {
       $current_umask = umask(0000);
       mkdir($cacheDir, 0777, true);
       umask($current_umask);
@@ -319,19 +301,15 @@ class sfLessCompiler extends lessc implements sfIService {
 
     $cacheFile = $cacheDir . DIRECTORY_SEPARATOR . basename($outputFile) . '.cache';
 
-    if(file_exists($cacheFile) && file_exists($outputFile))
-    {
+    if (file_exists($cacheFile) && file_exists($outputFile)) {
       $cache = unserialize(file_get_contents($cacheFile));
-    }
-    else
-    {
+    } else {
       $cache = $inputFile;
     }
 
     $newCache = $this->cachedCompile($cache);
 
-    if(!is_array($cache) || $newCache['updated'] > $cache['updated'])
-    {
+    if (!is_array($cache) || $newCache['updated'] > $cache['updated']) {
       file_put_contents($cacheFile, serialize($newCache));
       file_put_contents($outputFile, $newCache['compiled']);
     }
@@ -362,13 +340,11 @@ class sfLessCompiler extends lessc implements sfIService {
 
   public function compileFile($fname, $outFname = null)
   {
-    if(!is_readable($fname))
-    {
+    if (!is_readable($fname)) {
       throw new sfLessCompilerException(sprintf('File "%s" does not exist or is not readable', $fname));
     }
 
-    if(sfConfig::get('sf_logging_enabled'))
-    {
+    if (sfConfig::get('sf_logging_enabled')) {
       sfLogger::getInstance()->info(sprintf('{sfLessCompiler} Compiling file "%s"', $fname));
     }
 
@@ -382,8 +358,7 @@ class sfLessCompiler extends lessc implements sfIService {
 
     $out = $this->compile(file_get_contents($fname), $fname);
 
-    if($outFname !== null)
-    {
+    if ($outFname !== null) {
       return file_put_contents($outFname, $out);
     }
 
@@ -399,8 +374,7 @@ class sfLessCompiler extends lessc implements sfIService {
   protected function findImport($url)
   {
     // this is an url
-    if(strpos($url, '//') !== false)
-    {
+    if (strpos($url, '//') !== false) {
       return null;
     }
 
@@ -408,30 +382,24 @@ class sfLessCompiler extends lessc implements sfIService {
     $url = sprintf(sprintf('%s.less', $url));
 
     // we have an absolute path to the less stylesheet
-    if(sfToolkit::isPathAbsolute($url))
-    {
-      if(is_readable($url))
-      {
+    if (sfToolkit::isPathAbsolute($url)) {
+      if (is_readable($url)) {
         return $url;
       }
 
       return null;
     }
 
-    foreach($this->importDir as $dir)
-    {
-      if(sfConfig::get('sf_logging_enabled'))
-      {
+    foreach ($this->importDir as $dir) {
+      if (sfConfig::get('sf_logging_enabled')) {
         sfLogger::getInstance()->debug(sprintf('{sfLessCompiler} Looking up for "%s" in "%s"', $url, $dir));
       }
 
       $dir = rtrim($dir, DIRECTORY_SEPARATOR);
       $file = $dir . DIRECTORY_SEPARATOR . $url;
 
-      if($this->fileExists($file))
-      {
-        if(sfConfig::get('sf_logging_enabled'))
-        {
+      if ($this->fileExists($file)) {
+        if (sfConfig::get('sf_logging_enabled')) {
           sfLogger::getInstance()->log(sprintf('{sfLessCompiler} Found "%s"', $file));
         }
 
@@ -439,8 +407,7 @@ class sfLessCompiler extends lessc implements sfIService {
       }
     }
 
-    if(sfConfig::get('sf_logging_enabled'))
-    {
+    if (sfConfig::get('sf_logging_enabled')) {
       sfLogger::getInstance()->err(sprintf('{sfLessCompiler} No import for file found for "%s"', $url));
     }
 
@@ -452,8 +419,7 @@ class sfLessCompiler extends lessc implements sfIService {
    */
   public function shutdown()
   {
-    if(rand(1, 100) <= $this->options['garbage_collection_probability'])
-    {
+    if (rand(1, 100) <= $this->options['garbage_collection_probability']) {
       $this->cacheGc();
     }
   }
@@ -464,8 +430,7 @@ class sfLessCompiler extends lessc implements sfIService {
    */
   public function cacheGc()
   {
-    if(sfConfig::get('sf_logging_enabled'))
-    {
+    if (sfConfig::get('sf_logging_enabled')) {
       sfLogger::getInstance()->info('{sfLessCompiler} Cache garbage collection.');
     }
 
@@ -475,10 +440,8 @@ class sfLessCompiler extends lessc implements sfIService {
     $cached = sfFinder::type('file')->name('*.css')->maxDepth(1)->in($cacheDir);
     $compiled = sfFinder::type('file')->name('*.cache')->relative()->in($compileDir);
 
-    foreach($cached as $file)
-    {
-      if(!in_array(sprintf('%s.cache', basename($file)), $compiled))
-      {
+    foreach ($cached as $file) {
+      if (!in_array(sprintf('%s.cache', basename($file)), $compiled)) {
         unlink($file);
       }
     }

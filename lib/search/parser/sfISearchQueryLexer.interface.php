@@ -12,8 +12,8 @@
  * @package Sift
  * @subpackage search
  */
-interface sfISearchQueryLexer {
-
+interface sfISearchQueryLexer
+{
   /**
    * Executes the lexer
    *

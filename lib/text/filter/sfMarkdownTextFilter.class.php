@@ -12,8 +12,8 @@
  * @package    Sift
  * @subpackage text_filter
  */
-class sfMarkdownTextFilter extends sfTextFilter {
-
+class sfMarkdownTextFilter extends sfTextFilter
+{
   /**
    * Markdown parser
    *

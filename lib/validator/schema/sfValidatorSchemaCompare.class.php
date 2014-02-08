@@ -12,8 +12,8 @@
  * @package    Sift
  * @subpackage validator
  */
-class sfValidatorSchemaCompare extends sfValidatorSchema {
-
+class sfValidatorSchemaCompare extends sfValidatorSchema
+{
   const EQUAL = '==';
   const NOT_EQUAL = '!=';
   const LESS_THAN = '<';
@@ -65,21 +65,18 @@ class sfValidatorSchemaCompare extends sfValidatorSchema {
    */
   protected function doClean($values)
   {
-    if(is_null($values))
-    {
+    if (is_null($values)) {
       $values = array();
     }
 
-    if(!is_array($values))
-    {
+    if (!is_array($values)) {
       throw new InvalidArgumentException('You must pass an array parameter to the clean() method');
     }
 
     $leftValue = isset($values[$this->getOption('left_field')]) ? $values[$this->getOption('left_field')] : null;
     $rightValue = isset($values[$this->getOption('right_field')]) ? $values[$this->getOption('right_field')] : null;
 
-    switch($this->getOption('operator'))
-    {
+    switch ($this->getOption('operator')) {
       case self::GREATER_THAN:
         $valid = $leftValue > $rightValue;
         break;
@@ -108,15 +105,13 @@ class sfValidatorSchemaCompare extends sfValidatorSchema {
         throw new InvalidArgumentException(sprintf('The operator "%s" does not exist.', $this->getOption('operator')));
     }
 
-    if(!$valid)
-    {
+    if (!$valid) {
       $error = new sfValidatorError($this, 'invalid', array(
           'left_field' => $leftValue,
           'right_field' => $rightValue,
           'operator' => $this->getOption('operator'),
       ));
-      if($this->getOption('throw_global_error'))
-      {
+      if ($this->getOption('throw_global_error')) {
         throw $error;
       }
 
@@ -136,8 +131,7 @@ class sfValidatorSchemaCompare extends sfValidatorSchema {
     unset($options['left_field'], $options['operator'], $options['right_field']);
 
     $arguments = '';
-    if($options || $messages)
-    {
+    if ($options || $messages) {
       $arguments = sprintf('(%s%s)', $options ? sfYamlInline::dump($options) : ($messages ? '{}' : ''), $messages ? ', ' . sfYamlInline::dump($messages) : ''
       );
     }

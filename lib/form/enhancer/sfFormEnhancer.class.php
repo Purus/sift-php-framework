@@ -12,8 +12,8 @@
  * @package    Sift
  * @subpackage form_enhancer
  */
-class sfFormEnhancer extends sfConfigurable implements sfIFormEnhancer {
-
+class sfFormEnhancer extends sfConfigurable implements sfIFormEnhancer
+{
   /**
    * Array of already enhanced forms
    *
@@ -33,21 +33,15 @@ class sfFormEnhancer extends sfConfigurable implements sfIFormEnhancer {
   {
     $enhancerClass = sprintf('sfFormEnhancer%s', ucfirst($class));
 
-    if(class_exists($enhancerClass))
-    {
+    if (class_exists($enhancerClass)) {
       $enhancer = new $enhancerClass($options);
-    }
-    elseif(class_exists($class))
-    {
+    } elseif (class_exists($class)) {
       $enhancer = new $class($options);
-    }
-    else
-    {
+    } else {
       throw new InvalidArgumentException(sprintf('Enhancer "%s" does not exist.', $class));
     }
 
-    if(!$enhancer instanceof sfIFormEnhancer)
-    {
+    if (!$enhancer instanceof sfIFormEnhancer) {
       throw new InvalidArgumentException(sprintf('Form enhancer "%s" does not implement sfIFormEnhancer interface.', $class));
     }
 
@@ -64,8 +58,7 @@ class sfFormEnhancer extends sfConfigurable implements sfIFormEnhancer {
    */
   public function filterTemplateVariables(sfEvent $event, array $variables)
   {
-    foreach($variables as $variable)
-    {
+    foreach ($variables as $variable) {
       if($variable instanceof sfForm &&
               !in_array($variable, $this->enhanced, true))
       {
@@ -97,36 +90,27 @@ class sfFormEnhancer extends sfConfigurable implements sfIFormEnhancer {
   protected function enhanceFormFields(sfForm $form, sfFormFieldSchema $fieldSchema, $formClass, array $embeddedForms = array())
   {
     // loop through the fields and apply the global configuration
-    foreach($fieldSchema as $name => $field)
-    {
-      if($field instanceof sfFormFieldSchema)
-      {
-        if(isset($embeddedForms[$field->getName()]))
-        {
+    foreach ($fieldSchema as $name => $field) {
+      if ($field instanceof sfFormFieldSchema) {
+        if (isset($embeddedForms[$field->getName()])) {
           $embededForm = $embeddedForms[$field->getName()];
           $this->enhanceFormFields($embededForm, $form->getFormFieldSchema(), get_class($embededForm), $embededForm->getEmbeddedForms());
-        }
-        else
-        {
+        } else {
           $this->enhanceFormFields($form, $field, $formClass);
         }
       }
 
       $validator = null;
 
-      if($form->hasValidator($name))
-      {
+      if ($form->hasValidator($name)) {
         $validator = $form->getValidator($name);
         $this->enhanceValidator($validator);
 
-        if($validator instanceof sfValidatorSchema)
-        {
-          if($preValidator = $validator->getPreValidator())
-          {
+        if ($validator instanceof sfValidatorSchema) {
+          if ($preValidator = $validator->getPreValidator()) {
             $this->enhanceValidator($preValidator, true);
           }
-          if($postValidator = $validator->getPostValidator())
-          {
+          if ($postValidator = $validator->getPostValidator()) {
             $this->enhanceValidator($postValidator, true);
           }
         }
@@ -137,24 +121,19 @@ class sfFormEnhancer extends sfConfigurable implements sfIFormEnhancer {
     } // end foreach fields
 
     // loop through the form's lineage and apply configuration
-    foreach(self::getLineage($formClass) as $class)
-    {
-      foreach($this->getOption(sprintf('forms.%s', $class), array()) as $name => $params)
-      {
+    foreach (self::getLineage($formClass) as $class) {
+      foreach ($this->getOption(sprintf('forms.%s', $class), array()) as $name => $params) {
         // catch pre and post validators
-        if(preg_match('/^_(pre|post)_validator$/', $name, $match))
-        {
+        if (preg_match('/^_(pre|post)_validator$/', $name, $match)) {
           $method = 'get' . ucwords($match[1]) . 'Validator';
-          if(($error = $fieldSchema->getError()) && ($validator = $error->getValidator()->$method()))
-          {
+          if (($error = $fieldSchema->getError()) && ($validator = $error->getValidator()->$method())) {
             $validator->setMessages(array_merge($validator->getMessages(), $params));
           }
           continue;
         }
 
         // this is invalid
-        if(!isset($fieldSchema[$name]))
-        {
+        if (!isset($fieldSchema[$name])) {
           throw new InvalidArgumentException(sprintf('Invalid field "%s". Cannot enhance the form "%s".', $name, $formClass));
         }
 
@@ -162,32 +141,24 @@ class sfFormEnhancer extends sfConfigurable implements sfIFormEnhancer {
         $widget = $field->getWidget();
         $validator = $field->hasError() ? $field->getError()->getValidator() : null;
 
-        if(isset($params['label']))
-        {
+        if (isset($params['label'])) {
           $widget->setLabel($params['label']);
         }
 
-        if(isset($params['help']))
-        {
+        if (isset($params['help'])) {
           $fieldSchema->getWidget()->setHelp($name, $params['help']);
         }
 
-        if($validator && isset($params['errors']))
-        {
+        if ($validator && isset($params['errors'])) {
           $validator->setMessages(array_merge($validator->getMessages(), $params['errors']));
         }
 
-        if(isset($params['attributes']))
-        {
-          foreach($params['attributes'] as $name => $value)
-          {
-            if('class' == $name)
-            {
+        if (isset($params['attributes'])) {
+          foreach ($params['attributes'] as $name => $value) {
+            if ('class' == $name) {
               // non-destructive
               $widget->setAttribute($name, trim(implode(' ', array_merge(explode(' ', $widget->getAttribute('class')), array($value)))));
-            }
-            else
-            {
+            } else {
               $widget->setAttribute($name, $value);
             }
           }
@@ -204,40 +175,31 @@ class sfFormEnhancer extends sfConfigurable implements sfIFormEnhancer {
    */
   public function enhanceWidget(sfWidget $widget, sfValidatorBase $validator = null)
   {
-    foreach(self::getLineage($widget) as $class)
-    {
+    foreach (self::getLineage($widget) as $class) {
       $config = $this->getOption(sprintf('widgets.%s', $class));
-      if(is_array($config))
-      {
-        if(!isset($config['options']) && !isset($config['attributes']))
-        {
+      if (is_array($config)) {
+        if (!isset($config['options']) && !isset($config['attributes'])) {
           $config = array('attributes' => $config);
         }
 
         $config = array_merge(array('options' => array(), 'attributes' => array()), $config);
 
-        foreach($config['options'] as $name => $value)
-        {
+        foreach ($config['options'] as $name => $value) {
           $widget->setOption($name, $value);
         }
 
-        foreach($config['attributes'] as $name => $value)
-        {
+        foreach ($config['attributes'] as $name => $value) {
           $value = $this->getValue($name, $value, $widget, $validator);
 
           // skip attribute
-          if($value === false)
-          {
+          if ($value === false) {
             continue;
           }
 
-          if('class' == $name)
-          {
+          if ('class' == $name) {
             // non-destructive
             $widget->setAttribute($name, implode(' ', array_merge(explode(' ', $widget->getAttribute('class')), array($value))));
-          }
-          else
-          {
+          } else {
             $widget->setAttribute($name, $value);
           }
 
@@ -258,19 +220,14 @@ class sfFormEnhancer extends sfConfigurable implements sfIFormEnhancer {
    */
   protected function getValue($name, $value, $widget, $validator)
   {
-    if(preg_match('/\!\!callback:\s?(.*+)/', $value, $matches))
-    {
-      if(strpos($value, '->') !== false)
-      {
+    if (preg_match('/\!\!callback:\s?(.*+)/', $value, $matches)) {
+      if (strpos($value, '->') !== false) {
         list($object, $method) = explode('->', $matches[1]);
       }
       // static method call myClass::method
-      elseif(strpos($matches[1], '::') !== false)
-      {
+      elseif (strpos($matches[1], '::') !== false) {
         list($object, $method) = explode('::', $matches[1]);
-      }
-      else
-      {
+      } else {
         $object = '$this';
         $method = $matches[1];
       }
@@ -280,8 +237,7 @@ class sfFormEnhancer extends sfConfigurable implements sfIFormEnhancer {
 
       $callback = false;
 
-      switch($object)
-      {
+      switch ($object) {
         case 'widget':
         case '$widget':
           $callback = array($widget, $method);
@@ -301,8 +257,7 @@ class sfFormEnhancer extends sfConfigurable implements sfIFormEnhancer {
           break;
       }
 
-      if($callback && !is_callable($callback, false, $callableName))
-      {
+      if ($callback && !is_callable($callback, false, $callableName)) {
         throw new sfConfigurationException(sprintf('Invalid callback "%s" given for "%s". Key: "%s"', $callableName, get_class($widget), $name));
       }
 
@@ -325,42 +280,33 @@ class sfFormEnhancer extends sfConfigurable implements sfIFormEnhancer {
    */
   public function enhanceValidator(sfValidatorBase $validator, $recursive = false)
   {
-    foreach(self::getLineage($validator) as $class)
-    {
+    foreach (self::getLineage($validator) as $class) {
       $config = $this->getOption(sprintf('validators.%s', $class));
-      if(is_array($config))
-      {
-        if(!isset($config['options']) && !isset($config['messages']))
-        {
+      if (is_array($config)) {
+        if (!isset($config['options']) && !isset($config['messages'])) {
           $config = array('messages' => $config);
         }
 
         $config = array_merge(array('options' => array(), 'messages' => array()), $config);
 
-        foreach($config['options'] as $name => $value)
-        {
+        foreach ($config['options'] as $name => $value) {
           $validator->setOption($name, $value);
         }
 
-        foreach($config['messages'] as $code => $message)
-        {
+        foreach ($config['messages'] as $code => $message) {
           $validator->setMessage($code, $message);
         }
       }
     }
 
-    if($recursive && $validator instanceof sfValidatorSchema)
-    {
-      foreach($validator->getFields() as $v)
-      {
+    if ($recursive && $validator instanceof sfValidatorSchema) {
+      foreach ($validator->getFields() as $v) {
         $this->enhanceValidator($v, $recursive);
       }
     }
 
-    if(method_exists($validator, 'getValidators'))
-    {
-      foreach($validator->getValidators() as $v)
-      {
+    if (method_exists($validator, 'getValidators')) {
+      foreach ($validator->getValidators() as $v) {
         $this->enhanceValidator($v, $recursive);
       }
     }
@@ -375,17 +321,14 @@ class sfFormEnhancer extends sfConfigurable implements sfIFormEnhancer {
    */
   public static function getLineage($class)
   {
-    if(is_object($class))
-    {
+    if (is_object($class)) {
       $class = get_class($class);
     }
 
     $classes = array();
-    do
-    {
+    do {
       $classes[] = $class;
-    }
-    while($class = get_parent_class($class));
+    } while ($class = get_parent_class($class));
 
     $lineage = array_reverse($classes);
 

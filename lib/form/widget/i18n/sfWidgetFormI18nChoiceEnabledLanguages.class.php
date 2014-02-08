@@ -12,8 +12,8 @@
  * @package    Sift
  * @subpackage form_widget
  */
-class sfWidgetFormI18nChoiceEnabledLanguages extends sfWidgetFormChoice {
-
+class sfWidgetFormI18nChoiceEnabledLanguages extends sfWidgetFormChoice
+{
   /**
    *
    * @see sfWidgetForm
@@ -30,8 +30,7 @@ class sfWidgetFormI18nChoiceEnabledLanguages extends sfWidgetFormChoice {
 
     $allLanguages = sfCulture::getInstance($culture)->getLanguages();
     $languages = array();
-    foreach($cultures as $culture)
-    {
+    foreach ($cultures as $culture) {
       $languages[$culture] = $allLanguages[substr($culture, 0, 2)];
     }
 
@@ -41,8 +40,7 @@ class sfWidgetFormI18nChoiceEnabledLanguages extends sfWidgetFormChoice {
     $this->addOption('add_empty', false);
 
     $addEmpty = isset($options['add_empty']) ? $options['add_empty'] : false;
-    if (false !== $addEmpty)
-    {
+    if (false !== $addEmpty) {
       $languages = array_merge(array('' => true === $addEmpty ? '' : $addEmpty), $languages);
     }
 

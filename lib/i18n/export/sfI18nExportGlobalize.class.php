@@ -13,8 +13,8 @@
  * @subpackage i18n_export
  * @see http://github.com/jquery/globalize
  */
-class sfCultureExportGlobalize extends sfCultureExport {
-
+class sfCultureExportGlobalize extends sfCultureExport
+{
   /**
    * @var sfCulture
    */

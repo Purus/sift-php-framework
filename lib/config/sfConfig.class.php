@@ -26,14 +26,12 @@ class sfConfig
    */
   public static function get($name, $default = null)
   {
-    if(isset(self::$config[$name]))
-    {
+    if (isset(self::$config[$name])) {
       return self::$config[$name];
     }
 
     // no dot notation
-    if(strpos($name, '.') === false)
-    {
+    if (strpos($name, '.') === false) {
       return $default;
     }
 
@@ -49,8 +47,7 @@ class sfConfig
    */
   public static function has($name)
   {
-    if(strpos($name, '.') === false)
-    {
+    if (strpos($name, '.') === false) {
       return array_key_exists($name, self::$config);
     }
 
@@ -68,12 +65,9 @@ class sfConfig
   public static function set($name, $value)
   {
     // not dot notation
-    if(strpos($name, '.') === false)
-    {
+    if (strpos($name, '.') === false) {
       self::$config[$name] = $value;
-    }
-    else
-    {
+    } else {
       sfArray::set(self::$config, $name, $value);
     }
   }
@@ -88,8 +82,7 @@ class sfConfig
    */
   public static function add($parameters = array())
   {
-    foreach($parameters as $p => $v)
-    {
+    foreach ($parameters as $p => $v) {
       self::set($p, $v);
     }
   }

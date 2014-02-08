@@ -33,8 +33,7 @@ class sfImageFlipGD extends sfImageTransformAbstract
 
     $dest_resource = $image->getAdapter()->getTransparentImage($x, $y);
 
-    for ($h = 0; $h < $y; $h++)
-    {
+    for ($h = 0; $h < $y; $h++) {
       imagecopy($dest_resource, $resource, 0, $h, 0, $y - $h - 1, $x, 1);
     }
     // Tidy up

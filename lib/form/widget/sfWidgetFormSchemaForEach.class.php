@@ -12,8 +12,8 @@
  * @package    Sift
  * @subpackage form_widget
  */
-class sfWidgetFormSchemaForEach extends sfWidgetFormSchema {
-
+class sfWidgetFormSchemaForEach extends sfWidgetFormSchema
+{
   /**
    * Constructor.
    *

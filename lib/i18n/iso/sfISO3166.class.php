@@ -13,8 +13,8 @@
  * @subpackage i18n
  * @link http://en.wikipedia.org/wiki/ISO_3166
  */
-class sfISO3166 {
-
+class sfISO3166
+{
   /**
    * Alpha 2
    */

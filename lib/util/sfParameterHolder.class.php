@@ -16,8 +16,8 @@
  * @package    Sift
  * @subpackage util
  */
-class sfParameterHolder implements Serializable, sfIJsonSerializable {
-
+class sfParameterHolder implements Serializable, sfIJsonSerializable
+{
   /**
    * Default namespace
    *
@@ -44,9 +44,8 @@ class sfParameterHolder implements Serializable, sfIJsonSerializable {
    */
   public function __construct($namespace = null)
   {
-    if($namespace)
-    {
-      $this->defaultNamespace = (string)$namespace;
+    if ($namespace) {
+      $this->defaultNamespace = (string) $namespace;
     }
   }
 
@@ -100,21 +99,15 @@ class sfParameterHolder implements Serializable, sfIJsonSerializable {
    */
   public function & get($name, $default = null, $ns = null)
   {
-    if(!$ns)
-    {
+    if (!$ns) {
       $ns = $this->defaultNamespace;
     }
 
-    if(isset($this->parameters[$ns][$name]))
-    {
+    if (isset($this->parameters[$ns][$name])) {
       $value = & $this->parameters[$ns][$name];
-    }
-    else if(isset($this->parameters[$ns]))
-    {
+    } else if (isset($this->parameters[$ns])) {
       $value = sfToolkit::getArrayValueForPath($this->parameters[$ns], $name, $default);
-    }
-    else
-    {
+    } else {
       $value = $default;
     }
 
@@ -130,13 +123,11 @@ class sfParameterHolder implements Serializable, sfIJsonSerializable {
    */
   public function getNames($ns = null)
   {
-    if(!$ns)
-    {
+    if (!$ns) {
       $ns = $this->defaultNamespace;
     }
 
-    if(isset($this->parameters[$ns]))
-    {
+    if (isset($this->parameters[$ns])) {
       return array_keys($this->parameters[$ns]);
     }
 
@@ -167,15 +158,13 @@ class sfParameterHolder implements Serializable, sfIJsonSerializable {
    */
   public function & getAll($ns = null)
   {
-    if(!$ns)
-    {
+    if (!$ns) {
       $ns = $this->defaultNamespace;
     }
 
     $parameters = array();
 
-    if(isset($this->parameters[$ns]))
-    {
+    if (isset($this->parameters[$ns])) {
       $parameters = $this->parameters[$ns];
     }
 
@@ -192,27 +181,20 @@ class sfParameterHolder implements Serializable, sfIJsonSerializable {
    */
   public function has($name, $ns = null)
   {
-    if(!$ns)
-    {
+    if (!$ns) {
       $ns = $this->defaultNamespace;
     }
 
-    if(false !== ($offset = strpos($name, '[')))
-    {
-      if(isset($this->parameters[$ns][substr($name, 0, $offset)]))
-      {
+    if (false !== ($offset = strpos($name, '['))) {
+      if (isset($this->parameters[$ns][substr($name, 0, $offset)])) {
         $array = $this->parameters[$ns][substr($name, 0, $offset)];
 
-        while($pos = strpos($name, '[', $offset))
-        {
+        while ($pos = strpos($name, '[', $offset)) {
           $end = strpos($name, ']', $pos);
-          if($end == $pos + 1)
-          {
+          if ($end == $pos + 1) {
             // reached a []
             return true;
-          }
-          else if(!isset($array[substr($name, $pos + 1, $end - $pos - 1)]))
-          {
+          } else if (!isset($array[substr($name, $pos + 1, $end - $pos - 1)])) {
             return false;
           }
           $array = $array[substr($name, $pos + 1, $end - $pos - 1)];
@@ -221,9 +203,7 @@ class sfParameterHolder implements Serializable, sfIJsonSerializable {
 
         return true;
       }
-    }
-    elseif(isset($this->parameters[$ns][$name]))
-    {
+    } elseif (isset($this->parameters[$ns][$name])) {
       return true;
     }
 
@@ -252,15 +232,13 @@ class sfParameterHolder implements Serializable, sfIJsonSerializable {
    */
   public function & remove($name, $ns = null)
   {
-    if(!$ns)
-    {
+    if (!$ns) {
       $ns = $this->defaultNamespace;
     }
 
     $retval = null;
 
-    if(isset($this->parameters[$ns]) && isset($this->parameters[$ns][$name]))
-    {
+    if (isset($this->parameters[$ns]) && isset($this->parameters[$ns][$name])) {
       $retval = & $this->parameters[$ns][$name];
       unset($this->parameters[$ns][$name]);
     }
@@ -276,15 +254,13 @@ class sfParameterHolder implements Serializable, sfIJsonSerializable {
    */
   public function &removeNamespace($ns = null)
   {
-    if(!$ns)
-    {
+    if (!$ns) {
       $ns = $this->defaultNamespace;
     }
 
     $retval = null;
 
-    if(isset($this->parameters[$ns]))
-    {
+    if (isset($this->parameters[$ns])) {
       $retval = & $this->parameters[$ns];
       unset($this->parameters[$ns]);
     }
@@ -304,13 +280,11 @@ class sfParameterHolder implements Serializable, sfIJsonSerializable {
    */
   public function set($name, $value, $ns = null)
   {
-    if(!$ns)
-    {
+    if (!$ns) {
       $ns = $this->defaultNamespace;
     }
 
-    if(!isset($this->parameters[$ns]))
-    {
+    if (!isset($this->parameters[$ns])) {
       $this->parameters[$ns] = array();
     }
 
@@ -331,13 +305,11 @@ class sfParameterHolder implements Serializable, sfIJsonSerializable {
    */
   public function setByRef($name, &$value, $ns = null)
   {
-    if(!$ns)
-    {
+    if (!$ns) {
       $ns = $this->defaultNamespace;
     }
 
-    if(!isset($this->parameters[$ns]))
-    {
+    if (!isset($this->parameters[$ns])) {
       $this->parameters[$ns] = array();
     }
 
@@ -358,23 +330,19 @@ class sfParameterHolder implements Serializable, sfIJsonSerializable {
    */
   public function add($parameters, $ns = null)
   {
-    if($parameters === null)
-    {
+    if ($parameters === null) {
       return;
     }
 
-    if(!$ns)
-    {
+    if (!$ns) {
       $ns = $this->defaultNamespace;
     }
 
-    if(!isset($this->parameters[$ns]))
-    {
+    if (!isset($this->parameters[$ns])) {
       $this->parameters[$ns] = array();
     }
 
-    foreach($parameters as $key => $value)
-    {
+    foreach ($parameters as $key => $value) {
       $this->parameters[$ns][$key] = $value;
     }
 
@@ -393,18 +361,15 @@ class sfParameterHolder implements Serializable, sfIJsonSerializable {
    */
   public function addByRef(& $parameters, $ns = null)
   {
-    if(!$ns)
-    {
+    if (!$ns) {
       $ns = $this->defaultNamespace;
     }
 
-    if(!isset($this->parameters[$ns]))
-    {
+    if (!isset($this->parameters[$ns])) {
       $this->parameters[$ns] = array();
     }
 
-    foreach($parameters as $key => &$value)
-    {
+    foreach ($parameters as $key => &$value) {
       $this->parameters[$ns][$key] = & $value;
     }
 

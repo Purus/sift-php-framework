@@ -14,8 +14,8 @@
  * @package    Sift
  * @subpackage text_macro
  */
-class sfTextMacroCallbackDefinition extends sfCallbackDefinition {
-
+class sfTextMacroCallbackDefinition extends sfCallbackDefinition
+{
   /**
    * Constructor.
    *
@@ -26,16 +26,13 @@ class sfTextMacroCallbackDefinition extends sfCallbackDefinition {
   {
     parent::__construct($classOrFunction, $arguments);
 
-    if(($class = $this->getClass()))
-    {
-      if(!class_exists($class))
-      {
+    if (($class = $this->getClass())) {
+      if (!class_exists($class)) {
         throw new InvalidArgumentException(sprintf('The given class "%s" does not exist.', $class));
       }
 
       $classImplements = class_implements($class);
-      if(!(in_array('sfITextMacroFilter', $classImplements) || in_array('sfITextMacroWidget', $classImplements)))
-      {
+      if (!(in_array('sfITextMacroFilter', $classImplements) || in_array('sfITextMacroWidget', $classImplements))) {
         throw new InvalidArgumentException(sprintf('The given class "%s" does not implement sfITextMacroFilter nor sfITextMacroWidget interface.', $class));
       }
     }

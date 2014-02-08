@@ -33,19 +33,13 @@ class sfValidatorOr extends sfValidatorBase
    */
   public function __construct($validators = null, $options = array(), $messages = array())
   {
-    if ($validators instanceof sfValidatorBase)
-    {
+    if ($validators instanceof sfValidatorBase) {
       $this->addValidator($validators);
-    }
-    else if (is_array($validators))
-    {
-      foreach ($validators as $validator)
-      {
+    } else if (is_array($validators)) {
+      foreach ($validators as $validator) {
         $this->addValidator($validator);
       }
-    }
-    else if (!is_null($validators))
-    {
+    } else if (!is_null($validators)) {
       throw new InvalidArgumentException('sfValidatorOr constructor takes a sfValidatorBase object, or a sfValidatorBase array.');
     }
 
@@ -86,20 +80,15 @@ class sfValidatorOr extends sfValidatorBase
   protected function doClean($value)
   {
     $errors = array();
-    foreach ($this->validators as $validator)
-    {
-      try
-      {
+    foreach ($this->validators as $validator) {
+      try {
         return $validator->clean($value);
-      }
-      catch (sfValidatorError $e)
-      {
+      } catch (sfValidatorError $e) {
         $errors[] = $e;
       }
     }
 
-    if ($this->getMessage('invalid'))
-    {
+    if ($this->getMessage('invalid')) {
       throw new sfValidatorError($this, 'invalid', array('value' => $value));
     }
 
@@ -112,22 +101,18 @@ class sfValidatorOr extends sfValidatorBase
   public function asString($indent = 0)
   {
     $validators = '';
-    for ($i = 0, $max = count($this->validators); $i < $max; $i++)
-    {
+    for ($i = 0, $max = count($this->validators); $i < $max; $i++) {
       $validators .= "\n".$this->validators[$i]->asString($indent + 2)."\n";
 
-      if ($i < $max - 1)
-      {
+      if ($i < $max - 1) {
         $validators .= str_repeat(' ', $indent + 2).'or';
       }
 
-      if ($i == $max - 2)
-      {
+      if ($i == $max - 2) {
         $options = $this->getOptionsWithoutDefaults();
         $messages = $this->getMessagesWithoutDefaults();
 
-        if ($options || $messages)
-        {
+        if ($options || $messages) {
           $validators .= sprintf('(%s%s)',
             $options ? sfYamlInline::dump($options) : ($messages ? '{}' : ''),
             $messages ? ', '.sfYamlInline::dump($messages) : ''
@@ -142,8 +127,7 @@ class sfValidatorOr extends sfValidatorBase
   public function getActiveMessages()
   {
     $messages = array_values($this->messages);
-    foreach($this->getValidators() as $validator)
-    {
+    foreach ($this->getValidators() as $validator) {
       $messages = array_merge($messages, array_values($validator->getActiveMessages()));
     }
 

@@ -12,8 +12,8 @@
  * @package    Sift
  * @subpackage user
  */
-interface sfIUser {
-
+interface sfIUser
+{
   /**
    * Sets culture.
    *

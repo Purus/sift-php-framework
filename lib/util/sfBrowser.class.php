@@ -39,10 +39,8 @@ class sfBrowser extends sfBrowserBase
     $retval = ob_get_clean();
 
     // handle content-encoding first
-    if($encoding = $this->context->getResponse()->getHttpHeader('Content-Encoding'))
-    {
-      switch(strtolower($encoding))
-      {
+    if ($encoding = $this->context->getResponse()->getHttpHeader('Content-Encoding')) {
+      switch (strtolower($encoding)) {
         // Handle gzip encoding
         case 'gzip':
           $retval = $this->decodeGzip($retval);
@@ -71,8 +69,7 @@ class sfBrowser extends sfBrowserBase
    */
   public function getContext($forceReload = false)
   {
-    if (null === $this->context || $forceReload)
-    {
+    if (null === $this->context || $forceReload) {
       $isContextEmpty = null === $this->context;
       $context = $isContextEmpty ? sfContext::getInstance() : $this->context;
 
@@ -84,8 +81,7 @@ class sfBrowser extends sfBrowserBase
 
       // connect listeners
       $application->getEventDispatcher()->connect('application.throw_exception', array($this, 'listenToException'));
-      foreach ($this->listeners as $name => $listener)
-      {
+      foreach ($this->listeners as $name => $listener) {
         $application->getEventDispatcher()->connect($name, $listener);
       }
 
@@ -93,13 +89,10 @@ class sfBrowser extends sfBrowserBase
       $this->context = sfContext::createInstance($application);
       unset($application);
 
-      if (!$isContextEmpty)
-      {
+      if (!$isContextEmpty) {
         sfConfig::clear();
         sfConfig::add($this->rawConfiguration);
-      }
-      else
-      {
+      } else {
         $this->rawConfiguration = sfConfig::getAll();
       }
     }
@@ -177,8 +170,7 @@ class sfBrowser extends sfBrowserBase
   protected function decodeGzip($text)
   {
     $decoded = @gzinflate(substr($text, 10));
-    if($decoded === false)
-    {
+    if ($decoded === false) {
       throw new Exception('Could not decode GZIPed response');
     }
 

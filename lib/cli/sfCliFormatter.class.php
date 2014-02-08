@@ -18,15 +18,11 @@ class sfCliFormatter
 
   public function __construct($maxLineSize = null)
   {
-    if (null === $maxLineSize)
-    {
-      if (function_exists('shell_exec'))
-      {
+    if (null === $maxLineSize) {
+      if (function_exists('shell_exec')) {
         // this is tricky because "tput cols 2>&1" is not accurate
         $maxLineSize = ctype_digit(trim(shell_exec('tput cols 2>&1'))) ? (integer) shell_exec('tput cols') : 78;
-      }
-      else
-      {
+      } else {
         $maxLineSize = 78;
       }
     }
@@ -66,8 +62,7 @@ class sfCliFormatter
    */
   public function formatSection($section, $text, $size = null)
   {
-    if (!$size)
-    {
+    if (!$size) {
       $size = $this->size;
     }
 
@@ -86,13 +81,11 @@ class sfCliFormatter
    */
   public function excerpt($text, $size = null)
   {
-    if (!$size)
-    {
+    if (!$size) {
       $size = $this->size;
     }
 
-    if (strlen($text) < $size)
-    {
+    if (strlen($text) < $size) {
       return $text;
     }
 

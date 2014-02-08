@@ -37,8 +37,7 @@ function url_for($internal_uri, $absolute = false, $getParameters = array(), $pr
 {
   static $controller;
 
-  if(!isset($controller))
-  {
+  if (!isset($controller)) {
     $controller = sfContext::getInstance()->getController();
   }
 
@@ -65,8 +64,7 @@ function is_homepage()
 function get_current_uri($as_safe_url = false, $with_route_name = true)
 {
   $uri = sfRouting::getInstance()->getCurrentInternalUri($with_route_name);
-  if($as_safe_url)
-  {
+  if ($as_safe_url) {
     $uri = sfSafeUrl::encode($uri);
   }
 
@@ -131,53 +129,43 @@ function link_to($name = '', $internal_uri = '', $options = array())
   $html_options = _convert_options_to_javascript($html_options);
 
   $absolute = false;
-  if(isset($html_options['absolute_url']))
-  {
+  if (isset($html_options['absolute_url'])) {
     $html_options['absolute'] = $html_options['absolute_url'];
     unset($html_options['absolute_url']);
   }
-  if(isset($html_options['absolute']))
-  {
+  if (isset($html_options['absolute'])) {
     $absolute = (boolean) $html_options['absolute'];
     unset($html_options['absolute']);
   }
   $protocol = null;
-  if(isset($html_options['protocol']))
-  {
+  if (isset($html_options['protocol'])) {
     $protocol = (boolean) $html_options['protocol'];
     unset($html_options['protocol']);
   }
   $getParameters = array();
-  if(isset($html_options['get_parameters']))
-  {
+  if (isset($html_options['get_parameters'])) {
     $getParameters = (array) $html_options['get_parameters'];
     unset($html_options['get_parameters']);
   }
 
   $html_options['href'] = url_for($internal_uri, $absolute, $getParameters, $protocol);
 
-  if(isset($html_options['query_string']))
-  {
+  if (isset($html_options['query_string'])) {
     $html_options['href'] .= strpos($html_options['href'], '?') !== false ?
             ('&' . $html_options['query_string']) : ('?' . $html_options['query_string']);
 
     unset($html_options['query_string']);
   }
 
-  if(is_object($name))
-  {
-    if(method_exists($name, '__toString'))
-    {
+  if (is_object($name)) {
+    if (method_exists($name, '__toString')) {
       $name = $name->__toString();
-    }
-    else
-    {
+    } else {
       throw new sfException(sprintf('Object of class "%s" cannot be converted to string (Please create a __toString() method)', get_class($name)));
     }
   }
 
-  if(!strlen($name))
-  {
+  if (!strlen($name)) {
     $name = $html_options['href'];
   }
 
@@ -216,14 +204,11 @@ function link_to($name = '', $internal_uri = '', $options = array())
 function link_to_if($condition, $name = '', $internal_uri = '', $options = array())
 {
   $html_options = _parse_attributes($options);
-  if($condition)
-  {
+  if ($condition) {
     unset($html_options['tag']);
 
     return link_to($name, $internal_uri, $html_options);
-  }
-  else
-  {
+  } else {
     unset($html_options['query_string']);
     unset($html_options['absolute_url']);
     unset($html_options['absolute']);
@@ -297,10 +282,8 @@ function button_to($name, $internal_uri ='', $options = array())
   $html_options = _parse_attributes($options);
   $html_options['value'] = $name;
 
-  if(isset($html_options['post']) && $html_options['post'])
-  {
-    if(isset($html_options['popup']))
-    {
+  if (isset($html_options['post']) && $html_options['post']) {
+    if (isset($html_options['popup'])) {
       throw new sfConfigurationException('You can\'t use "popup" and "post" together');
     }
     $html_options['type'] = 'submit';
@@ -311,8 +294,7 @@ function button_to($name, $internal_uri ='', $options = array())
   }
 
   $url = url_for($internal_uri);
-  if(isset($html_options['query_string']))
-  {
+  if (isset($html_options['query_string'])) {
     $url = $url . '?' . $html_options['query_string'];
     unset($html_options['query_string']);
   }
@@ -320,13 +302,10 @@ function button_to($name, $internal_uri ='', $options = array())
 
   $html_options['type'] = 'button';
 
-  if(isset($html_options['popup']))
-  {
+  if (isset($html_options['popup'])) {
     $html_options = _convert_options_to_javascript($html_options, $url);
     unset($html_options['popup']);
-  }
-  else
-  {
+  } else {
     $html_options['onclick'] = "document.location.href=" . $url . ";";
     $html_options = _convert_options_to_javascript($html_options);
   }
@@ -370,26 +349,20 @@ function mail_to($email, $name = '', $options = array(), $default_value = array(
 
   $default_tmp = _parse_attributes($default_value);
   $default = array();
-  foreach($default_tmp as $key => $value)
-  {
+  foreach ($default_tmp as $key => $value) {
     $default[] = urlencode($key) . '=' . urlencode($value);
   }
   $options = count($default) ? '?' . implode('&', $default) : '';
 
-  if(isset($html_options['encode']) && $html_options['encode'])
-  {
+  if (isset($html_options['encode']) && $html_options['encode']) {
     unset($html_options['encode']);
     $html_options['href'] = _encodeText('mailto:' . $email . $options);
-    if(!$name)
-    {
+    if (!$name) {
       $name = _encodeText($email);
     }
-  }
-  else
-  {
+  } else {
     $html_options['href'] = 'mailto:' . $email . $options;
-    if(!$name)
-    {
+    if (!$name) {
       $name = $email;
     }
   }
@@ -413,35 +386,21 @@ function _convert_options_to_javascript($html_options, $url = 'this.href')
 
   $onclick = isset($html_options['onclick']) ? $html_options['onclick'] : '';
 
-  if($popup && $post)
-  {
+  if ($popup && $post) {
     throw new sfConfigurationException('You can\'t use "popup" and "post" in the same link');
-  }
-  else if($confirm && $popup)
-  {
+  } else if ($confirm && $popup) {
     $html_options['onclick'] = $onclick . 'if (' . _confirm_javascript_function($confirm) . ') { ' . _popup_javascript_function($popup, $url) . ' };return false;';
-  }
-  else if($confirm && $post)
-  {
+  } else if ($confirm && $post) {
     $html_options['onclick'] = $onclick . 'if (' . _confirm_javascript_function($confirm) . ') { ' . _post_javascript_function() . ' };return false;';
-  }
-  else if($confirm)
-  {
-    if($onclick)
-    {
+  } else if ($confirm) {
+    if ($onclick) {
       $html_options['onclick'] = 'if (' . _confirm_javascript_function($confirm) . ') { return ' . $onclick . '} else return false;';
-    }
-    else
-    {
+    } else {
       $html_options['onclick'] = 'return ' . _confirm_javascript_function($confirm) . ';';
     }
-  }
-  else if($post)
-  {
+  } else if ($post) {
     $html_options['onclick'] = $onclick . _post_javascript_function() . 'return false;';
-  }
-  else if($popup)
-  {
+  } else if ($popup) {
     $html_options['onclick'] = $onclick . _popup_javascript_function($popup, $url) . 'return false;';
   }
 
@@ -459,19 +418,13 @@ function _confirm_javascript_function($confirm)
 
 function _popup_javascript_function($popup, $url = '')
 {
-  if(is_array($popup))
-  {
-    if(isset($popup[1]))
-    {
+  if (is_array($popup)) {
+    if (isset($popup[1])) {
       return "var w=window.open(" . $url . ",'" . $popup[0] . "','" . $popup[1] . "');w.focus();";
-    }
-    else
-    {
+    } else {
       return "var w=window.open(" . $url . ",'" . $popup[0] . "');w.focus();";
     }
-  }
-  else
-  {
+  } else {
     return "var w=window.open(" . $url . ");w.focus();";
   }
 }
@@ -483,30 +436,23 @@ function _post_javascript_function()
 
 function _encodeText($text, $type = 'hextents')
 {
-  if(class_exists('myMailto'))
-  {
+  if (class_exists('myMailto')) {
     return myMailto::encode($text, $type);
   }
 
   $encoded_text = '';
 
-  for($i = 0; $i < strlen($text); $i++)
-  {
+  for ($i = 0; $i < strlen($text); $i++) {
     $char = $text{$i};
     $r = rand(0, 100);
 
     # roughly 10% raw, 45% hex, 45% dec
     # '@' *must* be encoded. I insist.
-    if($r > 90 && $char != '@')
-    {
+    if ($r > 90 && $char != '@') {
       $encoded_text .= $char;
-    }
-    else if($r < 45)
-    {
+    } else if ($r < 45) {
       $encoded_text .= '&#x' . dechex(ord($char)) . ';';
-    }
-    else
-    {
+    } else {
       $encoded_text .= '&#' . ord($char) . ';';
     }
   }

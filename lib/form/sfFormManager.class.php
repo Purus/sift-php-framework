@@ -12,8 +12,8 @@
  * @package    Sift
  * @subpackage form
  */
-class sfFormManager {
-
+class sfFormManager
+{
   /**
    * Returns form instance based on its name.
    *
@@ -24,8 +24,7 @@ class sfFormManager {
                                  $CSRFSecret = null)
   {
     $formClass = $name.'Form';
-    if(!class_exists($formClass = $name.'Form') && !class_exists($formClass = $name))
-    {
+    if (!class_exists($formClass = $name.'Form') && !class_exists($formClass = $name)) {
       throw new sfException(sprintf('The form manager has no "%s" form.', $formClass));
     }
 

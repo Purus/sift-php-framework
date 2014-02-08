@@ -12,8 +12,8 @@
  * @package    Sift
  * @subpackage minifier
  */
-class sfMinifierDriverGoogleClosureApi extends sfMinifier {
-
+class sfMinifierDriverGoogleClosureApi extends sfMinifier
+{
   /**
    * Browser holder
    *
@@ -38,8 +38,7 @@ class sfMinifierDriverGoogleClosureApi extends sfMinifier {
   {
     $result = $this->proccess(file_get_contents($file));
 
-    if($replace)
-    {
+    if ($replace) {
       $this->replaceFile($file, $result);
     }
 
@@ -79,8 +78,7 @@ class sfMinifierDriverGoogleClosureApi extends sfMinifier {
 
     ));
 
-    if($browser->responseIsError())
-    {
+    if ($browser->responseIsError()) {
       throw new sfException('An error occured while requesting compiler api.');
     }
 
@@ -93,8 +91,7 @@ class sfMinifierDriverGoogleClosureApi extends sfMinifier {
    */
   protected function getBrowser()
   {
-    if(!$this->browser)
-    {
+    if (!$this->browser) {
       $this->browser = new sfWebBrowser();
     }
 

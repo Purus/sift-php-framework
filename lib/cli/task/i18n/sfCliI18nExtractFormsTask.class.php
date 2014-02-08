@@ -83,15 +83,12 @@ EOF;
     $finder = sfFinder::type('file')->name('*Form.class.php');
 
     // application specific forms
-    if(is_dir($formPath = $this->environment->get('sf_apps_dir').'/' . $application . '/lib/form'))
-    {
+    if (is_dir($formPath = $this->environment->get('sf_apps_dir').'/' . $application . '/lib/form')) {
       $dirs[] = $formPath;
     }
 
-    if(!$options['exclude-global'])
-    {
-      if(is_dir($formPath = $this->environment->get('sf_root_dir').'/lib/form'))
-      {
+    if (!$options['exclude-global']) {
+      if (is_dir($formPath = $this->environment->get('sf_root_dir').'/lib/form')) {
         $dirs[] = $formPath;
       }
     }
@@ -99,8 +96,7 @@ EOF;
     $dirs = array_unique($dirs);
     $finder = sfFinder::type('file')->name('*Form.class.php');
 
-    foreach($finder->in($dirs) as $file)
-    {
+    foreach ($finder->in($dirs) as $file) {
       $form = basename($file, '.class.php');
 
       $this->checkFormClass($form);
@@ -117,39 +113,31 @@ EOF;
       $this->logSection('i18n', sprintf('found "%d" new i18n strings', $extract->getNewMessagesCount()));
       $this->logSection('i18n', sprintf('found "%d" old i18n strings', $extract->getOldMessagesCount()));
 
-      if ($options['display-new'])
-      {
+      if ($options['display-new']) {
         $this->logSection('i18n', sprintf('display new i18n strings', $extract->getNewMessagesCount()));
-        foreach ($extract->getNewMessages() as $domain => $messages)
-        {
-          foreach($messages as $message)
-          {
+        foreach ($extract->getNewMessages() as $domain => $messages) {
+          foreach ($messages as $message) {
             $this->log('               '.$message."\n");
           }
         }
       }
 
-      if ($options['auto-save'])
-      {
+      if ($options['auto-save']) {
         $this->logSection('i18n', 'saving new i18n strings');
 
         $extract->saveNewMessages();
       }
 
-      if ($options['display-old'])
-      {
+      if ($options['display-old']) {
         $this->logSection('i18n', sprintf('display old i18n strings', $extract->getOldMessagesCount()));
-        foreach($extract->getOldMessages() as $domain => $messages)
-        {
-          foreach($messages as $message)
-          {
+        foreach ($extract->getOldMessages() as $domain => $messages) {
+          foreach ($messages as $message) {
             $this->log('               '.$message."\n");
           }
         }
       }
 
-      if ($options['auto-delete'])
-      {
+      if ($options['auto-delete']) {
         $this->logSection('i18n', 'deleting old i18n strings');
 
         $extract->deleteOldMessages();

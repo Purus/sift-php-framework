@@ -50,18 +50,12 @@ class sfI18nApplicationExtract extends sfI18nExtract
     $this->extractDashboardWidgetsYamlFiles();
     $this->extractUserProfileYamlFiles();
 
-    try
-    {
+    try {
       $this->extractForms();
-    }
-    catch(Exception $e)
-    {
-      if($this->getOption('ignore_errors'))
-      {
+    } catch (Exception $e) {
+      if ($this->getOption('ignore_errors')) {
         $errors[] = $e;
-      }
-      else
-      {
+      } else {
         throw $e;
       }
     }
@@ -87,12 +81,10 @@ class sfI18nApplicationExtract extends sfI18nExtract
               ->in($this->getOption('app_dir').'/'.$this->getOption('lib_dir_name'));
 
     $extracted = array();
-    foreach($files as $file)
-    {
+    foreach ($files as $file) {
       $phpExtractor = new sfI18nPhpExtractor();
       $e = $phpExtractor->extract(file_get_contents($file));
-      if(!count($e))
-      {
+      if (!count($e)) {
         continue;
       }
       $extracted = array_merge_recursive($extracted, $e);
@@ -122,8 +114,7 @@ class sfI18nApplicationExtract extends sfI18nExtract
     $modulesDir = $this->getOption('app_dir').'/'.$this->getOption('module_dir_name');
     $modules = sfFinder::type('dir')->maxDepth(0)->ignoreVersionControl()->in($modulesDir);
 
-    foreach($modules as $module)
-    {
+    foreach ($modules as $module) {
       $moduleName = basename($module);
 
       $moduleExtractor = new sfI18nModuleExtract(array(
@@ -146,8 +137,7 @@ class sfI18nApplicationExtract extends sfI18nExtract
     // menu yaml files
     $menuFiles = sfFinder::type('file')->name('menu.yml')->in($this->getOption('app_dir').'/'.
                   $this->getOption('config_dir_name'));
-    foreach($menuFiles as $file)
-    {
+    foreach ($menuFiles as $file) {
       $extracted = $menuExtractor->extract(file_get_contents($file));
       $this->sortExtracted($extracted, $this->getOption('context'));
     }
@@ -164,8 +154,7 @@ class sfI18nApplicationExtract extends sfI18nExtract
     // menu yaml files
     $menuFiles = sfFinder::type('file')->name('dashboard_widgets.yml')->in($this->getOption('app_dir').'/'.
                   $this->getOption('config_dir_name'));
-    foreach($menuFiles as $file)
-    {
+    foreach ($menuFiles as $file) {
       $extracted = $menuExtractor->extract(file_get_contents($file));
       $this->sortExtracted($extracted, $this->getOption('context'));
     }
@@ -185,15 +174,13 @@ class sfI18nApplicationExtract extends sfI18nExtract
     $userProfileFiles = sfFinder::type('file')->name('user_profile.yml')->in($this->getOption('app_dir').'/'.
                          $this->getOption('config_dir_name'));
 
-    foreach($userProfileFiles as $file)
-    {
+    foreach ($userProfileFiles as $file) {
       ob_start();
       @eval('?>' . file_get_contents($file) . '<?php ');
       $contents = ob_get_contents();
       ob_end_clean();
 
-      if(!$contents)
-      {
+      if (!$contents) {
         continue;
       }
 
@@ -213,12 +200,10 @@ class sfI18nApplicationExtract extends sfI18nExtract
               ->in($this->getOption('app_dir') . '/' .
               $this->getOption('lib_dir_name') . '/form');
 
-    foreach($files as $file)
-    {
+    foreach ($files as $file) {
       // which classes are in the file?
       $classes = sfToolkit::extractClasses($file);
-      foreach($classes as $class)
-      {
+      foreach ($classes as $class) {
         try {
           // create form extractor
           $extractor = new sfI18nFormExtract(array(
@@ -226,9 +211,7 @@ class sfI18nApplicationExtract extends sfI18nExtract
             'culture' => $this->getOption('culture')
           ));
           $this->sortExtracted($extractor->extract(), $this->getOption('context'));
-        }
-        catch(Exception $e)
-        {
+        } catch (Exception $e) {
           throw new sfException(
                   sprintf('Error extracting form "%s". Original message was: %s',
                   $class, $e->getMessage()), $e->getCode());
@@ -249,21 +232,16 @@ class sfI18nApplicationExtract extends sfI18nExtract
               ->in($this->getOption('app_dir') . '/' .
               $this->getOption('lib_dir_name') . '/model');
 
-    foreach($files as $file)
-    {
+    foreach ($files as $file) {
       // which classes are in the file?
       $classes = sfToolkit::extractClasses($file);
-      foreach($classes as $class)
-      {
-        try
-        {
+      foreach ($classes as $class) {
+        try {
           $extractor = new sfI18nModelExtractor(array(
             'model' => $class
           ));
           $this->sortExtracted($extractor->extract(), $this->getOption('context'));
-        }
-        catch(Exception $e)
-        {
+        } catch (Exception $e) {
           throw new sfException(
                   sprintf('Error extracting model "%s". Original message was: %s',
                   $class, $e->getMessage()), $e->getCode());
@@ -278,18 +256,15 @@ class sfI18nApplicationExtract extends sfI18nExtract
    */
   protected function parseAllSeenMessages()
   {
-    foreach($this->allSeenMessages as $catalogue => $messages)
-    {
+    foreach ($this->allSeenMessages as $catalogue => $messages) {
       $source = sfI18nMessageSource::factory($this->getOption('source_driver'), dirname($catalogue));
       $source->setCulture($this->culture);
       $source->load(basename($catalogue));
 
       $this->currentMessages[$catalogue] = array();
 
-      foreach($source->read() as $c => $translations)
-      {
-        foreach($translations as $key => $values)
-        {
+      foreach ($source->read() as $c => $translations) {
+        foreach ($translations as $key => $values) {
           $this->currentMessages[$catalogue][] = $key;
         }
       }
@@ -310,8 +285,7 @@ class sfI18nApplicationExtract extends sfI18nExtract
    */
   protected function sortExtracted($extracted, $context = 'application', $module = null)
   {
-    foreach($extracted as $domain => $messages)
-    {
+    foreach ($extracted as $domain => $messages) {
       // we have an unknown domain,
       // it means that the translation looks like:
       //
@@ -320,18 +294,14 @@ class sfI18nApplicationExtract extends sfI18nExtract
       //
       // and belongs to the global application catalogue
 
-      if(strpos($domain, '%SF_SIFT_DATA_DIR%') !== false)
-      {
+      if (strpos($domain, '%SF_SIFT_DATA_DIR%') !== false) {
         continue;
-      }
-      elseif($context === 'application' && strpos($domain, '%SF_PLUGINS_DIR%') !== false)
-      {
+      } elseif ($context === 'application' && strpos($domain, '%SF_PLUGINS_DIR%') !== false) {
         continue;
       }
 
       $isPluginCatalogue = false;
-      if($context == 'plugin' && $this->getOption('plugin'))
-      {
+      if ($context == 'plugin' && $this->getOption('plugin')) {
         $isPluginCatalogue = strpos(str_replace(DIRECTORY_SEPARATOR, '/', $domain), $this->getOption('plugin')) !== false;
       }
 
@@ -342,8 +312,7 @@ class sfI18nApplicationExtract extends sfI18nExtract
               (strpos($domain, '/') === false && $domain == $this->catalogueName)
               || $isPluginCatalogue)
       {
-        switch($context)
-        {
+        switch ($context) {
           case 'application':
           case 'plugin':
              $key = $this->getOption('app_dir') . '/' . $this->getOption('i18n_dir_name')
@@ -357,10 +326,8 @@ class sfI18nApplicationExtract extends sfI18nExtract
         }
       }
       // simple catalogue name
-      elseif(strpos($domain, '/') === false)
-      {
-        switch($context)
-        {
+      elseif (strpos($domain, '/') === false) {
+        switch ($context) {
           case 'application':
           case 'plugin':
               $key =  $this->getOption('app_dir') . '/' . $this->getOption('i18n_dir_name')
@@ -372,28 +339,21 @@ class sfI18nApplicationExtract extends sfI18nExtract
                   . '/'. $module . '/' . $this->getOption('i18n_dir_name') . '/' . $domain;
           break;
         }
-      }
-      else
-      {
-        if(preg_match(sfI18n::$moduleCatalogueRegexp, $domain, $matches))
-        {
+      } else {
+        if (preg_match(sfI18n::$moduleCatalogueRegexp, $domain, $matches)) {
           $module = $matches[1];
           $catalogue = $matches[2];
           // FIXME: can be from plugin!
           $key = $this->getOption('app_dir') . '/' . $this->getOption('module_dir_name') .
                   '/' . $module . '/' . $this->getOption('i18n_dir_name') . '/' . $catalogue;
-        }
-        else
-        {
+        } else {
           $key = $domain;
         }
       }
 
-      foreach($messages as $message)
-      {
+      foreach ($messages as $message) {
         // prevent empty messages to appear here
-        if(empty($message))
-        {
+        if (empty($message)) {
           continue;
         }
         $this->allSeenMessages[$key][] = $message;

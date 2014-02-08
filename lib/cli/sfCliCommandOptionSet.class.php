@@ -46,8 +46,7 @@ class sfCliCommandOptionSet
    */
   public function addOptions($options = array())
   {
-    foreach ($options as $option)
-    {
+    foreach ($options as $option) {
       $this->addOption($option);
     }
   }
@@ -59,18 +58,14 @@ class sfCliCommandOptionSet
    */
   public function addOption(sfCliCommandOption $option)
   {
-    if (isset($this->options[$option->getName()]))
-    {
+    if (isset($this->options[$option->getName()])) {
       throw new sfCliCommandException(sprintf('An option named "%s" already exist.', $option->getName()));
-    }
-    else if (isset($this->shortcuts[$option->getShortcut()]))
-    {
+    } else if (isset($this->shortcuts[$option->getShortcut()])) {
       throw new sfCliCommandException(sprintf('An option with shortcut "%s" already exist.', $option->getShortcut()));
     }
 
     $this->options[$option->getName()] = $option;
-    if ($option->getShortcut())
-    {
+    if ($option->getShortcut()) {
       $this->shortcuts[$option->getShortcut()] = $option->getName();
     }
   }
@@ -84,8 +79,7 @@ class sfCliCommandOptionSet
    */
   public function getOption($name)
   {
-    if (!$this->hasOption($name))
-    {
+    if (!$this->hasOption($name)) {
       throw new sfCliCommandException(sprintf('The "--%s" option does not exist.', $name));
     }
 
@@ -144,8 +138,7 @@ class sfCliCommandOptionSet
   public function getDefaults()
   {
     $values = array();
-    foreach ($this->options as $option)
-    {
+    foreach ($this->options as $option) {
       $values[$option->getName()] = $option->getDefault();
     }
 
@@ -161,8 +154,7 @@ class sfCliCommandOptionSet
    */
   protected function shortcutToName($shortcut)
   {
-    if (!isset($this->shortcuts[$shortcut]))
-    {
+    if (!isset($this->shortcuts[$shortcut])) {
       throw new sfCliCommandException(sprintf('The "-%s" option does not exist.', $shortcut));
     }
 

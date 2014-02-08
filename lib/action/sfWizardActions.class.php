@@ -12,8 +12,8 @@
  * @package    Sift
  * @subpackage action
  */
-class sfWizardActions extends myActions {
-
+class sfWizardActions extends myActions
+{
   /**
    * Last step of the wizard
    * @var integer
@@ -48,15 +48,12 @@ class sfWizardActions extends myActions {
   {
     $this->step = $this->getRequest()->getInt('step');
 
-    try
-    {
+    try {
       $this->form = sfFormManager::getForm(sprintf($this->formNameMask, $this->step));
       // set session namespace where will be save data!
       myWizardForm::setStorageNamespace(sfInflector::tableize(get_class($this)),
               $this->formNameMask);
-    }
-    catch(sfException $e)
-    {
+    } catch (sfException $e) {
       $this->forward404($e->getMessage());
     }
 
@@ -69,10 +66,8 @@ class sfWizardActions extends myActions {
       $validated = 1;
       // get last validated step!
       // range is backward
-      foreach(range($this->lastStep, $this->firstStep) as $step)
-      {
-        if($this->stepIsValidated($step))
-        {
+      foreach (range($this->lastStep, $this->firstStep) as $step) {
+        if ($this->stepIsValidated($step)) {
           // next step after last validated step
           $validated = $step == $this->lastStep ? $this->lastStep : ($step + 1);
           break;
@@ -132,14 +127,11 @@ class sfWizardActions extends myActions {
    */
   protected function setStepValues($values, $overwrite = false)
   {
-    if($overwrite)
-    {
+    if ($overwrite) {
       $this->getUser()->getAttributeHolder()->removeNamespace($this->getWizardStorageNamespace().'/'.$this->step);
 
       return $this->getUser()->getAttributeHolder()->add($values, $this->getWizardStorageNamespace().'/'.$this->step);
-    }
-    else
-    {
+    } else {
       return $this->getUser()->getAttributeHolder()->add($values, $this->getWizardStorageNamespace().'/'.$this->step);
     }
   }
@@ -165,8 +157,7 @@ class sfWizardActions extends myActions {
   protected function stepIsValidated($step, $boolean = null)
   {
     // we are setting the value
-    if(!is_null($boolean))
-    {
+    if (!is_null($boolean)) {
       $this->getUser()->getAttributeHolder()->add(array('is_valid' => $boolean), $this->getWizardStorageNamespace().'/'.$step);
 
       return $this;
@@ -184,8 +175,7 @@ class sfWizardActions extends myActions {
    */
   protected function redirectToNextStep()
   {
-    if(!$this->isLastStep())
-    {
+    if (!$this->isLastStep()) {
       return $this->redirect($this->getWizardRouteName().'?step='.($this->step+1));
     }
 
@@ -199,8 +189,7 @@ class sfWizardActions extends myActions {
    */
   protected function redirectToPreviousStep()
   {
-    if(!$this->isFirstStep())
-    {
+    if (!$this->isFirstStep()) {
       return $this->redirect($this->getWizardRouteName().'?step='.($this->step-1));
     }
 
@@ -236,8 +225,7 @@ class sfWizardActions extends myActions {
   {
     $data = array();
     // cleanup
-    foreach(range($this->firstStep, $this->lastStep) as $step)
-    {
+    foreach (range($this->firstStep, $this->lastStep) as $step) {
       $data[$step] = $this->getStepValues($step);
     }
 
@@ -252,8 +240,7 @@ class sfWizardActions extends myActions {
   protected function cleanAllStepsData()
   {
     // cleanup
-    foreach(range($this->firstStep, $this->lastStep) as $step)
-    {
+    foreach (range($this->firstStep, $this->lastStep) as $step) {
       $this->getUser()->getAttributeHolder()->removeNamespace($this->getWizardStorageNamespace().'/'.$step);
     }
   }

@@ -31,8 +31,7 @@ class sfRoutingConfigHandler extends sfYamlConfigHandler
 
     $routes = sfRouting::getInstance();
     $routes->clearRoutes();
-    foreach ($config as $name => $params)
-    {
+    foreach ($config as $name => $params) {
       $routes->connect(
         $name,
         ($params['url'] ? $params['url'] : '/'),

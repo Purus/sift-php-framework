@@ -12,8 +12,8 @@
  * @package    Sift
  * @subpackage minifier
  */
-abstract class sfMinifier extends sfConfigurable implements sfIMinifier {
-
+abstract class sfMinifier extends sfConfigurable implements sfIMinifier
+{
   protected $optimizedContent = null,
     $optimizedSize = null,
     $originalSize = null,
@@ -30,21 +30,15 @@ abstract class sfMinifier extends sfConfigurable implements sfIMinifier {
   {
     $driverClass = sprintf(sprintf('sfMinifierDriver%s', ucfirst($driver)));
 
-    if(class_exists($driverClass))
-    {
+    if (class_exists($driverClass)) {
       $driverObj = new $driverClass($options);
-    }
-    elseif(class_exists($driver))
-    {
+    } elseif (class_exists($driver)) {
       $driverObj = new $driver($options);
-    }
-    else
-    {
+    } else {
       throw new InvalidArgumentException(sprintf('Driver "%s" does not exist.', $driver));
     }
 
-    if(!$driverObj instanceof sfIMinifier)
-    {
+    if (!$driverObj instanceof sfIMinifier) {
       throw new LogicException(sprintf('Driver "%s" does not implement sfIMinifier interface.', $driver));
     }
 
@@ -69,8 +63,7 @@ abstract class sfMinifier extends sfConfigurable implements sfIMinifier {
    */
   public function getResults()
   {
-    if(!$this->processed)
-    {
+    if (!$this->processed) {
       throw new LogicException('Optimization has not been processed');
     }
 
@@ -100,21 +93,17 @@ abstract class sfMinifier extends sfConfigurable implements sfIMinifier {
    */
   public function processFile($file, $replace = false)
   {
-    if(!is_readable($file))
-    {
+    if (!is_readable($file)) {
       throw new sfFileException(sprintf('File "%s" does not exist or is not readable.', $file));
     }
 
     $this->originalSize = filesize($file);
     $result = $this->doProcessFile($file, $replace);
 
-    if($replace)
-    {
+    if ($replace) {
       clearstatcache();
       $this->optimizedSize = filesize($result);
-    }
-    else
-    {
+    } else {
       $this->optimizedSize = strlen($result);
       $this->optimizedContent = $result;
     }
@@ -133,8 +122,7 @@ abstract class sfMinifier extends sfConfigurable implements sfIMinifier {
    */
   protected function replaceFile($file, $content)
   {
-    if(file_put_contents($file, $content) === false)
-    {
+    if (file_put_contents($file, $content) === false) {
       throw new RuntimeException(sprintf('Unable to replace file "%s" with optimized contents', $file));
     }
 

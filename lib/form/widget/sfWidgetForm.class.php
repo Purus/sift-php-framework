@@ -183,8 +183,7 @@ abstract class sfWidgetForm extends sfWidget
    */
   public function renderTag($tag, $attributes = array())
   {
-    if (empty($tag))
-    {
+    if (empty($tag)) {
       return '';
     }
 
@@ -219,8 +218,7 @@ abstract class sfWidgetForm extends sfWidget
    */
   protected function fixFormId($attributes)
   {
-    if (!isset($attributes['id']) && isset($attributes['name']))
-    {
+    if (!isset($attributes['id']) && isset($attributes['name'])) {
       $attributes['id'] = $this->generateId($attributes['name'], isset($attributes['value']) ? $attributes['value'] : null);
     }
 
@@ -252,19 +250,16 @@ abstract class sfWidgetForm extends sfWidget
    */
   public function generateId($name, $value = null)
   {
-    if (false === $this->getOption('id_format'))
-    {
+    if (false === $this->getOption('id_format')) {
       return null;
     }
 
     // check to see if we have an array variable for a field name
-    if (strstr($name, '['))
-    {
+    if (strstr($name, '[')) {
       $name = str_replace(array('[]', '][', '[', ']'), array(((null !== $value) && !is_array($value) ? '_'.$value : ''), '_', '_', ''), $name);
     }
 
-    if (false !== strpos($this->getOption('id_format'), '%s'))
-    {
+    if (false !== strpos($this->getOption('id_format'), '%s')) {
       $name = sprintf($this->getOption('id_format'), $name);
     }
 
@@ -284,8 +279,7 @@ abstract class sfWidgetForm extends sfWidget
   protected static function generateTwoCharsRange($start, $stop)
   {
     $results = array();
-    for ($i = $start; $i <= $stop; $i++)
-    {
+    for ($i = $start; $i <= $stop; $i++) {
       $results[$i] = sprintf('%02d', $i);
     }
 
@@ -330,12 +324,9 @@ abstract class sfWidgetForm extends sfWidget
    */
   protected function translate($text, array $parameters = array())
   {
-    if (null === $this->parent)
-    {
+    if (null === $this->parent) {
       return $text;
-    }
-    else
-    {
+    } else {
       return $this->parent->getFormFormatter()->translate($text, $parameters);
     }
   }
@@ -352,16 +343,12 @@ abstract class sfWidgetForm extends sfWidget
    */
   protected function translateAll(array $texts, array $parameters = array())
   {
-    if (null === $this->parent)
-    {
+    if (null === $this->parent) {
       return $texts;
-    }
-    else
-    {
+    } else {
       $result = array();
 
-      foreach ($texts as $key => $text)
-      {
+      foreach ($texts as $key => $text) {
         $result[$key] = $this->parent->getFormFormatter()->translate($text, $parameters);
       }
 
@@ -377,17 +364,13 @@ abstract class sfWidgetForm extends sfWidget
    */
   protected function getCulture()
   {
-    if($culture = $this->getOption('culture'))
-    {
+    if ($culture = $this->getOption('culture')) {
       return $culture;
     }
 
-    try
-    {
+    try {
       return sfContext::getInstance()->getUser()->getCulture();
-    }
-    catch(Exception $e)
-    {
+    } catch (Exception $e) {
       return sfCulture::getInstance()->getName(sfConfig::get('sf_i18n_default_culture', 'en'));
     }
   }
@@ -401,13 +384,10 @@ abstract class sfWidgetForm extends sfWidget
    */
   public function setOptionsFromArray(&$options, $unset = true)
   {
-    foreach(array_keys($this->getOptions()) as $option)
-    {
-      if(array_key_exists($option, $options))
-      {
+    foreach (array_keys($this->getOptions()) as $option) {
+      if (array_key_exists($option, $options)) {
         $this->setOption($option, $options[$option]);
-        if($unset)
-        {
+        if ($unset) {
           unset($options[$option]);
         }
       }

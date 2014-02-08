@@ -14,8 +14,8 @@
  * @package    Sift
  * @subpackage text_macro
  */
-class sfTextMacroRegistry implements Countable, sfILoggerAware {
-
+class sfTextMacroRegistry implements Countable, sfILoggerAware
+{
   /**
    * Holder for tags
    *
@@ -67,8 +67,7 @@ class sfTextMacroRegistry implements Countable, sfILoggerAware {
   {
     $configuration = include(sfConfigCache::getInstance()->checkConfig(
         sfConfig::get('sf_app_config_dir_name') . '/text_filters.yml'));
-    foreach($configuration['macros'] as $tagName => $definition)
-    {
+    foreach ($configuration['macros'] as $tagName => $definition) {
       $this->register($tagName, $definition);
     }
   }
@@ -106,23 +105,16 @@ class sfTextMacroRegistry implements Countable, sfILoggerAware {
    */
   public function register($tag, $callable)
   {
-    if(!$callable instanceof sfTextMacroCallbackDefinition)
-    {
+    if (!$callable instanceof sfTextMacroCallbackDefinition) {
       // create the definition from the function
-      if(is_string($callable))
-      {
+      if (is_string($callable)) {
         $callable = new sfTextMacroCallbackDefinition($callable);
-      }
-      elseif(is_array($callable))
-      {
+      } elseif (is_array($callable)) {
         // this is not a real definition, just a static call
-        if(!isset($callable['class']) && !isset($callable['function']))
-        {
+        if (!isset($callable['class']) && !isset($callable['function'])) {
           $callable = $callable = new sfTextMacroCallbackDefinition(
               sprintf('%s::%s', $callable[0], $callable[1]));
-        }
-        else
-        {
+        } else {
           $callable = sfTextMacroCallbackDefinition::createFromArray($callable);
         }
       }
@@ -171,19 +163,15 @@ class sfTextMacroRegistry implements Countable, sfILoggerAware {
    */
   public function hasTag($tag, $content)
   {
-    if(!isset($this->tags[$tag]))
-    {
+    if (!isset($this->tags[$tag])) {
       return false;
     }
 
     preg_match_all('/' . $this->getMacrosRegex() . '/s', $content, $matches, PREG_SET_ORDER);
 
-    if(!empty($matches))
-    {
-      foreach($matches as $tags)
-      {
-        if($tag === $tags[2])
-        {
+    if (!empty($matches)) {
+      foreach ($matches as $tags) {
+        if ($tag === $tags[2]) {
           return true;
         }
       }
@@ -265,8 +253,7 @@ class sfTextMacroRegistry implements Countable, sfILoggerAware {
    */
   protected function log($message, $level = sfILogger::INFO, array $context = array())
   {
-    if($this->logger)
-    {
+    if ($this->logger) {
       $this->logger->log(sprintf('{sfTextMacroRegistry} %s', $message), $level, $context);
     }
   }
@@ -286,34 +273,21 @@ class sfTextMacroRegistry implements Countable, sfILoggerAware {
     $atts = array();
     $pattern = '/(\w+)\s*=\s*"([^"]*)"(?:\s|$)|(\w+)\s*=\s*\'([^\']*)\'(?:\s|$)|(\w+)\s*=\s*([^\s\'"]+)(?:\s|$)|"([^"]*)"(?:\s|$)|(\S+)(?:\s|$)/';
     $text = preg_replace("/[\x{00a0}\x{200b}]+/u", " ", $text);
-    if(preg_match_all($pattern, $text, $match, PREG_SET_ORDER))
-    {
-      foreach($match as $m)
-      {
-        if(!empty($m[1]))
-        {
+    if (preg_match_all($pattern, $text, $match, PREG_SET_ORDER)) {
+      foreach ($match as $m) {
+        if (!empty($m[1])) {
           $atts[strtolower($m[1])] = stripcslashes($m[2]);
-        }
-        else if(!empty($m[3]))
-        {
+        } else if (!empty($m[3])) {
           $atts[strtolower($m[3])] = stripcslashes($m[4]);
-        }
-        else if(!empty($m[5]))
-        {
+        } else if (!empty($m[5])) {
           $atts[strtolower($m[5])] = stripcslashes($m[6]);
-        }
-        else if(isset($m[7]) and strlen($m[7]))
-        {
+        } else if (isset($m[7]) and strlen($m[7])) {
           $atts[] = stripcslashes($m[7]);
-        }
-        elseif(isset($m[8]))
-        {
+        } elseif (isset($m[8])) {
           $atts[] = stripcslashes($m[8]);
         }
       }
-    }
-    else
-    {
+    } else {
       $atts = ltrim($text);
     }
 
@@ -330,21 +304,17 @@ class sfTextMacroRegistry implements Countable, sfILoggerAware {
   protected function doMacroTag($m)
   {
     // allow [[foo]] syntax for escaping a tag
-    if($m[1] == '[' && $m[6] == ']')
-    {
+    if ($m[1] == '[' && $m[6] == ']') {
       return substr($m[0], 1, -1);
     }
 
     $tag = $m[2];
     $attr = $this->parseAttributes($m[3]);
 
-    if(isset($m[5]))
-    {
+    if (isset($m[5])) {
       // enclosing tag - extra parameter
       return $this->call($this->tags[$tag], $attr, $m[5], $tag) . $m[6];
-    }
-    else
-    {
+    } else {
       // self-closing tag
       return $this->call($this->tags[$tag], $attr, null, $tag) . $m[6];
     }
@@ -362,19 +332,15 @@ class sfTextMacroRegistry implements Countable, sfILoggerAware {
    */
   protected function call(sfTextMacroCallbackDefinition $definition, $attributes, $value, $tag)
   {
-    if(($function = $definition->getFunction()))
-    {
+    if (($function = $definition->getFunction())) {
       return call_user_func($function, $attributes, $value, $tag);
     }
 
     $cacheKey = md5(serialize($definition));
 
-    if(!isset($this->objectCache[$cacheKey]))
-    {
+    if (!isset($this->objectCache[$cacheKey])) {
       $object = $this->objectCache[$cacheKey] = $this->serviceContainer->createObjectFromDefinition($definition);
-    }
-    else
-    {
+    } else {
       $object = $this->objectCache[$cacheKey];
     }
 
@@ -403,18 +369,14 @@ class sfTextMacroRegistry implements Countable, sfILoggerAware {
    */
   protected function getMacrosRegex($allowedTags = array())
   {
-    if(count($allowedTags))
-    {
+    if (count($allowedTags)) {
       $tagNames = array_intersect($allowedTags, $this->getTags());
-    }
-    else
-    {
+    } else {
       $tagNames = $this->getTags();
     }
 
     $regexp = join('|', array_map('preg_quote', $tagNames));
-    if(empty($regexp))
-    {
+    if (empty($regexp)) {
       return false;
     }
 

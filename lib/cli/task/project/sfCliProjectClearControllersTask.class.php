@@ -12,8 +12,8 @@
  * @package    Sift
  * @subpackage cli_task
  */
-class sfCliProjectClearControllersTask extends sfCliBaseTask {
-
+class sfCliProjectClearControllersTask extends sfCliBaseTask
+{
   /**
    * @see sfCliTask
    */
@@ -59,14 +59,12 @@ EOF;
   protected function execute($arguments = array(), $options = array())
   {
     $finder = sfFinder::type('file')->maxDepth(1)->name('*.php');
-    foreach($finder->in($this->environment->get('sf_web_dir')) as $controller)
-    {
+    foreach ($finder->in($this->environment->get('sf_web_dir')) as $controller) {
       $content = file_get_contents($controller);
       preg_match('/\'SF_APP\',[\s]*\'(.*)\'\)/', $content, $found_app);
       preg_match('/\'SF_ENVIRONMENT\',[\s]*\'(.*)\'\)/', $content, $env);
 
-      if(isset($found_app[1]) && isset($env[1]) && $env[1] != 'prod')
-      {
+      if (isset($found_app[1]) && isset($env[1]) && $env[1] != 'prod') {
         $this->logSection($this->getFullName(), sprintf('Clear "%s" (%s, %s environment)',
                           basename($controller),
                           $found_app[1], $env[1]));

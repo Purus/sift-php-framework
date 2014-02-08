@@ -26,20 +26,15 @@ class sfMailerHtml2TextPlugin extends sfMailerPlugin
   public function beforeSendPerformed(Swift_Events_SendEvent $evt)
   {
     $mail = $evt->getMessage();
-    if($mail instanceof sfMailerMessage && !$mail->getPlainTextBody())
-    {
+    if ($mail instanceof sfMailerMessage && !$mail->getPlainTextBody()) {
       $body = $mail->getHtmlBody();
-      if(!$body)
-      {
+      if (!$body) {
         return;
       }
-      try
-      {
+      try {
         $converted = sfHtml2Text::convert($body);
         $mail->setPlaintextBody($converted);
-      }
-      catch(Exception $e)
-      {
+      } catch (Exception $e) {
       }
     }
   }

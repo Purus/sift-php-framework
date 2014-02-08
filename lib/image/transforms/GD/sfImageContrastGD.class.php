@@ -41,9 +41,8 @@ class sfImageContrastGD extends sfImageTransformAbstract
    */
   public function setContrast($contrast)
   {
-    if (is_numeric($contrast))
-    {
-      $this->contrast = (int)$contrast;
+    if (is_numeric($contrast)) {
+      $this->contrast = (int) $contrast;
 
       return true;
     }
@@ -72,13 +71,9 @@ class sfImageContrastGD extends sfImageTransformAbstract
   {
     $resource = $image->getAdapter()->getHolder();
 
-    if (function_exists('imagefilter'))
-    {
+    if (function_exists('imagefilter')) {
       imagefilter($resource, IMG_FILTER_CONTRAST, $this->contrast);
-    }
-
-    else
-    {
+    } else {
       throw new sfImageTransformException(sprintf('Cannot perform transform, GD does not support imagefilter '));
     }
 

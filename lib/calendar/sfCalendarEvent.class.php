@@ -12,8 +12,8 @@
  * @package Sift
  * @subpackage calendar
  */
-class sfCalendarEvent implements sfICalendarEvent, ArrayAccess {
-
+class sfCalendarEvent implements sfICalendarEvent, ArrayAccess
+{
   protected $start, $end;
   protected $data = array();
 
@@ -30,8 +30,7 @@ class sfCalendarEvent implements sfICalendarEvent, ArrayAccess {
     $this->start = sfDateTimeToolkit::getTS($start);
     $this->end = sfDateTimeToolkit::getTS($end);
 
-    if(!$this->start)
-    {
+    if (!$this->start) {
       throw new InvalidArgumentException('Start is invalid');
     }
 
@@ -71,25 +70,19 @@ class sfCalendarEvent implements sfICalendarEvent, ArrayAccess {
     $timestamp = mktime(0, 0, 0, $month, 1, $year);
 
     // we are looking for month
-    if(!$day)
-    {
+    if (!$day) {
       // number of days in the month
       $day = date('t', $timestamp);
       $start = mktime(0, 0, 0, $month, 1, $year);
       $end = mktime(23, 59, 59, $month, $day, $year);
-    }
-    else
-    {
+    } else {
       $start = mktime(0, 0, 0, $month, $day, $year);
       $end = mktime(23, 59, 59, $month, $day, $year);
     }
 
-    if($this->getStart() >= $start && $this->getStart() <= $end)
-    {
+    if ($this->getStart() >= $start && $this->getStart() <= $end) {
       return true;
-    }
-    elseif($start > $this->getStart() && $start < $this->getEnd())
-    {
+    } elseif ($start > $this->getStart() && $start < $this->getEnd()) {
       return true;
     }
 
@@ -108,12 +101,10 @@ class sfCalendarEvent implements sfICalendarEvent, ArrayAccess {
 
   public function __call($methodName, $args)
   {
-    if(preg_match('~^(set|get)([A-Z])(.*)$~', $methodName, $matches))
-    {
+    if (preg_match('~^(set|get)([A-Z])(.*)$~', $methodName, $matches)) {
       $property = strtolower($matches[2]) . $matches[3];
 
-      switch($matches[1])
-      {
+      switch ($matches[1]) {
         case 'set':
           $this->data[$property] = $args[0];
 
@@ -140,8 +131,7 @@ class sfCalendarEvent implements sfICalendarEvent, ArrayAccess {
   public function __toString()
   {
     $return = array();
-    if(isset($this->data['name']))
-    {
+    if (isset($this->data['name'])) {
       $return[] = $this->data['name'];
     }
 
@@ -150,20 +140,17 @@ class sfCalendarEvent implements sfICalendarEvent, ArrayAccess {
 
   public static function fromArray($array)
   {
-    if(isset($array['start']))
-    {
+    if (isset($array['start'])) {
       $start = $array['start'];
       unset($array['start']);
     }
 
-    if(isset($array['end']))
-    {
+    if (isset($array['end'])) {
       $end = $array['end'];
       unset($array['end']);
     }
 
-    if(!$start || !$end)
-    {
+    if (!$start || !$end) {
       throw new sfCalendarException('Calendar event is missing either start or end information.');
     }
 

@@ -12,8 +12,8 @@
  * @package    Sift
  * @subpackage project
  */
-abstract class sfApplication extends sfProject {
-
+abstract class sfApplication extends sfProject
+{
   /**
    * Debug environment?
    *
@@ -144,8 +144,7 @@ abstract class sfApplication extends sfProject {
     $this->configCache->import($this->getOption('sf_app_config_dir_name') . '/settings.yml', false);
 
     // detect relative url root, before setting up the request
-    if(!sfConfig::get('sf_relative_url_root'))
-    {
+    if (!sfConfig::get('sf_relative_url_root')) {
       $this->setOption('sf_relative_url_root', $this->detectRelativeUrlRoot());
     }
 
@@ -153,24 +152,19 @@ abstract class sfApplication extends sfProject {
     $this->configCache->import($this->getOption('sf_app_config_dir_name') . '/php.yml', false);
 
     // check locks
-    if(sfConfig::get('sf_check_lock'))
-    {
+    if (sfConfig::get('sf_check_lock')) {
       $this->checkLock();
     }
 
-    if(sfConfig::get('sf_check_sift_version'))
-    {
+    if (sfConfig::get('sf_check_sift_version')) {
       $this->checkSiftVersion();
     }
 
     // we set different modes for production environment
     // if we're in a prod environment we want E_ALL, but not to fail on E_NOTICE, E_WARNING or E_STRICT
-    if(!sfConfig::get('sf_debug'))
-    {
+    if (!sfConfig::get('sf_debug')) {
       set_error_handler(array('sfPhpErrorException', 'handleErrorCallback'), sfConfig::get('sf_error_reporting', E_ALL & ~E_NOTICE & ~E_WARNING));
-    }
-    else
-    {
+    } else {
       // get from config or default to E_ALL without E_NOTICE (those E_NOTICEs can get annoying...)
       set_error_handler(array('sfPhpErrorException', 'handleErrorCallback'), sfConfig::get('sf_error_reporting', E_ALL & ~E_NOTICE));
     }
@@ -182,27 +176,23 @@ abstract class sfApplication extends sfProject {
     $sf_debug = sfConfig::get('sf_debug');
 
     // load base settings
-    if($file = $this->configCache->checkConfig($sf_app_config_dir_name.'/app.yml', true))
-    {
+    if ($file = $this->configCache->checkConfig($sf_app_config_dir_name.'/app.yml', true)) {
       include($file);
     }
 
-    if(false !== sfConfig::get('sf_csrf_secret'))
-    {
+    if (false !== sfConfig::get('sf_csrf_secret')) {
       sfForm::enableCSRFProtection(sfConfig::get('sf_csrf_secret'));
     }
 
     // provide the dispatcher to the forms
     sfForm::setEventDispatcher($this->getEventDispatcher());
 
-    if(sfConfig::get('sf_i18n'))
-    {
+    if (sfConfig::get('sf_i18n')) {
       $i18nConfig = include($this->configCache->checkConfig($sf_app_config_dir_name . '/i18n.yml'));
 
       $this->addOptions($i18nConfig);
 
-      if(!function_exists('__'))
-      {
+      if (!function_exists('__')) {
         /**
          * Translate function
          *
@@ -220,11 +210,8 @@ abstract class sfApplication extends sfProject {
 
       // add translation callable to the forms
       sfWidgetFormSchemaFormatter::setTranslationCallable('__');
-    }
-    else
-    {
-      if(!function_exists('__'))
-      {
+    } else {
+      if (!function_exists('__')) {
         /**
          * Translate function
          *
@@ -235,15 +222,12 @@ abstract class sfApplication extends sfProject {
          */
         function __($string, $args = array(), $catalogue = 'messages')
         {
-          if(empty($args))
-          {
+          if (empty($args)) {
             $args = array();
           }
           // replace object with strings
-          foreach($args as $key => $value)
-          {
-            if(is_object($value) && method_exists($value, '__toString'))
-            {
+          foreach ($args as $key => $value) {
+            if (is_object($value) && method_exists($value, '__toString')) {
               $args[$key] = $value->__toString();
             }
           }
@@ -254,8 +238,7 @@ abstract class sfApplication extends sfProject {
     }
 
     // create dummy function
-    if(!$this->isDebug() && !function_exists('dump'))
-    {
+    if (!$this->isDebug() && !function_exists('dump')) {
       /**
        * @internal
        */
@@ -272,16 +255,14 @@ abstract class sfApplication extends sfProject {
     ));
 
     // add autoloading callables
-    foreach((array) sfConfig::get('sf_autoloading_functions', array()) as $callable)
-    {
+    foreach ((array) sfConfig::get('sf_autoloading_functions', array()) as $callable) {
       spl_autoload_register($callable);
     }
 
     error_reporting(sfConfig::get('sf_error_reporting'));
 
     // required core classes for the framework
-    if(!$sf_debug && !sfConfig::get('sf_test') && PHP_SAPI !== 'cli')
-    {
+    if (!$sf_debug && !sfConfig::get('sf_test') && PHP_SAPI !== 'cli') {
       $this->configCache->import($sf_app_config_dir_name . '/core_compile.yml', false);
     }
 
@@ -300,14 +281,12 @@ abstract class sfApplication extends sfProject {
     include($this->configCache->checkConfig($sf_app_config_dir_name . '/asset_packages.yml'));
 
     // setup form enhancer
-    if($enhancer = $this->getFormEnhancer())
-    {
+    if ($enhancer = $this->getFormEnhancer()) {
       $this->getEventDispatcher()->connect('view.template.variables', array($enhancer,
           'filterTemplateVariables'));
     }
 
-    if(sfConfig::get('sf_environment') !== 'cli' || PHP_SAPI !== 'cli')
-    {
+    if (sfConfig::get('sf_environment') !== 'cli' || PHP_SAPI !== 'cli') {
       // start output buffering
       ob_start();
     }
@@ -319,8 +298,7 @@ abstract class sfApplication extends sfProject {
    */
   protected function initializePlugins()
   {
-    foreach($this->plugins as $name => $plugin)
-    {
+    foreach ($this->plugins as $name => $plugin) {
       if(false === $plugin->initialize() &&
         is_readable($config = $plugin->getRootDir(). DS .
         $this->getOption('sf_app_config_dir_name') . DS . 'config.php'))
@@ -337,8 +315,7 @@ abstract class sfApplication extends sfProject {
   public function callBootstrap()
   {
     $bootstrap = $this->getOption('sf_config_cache_dir').'/config_bootstrap_compile.yml.php';
-    if(is_readable($bootstrap))
-    {
+    if (is_readable($bootstrap)) {
       $this->setOption('sf_in_bootstrap', true);
       require($bootstrap);
     }
@@ -381,20 +358,15 @@ abstract class sfApplication extends sfProject {
 
     $compile = false;
     // create the file if it does not exits
-    if(is_readable($cacheFile))
-    {
-      if($this->isDebug() && filemtime($file) > filemtime($cacheFile))
-      {
+    if (is_readable($cacheFile)) {
+      if ($this->isDebug() && filemtime($file) > filemtime($cacheFile)) {
         $compile = true;
       }
-    }
-    else // cache does not exist
-    {
+    } else { // cache does not exist
       $compile = true;
     }
 
-    if($compile)
-    {
+    if ($compile) {
       $pluginHandler = new sfDimensionsConfigHandler();
       // application wide setting
       $result = $pluginHandler->execute(array($file));
@@ -421,8 +393,7 @@ abstract class sfApplication extends sfProject {
    */
   public function getFormEnhancer()
   {
-    if($this->formEnhancer === null)
-    {
+    if ($this->formEnhancer === null) {
       $config = include $this->configCache->checkConfig('config/forms.yml');
 
       // form enhancer is disabled
@@ -430,12 +401,9 @@ abstract class sfApplication extends sfProject {
           && !$config['enhancer']['enabled'])
       {
         $this->formEnhancer = false;
-      }
-      else
-      {
+      } else {
         $class = 'myFormEnhancer';
-        if(isset($config['enhancer']['class']))
-        {
+        if (isset($config['enhancer']['class'])) {
           $class = $config['enhancer']['class'];
         }
         $this->formEnhancer = sfFormEnhancer::factory($class, $config);
@@ -516,8 +484,7 @@ abstract class sfApplication extends sfProject {
   protected function detectRelativeUrlRoot()
   {
     $pathInfo = sfConfig::get('sf_path_info_array');
-    switch($pathInfo)
-    {
+    switch ($pathInfo) {
       case 'SERVER':
         $scriptName = $_SERVER['SCRIPT_NAME'];
       break;
@@ -564,8 +531,7 @@ abstract class sfApplication extends sfProject {
    */
   public function displayErrorPage($error = 'error500', $format = null)
   {
-    if(is_null($format))
-    {
+    if (is_null($format)) {
       $format = 'html';
       if(sfContext::hasInstance() && $request = sfContext::getInstance()->getRequest()
       // we will detect which is the best format for current response
@@ -576,8 +542,7 @@ abstract class sfApplication extends sfProject {
       }
     }
 
-    switch($error)
-    {
+    switch ($error) {
       case 'unavailable':
         header('HTTP/1.1 503 Service Temporarily Unavailable');
         header('Status: 503 Service Temporarily Unavailable');
@@ -609,22 +574,17 @@ abstract class sfApplication extends sfProject {
     );
 
     $errorPage = false;
-    foreach($files as $file)
-    {
-      if(is_readable($file))
-      {
+    foreach ($files as $file) {
+      if (is_readable($file)) {
         $errorPage = sfLimitedScope::render($file);
         break;
       }
     }
 
     // no error page, try html fallbacks
-    if(!$errorPage)
-    {
-      foreach($fallbacks as $file)
-      {
-        if(is_readable($file))
-        {
+    if (!$errorPage) {
+      foreach ($fallbacks as $file) {
+        if (is_readable($file)) {
           $format = 'html';
           $errorPage = sfLimitedScope::render($file);
           break;
@@ -633,8 +593,7 @@ abstract class sfApplication extends sfProject {
     }
 
     $charset = sfConfig::get('sf_charset');
-    switch($format)
-    {
+    switch ($format) {
       case 'html':
         @header(sprintf('Content-type: text/html;charset=%s', $charset));
       break;
@@ -659,8 +618,7 @@ abstract class sfApplication extends sfProject {
     // recent Sift update?
     $last_version    = @file_get_contents(sfConfig::get('sf_config_cache_dir').'/VERSION');
     $current_version = sfCore::getVersion();
-    if($last_version != $current_version)
-    {
+    if ($last_version != $current_version) {
       // clear cache
       sfToolkit::clearDirectory(sfConfig::get('sf_cache_dir'));
     }
@@ -724,8 +682,7 @@ abstract class sfApplication extends sfProject {
   public function getCoreHelpers()
   {
     $helpers = parent::getCoreHelpers();
-    if($this->isDebug())
-    {
+    if ($this->isDebug()) {
       $helpers[] = 'Debug';
     }
 
@@ -740,8 +697,7 @@ abstract class sfApplication extends sfProject {
    */
   public function getDimensions()
   {
-    if(is_null($this->dimensions))
-    {
+    if (is_null($this->dimensions)) {
       throw new RuntimeException('Application dimensions are not loaded yet.');
     }
 

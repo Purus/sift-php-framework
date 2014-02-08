@@ -12,8 +12,8 @@
  * @package    Sift
  * @subpackage validator
  */
-class sfValidatorString extends sfValidatorBase {
-
+class sfValidatorString extends sfValidatorBase
+{
   /**
    * Configures the current validator.
    *
@@ -64,22 +64,18 @@ class sfValidatorString extends sfValidatorBase {
     $clean = $value;
 
     // first sanitize!
-    if($sanitize = $this->getOption('sanitize'))
-    {
+    if ($sanitize = $this->getOption('sanitize')) {
       $clean = sfSanitizer::sanitize($clean, $sanitize);
     }
 
-    if($this->options['trim'] && is_string($clean))
-    {
+    if ($this->options['trim'] && is_string($clean)) {
       $clean = trim($clean);
     }
 
     // empty value?
-    if($this->isEmpty($clean))
-    {
+    if ($this->isEmpty($clean)) {
       // required?
-      if($this->options['required'])
-      {
+      if ($this->options['required']) {
         throw new sfValidatorError($this, 'required');
       }
 
@@ -98,13 +94,11 @@ class sfValidatorString extends sfValidatorBase {
 
     $length = function_exists('mb_strlen') ? mb_strlen($clean, $this->getCharset()) : strlen($clean);
 
-    if($this->hasOption('max_length') && $length > $this->getOption('max_length'))
-    {
+    if ($this->hasOption('max_length') && $length > $this->getOption('max_length')) {
       throw new sfValidatorError($this, 'max_length', array('value' => $value, 'max_length' => $this->getOption('max_length')));
     }
 
-    if($this->hasOption('min_length') && $length < $this->getOption('min_length'))
-    {
+    if ($this->hasOption('min_length') && $length < $this->getOption('min_length')) {
       throw new sfValidatorError($this, 'min_length', array('value' => $value, 'min_length' => $this->getOption('min_length')));
     }
 
@@ -120,16 +114,13 @@ class sfValidatorString extends sfValidatorBase {
   public function getActiveMessages()
   {
     $messages = array();
-    if($this->getOption('required'))
-    {
+    if ($this->getOption('required')) {
       $messages[] = $this->getMessage('required');
     }
-    if($this->getOption('min_length'))
-    {
+    if ($this->getOption('min_length')) {
       $messages[] = $this->getMessage('min_length');
     }
-    if($this->getOption('max_length'))
-    {
+    if ($this->getOption('max_length')) {
       $messages[] = $this->getMessage('max_length');
     }
 
@@ -142,14 +133,12 @@ class sfValidatorString extends sfValidatorBase {
   public function getJavascriptValidationMessages()
   {
     $messages = parent::getJavascriptValidationMessages();
-    if($this->getOption('min_length'))
-    {
+    if ($this->getOption('min_length')) {
       $messages[sfFormJavascriptValidation::MIN_LENGTH] =
               sfFormJavascriptValidation::fixValidationMessage($this, 'min_length');
     }
 
-    if($this->getOption('max_length'))
-    {
+    if ($this->getOption('max_length')) {
       $messages[sfFormJavascriptValidation::MAX_LENGTH] =
               sfFormJavascriptValidation::fixValidationMessage($this, 'max_length');
     }
@@ -164,13 +153,11 @@ class sfValidatorString extends sfValidatorBase {
   {
     $rules = parent::getJavascriptValidationRules();
 
-    if($this->getOption('min_length'))
-    {
+    if ($this->getOption('min_length')) {
       $rules[sfFormJavascriptValidation::MIN_LENGTH] = $this->getOption('min_length');
     }
 
-    if($this->getOption('max_length'))
-    {
+    if ($this->getOption('max_length')) {
       $rules[sfFormJavascriptValidation::MAX_LENGTH] = $this->getOption('max_length');
     }
 

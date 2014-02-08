@@ -12,8 +12,8 @@
  * @package    Sift
  * @subpackage config
  */
-class sfDimensionsConfigHandler extends sfYamlConfigHandler {
-
+class sfDimensionsConfigHandler extends sfYamlConfigHandler
+{
   /**
    * Execute this configuration handler.
    *
@@ -52,24 +52,18 @@ class sfDimensionsConfigHandler extends sfYamlConfigHandler {
     // normalize key values
     $myConfig = array_change_key_case($myConfig, CASE_LOWER);
 
-    if(!isset($myConfig['available']))
-    {
+    if (!isset($myConfig['available'])) {
       return array(array(), array());
     }
 
     $available = (array) $myConfig['available'];
     $default = array();
-    if(isset($myConfig['default']))
-    {
-      foreach($myConfig['default'] as $key => $value)
-      {
+    if (isset($myConfig['default'])) {
+      foreach ($myConfig['default'] as $key => $value) {
         $default[$key] = $value;
       }
-    }
-    else
-    {
-      foreach($available as $dimension)
-      {
+    } else {
+      foreach ($available as $dimension) {
         $default[] = array_shift($dimension);
       }
     }

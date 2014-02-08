@@ -16,8 +16,8 @@
  * @package Sift
  * @subpackage date
  */
-class sfDate {
-
+class sfDate
+{
   /**
    * SQL Datetime (example: 2012-12-24 12:02:35)
    */
@@ -202,8 +202,7 @@ class sfDate {
    */
   public function retrieve($unit = sfTime::DAY)
   {
-    switch($unit)
-    {
+    switch ($unit) {
       case sfTime::SECOND:
         return date('s', $this->ts);
       case sfTime::MINUTE:
@@ -269,8 +268,7 @@ class sfDate {
     $ts = sfDateTimeToolkit::getTS($value);
 
     $this->ts = $ts;
-    if($this->init === null)
-    {
+    if ($this->init === null) {
       $this->init = $ts;
     }
 
@@ -299,13 +297,10 @@ class sfDate {
   {
     $ts = sfDateTimeToolkit::getTS($value);
 
-    if($this->ts < $ts)
-    {
+    if ($this->ts < $ts) {
       // less than
       return -1;
-    }
-    else if($this->ts > $ts)
-    {
+    } else if ($this->ts > $ts) {
       // greater than
       return 1;
     }
@@ -353,8 +348,7 @@ class sfDate {
   {
     $callable = array('sfTime', $method);
 
-    if(!is_callable($callable))
-    {
+    if (!is_callable($callable)) {
       throw new sfDateTimeException(sprintf('Call to undefined function: %s::%s', 'sfDate', $method));
     }
 

@@ -12,8 +12,8 @@
  * @package    Sift
  * @subpackage feed
  */
-class sfRss091Feed extends sfRssFeed {
-
+class sfRss091Feed extends sfRssFeed
+{
   protected $version = '0.91';
 
 }

@@ -16,8 +16,8 @@ require_once dirname(__FILE__).'/../../vendor/swift/swift_init.php';
  * @package    Sift
  * @subpackage mailer
  */
-class sfMailerMessage extends Swift_Message {
-
+class sfMailerMessage extends Swift_Message
+{
   /**
    * Inline attachment
    */
@@ -111,8 +111,7 @@ class sfMailerMessage extends Swift_Message {
     // Don't allow more than 1000 characters according to RFC 2822.
     // Doing so could have unspecified side-effects such as truncating
     // parts of your message when it is transported between SMTP servers.
-    if($maxLineLength > 1000)
-    {
+    if ($maxLineLength > 1000) {
       throw new InvalidArgumentException(sprintf('Maximum message line length is 1000. "%s" given', $maxLineLength));
     }
 
@@ -140,8 +139,7 @@ class sfMailerMessage extends Swift_Message {
    */
   public function setEncoding($encoding)
   {
-    switch($encoding)
-    {
+    switch ($encoding) {
       case 'qp': // Quoted Printable
       case 'quoted_printable':
       case 'quoted-printable':
@@ -198,25 +196,21 @@ class sfMailerMessage extends Swift_Message {
    */
   public function attachFromPath($path, $filename = null, $contentType = null, $disposition = null)
   {
-    if(!sfToolkit::isPathAbsolute($path))
-    {
+    if (!sfToolkit::isPathAbsolute($path)) {
       $path = $this->fileDataPath . '/' . $path;
     }
 
-    if(!is_readable($path))
-    {
+    if (!is_readable($path)) {
       throw new sfException(sprintf('Invalid path "%s" given. Image is not readable or does not exist', $path));
     }
 
     $attachment = Swift_Attachment::fromPath($path, $contentType);
 
-    if($filename)
-    {
+    if ($filename) {
       $attachment->setFilename($filename);
     }
 
-    if($disposition)
-    {
+    if ($disposition) {
       $attachment->setDisposition($disposition);
     }
 
@@ -236,11 +230,9 @@ class sfMailerMessage extends Swift_Message {
   public function attachData($data, $filename = null, $contentType = null,
       $disposition = self::DISPOSITION_ATTACHMENT, $description = null)
   {
-    if($data instanceof sfCallable)
-    {
+    if ($data instanceof sfCallable) {
       $data = $data->call();
-      if(is_array($data))
-      {
+      if (is_array($data)) {
         $contentType = isset($data[1]) ? $data[1] : null;
         $data = $data[0];
       }
@@ -249,15 +241,13 @@ class sfMailerMessage extends Swift_Message {
     // create the attachment with your data
     $attachment = Swift_Attachment::newInstance($data, $filename, $contentType);
 
-    if(!self::isValidDisposition($disposition))
-    {
+    if (!self::isValidDisposition($disposition)) {
       throw new InvalidArgumentException(sprintf('Invalid attachment disposition "%s" given.', $disposition));
     }
 
     $attachment->setDisposition($disposition);
 
-    if($description)
-    {
+    if ($description) {
       $attachment->setDescription($description);
     }
 
@@ -309,13 +299,11 @@ class sfMailerMessage extends Swift_Message {
    */
   public function embedImage($path)
   {
-    if(!sfToolkit::isPathAbsolute($path))
-    {
+    if (!sfToolkit::isPathAbsolute($path)) {
       $path = $this->fileDataPath . '/' . $path;
     }
 
-    if(!is_readable($path))
-    {
+    if (!is_readable($path)) {
       throw new sfException(sprintf('Invalid path "%s" given. Image is not readable or does not exist', $path));
     }
 
@@ -344,13 +332,11 @@ class sfMailerMessage extends Swift_Message {
   public function setBodyFromPartial($partial, $vars = null, $type = self::TYPE_PLAIN)
   {
     // validate email type
-    if(!in_array($type, array(self::TYPE_PLAIN, self::TYPE_HTML)))
-    {
+    if (!in_array($type, array(self::TYPE_PLAIN, self::TYPE_HTML))) {
       throw new sfConfigurationException(sprintf('Invalid email type passed ("%s"). Valid types are "plain" or "html".', $type));
     }
 
-    if(is_null($vars))
-    {
+    if (is_null($vars)) {
       $vars = array();
     }
 
@@ -361,8 +347,7 @@ class sfMailerMessage extends Swift_Message {
 
     $body = get_partial($partial, $vars, 'sfPartialMail');
 
-    switch($type)
-    {
+    switch ($type) {
       case self::TYPE_PLAIN:
         return $this->setPlaintextBody($body);
 
@@ -406,18 +391,13 @@ class sfMailerMessage extends Swift_Message {
   {
     // this checks if the object has been created with HTML type
     // main type is not plain, so we need to search the children
-    if(!$this->mainContentType == 'text/plain')
-    {
-      foreach($this->getChildren() as $child)
-      {
-        if($child->getContentType() == 'text/plain')
-        {
+    if (!$this->mainContentType == 'text/plain') {
+      foreach ($this->getChildren() as $child) {
+        if ($child->getContentType() == 'text/plain') {
           return $child->getBody();
         }
       }
-    }
-    else
-    {
+    } else {
       return $this->getBody();
     }
   }
@@ -439,15 +419,12 @@ class sfMailerMessage extends Swift_Message {
    */
   public function getHtmlBody()
   {
-    if(!$this->mainContentType == 'text/plain')
-    {
+    if (!$this->mainContentType == 'text/plain') {
       return $this->getBody();
     }
 
-    foreach($this->getChildren() as $child)
-    {
-      if($child->getContentType() == 'text/html')
-      {
+    foreach ($this->getChildren() as $child) {
+      if ($child->getContentType() == 'text/html') {
         return $child->getBody();
       }
     }
@@ -472,25 +449,19 @@ class sfMailerMessage extends Swift_Message {
    */
   public function setPlaintextBody($body)
   {
-    if(!$this->mainContentType == 'text/plain')
-    {
+    if (!$this->mainContentType == 'text/plain') {
       $found = false;
-      foreach($this->getChildren() as $child)
-      {
-        if($child->getContentType() == 'text/plain')
-        {
+      foreach ($this->getChildren() as $child) {
+        if ($child->getContentType() == 'text/plain') {
           $found = true;
           $child->setBody($body);
           break;
         }
       }
-      if(!$found)
-      {
+      if (!$found) {
         $this->addPart($body, 'text/plain');
       }
-    }
-    else
-    {
+    } else {
       $this->setBody($body, 'text/plain');
     }
 
@@ -505,25 +476,19 @@ class sfMailerMessage extends Swift_Message {
    */
   public function setHtmlBody($body)
   {
-    if($this->mainContentType == 'text/plain')
-    {
+    if ($this->mainContentType == 'text/plain') {
       $found = false;
-      foreach($this->getChildren() as $child)
-      {
-        if($child->getContentType() == 'text/html')
-        {
+      foreach ($this->getChildren() as $child) {
+        if ($child->getContentType() == 'text/html') {
           $found = true;
           $child->setBody($body);
           break;
         }
       }
-      if(!$found)
-      {
+      if (!$found) {
         $this->addPart($body, 'text/html');
       }
-    }
-    else
-    {
+    } else {
       $this->setBody($body, 'text/html');
     }
 
@@ -581,8 +546,7 @@ class sfMailerMessage extends Swift_Message {
                         'arguments'   => $arguments,
                         'message'     => $this)));
 
-    if(!$event->isProcessed())
-    {
+    if (!$event->isProcessed()) {
       throw new sfException(sprintf('Call to undefined method %s::%s.', get_class($this), $method));
     }
 

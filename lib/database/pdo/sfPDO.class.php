@@ -12,8 +12,8 @@
  * @package Sift
  * @subpackage database
  */
-class sfPDO extends PDO {
-
+class sfPDO extends PDO
+{
   /**
    * Is logging enabled?
    *
@@ -52,16 +52,13 @@ class sfPDO extends PDO {
   protected function configureStatementClass($suppressError = false)
   {
     // extending PDOStatement is not supported with persistent connections
-    if(!$this->getAttribute(PDO::ATTR_PERSISTENT))
-    {
+    if (!$this->getAttribute(PDO::ATTR_PERSISTENT)) {
       // custom statement class
       $this->setAttribute(PDO::ATTR_STATEMENT_CLASS, array('sfPDOStatement',
           array($this, array(
               'logging' => $this->isLoggingEnabled
             ))));
-    }
-    elseif(!$suppressError)
-    {
+    } elseif (!$suppressError) {
       throw new InvalidArgumentException('Extending PDOStatement is not supported with persistent connections.');
     }
   }
@@ -85,16 +82,11 @@ class sfPDO extends PDO {
    */
   public static function getConstantType($var)
   {
-    if(is_int($var))
-    {
+    if (is_int($var)) {
       return PDO::PARAM_INT;
-    }
-    else if(is_bool($var))
-    {
+    } else if (is_bool($var)) {
       return PDO::PARAM_BOOL;
-    }
-    else if(is_null($var))
-    {
+    } else if (is_null($var)) {
       return PDO::PARAM_NULL;
     }
     // Default
@@ -113,8 +105,7 @@ class sfPDO extends PDO {
    */
   public function quote($value, $parameter_type = PDO::PARAM_STR)
   {
-    if(is_null($value))
-    {
+    if (is_null($value)) {
       return 'NULL';
     }
 
@@ -129,20 +120,17 @@ class sfPDO extends PDO {
    */
   public function exec($statement)
   {
-    if(sfConfig::get('sf_debug'))
-    {
+    if (sfConfig::get('sf_debug')) {
       sfTimerManager::getTimer('Database');
     }
 
-    if($this->isLoggingEnabled())
-    {
+    if ($this->isLoggingEnabled()) {
       $this->log($statement);
     }
 
     $result = parent::exec($statement);
 
-    if(sfConfig::get('sf_debug'))
-    {
+    if (sfConfig::get('sf_debug')) {
       sfTimerManager::getTimer('Database')->addTime();
     }
 
@@ -160,17 +148,13 @@ class sfPDO extends PDO {
   {
     $args = func_get_args();
 
-    if($this->isLoggingEnabled())
-    {
+    if ($this->isLoggingEnabled()) {
       $this->log($args[0]);
     }
 
-    if(version_compare(PHP_VERSION, '5.3', '<'))
-    {
+    if (version_compare(PHP_VERSION, '5.3', '<')) {
       $return = call_user_func_array(array($this, 'parent::query'), $args);
-    }
-    else
-    {
+    } else {
       $return = call_user_func_array('parent::query', $args);
     }
 
@@ -185,12 +169,11 @@ class sfPDO extends PDO {
    */
   public function log($message)
   {
-    if(!$this->isLoggingEnabled())
-    {
+    if (!$this->isLoggingEnabled()) {
       return;
     }
 
-    return $this->getLogger()->info(sprintf('{sfPDO} %s', (string)$message));
+    return $this->getLogger()->info(sprintf('{sfPDO} %s', (string) $message));
   }
 
   /**

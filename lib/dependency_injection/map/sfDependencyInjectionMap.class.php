@@ -12,8 +12,8 @@
  * @package Sift
  * @subpackage dependency_injection
  */
-class sfDependencyInjectionMap extends sfCollection {
-
+class sfDependencyInjectionMap extends sfCollection
+{
   /**
    * Item type
    *
@@ -40,10 +40,8 @@ class sfDependencyInjectionMap extends sfCollection {
   public function getItemsFor($injectWith)
   {
     $return = array();
-    foreach($this as $item)
-    {
-      if($item->getInjectWith() == $injectWith)
-      {
+    foreach ($this as $item) {
+      if ($item->getInjectWith() == $injectWith) {
         $return[] = $item;
       }
     }
@@ -60,12 +58,9 @@ class sfDependencyInjectionMap extends sfCollection {
    */
   public function has($injectWith)
   {
-    if(count($this->getItemsFor($injectWith)) > 0)
-    {
+    if (count($this->getItemsFor($injectWith)) > 0) {
       return true;
-    }
-    else
-    {
+    } else {
       return false;
     }
   }

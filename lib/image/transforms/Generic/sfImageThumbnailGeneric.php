@@ -62,8 +62,7 @@ class sfImageThumbnailGeneric extends sfImageTransformAbstract
    */
   public function __construct($width, $height, $method='fit', $background=null)
   {
-    if(!$this->setWidth($width) || !$this->setHeight($height))
-        {
+    if (!$this->setWidth($width) || !$this->setHeight($height)) {
             throw new sfImageTransformException(sprintf('Cannot perform thumbnail, a valid width and height must be supplied'));
         }
     $this->setMethod($method);
@@ -78,9 +77,8 @@ class sfImageThumbnailGeneric extends sfImageTransformAbstract
    */
   public function setHeight($height)
   {
-    if(is_numeric($height) && $height > 0)
-    {
-      $this->height = (int)$height;
+    if (is_numeric($height) && $height > 0) {
+      $this->height = (int) $height;
 
       return true;
     }
@@ -106,9 +104,8 @@ class sfImageThumbnailGeneric extends sfImageTransformAbstract
    */
   public function setWidth($width)
   {
-    if(is_numeric($width) && $width > 0)
-    {
-      $this->width = (int)$width;
+    if (is_numeric($width) && $width > 0) {
+      $this->width = (int) $width;
 
       return true;
     }
@@ -136,14 +133,12 @@ class sfImageThumbnailGeneric extends sfImageTransformAbstract
   {
     // Backwards compatibility
     $map = array('left' => 'west', 'right' => 'east', 'top' => 'north', 'bottom' => 'south');
-    if($key = array_search($method, $map))
-    {
+    if ($key = array_search($method, $map)) {
       $message = sprintf('sfImageTransformPlugin thumbnail method \'%s\' is depreciated use \'%s\'', $method, $key);
       sfContext::getInstance()->getEventDispatcher()->notify(new sfEvent($this, 'application.log', array($message, 'priority' => sfLogger::ERR)));
     }
 
-    if(in_array($method, $this->methods))
-    {
+    if (in_array($method, $this->methods)) {
       $this->method = strtolower($method);
 
       return true;
@@ -193,8 +188,7 @@ class sfImageThumbnailGeneric extends sfImageTransformAbstract
     $scale_w    = $this->getWidth()/$resource_w;
     $scale_h    = $this->getHeight()/$resource_h;
     $method = $this->getMethod();
-    switch ($method)
-    {
+    switch ($method) {
       case 'deflate':
       case 'inflate':
         return $image->resize($this->getWidth(), $this->getHeight());
@@ -210,30 +204,20 @@ class sfImageThumbnailGeneric extends sfImageTransformAbstract
       case 'center':
         $image->scale(max($scale_w, $scale_h));
 
-        if(false !== strstr($method, 'top'))
-        {
+        if (false !== strstr($method, 'top')) {
           $top = 0;
-        }
-        else if(false !== strstr($method, 'bottom'))
-        {
+        } else if (false !== strstr($method, 'bottom')) {
           $top = $image->getHeight() - $this->getHeight();
-        }
-        else
-        {
-          $top = (int)round(($image->getHeight() - $this->getHeight()) / 2);
+        } else {
+          $top = (int) round(($image->getHeight() - $this->getHeight()) / 2);
         }
 
-        if(false !== strstr($method, 'left'))
-        {
+        if (false !== strstr($method, 'left')) {
           $left = 0;
-        }
-        else if(false !== strstr($method, 'right'))
-        {
+        } else if (false !== strstr($method, 'right')) {
           $left = $image->getWidth() - $this->getWidth();
-        }
-        else
-        {
-          $left = (int)round(($image->getWidth() - $this->getWidth()) / 2);
+        } else {
+          $left = (int) round(($image->getWidth() - $this->getWidth()) / 2);
         }
 
         return $image->crop($left, $top, $this->getWidth(), $this->getHeight());
@@ -248,8 +232,7 @@ class sfImageThumbnailGeneric extends sfImageTransformAbstract
         $image->create($this->getWidth(), $this->getHeight());
 
         // Set a background color if specified
-        if(!is_null($this->getBackground()) && $this->getBackground() != '')
-        {
+        if (!is_null($this->getBackground()) && $this->getBackground() != '') {
           $image->fill(0,0, $this->getBackground());
         }
 

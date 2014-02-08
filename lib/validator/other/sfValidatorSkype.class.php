@@ -12,8 +12,8 @@
  * @package Sift
  * @subpackage validator
  */
-class sfValidatorSkype extends sfValidatorRegex {
-
+class sfValidatorSkype extends sfValidatorRegex
+{
   /**
    * Skype name matching pattern
    *

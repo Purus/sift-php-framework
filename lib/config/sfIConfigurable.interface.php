@@ -12,8 +12,8 @@
  * @package Sift
  * @subpackage config
  */
-interface sfIConfigurable {
-
+interface sfIConfigurable
+{
   public function getOption($name, $default = null);
   public function setOption($name, $value);
   public function hasOption($name);

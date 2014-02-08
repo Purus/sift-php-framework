@@ -106,9 +106,8 @@ class sfImageRectangleImageMagick extends sfImageTransformAbstract
    */
   public function setStartX($x)
   {
-    if (is_numeric($x))
-    {
-      $this->x1 = (int)$x;
+    if (is_numeric($x)) {
+      $this->x1 = (int) $x;
 
       return true;
     }
@@ -134,9 +133,8 @@ class sfImageRectangleImageMagick extends sfImageTransformAbstract
    */
   public function setStartY($y)
   {
-    if (is_numeric($y))
-    {
-      $this->y1 = (int)$y;
+    if (is_numeric($y)) {
+      $this->y1 = (int) $y;
 
       return true;
     }
@@ -162,9 +160,8 @@ class sfImageRectangleImageMagick extends sfImageTransformAbstract
    */
   public function setEndX($x)
   {
-    if (is_numeric($x))
-    {
-      $this->x2 = (int)$x;
+    if (is_numeric($x)) {
+      $this->x2 = (int) $x;
 
       return true;
     }
@@ -190,9 +187,8 @@ class sfImageRectangleImageMagick extends sfImageTransformAbstract
    */
   public function setEndY($y)
   {
-    if (is_numeric($y))
-    {
-      $this->y2 = (int)$y;
+    if (is_numeric($y)) {
+      $this->y2 = (int) $y;
 
       return true;
     }
@@ -218,9 +214,8 @@ class sfImageRectangleImageMagick extends sfImageTransformAbstract
    */
   public function setThickness($thickness)
   {
-    if (is_numeric($thickness))
-    {
-      $this->thickness = (int)$thickness;
+    if (is_numeric($thickness)) {
+      $this->thickness = (int) $thickness;
 
       return true;
     }
@@ -246,8 +241,7 @@ class sfImageRectangleImageMagick extends sfImageTransformAbstract
    */
   public function setColor($color)
   {
-    if (preg_match('/#[\d\w]{6}/',$color))
-    {
+    if (preg_match('/#[\d\w]{6}/',$color)) {
       $this->color = $color;
 
       return true;
@@ -274,8 +268,7 @@ class sfImageRectangleImageMagick extends sfImageTransformAbstract
    */
   public function setFill($fill)
   {
-    if (preg_match('/#[\d\w]{6}/',$fill) || (is_object($fill) && class_name($fill) === 'sfImage'))
-    {
+    if (preg_match('/#[\d\w]{6}/',$fill) || (is_object($fill) && class_name($fill) === 'sfImage')) {
       $this->fill = $fill;
 
       return true;
@@ -302,9 +295,8 @@ class sfImageRectangleImageMagick extends sfImageTransformAbstract
    */
   public function setStyle($style)
   {
-    if (is_numeric($style))
-    {
-      $this->style = (int)$style;
+    if (is_numeric($style)) {
+      $this->style = (int) $style;
       $this->color = IMG_COLOR_STYLED;
 
       return true;
@@ -337,15 +329,13 @@ class sfImageRectangleImageMagick extends sfImageTransformAbstract
 
     $draw->setStrokeWidth($this->thickness);
 
-    if (!is_null($this->color))
-    {
+    if (!is_null($this->color)) {
       $stroke = new ImagickPixel();
       $stroke->setColor($this->color);
       $draw->setStrokeColor($stroke);
     }
 
-    if (!is_null($this->fill))
-    {
+    if (!is_null($this->fill)) {
       $fill = new ImagickPixel();
       $fill->setColor($this->fill);
       $draw->setFillColor($fill);

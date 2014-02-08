@@ -12,8 +12,8 @@
  * @package    Sift
  * @subpackage validator
  */
-class sfValidatorCssClassName extends sfValidatorRegex {
-
+class sfValidatorCssClassName extends sfValidatorRegex
+{
   /**
    * Configures the current validator.
    *
@@ -45,12 +45,10 @@ class sfValidatorCssClassName extends sfValidatorRegex {
   public function doClean($value)
   {
     // multiple allowed?
-    if($this->getOption('multiple_values'))
-    {
+    if ($this->getOption('multiple_values')) {
       $values = explode(' ', $value);
       $result = array();
-      foreach($values as $value)
-      {
+      foreach ($values as $value) {
         $value = trim($value);
         $result[] = parent::doClean($value);
       }
@@ -66,8 +64,7 @@ class sfValidatorCssClassName extends sfValidatorRegex {
    */
   public function getJavascriptValidationRules()
   {
-    if(!$this->getOption('multiple_values'))
-    {
+    if (!$this->getOption('multiple_values')) {
       return parent::getJavascriptValidationRules();
     }
 
@@ -81,10 +78,8 @@ class sfValidatorCssClassName extends sfValidatorRegex {
     $callback = new sfJsonExpression(sprintf('function(value, element, params) {
     var parts = value.split(" ");
     var regex = new RegExp("%s")
-    for(var i = 0; i < parts.length; i++)
-    {
-      if(%sregex.test(parts[i]))
-      {
+    for (var i = 0; i < parts.length; i++) {
+      if (%sregex.test(parts[i])) {
         return false;
       }
     }
@@ -99,8 +94,7 @@ class sfValidatorCssClassName extends sfValidatorRegex {
 
   public function getJavascriptValidationMessages()
   {
-    if(!$this->getOption('multiple_values'))
-    {
+    if (!$this->getOption('multiple_values')) {
       return parent::getJavascriptValidationMessages();
     }
 

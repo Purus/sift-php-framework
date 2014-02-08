@@ -13,8 +13,8 @@
  * @package    Sift
  * @subpackage text_filter
  */
-class sfTextFilterContent {
-
+class sfTextFilterContent
+{
   /**
    * Bubble flag
    *
@@ -40,7 +40,7 @@ class sfTextFilterContent {
    */
   public function setText($text)
   {
-    $this->text = (string)$text;
+    $this->text = (string) $text;
 
     return $this;
   }
@@ -63,11 +63,10 @@ class sfTextFilterContent {
    */
   public function cancelBubble($flag = null)
   {
-    if(is_null($flag))
-    {
+    if (is_null($flag)) {
       return !$this->bubble;
     }
-    $this->bubble = !(boolean)$flag;
+    $this->bubble = !(boolean) $flag;
 
     return $this;
   }

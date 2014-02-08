@@ -12,8 +12,8 @@
  * @package    Sift
  * @subpackage form_widget
  */
-class sfWidgetFormInputRadio extends sfWidgetFormInput {
-
+class sfWidgetFormInputRadio extends sfWidgetFormInput
+{
   /**
    * @param array $options     An array of options
    * @param array $attributes  An array of default HTML attributes
@@ -40,8 +40,7 @@ class sfWidgetFormInputRadio extends sfWidgetFormInput {
    */
   public function render($name, $value = null, $attributes = array(), $errors = array())
   {
-    if(!isset($attributes['id']))
-    {
+    if (!isset($attributes['id'])) {
       $attributes['id'] = $this->generateId(sprintf('%s[]', $name), $value);
     }
 

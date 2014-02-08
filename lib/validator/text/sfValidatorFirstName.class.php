@@ -12,8 +12,8 @@
  * @package    Sift
  * @subpackage validator
  */
-class sfValidatorFirstName extends sfValidatorAnd {
-
+class sfValidatorFirstName extends sfValidatorAnd
+{
   /**
    * Pattern used to verify the name. Excludes
    * < > & \ | digits and +
@@ -107,8 +107,7 @@ class sfValidatorFirstName extends sfValidatorAnd {
   {
     $messages = array();
     $messages[] = $this->getMessage('invalid');
-    if($this->getOption('required'))
-    {
+    if ($this->getOption('required')) {
       $messages[] = $this->getMessage('required');
     }
 

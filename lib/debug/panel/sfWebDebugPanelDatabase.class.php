@@ -42,8 +42,7 @@ class sfWebDebugPanelDatabase extends sfWebDebugPanel
    */
   public function getPanelContent()
   {
-    if(!count($queries = $this->getQueries()))
-    {
+    if (!count($queries = $this->getQueries())) {
       return '';
     }
 
@@ -67,15 +66,13 @@ class sfWebDebugPanelDatabase extends sfWebDebugPanel
    */
   protected function getQueries()
   {
-    if($this->queries !== false)
-    {
+    if ($this->queries !== false) {
       return $this->queries;
     }
 
     $queries = array();
     $class = 'sfPDO';
-    foreach($this->webDebug->getLogger()->getLogs() as $log)
-    {
+    foreach ($this->webDebug->getLogger()->getLogs() as $log) {
       // catch sfPDO messages
       if(($class == $log['type'] ||
           (class_exists($log['type'], false) && is_subclass_of($log['type'], $class))))

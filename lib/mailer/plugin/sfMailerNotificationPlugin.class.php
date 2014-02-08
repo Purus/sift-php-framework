@@ -20,8 +20,8 @@
  * @package    Sift
  * @subpackage mailer
  */
-class sfMailerNotificationPlugin extends sfMailerPlugin {
-
+class sfMailerNotificationPlugin extends sfMailerPlugin
+{
   /**
    * Invoked before the message is sent.
    *

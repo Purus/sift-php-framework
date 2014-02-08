@@ -56,15 +56,12 @@ class sfWidgetFormTreeSelectCheckbox extends sfWidgetFormSelectCheckbox
    */
   public function render($name, $value = null, $attributes = array(), $errors = array())
   {
-    if ('[]' != substr($name, -2))
-    {
+    if ('[]' != substr($name, -2)) {
       $name .= '[]';
     }
 
-    if($this->getOption('multiple'))
-    {
-      if (null === $value)
-      {
+    if ($this->getOption('multiple')) {
+      if (null === $value) {
         $value = array();
       }
     }
@@ -72,8 +69,7 @@ class sfWidgetFormTreeSelectCheckbox extends sfWidgetFormSelectCheckbox
     // prepare classes to mark the tree
     $class = array($this->getOption('class'));
 
-    if($this->getOption('input_type') == 'checkbox')
-    {
+    if ($this->getOption('input_type') == 'checkbox') {
       $class[] = 'multiple';
     }
 
@@ -92,19 +88,15 @@ class sfWidgetFormTreeSelectCheckbox extends sfWidgetFormSelectCheckbox
     $this->attributes = array();
 
     $inputs = array();
-    foreach ($choices as $key => $option)
-    {
-      if($this->getOption('input_type') == 'radio')
-      {
+    foreach ($choices as $key => $option) {
+      if ($this->getOption('input_type') == 'radio') {
         $baseAttributes = array(
             'name' => substr($name, 0, -2),
             'type' => 'radio',
             'value' => self::escapeOnce($key),
             'id' => $id = $this->generateId($name, self::escapeOnce($key)),
         );
-      }
-      else
-      {
+      } else {
         $baseAttributes = array(
           'name'  => $name,
           'type'  => $this->getOption('input_type'),
@@ -113,8 +105,7 @@ class sfWidgetFormTreeSelectCheckbox extends sfWidgetFormSelectCheckbox
         );
       }
 
-      switch($this->getOption('input_type'))
-      {
+      switch ($this->getOption('input_type')) {
         case 'checkbox':
           if ((is_array($value) && in_array(strval($key), $value)) ||
                   (is_string($value) && strval($key) == strval($value)))
@@ -124,8 +115,7 @@ class sfWidgetFormTreeSelectCheckbox extends sfWidgetFormSelectCheckbox
         break;
 
         case 'radio':
-          if(strval($key) == strval($value === false ? 0 : $value))
-          {
+          if (strval($key) == strval($value === false ? 0 : $value)) {
             $baseAttributes['checked'] = 'checked';
           }
         break;
@@ -136,8 +126,7 @@ class sfWidgetFormTreeSelectCheckbox extends sfWidgetFormSelectCheckbox
         'class' => 'inline'
       );
 
-      if(sfWidget::isAriaEnabled())
-      {
+      if (sfWidget::isAriaEnabled()) {
         $labelId = sprintf('%s_label', $id);
         // overwrite attribute!
         $attributes['aria-labelledby'] = $labelId;
@@ -146,12 +135,9 @@ class sfWidgetFormTreeSelectCheckbox extends sfWidgetFormSelectCheckbox
 
       unset($attributes['multiple']);
 
-      if($option instanceof sfMenu)
-      {
+      if ($option instanceof sfMenu) {
         $labelName = $option->getName();
-      }
-      else
-      {
+      } else {
         $labelName = $option['title'];
       }
 
@@ -163,8 +149,7 @@ class sfWidgetFormTreeSelectCheckbox extends sfWidgetFormSelectCheckbox
         'children' => array()
       );
 
-      if(isset($option['children']) && count($option['children']))
-      {
+      if (isset($option['children']) && count($option['children'])) {
         $inputs[$id]['children'] = $this->formatChoices($name, $value, $option['children'], $attributes);
       }
     }
@@ -177,20 +162,17 @@ class sfWidgetFormTreeSelectCheckbox extends sfWidgetFormSelectCheckbox
     $attributes = array();
     $listAtttibutes = array();
 
-    if(sfWidget::isAriaEnabled())
-    {
+    if (sfWidget::isAriaEnabled()) {
       $attributes['role'] = 'list';
       $listAtttibutes['role'] = 'listitem';
     }
 
     $html = '';
-    foreach ($inputs as $input)
-    {
+    foreach ($inputs as $input) {
       $html .= sfHtml::tag('li', $listAtttibutes, true);
       $html .= $input['input'].$this->getOption('label_separator').$input['label'];
 
-      if($input['children'])
-      {
+      if ($input['children']) {
         $html .= $input['children'];
       }
 

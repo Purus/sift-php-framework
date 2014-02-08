@@ -14,8 +14,8 @@
  * @package    Sift
  * @subpackage util
  */
-class sfAssetPackage {
-
+class sfAssetPackage
+{
   /**
    * Configuration holder
    *
@@ -38,8 +38,7 @@ class sfAssetPackage {
    */
   public static function getConfig()
   {
-    if(!self::$filtered)
-    {
+    if (!self::$filtered) {
       self::$config = sfCore::filterByEventListeners(
                       self::$config, 'asset_packages.get_config');
       self::$filtered = true;
@@ -70,22 +69,18 @@ class sfAssetPackage {
    */
   public static function getJavascripts($name, $includeRequired = true, $replaceVariables = true)
   {
-    if(!is_array($name))
-    {
+    if (!is_array($name)) {
       $name = array($name);
     }
 
     $result = array();
-    foreach($name as $src)
-    {
-      if(!self::hasPackage($src))
-      {
+    foreach ($name as $src) {
+      if (!self::hasPackage($src)) {
         throw new sfException(sprintf('{sfAssetPackage} Unknown package name "%s" or no javascript files configured for this package.', $src));
       }
 
       $javascripts = sfArray::get(self::getConfig(), sprintf('packages.%s.javascripts', $src), array());
-      if($includeRequired)
-      {
+      if ($includeRequired) {
         // we include required before
         $result = array_merge($result, self::getRequiredJavascripts($src));
       }
@@ -116,27 +111,22 @@ class sfAssetPackage {
    */
   public static function getStylesheets($name, $includeRequired = true, $replaceVariables = true)
   {
-    if(!is_array($name))
-    {
+    if (!is_array($name)) {
       $name = array($name);
     }
 
     $result = array();
 
-    foreach($name as $src)
-    {
-      if(!self::hasPackage($src))
-      {
+    foreach ($name as $src) {
+      if (!self::hasPackage($src)) {
         throw new sfException(sprintf('{sfAssetPackage} Unknown package name "%s".', $src));
       }
 
       $stylesheets = sfArray::get(self::getConfig(), sprintf('packages.%s.stylesheets', $src), array());
 
-      if($includeRequired)
-      {
+      if ($includeRequired) {
         // get required packages
-        foreach(sfArray::get(self::getConfig(), sprintf('packages.%s.require', $src), array()) as $s)
-        {
+        foreach (sfArray::get(self::getConfig(), sprintf('packages.%s.require', $src), array()) as $s) {
           $result = array_merge($result, self::getStylesheets($s));
         }
       }
@@ -183,24 +173,17 @@ class sfAssetPackage {
    */
   public static function replaceVariables(&$value)
   {
-    if(is_array($value))
-    {
-      foreach($value as $k => $v)
-      {
-        if(is_numeric($k))
-        {
+    if (is_array($value)) {
+      foreach ($value as $k => $v) {
+        if (is_numeric($k)) {
           $value[$k] = self::replaceVariables($value[$k]);
-        }
-        elseif(is_string($k))
-        {
+        } elseif (is_string($k)) {
           $tmp = self::replaceVariables($value[$k]);
           unset($value[$k]);
           $value[self::replaceVariables($k)] = $tmp;
         }
       }
-    }
-    elseif(is_string($value))
-    {
+    } elseif (is_string($value)) {
       $value = sfToolkit::replaceConstantsWithModifiers($value);
       $request = sfContext::getInstance()->getRequest();
       $sf_relative_url_root = $request->getRelativeUrlRoot();

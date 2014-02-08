@@ -12,8 +12,8 @@
  * @package Sift
  * @subpackage helper
  */
-interface sfIPartialView extends sfIView {
-
+interface sfIPartialView extends sfIView
+{
   /**
    * Set partial vars
    *

@@ -14,8 +14,8 @@
  * @subpackage validator
  * @link       http://vvv.tobiassjosten.net/symfony/stopping-spam-with-symfony-forms/
  */
-class sfValidatorSpamProtectTimer extends sfValidatorBase {
-
+class sfValidatorSpamProtectTimer extends sfValidatorBase
+{
   /**
    * @see sfValidatorBase
    */
@@ -34,23 +34,19 @@ class sfValidatorSpamProtectTimer extends sfValidatorBase {
   protected function doClean($value)
   {
     $time = base64_decode($value);
-    if(!$time)
-    {
+    if (!$time) {
       throw new sfValidatorError($this, 'tampered');
     }
-    if(!is_numeric($time))
-    {
+    if (!is_numeric($time)) {
       throw new sfValidatorError($this, 'nan');
     }
 
     $time_ago = time() - $time;
-    if($time_ago > 84600)
-    {
+    if ($time_ago > 84600) {
       throw new sfValidatorError($this, 'max_time');
     }
 
-    if($time_ago < 7)
-    {
+    if ($time_ago < 7) {
       throw new sfValidatorError($this, 'min_time');
     }
 

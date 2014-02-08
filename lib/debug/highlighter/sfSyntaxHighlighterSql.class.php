@@ -12,8 +12,8 @@
  * @package Sift
  * @subpackage debug_highlighter
  */
-class sfSyntaxHighlighterSql extends sfSyntaxHighlighterGeneric {
-
+class sfSyntaxHighlighterSql extends sfSyntaxHighlighterGeneric
+{
   /**
    * Setups the regexes
    *

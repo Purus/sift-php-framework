@@ -12,8 +12,8 @@
  * @package Sift
  * @subpackage debug
  */
-abstract class sfDebugBacktraceDecorator extends sfConfigurable implements sfIDebugBacktraceDecorator {
-
+abstract class sfDebugBacktraceDecorator extends sfConfigurable implements sfIDebugBacktraceDecorator
+{
   /**
    * The backtrace
    *

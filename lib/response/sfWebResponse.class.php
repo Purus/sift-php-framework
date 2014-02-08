@@ -160,17 +160,12 @@ class sfWebResponse extends sfResponse
    */
   public function setCookie($name, $value, $expire = null, $path = '/', $domain = '', $secure = false, $httpOnly = false)
   {
-    if($expire !== null)
-    {
-      if(is_numeric($expire))
-      {
+    if ($expire !== null) {
+      if (is_numeric($expire)) {
         $expire = (int) $expire;
-      }
-      else
-      {
+      } else {
         $expire = strtotime($expire);
-        if ($expire === false || $expire == -1)
-        {
+        if ($expire === false || $expire == -1) {
           throw new sfException('Your expire parameter is not valid.');
         }
       }
@@ -265,18 +260,15 @@ class sfWebResponse extends sfResponse
   {
     $name = $this->normalizeHeaderName($name);
 
-    if('Content-Type' == $name)
-    {
-      if($replace || !$this->getHttpHeader('Content-Type', null))
-      {
+    if ('Content-Type' == $name) {
+      if ($replace || !$this->getHttpHeader('Content-Type', null)) {
         $this->setContentType($value);
       }
 
       return;
     }
 
-    if(!$replace)
-    {
+    if (!$replace) {
       $current = $this->getParameter($name, '', 'sift/response/http/headers');
       $value = ($current ? $current.', ' : '').$value;
     }
@@ -361,34 +353,28 @@ class sfWebResponse extends sfResponse
     $status = 'HTTP/1.0 '.$this->statusCode.' '.$this->statusText;
     header($status);
 
-    if(substr(php_sapi_name(), 0, 3) == 'cgi')
-    {
+    if (substr(php_sapi_name(), 0, 3) == 'cgi') {
       // fastcgi servers cannot send this status information because it was sent by them already due to the HTT/1.0 line
       // so we can safely unset them.
       unset($headers['Status']);
     }
 
-    if(sfConfig::get('sf_logging_enabled'))
-    {
+    if (sfConfig::get('sf_logging_enabled')) {
       sfLogger::getInstance()->info(sprintf('{sfResponse} Sent status "%s"', $status));
     }
 
     // headers
-    foreach ($headers as $name => $value)
-    {
+    foreach ($headers as $name => $value) {
       header($name.': '.$value);
-      if (sfConfig::get('sf_logging_enabled') && $value != '')
-      {
+      if (sfConfig::get('sf_logging_enabled') && $value != '') {
         sfLogger::getInstance()->info(sprintf('{sfResponse} Sent header "%s": "%s"', $name, $value));
       }
     }
 
     // cookies
-    foreach($this->cookies as $cookie)
-    {
+    foreach ($this->cookies as $cookie) {
       setrawcookie($cookie['name'], $cookie['value'], $cookie['expire'], $cookie['path'], $cookie['domain'], $cookie['secure'], $cookie['httpOnly']);
-      if(sfConfig::get('sf_logging_enabled'))
-      {
+      if (sfConfig::get('sf_logging_enabled')) {
         sfLogger::getInstance()->info(sprintf('{sfResponse} Sent cookie "%s":"%s"', $cookie['name'], $cookie['value']));
       }
     }
@@ -400,16 +386,11 @@ class sfWebResponse extends sfResponse
    */
   public function sendContent()
   {
-    if(!$this->headerOnly)
-    {
-      if(is_string($this->content))
-      {
+    if (!$this->headerOnly) {
+      if (is_string($this->content)) {
         parent::sendContent();
-      }
-      elseif(sfToolkit::isCallable($this->content, false, $callableName))
-      {
-        if(sfConfig::get('sf_logging_enabled'))
-        {
+      } elseif (sfToolkit::isCallable($this->content, false, $callableName)) {
+        if (sfConfig::get('sf_logging_enabled')) {
           sfLogger::getInstance()->info(sprintf('{sfResponse} Calling callable "%s"', $callableName));
         }
         call_user_func($this->content);
@@ -425,8 +406,7 @@ class sfWebResponse extends sfResponse
   {
     $this->dispatcher->notify(new sfEvent('response.send', array('response' => $this)));
 
-    if(!sfToolkit::isCallable($this->content))
-    {
+    if (!sfToolkit::isCallable($this->content)) {
       $this->sendHttpHeaders();
     }
 
@@ -468,20 +448,13 @@ class sfWebResponse extends sfResponse
   {
     $type = strtolower($type);
 
-    if($type == 'rfc1123')
-    {
+    if ($type == 'rfc1123') {
       return substr(gmdate('r', $timestamp), 0, -5).'GMT';
-    }
-    elseif($type == 'rfc1036')
-    {
+    } elseif ($type == 'rfc1036') {
       return gmdate('l, d-M-y H:i:s ', $timestamp).'GMT';
-    }
-    elseif($type == 'asctime')
-    {
+    } elseif ($type == 'asctime') {
       return gmdate('D M j H:i:s', $timestamp);
-    }
-    else
-    {
+    } else {
       throw new InvalidArgumentException('The second getDate() method parameter must be one of: rfc1123, rfc1036 or asctime');
     }
   }
@@ -496,13 +469,11 @@ class sfWebResponse extends sfResponse
   {
     $vary = $this->getHttpHeader('Vary');
     $currentHeaders = array();
-    if($vary)
-    {
+    if ($vary) {
       $currentHeaders = preg_split('/\s*,\s*/', $vary);
     }
     $header = $this->normalizeHeaderName($header);
-    if(!in_array($header, $currentHeaders))
-    {
+    if (!in_array($header, $currentHeaders)) {
       $currentHeaders[] = $header;
       $this->setHttpHeader('Vary', implode(', ', $currentHeaders));
     }
@@ -521,10 +492,8 @@ class sfWebResponse extends sfResponse
   {
     $cacheControl = $this->getHttpHeader('Cache-Control');
     $currentHeaders = array();
-    if($cacheControl)
-    {
-      foreach(preg_split('/\s*,\s*/', $cacheControl) as $tmp)
-      {
+    if ($cacheControl) {
+      foreach (preg_split('/\s*,\s*/', $cacheControl) as $tmp) {
         $tmp = explode('=', $tmp);
         $currentHeaders[$tmp[0]] = isset($tmp[1]) ? $tmp[1] : null;
       }
@@ -532,8 +501,7 @@ class sfWebResponse extends sfResponse
     $currentHeaders[strtr(strtolower($name), '_', '-')] = $value;
 
     $headers = array();
-    foreach($currentHeaders as $key => $value)
-    {
+    foreach ($currentHeaders as $key => $value) {
       $headers[] = $key.(null !== $value ? '='.$value : '');
     }
     $this->setHttpHeader('Cache-Control', implode(', ', $headers));
@@ -565,12 +533,9 @@ class sfWebResponse extends sfResponse
 
     // set HTTP header
     $this->setHttpHeader($key, $value, $replace);
-    if('Content-Type' == $key)
-    {
+    if ('Content-Type' == $key) {
       $value = $this->getContentType();
-    }
-    elseif(!$replace)
-    {
+    } elseif (!$replace) {
       $current = $this->getParameter($key, '', 'helper/asset/auto/httpmeta');
       $value = ($current ? $current.', ' : '').$value;
     }
@@ -609,10 +574,8 @@ class sfWebResponse extends sfResponse
   public function getAllStylesheets()
   {
     $stylesheets = array();
-    foreach(array('first', '', 'last') as $position)
-    {
-      foreach($this->getStylesheets($position) as $file => $options)
-      {
+    foreach (array('first', '', 'last') as $position) {
+      foreach ($this->getStylesheets($position) as $file => $options) {
         $stylesheets[$file] = $options;
       }
     }
@@ -643,8 +606,7 @@ class sfWebResponse extends sfResponse
    */
   public function removeStylesheet($file)
   {
-    foreach(array('first', '', 'last') as $position)
-    {
+    foreach (array('first', '', 'last') as $position) {
       $this->getParameterHolder()->remove($file, 'helper/asset/auto/stylesheet'.($position ? '/'.$position : ''));
     }
 
@@ -670,10 +632,8 @@ class sfWebResponse extends sfResponse
   public function getAllJavascripts()
   {
     $javascripts = array();
-    foreach(array('first', '', 'last') as $position)
-    {
-      foreach($this->getJavascripts($position) as $file => $options)
-      {
+    foreach (array('first', '', 'last') as $position) {
+      foreach ($this->getJavascripts($position) as $file => $options) {
         $javascripts[$file] = $options;
       }
     }
@@ -704,8 +664,7 @@ class sfWebResponse extends sfResponse
    */
   public function removeJavascript($file)
   {
-    foreach(array('first', '', 'last') as $position)
-    {
+    foreach (array('first', '', 'last') as $position) {
       $this->getParameterHolder()->remove($file, 'helper/asset/auto/javascript'.($position ? '/'.$position : ''));
     }
 
@@ -734,8 +693,7 @@ class sfWebResponse extends sfResponse
   public function getCookies()
   {
     $cookies = array();
-    foreach($this->cookies as $cookie)
-    {
+    foreach ($this->cookies as $cookie) {
       $cookies[$cookie['name']] = $cookie;
     }
 
@@ -777,15 +735,12 @@ class sfWebResponse extends sfResponse
 
     $global_title = sfConfig::get('app_title_name');
 
-    if($includeGlobal && $global_title)
-    {
+    if ($includeGlobal && $global_title) {
       $mode = $this->getTitleMode();
       $separator = trim(sfConfig::get('app_title_separator', '~'));
 
-      if(!empty($title) && !empty($global_title) && $title != $global_title)
-      {
-        switch($mode)
-        {
+      if (!empty($title) && !empty($global_title) && $title != $global_title) {
+        switch ($mode) {
           case self::TITLE_MODE_APPEND:
             $title = sprintf('%s %s %s', $global_title, $separator, $title);
           break;
@@ -798,15 +753,12 @@ class sfWebResponse extends sfResponse
             // do nothing
           break;
         }
-      }
-      elseif(!empty($global_title))
-      {
+      } elseif (!empty($global_title)) {
         $title = $global_title;
       }
     }
 
-    if(empty($title))
-    {
+    if (empty($title)) {
       // old style titles -> used from metas
       $title = $this->getParameter('title', '', 'helper/asset/auto/meta');
     }
@@ -814,21 +766,17 @@ class sfWebResponse extends sfResponse
     // SEO stuff
     $max = sfConfig::get('app_title_max_length', 80);
 
-    if($max && ($length = mb_strlen($title, sfConfig::get('sf_charset'))) > $max)
-    {
-      if(sfConfig::get('sf_logging_enabled'))
-      {
+    if ($max && ($length = mb_strlen($title, sfConfig::get('sf_charset'))) > $max) {
+      if (sfConfig::get('sf_logging_enabled')) {
         sfLogger::getInstance()->notice(
                 sprintf('{SEO} Page title is too long (%s chars, maximum is %s). Please consider shorter title.', $length, $max));
       }
 
       // lets do some magic with the title, if configured
-      if(sfConfig::get('app_title_auto_trim', false))
-      {
+      if (sfConfig::get('app_title_auto_trim', false)) {
         $title = myText::truncate($title, $max, ' ...');
         $length = mb_strlen($title, sfConfig::get('sf_charset'));
-        if(sfConfig::get('sf_logging_enabled'))
-        {
+        if (sfConfig::get('sf_logging_enabled')) {
           sfLogger::getInstance()->info(sprintf('{SEO} Page title has been auto trimmed to %s chars (maximum is %s).', $length, $max));
         }
       }
@@ -849,14 +797,11 @@ class sfWebResponse extends sfResponse
   public function setTitle($title, $escape = true, $replace = true, $use_i18n = false)
   {
     $old_title = $this->getTitle(false);
-    if($replace || empty($old_title))
-    {
-      if($use_i18n && sfConfig::get('sf_i18n'))
-      {
+    if ($replace || empty($old_title)) {
+      if ($use_i18n && sfConfig::get('sf_i18n')) {
         $title = __($title);
       }
-      if($escape)
-      {
+      if ($escape) {
         $title = htmlspecialchars($title, ENT_QUOTES, sfConfig::get('sf_charset'));
       }
       $this->setParameter('title', $title, 'helper/asset/auto/title');
@@ -875,12 +820,9 @@ class sfWebResponse extends sfResponse
   public function setTitleMode($policy)
   {
     $policy = strtoupper($policy);
-    if(in_array($policy, array(self::TITLE_MODE_APPEND, self::TITLE_MODE_PREPEND, self::TITLE_MODE_REPLACE)))
-    {
+    if (in_array($policy, array(self::TITLE_MODE_APPEND, self::TITLE_MODE_PREPEND, self::TITLE_MODE_REPLACE))) {
       $this->setParameter('mode', $policy, 'helper/asset/auto/title');
-    }
-    else
-    {
+    } else {
       throw new InvalidArgumentException(sprintf('Invalid title mode "%s" given. Valid modes are: %s', $policy,
           join(',',  array(self::TITLE_MODE_APPEND, self::TITLE_MODE_PREPEND, self::TITLE_MODE_REPLACE))));
     }
@@ -912,13 +854,11 @@ class sfWebResponse extends sfResponse
   {
     $key = strtolower($key);
 
-    if($escape)
-    {
+    if ($escape) {
       $value = htmlspecialchars($value, ENT_QUOTES, sfConfig::get('sf_charset'));
     }
 
-    if($replace || !$this->getParameter($key, null, 'helper/asset/auto/meta'))
-    {
+    if ($replace || !$this->getParameter($key, null, 'helper/asset/auto/meta')) {
       $this->setParameter($key, $value, 'helper/asset/auto/meta');
     }
 
@@ -935,8 +875,7 @@ class sfWebResponse extends sfResponse
   public function setBodyId($id, $replace = true)
   {
     $exists = $this->getParameter('id', false, 'helper/asset/auto/body');
-    if($exists && !$replace)
-    {
+    if ($exists && !$replace) {
       return;
     }
     $this->setParameter('id', $id, 'helper/asset/auto/body');
@@ -1054,14 +993,11 @@ class sfWebResponse extends sfResponse
   public function removeBodyClass($class)
   {
     $classes = $this->getParameter('classes', array(), 'helper/asset/auto/body');
-    if(!is_array($class))
-    {
+    if (!is_array($class)) {
       $class = array($class);
     }
-    foreach($class as $c)
-    {
-      if(isset($classes[$c]))
-      {
+    foreach ($class as $c) {
+      if (isset($classes[$c])) {
         unset($classes[$c]);
       }
     }
@@ -1149,8 +1085,7 @@ class sfWebResponse extends sfResponse
   {
     // add the description to response
     $current = $this->getMeta('description');
-    if($current && !$replace)
-    {
+    if ($current && !$replace) {
       $description = $current . ' ' . $description;
     }
     $this->addMeta('description', trim($description));
@@ -1192,37 +1127,31 @@ class sfWebResponse extends sfResponse
    */
   public function setSeo(array $seo, $override = false)
   {
-    if(array_key_exists('title', $seo))
-    {
+    if (array_key_exists('title', $seo)) {
       $this->setTitle($seo['title']);
     }
 
-    if(array_key_exists('description', $seo))
-    {
+    if (array_key_exists('description', $seo)) {
       $override ? $this->setMetaDescription($seo['description'])
                 : $this->addMetaDescription($seo['description']);
     }
     // meta description is also valid
-    elseif(array_key_exists('meta_description', $seo))
-    {
+    elseif (array_key_exists('meta_description', $seo)) {
       $override ? $this->setMetaDescription($seo['meta_description'])
                 :  $this->addMetaDescription($seo['meta_description']);
     }
 
-    if(array_key_exists('keywords', $seo))
-    {
+    if (array_key_exists('keywords', $seo)) {
       $override ? $this->setMetaKeywords($seo['keywords'])
                 : $this->addMetaDescription($seo['keywords']);
     }
     // meta description is also valid
-    elseif(array_key_exists('meta_keywords', $seo))
-    {
+    elseif (array_key_exists('meta_keywords', $seo)) {
       $override ? $this->setMetaKeywords($seo['meta_keywords'])
                 : $this->addMetaDescription($seo['meta_keywords']);
     }
 
-    if(array_key_exists('title_mode', $seo))
-    {
+    if (array_key_exists('title_mode', $seo)) {
       $this->setTitleMode($seo['title_mode']);
     }
 
@@ -1247,8 +1176,7 @@ class sfWebResponse extends sfResponse
     // trim the values
     $all = array_map('trim', $all);
 
-    if($preserveUniqueness)
-    {
+    if ($preserveUniqueness) {
       $all = array_unique($all);
     }
 
@@ -1321,8 +1249,7 @@ class sfWebResponse extends sfResponse
       'helper/asset/auto/javascript/first',
     );
 
-    foreach($namespaces as $namespace)
-    {
+    foreach ($namespaces as $namespace) {
       $this->getParameterHolder()->removeNamespace($namespace);
     }
 
@@ -1377,8 +1304,7 @@ class sfWebResponse extends sfResponse
       'helper/asset/auto/stylesheet/last',
       'helper/asset/auto/stylesheet/first',
     );
-    foreach($namespaces as $namespace)
-    {
+    foreach ($namespaces as $namespace) {
       $this->getParameterHolder()->removeNamespace($namespace);
     }
 
@@ -1457,12 +1383,10 @@ class sfWebResponse extends sfResponse
   public function merge(sfWebResponse $response)
   {
     $parameterHolder = $response->getParameterHolder();
-    foreach($parameterHolder->getNamespaces() as $namespace)
-    {
+    foreach ($parameterHolder->getNamespaces() as $namespace) {
       $value = $this->getParameterHolder()->getAll($namespace);
 
-      switch($namespace)
-      {
+      switch ($namespace) {
         // special care for slots
         case 'helper/view/slot':
           $value = sfToolkit::arrayDeepMerge($value, $parameterHolder->getAll($namespace));

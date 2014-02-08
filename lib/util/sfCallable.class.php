@@ -12,8 +12,8 @@
  * @package    Sift
  * @subpackage util
  */
-class sfCallable {
-
+class sfCallable
+{
   protected $callable = null;
 
   /**
@@ -47,8 +47,7 @@ class sfCallable {
    */
   public function call()
   {
-    if(!sfToolkit::isCallable($this->callable, false, $callableName))
-    {
+    if (!sfToolkit::isCallable($this->callable, false, $callableName)) {
       throw new sfException(sprintf('"%s" is not a valid callable.', $callableName));
     }
 

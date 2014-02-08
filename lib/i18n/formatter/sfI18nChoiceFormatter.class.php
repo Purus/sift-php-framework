@@ -63,8 +63,8 @@
  * @package Sift
  * @subpackage i18n
  */
-class sfI18nChoiceFormatter {
-
+class sfI18nChoiceFormatter
+{
   /**
    * Instance holder
    *
@@ -97,8 +97,7 @@ class sfI18nChoiceFormatter {
    */
   public static function getInstance()
   {
-    if(!isset(self::$instance))
-    {
+    if (!isset(self::$instance)) {
       self::$instance = new sfI18nChoiceFormatter();
     }
 
@@ -124,13 +123,11 @@ class sfI18nChoiceFormatter {
   {
     $n = preg_match_all($this->validate, $set, $matches, PREG_SET_ORDER);
 
-    if($n < 3)
-    {
+    if ($n < 3) {
       throw new sfException("Invalid set \"{$set}\"");
     }
 
-    if(preg_match('/\{\s*n:([^\}]+)\}/', $set, $def))
-    {
+    if (preg_match('/\{\s*n:([^\}]+)\}/', $set, $def)) {
       return $this->isValidSetNotation($number, $def[1]);
     }
 
@@ -139,11 +136,9 @@ class sfI18nChoiceFormatter {
 
     $i = 0;
     $elements = array();
-    foreach($matches as $match)
-    {
+    foreach ($matches as $match) {
       $string = $match[0];
-      if($i != 0 && $i != $n - 1 && $string !== ',')
-      {
+      if ($i != 0 && $i != $n - 1 && $string !== ',') {
         if($string == '-Inf')
           $elements[] = -1 * $this->inf;
         else if($string == '+Inf' || $string == 'Inf')
@@ -182,14 +177,11 @@ class sfI18nChoiceFormatter {
   protected function isValidSetNotation($number, $set)
   {
     $str = '$result = ' . str_replace('n', '$number', $set) . ';';
-    try
-    {
+    try {
       eval($str);
 
       return $result;
-    }
-    catch(Exception $e)
-    {
+    } catch (Exception $e) {
       return false;
     }
   }
@@ -204,15 +196,13 @@ class sfI18nChoiceFormatter {
   {
     $n = preg_match_all($this->parse, $string, $matches, PREG_OFFSET_CAPTURE);
     $sets = array();
-    foreach($matches[1] as $match)
-    {
+    foreach ($matches[1] as $match) {
       $sets[] = $match[0];
     }
 
     $offset = $matches[0];
     $strings = array();
-    for($i = 0; $i < $n; $i++)
-    {
+    for ($i = 0; $i < $n; $i++) {
       $len = strlen($offset[$i][0]);
       $begin = $i == 0 ? $len : $offset[$i][1] + $len;
       $end = $i == $n - 1 ? strlen($string) : $offset[$i + 1][1];
@@ -233,8 +223,7 @@ class sfI18nChoiceFormatter {
   {
     list($sets, $strings) = $this->parse($string);
     $total = count($sets);
-    for($i = 0; $i < $total; $i++)
-    {
+    for ($i = 0; $i < $total; $i++) {
       if($this->isValid($number, $sets[$i]))
 
         return $strings[$i];

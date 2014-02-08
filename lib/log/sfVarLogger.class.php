@@ -13,8 +13,8 @@
  * @package    Sift
  * @subpackage log
  */
-class sfVarLogger extends sfLoggerBase {
-
+class sfVarLogger extends sfLoggerBase
+{
   protected $logs = array(),
     $xdebugLogging = false;
 
@@ -49,8 +49,7 @@ class sfVarLogger extends sfLoggerBase {
     $this->xdebugLogging = $this->getOption('xdebug_logging');
 
     // disable xdebug when an HTTP debug session exists (crashes Apache, see #2438)
-    if(isset($_GET['XDEBUG_SESSION_START']) || isset($_COOKIE['XDEBUG_SESSION']))
-    {
+    if (isset($_GET['XDEBUG_SESSION_START']) || isset($_COOKIE['XDEBUG_SESSION'])) {
       $this->xdebugLogging = false;
     }
   }
@@ -81,10 +80,8 @@ class sfVarLogger extends sfLoggerBase {
   public function getTypes()
   {
     $types = array();
-    foreach($this->logs as $log)
-    {
-      if(!in_array($log['type'], $types))
-      {
+    foreach ($this->logs as $log) {
+      if (!in_array($log['type'], $types)) {
         $types[] = $log['type'];
       }
     }
@@ -102,10 +99,8 @@ class sfVarLogger extends sfLoggerBase {
   public function getLevels()
   {
     $priorities = array();
-    foreach($this->logs as $log)
-    {
-      if(!in_array($log['level'], $priorities))
-      {
+    foreach ($this->logs as $log) {
+      if (!in_array($log['level'], $priorities)) {
         $priorities[] = $log['level'];
       }
     }
@@ -123,10 +118,8 @@ class sfVarLogger extends sfLoggerBase {
   public function getHighestLevel()
   {
     $level = 1000;
-    foreach($this->logs as $log)
-    {
-      if($log['level'] < $level)
-      {
+    foreach ($this->logs as $log) {
+      if ($log['level'] < $level) {
         $level = $log['level'];
       }
     }
@@ -144,8 +137,7 @@ class sfVarLogger extends sfLoggerBase {
   {
     // get log type in {}
     $type = 'sfOther';
-    if(preg_match('/^\s*{([^}]+)}\s*(.+?)$/s', $message, $matches))
-    {
+    if (preg_match('/^\s*{([^}]+)}\s*(.+?)$/s', $message, $matches)) {
       $type = $matches[1];
       $message = $matches[2];
     }
@@ -171,8 +163,7 @@ class sfVarLogger extends sfLoggerBase {
   protected function getDebugBacktrace()
   {
     // if we have xdebug and dev has not disabled the feature, add some stack information
-    if(!$this->xdebugLogging || !function_exists('debug_backtrace'))
-    {
+    if (!$this->xdebugLogging || !function_exists('debug_backtrace')) {
       return array();
     }
     // remove first item, since its this function

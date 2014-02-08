@@ -49,8 +49,8 @@
  * @package Sift
  * @subpackage i18n
  */
-class sfI18nNumberFormatter {
-
+class sfI18nNumberFormatter
+{
   /**
    * Instances holder
    *
@@ -75,20 +75,13 @@ class sfI18nNumberFormatter {
    */
   public function __construct($formatInfo = null)
   {
-    if(is_null($formatInfo))
-    {
+    if (is_null($formatInfo)) {
       $this->formatInfo = sfI18nNumberFormat::getInvariantInfo();
-    }
-    else if($formatInfo instanceof sfI18nCulture)
-    {
+    } else if ($formatInfo instanceof sfI18nCulture) {
       $this->formatInfo = $formatInfo->sfNumberFormat;
-    }
-    else if($formatInfo instanceof sfI18nNumberFormat)
-    {
+    } else if ($formatInfo instanceof sfI18nNumberFormat) {
       $this->formatInfo = $formatInfo;
-    }
-    else
-    {
+    } else {
       $this->formatInfo = sfI18nNumberFormat::getInstance($formatInfo);
     }
   }
@@ -101,8 +94,7 @@ class sfI18nNumberFormatter {
    */
   public static function getInstance($culture)
   {
-    if(!isset(self::$instances[$culture]))
-    {
+    if (!isset(self::$instances[$culture])) {
       self::$instances[$culture] = new sfI18nNumberFormatter($culture);
     }
 
@@ -126,8 +118,7 @@ class sfI18nNumberFormatter {
   {
     $this->setPattern($pattern);
 
-    if(strtolower($pattern) == 'p')
-    {
+    if (strtolower($pattern) == 'p') {
       $number = $number * 100;
     }
 
@@ -141,16 +132,11 @@ class sfI18nNumberFormatter {
     $result = (strlen($decimal) > 0) ? $integer . $decimal : $integer;
 
     // get the suffix
-    if($number >= 0)
-    {
+    if ($number >= 0) {
       $suffix = $this->formatInfo->PositivePattern;
-    }
-    else if($number < 0)
-    {
+    } else if ($number < 0) {
       $suffix = $this->formatInfo->NegativePattern;
-    }
-    else
-    {
+    } else {
       $suffix = array('', '');
     }
 
@@ -160,8 +146,7 @@ class sfI18nNumberFormatter {
     // replace currency sign
     $symbol = $this->formatInfo->getCurrencySymbol($currency);
 
-    if(is_null($symbol))
-    {
+    if (is_null($symbol)) {
       $symbol = $currency;
     }
 
@@ -181,8 +166,7 @@ class sfI18nNumberFormatter {
     $string = (string) $string;
     $dp = strpos($string, '.');
 
-    if(is_int($dp))
-    {
+    if (is_int($dp)) {
       $string = substr($string, 0, $dp);
     }
 
@@ -197,33 +181,23 @@ class sfI18nNumberFormatter {
     $multiGroup = is_int($groupSize[1]);
     $count = 0;
 
-    if(is_int($groupSize[0]))
-    {
+    if (is_int($groupSize[0])) {
       // now for the integer groupings
-      for($i = 0; $i < $len; $i++)
-      {
+      for ($i = 0; $i < $len; $i++) {
         $char = $string{$len - $i - 1};
 
-        if($multiGroup && $count == 0)
-        {
-          if($i != 0 && $i % $groupSize[0] == 0)
-          {
+        if ($multiGroup && $count == 0) {
+          if ($i != 0 && $i % $groupSize[0] == 0) {
             $integer = $groupSeparator . $integer;
             $count++;
           }
-        }
-        else if($multiGroup && $count >= 1)
-        {
-          if($i != 0 && ($i - $groupSize[0]) % $groupSize[1] == 0)
-          {
+        } else if ($multiGroup && $count >= 1) {
+          if ($i != 0 && ($i - $groupSize[0]) % $groupSize[1] == 0) {
             $integer = $groupSeparator . $integer;
             $count++;
           }
-        }
-        else
-        {
-          if($i != 0 && $i % $groupSize[0] == 0)
-          {
+        } else {
+          if ($i != 0 && $i % $groupSize[0] == 0) {
             $integer = $groupSeparator . $integer;
             $count++;
           }
@@ -231,9 +205,7 @@ class sfI18nNumberFormatter {
 
         $integer = $char . $integer;
       }
-    }
-    else
-    {
+    } else {
       $integer = $string;
     }
 
@@ -254,40 +226,26 @@ class sfI18nNumberFormatter {
     $decimalDigits = $this->formatInfo->DecimalDigits;
     $decimalSeparator = $this->formatInfo->DecimalSeparator;
 
-    if(is_int($dp))
-    {
-      if($decimalDigits == -1)
-      {
+    if (is_int($dp)) {
+      if ($decimalDigits == -1) {
         $decimal = substr($string, $dp + 1);
-      }
-      else if(is_int($decimalDigits))
-      {
-        if(false === $pos = strpos($string, '.'))
-        {
+      } else if (is_int($decimalDigits)) {
+        if (false === $pos = strpos($string, '.')) {
           $decimal = str_pad($decimal, $decimalDigits, '0');
-        }
-        else
-        {
+        } else {
           $decimal = substr($string, $pos + 1);
-          if(strlen($decimal) <= $decimalDigits)
-          {
+          if (strlen($decimal) <= $decimalDigits) {
             $decimal = str_pad($decimal, $decimalDigits, '0');
-          }
-          else
-          {
+          } else {
             $decimal = substr($decimal, 0, $decimalDigits);
           }
         }
-      }
-      else
-      {
+      } else {
         return array($string, $decimal);
       }
 
       return array($string, $decimalSeparator . $decimal);
-    }
-    else if($decimalDigits > 0)
-    {
+    } else if ($decimalDigits > 0) {
       return array($string, $decimalSeparator . str_pad($decimal, $decimalDigits, '0'));
     }
 
@@ -303,8 +261,7 @@ class sfI18nNumberFormatter {
    */
   protected function setPattern($pattern)
   {
-    switch($pattern)
-    {
+    switch ($pattern) {
       case 'c':
       case 'C':
         $this->formatInfo->setPattern(sfI18nNumberFormat::CURRENCY);
@@ -331,8 +288,7 @@ class sfI18nNumberFormatter {
   {
     $string = (string) $float;
 
-    if(false === strstr($float, 'E'))
-    {
+    if (false === strstr($float, 'E')) {
       return $string;
     }
 

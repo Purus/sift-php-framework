@@ -12,8 +12,8 @@
  * @package    Sift
  * @subpackage text
  */
-class sfText {
-
+class sfText
+{
   const AUTO_LINK_RE = '~
     (                       # leading text
       <\w+.*?>|             #   leading HTML tag, or
@@ -55,10 +55,8 @@ class sfText {
     $charset = sfConfig::get('sf_charset', 'UTF-8');
     $ending  = mb_convert_encoding($ending, sfConfig::get('sf_charset'), 'HTML-ENTITIES');
 
-    if($considerHtml)
-    {
-      if(mb_strlen(preg_replace('/<.*?>/', '', $text)) <= $length)
-      {
+    if ($considerHtml) {
+      if (mb_strlen(preg_replace('/<.*?>/', '', $text)) <= $length) {
         return $text;
       }
 
@@ -68,40 +66,28 @@ class sfText {
 
       preg_match_all('/(<\/?([\w+]+)[^>]*>)?([^<>]*)/', $text, $tags, PREG_SET_ORDER);
 
-      foreach($tags as $tag)
-      {
-        if(!preg_match('/img|br|input|hr|area|base|basefont|col|frame|isindex|link|meta|param/s', $tag[2]))
-        {
-          if(preg_match('/<[\w]+[^>]*>/s', $tag[0]))
-          {
+      foreach ($tags as $tag) {
+        if (!preg_match('/img|br|input|hr|area|base|basefont|col|frame|isindex|link|meta|param/s', $tag[2])) {
+          if (preg_match('/<[\w]+[^>]*>/s', $tag[0])) {
             array_unshift($openTags, $tag[2]);
-          }
-          else if(preg_match('/<\/([\w]+)[^>]*>/s', $tag[0], $closeTag))
-          {
+          } else if (preg_match('/<\/([\w]+)[^>]*>/s', $tag[0], $closeTag)) {
             $pos = array_search($closeTag[1], $openTags);
-            if($pos !== false)
-            {
+            if ($pos !== false) {
               array_splice($openTags, $pos, 1);
             }
           }
         }
         $truncate .= $tag[1];
         $contentLength = mb_strlen(preg_replace('/&[0-9a-z]{2,8};|&#[0-9]{1,7};|&#x[0-9a-f]{1,6};/i', ' ', $tag[3]), $charset);
-        if($contentLength + $totalLength > $length)
-        {
+        if ($contentLength + $totalLength > $length) {
           $left = $length - $totalLength;
           $entitiesLength = 0;
-          if(preg_match_all('/&[0-9a-z]{2,8};|&#[0-9]{1,7};|&#x[0-9a-f]{1,6};/i', $tag[3], $entities, PREG_OFFSET_CAPTURE))
-          {
-            foreach($entities[0] as $entity)
-            {
-              if($entity[1] + 1 - $entitiesLength <= $left)
-              {
+          if (preg_match_all('/&[0-9a-z]{2,8};|&#[0-9]{1,7};|&#x[0-9a-f]{1,6};/i', $tag[3], $entities, PREG_OFFSET_CAPTURE)) {
+            foreach ($entities[0] as $entity) {
+              if ($entity[1] + 1 - $entitiesLength <= $left) {
                 $left--;
                 $entitiesLength += mb_strlen($entity[0], $charset);
-              }
-              else
-              {
+              } else {
                 break;
               }
             }
@@ -109,44 +95,30 @@ class sfText {
 
           $truncate .= mb_substr($tag[3], 0, $left + $entitiesLength, $charset);
           break;
-        }
-        else
-        {
+        } else {
           $truncate .= $tag[3];
           $totalLength += $contentLength;
         }
-        if($totalLength >= $length)
-        {
+        if ($totalLength >= $length) {
           break;
         }
       }
-    }
-    else
-    {
-      if(mb_strlen($text, $charset) <= $length)
-      {
+    } else {
+      if (mb_strlen($text, $charset) <= $length) {
         return $text;
-      }
-      else
-      {
+      } else {
         $truncate = mb_substr($text, 0, $length - mb_strlen($ending, $charset), $charset);
       }
     }
-    if(!$exact)
-    {
+    if (!$exact) {
       $spacepos = mb_strrpos($truncate, ' ', $charset);
-      if($spacepos)
-      {
-        if($considerHtml)
-        {
+      if ($spacepos) {
+        if ($considerHtml) {
           $bits = mb_substr($truncate, $spacepos, 0, $charset);
           preg_match_all('/<\/([a-z]+)>/', $bits, $droppedTags, PREG_SET_ORDER);
-          if(!empty($droppedTags))
-          {
-            foreach($droppedTags as $closingTag)
-            {
-              if(!in_array($closingTag[1], $openTags))
-              {
+          if (!empty($droppedTags)) {
+            foreach ($droppedTags as $closingTag) {
+              if (!in_array($closingTag[1], $openTags)) {
                 array_unshift($openTags, $closingTag[1]);
               }
             }
@@ -156,10 +128,8 @@ class sfText {
       }
     }
     $truncate .= $ending;
-    if($considerHtml)
-    {
-      foreach($openTags as $tag)
-      {
+    if ($considerHtml) {
+      foreach ($openTags as $tag) {
         $truncate .= '</' . $tag . '>';
       }
     }
@@ -179,28 +149,23 @@ class sfText {
    */
   public static function highlight($text, $phrase, $highlighter = '<strong class="highlight">\1</strong>')
   {
-    if(empty($text))
-    {
+    if (empty($text)) {
       return '';
     }
 
     // FIXME: cannot highlight HTML text
-    if(self::isHtml($text))
-    {
+    if (self::isHtml($text)) {
       return $text;
     }
 
-    if(!is_array($phrase))
-    {
+    if (!is_array($phrase)) {
       $phrase = array($phrase);
     }
 
     $highlighter = sprintf('\\1%s\\3', str_replace('\1', '\\2', $highlighter));
 
-    foreach($phrase as $p)
-    {
-      if(empty($p))
-      {
+    foreach ($phrase as $p) {
+      if (empty($p)) {
         continue;
       }
       $text = preg_replace('/(^|\s|,!|;)(' . preg_quote($p, '/') . ')(\s|,|!|&|$)/i', $highlighter, $text);
@@ -223,8 +188,7 @@ class sfText {
    */
   public static function excerpt($text, $phrase, $radius = 100, $excerpt_string = '&hellip;', $excerpt_space = false)
   {
-    if($text == '' || $phrase == '')
-    {
+    if ($text == '' || $phrase == '') {
       return '';
     }
 
@@ -233,8 +197,7 @@ class sfText {
 
     $found_pos = sfUtf8::pos(sfUtf8::lower($text), sfUtf8::lower($phrase));
 
-    if($found_pos !== false)
-    {
+    if ($found_pos !== false) {
       $start_pos = max($found_pos - $radius, 0);
       $end_pos = min($found_pos + sfUtf8::len($phrase) + $radius, sfUtf8::len($text));
       $excerpt = sfUtf8::sub($text, $start_pos, $end_pos - $start_pos);
@@ -242,15 +205,12 @@ class sfText {
       $prefix = ($start_pos > 0) ? $excerpt_string : '';
       $postfix = $end_pos < sfUtf8::len($text) ? $excerpt_string : '';
 
-      if($excerpt_space)
-      {
+      if ($excerpt_space) {
         // only cut off at ends where $excerpt_string is added
-        if($prefix)
-        {
+        if ($prefix) {
           $excerpt = preg_replace('/^(\S+)?\s+?/', ' ', $excerpt);
         }
-        if($postfix)
-        {
+        if ($postfix) {
           $excerpt = preg_replace('/\s+?(\S+)?$/', ' ', $excerpt);
         }
       }
@@ -308,20 +268,13 @@ class sfText {
    */
   public static function autoLink($text, $link = 'all', $href_options = array())
   {
-    if($link == 'all')
-    {
+    if ($link == 'all') {
       return self::autoLinkUrls(self::autoLinkEmailAddresses($text), $href_options);
-    }
-    else if($link == 'email_addresses')
-    {
+    } else if ($link == 'email_addresses') {
       return self::autoLinkEmailAddresses($text);
-    }
-    else if($link == 'urls')
-    {
+    } else if ($link == 'urls') {
       return self::autoLinkUrls($text, $href_options);
-    }
-    else
-    {
+    } else {
       throw new sfException('Unknown option for sfText::autoLink(). Valid link options are: "all", "email_addresses", "urls"');
     }
   }
@@ -353,12 +306,9 @@ class sfText {
     return preg_replace_callback(
       self::AUTO_LINK_RE,
       create_function('$matches', '
-      if(preg_match("/<a\s/i", $matches[1]))
-      {
+      if (preg_match("/<a\s/i", $matches[1])) {
         return $matches[0];
-      }
-      else
-      {
+      } else {
         return $matches[1].\'<a href="\'.($matches[2] == "www." ? "http://www." : $matches[2]).$matches[3].\'"' . $href_options . '>\'.$matches[2].$matches[3].\'</a>\'.$matches[4];
       }
     ')
@@ -409,8 +359,7 @@ class sfText {
       $str = trim(strip_tags($str));
 
       // Is the string long enough to ellipsize?
-      if(sfUtf8::len($str) <= $max_length)
-      {
+      if (sfUtf8::len($str) <= $max_length) {
         return $str;
       }
 
@@ -418,12 +367,9 @@ class sfText {
 
       $position = ($position > 1) ? 1 : $position;
 
-      if($position === 1)
-      {
+      if ($position === 1) {
         $end = sfUtf8::sub($str, 0, -($max_length - sfUtf8::len($beg)));
-      }
-      else
-      {
+      } else {
         $end = sfUtf8::sub($str, -($max_length - sfUtf8::len($beg)));
       }
 

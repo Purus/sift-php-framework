@@ -12,8 +12,8 @@
  * @package    Sift
  * @subpackage form_widget
  */
-class sfWidgetFormInputPassword extends sfWidgetFormInput {
-
+class sfWidgetFormInputPassword extends sfWidgetFormInput
+{
   /**
    * Configures the current widget.
    *
@@ -52,8 +52,7 @@ class sfWidgetFormInputPassword extends sfWidgetFormInput {
   public function render($name, $value = null, $attributes = array(), $errors = array())
   {
     $meter = '';
-    if($this->getOption('strength_meter'))
-    {
+    if ($this->getOption('strength_meter')) {
       $meter = $this->getStrengthMeterHtml();
     }
 

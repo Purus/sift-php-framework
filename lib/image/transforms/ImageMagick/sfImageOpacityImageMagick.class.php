@@ -38,15 +38,10 @@ class sfImageOpacityImageMagick extends sfImageTransformAbstract
    */
   public function setOpacity($opacity)
   {
-    if (is_numeric($opacity) or is_float($opacity))
-    {
-      if ($opacity <= 1)
-      {
+    if (is_numeric($opacity) or is_float($opacity)) {
+      if ($opacity <= 1) {
         $this->opacity  = $opacity;
-      }
-
-      else
-      {
+      } else {
         $this->opacity = $opacity/100;
       }
     }

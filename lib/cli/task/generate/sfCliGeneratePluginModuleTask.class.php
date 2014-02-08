@@ -12,8 +12,8 @@
  * @package     Sift
  * @subpackage  cli_task
  */
-class sfCliGeneratePluginModuleTask extends sfCliGeneratorBaseTask {
-
+class sfCliGeneratePluginModuleTask extends sfCliGeneratorBaseTask
+{
   /**
    * @see sfCliTask
    */
@@ -64,8 +64,7 @@ EOF;
     $this->checkPluginExists($plugin);
 
     // validate the module name
-    if(!preg_match('/^[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*$/', $module))
-    {
+    if (!preg_match('/^[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*$/', $module)) {
       throw new sfCliCommandException(sprintf('The module name "%s" is invalid.', $module));
     }
 
@@ -73,22 +72,18 @@ EOF;
     $moduleDir = $pluginDir . '/modules/' . $module;
     $testDir = $pluginDir . '/test';
 
-    if(is_dir($moduleDir))
-    {
+    if (is_dir($moduleDir)) {
       throw new sfCliCommandException(sprintf('The module "%s" already exists in the "%s" plugin.', $moduleDir, $plugin));
     }
 
-    if(is_readable($this->environment->get('sf_data_dir') . '/skeleton/plugin_module'))
-    {
+    if (is_readable($this->environment->get('sf_data_dir') . '/skeleton/plugin_module')) {
       $skeletonDir = $this->environment->get('sf_data_dir') . '/skeleton/plugin_module';
-    }
-    else
-    {
+    } else {
       $skeletonDir = $this->environment->get('sf_sift_data_dir') . '/skeleton/plugin_module';
     }
 
     // module credentials
-    $credentials = isset($options['credentials']) ? (array)$options['credentials'] : array();
+    $credentials = isset($options['credentials']) ? (array) $options['credentials'] : array();
 
     $constants = array(
       'PLUGIN_NAME' => $plugin,
@@ -108,27 +103,23 @@ EOF;
     $finder = sfFinder::type('file')->name('*.php', '*.yml');
     $this->getFilesystem()->replaceTokens($finder->in($moduleDir), '##', '##', $constants);
 
-    if(!$options['secured'])
-    {
+    if (!$options['secured']) {
       $this->getFilesystem()->remove($moduleDir . '/config/security.yml');
       // FIXME: check if there are any files left, if yes, discard the dir!
     }
 
     $moduleYaml = array();
 
-    if($options['internal'])
-    {
+    if ($options['internal']) {
       $moduleYaml[] = 'all:';
       $moduleYaml[] = '  is_internal: true';
     }
 
-    if(count($moduleYaml))
-    {
+    if (count($moduleYaml)) {
       file_put_contents($moduleDir . '/config/module.yml', join("\n", $moduleYaml));
     }
 
-    if(file_exists($testDir . '/fixtures/project/app'))
-    {
+    if (file_exists($testDir . '/fixtures/project/app')) {
       // create functional test
       $this->getFilesystem()->copy($skeletonDir . '/test/actionsTest.php', $testDir . '/functional/' . $module . 'ActionsTest.php');
       $this->getFilesystem()->replaceTokens($testDir . '/functional/' . $module . 'ActionsTest.php', '##', '##', $constants);
@@ -137,12 +128,10 @@ EOF;
       $file = $pluginDir . '/test/fixtures/project/config/settings.yml';
       $config = file_exists($file) ? sfYaml::load($file) : array();
 
-      if(!isset($config['all']))
-      {
+      if (!isset($config['all'])) {
         $config['all'] = array();
       }
-      if(!isset($config['all']['enabled_modules']))
-      {
+      if (!isset($config['all']['enabled_modules'])) {
         $config['all']['enabled_modules'] = array();
       }
       $config['all']['enabled_modules'][] = $module;

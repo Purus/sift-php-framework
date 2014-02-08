@@ -12,8 +12,8 @@
  * @package Sift
  * @subpackage i18n_export
  */
-class sfCultureExport extends sfConfigurable implements sfICultureExport {
-
+class sfCultureExport extends sfConfigurable implements sfICultureExport
+{
   /**
    * Culture holder
    *
@@ -45,8 +45,7 @@ class sfCultureExport extends sfConfigurable implements sfICultureExport {
   public static function factory($driver, $culture)
   {
     $class = sprintf('sfCultureExport%s', $driver);
-    if(!class_exists($class))
-    {
+    if (!class_exists($class)) {
       throw new sfInvalidArgumentException(sprintf('Invalid export driver "%s" given.', $driver));
     }
 

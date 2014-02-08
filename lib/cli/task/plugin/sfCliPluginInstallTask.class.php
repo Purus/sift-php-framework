@@ -12,8 +12,8 @@
  * @package    Sift
  * @subpackage cli_task
  */
-class sfCliPluginInstallTask extends sfCliPluginBaseTask {
-
+class sfCliPluginInstallTask extends sfCliPluginBaseTask
+{
   /**
    * @see sfCliTask
    */
@@ -94,22 +94,16 @@ EOF;
     unset($options['release']);
 
     // license compatible?
-    if(!$options['force-license'])
-    {
-      try
-      {
+    if (!$options['force-license']) {
+      try {
         $license = $this->getPluginManager()->getPluginLicense($arguments['name'], $options);
-      }
-      catch(Exception $e)
-      {
+      } catch (Exception $e) {
         throw new sfCliCommandException(sprintf('%s (use --force-license to force installation)', $e->getMessage()));
       }
 
-      if(false !== $license)
-      {
+      if (false !== $license) {
         $temp = trim(str_replace('license', '', strtolower($license)));
-        if(null !== $license && !in_array($temp, array('mit', 'bsd', 'lgpl', 'php', 'apache')))
-        {
+        if (null !== $license && !in_array($temp, array('mit', 'bsd', 'lgpl', 'php', 'apache'))) {
           throw new sfCliCommandException(sprintf('The license of this plugin "%s" is not MIT like (use --force-license to force installation).', $license));
         }
       }

@@ -14,8 +14,8 @@
  * @subpackage i18n_extract
  * @link       http://code.google.com/p/jsgettext/
  */
-class sfI18nJavascriptExtractor extends sfConfigurable implements sfII18nExtractor {
-
+class sfI18nJavascriptExtractor extends sfConfigurable implements sfII18nExtractor
+{
   /**
    * Regular expression holder
    *
@@ -124,8 +124,7 @@ class sfI18nJavascriptExtractor extends sfConfigurable implements sfII18nExtract
       '# (?:' . $keywords . ') \(\\ *" ( (?: (?>[^"\\\\]++) | \\\\\\\\ | (?<!\\\\)\\\\(?!\\\\) | \\\\" )* ) (?<!\\\\)"\\ *(?:\)|,) #ix', $content, $matches, PREG_SET_ORDER
     );
 
-    foreach($matches as $m)
-    {
+    foreach ($matches as $m) {
       $messages[] = stripslashes($m[1]);
     }
 
@@ -135,8 +134,7 @@ class sfI18nJavascriptExtractor extends sfConfigurable implements sfII18nExtract
       "# (?:$keywords) \(\\ *' ( (?: (?>[^'\\\\]++) | \\\\\\\\ | (?<!\\\\)\\\\(?!\\\\) | \\\\' )* ) (?<!\\\\)'\\ *(?:\)|,) #ix", $content, $matches, PREG_SET_ORDER
     );
 
-    foreach($matches as $m)
-    {
+    foreach ($matches as $m) {
       $messages[] = stripslashes($m[1]);
     }
 

@@ -12,8 +12,8 @@
  * @package    Sift
  * @subpackage cli_task
  */
-class sfCliI18nBundleTask extends sfCliI18nBaseTask {
-
+class sfCliI18nBundleTask extends sfCliI18nBaseTask
+{
   /**
    * @see sfCliTask
    */
@@ -49,12 +49,9 @@ EOF;
   {
     list($application, $dir, $isPlugin) = $this->getApplicationOrPlugin($arguments['app']);
 
-    if($isPlugin)
-    {
+    if ($isPlugin) {
       $this->logSection($this->getFullName(), sprintf('Preparing catalogues for plugin "%s"', $application));
-    }
-    else
-    {
+    } else {
       $this->logSection($this->getFullName(), sprintf('Preparing catalogues for "%s"', $application));
     }
 
@@ -71,8 +68,7 @@ EOF;
     $i18nDirName = $this->environment->get('sf_app_i18n_dir_name');
 
     // loop each module
-    foreach($moduleNames as $module)
-    {
+    foreach ($moduleNames as $module) {
       $i18nDir = $dir . '/' . $moduleDirName . '/' . $module . '/' . $i18nDirName . '/' . $culture;
       $filesystem->mirror($i18nDir, $tmpDir . '/' . $moduleDirName . '/' . $module . '/' . $i18nDirName .'/' . $culture,
               new sfFinder());
@@ -85,8 +81,7 @@ EOF;
     $zip = sprintf('%s/%s_%s.zip', getcwd(),
             $application, $culture);
 
-    if(is_readable($zip))
-    {
+    if (is_readable($zip)) {
       $filesystem->remove($zip);
     }
 

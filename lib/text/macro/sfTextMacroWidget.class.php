@@ -13,8 +13,8 @@
  * @package    Sift
  * @subpackage text_macro
  */
-abstract class sfTextMacroWidget implements sfITextMacroWidget {
-
+abstract class sfTextMacroWidget implements sfITextMacroWidget
+{
   /**
    * Combine user attributes with known attributes and fill in defaults when needed.
    *
@@ -34,14 +34,10 @@ abstract class sfTextMacroWidget implements sfITextMacroWidget {
   {
     $attributes = (array) $attributes;
     $out = array();
-    foreach($defaults as $name => $default)
-    {
-      if(array_key_exists($name, $attributes))
-      {
+    foreach ($defaults as $name => $default) {
+      if (array_key_exists($name, $attributes)) {
         $out[$name] = $attributes[$name];
-      }
-      else
-      {
+      } else {
         $out[$name] = $default;
       }
     }

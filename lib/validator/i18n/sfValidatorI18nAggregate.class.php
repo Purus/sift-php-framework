@@ -12,8 +12,8 @@
  * @package    Sift
  * @subpackage validator
  */
-class sfValidatorI18nAggregate extends sfValidatorAnd {
-
+class sfValidatorI18nAggregate extends sfValidatorAnd
+{
   /**
    * Available options:
    *
@@ -54,39 +54,30 @@ class sfValidatorI18nAggregate extends sfValidatorAnd {
 
     $first = true;
     // loop all cultures and validate the value
-    foreach($cultures as $culture => $cultureName)
-    {
-      if(is_numeric($culture))
-      {
+    foreach ($cultures as $culture => $cultureName) {
+      if (is_numeric($culture)) {
         $culture = $cultureName;
       }
 
-      foreach($validators as $validator)
-      {
-        if(!$first)
-        {
+      foreach ($validators as $validator) {
+        if (!$first) {
           // dynamically update validator option,
           // so only the first is required
-          if(!$this->getOption('all_need_to_pass') && $validator->getOption('required'))
-          {
+          if (!$this->getOption('all_need_to_pass') && $validator->getOption('required')) {
             $validator->setOption('required', false);
           }
         }
 
-        try
-        {
+        try {
           $clean[$culture] = $validator->clean(isset($clean[$culture]) ? $clean[$culture] : null);
-        }
-        catch(sfValidatorError $e)
-        {
+        } catch (sfValidatorError $e) {
           // repack error
           $error = new sfValidatorError($validator, $e->getCode(), array_merge(
                   $e->getArguments(true), array('culture_name' => $cultureName, 'culture' => $culture)));
 
           $errors[] = $error;
 
-          if($this->getOption('halt_on_error'))
-          {
+          if ($this->getOption('halt_on_error')) {
             break;
           }
         }
@@ -96,8 +87,7 @@ class sfValidatorI18nAggregate extends sfValidatorAnd {
     }
 
     // we have some errors
-    if(count($errors))
-    {
+    if (count($errors)) {
       $this->throwError($errors, $value);
     }
 
@@ -114,8 +104,7 @@ class sfValidatorI18nAggregate extends sfValidatorAnd {
    */
   protected function throwError($errors, $value)
   {
-    if($this->getMessage('invalid'))
-    {
+    if ($this->getMessage('invalid')) {
       throw new sfValidatorError($this, 'invalid', array('value' => $value));
     }
 
@@ -131,8 +120,7 @@ class sfValidatorI18nAggregate extends sfValidatorAnd {
   {
     $cultures = $this->getOption('cultures');
 
-    if($cultures instanceof sfCallable)
-    {
+    if ($cultures instanceof sfCallable) {
       $cultures = $cultures->call();
     }
 

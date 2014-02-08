@@ -23,8 +23,7 @@
  */
 function tag($name, $options = array(), $open = false)
 {
-  if(!$name)
-  {
+  if (!$name) {
     return '';
   }
 
@@ -33,8 +32,7 @@ function tag($name, $options = array(), $open = false)
 
 function content_tag($name, $content = '', $options = array())
 {
-  if(!$name)
-  {
+  if (!$name) {
     return '';
   }
 
@@ -121,8 +119,7 @@ function _tag_options($options = array())
 {
   $options = _parse_attributes($options);
   $html    = '';
-  foreach($options as $key => $value)
-  {
+  foreach ($options as $key => $value) {
     $html .= ' '.$key.'="'.escape_once($value).'"';
   }
 
@@ -151,13 +148,10 @@ function _parse_attributes($string)
  */
 function _get_option(&$options, $name, $default = null)
 {
-  if(array_key_exists($name, $options))
-  {
+  if (array_key_exists($name, $options)) {
     $value = $options[$name];
     unset($options[$name]);
-  }
-  else
-  {
+  } else {
     $value = $default;
   }
 
@@ -176,25 +170,21 @@ function body_tag($options = array())
 
   $classes = sfContext::getInstance()->getResponse()->getBodyClasses();
 
-  if(count($classes))
-  {
+  if (count($classes)) {
     $options['class'] = isset($options['class']) ?
             join(' ', array_merge(array_values($classes), array($options['class']))) :
             join(' ', array_merge(array_values($classes)));
   }
   $id = sfContext::getInstance()->getResponse()->getBodyId();
-  if($id)
-  {
+  if ($id) {
     $options['id'] = $id;
   }
   $onload = sfContext::getInstance()->getResponse()->getBodyOnload();
-  if(count($onload))
-  {
+  if (count($onload)) {
     $options['onload'] = join(';', $onload);
   }
   $onunload = sfContext::getInstance()->getResponse()->getBodyOnUnload();
-  if(count($onunload))
-  {
+  if (count($onunload)) {
     $options['onunload'] = join(';', $onunload);
   }
 
@@ -220,13 +210,11 @@ function body_tag($options = array())
  */
 function start_javascript($cacheKey = null, $cacheLifeTime = null)
 {
-  if(!is_null($cacheKey))
-  {
+  if (!is_null($cacheKey)) {
     sfContext::getInstance()->getRequest()->setAttribute('key', $cacheKey, 'minimize_script');
   }
 
-  if(!is_null($cacheLifeTime))
-  {
+  if (!is_null($cacheLifeTime)) {
     sfContext::getInstance()->getRequest()->setAttribute('lifetime', $cacheLifeTime, 'minimize_script');
   }
 
@@ -260,14 +248,12 @@ function end_javascript()
 function _compress_javascript($buffer)
 {
   // do not compress when minify is disabled
-  if(!sfConfig::get('sf_javascript_minify.enabled'))
-  {
+  if (!sfConfig::get('sf_javascript_minify.enabled')) {
     return $buffer;
   }
 
   // cache is enabled we will look for cached version of the buffer
-  if(sfConfig::get('sf_cache'))
-  {
+  if (sfConfig::get('sf_cache')) {
     $context = sfContext::getInstance();
     $request = $context->getRequest();
 
@@ -278,15 +264,12 @@ function _compress_javascript($buffer)
     $key = $request->getAttribute('key', null, 'minimize_script');
 
     // skip cache
-    if($key !== false)
-    {
-      if(!$key)
-      {
+    if ($key !== false) {
+      if (!$key) {
         $key = md5($context->getModuleName() . $context->getActionName() . $buffer);
       }
 
-      if($cache->has($key))
-      {
+      if ($cache->has($key)) {
         return $cache->get($key);
       }
     }
@@ -295,8 +278,7 @@ function _compress_javascript($buffer)
   // minify the buffer
   $result = minify_javascript($buffer);
 
-  if(sfConfig::get('sf_cache') && $key)
-  {
+  if (sfConfig::get('sf_cache') && $key) {
     $cache->set($key, $result, $lifetime);
   }
 
@@ -315,8 +297,7 @@ function minify_javascript($js)
   // minifier holder
   static $minifier;
 
-  if(!isset($minifier))
-  {
+  if (!isset($minifier)) {
     // create minifier instance
     $minifier = sfMinifier::factory(
                   sfConfig::get('sf_javascript_minify.driver', 'JsMin'),

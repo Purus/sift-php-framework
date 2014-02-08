@@ -12,8 +12,8 @@
  * @package Sift
  * @subpackage date
  */
-class sfTime {
-
+class sfTime
+{
   /**
    * Units of time
    */
@@ -83,8 +83,7 @@ class sfTime {
   public static function add($ts = null, $num = 1, $unit = sfTime::DAY)
   {
     // default to now
-    if($ts === null)
-    {
+    if ($ts === null) {
       $ts = sfDateTimeToolkit::now();
     }
 
@@ -92,8 +91,7 @@ class sfTime {
     list($H, $i, $s, $m, $d, $Y) = sfDateTimeToolkit::breakdown($ts);
 
     // determine which unit of time to add by
-    switch($unit)
-    {
+    switch ($unit) {
       case sfTime::SECOND:
         return mktime($H, $i, $s + $num, $m, $d, $Y);
       case sfTime::MINUTE:
@@ -159,8 +157,7 @@ class sfTime {
   public static function clearTime($ts = null)
   {
     // default to now
-    if($ts === null)
-    {
+    if ($ts === null) {
       $ts = sfDateTimeToolkit::now();
     }
 
@@ -180,8 +177,7 @@ class sfTime {
   public static function clearDate($ts = null)
   {
     // default to now
-    if($ts === null)
-    {
+    if ($ts === null) {
       $ts = sfDateTimeToolkit::now();
     }
 
@@ -617,30 +613,22 @@ class sfTime {
   public static function firstDayOfWeek($ts = null, $firstDay = null)
   {
     // default to now
-    if($ts === null)
-    {
+    if ($ts === null) {
       $ts = sfDateTimeToolkit::now();
     }
 
-    if(is_string($firstDay))
-    {
+    if (is_string($firstDay)) {
       $firstDay = sfCulture::getInstance($firstDay)
               ->getDateTimeFormat()->getFirstDayOfWeek();
-    }
-    elseif($firstDay instanceof sfCulture)
-    {
+    } elseif ($firstDay instanceof sfCulture) {
       $firstDay = $firstDay->getDateTimeFormat()->getFirstDayOfWeek();
-    }
-    elseif($firstDay instanceof sfI18nDateTimeFormat)
-    {
+    } elseif ($firstDay instanceof sfI18nDateTimeFormat) {
       $firstDay = $firstDay->getFirstDayOfWeek();
-    }
-    elseif(is_null($firstDay))
-    {
+    } elseif (is_null($firstDay)) {
       $firstDay = 0;
     }
 
-    return sfTime::subtractDay($ts, date('w', $ts) - (integer)$firstDay);
+    return sfTime::subtractDay($ts, date('w', $ts) - (integer) $firstDay);
   }
 
   /**
@@ -666,8 +654,7 @@ class sfTime {
   public static function firstDayOfMonth($ts = null)
   {
     // default to now
-    if($ts === null)
-    {
+    if ($ts === null) {
       $ts = sfDateTimeToolkit::now();
     }
 
@@ -699,8 +686,7 @@ class sfTime {
   public static function firstDayOfQuarter($ts = null)
   {
     // default to now
-    if($ts === null)
-    {
+    if ($ts === null) {
       $ts = sfDateTimeToolkit::now();
     }
 
@@ -731,8 +717,7 @@ class sfTime {
   public static function firstDayOfYear($ts = null)
   {
     // default to now
-    if($ts === null)
-    {
+    if ($ts === null) {
       $ts = sfDateTimeToolkit::now();
     }
 
@@ -760,8 +745,7 @@ class sfTime {
   public static function nextDay($ts = null, $day = sfTime::SUNDAY)
   {
     // default to now
-    if($ts === null)
-    {
+    if ($ts === null) {
       $ts = sfDateTimeToolkit::now();
     }
 
@@ -785,8 +769,7 @@ class sfTime {
   public static function previousDay($ts = null, $day = sfTime::SUNDAY)
   {
     // default to now
-    if($ts === null)
-    {
+    if ($ts === null) {
       $ts = sfDateTimeToolkit::now();
     }
 
@@ -810,8 +793,7 @@ class sfTime {
   public static function nextMonth($ts = null, $month = sfTime::JANUARY)
   {
     // default to now
-    if($ts === null)
-    {
+    if ($ts === null) {
       $ts = sfDateTimeToolkit::now();
     }
 
@@ -835,8 +817,7 @@ class sfTime {
   public static function previousMonth($ts = null, $month = sfTime::JANUARY)
   {
     // default to now
-    if($ts === null)
-    {
+    if ($ts === null) {
       $ts = sfDateTimeToolkit::now();
     }
 

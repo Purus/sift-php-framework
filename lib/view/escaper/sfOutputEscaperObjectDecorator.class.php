@@ -39,20 +39,14 @@ class sfOutputEscaperObjectDecorator extends sfOutputEscaperGetterDecorator impl
    */
   public function __call($method, $args)
   {
-    if (count($args) > 0)
-    {
+    if (count($args) > 0) {
       $escapingMethod = $args[count($args) - 1];
-      if (is_string($escapingMethod) && substr($escapingMethod, 0, 4) === 'esc_')
-      {
+      if (is_string($escapingMethod) && substr($escapingMethod, 0, 4) === 'esc_') {
         array_pop($args);
-      }
-      else
-      {
+      } else {
         $escapingMethod = $this->escapingMethod;
       }
-    }
-    else
-    {
+    } else {
       $escapingMethod = $this->escapingMethod;
     }
 
@@ -75,8 +69,7 @@ class sfOutputEscaperObjectDecorator extends sfOutputEscaperGetterDecorator impl
    */
   public function getRaw($key)
   {
-    if (!is_callable(array($this->value, 'get')))
-    {
+    if (!is_callable(array($this->value, 'get'))) {
       throw new sfException('Object does not have a callable get() method.');
     }
 

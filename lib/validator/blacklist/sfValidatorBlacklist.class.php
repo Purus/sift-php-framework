@@ -14,8 +14,8 @@
  * @package    Sift
  * @subpackage validator
  */
-class sfValidatorBlacklist extends sfValidatorBase {
-
+class sfValidatorBlacklist extends sfValidatorBase
+{
   /**
    * Configures the current validator.
    *
@@ -42,21 +42,18 @@ class sfValidatorBlacklist extends sfValidatorBase {
   protected function doClean($value)
   {
     $forbiddenValues = $this->getOption('forbidden_values');
-    if($forbiddenValues instanceof sfCallable)
-    {
+    if ($forbiddenValues instanceof sfCallable) {
       $forbiddenValues = $forbiddenValues->call();
     }
 
     $checkValue = $value;
 
-    if(false === $this->getOption('case_sensitive'))
-    {
+    if (false === $this->getOption('case_sensitive')) {
       $checkValue = sfUtf8::lower($checkValue);
       $forbiddenValues = array_map(sfUtf8::lower, $forbiddenValues);
     }
 
-    if(in_array($checkValue, $forbiddenValues))
-    {
+    if (in_array($checkValue, $forbiddenValues)) {
       throw new sfValidatorError($this, 'forbidden', array('value' => $value));
     }
 
@@ -66,8 +63,7 @@ class sfValidatorBlacklist extends sfValidatorBase {
   public function getActiveMessages()
   {
     $messages = array();
-    if($this->getOption('required'))
-    {
+    if ($this->getOption('required')) {
       $messages[] = $this->getMessage('required');
     }
     $messages[] = $this->getMessage('forbidden');

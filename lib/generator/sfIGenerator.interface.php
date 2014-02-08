@@ -12,8 +12,8 @@
  * @package Sift
  * @subpackage generator
  */
-interface sfIGenerator {
-
+interface sfIGenerator
+{
   /**
    * Generates classes and templates.
    *

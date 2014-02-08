@@ -16,8 +16,8 @@
  * @package    Sift
  * @subpackage util
  */
-class sfInflector {
-
+class sfInflector
+{
   /**
    * Returns a camelized string from a lower case and underscored string by replaceing slash with
    * double-colon and upper-casing each letter preceded by an underscore.

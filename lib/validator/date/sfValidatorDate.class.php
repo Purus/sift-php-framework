@@ -67,10 +67,8 @@ class sfValidatorDate extends sfValidatorBase
   protected function doClean($value)
   {
     // check date format
-    if (is_string($value) && $regex = $this->getOption('date_format'))
-    {
-      if (!preg_match($regex, $value, $match))
-      {
+    if (is_string($value) && $regex = $this->getOption('date_format')) {
+      if (!preg_match($regex, $value, $match)) {
         throw new sfValidatorError($this, 'bad_format', array('value' => $value, 'date_format' => $this->getOption('date_format_error') ? $this->getOption('date_format_error') : $this->getOption('date_format')));
       }
 
@@ -78,88 +76,70 @@ class sfValidatorDate extends sfValidatorBase
     }
 
     // convert array to date string
-    if (is_array($value))
-    {
+    if (is_array($value)) {
       $value = $this->convertDateArrayToString($value);
-    }
-    else
-    {
+    } else {
       // we have to handle culture specific formatting
-      if($newValue = $this->getValidDate($value, $this->getCulture()))
-      {
+      if ($newValue = $this->getValidDate($value, $this->getCulture())) {
         $value = $newValue;
       }
     }
 
     // convert timestamp to date number format
-    if (is_numeric($value))
-    {
+    if (is_numeric($value)) {
       $cleanTime = (integer) $value;
       $clean     = date('YmdHis', $cleanTime);
     }
     // convert string to date number format
-    else
-    {
-      try
-      {
+    else {
+      try {
         $date = new DateTime($value);
         $date->setTimezone(new DateTimeZone(date_default_timezone_get()));
         $clean = $date->format('YmdHis');
-      }
-      catch (Exception $e)
-      {
+      } catch (Exception $e) {
         throw new sfValidatorError($this, 'invalid', array('value' => $value));
       }
     }
 
     // check max
-    if ($max = $this->getOption('max'))
-    {
+    if ($max = $this->getOption('max')) {
       // convert timestamp to date number format
-      if (is_numeric($max))
-      {
+      if (is_numeric($max)) {
         $maxError = date($this->getOption('date_format_range_error'), $max);
         $max      = date('YmdHis', $max);
       }
       // convert string to date number
-      else
-      {
+      else {
         $dateMax  = new DateTime($max);
         $max      = $dateMax->format('YmdHis');
         $maxError = $dateMax->format($this->getOption('date_format_range_error'));
       }
 
-      if ($clean > $max)
-      {
+      if ($clean > $max) {
         throw new sfValidatorError($this, 'max', array('value' => $value, 'max' => $maxError));
       }
     }
 
     // check min
-    if ($min = $this->getOption('min'))
-    {
+    if ($min = $this->getOption('min')) {
       // convert timestamp to date number
-      if (is_numeric($min))
-      {
+      if (is_numeric($min)) {
         $minError = date($this->getOption('date_format_range_error'), $min);
         $min      = date('YmdHis', $min);
       }
       // convert string to date number
-      else
-      {
+      else {
         $dateMin  = new DateTime($min);
         $min      = $dateMin->format('YmdHis');
         $minError = $dateMin->format($this->getOption('date_format_range_error'));
       }
 
-      if ($clean < $min)
-      {
+      if ($clean < $min) {
         throw new sfValidatorError($this, 'min', array('value' => $value, 'min' => $minError));
       }
     }
 
-    if ($clean === $this->getEmptyValue())
-    {
+    if ($clean === $this->getEmptyValue()) {
       return $cleanTime;
     }
 
@@ -181,8 +161,7 @@ class sfValidatorDate extends sfValidatorBase
     // Use the language culture date format
     $result = sfI18n::getDate($value, $culture);
 
-    if($result === null)
-    {
+    if ($result === null) {
       return;
     }
 
@@ -190,14 +169,12 @@ class sfValidatorDate extends sfValidatorBase
     list($d, $m, $y) = $result;
 
     // Make sure the date is a valid gregorian calendar date also
-    if ($result === null || !checkdate($m, $d, $y))
-    {
+    if ($result === null || !checkdate($m, $d, $y)) {
       return null;
     }
 
     $hour = $min = 0;
-    if($time)
-    {
+    if ($time) {
       list($hour, $min) = $time;
     }
 
@@ -216,10 +193,8 @@ class sfValidatorDate extends sfValidatorBase
   protected function convertDateArrayToString($value)
   {
     // all elements must be empty or a number
-    foreach (array('year', 'month', 'day', 'hour', 'minute', 'second') as $key)
-    {
-      if (isset($value[$key]) && !preg_match('#^\d+$#', $value[$key]) && !empty($value[$key]))
-      {
+    foreach (array('year', 'month', 'day', 'hour', 'minute', 'second') as $key) {
+      if (isset($value[$key]) && !preg_match('#^\d+$#', $value[$key]) && !empty($value[$key])) {
         throw new sfValidatorError($this, 'invalid', array('value' => $value));
       }
     }
@@ -230,22 +205,17 @@ class sfValidatorDate extends sfValidatorBase
       (!isset($value['month']) || !$value['month'] ? 1 : 0) +
       (!isset($value['day']) || !$value['day'] ? 1 : 0)
     ;
-    if ($empties > 0 && $empties < 3)
-    {
+    if ($empties > 0 && $empties < 3) {
       throw new sfValidatorError($this, 'invalid', array('value' => $value));
-    }
-    else if (3 == $empties)
-    {
+    } else if (3 == $empties) {
       return $this->getEmptyValue();
     }
 
-    if (!checkdate(intval($value['month']), intval($value['day']), intval($value['year'])))
-    {
+    if (!checkdate(intval($value['month']), intval($value['day']), intval($value['year']))) {
       throw new sfValidatorError($this, 'invalid', array('value' => $value));
     }
 
-    if ($this->getOption('with_time'))
-    {
+    if ($this->getOption('with_time')) {
       // if second is set, minute and hour must be set
       // if minute is set, hour must be set
       if (
@@ -266,9 +236,7 @@ class sfValidatorDate extends sfValidatorBase
         isset($value['minute']) ? intval($value['minute']) : 0,
         isset($value['second']) ? intval($value['second']) : 0
       );
-    }
-    else
-    {
+    } else {
       $clean = sprintf(
         "%04d-%02d-%02d %02d:%02d:%02d",
         intval($value['year']),
@@ -293,8 +261,7 @@ class sfValidatorDate extends sfValidatorBase
    */
   protected function isEmpty($value)
   {
-    if (is_array($value))
-    {
+    if (is_array($value)) {
       $filtered = array_filter($value);
 
       return empty($filtered);

@@ -13,8 +13,8 @@
  * @subpackage i18n
  * @link http://en.wikipedia.org/wiki/ISO_4217
  */
-class sfISO4217 {
-
+class sfISO4217
+{
   /**
    * Array of existing currencies
    *

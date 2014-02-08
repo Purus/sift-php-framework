@@ -42,14 +42,12 @@ EOF;
   {
     $plugins = $this->getPluginManager()->getInstalledPlugins();
 
-    if(count($plugins))
-    {
+    if (count($plugins)) {
       $this->logSection($this->getFullName(), sprintf('%s plugins installed.', count($plugins)));
 
       $this->log($this->formatter->format('Installed plugins:', 'COMMENT'));
 
-      foreach($plugins as $package)
-      {
+      foreach ($plugins as $package) {
         $alias = $this->getPluginManager()->getEnvironment()
                   ->getRegistry()->getChannel($package->getChannel())->getAlias();
 
@@ -59,9 +57,7 @@ EOF;
                 $package->getState() ? $package->getState() : null,
                 $this->formatter->format(sprintf('# %s (%s)', $package->getChannel(), $alias), 'COMMENT')));
       }
-    }
-    else
-    {
+    } else {
       $this->logSection($this->getFullName(), 'No plugins installed.');
     }
 

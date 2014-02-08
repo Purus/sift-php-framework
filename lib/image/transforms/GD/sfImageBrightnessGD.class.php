@@ -39,9 +39,8 @@ class sfImageBrightnessGD extends sfImageTransformAbstract
    */
   public function setBrightness($brightness)
   {
-    if (is_numeric($brightness))
-    {
-      $this->brightness = (int)$brightness;
+    if (is_numeric($brightness)) {
+      $this->brightness = (int) $brightness;
 
       return true;
     }
@@ -70,13 +69,9 @@ class sfImageBrightnessGD extends sfImageTransformAbstract
   {
     $resource = $image->getAdapter()->getHolder();
 
-    if (function_exists('imagefilter'))
-    {
+    if (function_exists('imagefilter')) {
       imagefilter($resource, IMG_FILTER_BRIGHTNESS, $this->brightness);
-    }
-
-    else
-    {
+    } else {
       throw new sfImageTransformException(sprintf('Cannot perform transform, GD does not support imagefilter '));
     }
 

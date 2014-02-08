@@ -12,8 +12,8 @@
  * @package    Sift
  * @subpackage text_macro
  */
-interface sfITextMacroFilter {
-
+interface sfITextMacroFilter
+{
   /**
    * Filters given content
    *

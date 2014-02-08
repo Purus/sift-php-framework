@@ -77,8 +77,7 @@ abstract class sfImageTransformAdapterAbstract
    */
   public function setFilename($filename)
   {
-    if ('' !== $filename)
-    {
+    if ('' !== $filename) {
       $this->filename = $filename;
 
       return true;
@@ -106,8 +105,7 @@ abstract class sfImageTransformAdapterAbstract
    */
   public function setQuality($quality)
   {
-    if (is_numeric($quality) && $quality >= 0 && $quality <= 100)
-    {
+    if (is_numeric($quality) && $quality >= 0 && $quality <= 100) {
       $this->quality = $quality;
 
       return true;

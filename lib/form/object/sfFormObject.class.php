@@ -82,8 +82,7 @@ abstract class sfFormObject extends myForm
   public function bindAndSave($taintedValues, $taintedFiles = null, $con = null)
   {
     $this->bind($taintedValues, $taintedFiles);
-    if ($this->isValid())
-    {
+    if ($this->isValid()) {
       $this->save($con);
 
       return true;
@@ -107,26 +106,21 @@ abstract class sfFormObject extends myForm
    */
   public function save($con = null)
   {
-    if (!$this->isValid())
-    {
+    if (!$this->isValid()) {
       throw $this->getErrorSchema();
     }
 
-    if (null === $con)
-    {
+    if (null === $con) {
       $con = $this->getConnection();
     }
 
-    try
-    {
+    try {
       $con->beginTransaction();
 
       $this->doSave($con);
 
       $con->commit();
-    }
-    catch (Exception $e)
-    {
+    } catch (Exception $e) {
       $con->rollBack();
 
       throw $e;
@@ -145,8 +139,7 @@ abstract class sfFormObject extends myForm
    */
   protected function doSave($con = null)
   {
-    if (null === $con)
-    {
+    if (null === $con) {
       $con = $this->getConnection();
     }
 
@@ -167,8 +160,7 @@ abstract class sfFormObject extends myForm
    */
   public function updateObject($values = null)
   {
-    if (null === $values)
-    {
+    if (null === $values) {
       $values = $this->getValues();
     }
 
@@ -190,24 +182,18 @@ abstract class sfFormObject extends myForm
    */
   public function updateObjectEmbeddedForms($values, $forms = null)
   {
-    if (null === $forms)
-    {
+    if (null === $forms) {
       $forms = $this->embeddedForms;
     }
 
-    foreach ($forms as $name => $form)
-    {
-      if (!isset($values[$name]) || !is_array($values[$name]))
-      {
+    foreach ($forms as $name => $form) {
+      if (!isset($values[$name]) || !is_array($values[$name])) {
         continue;
       }
 
-      if ($form instanceof sfFormObject)
-      {
+      if ($form instanceof sfFormObject) {
         $form->updateObject($values[$name]);
-      }
-      else
-      {
+      } else {
         $this->updateObjectEmbeddedForms($values[$name], $form->getEmbeddedForms());
       }
     }
@@ -221,25 +207,19 @@ abstract class sfFormObject extends myForm
    */
   public function saveEmbeddedForms($con = null, $forms = null)
   {
-    if (null === $con)
-    {
+    if (null === $con) {
       $con = $this->getConnection();
     }
 
-    if (null === $forms)
-    {
+    if (null === $forms) {
       $forms = $this->embeddedForms;
     }
 
-    foreach ($forms as $form)
-    {
-      if ($form instanceof sfFormObject)
-      {
+    foreach ($forms as $form) {
+      if ($form instanceof sfFormObject) {
         $form->saveEmbeddedForms($con);
         $form->getObject()->save($con);
-      }
-      else
-      {
+      } else {
         $this->saveEmbeddedForms($con, $form->getEmbeddedForms());
       }
     }
@@ -262,8 +242,7 @@ abstract class sfFormObject extends myForm
    */
   public function renderFormTag($url, array $attributes = array())
   {
-    if (!isset($attributes['method']))
-    {
+    if (!isset($attributes['method'])) {
       $attributes['method'] = $this->isNew() ? 'post' : 'put';
     }
 

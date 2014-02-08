@@ -12,8 +12,8 @@
  * @package Sift
  * @subpackage analytics
  */
-class sfGoogleAnalytics {
-
+class sfGoogleAnalytics
+{
   const SCOPE_VISITOR_LEVEL = 1;
   const SCOPE_SESSION_LEVEL = 2;
   const SCOPE_PAGE_LEVEL = 3;
@@ -63,8 +63,7 @@ class sfGoogleAnalytics {
       'slot'  => $slot,
     );
 
-    if(!is_null($scope))
-    {
+    if (!is_null($scope)) {
       $variables[$i]['scope'] = $scope;
     }
 
@@ -82,14 +81,12 @@ class sfGoogleAnalytics {
   public static function trackPageViewRemote($documentPath, $referer = '', $ua = null,
           $mobile = false)
   {
-    if(is_null($ua))
-    {
+    if (is_null($ua)) {
       $ua = sfConfig::get('app_google_analytics_ua');
     }
 
     // we have mobile request, check if UA is mobile
-    if($mobile)
-    {
+    if ($mobile) {
       // UA-31116947-1 -> MO-31116947-1
       $ua = preg_replace('/^(UA)+/', 'MO', $ua);
     }
@@ -105,11 +102,9 @@ class sfGoogleAnalytics {
     $ip        = $request->getIp();
 
     $guidHeader = '';
-    foreach(array('x_dcmguid', 'x_up_subno', 'x_jphone_uid', 'x_um_uid') as $header)
-    {
+    foreach (array('x_dcmguid', 'x_up_subno', 'x_jphone_uid', 'x_um_uid') as $header) {
       $value = $request->getHttpHeader($header);
-      if($value)
-      {
+      if ($value) {
         $guidHeader = $value;
         break;
       }
@@ -118,20 +113,17 @@ class sfGoogleAnalytics {
     // Try and get visitor cookie from the request.
     $cookie = $request->getCookie($mobile ? self::MOBILE_COOKIE_NAME : self::COOKIE_NAME);
 
-    if(sfConfig::get('sf_logging_enabled'))
-    {
+    if (sfConfig::get('sf_logging_enabled')) {
       sfLogger::getInstance()->err('Cookie: '. var_export($cookie, true));
     }
 
     $visitorId = self::getVisitorId($guidHeader, $ua, $userAgent, $cookie);
 
-    if(sfConfig::get('sf_logging_enabled'))
-    {
+    if (sfConfig::get('sf_logging_enabled')) {
       sfLogger::getInstance()->err('Visitor ID: '. $visitorId);
     }
 
-    if($mobile)
-    {
+    if ($mobile) {
       // Always try and add the cookie to the response.
       setrawcookie(
           self::MOBILE_COOKIE_NAME,
@@ -166,13 +158,11 @@ class sfGoogleAnalytics {
   {
     $browser = new sfWebBrowser();
 
-    if($params)
-    {
+    if ($params) {
       $uri .= ((false !== strpos($uri, '?')) ? '&' : '?') . http_build_query($params, '', '&');
     }
 
-    if(sfConfig::get('sf_logging_enabled'))
-    {
+    if (sfConfig::get('sf_logging_enabled')) {
       sfLogger::getInstance()->err('Calling uri: '. $uri);
     }
 
@@ -193,19 +183,15 @@ class sfGoogleAnalytics {
   public static function getVisitorId($guid, $account, $userAgent, $cookie)
   {
     // If there is a value in the cookie, don't change it.
-    if(!empty($cookie))
-    {
+    if (!empty($cookie)) {
       return $cookie;
     }
 
     $message = '';
-    if(!empty($guid))
-    {
+    if (!empty($guid)) {
       // Create the visitor id using the guid.
       $message = $guid . $account;
-    }
-    else
-    {
+    } else {
       // otherwise this is a new user, create a new random id.
       $message = $userAgent . uniqid(self::getRandomNumber(), true);
     }
@@ -249,9 +235,7 @@ class sfGoogleAnalytics {
     {
       $trackParams = (strpos($url, '#') === false) ? ('#' . $trackParams)
                       : ('&' . $trackParams);
-    }
-    else
-    {
+    } else {
       $trackParams = (strpos($url, '?') === false) ? ('?' . $trackParams)
                       : ('&' . $trackParams);
     }

@@ -12,8 +12,8 @@
  * @package    Sift
  * @subpackage collection
  */
-class sfCollectionSorterStrategyCallback implements sfICollectionSorterStrategy {
-
+class sfCollectionSorterStrategyCallback implements sfICollectionSorterStrategy
+{
   /**
    * Callback
    *
@@ -29,14 +29,12 @@ class sfCollectionSorterStrategyCallback implements sfICollectionSorterStrategy 
    */
   public function __construct($callback)
   {
-    if($callback instanceof sfCallable)
-    {
+    if ($callback instanceof sfCallable) {
       $callback = $callback->getCallable();
     }
 
     // check the callback
-    if(!sfToolkit::isCallable($callback, false, $callableName))
-    {
+    if (!sfToolkit::isCallable($callback, false, $callableName)) {
       throw new InvalidArgumentException(sprintf('Invalid callback "%s" given.', $callableName));
     }
 

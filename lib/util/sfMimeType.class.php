@@ -13,8 +13,8 @@
  * @subpackage util
  *
  */
-class sfMimeType {
-
+class sfMimeType
+{
   protected static $mimeTypes = null;
 
   /**
@@ -41,25 +41,18 @@ class sfMimeType {
     $type = strtolower(trim($type));
     $default = trim($default);
 
-    if(!$type)
-    {
+    if (!$type) {
       return $dot ? sprintf('.%s', $default) : $default;
     }
 
     // we know the type
-    if(isset(self::$mimeTypes[$type]))
-    {
+    if (isset(self::$mimeTypes[$type])) {
       return $dot ? sprintf('.%s', self::$mimeTypes[$type]['extension'][0]) :
         self::$mimeTypes[$type]['extension'][0];
-    }
-    else // try to detect it
-    {
-      foreach(self::$mimeTypes as $mimeName => $mimeType)
-      {
-        foreach($mimeType['alias'] as $alias)
-        {
-          if($alias == $type)
-          {
+    } else { // try to detect it
+      foreach (self::$mimeTypes as $mimeName => $mimeType) {
+        foreach ($mimeType['alias'] as $alias) {
+          if ($alias == $type) {
             return $dot ? sprintf('.%s', self::$mimeTypes[$mimeName]['extension'][0]) :
               self::$mimeTypes[$mimeName]['extension'][0];
           }
@@ -86,11 +79,9 @@ class sfMimeType {
     // tar.gz will be coverted to gz
     $extension = self::getFileExtension($extension);
 
-    foreach(self::$mimeTypes as $mimeType => $property)
-    {
+    foreach (self::$mimeTypes as $mimeType => $property) {
       $key = array_search($extension, $property['extension']);
-      if($key !== false)
-      {
+      if ($key !== false) {
         return $mimeType;
       }
     }
@@ -138,8 +129,7 @@ class sfMimeType {
   public static function getTypeFromFile($file, $default = 'application/octet-stream', $originalFileName = null)
   {
     // no filename passed
-    if(!$originalFileName)
-    {
+    if (!$originalFileName) {
       $originalFileName = basename($file);
     }
 
@@ -147,31 +137,24 @@ class sfMimeType {
     $customMagic = sfConfig::get('sf_mime_detect_magic_path', false);
 
     // STEP 1
-    if(class_exists('finfo'))
-    {
+    if (class_exists('finfo')) {
       $fileInfo = ($customMagic) ?
         new finfo(FILEINFO_MIME, $customMagic) :
         new finfo(FILEINFO_MIME);
 
       $result = $fileInfo->file($file);
-    }
-    else // fallback
-    {
-      if(!ini_get('safe_mode') && DIRECTORY_SEPARATOR != '\\')
-      {
+    } else { // fallback
+      if (!ini_get('safe_mode') && DIRECTORY_SEPARATOR != '\\') {
         $result = trim(@exec(sprintf('file -bi %s%s',
                  escapeshellarg($file),
                 ($customMagic ? sprintf(' -m %s', escapeshellarg($customMagic)) : '')
         )));
-      }
-      elseif(function_exists('mime_content_type'))
-      {
+      } elseif (function_exists('mime_content_type')) {
         $result = mime_content_type($file);
       }
     }
 
-    if(is_string($result) && !empty($result))
-    {
+    if (is_string($result) && !empty($result)) {
       $mimeType = $result;
     }
 
@@ -186,23 +169,19 @@ class sfMimeType {
     // invalid files and its content types
     // @link http://stackoverflow.com/questions/7416936/finfo-returns-wrong-mime-type-on-some-js-files-text-x-c
     // @link http://stackoverflow.com/questions/5226289/php-doesnt-return-the-correct-mime-type
-    if(preg_match('/\.(js|css|json|php|docx|xlsx|wmv)$/i', $originalFileName))
-    {
+    if (preg_match('/\.(js|css|json|php|docx|xlsx|wmv)$/i', $originalFileName)) {
       $mimeType = $mimeType2;
     }
 
     // auto detection failed, we will simply return autodetected value
-    if(!$mimeType)
-    {
+    if (!$mimeType) {
       return $mimeType2;
     }
 
     // STEP3
-    if($mimeType != $mimeType2 && isset(self::$mimeTypes[$mimeType2]))
-    {
+    if ($mimeType != $mimeType2 && isset(self::$mimeTypes[$mimeType2])) {
       // yes, its the parent,
-      if(in_array($mimeType, self::$mimeTypes[$mimeType2]['parent']))
-      {
+      if (in_array($mimeType, self::$mimeTypes[$mimeType2]['parent'])) {
         return $mimeType2;
       }
     }
@@ -215,8 +194,7 @@ class sfMimeType {
     $extension = $filename;
     // finds the last occurence of .
     $pos = strrpos($extension, '.');
-    if($pos !== false)
-    {
+    if ($pos !== false) {
       $extension = substr($filename, $pos + 1);
     }
 
@@ -228,8 +206,7 @@ class sfMimeType {
    */
   protected static function loadMimeTypes()
   {
-    if(is_null(self::$mimeTypes))
-    {
+    if (is_null(self::$mimeTypes)) {
       $definitions = unserialize(file_get_contents(
         sfConfig::get('sf_sift_data_dir').'/data/mime_types.dat'));
       self::$mimeTypes = $definitions;
@@ -247,8 +224,7 @@ class sfMimeType {
   {
     $mimeType = preg_replace('#[\s;].*$#', '', $mimeType);
     // IE8 mime wrong types!
-    switch($mimeType)
-    {
+    switch ($mimeType) {
       case 'image/pjpeg':
         $mimeType = 'image/jpeg';
       break;
@@ -267,18 +243,14 @@ class sfMimeType {
   {
     self::loadMimeTypes();
 
-    foreach(self::$mimeTypes as $mimeType => $property)
-    {
-      if($mime == $mimeType)
-      {
+    foreach (self::$mimeTypes as $mimeType => $property) {
+      if ($mime == $mimeType) {
         return $property['name'];
       }
 
       // loop all aliases
-      foreach($property['alias'] as $alias)
-      {
-        if($mime == $alias)
-        {
+      foreach ($property['alias'] as $alias) {
+        if ($mime == $alias) {
           return $property['name'];
         }
       }

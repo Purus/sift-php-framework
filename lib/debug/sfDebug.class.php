@@ -13,8 +13,8 @@
  * @package    Sift
  * @subpackage debug
  */
-class sfDebug {
-
+class sfDebug
+{
   /**
    * Returns PHP information as an array.
    *
@@ -23,8 +23,7 @@ class sfDebug {
   public static function phpInfoAsArray()
   {
     $imagickVersion = '';
-    if(class_exists('Imagick'))
-    {
+    if (class_exists('Imagick')) {
       $imagick = new Imagick();
       $imagickVersion = $imagick->getVersion();
     }
@@ -61,8 +60,7 @@ class sfDebug {
   public static function pluginsInfoAsArray()
   {
     $plugins = array();
-    foreach(sfContext::getInstance()->getApplication()->getPlugins() as $plugin)
-    {
+    foreach (sfContext::getInstance()->getApplication()->getPlugins() as $plugin) {
       $plugins[] = array(
           'name' => $plugin->getName(),
           'version' => $plugin->getVersion(),
@@ -110,10 +108,8 @@ class sfDebug {
    */
   public static function shortenFilePath($file)
   {
-    foreach(array('sf_plugins_dir', 'sf_root_dir', 'sf_sift_lib_dir') as $key)
-    {
-      if(0 === strpos($file, $value = sfConfig::get($key)))
-      {
+    foreach (array('sf_plugins_dir', 'sf_root_dir', 'sf_sift_lib_dir') as $key) {
+      if (0 === strpos($file, $value = sfConfig::get($key))) {
         $file = str_replace($value, strtoupper($key), $file);
         break;
       }
@@ -130,16 +126,13 @@ class sfDebug {
   public static function globalsAsArray()
   {
     $values = array();
-    foreach(array('cookie', 'server', 'get', 'post', 'files', 'env', 'session') as $name)
-    {
-      if(!isset($GLOBALS['_' . strtoupper($name)]))
-      {
+    foreach (array('cookie', 'server', 'get', 'post', 'files', 'env', 'session') as $name) {
+      if (!isset($GLOBALS['_' . strtoupper($name)])) {
         continue;
       }
 
       $values[$name] = array();
-      foreach($GLOBALS['_' . strtoupper($name)] as $key => $value)
-      {
+      foreach ($GLOBALS['_' . strtoupper($name)] as $key => $value) {
         $values[$name][$key] = $value;
       }
       ksort($values[$name]);
@@ -173,15 +166,12 @@ class sfDebug {
    */
   public static function requestAsArray($request)
   {
-    if($request)
-    {
+    if ($request) {
       $values = array(
           'parameterHolder' => self::flattenParameterHolder($request->getParameterHolder()),
           'attributeHolder' => self::flattenParameterHolder($request->getAttributeHolder()),
       );
-    }
-    else
-    {
+    } else {
       $values = array('parameterHolder' => array(), 'attributeHolder' => array());
     }
 
@@ -197,32 +187,25 @@ class sfDebug {
    */
   public static function responseAsArray($response)
   {
-    if($response)
-    {
+    if ($response) {
       $values = array(
           'cookies' => array(),
           'httpHeaders' => array(),
           'parameterHolder' => self::flattenParameterHolder($response->getParameterHolder()),
       );
-      if(method_exists($response, 'getHttpHeaders'))
-      {
-        foreach($response->getHttpHeaders() as $key => $value)
-        {
+      if (method_exists($response, 'getHttpHeaders')) {
+        foreach ($response->getHttpHeaders() as $key => $value) {
           $values['httpHeaders'][$key] = $value;
         }
       }
 
-      if(method_exists($response, 'getCookies'))
-      {
+      if (method_exists($response, 'getCookies')) {
         $cookies = array();
-        foreach($response->getCookies() as $key => $value)
-        {
+        foreach ($response->getCookies() as $key => $value) {
           $values['cookies'][$key] = $value;
         }
       }
-    }
-    else
-    {
+    } else {
       $values = array('cookies' => array(), 'httpHeaders' => array(), 'parameterHolder' => array());
     }
 
@@ -240,28 +223,21 @@ class sfDebug {
   public static function flattenParameterHolder($parameterHolder, $removeObjects = false)
   {
     $values = array();
-    if($parameterHolder instanceof sfFlatParameterHolder)
-    {
-      foreach($parameterHolder->getAll() as $key => $value)
-      {
+    if ($parameterHolder instanceof sfFlatParameterHolder) {
+      foreach ($parameterHolder->getAll() as $key => $value) {
         $values[$key] = $value;
       }
-    }
-    else
-    {
-      foreach($parameterHolder->getNamespaces() as $ns)
-      {
+    } else {
+      foreach ($parameterHolder->getNamespaces() as $ns) {
         $values[$ns] = array();
-        foreach($parameterHolder->getAll($ns) as $key => $value)
-        {
+        foreach ($parameterHolder->getAll($ns) as $key => $value) {
           $values[$ns][$key] = $value;
         }
         ksort($values[$ns]);
       }
     }
 
-    if($removeObjects)
-    {
+    if ($removeObjects) {
       $values = self::removeObjects($values);
     }
 
@@ -280,18 +256,12 @@ class sfDebug {
   public static function removeObjects($values)
   {
     $nvalues = array();
-    foreach($values as $key => $value)
-    {
-      if(is_array($value))
-      {
+    foreach ($values as $key => $value) {
+      if (is_array($value)) {
         $nvalues[$key] = self::removeObjects($value);
-      }
-      else if(is_object($value))
-      {
+      } else if (is_object($value)) {
         $nvalues[$key] = sprintf('%s Object()', get_class($value));
-      }
-      else
-      {
+      } else {
         $nvalues[$key] = $value;
       }
     }
@@ -308,8 +278,7 @@ class sfDebug {
    */
   public static function userAsArray(sfUser $user = null)
   {
-    if(!$user)
-    {
+    if (!$user) {
       return array();
     }
 
@@ -318,8 +287,7 @@ class sfDebug {
         'culture' => $user->getCulture(),
     );
 
-    if($user instanceof sfBasicSecurityUser)
-    {
+    if ($user instanceof sfBasicSecurityUser) {
       $data = array_merge($data, array(
           'authenticated' => $user->isAuthenticated(),
           'credentials' => $user->getCredentials(),

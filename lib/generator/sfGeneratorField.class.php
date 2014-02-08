@@ -12,8 +12,8 @@
  * @package    Sift
  * @subpackage generator
  */
-abstract class sfGeneratorField extends sfConfigurable implements sfIGeneratorField {
-
+abstract class sfGeneratorField extends sfConfigurable implements sfIGeneratorField
+{
   /**
    * String type
    */
@@ -255,8 +255,7 @@ abstract class sfGeneratorField extends sfConfigurable implements sfIGeneratorFi
    */
   public function getDisplayName()
   {
-    if($name = $this->getOption('name'))
-    {
+    if ($name = $this->getOption('name')) {
       return $name;
     }
 
@@ -361,8 +360,7 @@ abstract class sfGeneratorField extends sfConfigurable implements sfIGeneratorFi
    */
   public function setFlags($flags)
   {
-    if(!is_array($flags))
-    {
+    if (!is_array($flags)) {
       $flags = array($flags);
     }
 
@@ -477,8 +475,7 @@ abstract class sfGeneratorField extends sfConfigurable implements sfIGeneratorFi
   public static function splitFieldWithFlag($field)
   {
     $flags = array();
-    while(in_array($field[0], array('=', '_', '~')))
-    {
+    while (in_array($field[0], array('=', '_', '~'))) {
       $flags[] = $field[0];
       $field = substr($field, 1);
     }
@@ -537,7 +534,7 @@ abstract class sfGeneratorField extends sfConfigurable implements sfIGeneratorFi
    */
   public function isFilterCriteriaDisabled()
   {
-    return (boolean)$this->getOption('filter_criteria_disabled');
+    return (boolean) $this->getOption('filter_criteria_disabled');
   }
 
   /**

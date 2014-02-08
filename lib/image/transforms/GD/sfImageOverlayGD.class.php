@@ -57,19 +57,14 @@ class sfImageOverlayGD extends sfImageTransformAbstract
   {
     $this->setOverlay($overlay);
 
-    if (is_array($position) && count($position))
-    {
+    if (is_array($position) && count($position)) {
 
       $this->setLeft($position[0]);
 
-      if (isset($position[1]))
-      {
+      if (isset($position[1])) {
         $this->setTop($position[1]);
       }
-    }
-
-    else
-    {
+    } else {
       $this->setPosition($position);
     }
   }
@@ -101,8 +96,7 @@ class sfImageOverlayGD extends sfImageTransformAbstract
    */
   public function setLeft($left)
   {
-    if(is_numeric($left))
-    {
+    if (is_numeric($left)) {
       $this->left = $left;
 
       return true;
@@ -128,8 +122,7 @@ class sfImageOverlayGD extends sfImageTransformAbstract
    */
   public function setTop($top)
   {
-    if(is_numeric($top))
-    {
+    if (is_numeric($top)) {
       $this->top = $top;
 
       return true;
@@ -187,8 +180,7 @@ class sfImageOverlayGD extends sfImageTransformAbstract
 //      }
 //    }
 
-    if(in_array($position, $this->labels))
-    {
+    if (in_array($position, $this->labels)) {
       $this->position = strtolower($position);
 
       return true;
@@ -219,8 +211,7 @@ class sfImageOverlayGD extends sfImageTransformAbstract
   {
     $position = $this->getPosition();
 
-    if (is_null($position))
-    {
+    if (is_null($position)) {
       return false;
     }
 
@@ -232,8 +223,7 @@ class sfImageOverlayGD extends sfImageTransformAbstract
     $overlay_x  = ImageSX($overlay);
     $overlay_y  = ImageSY($overlay);
 
-    switch (strtolower($position))
-    {
+    switch (strtolower($position)) {
       case 'top':
       case 'top-left':
         $this->setLeft(0);
@@ -308,8 +298,7 @@ class sfImageOverlayGD extends sfImageTransformAbstract
     imagecopy($canvas_img, $resource, 0,0,0,0, $canvas_w, $canvas_h);
 
     // Check we have a valid image resource
-    if (false === $this->overlay->getAdapter()->getHolder())
-    {
+    if (false === $this->overlay->getAdapter()->getHolder()) {
       throw new sfImageTransformException(sprintf('Cannot perform transform: %s',get_class($this)));
     }
 

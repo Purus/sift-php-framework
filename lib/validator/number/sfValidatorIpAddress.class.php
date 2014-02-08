@@ -36,12 +36,9 @@ class sfValidatorIpAddress extends sfValidatorBase
     $this->setMessage('invalid', '"%value%" is not a valid IP address.');
 
     // switch
-    if(isset($options['v6']) && $options['v6'])
-    {
+    if (isset($options['v6']) && $options['v6']) {
       $this->addOption('v4', false);
-    }
-    else
-    {
+    } else {
       $this->addOption('v4', true);
     }
 
@@ -55,14 +52,12 @@ class sfValidatorIpAddress extends sfValidatorBase
   {
     $clean = trim(strval($value));
 
-    if($this->getOption('v4') && filter_var($clean, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4))
-    {
+    if ($this->getOption('v4') && filter_var($clean, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
       return $clean;
     }
 
     // detect if it is a valid IPv6 Address
-    if($this->getOption('v6') && filter_var($clean, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6))
-    {
+    if ($this->getOption('v6') && filter_var($clean, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
       return $clean;
     }
 

@@ -13,8 +13,8 @@
  * @package Sift
  * @subpackage form_javascript
  */
-class sfFormJavascriptValidationFieldMessages implements ArrayAccess, Iterator {
-
+class sfFormJavascriptValidationFieldMessages implements ArrayAccess, Iterator
+{
   /**
    * Field name (short version)
    *
@@ -48,10 +48,8 @@ class sfFormJavascriptValidationFieldMessages implements ArrayAccess, Iterator {
     $this->fieldName = $fieldName;
     $this->formFieldName = $formFieldName;
 
-    foreach($messages as $i => $message)
-    {
-      if(!$message instanceof sfFormJavascriptValidationMessage)
-      {
+    foreach ($messages as $i => $message) {
+      if (!$message instanceof sfFormJavascriptValidationMessage) {
         $messages[$i] = new sfFormJavascriptValidationMessage($message);
       }
     }
@@ -96,8 +94,7 @@ class sfFormJavascriptValidationFieldMessages implements ArrayAccess, Iterator {
 
   public function offsetSet($name, $value)
   {
-    if(!$value instanceof sfFormJavascriptValidationMessage)
-    {
+    if (!$value instanceof sfFormJavascriptValidationMessage) {
       $value = new sfFormJavascriptValidationMessage($value);
     }
 

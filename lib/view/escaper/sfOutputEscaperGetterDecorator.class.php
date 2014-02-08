@@ -39,8 +39,7 @@ abstract class sfOutputEscaperGetterDecorator extends sfOutputEscaper
    */
   public function get($key, $escapingMethod = null)
   {
-    if (!$escapingMethod)
-    {
+    if (!$escapingMethod) {
       $escapingMethod = $this->escapingMethod;
     }
 

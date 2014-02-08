@@ -12,8 +12,8 @@
  * @package    Sift
  * @subpackage log
  */
-class sfLogAnalyzer extends sfConfigurable implements Countable {
-
+class sfLogAnalyzer extends sfConfigurable implements Countable
+{
   /**
    * Array of default options
    *
@@ -59,8 +59,7 @@ class sfLogAnalyzer extends sfConfigurable implements Countable {
    */
   public function __construct($file, $options = array())
   {
-    if(!is_readable($file))
-    {
+    if (!is_readable($file)) {
       throw new InvalidArgumentException(sprintf('The file "%s" is not readable or does not exist', $file));
     }
 
@@ -75,8 +74,7 @@ class sfLogAnalyzer extends sfConfigurable implements Countable {
    */
   public function setup()
   {
-    if(!extension_loaded('pdo_SQLite'))
-    {
+    if (!extension_loaded('pdo_SQLite')) {
       throw new sfConfigurationException('sfLogAnalyzer class needs "pdo_sqlite" extension to be loaded.');
     }
   }
@@ -88,8 +86,7 @@ class sfLogAnalyzer extends sfConfigurable implements Countable {
    */
   public function process()
   {
-    if($this->processed)
-    {
+    if ($this->processed) {
       return;
     }
     $this->setDatabase($this->getOption('database'));
@@ -151,20 +148,17 @@ class sfLogAnalyzer extends sfConfigurable implements Countable {
     $handle = fopen($this->file, 'r');
     // while it's not at the end...
     $i = 0;
-    while(!feof($handle))
-    {
+    while (!feof($handle)) {
       $i++;
 
       // read the line
       $line = fgets($handle);
 
-      if(trim($line) == '')
-      {
+      if (trim($line) == '') {
         continue;
       }
 
-      if(!preg_match($pattern, $line, $matches))
-      {
+      if (!preg_match($pattern, $line, $matches)) {
         $this->skipped[] = array(
           'line' => $i,
           'content' => $line
@@ -172,8 +166,7 @@ class sfLogAnalyzer extends sfConfigurable implements Countable {
         continue;
       }
 
-      if($pregError = preg_last_error())
-      {
+      if ($pregError = preg_last_error()) {
         $this->skipped[] = array(
           'line' => $i,
           'content' => $line
@@ -199,12 +192,9 @@ class sfLogAnalyzer extends sfConfigurable implements Countable {
    */
   protected function getTimestamp($datetime)
   {
-    if($datetime instanceof DateTime)
-    {
+    if ($datetime instanceof DateTime) {
       $datetime = $datetime->format('U');
-    }
-    elseif($datetime instanceof sfDate)
-    {
+    } elseif ($datetime instanceof sfDate) {
       $datetime = $datetime->getTS();
     }
 
@@ -222,8 +212,7 @@ class sfLogAnalyzer extends sfConfigurable implements Countable {
   {
     $this->process();
 
-    if(!is_array($level))
-    {
+    if (!is_array($level)) {
       $level = array($level);
     }
 
@@ -231,14 +220,12 @@ class sfLogAnalyzer extends sfConfigurable implements Countable {
     $where[] = join(' OR ', array_fill(0, count($level), 'level = ?'));
     $params = array_merge(array(), $level);
 
-    if($start)
-    {
+    if ($start) {
       $where[] = 'created_at >= ?';
       $params[] = $this->getTimestamp($start);
     }
 
-    if($end)
-    {
+    if ($end) {
       $where[] = 'created_at <= ?';
       $params[] = $this->getTimestamp($end);
     }
@@ -299,8 +286,7 @@ class sfLogAnalyzer extends sfConfigurable implements Countable {
 
     $levelMap = $this->getLogLevelMap();
     $levels = array();
-    foreach($result as $level)
-    {
+    foreach ($result as $level) {
       $key = array_search($level['level'], $levelMap);
       $levels[$key] = array(
         'count' => $level['count'],
@@ -352,8 +338,7 @@ class sfLogAnalyzer extends sfConfigurable implements Countable {
 
     $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    foreach($result as &$item)
-    {
+    foreach ($result as &$item) {
       $item['message'] = new sfLogAnalyzerMessage($item['message'], $item['extra']);
     }
 
@@ -367,8 +352,7 @@ class sfLogAnalyzer extends sfConfigurable implements Countable {
    */
   public function getDatabaseHandle()
   {
-    if(!$this->dbh)
-    {
+    if (!$this->dbh) {
       $this->setDatabase($this->getOption('database'));
     }
 
@@ -396,31 +380,25 @@ class sfLogAnalyzer extends sfConfigurable implements Countable {
   protected function setDatabase($database)
   {
     $new = false;
-    if(':memory:' == $database)
-    {
+    if (':memory:' == $database) {
       $new = true;
-    }
-    else if(!is_file($database))
-    {
+    } else if (!is_file($database)) {
       $new = true;
       // create cache dir if needed
       $dir = dirname($database);
       $current_umask = umask(0000);
-      if (!is_dir($dir))
-      {
+      if (!is_dir($dir)) {
         @mkdir($dir, 0777, true);
       }
       touch($database);
       umask($current_umask);
     }
 
-    if(!$this->dbh = new PDO(sprintf('sqlite:%s', $this->getOption('database'))))
-    {
+    if (!$this->dbh = new PDO(sprintf('sqlite:%s', $this->getOption('database')))) {
       throw new sfDatabaseException(sprintf('Unable to connect to SQLite database: %s.'));
     }
 
-    if($new)
-    {
+    if ($new) {
       $this->createSchema();
     }
   }
@@ -446,10 +424,8 @@ class sfLogAnalyzer extends sfConfigurable implements Countable {
       'CREATE INDEX [created_at_idx] ON [log_analyzed] ([created_at])'
     );
 
-    foreach($statements as $statement)
-    {
-      if(!$this->dbh->query($statement))
-      {
+    foreach ($statements as $statement) {
+      if (!$this->dbh->query($statement)) {
         throw new sfDatabaseException($this->dbh->lastError());
       }
     }
@@ -466,7 +442,7 @@ class sfLogAnalyzer extends sfConfigurable implements Countable {
     $stmt = $this->dbh->prepare('SELECT COUNT(id) FROM log_analyzed');
     $stmt->execute();
 
-    return (integer)$stmt->fetchColumn(0);
+    return (integer) $stmt->fetchColumn(0);
   }
 
   /**
@@ -483,8 +459,7 @@ class sfLogAnalyzer extends sfConfigurable implements Countable {
    */
   public function __call($method, $arguments)
   {
-    if(preg_match(sprintf('/^get(%s+)Logs$/i', $this->getLevelsRegex()), $method, $matches))
-    {
+    if (preg_match(sprintf('/^get(%s+)Logs$/i', $this->getLevelsRegex()), $method, $matches)) {
       $level = strtolower($matches[1]);
       array_unshift($arguments, $level);
 

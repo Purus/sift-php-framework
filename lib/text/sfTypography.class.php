@@ -15,8 +15,8 @@
  * @see http://www.smashingmagazine.com/2011/08/15/mind-your-en-and-em-dashes-typographic-etiquette/
  * @see http://kevin.deldycke.com/2007/03/ultimate-regular-expression-for-html-tag-parsing-with-php/
  */
-class sfTypography {
-
+class sfTypography
+{
   const HYPHENATE_QUALITY_HIGHEST = 9;
   const HYPHENATE_QUALITY_HIGH = 7;
   const HYPHENATE_QUALITY_NORMAL = 5;
@@ -131,28 +131,24 @@ class sfTypography {
    */
   public function __construct($language = null, $options = array())
   {
-    if(!$language)
-    {
+    if (!$language) {
       $language = self::getDefaultLanguage();
     }
 
     $lang = array($language);
 
     $pos = strpos($language, '_');
-    if(false !== $pos)
-    {
+    if (false !== $pos) {
       $lang[] = sfUtf8::sub($language, 0, $pos);
     }
 
     $found = false;
 
-    foreach($lang as $_language)
-    {
+    foreach ($lang as $_language) {
       $languageFile = sprintf('%s/i18n/typo/%s.dat',
                         sfConfig::get('sf_sift_data_dir'), $_language);
 
-      if(!is_readable($languageFile))
-      {
+      if (!is_readable($languageFile)) {
         continue;
       }
 
@@ -170,13 +166,11 @@ class sfTypography {
       $this->prepositions   = $data['prepositions'];
     }
 
-    if(!$found)
-    {
+    if (!$found) {
       throw new sfException(sprintf('Data file for language "%s" could not be found.', $language));
     }
 
-    if(null === $this->options['hyphen'])
-    {
+    if (null === $this->options['hyphen']) {
       $this->options['hyphen'] = chr(194).chr(173);
     }
 
@@ -193,8 +187,7 @@ class sfTypography {
    */
   public static function getInstance($language = null, $options = array())
   {
-    if(!$language)
-    {
+    if (!$language) {
       $language = self::getDefaultLanguage();
     }
 
@@ -232,21 +225,18 @@ class sfTypography {
   public function correct($string)
   {
     // empty?
-    if(empty($string))
-    {
+    if (empty($string)) {
       return '';
     }
 
     // standardize newlines to make matching easier
-    if(strpos($string, "\r") !== false)
-    {
+    if (strpos($string, "\r") !== false) {
       $string = str_replace(array("\r\n", "\r"), "\n", $string);
     }
 
     // Reduce line breaks.  If there are more than two consecutive linebreaks
     // we'll compress them down to a maximum of two since there's no benefit to more.
-    if($this->options['reduce_linebreaks'])
-    {
+    if ($this->options['reduce_linebreaks']) {
       $string = preg_replace("/\n\n+/", "\n\n", $string);
     }
 
@@ -256,12 +246,9 @@ class sfTypography {
     // HTML comment tags don't conform to patterns of normal tags,
     // so pull them out separately, only if needed
     $html_comments = array();
-    if(strpos($string, '<!--') !== false)
-    {
-      if(preg_match_all("#(<!\-\-.*?\-\->)#s", $string, $matches))
-      {
-        for($i = 0, $total = count($matches[0]); $i < $total; $i++)
-        {
+    if (strpos($string, '<!--') !== false) {
+      if (preg_match_all("#(<!\-\-.*?\-\->)#s", $string, $matches)) {
+        for ($i = 0, $total = count($matches[0]); $i < $total; $i++) {
           $html_comments[] = $matches[0][$i];
           $string = str_replace($matches[0][$i], '{@HC' . $i . '}', $string);
         }
@@ -269,8 +256,7 @@ class sfTypography {
     }
 
     // lets do the dirty work
-    if($isHtml)
-    {
+    if ($isHtml) {
       // match and yank <pre> tags if they exist.
       $string = preg_replace_callback("#<pre.*?>.*?</pre>#si",
               array($this, 'protectCharacters'), $string);
@@ -279,8 +265,7 @@ class sfTypography {
       $string = preg_replace_callback("#<.+?>#si", array($this, 'protectCharacters'), $string);
 
       // Do the same with braces if necessary
-      if($this->options['protect_braced_quotes'])
-      {
+      if ($this->options['protect_braced_quotes']) {
         $string = preg_replace_callback("#\{.+?\}#si", array($this, 'protectCharacters'), $string);
       }
 
@@ -313,20 +298,16 @@ class sfTypography {
       $blockElements = 'address|blockquote|div|dl|fieldset|form|h\d|hr|noscript|object|ol|p|pre|script|table|ul';
       $skipElements   = 'p|pre|ol|ul|dl|object|table|h\d';
 
-      foreach($chunks as $chunk)
-      {
+      foreach ($chunks as $chunk) {
         $current_chunk++;
         // Are we dealing with a tag? If so, we'll skip the processing for this cycle.
         // Well also set the "process" flag which allows us to skip <pre> tags and a few other things.
-        if(preg_match("#<(/*)(".$blockElements.").*?>#", $chunk, $match))
-        {
-          if(preg_match("#".$skipElements."#", $match[2]))
-          {
+        if (preg_match("#<(/*)(".$blockElements.").*?>#", $chunk, $match)) {
+          if (preg_match("#".$skipElements."#", $match[2])) {
             $process = ($match[1] == '/') ? true : false;
           }
 
-          if($match[1] == '')
-          {
+          if ($match[1] == '') {
             $this->lastBlockElement = $match[2];
           }
 
@@ -334,15 +315,13 @@ class sfTypography {
           continue;
         }
 
-        if($process == false)
-        {
+        if ($process == false) {
           $string .= $chunk;
           continue;
         }
 
         // Force a newline to make sure end tags get processed by _format_newlines()
-        if($current_chunk == $total_chunks)
-        {
+        if ($current_chunk == $total_chunks) {
           $chunk .= "\n";
         }
 
@@ -351,8 +330,7 @@ class sfTypography {
       }
 
       // No opening block level tag? Add it if needed.
-      if(!preg_match("/^\s*<(?:" . $blockElements . ")/i", $string))
-      {
+      if (!preg_match("/^\s*<(?:" . $blockElements . ")/i", $string)) {
         $string = preg_replace("/^(.*?)<(" . $blockElements . ")/i", '<p>$1</p><$2', $string);
       }
 
@@ -362,16 +340,14 @@ class sfTypography {
 
 
     // restore HTML comments
-    for($i = 0, $total = count($html_comments); $i < $total; $i++)
-    {
+    for ($i = 0, $total = count($html_comments); $i < $total; $i++) {
       // remove surrounding paragraph tags, but only if there's an opening paragraph tag
       // otherwise HTML comments at the ends of paragraphs will have the closing tag removed
       // if '<p>{@HC1}' then replace <p>{@HC1}</p> with the comment, else replace only {@HC1} with the comment
       $string = preg_replace('#(?(?=<p>\{@HC' . $i . '\})<p>\{@HC' . $i . '\}(\s*</p>)|\{@HC' . $i . '\})#s', $html_comments[$i], $string);
     }
 
-    if($isHtml)
-    {
+    if ($isHtml) {
       // Final clean up
       $table = array(
         // If the user submitted their own paragraph tags within the text
@@ -407,12 +383,9 @@ class sfTypography {
       );
 
       // Do we need to reduce empty lines?
-      if($this->options['reduce_linebreaks'])
-      {
+      if ($this->options['reduce_linebreaks']) {
         $table['#<p>\n*</p>#'] = '';
-      }
-      else
-      {
+      } else {
         // If we have empty paragraph tags we add a non-breaking space
         // otherwise most browsers won't treat them as true paragraphs
         $table['#<p></p>#'] = '<p>&nbsp;</p>';
@@ -450,18 +423,15 @@ class sfTypography {
   public static function correctStatic($string,
           $options = null, $apllyFilters = null)
   {
-    if(null === $options)
-    {
+    if (null === $options) {
       $options = array();
     }
 
-    if(null === $apllyFilters)
-    {
+    if (null === $apllyFilters) {
       $apllyFilters = array();
     }
 
-    if(!isset($options ['language']))
-    {
+    if (!isset($options ['language'])) {
       $options['language'] = self::getDefaultLanguage();
     }
 
@@ -516,33 +486,26 @@ class sfTypography {
   {
     $html = $this->isStringHtml($string);
 
-    if($html)
-    {
+    if ($html) {
       $array = preg_split('/([\s<>])/', $string, -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE);
-    }
-    else
-    {
+    } else {
       $array = preg_split('/([\s])/', $string, -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE);
     }
 
     $size = count($array);
 
     // HTML
-    if($html)
-    {
+    if ($html) {
       $inTag    = $inSkip = false;
       $skip     = $this->getSkipTags();
       $skipEnd  = $this->getSkipTagsEnd();
 
-      for($i = 0; $i < $size; $i++)
-      {
-        if(!$inTag && sfUtf8::sub($array[$i], 0, 1) == '<')
-        {
+      for ($i = 0; $i < $size; $i++) {
+        if (!$inTag && sfUtf8::sub($array[$i], 0, 1) == '<') {
           $inTag = true;
         }
 
-        if(!$inSkip && $i + 2 < $size && in_array($array[$i].$array[$i + 1], $skip))
-        {
+        if (!$inSkip && $i + 2 < $size && in_array($array[$i].$array[$i + 1], $skip)) {
           $inSkip = true;
         }
 
@@ -552,22 +515,18 @@ class sfTypography {
           $array[$i] = $this->hyphenateWord($array[$i]);
         }
 
-        if(sfUtf8::sub($array[$i], -1, 1) == '>')
-        {
+        if (sfUtf8::sub($array[$i], -1, 1) == '>') {
           $inTag = false;
         }
 
-        if($i + 2 < $size && in_array($array[$i] . $array[$i + 1] . $array[$i + 2], $skipEnd))
-        {
+        if ($i + 2 < $size && in_array($array[$i] . $array[$i + 1] . $array[$i + 2], $skipEnd)) {
           $inSkip = false;
         }
       }
     }
     // Plain text
-    else
-    {
-      for($i = 0; $i < $size; $i++)
-      {
+    else {
+      for ($i = 0; $i < $size; $i++) {
         $array[$i] = $this->hyphenateWord($array[$i]);
       }
     }
@@ -588,44 +547,38 @@ class sfTypography {
   public function hyphenateWord($word)
   {
     // If the Word is empty, return an empty string.
-    if('' === trim($word))
-    {
+    if ('' === trim($word)) {
       return $word;
     }
 
     // Check whether the word shall be hyphenated.
     $result = $this->isNotToBeHyphenated($word);
-    if(false !== $result)
-    {
+    if (false !== $result) {
       return $result;
     }
 
     // If the length of the word is smaller than the minimum word-size,
     // return the word.
-    if($this->options['hyphenate_word_min'] > sfUtf8::len($word))
-    {
+    if ($this->options['hyphenate_word_min'] > sfUtf8::len($word)) {
       return $word;
     }
 
     // Character 173 is the unicode char 'Soft Hyphen' wich may  not be
     // visible in some editors!
     // HTML-Entity for soft hyphenation is &shy;!
-    if(false !== strpos($word, '&shy;'))
-    {
+    if (false !== strpos($word, '&shy;')) {
       return str_replace('&shy;', $this->options['hyphen'], $word);
     }
 
     // Replace a custom hyphenate-string with the hyphen.
     $result = $this->replaceCustomHyphen($word);
-    if(false !== $result)
-    {
+    if (false !== $result) {
       return $result;
     }
 
     // If the word already contains a hyphen-character, we assume it is
     // already hyphenated and return the word 'as is'.
-    if(false !== strpos($word, $this->options['hyphen']))
-    {
+    if (false !== strpos($word, $this->options['hyphen'])) {
       return $word;
     }
 
@@ -633,24 +586,20 @@ class sfTypography {
     // put a zerowidthspace after it and hyphenate the parts separated by
     // the special string.
     $result = $this->handleSpecialStrings($word);
-    if(false !== $result)
-    {
+    if (false !== $result) {
       return $result;
     }
 
     // Is it a pre-hyphenated word?
     // we have this block here twice (once again in doHyphenateWord)
-    if(isset($this->hyphenation[sfUtf8::lower($word)]))
-    {
+    if (isset($this->hyphenation[sfUtf8::lower($word)])) {
       // split word to individual characters
       $chars            = preg_split('//u', $word, -1, PREG_SPLIT_NO_EMPTY);
       $replaceWith      = $this->hyphenation[sfUtf8::lower($word)];
       // split replacement word into characters
       $replaceWithChars = preg_split('//u', $replaceWith, -1, PREG_SPLIT_NO_EMPTY);
-      for($i = 0, $count = count($replaceWithChars); $i < $count; $i++)
-      {
-        if($replaceWithChars[$i] == '-')
-        {
+      for ($i = 0, $count = count($replaceWithChars); $i < $count; $i++) {
+        if ($replaceWithChars[$i] == '-') {
           array_splice($chars, $i, 0, '-');
         }
       }
@@ -677,33 +626,28 @@ class sfTypography {
     // If a special character occurs in the middle of the word, simply
     // return the word AS IS as the word can not really be hyphenated
     // automaticaly.
-    if(preg_match('/[^' . $specials . '][' . $specials . '][^' . $specials . ']/u', $word))
-    {
+    if (preg_match('/[^' . $specials . '][' . $specials . '][^' . $specials . ']/u', $word)) {
       return $word;
     }
 
     // If one or more special characters appear before or after a word
     // we take the word in between and hyphenate that asn append and prepend
     // the special characters later on.
-    if(preg_match('/([' . $specials . ']*)([^' . $specials . ']+)([' . $specials . ']*)/u', $word, $result))
-    {
+    if (preg_match('/([' . $specials . ']*)([^' . $specials . ']+)([' . $specials . ']*)/u', $word, $result)) {
       $prepend = $result[1];
       $word = $result[2];
       $append = $result[3];
     }
 
     // Is it a pre-hyphenated word?
-    if(isset($this->hyphenation[sfUtf8::lower($word)]))
-    {
+    if (isset($this->hyphenation[sfUtf8::lower($word)])) {
       // split word to individual characters
       $chars            = preg_split('//u', $word, -1, PREG_SPLIT_NO_EMPTY);
       $replaceWith      = $this->hyphenation[sfUtf8::lower($word)];
       // split replacement word into characters
       $replaceWithChars = preg_split('//u', $replaceWith, -1, PREG_SPLIT_NO_EMPTY);
-      for($i = 0, $count = count($replaceWithChars); $i < $count; $i++)
-      {
-        if($replaceWithChars[$i] == '-')
-        {
+      for ($i = 0, $count = count($replaceWithChars); $i < $count; $i++) {
+        if ($replaceWithChars[$i] == '-') {
           array_splice($chars, $i, 0, '-');
         }
       }
@@ -718,8 +662,7 @@ class sfTypography {
     $wl = sfUtf8::len($word);
     $lastOne = 0;
 
-    for($i = 1; $i < $wl; $i++)
-    {
+    for ($i = 1; $i < $wl; $i++) {
       // If the integer on position $i is higher than 0 and is odd,
       // we can hyphenate at that position if the integer is lower or
       // equal than the set quality-level.
@@ -757,12 +700,10 @@ class sfTypography {
     $w = '_' . sfUtf8::lower($word) . '_';
     $wl = sfUtf8::len($w);
     // Initialize an array of length of the word with 0-values.
-    for($i = 0; $i < $wl; $i++)
-    {
+    for ($i = 0; $i < $wl; $i++) {
       $positions[$i] = 0;
     }
-    for($s = 0; $s < $wl - 1; $s++)
-    {
+    for ($s = 0; $s < $wl - 1; $s++) {
       $maxl = $wl - $s;
       $window = sfUtf8::sub($w, $s);
       for($l = $this->options['hyphenate_shortest_pattern'];
@@ -770,24 +711,20 @@ class sfTypography {
       {
         $part = sfUtf8::sub($window, 0, $l);
         $values = null;
-        if(isset($this->patterns[$part]))
-        {
+        if (isset($this->patterns[$part])) {
           // We found a pattern for this part.
           $values = (string) $this->patterns [$part];
           $i = $s;
           $v = null;
           $m = sfUtf8::len($values);
           $corrector = 1;
-          for($p = 0; $p < $m; $p++)
-          {
+          for ($p = 0; $p < $m; $p++) {
             $v = sfUtf8::sub($values, $p, 1);
             $arrayKey = $i + $p - $corrector;
-            if(array_key_exists($arrayKey, $positions) && ( ( (int) $v > $positions[$arrayKey] ) ))
-            {
+            if (array_key_exists($arrayKey, $positions) && ( ( (int) $v > $positions[$arrayKey] ) )) {
               $positions[$arrayKey] = (int) $v;
             }
-            if($v > 0)
-            {
+            if ($v > 0) {
               $corrector++;
             }
           }
@@ -822,8 +759,7 @@ class sfTypography {
 
     $string = str_replace($this->options['no_hyphenate_string'], '', $word);
     $string = str_replace($this->options['custom_hyphen'], '', $string);
-    if(null !== $this->options['customized_marker'] && true === $this->options['mark_customized'])
-    {
+    if (null !== $this->options['customized_marker'] && true === $this->options['mark_customized']) {
       $string = $this->getCustomizationMarker() . $string;
     }
 
@@ -846,8 +782,7 @@ class sfTypography {
     }
 
     $string = str_replace($this->options['custom_hyphen'], $this->options['hyphen'], $word);
-    if(null !== $this->options['customized_marker'] && true === $this->options['mark_customized'])
-    {
+    if (null !== $this->options['customized_marker'] && true === $this->options['mark_customized']) {
       $string = $this->getCustomizationMarker() . $string;
     }
 
@@ -867,18 +802,15 @@ class sfTypography {
    */
   public function handleSpecialStrings($word)
   {
-    foreach($this->specialStrings as $specialString)
-    {
-      if(false === strpos($word, $specialString))
-      {
+    foreach ($this->specialStrings as $specialString) {
+      if (false === strpos($word, $specialString)) {
         continue;
       }
       // Word contains a special string so put a zerowidthspace after
       // it and hyphenate the parts separated with the special string.
       $parts = explode($specialString, $word);
       $counter = count($parts);
-      for($i = 0; $i < $counter; $i++)
-      {
+      for ($i = 0; $i < $counter; $i++) {
         $parts[$i] = $this->doHyphenateWord($parts[$i]);
       }
 
@@ -1001,8 +933,7 @@ class sfTypography {
    */
   public function setHyphenateQuality($quality = self::HYPHENATE_QUALITY_NORMAL)
   {
-    if(is_string($quality))
-    {
+    if (is_string($quality)) {
       $quality = constant(sprintf('self::HYPHENATE_QUALITY_%s',
                   strtoupper($quality)));
     }
@@ -1075,8 +1006,7 @@ class sfTypography {
    */
   public function markCustomization($mark = null)
   {
-    if(null !== $mark)
-    {
+    if (null !== $mark) {
       $this->options['mark_customized'] = (bool) $mark;
     }
 
@@ -1117,8 +1047,7 @@ class sfTypography {
   public function getSkipTags()
   {
     $array = array();
-    foreach($this->skipTags as $t)
-    {
+    foreach ($this->skipTags as $t) {
       $array[] = '<' . $t . '>';
       $array[] = '<' . $t;
     }
@@ -1133,8 +1062,7 @@ class sfTypography {
   public function getSkipTagsEnd()
   {
     $array = array();
-    foreach($this->skipTags as $t)
-    {
+    foreach ($this->skipTags as $t) {
       $array[] = '</' . $t . '>';
     }
 
@@ -1251,8 +1179,7 @@ class sfTypography {
    */
   public function formatNewlines($string)
   {
-    if(empty($string))
-    {
+    if (empty($string)) {
       return '';
     }
 
@@ -1271,8 +1198,7 @@ class sfTypography {
     $string = preg_replace("/([^\n])(\n)([^\n])/", "\\1<br />\\2\\3", $string);
 
     // Wrap the whole enchilada in enclosing paragraphs
-    if($string != "\n")
-    {
+    if ($string != "\n") {
       // We trim off the right-side new line so that the closing </p> tag
       // will be positioned immediately following the string, matching
       // the behavior of the opening <p> tag
@@ -1309,16 +1235,14 @@ class sfTypography {
   {
     // create a list of matches
     $wordMatches = array();
-    foreach(array('abbreviations', 'conjunctions', 'prepositions') as $a)
-    {
+    foreach (array('abbreviations', 'conjunctions', 'prepositions') as $a) {
       $wordMatches[] = join('|', $this->$a);
     }
 
     $matches = array();
     $replacements = array();
 
-    if(count($wordMatches))
-    {
+    if (count($wordMatches)) {
       // matches
       $matches['words'] = sprintf('@(^|;| |&nbsp;|\(|\n)(%s) @iu', join('|', $wordMatches));
       $replacements['words'] = '$1$2&nbsp;';
@@ -1331,14 +1255,12 @@ class sfTypography {
       $replacements['numbers'] = '$1&nbsp;$2';
     }
 
-    if(!count($matches))
-    {
+    if (!count($matches)) {
       return $string;
     }
 
     // we are dealing with HTML code
-    if($this->isStringHtml($string))
-    {
+    if ($this->isStringHtml($string)) {
       $array = preg_split('/(<.*>|\[.*\])/Us', $string, -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE);
 
       $ignoreTagStack   = array();
@@ -1346,25 +1268,20 @@ class sfTypography {
       $skipTagsExpr   = count($this->skipTags) ? '(' . implode('|', $this->skipTags) . ')' : false;
       $skipMacrosExpr = count($this->skipMacros) ? '(' . implode('|', $this->skipMacros) . ')' : false;
 
-      for($i = 0, $stop = count($array); $i < $stop; $i++)
-      {
+      for ($i = 0, $stop = count($array); $i < $stop; $i++) {
         if(!empty($array[$i]) && '<' != $array[$i]{0} && '[' != $array[$i]{0}
           && ($skipMacrosExpr && empty($ignoreTagStack))
           && ($skipMacrosExpr && empty($ignoreMacroStack)))
         { // If it's not a tag
           $array[$i] = preg_replace($matches, $replacements, $array[$i]);
-        }
-        else
-        {
+        } else {
           $this->pushAndPopElement($array[$i], $ignoreTagStack, $skipTagsExpr, '<', '>');
           $this->pushAndPopElement($array[$i], $ignoreMacroStack, $skipMacrosExpr, '[', ']');
         }
       }
 
       return join('', $array);
-    }
-    else
-    {
+    } else {
       return preg_replace($matches, $replacements, $string);
     }
   }
@@ -1385,11 +1302,9 @@ class sfTypography {
   private function pushAndPopElement($text, &$stack, $disabled_elements, $opening = '<', $closing = '>')
   {
     // Check if it is a closing tag -- otherwise assume opening tag
-    if(strncmp($opening . '/', $text, 2) && $disabled_elements)
-    {
+    if (strncmp($opening . '/', $text, 2) && $disabled_elements) {
       // Opening? Check $text+1 against disabled elements
-      if(preg_match('/^' . $disabled_elements . '\b/', substr($text, 1), $matches))
-      {
+      if (preg_match('/^' . $disabled_elements . '\b/', substr($text, 1), $matches)) {
         /*
          * This disables fixing until we find a closing tag of our type
          * (e.g. <pre>) even if there was invalid nesting before that
@@ -1399,13 +1314,10 @@ class sfTypography {
          */
         array_push($stack, $matches[1]);
       }
-    }
-    else
-    {
+    } else {
       // Closing? Check $text+2 against disabled elements
       $c = preg_quote($closing, '/');
-      if(preg_match('/^' . $disabled_elements . $c . '/', substr($text, 2), $matches))
-      {
+      if (preg_match('/^' . $disabled_elements . $c . '/', substr($text, 2), $matches)) {
         $last = array_pop($stack);
 
         // Make sure it matches the opening tag

@@ -15,15 +15,14 @@
  * @package    Sift
  * @subpackage feed
  */
-class sfRssFeed extends sfFeed {
-
+class sfRssFeed extends sfFeed
+{
   protected $context,
           $version = '2.0';
 
   protected function initContext()
   {
-    if(!$this->context)
-    {
+    if (!$this->context) {
       $this->context = sfContext::getInstance();
     }
   }
@@ -40,25 +39,20 @@ class sfRssFeed extends sfFeed {
   public function fromXml($feedXml)
   {
     preg_match('/^<\?xml\s*version="1\.0"\s*encoding="(.*?)".*?\?>$/mi', $feedXml, $matches);
-    if(isset($matches[1]))
-    {
+    if (isset($matches[1])) {
       $this->setEncoding($matches[1]);
     }
     $feedXml = simplexml_load_string($feedXml);
-    if(!$feedXml)
-    {
+    if (!$feedXml) {
       throw new Exception('Error creating feed from XML: string is not well-formatted XML');
     }
 
     $authorString = (string) $feedXml->channel[0]->managingEditor;
     $pos = strpos($authorString, '(');
-    if($pos !== false)
-    {
+    if ($pos !== false) {
       $this->setAuthorEmail(trim(substr($authorString, 0, $pos)));
       $this->setAuthorName(trim(substr($authorString, $pos + 1, strlen($authorString) - $pos - 2)));
-    }
-    else
-    {
+    } else {
       $this->setAuthorEmail(trim($authorString));
     }
     $this->setTitle((string) $feedXml->channel[0]->title);
@@ -66,8 +60,7 @@ class sfRssFeed extends sfFeed {
     $this->setDescription((string) $feedXml->channel[0]->description);
     $this->setLanguage((string) $feedXml->channel[0]->language);
 
-    if($feedXml->channel[0]->image)
-    {
+    if ($feedXml->channel[0]->image) {
       $image = new sfFeedImage(array(
                   "image" => (string) $feedXml->channel[0]->image->url,
                   "imageX" => (int) $feedXml->channel[0]->image->width,
@@ -79,63 +72,47 @@ class sfRssFeed extends sfFeed {
     }
 
     $categories = array();
-    foreach($feedXml->channel[0]->category as $category)
-    {
+    foreach ($feedXml->channel[0]->category as $category) {
       $categories[] = (string) $category;
     }
     $this->setCategories($categories);
 
-    foreach($feedXml->channel[0]->item as $itemXml)
-    {
+    foreach ($feedXml->channel[0]->item as $itemXml) {
       $url = (string) $itemXml->link;
       $authorString = (string) $itemXml->author;
       $pos = strpos($authorString, '(');
-      if($pos !== false)
-      {
+      if ($pos !== false) {
         $authorEmail = trim(substr($authorString, 0, $pos));
         $authorName = trim(substr($authorString, $pos + 1, strlen($authorString) - $pos - 2));
-      }
-      else
-      {
+      } else {
         $authorEmail = trim($authorString);
         $authorName = '';
       }
       $dc = $itemXml->children("http://purl.org/dc/elements/1.1/");
-      if(!$authorName)
-      {
+      if (!$authorName) {
         $authorName = (string) $dc->creator;
       }
       $pubdate = strtotime(str_replace(array('UT', 'Z'), '', (string) $itemXml->pubDate));
-      if(!$pubdate)
-      {
-        if((string) $dc->date)
-        {
+      if (!$pubdate) {
+        if ((string) $dc->date) {
           $pubdate = strtotime(str_replace(array('UT', 'Z'), '', (string) $dc->date));
-        }
-        else if(preg_match('/\d{4}\/\d{2}\/\d{2}/', $url, $matches))
-        {
+        } else if (preg_match('/\d{4}\/\d{2}\/\d{2}/', $url, $matches)) {
           $pubdate = strtotime($matches[0]);
-        }
-        else
-        {
+        } else {
           $pubdate = 0;
         }
       }
       $content = $itemXml->children("http://purl.org/rss/1.0/modules/content/");
       $categories = array();
-      foreach($itemXml->category as $category)
-      {
+      foreach ($itemXml->category as $category) {
         $categories[] = (string) $category;
       }
-      if($enclosureElement = $itemXml->enclosure)
-      {
+      if ($enclosureElement = $itemXml->enclosure) {
         $enclosure = new sfFeedEnclosure();
         $enclosure->setUrl((string) $enclosureElement['url']);
         $enclosure->setLength((string) $enclosureElement['length']);
         $enclosure->setMimeType((string) $enclosureElement['type']);
-      }
-      else
-      {
+      } else {
         $enclosure = null;
       }
       $this->addItemFromArray(array(
@@ -185,19 +162,15 @@ class sfRssFeed extends sfFeed {
     $xml[] = '    <link>' . $this->context->getController()->genUrl($this->getLink(), true) . '</link>';
     $xml[] = '    <description>' . $this->getDescription() . '</description>';
     $xml[] = '    <pubDate>' . date(DATE_RFC822, $this->getLatestPostDate()) . '</pubDate>';
-    if($this->getAuthorEmail())
-    {
+    if ($this->getAuthorEmail()) {
       $xml[] = '    <managingEditor>' . $this->getAuthorEmail() . ($this->getAuthorName() ? ' (' . $this->getAuthorName() . ')' : '') . '</managingEditor>';
     }
-    if(!$this->getAuthorEmail() && $this->getAuthorName())
-    {
+    if (!$this->getAuthorEmail() && $this->getAuthorName()) {
       $xml[] = '    <managingEditor>' . $this->getAuthorName() . '</managingEditor>';
-    } if($this->getLanguage())
-    {
+    } if ($this->getLanguage()) {
       $xml[] = '    <language>' . $this->getLanguage() . '</language>';
     }
-    if($this->getImage())
-    {
+    if ($this->getImage()) {
       $xml[] = '    <image>';
       $xml[] = '      <url>' . $this->getImage()->getImage() . '</url>';
       $xml[] = '      <title>' . $this->getImage()->getTitle() . '</title>';
@@ -206,12 +179,9 @@ class sfRssFeed extends sfFeed {
       $xml[] = '      <height>' . $this->getImage()->getImageY() . '</height>';
       $xml[] = '    </image>';
     }
-    if(strpos($this->version, '2.') !== false)
-    {
-      if(is_array($this->getCategories()))
-      {
-        foreach($this->getCategories() as $category)
-        {
+    if (strpos($this->version, '2.') !== false) {
+      if (is_array($this->getCategories())) {
+        foreach ($this->getCategories() as $category) {
           $xml[] = '    <category>' . $category . '</category>';
         }
       }
@@ -231,52 +201,41 @@ class sfRssFeed extends sfFeed {
   protected function getFeedElements()
   {
     $xml = array();
-    foreach($this->getItems() as $item)
-    {
+    foreach ($this->getItems() as $item) {
       $xml[] = '    <item>';
       $xml[] = '      <title><![CDATA[' . $item->getTitle() . ']]></title>';
       $xml[] = '      <link>' . $this->context->getController()->genUrl($item->getLink(), true) . '</link>';
-      if($item->getDescription())
-      {
+      if ($item->getDescription()) {
         $xml[] = '      <description><![CDATA[' . $item->getDescription() . ']]></description>';
       }
-      if($item->getContent())
-      {
+      if ($item->getContent()) {
         $xml[] = '      <content:encoded><![CDATA[' . $item->getContent() . ']]></content:encoded>';
       }
-      if(strpos($this->version, '2.') !== false)
-      {
-        if($item->getUniqueId())
-        {
+      if (strpos($this->version, '2.') !== false) {
+        if ($item->getUniqueId()) {
           $xml[] = '      <guid isPermaLink="false">' . $item->getUniqueId() . '</guid>';
         }
 
         // author information
-        if($item->getAuthorEmail())
-        {
+        if ($item->getAuthorEmail()) {
           $xml[] = sprintf('      <author>%s%s</author>', $item->getAuthorEmail(), ($item->getAuthorName()) ? ' (' . $item->getAuthorName() . ')' : '');
         }
-        if($item->getPubdate())
-        {
+        if ($item->getPubdate()) {
           $xml[] = '      <pubDate>' . date(DATE_RFC822, $item->getPubdate()) . '</pubDate>';
         }
-        if(is_string($item->getComments()))
-        {
+        if (is_string($item->getComments())) {
           $xml[] = '      <comments>' . htmlspecialchars($item->getComments()) . '</comments>';
         }
 
         // enclosure
-        if($enclosure = $item->getEnclosure())
-        {
+        if ($enclosure = $item->getEnclosure()) {
           $enclosure_attributes = sprintf('url="%s" length="%s" type="%s"', $enclosure->getUrl(), $enclosure->getLength(), $enclosure->getMimeType());
           $xml[] = '      <enclosure ' . $enclosure_attributes . '></enclosure>';
         }
 
         // categories
-        if(is_array($item->getCategories()))
-        {
-          foreach($item->getCategories() as $category)
-          {
+        if (is_array($item->getCategories())) {
+          foreach ($item->getCategories() as $category) {
             $xml[] = '      <category><![CDATA[' . $category . ']]></category>';
           }
         }
@@ -297,8 +256,7 @@ class sfRssFeed extends sfFeed {
 
   public function setVersion($version)
   {
-    if($version)
-    {
+    if ($version) {
       $this->version = $version;
     }
   }

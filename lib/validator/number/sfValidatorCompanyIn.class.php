@@ -47,13 +47,11 @@ class sfValidatorCompanyIn extends sfValidatorBase
     // be liberal in what you recieve
     $value = preg_replace('#\s+#', '', $value);
 
-    if(!sfValidatorTools::validateCompanyIn($value))
-    {
+    if (!sfValidatorTools::validateCompanyIn($value)) {
       throw new sfValidatorError($this, 'invalid', array('value' => $value));
     }
 
-    if($database = $this->getOption('public_database_check'))
-    {
+    if ($database = $this->getOption('public_database_check')) {
       // FIXME: pass as option
       $options = array();
       $this->validateUsingPublicDatabaseApi($value, $database, $options);
@@ -70,8 +68,7 @@ class sfValidatorCompanyIn extends sfValidatorBase
     $rules[sfFormJavascriptValidation::CUSTOM_CALLBACK] = array('callback' => (
 "function(value, element, params) {
   var x = value;
-  try
-  {
+  try {
     var a = 0;
     if(x.length == 0) return true;
     if(x.length != 8) throw 1;
@@ -84,9 +81,7 @@ class sfValidatorCompanyIn extends sfValidatorBase
     if(a == 0) c = 1;
     if(a == 10) c = 1;
     if(parseInt(b[7]) != c) throw 1;
-  }
-  catch(e)
-  {
+  } catch (e) {
     return false;
   }
 
@@ -113,8 +108,7 @@ class sfValidatorCompanyIn extends sfValidatorBase
           $driverOptions = array())
   {
     $driver = sprintf('sfValidatorCompanyInDriver%s', ucfirst($driver));
-    if(!class_exists($driver))
-    {
+    if (!class_exists($driver)) {
       throw new InvalidArgumentException(sprintf('Invalid driver "%s"', $driver));
     }
 
@@ -122,8 +116,7 @@ class sfValidatorCompanyIn extends sfValidatorBase
 
     $valid = $checker->validate($value);
 
-    if(!$valid)
-    {
+    if (!$valid) {
       throw new sfValidatorError($this, 'invalid', array('value' => $value));
     }
 

@@ -12,8 +12,8 @@
  * @package Sift
  * @subpackage form_javascript
  */
-class sfFormJavascriptValidationRulesCollection extends sfCollection implements sfIJsonSerializable {
-
+class sfFormJavascriptValidationRulesCollection extends sfCollection implements sfIJsonSerializable
+{
   protected $itemType = 'sfFormJavascriptValidationFieldRules';
 
   /**
@@ -24,10 +24,8 @@ class sfFormJavascriptValidationRulesCollection extends sfCollection implements 
    */
   public function offsetGet($name)
   {
-    foreach($this as $rule)
-    {
-      if($rule->getFieldName() == $name)
-      {
+    foreach ($this as $rule) {
+      if ($rule->getFieldName() == $name) {
         return $rule;
       }
     }
@@ -41,8 +39,7 @@ class sfFormJavascriptValidationRulesCollection extends sfCollection implements 
   public function jsonSerialize()
   {
     $data = array();
-    foreach($this as $rule)
-    {
+    foreach ($this as $rule) {
       $data[$rule->getFormFieldName()] = $rule->getRules();
     }
 

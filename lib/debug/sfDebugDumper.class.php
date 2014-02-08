@@ -12,8 +12,8 @@
  * @package Sift
  * @subpackage debug
  */
-class sfDebugDumper {
-
+class sfDebugDumper
+{
   /**
    * End of line
    */
@@ -73,8 +73,7 @@ class sfDebugDumper {
    */
   public static function getSapi()
   {
-    if(self::$sapi === null)
-    {
+    if (self::$sapi === null) {
       self::$sapi = PHP_SAPI;
     }
 
@@ -152,28 +151,21 @@ class sfDebugDumper {
   public static function dump($var, array $options = null, $echo = true)
   {
     // only available in debug mode
-    if(!self::isInCli() && class_exists('sfConfig', false) && !sfConfig::get('sf_debug'))
-    {
+    if (!self::isInCli() && class_exists('sfConfig', false) && !sfConfig::get('sf_debug')) {
       return;
     }
 
-    $options = array_merge(self::$defaultOptions, (array)$options);
+    $options = array_merge(self::$defaultOptions, (array) $options);
 
-    if(!self::isInCli())
-    {
+    if (!self::isInCli()) {
       $dump = self::toHtml($var, $options);
-    }
-    elseif(self::detectColors() || $options['terminal_force_colors'])
-    {
+    } elseif (self::detectColors() || $options['terminal_force_colors']) {
       $dump = self::toTerminal($var, $options);
-    }
-    else
-    {
+    } else {
       $dump = self::toText($var, $options);
     }
 
-    if($echo)
-    {
+    if ($echo) {
       echo $dump;
     }
 
@@ -190,22 +182,18 @@ class sfDebugDumper {
    */
   private static function toHtml($var, array $options = null, $includeAssets = true)
   {
-    $options = array_merge(self::$defaultOptions, (array)$options);
+    $options = array_merge(self::$defaultOptions, (array) $options);
 
-    if(!is_array($options['location']) && $options['location'])
-    {
+    if (!is_array($options['location']) && $options['location']) {
       list($file, $line, $code) = self::findLocation();
-    }
-    else
-    {
+    } else {
       list($file, $line, $code) = $options['location'];
     }
 
     $templateDir = sfToolkit::replaceConstants($options['template_dir']);
 
     $css = $js = '';
-    if($includeAssets && !self::$assetsIncluded)
-    {
+    if ($includeAssets && !self::$assetsIncluded) {
       $css = file_get_contents($templateDir . '/' . $options['css_stylesheet']);
       $js = file_get_contents($templateDir . '/' . $options['javascript']);
       self::$assetsIncluded = true;
@@ -297,12 +285,9 @@ class sfDebugDumper {
    */
   private static function dumpVar(&$var, array $options, $level = 0)
   {
-    if(method_exists(__CLASS__, $m = 'dump' . gettype($var)))
-    {
+    if (method_exists(__CLASS__, $m = 'dump' . gettype($var))) {
       return self::$m($var, $options, $level);
-    }
-    else
-    {
+    } else {
       return '<span class="debug-dump-unknown">unknown type</span>';
     }
   }
@@ -377,29 +362,21 @@ class sfDebugDumper {
   private static function dumpArray(&$var, $options, $level)
   {
     static $marker;
-    if($marker === null)
-    {
+    if ($marker === null) {
       $marker = uniqid("\x00", true);
     }
 
     $out = '<span class="debug-dump-array">array</span>(';
-    if(empty($var))
-    {
+    if (empty($var)) {
       return $out . ')' . self::EOL;
-    }
-    elseif(isset($var[$marker]))
-    {
+    } elseif (isset($var[$marker])) {
       return $out . (count($var) - 1) . ') [ <span class="debug-dump-recursion">-recursion-</span> ]' . self::EOL;
-    }
-    elseif(!$options['depth'] || $level < $options['depth'])
-    {
+    } elseif (!$options['depth'] || $level < $options['depth']) {
       $collapsed = $level ? count($var) >= $options['collapse_count'] : $options['always_collapse'];
       $out = '<a href="#" class="debug-dump-toggler level-' . $level . (!$collapsed ? ' opened' : '') . '">' . $out . count($var) . ")</a>\n<div class=\"debug-dump-collapsable level-" . $level . ($collapsed ? ' collapsed' : '') . "\">";
       $var[$marker] = true;
-      foreach($var as $k => & $v)
-      {
-        if($k !== $marker)
-        {
+      foreach ($var as $k => & $v) {
+        if ($k !== $marker) {
           $out .= '<span class="debug-dump-indent">   ' . str_repeat('|  ', $level) . '</span>'
               . '<span class="debug-dump-key">' . (preg_match('#^\w+\z#', $k) ? $k : self::encodeString($k)) . '</span> => '
               . self::dumpVar($v, $options, $level + 1);
@@ -408,9 +385,7 @@ class sfDebugDumper {
       unset($var[$marker]);
 
       return $out . '</div>';
-    }
-    else
-    {
+    } else {
       return $out . count($var) . ') [ ... ]'. self::EOL;
     }
   }
@@ -426,33 +401,24 @@ class sfDebugDumper {
    */
   private static function dumpObject(&$var, $options, $level)
   {
-    if($var instanceof Closure)
-    {
+    if ($var instanceof Closure) {
       $rc = new ReflectionFunction($var);
       $fields = array();
-      foreach($rc->getParameters() as $param)
-      {
+      foreach ($rc->getParameters() as $param) {
         $fields[] = '$' . $param->getName();
       }
       $fields = array(
         'file' => $rc->getFileName(), 'line' => $rc->getStartLine(),
         'variables' => $rc->getStaticVariables(), 'parameters' => implode(', ', $fields)
       );
-    }
-    elseif($var instanceof SplFileInfo)
-    {
+    } elseif ($var instanceof SplFileInfo) {
       $fields = array('path' => $var->getPathname());
-    }
-    elseif($var instanceof SplObjectStorage)
-    {
+    } elseif ($var instanceof SplObjectStorage) {
       $fields = array();
-      foreach(clone $var as $obj)
-      {
+      foreach (clone $var as $obj) {
         $fields[] = array('object' => $obj, 'data' => $var[$obj]);
       }
-    }
-    else
-    {
+    } else {
       $fields = (array) $var;
     }
 
@@ -460,24 +426,17 @@ class sfDebugDumper {
 
     $out = '<span class="debug-dump-object">' . get_class($var) . '</span> <span class="debug-dump-hash">(#' . spl_object_hash($var) . ')</span>';
 
-    if(empty($fields))
-    {
+    if (empty($fields)) {
       return $out . self::EOL;
-    }
-    elseif(in_array($var, $list, true))
-    {
+    } elseif (in_array($var, $list, true)) {
       return $out . ' { <span class="debug-dump-recursion">-recursion-</span> }' . self::EOL;
-    }
-    elseif(!$options['depth'] || $level < $options['depth'] || $var instanceof Closure)
-    {
+    } elseif (!$options['depth'] || $level < $options['depth'] || $var instanceof Closure) {
       $collapsed = $level ? count($fields) >= $options['collapse_count'] : $options['always_collapse'];
       $out = '<a href="#" class="debug-dump-toggler level-' . $level . (!$collapsed ? ' opened' : '') . "\">". $out . "</a>\n<div class=\"debug-dump-collapsable level-" . $level . ($collapsed ? ' collapsed' : '') . "\">";
       $list[] = $var;
-      foreach($fields as $k => & $v)
-      {
+      foreach ($fields as $k => & $v) {
         $vis = '';
-        if($k[0] === "\x00")
-        {
+        if ($k[0] === "\x00") {
           $vis = ' <span class="debug-dump-access">' . ($k[1] === '*' ? 'protected' : 'private') . '</span>';
           $k = substr($k, strrpos($k, "\x00") + 1);
         }
@@ -488,9 +447,7 @@ class sfDebugDumper {
       array_pop($list);
 
       return $out . '</div>';
-    }
-    else
-    {
+    } else {
       return $out . ' { ... }' . self::EOL;
     }
   }
@@ -507,11 +464,9 @@ class sfDebugDumper {
   {
     $type = get_resource_type($var);
     $out = '<span class="debug-dump-resource">' . htmlspecialchars($type) . ' resource</span>';
-    if(isset(self::$resources[$type]))
-    {
+    if (isset(self::$resources[$type])) {
       $out = sprintf('<a href="#" class="debug-dump-toggler">%s</a><div class="debug-dump-collapsable">', $out);
-      foreach(call_user_func(self::$resources[$type], $var) as $k => $v)
-      {
+      foreach (call_user_func(self::$resources[$type], $var) as $k => $v) {
         $out .= '<span class="debug-dump-indent">   ' . str_repeat('|  ', $level) . '</span>'
             . '<span class="debug-dump-key">' . htmlspecialchars($k) . "</span> => " . self::dumpVar($v, $options, $level + 1);
       }
@@ -525,10 +480,8 @@ class sfDebugDumper {
   private static function encodeString($s)
   {
     static $table;
-    if($table === null)
-    {
-      foreach(array_merge(range("\x00", "\x1F"), range("\x7F", "\xFF")) as $ch)
-      {
+    if ($table === null) {
+      foreach (array_merge(range("\x00", "\x1F"), range("\x7F", "\xFF")) as $ch) {
         $table[$ch] = '\x' . str_pad(dechex(ord($ch)), 2, '0', STR_PAD_LEFT);
       }
       $table["\\"] = '\\\\';
@@ -537,8 +490,7 @@ class sfDebugDumper {
       $table["\t"] = '\t';
     }
 
-    if(preg_match('#[^\x09\x0A\x0D\x20-\x7E\xA0-\x{10FFFF}]#u', $s) || preg_last_error())
-    {
+    if (preg_match('#[^\x09\x0A\x0D\x20-\x7E\xA0-\x{10FFFF}]#u', $s) || preg_last_error()) {
       $s = strtr($s, $table);
     }
 
@@ -553,18 +505,12 @@ class sfDebugDumper {
   private static function findLocation()
   {
     $dir = dirname(__FILE__);
-    foreach(debug_backtrace(PHP_VERSION_ID >= 50306 ? DEBUG_BACKTRACE_IGNORE_ARGS : false) as $item)
-    {
-      if(isset($item['file']) && strpos($item['file'], $dir) === 0)
-      {
+    foreach (debug_backtrace(PHP_VERSION_ID >= 50306 ? DEBUG_BACKTRACE_IGNORE_ARGS : false) as $item) {
+      if (isset($item['file']) && strpos($item['file'], $dir) === 0) {
         continue;
-      }
-      elseif(!isset($item['file'], $item['line']) || !is_file($item['file']))
-      {
+      } elseif (!isset($item['file'], $item['line']) || !is_file($item['file'])) {
         break;
-      }
-      else
-      {
+      } else {
         $lines = file($item['file']);
         $line = $lines[$item['line'] - 1];
 

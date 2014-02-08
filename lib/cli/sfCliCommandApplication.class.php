@@ -12,8 +12,8 @@
  * @package    Sift
  * @subpackage cli
  */
-abstract class sfCliCommandApplication {
-
+abstract class sfCliCommandApplication
+{
   protected $project = null,
     $commandManager = null,
     $trace = false,
@@ -72,13 +72,10 @@ abstract class sfCliCommandApplication {
   public function bindToProject()
   {
     // load project
-    if(file_exists($this->environment->get('sf_root_dir').'/lib/myProject.class.php'))
-    {
+    if (file_exists($this->environment->get('sf_root_dir').'/lib/myProject.class.php')) {
       require_once $this->environment->get('sf_root_dir').'/lib/myProject.class.php';
       $projectClass = 'myProject';
-    }
-    else
-    {
+    } else {
       $projectClass = 'sfGenericProject';
     }
 
@@ -127,8 +124,7 @@ abstract class sfCliCommandApplication {
   {
     $this->formatter = $formatter;
 
-    foreach($this->getTasks() as $task)
-    {
+    foreach ($this->getTasks() as $task) {
       $task->setFormatter($formatter);
     }
   }
@@ -147,13 +143,11 @@ abstract class sfCliCommandApplication {
    */
   public function registerTasks($tasks = null)
   {
-    if(null === $tasks)
-    {
+    if (null === $tasks) {
       $tasks = $this->autodiscoverTasks();
     }
 
-    foreach($tasks as $task)
-    {
+    foreach ($tasks as $task) {
       $this->registerTask($task);
     }
   }
@@ -165,17 +159,14 @@ abstract class sfCliCommandApplication {
    */
   public function registerTask(sfCliTask $task)
   {
-    if(isset($this->tasks[$task->getFullName()]))
-    {
+    if (isset($this->tasks[$task->getFullName()])) {
       throw new sfCliCommandException(sprintf('The task named "%s" in "%s" task is already registered by the "%s" task.', $task->getFullName(), get_class($task), get_class($this->tasks[$task->getFullName()])));
     }
 
     $this->tasks[$task->getFullName()] = $task;
 
-    foreach($task->getAliases() as $alias)
-    {
-      if(isset($this->tasks[$alias]))
-      {
+    foreach ($task->getAliases() as $alias) {
+      if (isset($this->tasks[$alias])) {
         throw new sfCliCommandException(sprintf('A task named "%s" is already registered.', $alias));
       }
 
@@ -194,11 +185,9 @@ abstract class sfCliCommandApplication {
 
     $classLoader = new sfClassLoader();
 
-    foreach(get_declared_classes() as $class)
-    {
+    foreach (get_declared_classes() as $class) {
       $r = new ReflectionClass($class);
-      if($r->isSubclassOf('sfCliTask') && !$r->isAbstract())
-      {
+      if ($r->isSubclassOf('sfCliTask') && !$r->isAbstract()) {
         $task = new $class($this->environment, $this->dispatcher, $this->formatter, $this->logger);
         // we have to setup autoload for a task
         $task->setupAutoload($classLoader);
@@ -230,8 +219,7 @@ abstract class sfCliCommandApplication {
    */
   public function getTask($name)
   {
-    if(!isset($this->tasks[$name]))
-    {
+    if (!isset($this->tasks[$name])) {
       throw new sfCliCommandException(sprintf('The task "%s" does not exist.', $name));
     }
 
@@ -361,14 +349,12 @@ abstract class sfCliCommandApplication {
         $this->formatter->format('Options:', 'COMMENT'),
     );
 
-    foreach($this->commandManager->getOptionSet()->getOptions() as $option)
-    {
+    foreach ($this->commandManager->getOptionSet()->getOptions() as $option) {
       $messages[] = sprintf('  %-24s %s  %s', $this->formatter->format('--' . $option->getName(), 'INFO'), $option->getShortcut() ? $this->formatter->format('-' . $option->getShortcut(), 'INFO') : '  ', $option->getHelp()
       );
     }
 
-    foreach($messages as $message)
-    {
+    foreach ($messages as $message) {
       $this->logger->log($message);
     }
   }
@@ -403,30 +389,25 @@ abstract class sfCliCommandApplication {
 
     // the order of option processing matters
 
-    if($this->commandManager->getOptionSet()->hasOption('color') && false !== $this->commandManager->getOptionValue('color'))
-    {
+    if ($this->commandManager->getOptionSet()->hasOption('color') && false !== $this->commandManager->getOptionValue('color')) {
       $this->setFormatter(new sfCliAnsiColorFormatter());
     }
 
-    if($this->commandManager->getOptionSet()->hasOption('quiet') && false !== $this->commandManager->getOptionValue('quiet'))
-    {
+    if ($this->commandManager->getOptionSet()->hasOption('quiet') && false !== $this->commandManager->getOptionValue('quiet')) {
       $this->verbose = false;
     }
 
-    if($this->commandManager->getOptionSet()->hasOption('trace') && false !== $this->commandManager->getOptionValue('trace'))
-    {
+    if ($this->commandManager->getOptionSet()->hasOption('trace') && false !== $this->commandManager->getOptionValue('trace')) {
       $this->verbose = true;
       $this->trace = true;
     }
 
-    if($this->commandManager->getOptionSet()->hasOption('help') && false !== $this->commandManager->getOptionValue('help'))
-    {
+    if ($this->commandManager->getOptionSet()->hasOption('help') && false !== $this->commandManager->getOptionValue('help')) {
       $this->help();
       exit(0);
     }
 
-    if($this->commandManager->getOptionSet()->hasOption('version') && false !== $this->commandManager->getOptionValue('version'))
-    {
+    if ($this->commandManager->getOptionSet()->hasOption('version') && false !== $this->commandManager->getOptionValue('version')) {
       echo $this->getLongVersion();
       exit(0);
     }
@@ -442,41 +423,35 @@ abstract class sfCliCommandApplication {
     $title = sprintf('  [%s]  ', get_class($e));
     $len = $this->strlen($title);
     $lines = array();
-    foreach(explode("\n", $e->getMessage()) as $line)
-    {
+    foreach (explode("\n", $e->getMessage()) as $line) {
       $lines[] = sprintf('  %s  ', $line);
       $len = max($this->strlen($line) + 4, $len);
     }
 
     $messages = array(str_repeat(' ', $len));
 
-    if($this->trace)
-    {
+    if ($this->trace) {
       $messages[] = $title . str_repeat(' ', $len - $this->strlen($title));
     }
 
-    foreach($lines as $line)
-    {
+    foreach ($lines as $line) {
       $messages[] = $line . str_repeat(' ', $len - $this->strlen($line));
     }
 
     $messages[] = str_repeat(' ', $len);
 
     fwrite(STDERR, "\n");
-    foreach($messages as $message)
-    {
+    foreach ($messages as $message) {
       fwrite(STDERR, $this->formatter->format($message, 'ERROR', STDERR) . "\n");
     }
     fwrite(STDERR, "\n");
 
-    if(null !== $this->currentTask && $e instanceof sfCliCommandArgumentsException)
-    {
+    if (null !== $this->currentTask && $e instanceof sfCliCommandArgumentsException) {
       fwrite(STDERR, $this->formatter->format(sprintf($this->currentTask->getSynopsis(), $this->getScriptName()), 'INFO', STDERR) . "\n");
       fwrite(STDERR, "\n");
     }
 
-    if($this->trace)
-    {
+    if ($this->trace) {
       fwrite(STDERR, $this->formatter->format("Exception trace:\n", 'COMMENT'));
 
       // exception related properties
@@ -488,8 +463,7 @@ abstract class sfCliCommandApplication {
           'args' => array(),
       ));
 
-      for($i = 0, $count = count($trace); $i < $count; $i++)
-      {
+      for ($i = 0, $count = count($trace); $i < $count; $i++) {
         $class = isset($trace[$i]['class']) ? $trace[$i]['class'] : '';
         $type = isset($trace[$i]['type']) ? $trace[$i]['type'] : '';
         $function = $trace[$i]['function'];
@@ -513,63 +487,47 @@ abstract class sfCliCommandApplication {
   public function getTaskToExecute($name)
   {
     // namespace
-    if(false !== $pos = strpos($name, ':'))
-    {
+    if (false !== $pos = strpos($name, ':')) {
       $namespace = substr($name, 0, $pos);
       $name = substr($name, $pos + 1);
 
       $namespaces = array();
-      foreach($this->tasks as $task)
-      {
-        if($task->getNamespace() && !in_array($task->getNamespace(), $namespaces))
-        {
+      foreach ($this->tasks as $task) {
+        if ($task->getNamespace() && !in_array($task->getNamespace(), $namespaces)) {
           $namespaces[] = $task->getNamespace();
         }
       }
       $abbrev = $this->getAbbreviations($namespaces);
 
-      if(!isset($abbrev[$namespace]))
-      {
+      if (!isset($abbrev[$namespace])) {
         throw new sfCliCommandException(sprintf('There are no tasks defined in the "%s" namespace.', $namespace));
-      }
-      else if(count($abbrev[$namespace]) > 1)
-      {
+      } else if (count($abbrev[$namespace]) > 1) {
         throw new sfCliCommandException(sprintf('The namespace "%s" is ambiguous (%s).', $namespace, implode(', ', $abbrev[$namespace])));
-      }
-      else
-      {
+      } else {
         $namespace = $abbrev[$namespace][0];
       }
-    }
-    else
-    {
+    } else {
       $namespace = '';
     }
 
     // name
     $tasks = array();
-    foreach($this->tasks as $taskName => $task)
-    {
-      if($taskName == $task->getFullName() && $task->getNamespace() == $namespace)
-      {
+    foreach ($this->tasks as $taskName => $task) {
+      if ($taskName == $task->getFullName() && $task->getNamespace() == $namespace) {
         $tasks[] = $task->getName();
       }
     }
 
     $abbrev = $this->getAbbreviations($tasks);
-    if(isset($abbrev[$name]) && count($abbrev[$name]) == 1)
-    {
+    if (isset($abbrev[$name]) && count($abbrev[$name]) == 1) {
       return $this->getTask($namespace ? $namespace . ':' . $abbrev[$name][0] : $abbrev[$name][0]);
     }
 
     // aliases
     $aliases = array();
-    foreach($this->tasks as $taskName => $task)
-    {
-      if($taskName == $task->getFullName())
-      {
-        foreach($task->getAliases() as $alias)
-        {
+    foreach ($this->tasks as $taskName => $task) {
+      if ($taskName == $task->getFullName()) {
+        foreach ($task->getAliases() as $alias) {
           $aliases[] = $alias;
         }
       }
@@ -577,29 +535,22 @@ abstract class sfCliCommandApplication {
 
     $abbrev = $this->getAbbreviations($aliases);
     $fullName = $namespace ? $namespace . ':' . $name : $name;
-    if(!isset($abbrev[$fullName]))
-    {
+    if (!isset($abbrev[$fullName])) {
       throw new sfCliCommandException(sprintf('Task "%s" is not defined.', $fullName));
-    }
-    else if(count($abbrev[$fullName]) > 1)
-    {
+    } else if (count($abbrev[$fullName]) > 1) {
       throw new sfCliCommandException(sprintf('Task "%s" is ambiguous (%s).', $fullName, implode(', ', $abbrev[$fullName])));
-    }
-    else
-    {
+    } else {
       return $this->getTask($abbrev[$fullName][0]);
     }
   }
 
   protected function strlen($string)
   {
-    if(!function_exists('mb_strlen'))
-    {
+    if (!function_exists('mb_strlen')) {
       return strlen($string);
     }
 
-    if(false === $encoding = mb_detect_encoding($string))
-    {
+    if (false === $encoding = mb_detect_encoding($string)) {
       return strlen($string);
     }
 
@@ -623,8 +574,7 @@ abstract class sfCliCommandApplication {
     ini_set('html_errors', false);
     ini_set('magic_quotes_runtime', false);
 
-    if(false === strpos(PHP_SAPI, 'cgi'))
-    {
+    if (false === strpos(PHP_SAPI, 'cgi')) {
       return;
     }
 
@@ -634,8 +584,7 @@ abstract class sfCliCommandApplication {
     define('STDERR', fopen('php://stderr', 'w'));
 
     // change directory
-    if(isset($_SERVER['PWD']))
-    {
+    if (isset($_SERVER['PWD'])) {
       chdir($_SERVER['PWD']);
     }
 
@@ -653,34 +602,24 @@ abstract class sfCliCommandApplication {
     $abbrevs = array();
     $table = array();
 
-    foreach($names as $name)
-    {
-      for($len = strlen($name) - 1; $len > 0; --$len)
-      {
+    foreach ($names as $name) {
+      for ($len = strlen($name) - 1; $len > 0; --$len) {
         $abbrev = substr($name, 0, $len);
-        if(!array_key_exists($abbrev, $table))
-        {
+        if (!array_key_exists($abbrev, $table)) {
           $table[$abbrev] = 1;
-        }
-        else
-        {
+        } else {
           ++$table[$abbrev];
         }
 
         $seen = $table[$abbrev];
-        if($seen == 1)
-        {
+        if ($seen == 1) {
           // We're the first word so far to have this abbreviation.
           $abbrevs[$abbrev] = array($name);
-        }
-        else if($seen == 2)
-        {
+        } else if ($seen == 2) {
           // We're the second word to have this abbreviation, so we can't use it.
           // unset($abbrevs[$abbrev]);
           $abbrevs[$abbrev][] = $name;
-        }
-        else
-        {
+        } else {
           // We're the third word to have this abbreviation, so skip to the next word.
           continue;
         }
@@ -688,8 +627,7 @@ abstract class sfCliCommandApplication {
     }
 
     // Non-abbreviations always get entered, even if they aren't unique
-    foreach($names as $name)
-    {
+    foreach ($names as $name) {
       $abbrevs[$name] = array($name);
     }
 
@@ -710,12 +648,9 @@ abstract class sfCliCommandApplication {
    */
   protected function isStreamSupportsColors($stream)
   {
-    if(DIRECTORY_SEPARATOR == '\\')
-    {
+    if (DIRECTORY_SEPARATOR == '\\') {
       return false !== getenv('ANSICON');
-    }
-    else
-    {
+    } else {
       return function_exists('posix_isatty') && @posix_isatty($stream);
     }
   }

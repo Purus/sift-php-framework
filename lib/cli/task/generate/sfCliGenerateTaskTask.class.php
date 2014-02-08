@@ -80,8 +80,7 @@ EOF;
     $taskClassName[0] = strtolower($taskClassName[0]);
 
     // Validate the class name
-    if(!preg_match('/^[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*$/', $taskClassName))
-    {
+    if (!preg_match('/^[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*$/', $taskClassName)) {
       throw new sfCliCommandException(sprintf('The task class name "%s" is invalid.', $taskClassName));
     }
 
@@ -89,12 +88,9 @@ EOF;
 
     $useDatabase = sfToolkit::literalize($options['use-database']);
 
-    if($useDatabase)
-    {
+    if ($useDatabase) {
       $skeletonFile = 'task_database.php';
-    }
-    else
-    {
+    } else {
       $skeletonFile = 'task_simple.php';
     }
 
@@ -109,24 +105,19 @@ EOF;
       'DEFAULT_CONNECTION' => $defaultConnection
     );
 
-    if(is_readable($this->environment->get('sf_data_dir').'/skeleton/task/' . $skeletonFile))
-    {
+    if (is_readable($this->environment->get('sf_data_dir').'/skeleton/task/' . $skeletonFile)) {
       $skeleton = $this->environment->get('sf_data_dir').'/skeleton/task/' . $skeletonFile;
-    }
-    else
-    {
+    } else {
       $skeleton = $this->environment->get('sf_sift_data_dir').'/skeleton/task/' . $skeletonFile;
     }
 
     // check that the task directory exists and that the task file doesn't exist
-    if (!is_readable($this->environment->get('sf_root_dir').'/'.$options['dir']))
-    {
+    if (!is_readable($this->environment->get('sf_root_dir').'/'.$options['dir'])) {
       $this->getFilesystem()->mkdirs($this->environment->get('sf_root_dir') . '/' . $options['dir']);
     }
 
     $taskFile = $this->environment->get('sf_root_dir').'/'.$options['dir'].'/'.$taskClassName.'.class.php';
-    if(is_readable($taskFile))
-    {
+    if (is_readable($taskFile)) {
       throw new sfCliCommandException(sprintf('A "%s" task already exists in "%s".', $taskName, $taskFile));
     }
 

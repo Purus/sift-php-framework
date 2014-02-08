@@ -13,8 +13,8 @@
  * @subpackage text
  * @license http://www.eclipse.org/legal/epl-v10.html
  */
-class sfHtml2Text {
-
+class sfHtml2Text
+{
   /**
    * Tries to convert the given HTML into a plain text format - best suited for
    * e-mail display, etc.
@@ -32,8 +32,7 @@ class sfHtml2Text {
   {
     $html = self::fixNewlines($html);
 
-    if(empty($html))
-    {
+    if (empty($html)) {
       return '';
     }
 
@@ -46,8 +45,7 @@ class sfHtml2Text {
     // $doc->formatOutput = true;
     // $doc->recover = true;
 
-    if(!$doc->loadHTML($html))
-    {
+    if (!$doc->loadHTML($html)) {
       throw new sfException("Could not load HTML - badly formed?");
     }
 
@@ -86,13 +84,11 @@ class sfHtml2Text {
    */
   protected static function iterateOverNode($node)
   {
-    if($node instanceof DOMText)
-    {
+    if ($node instanceof DOMText) {
       return preg_replace("/\\s+/im", " ", $node->wholeText);
     }
 
-    if($node instanceof DOMDocumentType)
-    {
+    if ($node instanceof DOMDocumentType) {
       // ignore
       return "";
     }
@@ -103,8 +99,7 @@ class sfHtml2Text {
     $name = strtolower($node->nodeName);
 
     // start whitespace
-    switch($name)
-    {
+    switch ($name) {
       case "hr":
         return "------\n";
 
@@ -147,16 +142,14 @@ class sfHtml2Text {
         break;
     }
 
-    for($i = 0; $i < $node->childNodes->length; $i++)
-    {
+    for ($i = 0; $i < $node->childNodes->length; $i++) {
       $n = $node->childNodes->item($i);
       $text = self::iterateOverNode($n);
       $output .= $text;
     }
 
     // end whitespace
-    switch($name)
-    {
+    switch ($name) {
       case "style":
       case "head":
       case "title":
@@ -191,31 +184,23 @@ class sfHtml2Text {
       case "a":
         // links are returned in [text](link) format
         $href = $node->getAttribute("href");
-        if($href == null)
-        {
+        if ($href == null) {
           // it doesn't link anywhere
-          if($node->getAttribute("name") != null)
-          {
+          if ($node->getAttribute("name") != null) {
             $output = "[$output]";
           }
-        }
-        else
-        {
-          if($href == $output)
-          {
+        } else {
+          if ($href == $output) {
             // link to the same address: just use link
             $output;
-          }
-          else
-          {
+          } else {
             // replace it
             $output = "$output ($href)";
           }
         }
 
         // does the next node require additional whitespace?
-        switch($nextName)
-        {
+        switch ($nextName) {
           case "h1": case "h2": case "h3": case "h4": case "h5": case "h6":
             $output .= "\n";
             break;
@@ -233,17 +218,14 @@ class sfHtml2Text {
   {
     // get the previous child
     $nextNode = $node->previousSibling;
-    while($nextNode != null)
-    {
-      if($nextNode instanceof DOMElement)
-      {
+    while ($nextNode != null) {
+      if ($nextNode instanceof DOMElement) {
         break;
       }
     $nextNode = $nextNode->previousSibling;
     }
     $nextName = null;
-    if($nextNode instanceof DOMElement && $nextNode != null)
-    {
+    if ($nextNode instanceof DOMElement && $nextNode != null) {
       $nextName = strtolower($nextNode->nodeName);
     }
 
@@ -254,17 +236,14 @@ class sfHtml2Text {
   {
     // get the next child
     $nextNode = $node->nextSibling;
-    while($nextNode != null)
-    {
-      if($nextNode instanceof DOMElement)
-      {
+    while ($nextNode != null) {
+      if ($nextNode instanceof DOMElement) {
         break;
       }
       $nextNode = $nextNode->nextSibling;
     }
     $nextName = null;
-    if($nextNode instanceof DOMElement && $nextNode != null)
-    {
+    if ($nextNode instanceof DOMElement && $nextNode != null) {
       $nextName = strtolower($nextNode->nodeName);
     }
 

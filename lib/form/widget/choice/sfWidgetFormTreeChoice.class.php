@@ -13,8 +13,8 @@
  * @package    Sift
  * @subpackage form_widget
  */
-class sfWidgetFormTreeChoice extends sfWidgetFormChoice {
-
+class sfWidgetFormTreeChoice extends sfWidgetFormChoice
+{
   /**
    * @param array $options     An array of options
    * @param array $attributes  An array of default HTML attributes
@@ -25,7 +25,7 @@ class sfWidgetFormTreeChoice extends sfWidgetFormChoice {
   {
     parent::configure($options, $attributes);
 
-    $this->addOption('multiple', isset($options['multiple']) ? (boolean)$options['multiple'] : true);
+    $this->addOption('multiple', isset($options['multiple']) ? (boolean) $options['multiple'] : true);
 
     // asset package
     $this->addOption('asset_package', 'tree');
@@ -44,27 +44,21 @@ class sfWidgetFormTreeChoice extends sfWidgetFormChoice {
   {
     $choices = $this->getOption('choices');
 
-    if($choices instanceof sfCallable)
-    {
+    if ($choices instanceof sfCallable) {
       $choices = $choices->call();
     }
 
-    if (!$this->getOption('translate_choices'))
-    {
+    if (!$this->getOption('translate_choices')) {
       return $choices;
     }
 
     return $choices;
 
     $results = array();
-    foreach ($choices as $key => $choice)
-    {
-      if (is_array($choice))
-      {
+    foreach ($choices as $key => $choice) {
+      if (is_array($choice)) {
         $results[$this->translate($key)] = $this->translateAll($choice);
-      }
-      else
-      {
+      } else {
         $results[$key] = $this->translate($choice);
       }
     }

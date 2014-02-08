@@ -12,8 +12,8 @@
  * @package    Sift
  * @subpackage user
  */
-interface sfIUserAware {
-
+interface sfIUserAware
+{
   /**
    * Sets the user
    *

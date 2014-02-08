@@ -12,8 +12,8 @@
  * @package    Sift
  * @subpackage generator
  */
-abstract class sfGenerator extends sfConfigurable implements sfIGenerator {
-
+abstract class sfGenerator extends sfConfigurable implements sfIGenerator
+{
   /**
    * List context
    */
@@ -132,8 +132,7 @@ abstract class sfGenerator extends sfConfigurable implements sfIGenerator {
   public function generate()
   {
     $themeDir = $this->getThemeDir();
-    if(!$themeDir)
-    {
+    if (!$themeDir) {
       throw new sfInitializationException('Cannot generate without themeDir!');
     }
 
@@ -155,8 +154,7 @@ abstract class sfGenerator extends sfConfigurable implements sfIGenerator {
    */
   protected function generatePhpFiles($generatedModuleName, $files = array())
   {
-    foreach($files as $file)
-    {
+    foreach ($files as $file) {
       $this->getGeneratorManager()->save($generatedModuleName . '/' . $file, $this->evalTemplate($file));
     }
   }
@@ -408,8 +406,7 @@ abstract class sfGenerator extends sfConfigurable implements sfIGenerator {
    */
   public function addCredentialCondition($content, $credentials = array())
   {
-    if(count($credentials))
-    {
+    if (count($credentials)) {
       $credentials = $this->asPhp($credentials);
 
       return <<<EOF
@@ -418,9 +415,7 @@ $content
 [?php endif; ?]
 
 EOF;
-    }
-    else
-    {
+    } else {
       return $content;
     }
   }
@@ -443,8 +438,7 @@ EOF;
         'arguments' => $arguments,
         'generator' => $this)));
 
-    if(!$event->isProcessed())
-    {
+    if (!$event->isProcessed()) {
       throw new sfException(sprintf('Call to undefined method %s::%s.', get_class($this), $method));
     }
 

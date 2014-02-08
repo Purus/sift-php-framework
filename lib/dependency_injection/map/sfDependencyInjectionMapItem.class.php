@@ -22,8 +22,8 @@
  * @package Sift
  * @subpackage dependency_injection
  */
-class sfDependencyInjectionMapItem {
-
+class sfDependencyInjectionMapItem
+{
   /**
    * Method injection
    */
@@ -272,16 +272,13 @@ class sfDependencyInjectionMapItem {
    */
   public static function convertToBoolean($value)
   {
-    if(in_array(strtolower($value), array('true')))
-    {
+    if (in_array(strtolower($value), array('true'))) {
       return true;
-    }
-    elseif(in_array(strtolower($value), array('false')))
-    {
+    } elseif (in_array(strtolower($value), array('false'))) {
       return false;
     }
 
-    return (boolean)$value;
+    return (boolean) $value;
   }
 
 }

@@ -22,8 +22,8 @@
  * @package Sift
  * @subpackage i18n
  */
-class sfI18nNumberFormat {
-
+class sfI18nNumberFormat
+{
   /**
    * Format as decimal value
    */
@@ -87,12 +87,9 @@ class sfI18nNumberFormat {
   public function __get($name)
   {
     $getProperty = 'get' . $name;
-    if(in_array($getProperty, $this->properties))
-    {
+    if (in_array($getProperty, $this->properties)) {
       return $this->$getProperty();
-    }
-    else
-    {
+    } else {
       throw new sfException(sprintf('Property %s does not exists.', $name));
     }
   }
@@ -104,12 +101,9 @@ class sfI18nNumberFormat {
   public function __set($name, $value)
   {
     $setProperty = 'set' . $name;
-    if(in_array($setProperty, $this->properties))
-    {
+    if (in_array($setProperty, $this->properties)) {
       $this->$setProperty($value);
-    }
-    else
-    {
+    } else {
       throw new sfException(sprintf('Property %s can not be set.', $name));
     }
   }
@@ -126,8 +120,7 @@ class sfI18nNumberFormat {
    */
   public function __construct($data = array(), $type = self::DECIMAL)
   {
-    if(empty($data) || !is_array($data))
-    {
+    if (empty($data) || !is_array($data)) {
       throw new sfException('Please provide the I18N data to initialize.');
     }
 
@@ -145,12 +138,9 @@ class sfI18nNumberFormat {
    */
   public function setPattern($type = sfI18nNumberFormat::DECIMAL)
   {
-    if(is_int($type))
-    {
+    if (is_int($type)) {
       $this->pattern = $this->parsePattern($this->data['numberPatterns'][$type]);
-    }
-    else
-    {
+    } else {
       $this->pattern = $this->parsePattern($type);
     }
 
@@ -177,8 +167,7 @@ class sfI18nNumberFormat {
    */
   public static function getInvariantInfo($type = sfI18nNumberFormat::DECIMAL)
   {
-    if(is_null(self::$invariant))
-    {
+    if (is_null(self::$invariant)) {
       $culture = sfCulture::getInvariantCulture();
       self::$invariant = $culture->getNumberFormat();
       self::$invariant->setPattern($type);
@@ -201,23 +190,18 @@ class sfI18nNumberFormat {
    */
   public static function getInstance($culture = null, $type = sfI18nNumberFormat::DECIMAL)
   {
-    if($culture instanceof sfCulture)
-    {
+    if ($culture instanceof sfCulture) {
       $formatInfo = $culture->getNumberFormat();
       $formatInfo->setPattern($type);
 
       return $formatInfo;
-    }
-    else if(is_string($culture))
-    {
+    } else if (is_string($culture)) {
       $sfCulture = new sfCulture($culture);
       $formatInfo = $sfCulture->getNumberFormat();
       $formatInfo->setPattern($type);
 
       return $formatInfo;
-    }
-    else
-    {
+    } else {
       $sfCulture = new sfCulture();
       $formatInfo = $sfCulture->getNumberFormat();
       $formatInfo->setPattern($type);
@@ -277,13 +261,11 @@ class sfI18nNumberFormat {
   */
   public static function getNumber($value, $culture)
   {
-    if(!is_string($value))
-    {
+    if (!is_string($value)) {
       return $value;
     }
 
-    if(!self::isNumber($value,  $culture))
-    {
+    if (!self::isNumber($value,  $culture)) {
       throw new sfException(sprintf('No localized value in "%s" found, or the given number does not match the localized format', $value));
     }
 
@@ -298,19 +280,14 @@ class sfI18nNumberFormat {
 
     $separator = $num_format->getGroupSeparator();
     // this is a non breaking space, should be handled with care!
-    if($separator == sfI18nNumberFormat::NBSP)
-    {
+    if ($separator == sfI18nNumberFormat::NBSP) {
       $value = str_replace(array($separator, ' '), '', $value);
-    }
-    else
-    {
+    } else {
       $value = str_replace($separator, '', $value);
     }
 
-    if(strpos($value, $num_format->getDecimalSeparator()) !== false)
-    {
-      if($num_format->getDecimalSeparator() != '.')
-      {
+    if (strpos($value, $num_format->getDecimalSeparator()) !== false) {
+      if ($num_format->getDecimalSeparator() != '.') {
         $value = str_replace($num_format->getDecimalSeparator(), '.', $value);
       }
     }
@@ -329,22 +306,18 @@ class sfI18nNumberFormat {
   {
     $regexs = self::getRegexForType(self::DECIMAL, $culture);
 
-    foreach($regexs as $regex)
-    {
+    foreach ($regexs as $regex) {
       preg_match($regex, $input, $found);
-      if(isset($found[0]))
-      {
+      if (isset($found[0])) {
         return true;
       }
 
       // try the regex with spaces if the separator is non breaking space
-      if(strpos($regex, self::NBSP) !== false)
-      {
+      if (strpos($regex, self::NBSP) !== false) {
         // handle non breaking spaces
         $regex = str_replace(self::NBSP, ' ', $regex);
         preg_match($regex, $input, $found);
-        if(isset($found[0]))
-        {
+        if (isset($found[0])) {
           return true;
         }
       }
@@ -369,52 +342,38 @@ class sfI18nNumberFormat {
     $decimal  = preg_replace('/[^#0,;\.\-Ee]/', '',$decimal);
     $patterns = explode(';', $decimal);
 
-    if(count($patterns) == 1)
-    {
+    if (count($patterns) == 1) {
       $patterns[1] = '-' . $patterns[0];
     }
 
-    foreach($patterns as $pkey => $pattern)
-    {
+    foreach ($patterns as $pkey => $pattern) {
       $regex[$pkey] = '/^';
       $rest = 0;
       $end = null;
-      if(strpos($pattern, '.') !== false)
-      {
+      if (strpos($pattern, '.') !== false) {
         $end = substr($pattern, strpos($pattern, '.') + 1);
         $pattern = substr($pattern, 0, -strlen($end) - 1);
       }
 
-      if(strpos($pattern, ',') !== false)
-      {
+      if (strpos($pattern, ',') !== false) {
         $parts = explode(',', $pattern);
         $count = count($parts);
-        foreach($parts as $key => $part)
-        {
-          switch($part)
-          {
+        foreach ($parts as $key => $part) {
+          switch ($part) {
             case '#':
             case '-#':
 
-              if($part[0] == '-')
-              {
+              if ($part[0] == '-') {
                 $regex[$pkey] .= '[' . $num_format->getNegativeSign() . '-]{0,1}';
-              }
-              else
-              {
+              } else {
                 $regex[$pkey] .= '[' . $num_format->getPositiveSign() . '+]{0,1}';
               }
 
-              if(($parts[$key + 1]) == '##0')
-              {
+              if (($parts[$key + 1]) == '##0') {
                 $regex[$pkey] .= '[0-9]{1,3}';
-              }
-              elseif(($parts[$key + 1]) == '##')
-              {
+              } elseif (($parts[$key + 1]) == '##') {
                 $regex[$pkey] .= '[0-9]{1,2}';
-              }
-              else
-              {
+              } else {
                 throw new sfException(sprintf('Unsupported token for numberformat (Pos 1):"%s"', $pattern));
               }
 
@@ -422,12 +381,9 @@ class sfI18nNumberFormat {
 
             case '##':
 
-              if($parts[$key + 1] == '##0')
-              {
+              if ($parts[$key + 1] == '##0') {
                 $regex[$pkey] .=  '(\\' . $num_format->getGroupSeparator() . '{0,1}[0-9]{2})*';
-              }
-              else
-              {
+              } else {
                 throw new sfException(sprintf('Unsupported token for numberformat (Pos 2):"%s"',  $pattern));
               }
 
@@ -435,28 +391,20 @@ class sfI18nNumberFormat {
 
             case '##0':
 
-              if($parts[$key - 1] == '##')
-              {
+              if ($parts[$key - 1] == '##') {
                 $regex[$pkey] .= '[0-9]';
-              }
-              else if (($parts[$key - 1] == '#') || ($parts[$key - 1] == '-#'))
-              {
+              } else if (($parts[$key - 1] == '#') || ($parts[$key - 1] == '-#')) {
                 $regex[$pkey] .= '(\\' .  $num_format->getGroupSeparator(). '{0,1}[0-9]{3})*';
-              }
-              else
-              {
+              } else {
                 throw new sfException(sprintf('Unsupported token for numberformat (Pos 3):"%s"', $pattern));
               }
               break;
 
             case '#0':
 
-              if($key == 0)
-              {
+              if ($key == 0) {
                 $regex[$pkey] .= '[0-9]*';
-              }
-              else
-              {
+              } else {
                 throw new sfException(sprintf('Unsupported token for numberformat (Pos 4):"%s"', $pattern));
               }
 
@@ -465,34 +413,22 @@ class sfI18nNumberFormat {
         }
       }
 
-      if(strpos($pattern, 'E') !== false)
-      {
-        if(($pattern == '#E0') || ($pattern == '#E00'))
-        {
+      if (strpos($pattern, 'E') !== false) {
+        if (($pattern == '#E0') || ($pattern == '#E00')) {
           $regex[$pkey] .= '[' . $num_format->getPositiveSign() . '+]{0,1}[0-9]{1,}(\\' . $num_format->getDecimalSeparator() . '[0-9]{1,})*[eE][' . $num_format->getPositiveSign() . '+]{0,1}[0-9]{1,}';
-        }
-        else if (($pattern == '-#E0') || ($pattern == '-#E00'))
-        {
+        } else if (($pattern == '-#E0') || ($pattern == '-#E00')) {
           $regex[$pkey] .= '[' . $num_format->getNegativeSign() . '-]{0,1}[0-9]{1,}(\\' . $num_format->getDecimalSeparator() . '[0-9]{1,})*[eE][' . $num_format->getNegativeSign() . '-]{0,1}[0-9]{1,}';
-        }
-        else
-        {
+        } else {
           throw new sfException(sprintf('Unsupported token for numberformat (Pos 5):"%s"', $pattern));
         }
       }
 
-      if(!empty($end))
-      {
-        if($end == '###')
-        {
+      if (!empty($end)) {
+        if ($end == '###') {
           $regex[$pkey] .= '(\\' . $num_format->getDecimalSeparator() . '{1}[0-9]{1,}){0,1}';
-        }
-        else if ($end == '###-')
-        {
+        } else if ($end == '###-') {
           $regex[$pkey] .= '(\\' . $num_format->getDecimalSeparator() . '{1}[0-9]{1,}){0,1}[' . $num_format->getNegativeSign() . '-]';
-        }
-        else
-        {
+        } else {
           throw new sfException(sprintf('Unsupported token for numberformat (Pos 6):"%s"', $pattern));
         }
       }
@@ -514,8 +450,7 @@ class sfI18nNumberFormat {
     $pattern = explode(';', $pattern);
 
     $negative = null;
-    if(count($pattern) > 1)
-    {
+    if (count($pattern) > 1) {
       $negative = $pattern[1];
     }
     $pattern = $pattern[0];
@@ -541,8 +476,7 @@ class sfI18nNumberFormat {
     $info['positive'] = $pattern;
 
     // find the negative prefix and postfix
-    if($negative)
-    {
+    if ($negative) {
       $prefixPostfix = $this->getPrePostfix($negative);
       $info['negPref'] = $prefixPostfix[0];
       $info['negPost'] = $prefixPostfix[1];
@@ -552,24 +486,18 @@ class sfI18nNumberFormat {
     $info['posPref'] = $posfix[0];
     $info['posPost'] = $posfix[1];
 
-    if(is_int($groupPos1))
-    {
+    if (is_int($groupPos1)) {
       // get the second group
       $groupPos2 = strrpos(substr($pattern, 0, $groupPos1), $comma);
 
       // get the number of decimal digits
-      if(is_int($decimalPos))
-      {
+      if (is_int($decimalPos)) {
         $groupSize1 = $decimalPos - $groupPos1 - 1;
-      }
-      else
-      {
+      } else {
         // no decimal point, so traverse from the back
         // to find the groupsize 1.
-        for($i = strlen($pattern) - 1; $i >= 0; $i--)
-        {
-          if($pattern{$i} == $digit || $pattern{$i} == $hash)
-          {
+        for ($i = strlen($pattern) - 1; $i >= 0; $i--) {
+          if ($pattern{$i} == $digit || $pattern{$i} == $hash) {
             $groupSize1 = $i - $groupPos1;
             break;
           }
@@ -577,22 +505,17 @@ class sfI18nNumberFormat {
       }
 
       // get the second group size
-      if(is_int($groupPos2))
-      {
+      if (is_int($groupPos2)) {
         $groupSize2 = $groupPos1 - $groupPos2 - 1;
       }
     }
 
-    if(is_int($decimalPos))
-    {
-      for($i = strlen($pattern) - 1; $i >= 0; $i--)
-      {
-        if($pattern{$i} == $dot)
-        {
+    if (is_int($decimalPos)) {
+      for ($i = strlen($pattern) - 1; $i >= 0; $i--) {
+        if ($pattern{$i} == $dot) {
           break;
         }
-        if($pattern{$i} == $digit)
-        {
+        if ($pattern{$i} == $digit) {
           $decimalPoints = $i - $decimalPos;
           break;
         }
@@ -778,12 +701,9 @@ class sfI18nNumberFormat {
    */
   public function getCurrencySymbol($currency = 'USD')
   {
-    if(isset($this->pattern['symbol']))
-    {
+    if (isset($this->pattern['symbol'])) {
       return $this->pattern['symbol'];
-    }
-    elseif(isset($this->data['currencies'][$currency][0]))
-    {
+    } elseif (isset($this->data['currencies'][$currency][0])) {
       return $this->data['currencies'][$currency][0];
     }
 

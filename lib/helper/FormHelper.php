@@ -51,30 +51,22 @@ function options_for_select($options = array(), $selected = '', $html_options = 
 {
   $html_options = _parse_attributes($html_options);
 
-  if(is_array($selected))
-  {
+  if (is_array($selected)) {
     $selected = array_map('strval', array_values($selected));
   }
 
   $html = '';
 
-  if($value = _get_option($html_options, 'include_custom'))
-  {
+  if ($value = _get_option($html_options, 'include_custom')) {
     $html .= content_tag('option', $value, array('value' => '')) . "\n";
-  }
-  else if(_get_option($html_options, 'include_blank'))
-  {
+  } else if (_get_option($html_options, 'include_blank')) {
     $html .= content_tag('option', '', array('value' => '')) . "\n";
   }
 
-  foreach($options as $key => $value)
-  {
-    if(is_array($value) || $value instanceof sfOutputEscaperArrayDecorator)
-    {
+  foreach ($options as $key => $value) {
+    if (is_array($value) || $value instanceof sfOutputEscaperArrayDecorator) {
       $html .= content_tag('optgroup', options_for_select($value, $selected, $html_options), array('label' => $key)) . "\n";
-    }
-    else
-    {
+    } else {
       $option_options = array('value' => $key);
 
       if(
@@ -115,18 +107,15 @@ function form_tag($url_for_options = '', $options = array())
   $options = _parse_attributes($options);
 
   $html_options = $options;
-  if(!isset($html_options['method']))
-  {
+  if (!isset($html_options['method'])) {
     $html_options['method'] = 'post';
   }
 
-  if(_get_option($html_options, 'multipart'))
-  {
+  if (_get_option($html_options, 'multipart')) {
     $html_options['enctype'] = 'multipart/form-data';
   }
 
-  if(!isset($html_options['accept-charset']))
-  {
+  if (!isset($html_options['accept-charset'])) {
     $html_options['accept-charset'] = strtoupper(sfConfig::get('sf_charset'));
   }
 
@@ -171,19 +160,16 @@ function select_tag($name, $option_tags = null, $options = array())
 {
   $options = _convert_options($options);
   $id = $name;
-  if(isset($options['multiple']) && $options['multiple'] && substr($name, -2) !== '[]')
-  {
+  if (isset($options['multiple']) && $options['multiple'] && substr($name, -2) !== '[]') {
     $name .= '[]';
   }
-  if(is_array($option_tags))
-  {
+  if (is_array($option_tags)) {
     $option_tags = options_for_select($option_tags);
   }
 
   $default = array();
 
-  if($name)
-  {
+  if ($name) {
     $default['name'] = $name;
     $default['id'] = get_id_from_name($id);
   }
@@ -219,8 +205,7 @@ function select_country_tag($name, $selected = null, $options = array(), $cultur
 {
   $options = _parse_attributes($options);
 
-  if(is_null($culture))
-  {
+  if (is_null($culture)) {
     $culture = sfContext::getInstance()->getUser()->getCulture();
   }
 
@@ -246,20 +231,16 @@ function select_currency_tag($name, $selected = null, $options = array(), $cultu
 {
   $options = _parse_attributes($options);
 
-  if(is_null($culture))
-  {
+  if (is_null($culture)) {
     $culture = sfContext::getInstance()->getUser()->getCulture();
   }
 
   $c = new sfCulture($culture);
 
-  if($currency_option = _get_option($options, 'currency'))
-  {
+  if ($currency_option = _get_option($options, 'currency')) {
     $currency_option = array_map('strtoupper', $currency_option);
     $currencies = $c->getCurrencies($currency_option);
-  }
-  else
-  {
+  } else {
     $currencies = $c->getCurrencies();
   }
 
@@ -301,12 +282,9 @@ function select_language_tag($name, $selected = null, $options = array())
   $c = new sfCulture(sfContext::getInstance()->getUser()->getCulture());
   $languages = $c->getLanguages();
 
-  if($language_option = _get_option($options, 'languages'))
-  {
-    foreach($languages as $key => $value)
-    {
-      if(!in_array($key, $language_option))
-      {
+  if ($language_option = _get_option($options, 'languages')) {
+    foreach ($languages as $key => $value) {
+      if (!in_array($key, $language_option)) {
         unset($languages[$key]);
       }
     }
@@ -461,20 +439,15 @@ function textarea_tag($name, $content = null, $options = array())
 {
   $options = _parse_attributes($options);
 
-  if($size = _get_option($options, 'size'))
-  {
+  if ($size = _get_option($options, 'size')) {
     list($options['cols'], $options['rows']) = explode('x', $size, 2);
   }
 
   // rich control?
-  if($rich = _get_option($options, 'rich', false))
-  {
-    if(true === $rich)
-    {
+  if ($rich = _get_option($options, 'rich', false)) {
+    if (true === $rich) {
       $driver = sfConfig::get('sf_rich_text_editor_class', 'CKEditor');
-    }
-    else
-    {
+    } else {
       $driver = $rich;
     }
 
@@ -533,8 +506,7 @@ function checkbox_tag($name, $value = '1', $checked = false, $options = array())
 
   $html_options = array_merge(array('type' => 'checkbox', 'name' => $name, 'id' => get_id_from_name($name, $value), 'value' => $value), _convert_options($options));
 
-  if($checked)
-  {
+  if ($checked) {
     $html_options['checked'] = 'checked';
   }
 
@@ -562,8 +534,7 @@ function radiobutton_tag($name, $value, $checked = false, $options = array())
 
   $html_options = array_merge(array('type' => 'radio', 'name' => $name, 'id' => get_id_from_name($name . '[]', $value), 'value' => $value), _convert_options($options));
 
-  if($checked)
-  {
+  if ($checked) {
     $html_options['checked'] = 'checked';
   }
 
@@ -655,19 +626,15 @@ function input_date_tag($name, $value = null, $options = array())
   $withTime = _get_option($options, 'withtime', false);
 
   // rich control?
-  if(!_get_option($options, 'rich', false))
-  {
+  if (!_get_option($options, 'rich', false)) {
     use_helper('DateForm');
 
     // set culture for month tag
     $options['culture'] = $culture;
 
-    if($withTime)
-    {
+    if ($withTime) {
       return select_datetime_tag($name, $value, $options, isset($options['html']) ? $options['html'] : array());
-    }
-    else
-    {
+    } else {
       return select_date_tag($name, $value, $options, isset($options['html']) ? $options['html'] : array());
     }
   }
@@ -679,12 +646,9 @@ function input_date_tag($name, $value = null, $options = array())
   $pattern = $dateFormat->getInputPattern($pattern);
 
   // parse date
-  if($value === null || $value === '')
-  {
+  if ($value === null || $value === '') {
     $value = '';
-  }
-  else
-  {
+  } else {
     $value = $dateFormat->format($value, $pattern);
   }
 
@@ -695,14 +659,12 @@ function input_date_tag($name, $value = null, $options = array())
       is_readable(sfConfig::get('sf_sift_data_dir') . '/web/' . $langFile . '.js') || is_readable(sfConfig::get('sf_web_dir') . '/' . $langFile . '.js') ? $langFile : sfConfig::get('sf_calendar_web_dir') . '/lang/calendar-en',
       sfConfig::get('sf_calendar_web_dir') . '/calendar-setup',
   );
-  foreach($jss as $js)
-  {
+  foreach ($jss as $js) {
     $context->getResponse()->addJavascript($js);
   }
 
   // css
-  if($calendar_style = _get_option($options, 'css', 'skins/blue/blue'))
-  {
+  if ($calendar_style = _get_option($options, 'css', 'skins/blue/blue')) {
     $context->getResponse()->addStylesheet(sfConfig::get('sf_calendar_web_dir') . '/' . $calendar_style);
   }
 
@@ -727,14 +689,12 @@ function input_date_tag($name, $value = null, $options = array())
       align    : "bR",
       button : "' . $id_calendarButton . '"';
 
-  if($withTime)
-  {
+  if ($withTime) {
     $js .= ",\n showsTime : true";
   }
 
   // calendar options
-  if($calendar_options = _get_option($options, 'calendar_options'))
-  {
+  if ($calendar_options = _get_option($options, 'calendar_options')) {
     $js .= ",\n" . $calendar_options;
   }
 
@@ -746,37 +706,29 @@ function input_date_tag($name, $value = null, $options = array())
   // calendar button
   $calendar_button = $withTime ? 'select date and time' : 'select date';
   $calendar_button_type = 'txt';
-  if($calendar_button_img = _get_option($options, 'calendar_button_img'))
-  {
+  if ($calendar_button_img = _get_option($options, 'calendar_button_img')) {
     $calendar_button = $calendar_button_img;
     $calendar_button_type = 'img';
-  }
-  else if($calendar_button_txt = _get_option($options, 'calendar_button_txt'))
-  {
+  } else if ($calendar_button_txt = _get_option($options, 'calendar_button_txt')) {
     $calendar_button = $calendar_button_txt;
     $calendar_button_type = 'txt';
   }
 
 
   // construct html
-  if(!isset($options['size']))
-  {
+  if (!isset($options['size'])) {
     // educated guess about the size
     $options['size'] = strlen($date_format) + 2;
   }
   $html = input_tag($name, $value, $options);
 
-  if($calendar_button_type == 'img')
-  {
+  if ($calendar_button_type == 'img') {
     // $html .= image_tag($calendar_button, array('id' => $id_calendarButton, 'style' => 'cursor: pointer; vertical-align: middle'));
-  }
-  else
-  {
+  } else {
     // $html .= content_tag('button', '<span>'.__($calendar_button).'</span>', array('type' => 'button', 'class' => 'calendar', 'onclick' => 'return false', 'id' => $id_calendarButton));
   }
 
-  if(_get_option($options, 'with_format'))
-  {
+  if (_get_option($options, 'with_format')) {
     $html .= '(' . $date_format . ')';
   }
 
@@ -867,8 +819,7 @@ function reset_tag($value = 'Reset', $options = array())
  */
 function submit_image_tag($source, $options = array())
 {
-  if(!isset($options['alt']))
-  {
+  if (!isset($options['alt'])) {
     $path_pos = strrpos($source, '/');
     $dot_pos = strrpos($source, '.');
     $begin = $path_pos ? $path_pos + 1 : 0;
@@ -919,8 +870,7 @@ function label_for($id, $label, $options = array())
 function get_id_from_name($name, $value = null)
 {
   // check to see if we have an array variable for a field name
-  if(strstr($name, '['))
-  {
+  if (strstr($name, '[')) {
     $name = str_replace(array('[]', '][', '[', ']'), array((($value != null) ? '_' . $value : ''), '_', '_', ''), $name);
   }
 
@@ -953,26 +903,21 @@ function form_required_label_markup(sfForm $form)
 function get_javascripts_for_form(sfForm $form)
 {
   $html = '';
-  foreach($form->getJavascripts() as $file => $options)
-  {
-    if(is_numeric($file))
-    {
+  foreach ($form->getJavascripts() as $file => $options) {
+    if (is_numeric($file)) {
       // File names as values without options are also supported
       $file = $options;
-      if(is_array($file))
-      {
+      if (is_array($file)) {
         $options = current($file);
         $file = key($file);
       }
     }
 
-    if(!is_array($options))
-    {
+    if (!is_array($options)) {
       $options = array();
     }
 
-    if(isset($options['position']))
-    {
+    if (isset($options['position'])) {
       unset($options['position']);
     }
 
@@ -985,27 +930,22 @@ function get_javascripts_for_form(sfForm $form)
 function use_javascripts_for_form(sfForm $form)
 {
   $response = sfContext::getInstance()->getResponse();
-  foreach($form->getJavascripts() as $file => $options)
-  {
-    if(is_numeric($file))
-    {
+  foreach ($form->getJavascripts() as $file => $options) {
+    if (is_numeric($file)) {
       // File names as values without options are also supported
       $file = $options;
-      if(is_array($file))
-      {
+      if (is_array($file)) {
         $options = current($file);
         $file = key($file);
       }
     }
 
-      if(!is_array($options))
-    {
+      if (!is_array($options)) {
       $options = array();
     }
 
       $position = '';
-      if(isset($options['position']))
-    {
+      if (isset($options['position'])) {
       $position = $options['position'];
       unset($options['position']);
     }
@@ -1033,19 +973,15 @@ function include_javascripts_for_form(sfForm $form)
 function get_stylesheets_for_form(sfForm $form)
 {
   $html = '';
-  foreach ($form->getStylesheets() as $file => $options)
-  {
-    if(is_integer($file) && is_string($options))
-    {
+  foreach ($form->getStylesheets() as $file => $options) {
+    if (is_integer($file) && is_string($options)) {
       $file = $options;
       $options = array();
     }
-      if(is_string($options))
-    {
+      if (is_string($options)) {
       $options = array('media' => $options);
     }
-    if(isset($options['position']))
-    {
+    if (isset($options['position'])) {
       unset($options['position']);
     }
     $html .= stylesheet_tag($file, $options);
@@ -1063,20 +999,16 @@ function use_stylesheets_for_form(sfForm $form)
 {
   $response = sfContext::getInstance()->getResponse();
 
-  foreach($form->getStylesheets() as $file => $options)
-  {
-    if(is_integer($file) && is_string($options))
-    {
+  foreach ($form->getStylesheets() as $file => $options) {
+    if (is_integer($file) && is_string($options)) {
       $file = $options;
       $options = array();
     }
-    if(is_string($options))
-    {
+    if (is_string($options)) {
       $options = array('media' => $options);
     }
     $position = '';
-    if(isset($options['position']))
-    {
+    if (isset($options['position'])) {
       $position = $options['position'];
       unset($options['position']);
     }
@@ -1161,16 +1093,11 @@ function _convert_options($options)
 {
   $options = _parse_attributes($options);
 
-  foreach(array('disabled', 'readonly', 'multiple') as $attribute)
-  {
-    if(array_key_exists($attribute, $options))
-    {
-      if($options[$attribute])
-      {
+  foreach (array('disabled', 'readonly', 'multiple') as $attribute) {
+    if (array_key_exists($attribute, $options)) {
+      if ($options[$attribute]) {
         $options[$attribute] = $attribute;
-      }
-      else
-      {
+      } else {
         unset($options[$attribute]);
       }
     }
@@ -1181,12 +1108,9 @@ function _convert_options($options)
 
 function _convert_include_custom_for_select($options, &$select_options)
 {
-  if(_get_option($options, 'include_blank'))
-  {
+  if (_get_option($options, 'include_blank')) {
     $select_options[''] = '';
-  }
-  else if($include_custom = _get_option($options, 'include_custom'))
-  {
+  } else if ($include_custom = _get_option($options, 'include_custom')) {
     $select_options[''] = $include_custom;
   }
 }
@@ -1199,14 +1123,12 @@ function _convert_include_custom_for_select($options, &$select_options)
  */
 function form_debug(sfForm $form)
 {
-  if(sfConfig::get('sf_environment') != 'dev')
-  {
+  if (sfConfig::get('sf_environment') != 'dev') {
     return '';
   }
 
   $dbg = $form->debug();
-  if(!$dbg)
-  {
+  if (!$dbg) {
     return '';
   }
 

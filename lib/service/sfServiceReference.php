@@ -12,8 +12,8 @@
  * @package Sift
  * @subpackage service
  */
-class sfServiceReference {
-
+class sfServiceReference
+{
   /**
    * Service id
    *

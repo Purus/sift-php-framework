@@ -13,8 +13,8 @@
  * @package Sift
  * @subpackage mailer
  */
-class sfMailerBlackholePlugin extends sfMailerPlugin implements Swift_Events_TransportChangeListener {
-
+class sfMailerBlackholePlugin extends sfMailerPlugin implements Swift_Events_TransportChangeListener
+{
   /**
    * Invoked just before a transport is started.
    *
@@ -22,8 +22,7 @@ class sfMailerBlackholePlugin extends sfMailerPlugin implements Swift_Events_Tra
    */
   public function beforeTransportStarted(Swift_Events_TransportChangeEvent $evt)
   {
-    if(sfConfig::get('sf_logging_enabled'))
-    {
+    if (sfConfig::get('sf_logging_enabled')) {
       sfLogger::getInstance()->info('{sfMailer} Delivery canceled. The email has been put to the blackhole.');
     }
     $evt->cancelBubble();

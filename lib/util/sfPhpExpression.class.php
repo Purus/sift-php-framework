@@ -30,8 +30,8 @@
  * @see        sfToolkit::varExport()
  * @link http://www.php.net/manual/en/language.oop5.magic.php#object.set-state
  */
-class sfPhpExpression {
-
+class sfPhpExpression
+{
   /**
    * Storage for php expression.
    *

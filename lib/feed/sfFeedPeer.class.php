@@ -12,8 +12,8 @@
  * @package    Sift
  * @subpackage feed
  */
-class sfFeedPeer {
-
+class sfFeedPeer
+{
   /**
    * Retrieve a new sfFeed implementation instance.
    *
@@ -25,15 +25,13 @@ class sfFeedPeer {
    */
   public static function newInstance($format = '')
   {
-    try
-    {
+    try {
       $class = 'sf' . ucfirst($format) . 'Feed';
 
       // the class exists
       $object = new $class();
 
-      if(!($object instanceof sfFeed))
-      {
+      if (!($object instanceof sfFeed)) {
         // the class name is of the wrong type
         $error = 'Class "%s" is not of the type sfFeed';
         $error = sprintf($error, $class);
@@ -42,9 +40,7 @@ class sfFeedPeer {
       }
 
       return $object;
-    }
-    catch(sfException $e)
-    {
+    } catch (sfException $e) {
       $e->printStackTrace();
     }
   }
@@ -60,17 +56,13 @@ class sfFeedPeer {
    */
   public static function createFromWeb($uri, $options = array())
   {
-    if(isset($options['adapter']))
-    {
+    if (isset($options['adapter'])) {
       $browser = new sfWebBrowser(array(), $options['adapter'], isset($options['adapter_options']) ? $options['adapter_options'] : array());
-    }
-    else
-    {
+    } else {
       $browser = new sfWebBrowser();
     }
     $browser->setUserAgent(isset($options['userAgent']) ? $options['userAgent'] : 'sfFeedReader/0.9');
-    if($browser->get($uri)->responseIsError())
-    {
+    if ($browser->get($uri)->responseIsError()) {
       $error = 'The given URL (%s) returns an error (%s: %s)';
       $error = sprintf($error, $uri, $browser->getResponseCode(), $browser->getResponseMessage());
       throw new Exception($error);
@@ -92,29 +84,23 @@ class sfFeedPeer {
   public static function createFromXml($feedString, $uri)
   {
     $feedClass = '';
-    if(preg_match('/xmlns=[\"\'](http:\/\/www\.w3\.org\/2005\/Atom|http:\/\/purl\.org\/atom)/', $feedString))
-    {
+    if (preg_match('/xmlns=[\"\'](http:\/\/www\.w3\.org\/2005\/Atom|http:\/\/purl\.org\/atom)/', $feedString)) {
       $feedClass = 'sfAtom1Feed';
     }
-    if(strpos($feedString, '<rss') !== false)
-    {
+    if (strpos($feedString, '<rss') !== false) {
       $feedClass = 'sfRssFeed';
     }
-    if(strpos($feedString, '<rdf:RDF') !== false)
-    {
+    if (strpos($feedString, '<rdf:RDF') !== false) {
       $feedClass = 'sfRss10Feed';
     }
 
-    if($feedClass)
-    {
+    if ($feedClass) {
       $object = new $feedClass();
       $object->setFeedUrl($uri);
       $object->fromXml($feedString);
 
       return $object;
-    }
-    else
-    {
+    } else {
       throw new sfException('Impossible to decode feed format');
     }
   }
@@ -132,13 +118,10 @@ class sfFeedPeer {
   {
     // merge all items
     $feed_items = array();
-    foreach($feeds as $feed)
-    {
-      foreach($feed->getItems() as $item)
-      {
+    foreach ($feeds as $feed) {
+      foreach ($feed->getItems() as $item) {
         $index = is_integer($item->getPubDate()) ? $item->getPubDate() : 0;
-        while(isset($feed_items[$index]))
-        {
+        while (isset($feed_items[$index])) {
           $index++;
         }
         $feed_items[$index] = $item;
@@ -149,16 +132,14 @@ class sfFeedPeer {
     krsort($feed_items);
 
     // limit the number of feed items to be added
-    if(isset($parameters['limit']))
-    {
+    if (isset($parameters['limit'])) {
       $feed_items = array_slice($feed_items, 0, $parameters['limit']);
     }
 
     // create a feed with these items
     $feed = self::newInstance(isset($parameters['format']) ? $parameters['format'] : '');
     $feed->initialize($parameters);
-    foreach($feed_items as $item)
-    {
+    foreach ($feed_items as $item) {
       $origin_feed = clone $item->getFeed();
       $origin_feed->setItems();
       $feed->addItem($item);
@@ -181,25 +162,18 @@ class sfFeedPeer {
   public static function convertObjectsToItems($objects, $options = array())
   {
     $items = array();
-    foreach($objects as $object)
-    {
+    foreach ($objects as $object) {
       $item = new sfFeedItem();
 
       // For each item property, check if an object method is provided,
       // and if not, guess it. Here is what it does for the link property
-      if(isset($options['methods']['link']))
-      {
-        if($options['methods']['link'])
-        {
+      if (isset($options['methods']['link'])) {
+        if ($options['methods']['link']) {
           $item->setLink(call_user_func(array($object, $options['methods']['link'])));
-        }
-        else
-        {
+        } else {
           $item->setLink('');
         }
-      }
-      else
-      {
+      } else {
         $routeName = (isset($options['routeName'])) ? $options['routeName'] : '';
         $fallbackUrl = (isset($options['fallbackUrl'])) ? $options['fallbackUrl'] : '';
         $item->setLink(self::getItemFeedLink($object, $routeName, $fallbackUrl));
@@ -208,29 +182,19 @@ class sfFeedPeer {
       // For the other properties, it can be automated
       // Not as readable but definitely more concise
       $details = array('title', 'description', 'content', 'authorEmail', 'authorName', 'authorLink', 'pubdate', 'comments', 'uniqueId', 'enclosure', 'categories');
-      foreach($details as $detail)
-      {
+      foreach ($details as $detail) {
         $itemMethod = 'set' . ucfirst($detail);
-        if(isset($options['methods'][$detail]))
-        {
-          if($options['methods'][$detail])
-          {
-            if(is_array($options['methods'][$detail]))
-            {
+        if (isset($options['methods'][$detail])) {
+          if ($options['methods'][$detail]) {
+            if (is_array($options['methods'][$detail])) {
               call_user_func(array($item, $itemMethod), call_user_func_array(array($object, $options['methods'][$detail][0]), $options['methods'][$detail][1]));
-            }
-            else
-            {
+            } else {
               call_user_func(array($item, $itemMethod), call_user_func(array($object, $options['methods'][$detail])));
             }
-          }
-          else
-          {
+          } else {
             call_user_func(array($item, $itemMethod), '');
           }
-        }
-        else
-        {
+        } else {
           call_user_func(array($item, $itemMethod), call_user_func(array('sfFeedPeer', 'getItemFeed' . ucfirst($detail)), $object));
         }
       }
@@ -262,10 +226,8 @@ class sfFeedPeer {
 
   private static function getItemFeedTitle($item)
   {
-    foreach(array('getFeedTitle', 'getTitle', 'getName', '__toString') as $methodName)
-    {
-      if(method_exists($item, $methodName))
-      {
+    foreach (array('getFeedTitle', 'getTitle', 'getName', '__toString') as $methodName) {
+      if (method_exists($item, $methodName)) {
         return $item->$methodName();
       }
     }
@@ -275,17 +237,13 @@ class sfFeedPeer {
 
   private static function getItemFeedLink($item, $routeName = '', $fallback_url = '')
   {
-    if($routeName)
-    {
-      if(method_exists('sfRouting', 'getInstance'))
-      {
+    if ($routeName) {
+      if (method_exists('sfRouting', 'getInstance')) {
         $route = sfRouting::getInstance()->getRouteByName($routeName);
         $url = $route[0];
         $paramNames = $route[2];
         $defaults = $route[4];
-      }
-      else
-      {
+      } else {
         $routes = sfContext::getInstance()->getRouting()->getRoutes();
         $route = $routes[substr($routeName, 1)];
         $url = $route[0];
@@ -295,30 +253,23 @@ class sfFeedPeer {
 
       // we get all parameters
       $params = array();
-      foreach($paramNames as $paramName)
-      {
+      foreach ($paramNames as $paramName) {
         $value = null;
         $name = ucfirst(sfInflector::camelize($paramName));
 
         $found = false;
-        foreach(array('getFeed' . $name, 'get' . $name) as $methodName)
-        {
-          if(method_exists($item, $methodName))
-          {
+        foreach (array('getFeed' . $name, 'get' . $name) as $methodName) {
+          if (method_exists($item, $methodName)) {
             $value = $item->$methodName();
             $found = true;
             break;
           }
         }
 
-        if(!$found)
-        {
-          if(array_key_exists($paramName, $defaults))
-          {
+        if (!$found) {
+          if (array_key_exists($paramName, $defaults)) {
             $value = $defaults[$paramName];
-          }
-          else
-          {
+          } else {
             $error = 'Cannot find a "getFeed%s()" or "get%s()" method for object "%s" to generate URL with the "%s" route';
             $error = sprintf($error, $name, $name, get_class($item), $routeName);
             throw new sfException($error);
@@ -331,30 +282,23 @@ class sfFeedPeer {
       return sfContext::getInstance()->getController()->genUrl($routeName . ($params ? '?' . implode('&', $params) : ''), true);
     }
 
-    foreach(array('getFeedLink', 'getLink', 'getUrl') as $methodName)
-    {
-      if(method_exists($item, $methodName))
-      {
+    foreach (array('getFeedLink', 'getLink', 'getUrl') as $methodName) {
+      if (method_exists($item, $methodName)) {
         return sfContext::getInstance()->getController()->genUrl($item->$methodName(), true);
       }
     }
 
-    if($fallback_url)
-    {
+    if ($fallback_url) {
       return sfContext::getInstance()->getController()->genUrl($fallback_url, true);
-    }
-    else
-    {
+    } else {
       return sfContext::getInstance()->getController()->genUrl('/', true);
     }
   }
 
   private static function getItemFeedDescription($item)
   {
-    foreach(array('getFeedDescription', 'getDescription', 'getBody') as $methodName)
-    {
-      if(method_exists($item, $methodName))
-      {
+    foreach (array('getFeedDescription', 'getDescription', 'getBody') as $methodName) {
+      if (method_exists($item, $methodName)) {
         return $item->$methodName();
       }
     }
@@ -364,10 +308,8 @@ class sfFeedPeer {
 
   private static function getItemFeedContent($item)
   {
-    foreach(array('getFeedContent', 'getContent', 'getHtmlBody', 'getBody') as $methodName)
-    {
-      if(method_exists($item, $methodName))
-      {
+    foreach (array('getFeedContent', 'getContent', 'getHtmlBody', 'getBody') as $methodName) {
+      if (method_exists($item, $methodName)) {
         return $item->$methodName();
       }
     }
@@ -377,10 +319,8 @@ class sfFeedPeer {
 
   private static function getItemFeedUniqueId($item)
   {
-    foreach(array('getFeedUniqueId', 'getUniqueId', 'getId') as $methodName)
-    {
-      if(method_exists($item, $methodName))
-      {
+    foreach (array('getFeedUniqueId', 'getUniqueId', 'getId') as $methodName) {
+      if (method_exists($item, $methodName)) {
         return $item->$methodName();
       }
     }
@@ -390,21 +330,16 @@ class sfFeedPeer {
 
   private static function getItemFeedAuthorEmail($item)
   {
-    foreach(array('getFeedAuthorEmail', 'getAuthorEmail') as $methodName)
-    {
-      if(method_exists($item, $methodName))
-      {
+    foreach (array('getFeedAuthorEmail', 'getAuthorEmail') as $methodName) {
+      if (method_exists($item, $methodName)) {
         return $item->$methodName();
       }
     }
 
     // author as an object link
-    if($author = self::getItemFeedAuthor($item))
-    {
-      foreach(array('getEmail', 'getMail') as $methodName)
-      {
-        if(method_exists($author, $methodName))
-        {
+    if ($author = self::getItemFeedAuthor($item)) {
+      foreach (array('getEmail', 'getMail') as $methodName) {
+        if (method_exists($author, $methodName)) {
           return $author->$methodName();
         }
       }
@@ -415,21 +350,16 @@ class sfFeedPeer {
 
   private static function getItemFeedAuthorName($item)
   {
-    foreach(array('getFeedAuthorName', 'getAuthorName') as $methodName)
-    {
-      if(method_exists($item, $methodName))
-      {
+    foreach (array('getFeedAuthorName', 'getAuthorName') as $methodName) {
+      if (method_exists($item, $methodName)) {
         return $item->$methodName();
       }
     }
 
     // author as an object link
-    if($author = self::getItemFeedAuthor($item))
-    {
-      foreach(array('getName', '__toString') as $methodName)
-      {
-        if(method_exists($author, $methodName))
-        {
+    if ($author = self::getItemFeedAuthor($item)) {
+      foreach (array('getName', '__toString') as $methodName) {
+        if (method_exists($author, $methodName)) {
           return $author->$methodName();
         }
       }
@@ -440,21 +370,16 @@ class sfFeedPeer {
 
   private static function getItemFeedAuthorLink($item)
   {
-    foreach(array('getFeedAuthorLink', 'getAuthorLink') as $methodName)
-    {
-      if(method_exists($item, $methodName))
-      {
+    foreach (array('getFeedAuthorLink', 'getAuthorLink') as $methodName) {
+      if (method_exists($item, $methodName)) {
         return $item->$methodName();
       }
     }
 
     // author as an object link
-    if($author = self::getItemFeedAuthor($item))
-    {
-      foreach(array('getLink') as $methodName)
-      {
-        if(method_exists($author, $methodName))
-        {
+    if ($author = self::getItemFeedAuthor($item)) {
+      foreach (array('getLink') as $methodName) {
+        if (method_exists($author, $methodName)) {
           return $author->$methodName();
         }
       }
@@ -465,10 +390,8 @@ class sfFeedPeer {
 
   private static function getItemFeedAuthor($item)
   {
-    foreach(array('getAuthor', 'getUser', 'getPerson') as $methodName)
-    {
-      if(method_exists($item, $methodName) && is_object($item->$methodName()))
-      {
+    foreach (array('getAuthor', 'getUser', 'getPerson') as $methodName) {
+      if (method_exists($item, $methodName) && is_object($item->$methodName())) {
         return $item->$methodName();
       }
     }
@@ -478,10 +401,8 @@ class sfFeedPeer {
 
   private static function getItemFeedPubdate($item)
   {
-    foreach(array('getFeedPubdate', 'getPubdate', 'getCreatedAt', 'getDate', 'getPublishedAt') as $methodName)
-    {
-      if(method_exists($item, $methodName))
-      {
+    foreach (array('getFeedPubdate', 'getPubdate', 'getCreatedAt', 'getDate', 'getPublishedAt') as $methodName) {
+      if (method_exists($item, $methodName)) {
         return $item->$methodName('U');
       }
     }
@@ -491,10 +412,8 @@ class sfFeedPeer {
 
   private static function getItemFeedComments($item)
   {
-    foreach(array('getFeedComments', 'getComments') as $methodName)
-    {
-      if(method_exists($item, $methodName))
-      {
+    foreach (array('getFeedComments', 'getComments') as $methodName) {
+      if (method_exists($item, $methodName)) {
         return $item->$methodName();
       }
     }
@@ -504,13 +423,10 @@ class sfFeedPeer {
 
   private static function getItemFeedCategories($item)
   {
-    foreach(array('getFeedCategories', 'getCategories') as $methodName)
-    {
-      if(method_exists($item, $methodName) && is_array($item->$methodName()))
-      {
+    foreach (array('getFeedCategories', 'getCategories') as $methodName) {
+      if (method_exists($item, $methodName) && is_array($item->$methodName())) {
         $cats = array();
-        foreach($item->$methodName() as $category)
-        {
+        foreach ($item->$methodName() as $category) {
           $cats[] = (string) $category;
         }
 
@@ -523,8 +439,7 @@ class sfFeedPeer {
 
   private static function getItemFeedEnclosure($item)
   {
-    if(method_exists($item, 'getFeedEnclosure'))
-    {
+    if (method_exists($item, 'getFeedEnclosure')) {
       return $item->getFeedEnclosure();
     }
 

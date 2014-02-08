@@ -46,21 +46,15 @@ abstract class sfCache extends sfConfigurable implements sfICache
   {
     $driverClass = sprintf('sf%sCache', ucfirst($driver));
     $driverObj = false;
-    if(class_exists($driverClass))
-    {
+    if (class_exists($driverClass)) {
       $driverObj = new $driverClass($driverOptions);
-    }
-    elseif(class_exists(($driverClass = $driver)))
-    {
+    } elseif (class_exists(($driverClass = $driver))) {
       $driverObj = new $driverClass($driverOptions);
     }
 
-    if(!$driverObj)
-    {
+    if (!$driverObj) {
       throw new LogicException(sprintf('Invalid cache driver "%s" (class: %s) given.', $driver, $driverClass));
-    }
-    elseif(!$driverObj instanceof sfICache)
-    {
+    } elseif (!$driverObj instanceof sfICache) {
       throw new LogicException(sprintf('Cache driver "%s" (class: %s) does not implement sfICache.', $driver, $driverClass));
     }
 
@@ -74,14 +68,10 @@ abstract class sfCache extends sfConfigurable implements sfICache
    */
   public function __construct($options = array())
   {
-    if(is_object($options))
-    {
-      if(is_callable(array($options, 'toArray')))
-      {
+    if (is_object($options)) {
+      if (is_callable(array($options, 'toArray'))) {
         $options = $options->toArray();
-      }
-      else
-      {
+      } else {
         throw new InvalidArgumentException(sprintf('Options for "%s" must be an array or a object with ->toArray() method', get_class($this)));
       }
     }
@@ -122,8 +112,7 @@ abstract class sfCache extends sfConfigurable implements sfICache
   public function getMany($keys)
   {
     $data = array();
-    foreach($keys as $key)
-    {
+    foreach ($keys as $key) {
       $data[$key] = $this->get($key);
     }
 

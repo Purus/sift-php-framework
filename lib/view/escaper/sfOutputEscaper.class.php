@@ -77,51 +77,38 @@ abstract class sfOutputEscaper
    */
   public static function escape($escapingMethod, $value)
   {
-    if (null === $value)
-    {
+    if (null === $value) {
       return $value;
     }
 
     // Scalars are anything other than arrays, objects and resources.
-    if (is_scalar($value))
-    {
+    if (is_scalar($value)) {
       return call_user_func($escapingMethod, $value);
     }
 
-    if (is_array($value))
-    {
+    if (is_array($value)) {
       return new sfOutputEscaperArrayDecorator($escapingMethod, $value);
     }
 
-    if (is_object($value))
-    {
-      if ($value instanceof sfOutputEscaper)
-      {
+    if (is_object($value)) {
+      if ($value instanceof sfOutputEscaper) {
         // avoid double decoration
         $copy = clone $value;
 
         $copy->escapingMethod = $escapingMethod;
 
         return $copy;
-      }
-      else if (self::isClassMarkedAsSafe(get_class($value)))
-      {
+      } else if (self::isClassMarkedAsSafe(get_class($value))) {
         // the class or one of its children is marked as safe
         // return the unescaped object
         return $value;
-      }
-      else if ($value instanceof sfOutputEscaperSafe)
-      {
+      } else if ($value instanceof sfOutputEscaperSafe) {
         // do not escape objects marked as safe
         // return the original object
         return $value->getValue();
-      }
-      else if ($value instanceof Traversable)
-      {
+      } else if ($value instanceof Traversable) {
         return new sfOutputEscaperIteratorDecorator($escapingMethod, $value);
-      }
-      else
-      {
+      } else {
         return new sfOutputEscaperObjectDecorator($escapingMethod, $value);
       }
     }
@@ -141,26 +128,19 @@ abstract class sfOutputEscaper
    */
   public static function unescape($value)
   {
-    if (null === $value || is_bool($value))
-    {
+    if (null === $value || is_bool($value)) {
       return $value;
     }
 
-    if (is_scalar($value))
-    {
+    if (is_scalar($value)) {
       return html_entity_decode($value, ENT_QUOTES, sfConfig::get('sf_charset'));
-    }
-    elseif (is_array($value))
-    {
-      foreach ($value as $name => $v)
-      {
+    } elseif (is_array($value)) {
+      foreach ($value as $name => $v) {
         $value[$name] = self::unescape($v);
       }
 
       return $value;
-    }
-    elseif (is_object($value))
-    {
+    } elseif (is_object($value)) {
       return $value instanceof sfOutputEscaper ? $value->getRawValue() : $value;
     }
 
@@ -176,15 +156,12 @@ abstract class sfOutputEscaper
    */
   public static function isClassMarkedAsSafe($class)
   {
-    if (in_array($class, self::$safeClasses))
-    {
+    if (in_array($class, self::$safeClasses)) {
       return true;
     }
 
-    foreach (self::$safeClasses as $safeClass)
-    {
-      if (is_subclass_of($class, $safeClass))
-      {
+    foreach (self::$safeClasses as $safeClass) {
+      if (is_subclass_of($class, $safeClass)) {
         return true;
       }
     }

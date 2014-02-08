@@ -12,8 +12,8 @@
  * @package Sift
  * @subpackage exception
  */
-class sfRegexpException extends sfException {
-
+class sfRegexpException extends sfException
+{
   /**
    * Array of error messages
    *
@@ -36,8 +36,7 @@ class sfRegexpException extends sfException {
    */
   public function __construct($message, $code = null, $pattern = null)
   {
-    if(!$message)
-    {
+    if (!$message) {
       $message = (isset(self::$messages[$code]) ? self::$messages[$code] : 'Unknown error') .
                  ($pattern ? " (pattern: $pattern)" : '');
     }

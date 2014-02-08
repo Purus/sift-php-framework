@@ -13,8 +13,8 @@
  * @package    Sift
  * @subpackage util
  */
-class sfObjectCallbackDefinition {
-
+class sfObjectCallbackDefinition
+{
   protected $class        = null,
     $file         = null,
     $constructor  = null,
@@ -33,35 +33,29 @@ class sfObjectCallbackDefinition {
    */
   public static function createFromArray(array $array, $class = __CLASS__)
   {
-    if(!isset($array['class']))
-    {
+    if (!isset($array['class'])) {
       throw new InvalidArgumentException('Missing "class" key in the object definition');
     }
 
     $definition = new $class($array['class'], (isset($array['arguments']) ? $array['arguments'] : array()));
 
-    if(isset($array['constructor']))
-    {
+    if (isset($array['constructor'])) {
       $definition->setConstructor($array['constructor']);
     }
 
-    if(isset($array['file']))
-    {
+    if (isset($array['file'])) {
       $definition->setFile(self::replacePath($array['file']));
     }
 
-    if(isset($array['calls']))
-    {
+    if (isset($array['calls'])) {
       $definition->setMethodCalls($array['calls']);
     }
 
-    if(isset($array['configurator']))
-    {
+    if (isset($array['configurator'])) {
       $definition->setConfigurator($array['configurator']);
     }
 
-    if(isset($array['shared']))
-    {
+    if (isset($array['shared'])) {
       $definition->setShared($array['shared']);
     }
 
@@ -70,8 +64,7 @@ class sfObjectCallbackDefinition {
 
   public static function replacePath($path)
   {
-    if(!sfToolkit::isPathAbsolute($path))
-    {
+    if (!sfToolkit::isPathAbsolute($path)) {
       // not an absolute path so we'll prepend to it
       $path = sfConfig::get('sf_app_dir') . '/' . $path;
     }
@@ -186,8 +179,7 @@ class sfObjectCallbackDefinition {
   public function setMethodCalls(array $calls = array())
   {
     $this->calls = array();
-    foreach ($calls as $call)
-    {
+    foreach ($calls as $call) {
       $this->addMethodCall($call[0], $call[1]);
     }
 

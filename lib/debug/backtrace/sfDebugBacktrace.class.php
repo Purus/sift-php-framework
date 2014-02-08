@@ -12,8 +12,8 @@
  * @package Sift
  * @subpackage debug
  */
-class sfDebugBacktrace extends sfConfigurable implements Serializable, sfIJsonSerializable {
-
+class sfDebugBacktrace extends sfConfigurable implements Serializable, sfIJsonSerializable
+{
   /**
    * Object
    */
@@ -101,8 +101,7 @@ class sfDebugBacktrace extends sfConfigurable implements Serializable, sfIJsonSe
    */
   public function get()
   {
-    if($this->processed === false)
-    {
+    if ($this->processed === false) {
       $this->processTrace();
     }
 
@@ -117,8 +116,7 @@ class sfDebugBacktrace extends sfConfigurable implements Serializable, sfIJsonSe
   {
     $skip = $this->getOption('skip');
     $processed = array();
-    foreach($this->backtrace as $i => $trace)
-    {
+    foreach ($this->backtrace as $i => $trace) {
       if($i < $skip
           || (isset($trace['class']) && $this->skipClass($trace['class'])))
       {
@@ -127,36 +125,28 @@ class sfDebugBacktrace extends sfConfigurable implements Serializable, sfIJsonSe
 
       // prepare method argments
       $args = array();
-      if(isset($trace['args']) && $withArgs)
-      {
-        foreach($trace['args'] as $name => $arg)
-        {
+      if (isset($trace['args']) && $withArgs) {
+        foreach ($trace['args'] as $name => $arg) {
           $args[$name] = $this->getCalledArgument($arg);
         }
       }
 
       $methodName = $trace['function'];
-      if(isset($trace['class']) && isset($trace['function']))
-      {
-        if(isset($trace['object']) && get_class($trace['object']) != $trace['class'])
-        {
+      if (isset($trace['class']) && isset($trace['function'])) {
+        if (isset($trace['object']) && get_class($trace['object']) != $trace['class']) {
           $className = get_class($trace['object']) . '[' . $trace['class'] . ']';
-        }
-        else
-        {
+        } else {
           $className = $trace['class'];
         }
 
         $methodName = sprintf('%s%s%s', $className, isset($trace['type']) ? $trace['type'] : '->', $trace['function']);
       }
 
-      if(!isset($trace['file']))
-      {
+      if (!isset($trace['file'])) {
         $trace['file'] = '';
       }
 
-      if(!isset($trace['line']))
-      {
+      if (!isset($trace['line'])) {
         $trace['line'] = '';
       }
 
@@ -168,15 +158,11 @@ class sfDebugBacktrace extends sfConfigurable implements Serializable, sfIJsonSe
       }
 
       $fileShort = '';
-      if($trace['file'])
-      {
-        if($this->getOption('shorten_file_paths'))
-        {
+      if ($trace['file']) {
+        if ($this->getOption('shorten_file_paths')) {
           $trace['file'] = $this->shortenFilePath($trace['file']);
           $fileShort = $trace['file'];
-        }
-        else
-        {
+        } else {
           $fileShort = $this->shortenFilePath($trace['file']);
         }
       }
@@ -203,19 +189,16 @@ class sfDebugBacktrace extends sfConfigurable implements Serializable, sfIJsonSe
    */
   protected function skipClass($class)
   {
-    if(!class_exists($class, false))
-    {
+    if (!class_exists($class, false)) {
       return true;
     }
 
-    if(in_array($class, $this->getOption('skip_classes')))
-    {
+    if (in_array($class, $this->getOption('skip_classes'))) {
       return true;
     }
 
     $implements = class_implements($class, false);
-    foreach($this->getOption('skip_classes') as $skip)
-    {
+    foreach ($this->getOption('skip_classes') as $skip) {
       // is_subclass_of works for interfaces in php > 5.3.7
       if(is_subclass_of($class, $skip) ||
           in_array($skip, $implements))
@@ -236,8 +219,7 @@ class sfDebugBacktrace extends sfConfigurable implements Serializable, sfIJsonSe
    */
   protected function getFileEditUrl($file, $line)
   {
-    if(!$linkFormat = $this->getOption('file_url_format'))
-    {
+    if (!$linkFormat = $this->getOption('file_url_format')) {
       return '';
     }
 
@@ -265,63 +247,44 @@ class sfDebugBacktrace extends sfConfigurable implements Serializable, sfIJsonSe
   {
     $type = $value = null;
 
-    if(is_object($arg))
-    {
+    if (is_object($arg)) {
       $type = self::TYPE_OBJECT;
       $value = sprintf("$%s (#%s)", get_class($arg), spl_object_hash($arg));
-    }
-    else if(is_resource($arg))
-    {
+    } else if (is_resource($arg)) {
       $type = self::TYPE_RESOURCE;
       $value = sprintf('[resource: %s]', get_resource_type($arg));
-    }
-    else if(is_array($arg))
-    {
+    } else if (is_array($arg)) {
       $type = self::TYPE_ARRAY;
       $isAssociative = false;
       $args = array();
-      foreach($arg as $k => $v)
-      {
-        if(!is_numeric($k))
-        {
+      foreach ($arg as $k => $v) {
+        if (!is_numeric($k)) {
           $isAssociative = true;
         }
         $argValue = $this->getCalledArgument($v);
         $args[$k] = $argValue['value'];
       }
 
-      if($isAssociative)
-      {
+      if ($isAssociative) {
         $arr = array();
-        foreach($args as $k => $v)
-        {
+        foreach ($args as $k => $v) {
           $argValue = $this->getCalledArgument($k);
           $arr[] = sprintf('%s => %s', $argValue['value'], $v);
         }
         $value = 'array(' . join(', ', $arr) . ')';
-      }
-      else
-      {
+      } else {
         $value = 'array(' . join(', ', $args) . ')';
       }
-    }
-    else if(is_null($arg))
-    {
+    } else if (is_null($arg)) {
       $type = self::TYPE_NULL;
       $value = 'NULL';
-    }
-    else if(is_numeric($arg) || is_float($arg))
-    {
+    } else if (is_numeric($arg) || is_float($arg)) {
       $type = self::TYPE_NUMERIC;
-      $value = (string)$arg;
-    }
-    else if(is_string($arg))
-    {
+      $value = (string) $arg;
+    } else if (is_string($arg)) {
       $type = self::TYPE_STRING;
       $value = sprintf("'%s'", strtr($arg, array("\t" => '\t', "\r" => '\r', "\n" => '\n')));
-    }
-    else if(is_bool($arg))
-    {
+    } else if (is_bool($arg)) {
       $type = self::TYPE_BOOLEAN;
       $value = $arg === true ? 'true' : 'false';
     }
@@ -343,8 +306,7 @@ class sfDebugBacktrace extends sfConfigurable implements Serializable, sfIJsonSe
   public static function getFileExcerpt($file, $limitLines = false, $line = -1)
   {
     static $highlighter;
-    if(!$highlighter)
-    {
+    if (!$highlighter) {
       $highlighter = sfSyntaxHighlighter::factory('php');
     }
 

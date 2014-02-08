@@ -24,8 +24,8 @@
  * @package    Sift
  * @subpackage validator
  */
-class sfValidatorReCaptcha extends sfValidatorBase {
-
+class sfValidatorReCaptcha extends sfValidatorBase
+{
   /**
    * Configures the current validator.
    *
@@ -72,8 +72,7 @@ class sfValidatorReCaptcha extends sfValidatorBase {
   {
     $challenge = isset($value['recaptcha_challenge_field']) ? $value['recaptcha_challenge_field'] : null;
     $response = isset($value['recaptcha_response_field']) ? $value['recaptcha_response_field'] : null;
-    if(empty($challenge) || empty($response))
-    {
+    if (empty($challenge) || empty($response)) {
       throw new sfValidatorError($this, 'captcha', array('error' => 'invalid captcha'));
     }
 
@@ -99,8 +98,7 @@ class sfValidatorReCaptcha extends sfValidatorBase {
    */
   protected function check($parameters)
   {
-    if(false === ($fs = @fsockopen($this->getOption('server_host'), $this->getOption('server_port'), $errno, $errstr, $this->getOption('server_timeout'))))
-    {
+    if (false === ($fs = @fsockopen($this->getOption('server_host'), $this->getOption('server_port'), $errno, $errstr, $this->getOption('server_timeout')))) {
       throw new sfValidatorError($this, 'server_problem', array('error' => $errstr));
     }
 
@@ -115,8 +113,7 @@ class sfValidatorReCaptcha extends sfValidatorBase {
     );
 
     $response = '';
-    while(!feof($fs))
-    {
+    while (!feof($fs)) {
       $response .= fgets($fs, 1160);
     }
     fclose($fs);

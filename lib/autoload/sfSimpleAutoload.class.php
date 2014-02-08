@@ -12,8 +12,8 @@
  * @package    Sift
  * @subpackage autoload
  */
-class sfSimpleAutoload {
-
+class sfSimpleAutoload
+{
   protected static $registered = false,
           $instance = null;
   protected $cacheFile = null,
@@ -26,8 +26,7 @@ class sfSimpleAutoload {
 
   protected function __construct($cacheFile = null)
   {
-    if(null !== $cacheFile)
-    {
+    if (null !== $cacheFile) {
       $this->cacheFile = $cacheFile;
     }
 
@@ -43,8 +42,7 @@ class sfSimpleAutoload {
    */
   public static function getInstance($cacheFile = null)
   {
-    if(!isset(self::$instance))
-    {
+    if (!isset(self::$instance)) {
       self::$instance = new sfSimpleAutoload($cacheFile);
     }
 
@@ -58,19 +56,16 @@ class sfSimpleAutoload {
    */
   public static function register()
   {
-    if(self::$registered)
-    {
+    if (self::$registered) {
       return;
     }
 
     ini_set('unserialize_callback_func', 'spl_autoload_call');
-    if(false === spl_autoload_register(array(self::getInstance(), 'autoload')))
-    {
+    if (false === spl_autoload_register(array(self::getInstance(), 'autoload'))) {
       throw new sfException(sprintf('Unable to register %s::autoload as an autoloading method.', get_class(self::getInstance())));
     }
 
-    if(self::getInstance()->cacheFile)
-    {
+    if (self::getInstance()->cacheFile) {
       register_shutdown_function(array(self::getInstance(), 'saveCache'));
     }
 
@@ -101,42 +96,33 @@ class sfSimpleAutoload {
 
     // class already exists
     /*
-    if(class_exists($class, false) || interface_exists($class, false))
-    {
+    if (class_exists($class, false) || interface_exists($class, false)) {
       return true;
     }
     */
 
     $found = false;
     // we have a class path, let's include it
-    if(isset($this->classes[$class]))
-    {
+    if (isset($this->classes[$class])) {
       $found = $this->classes[$class];
-    }
-    elseif(class_exists('sfContext', false) && sfContext::hasInstance() &&
+    } elseif(class_exists('sfContext', false) && sfContext::hasInstance() &&
         ($module = sfContext::getInstance()->getModuleName()) &&
         isset($this->classes[strtolower($module.'/'.$class)]))
     {
       $found = $this->classes[strtolower($module.'/'.$class)];
     }
 
-    if(!$found)
-    {
+    if (!$found) {
       return false;
     }
 
-    try
-    {
+    try {
       require_once $found;
 
       return true;
-    }
-    catch(sfException $e)
-    {
+    } catch (sfException $e) {
       $e->printStackTrace();
-    }
-    catch(Exception $e)
-    {
+    } catch (Exception $e) {
       sfException::createFromException($e)->printStackTrace();
     }
   }
@@ -146,8 +132,7 @@ class sfSimpleAutoload {
    */
   public function loadCache()
   {
-    if(!$this->cacheFile || !is_readable($this->cacheFile))
-    {
+    if (!$this->cacheFile || !is_readable($this->cacheFile)) {
       return;
     }
 
@@ -164,10 +149,8 @@ class sfSimpleAutoload {
    */
   public function saveCache($force = false)
   {
-    if($this->cacheChanged || $force)
-    {
-      if(is_writable(dirname($this->cacheFile)))
-      {
+    if ($this->cacheChanged || $force) {
+      if (is_writable(dirname($this->cacheFile))) {
         file_put_contents($this->cacheFile, serialize(array($this->classes, $this->dirs, $this->files)));
       }
 
@@ -183,18 +166,15 @@ class sfSimpleAutoload {
     $this->classes = array();
     $this->cacheLoaded = false;
 
-    foreach($this->dirs as $dir)
-    {
+    foreach ($this->dirs as $dir) {
       $this->addDirectory($dir);
     }
 
-    foreach($this->files as $file)
-    {
+    foreach ($this->files as $file) {
       $this->addFile($file);
     }
 
-    foreach($this->overriden as $class => $path)
-    {
+    foreach ($this->overriden as $class => $path) {
       $this->classes[$class] = $path;
     }
 
@@ -220,22 +200,16 @@ class sfSimpleAutoload {
   {
     $finder = sfFinder::type('file')->followLink()->name('*' . $ext);
 
-    if($dirs = glob($dir))
-    {
-      foreach($dirs as $dir)
-      {
-        if(false !== $key = array_search($dir, $this->dirs))
-        {
+    if ($dirs = glob($dir)) {
+      foreach ($dirs as $dir) {
+        if (false !== $key = array_search($dir, $this->dirs)) {
           unset($this->dirs[$key]);
           $this->dirs[] = $dir;
 
-          if($this->cacheLoaded)
-          {
+          if ($this->cacheLoaded) {
             continue;
           }
-        }
-        else
-        {
+        } else {
           $this->dirs[] = $dir;
         }
 
@@ -253,8 +227,7 @@ class sfSimpleAutoload {
    */
   public function addFiles(array $files, $register = true)
   {
-    foreach($files as $file)
-    {
+    foreach ($files as $file) {
       $this->addFile($file, $register);
     }
   }
@@ -267,33 +240,25 @@ class sfSimpleAutoload {
    */
   public function addFile($file, $register = true)
   {
-    if(!is_file($file))
-    {
+    if (!is_file($file)) {
       return;
     }
 
-    if(in_array($file, $this->files))
-    {
-      if($this->cacheLoaded)
-      {
+    if (in_array($file, $this->files)) {
+      if ($this->cacheLoaded) {
         return;
       }
-    }
-    else
-    {
-      if($register)
-      {
+    } else {
+      if ($register) {
         $this->files[] = $file;
       }
     }
 
-    if($register)
-    {
+    if ($register) {
       $this->cacheChanged = true;
     }
 
-    foreach(sfToolkit::extractClasses($file) as $class)
-    {
+    foreach (sfToolkit::extractClasses($file) as $class) {
       $this->classes[strtolower($class)] = $file;
     }
   }
@@ -337,8 +302,7 @@ class sfSimpleAutoload {
   public function loadConfiguration(array $files)
   {
     $config = new sfAutoloadConfigHandler();
-    foreach($config->evaluate($files) as $class => $file)
-    {
+    foreach ($config->evaluate($files) as $class => $file) {
       $this->setClassPath($class, $file);
     }
   }

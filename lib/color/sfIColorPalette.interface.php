@@ -12,8 +12,8 @@
  * @package Sift
  * @subpackage color
  */
-interface sfIColorPallete {
-
+interface sfIColorPallete
+{
   public function getSwatches();
   public function getClosestColor($color);
   public function getId();

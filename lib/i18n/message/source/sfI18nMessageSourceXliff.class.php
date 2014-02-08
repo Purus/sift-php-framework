@@ -20,8 +20,8 @@
  * @package Sift
  * @subpackage i18n
  */
-class sfI18nMessageSourceXliff extends sfI18nMessageSource {
-
+class sfI18nMessageSourceXliff extends sfI18nMessageSource
+{
   /**
    * Message data filename extension.
    * @var string
@@ -54,8 +54,7 @@ class sfI18nMessageSourceXliff extends sfI18nMessageSource {
   protected function &loadData($filename)
   {
     libxml_use_internal_errors(true);
-    if(!$xml = simplexml_load_file($filename))
-    {
+    if (!$xml = simplexml_load_file($filename)) {
       $error = false;
 
       return $error;
@@ -66,8 +65,7 @@ class sfI18nMessageSourceXliff extends sfI18nMessageSource {
 
     $translations = array();
 
-    foreach($translationUnit as $unit)
-    {
+    foreach ($translationUnit as $unit) {
       $source = (string) $unit->source;
       $translations[$source][] = (string) $unit->target;
       $translations[$source][] = (string) $unit['id'];
@@ -136,10 +134,8 @@ class sfI18nMessageSourceXliff extends sfI18nMessageSource {
 
     $variant = null;
 
-    for($i = 0, $max = count($variants); $i < $max; $i++)
-    {
-      if(strlen($variants[$i]) > 0)
-      {
+    for ($i = 0, $max = count($variants); $i < $max; $i++) {
+      if (strlen($variants[$i]) > 0) {
         $variant .= $variant ? '_' . $variants[$i] : $variants[$i];
         $catalogues[] = $catalogue . $this->dataSeparator . $variant . $this->dataExt;
       }
@@ -166,10 +162,8 @@ class sfI18nMessageSourceXliff extends sfI18nMessageSource {
 
     $variant = null;
 
-    for($i = 0, $max = count($variants); $i < $max; $i++)
-    {
-      if(strlen($variants[$i]) > 0)
-      {
+    for ($i = 0, $max = count($variants); $i < $max; $i++) {
+      if (strlen($variants[$i]) > 0) {
         $variant .= $variant ? '_' . $variants[$i] : $variants[$i];
         $catalogues[] = $variant . '/' . $catalogue . $this->dataExt;
       }
@@ -204,22 +198,18 @@ class sfI18nMessageSourceXliff extends sfI18nMessageSource {
 
     $catalogue = array();
 
-    foreach($files as $file)
-    {
-      if(is_dir($dir . '/' . $file) && preg_match('/^[a-z]{2}(_[A-Z]{2,3})?$/', $file))
-      {
+    foreach ($files as $file) {
+      if (is_dir($dir . '/' . $file) && preg_match('/^[a-z]{2}(_[A-Z]{2,3})?$/', $file)) {
         $catalogue = array_merge($catalogue, $this->getCatalogues($dir . '/' . $file, $file));
       }
 
       $pos = strpos($file, $this->dataExt);
-      if($pos > 0 && substr($file, -1 * strlen($this->dataExt)) == $this->dataExt)
-      {
+      if ($pos > 0 && substr($file, -1 * strlen($this->dataExt)) == $this->dataExt) {
         $name = substr($file, 0, $pos);
         $dot = strrpos($name, $this->dataSeparator);
         $culture = $variant;
         $cat = $name;
-        if(is_int($dot))
-        {
+        if (is_int($dot)) {
           $culture = substr($name, $dot + 1, strlen($name));
           $cat = substr($name, 0, $dot);
         }
@@ -245,16 +235,13 @@ class sfI18nMessageSourceXliff extends sfI18nMessageSource {
    */
   protected function getVariants($catalogue = 'messages')
   {
-    if(is_null($catalogue))
-    {
+    if (is_null($catalogue)) {
       $catalogue = 'messages';
     }
 
-    foreach($this->getCatalogueList($catalogue) as $variant)
-    {
+    foreach ($this->getCatalogueList($catalogue) as $variant) {
       $file = $this->getSource($variant);
-      if(is_file($file))
-      {
+      if (is_file($file)) {
         return array($variant, $file);
       }
     }
@@ -273,23 +260,18 @@ class sfI18nMessageSourceXliff extends sfI18nMessageSource {
   public function save($catalogue = 'messages')
   {
     $messages = $this->untranslated;
-    if(count($messages) <= 0)
-    {
+    if (count($messages) <= 0) {
       return false;
     }
 
     $variants = $this->getVariants($catalogue);
-    if($variants)
-    {
+    if ($variants) {
       list($variant, $filename) = $variants;
-    }
-    else
-    {
+    } else {
       list($variant, $filename) = $this->createMessageTemplate($catalogue);
     }
 
-    if(is_writable($filename) == false)
-    {
+    if (is_writable($filename) == false) {
       throw new sfException(sprintf("Unable to save to file %s, file must be writable.", $filename));
     }
 
@@ -303,18 +285,14 @@ class sfI18nMessageSourceXliff extends sfI18nMessageSource {
 
     // find the biggest "id" used
     $lastNodes = $xpath->query('//trans-unit[not(@id <= preceding-sibling::trans-unit/@id) and not(@id <= following-sibling::trans-unit/@id)]');
-    if(null !== $last = $lastNodes->item(0))
-    {
+    if (null !== $last = $lastNodes->item(0)) {
       $count = intval($last->getAttribute('id'));
-    }
-    else
-    {
+    } else {
       $count = 0;
     }
 
     // for each message add it to the XML file using DOM
-    foreach($messages as $message)
-    {
+    foreach ($messages as $message) {
       $unit = $dom->createElement('trans-unit');
       $unit->setAttribute('id', ++$count);
 
@@ -339,8 +317,7 @@ class sfI18nMessageSourceXliff extends sfI18nMessageSource {
 
     // save it and clear the cache for this variant
     $dom->save($filename);
-    if(!empty($this->cache))
-    {
+    if (!empty($this->cache)) {
       $this->cache->clean($variant, $this->culture);
     }
 
@@ -359,17 +336,13 @@ class sfI18nMessageSourceXliff extends sfI18nMessageSource {
   public function update($text, $target, $comments = '', $catalogue = 'messages')
   {
     $variants = $this->getVariants($catalogue);
-    if($variants)
-    {
+    if ($variants) {
       list($variant, $filename) = $variants;
-    }
-    else
-    {
+    } else {
       return false;
     }
 
-    if(is_writable($filename) == false)
-    {
+    if (is_writable($filename) == false) {
       throw new sfException(sprintf("Unable to update file %s, file must be writable.", $filename));
     }
 
@@ -382,35 +355,29 @@ class sfI18nMessageSourceXliff extends sfI18nMessageSource {
     $units = $xpath->query('//trans-unit');
 
     // for each of the existin units
-    foreach($units as $unit)
-    {
+    foreach ($units as $unit) {
       $found = false;
       $targetted = false;
       $commented = false;
 
       //in each unit, need to find the source, target and comment nodes
       //it will assume that the source is before the target.
-      foreach($unit->childNodes as $node)
-      {
+      foreach ($unit->childNodes as $node) {
         // source node
-        if($node->nodeName == 'source' && $node->firstChild->wholeText == $text)
-        {
+        if ($node->nodeName == 'source' && $node->firstChild->wholeText == $text) {
           $found = true;
         }
 
         // found source, get the target and notes
-        if($found)
-        {
+        if ($found) {
           // set the new translated string
-          if($node->nodeName == 'target')
-          {
+          if ($node->nodeName == 'target') {
             $node->nodeValue = $target;
             $targetted = true;
           }
 
           // set the notes
-          if(!empty($comments) && $node->nodeName == 'note')
-          {
+          if (!empty($comments) && $node->nodeName == 'note') {
             $node->nodeValue = $comments;
             $commented = true;
           }
@@ -418,24 +385,21 @@ class sfI18nMessageSourceXliff extends sfI18nMessageSource {
       }
 
       // append a target
-      if($found && !$targetted)
-      {
+      if ($found && !$targetted) {
         $targetNode = $dom->createElement('target');
         $targetNode->appendChild($dom->createTextNode($target));
         $unit->appendChild($targetNode);
       }
 
       // append a note
-      if($found && !$commented && !empty($comments))
-      {
+      if ($found && !$commented && !empty($comments)) {
         $commentsNode = $dom->createElement('note');
         $commentsNode->appendChild($dom->createTextNode($comments));
         $unit->appendChild($commentsNode);
       }
 
       // finished searching
-      if($found)
-      {
+      if ($found) {
         break;
       }
     }
@@ -443,10 +407,8 @@ class sfI18nMessageSourceXliff extends sfI18nMessageSource {
     $fileNode = $xpath->query('//file')->item(0);
     $fileNode->setAttribute('date', @date('Y-m-d\TH:i:s\Z'));
 
-    if($dom->save($filename) > 0)
-    {
-      if(!empty($this->cache))
-      {
+    if ($dom->save($filename) > 0) {
+      if (!empty($this->cache)) {
         $this->cache->clean($variant, $this->culture);
       }
 
@@ -466,17 +428,13 @@ class sfI18nMessageSourceXliff extends sfI18nMessageSource {
   public function delete($message, $catalogue = 'messages')
   {
     $variants = $this->getVariants($catalogue);
-    if($variants)
-    {
+    if ($variants) {
       list($variant, $filename) = $variants;
-    }
-    else
-    {
+    } else {
       return false;
     }
 
-    if(is_writable($filename) == false)
-    {
+    if (is_writable($filename) == false) {
       throw new sfException(sprintf("Unable to modify file %s, file must be writable.", $filename));
     }
 
@@ -489,32 +447,25 @@ class sfI18nMessageSourceXliff extends sfI18nMessageSource {
     $units = $xpath->query('//trans-unit');
 
     // for each of the existin units
-    foreach($units as $unit)
-    {
+    foreach ($units as $unit) {
       //in each unit, need to find the source, target and comment nodes
       //it will assume that the source is before the target.
-      foreach($unit->childNodes as $node)
-      {
+      foreach ($unit->childNodes as $node) {
         // source node
-        if($node->nodeName == 'source' && $node->firstChild->wholeText == $message)
-        {
+        if ($node->nodeName == 'source' && $node->firstChild->wholeText == $message) {
           // we found it, remove and save the xml file.
           $unit->parentNode->removeChild($unit);
 
           $fileNode = $xpath->query('//file')->item(0);
           $fileNode->setAttribute('date', @date('Y-m-d\TH:i:s\Z'));
 
-          if($dom->save($filename) > 0)
-          {
-            if(!empty($this->cache))
-            {
+          if ($dom->save($filename) > 0) {
+            if (!empty($this->cache)) {
               $this->cache->clean($variant, $this->culture);
             }
 
             return true;
-          }
-          else
-          {
+          } else {
             return false;
           }
         }
@@ -539,11 +490,9 @@ class sfI18nMessageSourceXliff extends sfI18nMessageSource {
     $dom->formatOutput = true;
     $dom->preserveWhiteSpace = false;
 
-    if(!is_null($xml) && is_string($xml))
-    {
+    if (!is_null($xml) && is_string($xml)) {
       // Add header for XML with UTF-8
-      if(!preg_match('/<\?xml/', $xml))
-      {
+      if (!preg_match('/<\?xml/', $xml)) {
         $xml = '<?xml version="1.0" encoding="UTF-8"?>' . "\n" . $xml;
       }
 
@@ -555,8 +504,7 @@ class sfI18nMessageSourceXliff extends sfI18nMessageSource {
 
   protected function createMessageTemplate($catalogue)
   {
-    if(is_null($catalogue))
-    {
+    if (is_null($catalogue)) {
       $catalogue = 'messages';
     }
 
@@ -566,14 +514,12 @@ class sfI18nMessageSourceXliff extends sfI18nMessageSource {
     $file = $this->getSource($variant);
     $dir = dirname($file);
 
-    if(!is_dir($dir))
-    {
+    if (!is_dir($dir)) {
       mkdir($dir);
       chmod($dir, 0777);
     }
 
-    if(!is_dir($dir))
-    {
+    if (!is_dir($dir)) {
       throw new sfException(sprintf("Unable to create directory %s.", $dir));
     }
 

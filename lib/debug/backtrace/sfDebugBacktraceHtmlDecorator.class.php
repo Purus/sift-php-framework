@@ -12,8 +12,8 @@
  * @package Sift
  * @subpackage debug
  */
-class sfDebugBacktraceHtmlDecorator extends sfDebugBacktraceDecorator {
-
+class sfDebugBacktraceHtmlDecorator extends sfDebugBacktraceDecorator
+{
   /**
    * Array of default options
    *
@@ -39,12 +39,9 @@ class sfDebugBacktraceHtmlDecorator extends sfDebugBacktraceDecorator {
    */
   public function setup()
   {
-    if(!is_dir($dir = $this->getOption('template_dir')))
-    {
+    if (!is_dir($dir = $this->getOption('template_dir'))) {
       throw new RuntimeException(sprintf('The template directory "%s" does not exist', $dir));
-    }
-    elseif(!is_readable(($template = ($dir . '/' . $this->getOption('template')))))
-    {
+    } elseif (!is_readable(($template = ($dir . '/' . $this->getOption('template'))))) {
       throw new RuntimeException(sprintf('The template "%s" does not exist or is not readable.', $template));
     }
   }

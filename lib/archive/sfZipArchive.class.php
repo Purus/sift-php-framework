@@ -18,8 +18,8 @@
  * @subpackage archive
  * @link       http://www.php.net/manual/en/function.ziparchive-addfile.php#88266
  */
-class sfZipArchive extends ZipArchive {
-
+class sfZipArchive extends ZipArchive
+{
   protected $_archiveFileName = null;
   protected $_newAddedFilesCounter = 0;
   protected $_newAddedFilesSize = 100;
@@ -36,16 +36,13 @@ class sfZipArchive extends ZipArchive {
   public static function extract($file, $extractPath)
   {
     $zip = new self;
-    try
-    {
+    try {
       $zip->open($file);
       $result = $zip->extractTo($extractPath);
       $zip->close();
 
       return $result;
-    }
-    catch(sfPhpErrorException $e)
-    {
+    } catch (sfPhpErrorException $e) {
       return false;
     }
   }
@@ -80,8 +77,7 @@ class sfZipArchive extends ZipArchive {
    */
   public function setNewlyAddedFilesSize($size = 100)
   {
-    if(empty($size) || !is_int($size) || $size < 1)
-    {
+    if (empty($size) || !is_int($size) || $size < 1) {
       $size = 100;
     }
     $this->_newAddedFilesSize = $size;
@@ -102,8 +98,7 @@ class sfZipArchive extends ZipArchive {
     $this->_archiveFileName = $fileName;
     $this->_newAddedFilesCounter = 0;
     $r = parent::open($fileName, $flags);
-    if($r !== true)
-    {
+    if ($r !== true) {
       throw new sfPhpErrorException(sprintf('{sfZipArchive} Cannot open file "%s", error "%s"', $fileName, $r));
     }
 
@@ -118,16 +113,13 @@ class sfZipArchive extends ZipArchive {
    */
   public function create($fileName, $fileMode = 0666, $flags = self::CREATE)
   {
-    try
-    {
+    try {
       $result = $this->open($fileName, $flags);
       // chmod our file
       @chmod($fileName, $fileMode);
 
       return $result;
-    }
-    catch(sfPhpException $e)
-    {
+    } catch (sfPhpException $e) {
       throw $e;
     }
   }
@@ -154,8 +146,7 @@ class sfZipArchive extends ZipArchive {
   public function reopen()
   {
     $archiveFileName = $this->_archiveFileName;
-    if(!$this->close())
-    {
+    if (!$this->close()) {
       return false;
     }
 
@@ -174,18 +165,15 @@ class sfZipArchive extends ZipArchive {
    */
   public function addFile($fileName, $localName = null, $start = 0, $length = 0)
   {
-    if(!is_readable($fileName))
-    {
+    if (!is_readable($fileName)) {
       throw new InvalidArgumentException(sprintf('The file "%s" is not readable or does not exist.', $fileName));
     }
 
-    if($this->_newAddedFilesCounter >= $this->_newAddedFilesSize)
-    {
+    if ($this->_newAddedFilesCounter >= $this->_newAddedFilesSize) {
       $this->reopen();
     }
     $added = parent::addFile($fileName, $localName);
-    if($added)
-    {
+    if ($added) {
       $this->_newAddedFilesCounter++;
     }
 
@@ -201,24 +189,18 @@ class sfZipArchive extends ZipArchive {
   public function addDir($path, $newname)
   {
     $nodes = glob($path . DIRECTORY_SEPARATOR . "*");
-    if(empty($nodes))
-    {
+    if (empty($nodes)) {
       return false;
     }
 
-    foreach($nodes as $node)
-    {
+    foreach ($nodes as $node) {
       // exclude temporary files
-      if(substr($node, -1) != "~")
-      {
+      if (substr($node, -1) != "~") {
         $newnode = substr($node, strlen($path) + 1);
         $newnode = $newname . DIRECTORY_SEPARATOR . $newnode;
-        if(is_dir($node))
-        {
+        if (is_dir($node)) {
           $this->addDir($node, $newnode);
-        }
-        elseif(is_file($node))
-        {
+        } elseif (is_file($node)) {
           $this->addFile($node, $newnode);
         }
       }

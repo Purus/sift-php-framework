@@ -42,8 +42,7 @@ class sfImageScaleGD extends sfImageTransformAbstract
    */
   public function setScale($scale)
   {
-    if (is_numeric($scale))
-    {
+    if (is_numeric($scale)) {
       $this->scale = $scale;
     }
   }

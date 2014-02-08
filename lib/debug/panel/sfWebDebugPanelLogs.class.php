@@ -77,15 +77,12 @@ class sfWebDebugPanelLogs extends sfWebDebugPanel
     $withTrace = $this->getOption('with_debug_backtrace');
 
     $types = $counts = array();
-    foreach($allLogs as $log)
-    {
-      if($log['level'] < $this->getStatus())
-      {
+    foreach ($allLogs as $log) {
+      if ($log['level'] < $this->getStatus()) {
         $this->setStatus($log['level']);
       }
 
-      if(!isset($counts[$log['level_name']]))
-      {
+      if (!isset($counts[$log['level_name']])) {
         $counts[$log['level_name']] = 0;
       }
 
@@ -132,10 +129,8 @@ class sfWebDebugPanelLogs extends sfWebDebugPanel
   {
     static $constants;
 
-    if(!$constants)
-    {
-      foreach(array('sf_app_dir', 'sf_root_dir', 'sf_sift_lib_dir') as $constant)
-      {
+    if (!$constants) {
+      foreach (array('sf_app_dir', 'sf_root_dir', 'sf_sift_lib_dir') as $constant) {
         $constants[realpath(sfConfig::get($constant)).DIRECTORY_SEPARATOR] = $constant.DIRECTORY_SEPARATOR;
       }
     }
@@ -145,20 +140,18 @@ class sfWebDebugPanelLogs extends sfWebDebugPanel
 
     // build a replacement array with braces around the context keys
     $replace = array();
-    foreach($context as $key => $val)
-    {
+    foreach ($context as $key => $val) {
       $replace['{' . $key . '}'] = sprintf('<span class="keyword">%s</span>', $val);
     }
 
     // interpolate replacement values into the message and return
-    $message = strtr((string)$message, $replace);
+    $message = strtr((string) $message, $replace);
 
     // replace constants value with constant name
     $message = str_replace(array_keys($constants), array_values($constants), $message);
 
     // remove username/password from DSN
-    if(strpos($message, 'DSN') !== false)
-    {
+    if (strpos($message, 'DSN') !== false) {
       $message = preg_replace("/=&gt;\s+'?[^'\s,]+'?/", "=&gt; '****'", $message);
     }
 

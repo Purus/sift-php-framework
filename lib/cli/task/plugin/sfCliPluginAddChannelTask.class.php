@@ -12,8 +12,8 @@
  * @package    Sift
  * @subpackage cli_task
  */
-class sfCliPluginAddChannelTask extends sfCliPluginBaseTask {
-
+class sfCliPluginAddChannelTask extends sfCliPluginBaseTask
+{
   /**
    * @see sfCliTask
    */

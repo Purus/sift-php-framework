@@ -19,8 +19,7 @@ class sfWebDebugPanelResponse extends sfWebDebugPanel
    */
   public function getTitle()
   {
-    if(!$context = $this->webDebug->getContext())
-    {
+    if (!$context = $this->webDebug->getContext()) {
       return;
     }
     $response = $context->getResponse();

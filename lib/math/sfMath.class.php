@@ -18,8 +18,8 @@
  * @link http://en.wikipedia.org/wiki/Rounding
  * @link http://grokbase.com/t/php/php-notes/121aps3na5/note-107134-added-to-ref-bc
  */
-class sfMath {
-
+class sfMath
+{
   /**
    * Add two arbitrary precision numbers
    *
@@ -164,14 +164,12 @@ class sfMath {
    */
   public static function factorial($n)
   {
-    if($n == 0 || $n == 1)
-    {
+    if ($n == 0 || $n == 1) {
       return '1';
     }
 
     $r = $n--;
-    while($n > 1)
-    {
+    while ($n > 1) {
       $r = self::multiply($r, $n--);
     }
 
@@ -186,11 +184,10 @@ class sfMath {
    */
   public static function clean($number)
   {
-    $number = (string)$number;
+    $number = (string) $number;
 
     // don't clean numbers without dot
-    if(strpos($number, '.') === false)
-    {
+    if (strpos($number, '.') === false) {
       return $number;
     }
 
@@ -200,8 +197,7 @@ class sfMath {
     $clean = ltrim($clean, '0');
 
     // everything has been cleaned
-    if($clean == '.')
-    {
+    if ($clean == '.') {
       $clean = '.0';
     }
 
@@ -248,20 +244,16 @@ class sfMath {
   {
     $value = sfMath::clean($value);
 
-    if(strpos($value, '.') === false)
-    {
+    if (strpos($value, '.') === false) {
       return $value;
     }
 
     $multiplier = self::power(10, $precision);
     $value = self::multiply($value, $multiplier);
 
-    if(!self::isNegative($value))
-    {
+    if (!self::isNegative($value)) {
       $value = self::add($value, '1', 0);
-    }
-    else
-    {
+    } else {
       $value = self::substract($value, '0', 0);
     }
 
@@ -279,20 +271,16 @@ class sfMath {
   {
     $number = self::clean($number);
 
-    if(strpos($number, '.') === false)
-    {
+    if (strpos($number, '.') === false) {
       return $number;
     }
 
     $multiplier = self::power(10, $precision);
     $number = self::multiply($number, $multiplier);
 
-    if(!self::isNegative($number))
-    {
+    if (!self::isNegative($number)) {
       $number = self::add($number, '0', 0);
-    }
-    else
-    {
+    } else {
       $number = self::substract($number, '1', 0);
     }
 
@@ -310,8 +298,7 @@ class sfMath {
 
     // Use substr() to find the negative sign at the beginning of the
     // number, rather than using signum() to determine the sign.
-    if(substr($value, 0, 1) === '-')
-    {
+    if (substr($value, 0, 1) === '-') {
       return substr($value, 1);
     }
 
@@ -329,12 +316,11 @@ class sfMath {
     $cmp = self::compare($value, '0');
 
     // this is zero
-    if($cmp == 0)
-    {
+    if ($cmp == 0) {
       return '1';
     }
 
-    return (string)$cmp;
+    return (string) $cmp;
   }
 
   /**
@@ -372,17 +358,13 @@ class sfMath {
   {
     $value = sfMath::clean($value);
 
-    if(strpos($value, '.') === false)
-    {
+    if (strpos($value, '.') === false) {
       return $value;
     }
 
-    if(!self::isNegative($value))
-    {
+    if (!self::isNegative($value)) {
       return self::ceil($value, $precision);
-    }
-    else
-    {
+    } else {
       return self::floor($value, $precision);
     }
   }
@@ -398,12 +380,9 @@ class sfMath {
     $value = sfMath::clean($value);
 
     // larger than zero
-    if(!self::isNegative($value))
-    {
+    if (!self::isNegative($value)) {
       return self::floor($value, $precision);
-    }
-    else
-    {
+    } else {
       return self::ceil($value, $precision);
     }
   }
@@ -420,8 +399,7 @@ class sfMath {
   {
     $value = self::clean($value);
 
-    if(strpos($value, '.') === false)
-    {
+    if (strpos($value, '.') === false) {
       return $value;
     }
 
@@ -429,13 +407,11 @@ class sfMath {
 
     $fraction = 0;
 
-    if(isset($decimal[$precision]))
-    {
+    if (isset($decimal[$precision])) {
       $fraction = $decimal[$precision];
     }
 
-    if($fraction > 5)
-    {
+    if ($fraction > 5) {
       return self::roundUp($value, $precision);
     }
 
@@ -455,13 +431,11 @@ class sfMath {
   {
     $value = self::clean($value);
 
-    if(strpos($value, '.') === false)
-    {
+    if (strpos($value, '.') === false) {
       return $value;
     }
 
-    if(!self::isNegative($value))
-    {
+    if (!self::isNegative($value)) {
       return self::add($value, '0.' . str_repeat('0', $precision) . '5', $precision);
     }
 
@@ -494,27 +468,22 @@ class sfMath {
   {
     $value = self::clean($value);
 
-    if(strpos($value, '.') === false)
-    {
+    if (strpos($value, '.') === false) {
       return $value;
     }
 
     list($integer, $decimal) = explode('.', $value);
     $index = $precision > 0 ? $precision - 1 : 0;
 
-    if(!isset($decimal[$index]))
-    {
+    if (!isset($decimal[$index])) {
       return $value;
     }
 
     $digit = $decimal[$index];
 
-    if(self::isOdd($precision > 0 ? $digit : $integer))
-    {
+    if (self::isOdd($precision > 0 ? $digit : $integer)) {
       return self::roundHalfUp($value, $precision);
-    }
-    else
-    {
+    } else {
       return self::roundHalfDown($value, $precision);
     }
   }
@@ -537,8 +506,7 @@ class sfMath {
   {
     $value = self::clean($value);
 
-    if(strpos($value, '.') === false)
-    {
+    if (strpos($value, '.') === false) {
       return $value;
     }
 
@@ -546,19 +514,15 @@ class sfMath {
 
     $index = $precision > 0 ? $precision - 1 : 0;
 
-    if(!isset($decimal[$index]))
-    {
+    if (!isset($decimal[$index])) {
       return $value;
     }
 
     $digit = $decimal[$index];
 
-    if(self::isEven($precision > 0 ? $digit : $integer))
-    {
+    if (self::isEven($precision > 0 ? $digit : $integer)) {
       return self::roundHalfUp($value, $precision);
-    }
-    else
-    {
+    } else {
       return self::roundHalfDown($value, $precision);
     }
   }
@@ -590,8 +554,7 @@ class sfMath {
   {
     $value = self::clean($value);
 
-    if($nearest == '' || $nearest == 0)
-    {
+    if ($nearest == '' || $nearest == 0) {
       throw new InvalidArgumentException('Nearest value is missing or is zero.');
     }
 

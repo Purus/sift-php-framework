@@ -14,8 +14,8 @@
  * @package    Sift
  * @subpackage request
  */
-abstract class sfRequest implements sfIRequest, Serializable {
-
+abstract class sfRequest implements sfIRequest, Serializable
+{
   /**
    * Protected namespace. Request parameters which are
    * prefixed with _sf_ should be there
@@ -90,10 +90,8 @@ abstract class sfRequest implements sfIRequest, Serializable {
   {
     $array = array();
     $parameters = & $this->parameterHolder->getAll();
-    foreach($parameters as $key => &$value)
-    {
-      if(in_array($key, $names))
-      {
+    foreach ($parameters as $key => &$value) {
+      if (in_array($key, $names)) {
         $array[$key] = & $value;
       }
     }
@@ -115,14 +113,11 @@ abstract class sfRequest implements sfIRequest, Serializable {
   public function setMethod($methodCode)
   {
     $available_methods = array(self::GET, self::POST, self::PUT, self::DELETE, self::HEAD);
-    if(in_array($methodCode, $available_methods))
-    {
+    if (in_array($methodCode, $available_methods)) {
       $this->method = $methodCode;
 
       return $this;
-    }
-    else
-    {
+    } else {
       // invalid method type
       throw new sfException(sprintf('Invalid request method: %s', $methodCode));
     }
@@ -133,10 +128,8 @@ abstract class sfRequest implements sfIRequest, Serializable {
    */
   public function getContent()
   {
-    if(null === $this->content)
-    {
-      if(0 === strlen(trim($this->content = file_get_contents('php://input'))))
-      {
+    if (null === $this->content) {
+      if (0 === strlen(trim($this->content = file_get_contents('php://input')))) {
         $this->content = false;
       }
     }
@@ -416,8 +409,7 @@ abstract class sfRequest implements sfIRequest, Serializable {
                 'arguments' => $arguments,
                 'request'   => $this)));
 
-    if (!$event->isProcessed())
-    {
+    if (!$event->isProcessed()) {
       throw new sfException(sprintf('Call to undefined method %s::%s', get_class($this), $method));
     }
 
@@ -490,8 +482,7 @@ abstract class sfRequest implements sfIRequest, Serializable {
   public function unserialize($serialized)
   {
     $vars = unserialize($serialized);
-    foreach($vars as $var => $value)
-    {
+    foreach ($vars as $var => $value) {
       $this->$var = $value;
     }
   }

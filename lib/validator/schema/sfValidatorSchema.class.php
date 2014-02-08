@@ -14,8 +14,8 @@
  * @package    Sift
  * @subpackage validator
  */
-class sfValidatorSchema extends sfValidatorBase implements ArrayAccess, IteratorAggregate, Countable {
-
+class sfValidatorSchema extends sfValidatorBase implements ArrayAccess, IteratorAggregate, Countable
+{
   protected $fields = array(),
     $preValidator = null,
     $postValidator = null;
@@ -36,15 +36,11 @@ class sfValidatorSchema extends sfValidatorBase implements ArrayAccess, Iterator
    */
   public function __construct($fields = null, $options = array(), $messages = array())
   {
-    if(is_array($fields))
-    {
-      foreach($fields as $name => $validator)
-      {
+    if (is_array($fields)) {
+      foreach ($fields as $name => $validator) {
         $this[$name] = $validator;
       }
-    }
-    else if(!is_null($fields))
-    {
+    } else if (!is_null($fields)) {
       throw new InvalidArgumentException('sfValidatorSchema constructor takes an array of sfValidatorBase objects.');
     }
 
@@ -90,13 +86,11 @@ class sfValidatorSchema extends sfValidatorBase implements ArrayAccess, Iterator
    */
   protected function doClean($values)
   {
-    if(is_null($values))
-    {
+    if (is_null($values)) {
       $values = array();
     }
 
-    if(!is_array($values))
-    {
+    if (!is_array($values)) {
       throw new InvalidArgumentException('You must pass an array parameter to the clean() method');
     }
 
@@ -105,39 +99,28 @@ class sfValidatorSchema extends sfValidatorBase implements ArrayAccess, Iterator
     $errorSchema = new sfValidatorErrorSchema($this);
 
     // check that post_max_size has not been reached
-    if(isset($_SERVER['CONTENT_LENGTH']) && (int) $_SERVER['CONTENT_LENGTH'] > $this->getBytes(ini_get('post_max_size')))
-    {
+    if (isset($_SERVER['CONTENT_LENGTH']) && (int) $_SERVER['CONTENT_LENGTH'] > $this->getBytes(ini_get('post_max_size'))) {
       $errorSchema->addError(new sfValidatorError($this, 'post_max_size'));
 
       throw $errorSchema;
     }
 
     // pre validator
-    try
-    {
+    try {
       $this->preClean($values);
-    }
-    catch(sfValidatorErrorSchema $e)
-    {
+    } catch (sfValidatorErrorSchema $e) {
       $errorSchema->addErrors($e);
-    }
-    catch(sfValidatorError $e)
-    {
+    } catch (sfValidatorError $e) {
       $errorSchema->addError($e);
     }
 
     // validate given values
-    foreach($values as $name => $value)
-    {
+    foreach ($values as $name => $value) {
       // field exists in our schema?
-      if(!array_key_exists($name, $this->fields))
-      {
-        if(!$this->options['allow_extra_fields'])
-        {
+      if (!array_key_exists($name, $this->fields)) {
+        if (!$this->options['allow_extra_fields']) {
           $errorSchema->addError(new sfValidatorError($this, 'extra_fields', array('field' => $name)));
-        }
-        else if(!$this->options['filter_extra_fields'])
-        {
+        } else if (!$this->options['filter_extra_fields']) {
           $clean[$name] = $value;
         }
 
@@ -147,12 +130,9 @@ class sfValidatorSchema extends sfValidatorBase implements ArrayAccess, Iterator
       unset($unused[array_search($name, $unused, true)]);
 
       // validate value
-      try
-      {
+      try {
         $clean[$name] = $this->fields[$name]->clean($value);
-      }
-      catch(sfValidatorError $e)
-      {
+      } catch (sfValidatorError $e) {
         $clean[$name] = null;
 
         $errorSchema->addError($e, (string) $name);
@@ -160,15 +140,11 @@ class sfValidatorSchema extends sfValidatorBase implements ArrayAccess, Iterator
     }
 
     // are non given values required?
-    foreach($unused as $name)
-    {
+    foreach ($unused as $name) {
       // validate value
-      try
-      {
+      try {
         $clean[$name] = $this->fields[$name]->clean(null);
-      }
-      catch(sfValidatorError $e)
-      {
+      } catch (sfValidatorError $e) {
         $clean[$name] = null;
 
         $errorSchema->addError($e, (string) $name);
@@ -176,21 +152,15 @@ class sfValidatorSchema extends sfValidatorBase implements ArrayAccess, Iterator
     }
 
     // post validator
-    try
-    {
+    try {
       $clean = $this->postClean($clean);
-    }
-    catch(sfValidatorErrorSchema $e)
-    {
+    } catch (sfValidatorErrorSchema $e) {
       $errorSchema->addErrors($e);
-    }
-    catch(sfValidatorError $e)
-    {
+    } catch (sfValidatorError $e) {
       $errorSchema->addError($e);
     }
 
-    if(count($errorSchema))
-    {
+    if (count($errorSchema)) {
       throw $errorSchema;
     }
 
@@ -211,8 +181,7 @@ class sfValidatorSchema extends sfValidatorBase implements ArrayAccess, Iterator
    */
   public function preClean($values)
   {
-    if(is_null($validator = $this->getPreValidator()))
-    {
+    if (is_null($validator = $this->getPreValidator())) {
       return;
     }
 
@@ -233,8 +202,7 @@ class sfValidatorSchema extends sfValidatorBase implements ArrayAccess, Iterator
    */
   public function postClean($values)
   {
-    if(is_null($validator = $this->getPostValidator()))
-    {
+    if (is_null($validator = $this->getPostValidator())) {
       return $values;
     }
 
@@ -313,8 +281,7 @@ class sfValidatorSchema extends sfValidatorBase implements ArrayAccess, Iterator
    */
   public function offsetSet($name, $validator)
   {
-    if(!$validator instanceof sfValidatorBase)
-    {
+    if (!$validator instanceof sfValidatorBase) {
       throw new InvalidArgumentException('A field must be an instance of sfValidatorBase.');
     }
 
@@ -352,18 +319,15 @@ class sfValidatorSchema extends sfValidatorBase implements ArrayAccess, Iterator
 
   public function __clone()
   {
-    foreach($this->fields as $name => $field)
-    {
+    foreach ($this->fields as $name => $field) {
       $this->fields[$name] = clone $field;
     }
 
-    if(!is_null($this->preValidator))
-    {
+    if (!is_null($this->preValidator)) {
       $this->preValidator = clone $this->preValidator;
     }
 
-    if(!is_null($this->postValidator))
-    {
+    if (!is_null($this->postValidator)) {
       $this->postValidator = clone $this->postValidator;
     }
   }
@@ -371,8 +335,7 @@ class sfValidatorSchema extends sfValidatorBase implements ArrayAccess, Iterator
   protected function getBytes($value)
   {
     $value = trim($value);
-    switch(strtolower($value[strlen($value) - 1]))
-    {
+    switch (strtolower($value[strlen($value) - 1])) {
       // The 'G' modifier is available since PHP 5.1.0
       case 'g':
         $value *= 1024;
@@ -391,8 +354,7 @@ class sfValidatorSchema extends sfValidatorBase implements ArrayAccess, Iterator
   public function getActiveMessages()
   {
     $messages = parent::getActiveMessages();
-    if(!$this->getOption('allow_extra_fields'))
-    {
+    if (!$this->getOption('allow_extra_fields')) {
       $messages[] = $this->getMessage('allow_extra_fields');
     }
 

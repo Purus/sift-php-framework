@@ -12,8 +12,8 @@
  * @package Sift
  * @subpackage form_javascript
  */
-class sfFormJavascriptValidationFieldRules implements ArrayAccess, sfIJsonSerializable {
-
+class sfFormJavascriptValidationFieldRules implements ArrayAccess, sfIJsonSerializable
+{
   /**
    * Field name (short version)
    *
@@ -46,7 +46,7 @@ class sfFormJavascriptValidationFieldRules implements ArrayAccess, sfIJsonSerial
   {
     $this->fieldName = $fieldName;
     $this->formFieldName = $formFieldName;
-    $this->rules = (array)$rules;
+    $this->rules = (array) $rules;
   }
 
   /**

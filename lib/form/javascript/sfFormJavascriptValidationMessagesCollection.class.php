@@ -12,8 +12,8 @@
  * @package Sift
  * @subpackage form_javascript
  */
-class sfFormJavascriptValidationMessagesCollection extends sfCollection implements sfIJsonSerializable {
-
+class sfFormJavascriptValidationMessagesCollection extends sfCollection implements sfIJsonSerializable
+{
   /**
    * Allowed type for this collection
    *
@@ -29,10 +29,8 @@ class sfFormJavascriptValidationMessagesCollection extends sfCollection implemen
    */
   public function offsetGet($name)
   {
-    foreach($this as $messages)
-    {
-      if($messages->getFieldName() == $name)
-      {
+    foreach ($this as $messages) {
+      if ($messages->getFieldName() == $name) {
         return $messages;
       }
     }
@@ -46,11 +44,9 @@ class sfFormJavascriptValidationMessagesCollection extends sfCollection implemen
   public function jsonSerialize()
   {
     $data = array();
-    foreach($this as $message)
-    {
+    foreach ($this as $message) {
       $serializableMessages = array();
-      foreach($message->getMessages() as $name => $singleMessage)
-      {
+      foreach ($message->getMessages() as $name => $singleMessage) {
         $serializableMessages[$name] = $singleMessage->__toString();
       }
       $data[$message->getFormFieldName()] = $serializableMessages;

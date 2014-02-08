@@ -13,8 +13,8 @@
  * @subpackage text
  * @link     http://pear.php.net/package/Console_Table
  */
-class sfPlainTextTable {
-
+class sfPlainTextTable
+{
   const HORIZONTAL_RULE = 1;
 
   const ALIGN_LEFT = -1;
@@ -130,8 +130,7 @@ class sfPlainTextTable {
     $this->_border = $border;
     $this->_padding = $padding;
     $this->_ansiColor = $color;
-    if(!empty($charset))
-    {
+    if (!empty($charset)) {
       $this->setCharset($charset);
     }
   }
@@ -152,16 +151,14 @@ class sfPlainTextTable {
    */
   public function fromArray($headers, $data, $returnObject = false)
   {
-    if(!is_array($headers) || !is_array($data))
-    {
+    if (!is_array($headers) || !is_array($data)) {
       return false;
     }
 
     $table = new Console_Table();
     $table->setHeaders($headers);
 
-    foreach($data as $row)
-    {
+    foreach ($data as $row) {
       $table->addRow($row);
     }
 
@@ -215,8 +212,7 @@ class sfPlainTextTable {
    */
   public function setAlign($col_id, $align = self::ALIGN_LEFT)
   {
-    switch($align)
-    {
+    switch ($align) {
       case self::ALIGN_CENTER:
         $pad = STR_PAD_BOTH;
         break;
@@ -266,12 +262,9 @@ class sfPlainTextTable {
    */
   public function addRow($row, $append = true)
   {
-    if($append)
-    {
+    if ($append) {
       $this->_data[] = array_values($row);
-    }
-    else
-    {
+    } else {
       array_unshift($this->_data, array_values($row));
     }
 
@@ -305,8 +298,7 @@ class sfPlainTextTable {
    */
   public function addCol($col_data, $col_id = 0, $row_id = 0)
   {
-    foreach($col_data as $col_cell)
-    {
+    foreach ($col_data as $col_cell) {
       $this->_data[$row_id++][$col_id] = $col_cell;
     }
 
@@ -325,17 +317,14 @@ class sfPlainTextTable {
    */
   public function addData($data, $col_id = 0, $row_id = 0)
   {
-    foreach($data as $row)
-    {
-      if($row === self::HORIZONTAL_RULE)
-      {
+    foreach ($data as $row) {
+      if ($row === self::HORIZONTAL_RULE) {
         $this->_data[$row_id] = self::HORIZONTAL_RULE;
         $row_id++;
         continue;
       }
       $starting_col = $col_id;
-      foreach($row as $cell)
-      {
+      foreach ($row as $cell) {
         $this->_data[$row_id][$starting_col++] = $cell;
       }
       $this->_updateRowsCols();
@@ -375,20 +364,16 @@ class sfPlainTextTable {
    */
   protected function _calculateTotals()
   {
-    if(empty($this->_calculateTotals))
-    {
+    if (empty($this->_calculateTotals)) {
       return;
     }
 
     $this->addSeparator();
 
     $totals = array();
-    foreach($this->_data as $row)
-    {
-      if(is_array($row))
-      {
-        foreach($this->_calculateTotals as $columnID)
-        {
+    foreach ($this->_data as $row) {
+      if (is_array($row)) {
+        foreach ($this->_calculateTotals as $columnID) {
           $totals[$columnID] += $row[$columnID];
         }
       }
@@ -405,20 +390,16 @@ class sfPlainTextTable {
    */
   protected function _applyFilters()
   {
-    if(empty($this->_filters))
-    {
+    if (empty($this->_filters)) {
       return;
     }
 
-    foreach($this->_filters as $filter)
-    {
+    foreach ($this->_filters as $filter) {
       $column = $filter[0];
       $callback = $filter[1];
 
-      foreach($this->_data as $row_id => $row_data)
-      {
-        if($row_data !== self::HORIZONTAL_RULE)
-        {
+      foreach ($this->_data as $row_id => $row_data) {
+        if ($row_data !== self::HORIZONTAL_RULE) {
           $this->_data[$row_id][$column] =
                   call_user_func($callback, $row_data[$column]);
         }
@@ -433,15 +414,12 @@ class sfPlainTextTable {
    */
   protected function _validateTable()
   {
-    if(!empty($this->_headers))
-    {
+    if (!empty($this->_headers)) {
       $this->_calculateRowHeight(-1, $this->_headers[0]);
     }
 
-    for($i = 0; $i < $this->_max_rows; $i++)
-    {
-      for($j = 0; $j < $this->_max_cols; $j++)
-      {
+    for ($i = 0; $i < $this->_max_rows; $i++) {
+      for ($j = 0; $j < $this->_max_cols; $j++) {
         if(!isset($this->_data[$i][$j]) &&
                 (!isset($this->_data[$i]) ||
                 $this->_data[$i] !== self::HORIZONTAL_RULE))
@@ -451,8 +429,7 @@ class sfPlainTextTable {
       }
       $this->_calculateRowHeight($i, $this->_data[$i]);
 
-      if($this->_data[$i] !== self::HORIZONTAL_RULE)
-      {
+      if ($this->_data[$i] !== self::HORIZONTAL_RULE) {
         ksort($this->_data[$i]);
       }
     }
@@ -460,12 +437,10 @@ class sfPlainTextTable {
     $this->_splitMultilineRows();
 
     // Update cell lengths.
-    for($i = 0; $i < count($this->_headers); $i++)
-    {
+    for ($i = 0; $i < count($this->_headers); $i++) {
       $this->_calculateCellLengths($this->_headers[$i]);
     }
-    for($i = 0; $i < $this->_max_rows; $i++)
-    {
+    for ($i = 0; $i < $this->_max_rows; $i++) {
       $this->_calculateCellLengths($this->_data[$i]);
     }
 
@@ -484,21 +459,17 @@ class sfPlainTextTable {
     $max_rows = array(count($this->_headers), $this->_max_rows);
     $row_height_offset = array(-1, 0);
 
-    for($s = 0; $s <= 1; $s++)
-    {
+    for ($s = 0; $s <= 1; $s++) {
       $inserted = 0;
       $new_data = $sections[$s];
 
-      for($i = 0; $i < $max_rows[$s]; $i++)
-      {
+      for ($i = 0; $i < $max_rows[$s]; $i++) {
         // Process only rows that have many lines.
         $height = $this->_row_heights[$i + $row_height_offset[$s]];
-        if($height > 1)
-        {
+        if ($height > 1) {
           // Split column data into one-liners.
           $split = array();
-          for($j = 0; $j < $this->_max_cols; $j++)
-          {
+          for ($j = 0; $j < $this->_max_cols; $j++) {
             $split[$j] = preg_split('/\r?\n|\r/',
                             $sections[$s][$i][$j]);
           }
@@ -506,10 +477,8 @@ class sfPlainTextTable {
           $new_rows = array();
           // Construct new 'virtual' rows - insert empty strings for
           // columns that have less lines that the highest one.
-          for($i2 = 0; $i2 < $height; $i2++)
-          {
-            for($j = 0; $j < $this->_max_cols; $j++)
-            {
+          for ($i2 = 0; $i2 < $height; $i2++) {
+            for ($j = 0; $j < $this->_max_cols; $j++) {
               $new_rows[$i2][$j] = !isset($split[$j][$i2]) ? '' : $split[$j][$i2];
             }
           }
@@ -523,8 +492,7 @@ class sfPlainTextTable {
       }
 
       // Has the data been modified?
-      if($inserted > 0)
-      {
+      if ($inserted > 0) {
         $sections[$s] = $new_data;
         $this->_updateRowsCols();
       }
@@ -538,8 +506,7 @@ class sfPlainTextTable {
    */
   protected function _buildTable()
   {
-    if(!count($this->_data))
-    {
+    if (!count($this->_data)) {
       return '';
     }
 
@@ -547,10 +514,8 @@ class sfPlainTextTable {
     $separator = $this->_getSeparator();
 
     $return = array();
-    for($i = 0; $i < count($this->_data); $i++)
-    {
-      for($j = 0; $j < count($this->_data[$i]); $j++)
-      {
+    for ($i = 0; $i < count($this->_data); $i++) {
+      for ($j = 0; $j < count($this->_data[$i]); $j++) {
         if($this->_data[$i] !== self::HORIZONTAL_RULE &&
                 $this->_strlen($this->_data[$i][$j]) <
                 $this->_cell_lengths[$j])
@@ -562,30 +527,25 @@ class sfPlainTextTable {
         }
       }
 
-      if($this->_data[$i] !== self::HORIZONTAL_RULE)
-      {
+      if ($this->_data[$i] !== self::HORIZONTAL_RULE) {
         $row_begin = $rule . str_repeat(' ', $this->_padding);
         $row_end = str_repeat(' ', $this->_padding) . $rule;
         $implode_char = str_repeat(' ', $this->_padding) . $rule
                 . str_repeat(' ', $this->_padding);
         $return[] = $row_begin
                 . implode($implode_char, $this->_data[$i]) . $row_end;
-      }
-      elseif(!empty($separator))
-      {
+      } elseif (!empty($separator)) {
         $return[] = $separator;
       }
     }
 
     $return = implode("\r\n", $return);
-    if(!empty($separator))
-    {
+    if (!empty($separator)) {
       $return = $separator . "\r\n" . $return . "\r\n" . $separator;
     }
     $return .= "\r\n";
 
-    if(!empty($this->_headers))
-    {
+    if (!empty($this->_headers)) {
       $return = $this->_getHeaderLine() . "\r\n" . $return;
     }
 
@@ -600,24 +560,19 @@ class sfPlainTextTable {
    */
   protected function _getSeparator()
   {
-    if(!$this->_border)
-    {
+    if (!$this->_border) {
       return;
     }
 
-    if($this->_border == self::BORDER_ASCII)
-    {
+    if ($this->_border == self::BORDER_ASCII) {
       $rule = '-';
       $sect = '+';
-    }
-    else
-    {
+    } else {
       $rule = $sect = $this->_border;
     }
 
     $return = array();
-    foreach($this->_cell_lengths as $cl)
-    {
+    foreach ($this->_cell_lengths as $cl) {
       $return[] = str_repeat($rule, $cl);
     }
 
@@ -637,21 +592,16 @@ class sfPlainTextTable {
   protected function _getHeaderLine()
   {
     // Make sure column count is correct
-    for($j = 0; $j < count($this->_headers); $j++)
-    {
-      for($i = 0; $i < $this->_max_cols; $i++)
-      {
-        if(!isset($this->_headers[$j][$i]))
-        {
+    for ($j = 0; $j < count($this->_headers); $j++) {
+      for ($i = 0; $i < $this->_max_cols; $i++) {
+        if (!isset($this->_headers[$j][$i])) {
           $this->_headers[$j][$i] = '';
         }
       }
     }
 
-    for($j = 0; $j < count($this->_headers); $j++)
-    {
-      for($i = 0; $i < count($this->_headers[$j]); $i++)
-      {
+    for ($j = 0; $j < count($this->_headers); $j++) {
+      for ($i = 0; $i < count($this->_headers[$j]); $i++) {
         if($this->_strlen($this->_headers[$j][$i]) <
                 $this->_cell_lengths[$i])
         {
@@ -671,12 +621,10 @@ class sfPlainTextTable {
             . str_repeat(' ', $this->_padding);
 
     $separator = $this->_getSeparator();
-    if(!empty($separator))
-    {
+    if (!empty($separator)) {
       $return[] = $separator;
     }
-    for($j = 0; $j < count($this->_headers); $j++)
-    {
+    for ($j = 0; $j < count($this->_headers); $j++) {
       $return[] = $row_begin
               . implode($implode_char, $this->_headers[$j]) . $row_end;
     }
@@ -701,8 +649,7 @@ class sfPlainTextTable {
     $keys = array_keys($this->_data);
     $this->_max_rows = end($keys) + 1;
 
-    switch($this->_defaultAlign)
-    {
+    switch ($this->_defaultAlign) {
       case self::ALIGN_CENTER:
         $pad = STR_PAD_BOTH;
         break;
@@ -715,8 +662,7 @@ class sfPlainTextTable {
     }
 
     // Set default column alignments
-    for($i = count($this->_col_align); $i < $this->_max_cols; $i++)
-    {
+    for ($i = count($this->_col_align); $i < $this->_max_cols; $i++) {
       $this->_col_align[$i] = $pad;
     }
   }
@@ -730,10 +676,8 @@ class sfPlainTextTable {
    */
   protected function _calculateCellLengths($row)
   {
-    for($i = 0; $i < count($row); $i++)
-    {
-      if(!isset($this->_cell_lengths[$i]))
-      {
+    for ($i = 0; $i < count($row); $i++) {
+      if (!isset($this->_cell_lengths[$i])) {
         $this->_cell_lengths[$i] = 0;
       }
       $this->_cell_lengths[$i] = max($this->_cell_lengths[$i],
@@ -751,19 +695,16 @@ class sfPlainTextTable {
    */
   protected function _calculateRowHeight($row_number, $row)
   {
-    if(!isset($this->_row_heights[$row_number]))
-    {
+    if (!isset($this->_row_heights[$row_number])) {
       $this->_row_heights[$row_number] = 1;
     }
 
     // Do not process horizontal rule rows.
-    if($row === self::HORIZONTAL_RULE)
-    {
+    if ($row === self::HORIZONTAL_RULE) {
       return;
     }
 
-    for($i = 0, $c = count($row); $i < $c; ++$i)
-    {
+    for ($i = 0, $c = count($row); $i < $c; ++$i) {
       $lines = preg_split('/\r?\n|\r/', $row[$i]);
       $this->_row_heights[$row_number] = max($this->_row_heights[$row_number],
                       count($lines));
@@ -782,19 +723,16 @@ class sfPlainTextTable {
     static $mbstring, $utf8;
 
     // Strip ANSI color codes if requested.
-    if($this->_ansiColor)
-    {
+    if ($this->_ansiColor) {
       include_once 'Console/Color.php';
       $str = Console_Color::strip($str);
     }
 
     // Cache expensive function_exists() calls.
-    if(!isset($mbstring))
-    {
+    if (!isset($mbstring)) {
       $mbstring = function_exists('mb_strlen');
     }
-    if(!isset($utf8))
-    {
+    if (!isset($utf8)) {
       $utf8 = function_exists('utf8_decode');
     }
 
@@ -804,8 +742,7 @@ class sfPlainTextTable {
     {
       return strlen(utf8_decode($str));
     }
-    if($mbstring)
-    {
+    if ($mbstring) {
       return mb_strlen($str, $this->_charset);
     }
 
@@ -826,20 +763,16 @@ class sfPlainTextTable {
     static $mbstring;
 
     // Cache expensive function_exists() calls.
-    if(!isset($mbstring))
-    {
+    if (!isset($mbstring)) {
       $mbstring = function_exists('mb_substr');
     }
 
-    if(is_null($length))
-    {
+    if (is_null($length)) {
       $length = $this->_strlen($string);
     }
-    if($mbstring)
-    {
+    if ($mbstring) {
       $ret = @mb_substr($string, $start, $length, $this->_charset);
-      if(!empty($ret))
-      {
+      if (!empty($ret)) {
         return $ret;
       }
     }
@@ -868,19 +801,16 @@ class sfPlainTextTable {
     $pad_length = $this->_strlen($pad);
 
     /* Return if we already have the length. */
-    if($mb_length >= $length)
-    {
+    if ($mb_length >= $length) {
       return $input;
     }
 
     /* Shortcut for single byte strings. */
-    if($mb_length == $sb_length && $pad_length == strlen($pad))
-    {
+    if ($mb_length == $sb_length && $pad_length == strlen($pad)) {
       return str_pad($input, $length, $pad, $type);
     }
 
-    switch($type)
-    {
+    switch ($type) {
       case STR_PAD_LEFT:
         $left = $length - $mb_length;
         $output = $this->_substr(str_repeat($pad, ceil($left / $pad_length)),

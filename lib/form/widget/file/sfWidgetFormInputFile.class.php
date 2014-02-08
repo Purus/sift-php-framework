@@ -38,18 +38,15 @@ class sfWidgetFormInputFile extends sfWidgetFormInput
    */
   public function render($name, $value = null, $attributes = array(), $errors = array())
   {
-    if($this->getOption('multiple'))
-    {
-      if('[]' != substr($name, -2))
-      {
+    if ($this->getOption('multiple')) {
+      if ('[]' != substr($name, -2)) {
         $name .= '[]';
       }
     }
 
     // prepare attributes
     // multiple is valid only for HTML5
-    if($this->getOption('multiple') && !sfWidget::isXhtml())
-    {
+    if ($this->getOption('multiple') && !sfWidget::isXhtml()) {
       // FIXME: in HTML5 the valid attibute is something like <input multiple>
       $attributes['multiple'] = 'multiple';
     }

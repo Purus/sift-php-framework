@@ -13,8 +13,8 @@
  * @subpackage image
  * @link http://www.sno.phy.queensu.ca/~phil/exiftool
  */
-class sfExifAdapterExifTool extends sfExifAdapter {
-
+class sfExifAdapterExifTool extends sfExifAdapter
+{
   /**
    * Array of default options
    *
@@ -43,8 +43,7 @@ class sfExifAdapterExifTool extends sfExifAdapter {
    */
   public function getData($file)
   {
-    if(!is_readable($file))
-    {
+    if (!is_readable($file)) {
       throw new sfFileException(sprintf('File "%s" is not readable', $file));
     }
 
@@ -54,24 +53,20 @@ class sfExifAdapterExifTool extends sfExifAdapter {
     $categories = sfExif::getCategories();
     $tags = '';
 
-    foreach(array('EXIF', 'IPTC', 'XMP') as $category)
-    {
-      foreach($categories[$category] as $field => $value)
-      {
+    foreach (array('EXIF', 'IPTC', 'XMP') as $category) {
+      foreach ($categories[$category] as $field => $value) {
         $tags .= ' -' . $field . '#';
       }
     }
 
-    foreach($categories['COMPOSITE'] as $field => $value)
-    {
+    foreach ($categories['COMPOSITE'] as $field => $value) {
       $tags .= ' -' . $field;
     }
 
     $command = '-j' . $tags . ' ' . $file;
     $results = json_decode($this->execute($command));
 
-    if(is_array($results))
-    {
+    if (is_array($results)) {
       return $this->processData((array) array_pop($results));
     }
 
@@ -90,13 +85,11 @@ class sfExifAdapterExifTool extends sfExifAdapter {
     $retval = null;
     exec($this->getOption('exiftool_executable') . ' ' . escapeshellcmd($command), $output, $retval);
 
-    if($retval)
-    {
+    if ($retval) {
       $this->log(sprintf("Error running command: %s", $command . "\n" . implode("\n", $output)));
     }
 
-    if(is_array($output))
-    {
+    if (is_array($output)) {
       $output = implode('', $output);
     }
 

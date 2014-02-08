@@ -12,8 +12,8 @@
  * @package Sift
  * @subpackage dependency_injection
  */
-class sfDependencyInjectionMaps implements Countable, ArrayAccess {
-
+class sfDependencyInjectionMaps implements Countable, ArrayAccess
+{
   /**
    * Maps holder
    *
@@ -54,12 +54,9 @@ class sfDependencyInjectionMaps implements Countable, ArrayAccess {
    */
   public function get($name)
   {
-    if(isset($this->maps[$name]))
-    {
+    if (isset($this->maps[$name])) {
       return $this->maps[$name];
-    }
-    else
-    {
+    } else {
       return new sfDependencyInjectionMap();
     }
   }

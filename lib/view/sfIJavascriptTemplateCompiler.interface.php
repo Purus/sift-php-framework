@@ -12,8 +12,8 @@
  * @package    Sift
  * @subpackage view
  */
-interface sfIJavascriptTemplateCompiler {
-
+interface sfIJavascriptTemplateCompiler
+{
   /**
    * Compile the string
    *

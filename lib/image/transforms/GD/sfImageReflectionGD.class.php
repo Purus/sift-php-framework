@@ -44,9 +44,8 @@ class sfImageReflectionGD extends sfImageTransformAbstract
    */
   public function setReflectionHeight($reflection_height)
   {
-    if (is_numeric($reflection_height))
-    {
-      $this->reflection_height = (int)$reflection_height;
+    if (is_numeric($reflection_height)) {
+      $this->reflection_height = (int) $reflection_height;
 
       return true;
     }
@@ -71,9 +70,8 @@ class sfImageReflectionGD extends sfImageTransformAbstract
    */
   public function setStartTransparency($start_transparency)
   {
-    if (is_numeric($start_transparency))
-    {
-      $this->start_transparency = (int)$start_transparency;
+    if (is_numeric($start_transparency)) {
+      $this->start_transparency = (int) $start_transparency;
 
       return true;
     }
@@ -132,11 +130,9 @@ class sfImageReflectionGD extends sfImageTransformAbstract
     $tr = $this->start_transparency;
 
     // Start at the bottom of the original image
-    for ($i = $height; $i <= $height + $this->reflection_height; $i++)
-    {
+    for ($i = $height; $i <= $height + $this->reflection_height; $i++) {
 
-      if ($tr > 100)
-      {
+      if ($tr > 100) {
         $tr = 100;
       }
 

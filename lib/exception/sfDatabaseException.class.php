@@ -12,8 +12,8 @@
  * @package    Sift
  * @subpackage exception
  */
-class sfDatabaseException extends sfException {
-
+class sfDatabaseException extends sfException
+{
   /**
    * Session open fails
    */

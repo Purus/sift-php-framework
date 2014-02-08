@@ -75,21 +75,17 @@ class sfWidgetFormInputFileEditable extends sfWidgetFormInputFile
   {
     $input = parent::render($name, $value, $attributes, $errors);
 
-    if (!$this->getOption('edit_mode'))
-    {
+    if (!$this->getOption('edit_mode')) {
       return $input;
     }
 
-    if ($this->getOption('with_delete'))
-    {
+    if ($this->getOption('with_delete')) {
       $deleteName = ']' == substr($name, -1) ? substr($name, 0, -1).'_delete]' : $name.'_delete';
 
       $delete = $this->renderTag('input', array_merge(array('type' => 'checkbox', 'name' => $deleteName, 'value' => '1'), $attributes));
       $deleteLabel = $this->translate($this->getOption('delete_label'));
       $deleteLabel = $this->renderContentTag('label', $deleteLabel, array_merge(array('for' => $this->generateId($deleteName), 'class' => 'inline')));
-    }
-    else
-    {
+    } else {
       $delete = '';
       $deleteLabel = '';
     }
@@ -99,12 +95,9 @@ class sfWidgetFormInputFileEditable extends sfWidgetFormInputFile
 
   protected function getFileAsTag($attributes)
   {
-    if ($this->getOption('is_image'))
-    {
+    if ($this->getOption('is_image')) {
       return false !== $this->getOption('file_src') ? $this->renderTag('img', array_merge(array('src' => $this->getOption('file_src')), $attributes)) : '';
-    }
-    else
-    {
+    } else {
       return $this->getOption('file_src');
     }
   }

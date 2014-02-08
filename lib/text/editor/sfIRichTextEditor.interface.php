@@ -12,8 +12,8 @@
  * @package    Sift
  * @subpackage text_editor
  */
-interface sfIRichTextEditor extends sfIConfigurable {
-
+interface sfIRichTextEditor extends sfIConfigurable
+{
   /**
    * Renders the field with given $name as rich editor
    *

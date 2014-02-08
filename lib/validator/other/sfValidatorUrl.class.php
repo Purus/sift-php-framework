@@ -12,8 +12,8 @@
  * @package    Sift
  * @subpackage validator
  */
-class sfValidatorUrl extends sfValidatorRegex {
-
+class sfValidatorUrl extends sfValidatorRegex
+{
   const REGEX_URL_FORMAT = '/^((%s):\/\/)%s(([a-z0-9-]+\.)+[a-z]{2,6}|\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})(:[0-9]+)?(\/?|\/\S+)$/i';
 
   /**
@@ -46,12 +46,10 @@ class sfValidatorUrl extends sfValidatorRegex {
   {
     $clean = (string) $value;
 
-    if(!$this->getOption('strict'))
-    {
+    if (!$this->getOption('strict')) {
       // If the URL doesn't start with protocol, assume that the link is a link to
       // http:// scheme
-      if(!preg_match(sprintf('/(%s):\/\/.+/', join('|', $this->getOption('protocols'))), $clean))
-      {
+      if (!preg_match(sprintf('/(%s):\/\/.+/', join('|', $this->getOption('protocols'))), $clean)) {
         $clean = 'http://' . $clean;
       }
     }
@@ -59,19 +57,14 @@ class sfValidatorUrl extends sfValidatorRegex {
     $clean = parent::doClean($clean);
 
     // we need to check the existance over network
-    if($this->getOption('network_check'))
-    {
+    if ($this->getOption('network_check')) {
       $browser = new sfWebBrowser();
-      try
-      {
+      try {
         // unsuccessful response
-        if($browser->get($clean)->responseIsError())
-        {
+        if ($browser->get($clean)->responseIsError()) {
           new sfValidatorError($this, 'invalid', array('value' => $value));
         }
-      }
-      catch(Exception $e)
-      {
+      } catch (Exception $e) {
       }
     }
 

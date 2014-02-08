@@ -12,8 +12,8 @@
  * @package    Sift
  * @subpackage config
  */
-class sfSanitizeConfigHandler extends sfSimpleYamlConfigHandler {
-
+class sfSanitizeConfigHandler extends sfSimpleYamlConfigHandler
+{
   /**
    * Executes this configuration handler.
    *
@@ -31,14 +31,12 @@ class sfSanitizeConfigHandler extends sfSimpleYamlConfigHandler {
     $myConfig = $this->parseYamls($configFiles);
 
     $all = array();
-    if(isset($myConfig['all']))
-    {
+    if (isset($myConfig['all'])) {
       $all = $this->replaceConstants($myConfig['all']);
       unset($myConfig['all']);
     }
 
-    foreach($myConfig as $section => $value)
-    {
+    foreach ($myConfig as $section => $value) {
       $myConfig[$section] = sfToolkit::arrayDeepMerge($all, $this->replaceConstants($value));
     }
 

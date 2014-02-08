@@ -13,8 +13,8 @@
  * @package    Sift
  * @subpackage event
  */
-class sfEventDispatcher implements sfIService {
-
+class sfEventDispatcher implements sfIService
+{
   /**
    * Listeners
    *
@@ -39,15 +39,13 @@ class sfEventDispatcher implements sfIService {
    */
   public function connect($name, $listener, $priority = self::DEFAULT_PRIORITY)
   {
-    if(!isset($this->listeners[$name]))
-    {
+    if (!isset($this->listeners[$name])) {
       $this->listeners[$name] = array();
     }
 
-    $priority = (int)$priority;
+    $priority = (int) $priority;
 
-    if(!isset($this->listeners[$name][$priority]))
-    {
+    if (!isset($this->listeners[$name][$priority])) {
       $this->listeners[$name][$priority] = array();
     }
 
@@ -66,17 +64,13 @@ class sfEventDispatcher implements sfIService {
    */
   public function disconnect($name, $listener)
   {
-    if(!isset($this->listeners[$name]))
-    {
+    if (!isset($this->listeners[$name])) {
       return false;
     }
 
-    foreach($this->listeners[$name] as $priority => $listeners)
-    {
-      foreach($listeners as $index => $callable)
-      {
-        if($listener === $callable)
-        {
+    foreach ($this->listeners[$name] as $priority => $listeners) {
+      foreach ($listeners as $index => $callable) {
+        if ($listener === $callable) {
           unset($this->listeners[$name][$priority][$index]);
 
           return true;
@@ -96,18 +90,14 @@ class sfEventDispatcher implements sfIService {
    */
   public function notify($event)
   {
-    if(sfConfig::get('sf_logging_enabled'))
-    {
+    if (sfConfig::get('sf_logging_enabled')) {
       sfLogger::getInstance()->log('{sfEventDispatcher} Notifying of "{name}" event.', sfILogger::DEBUG, array(
         'name' => $event->getName()
       ));
     }
-    foreach($this->getListeners($event->getName()) as $priority => $listeners)
-    {
-      foreach($listeners as $listener)
-      {
-        if(!sfToolkit::isCallable($listener, false, $callableName))
-        {
+    foreach ($this->getListeners($event->getName()) as $priority => $listeners) {
+      foreach ($listeners as $listener) {
+        if (!sfToolkit::isCallable($listener, false, $callableName)) {
           throw new sfException(sprintf('Invalid callable "%s" listens to "%s"', $callableName, $event->getName()));
         }
         call_user_func($listener, $event);
@@ -126,18 +116,14 @@ class sfEventDispatcher implements sfIService {
    */
   public function notifyUntil($event)
   {
-    if(sfConfig::get('sf_logging_enabled'))
-    {
+    if (sfConfig::get('sf_logging_enabled')) {
       sfLogger::getInstance()->log('{sfEventDispatcher} Notifying until of "{name}" event', sfILogger::DEBUG, array(
         'name' => $event->getName()
       ));
     }
-    foreach($this->getListeners($event->getName()) as $priority => $listeners)
-    {
-      foreach($listeners as $listener)
-      {
-        if(call_user_func($listener, $event))
-        {
+    foreach ($this->getListeners($event->getName()) as $priority => $listeners) {
+      foreach ($listeners as $listener) {
+        if (call_user_func($listener, $event)) {
           $event->setProcessed(true);
           break 2;
         }
@@ -157,16 +143,13 @@ class sfEventDispatcher implements sfIService {
    */
   public function filter($event, $value)
   {
-    if(sfConfig::get('sf_logging_enabled'))
-    {
+    if (sfConfig::get('sf_logging_enabled')) {
       sfLogger::getInstance()->log('{sfEventDispatcher} Filtering value by "{name}" event', sfILogger::DEBUG, array(
         'name' => $event->getName()
       ));
     }
-    foreach($this->getListeners($event->getName()) as $priority => $listeners)
-    {
-      foreach($listeners as $listener)
-      {
+    foreach ($this->getListeners($event->getName()) as $priority => $listeners) {
+      foreach ($listeners as $listener) {
         $value = call_user_func_array($listener, array($event, $value));
       }
     }
@@ -184,8 +167,7 @@ class sfEventDispatcher implements sfIService {
    */
   public function hasListeners($name)
   {
-    if(!isset($this->listeners[$name]))
-    {
+    if (!isset($this->listeners[$name])) {
       $this->listeners[$name] = array();
     }
 
@@ -201,8 +183,7 @@ class sfEventDispatcher implements sfIService {
    */
   public function getListeners($name)
   {
-    if(!isset($this->listeners[$name]))
-    {
+    if (!isset($this->listeners[$name])) {
       return array();
     }
     $listeners = $this->listeners[$name];

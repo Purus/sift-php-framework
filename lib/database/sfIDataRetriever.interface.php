@@ -12,8 +12,8 @@
  * @package    Sift
  * @subpackage database
  */
-interface sfIDataRetriever {
-
+interface sfIDataRetriever
+{
   /**
    * Retrieve objects
    *

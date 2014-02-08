@@ -58,10 +58,8 @@ class sfPrefetchBrowser extends sfBrowser
     $retval = ob_get_clean();
 
     // handle content-encoding first
-    if($encoding = $this->context->getResponse()->getHttpHeader('Content-Encoding'))
-    {
-      switch(strtolower($encoding))
-      {
+    if ($encoding = $this->context->getResponse()->getHttpHeader('Content-Encoding')) {
+      switch (strtolower($encoding)) {
         // Handle gzip encoding
         case 'gzip':
           $retval = $this->decodeGzip($retval);
@@ -81,8 +79,7 @@ class sfPrefetchBrowser extends sfBrowser
     $this->context->getResponse()->setContent($retval);
 
     // manually shutdown user to save current session data
-    if ($this->context->getUser())
-    {
+    if ($this->context->getUser()) {
       $this->context->getUser()->shutdown();
       $this->context->getStorage()->shutdown();
     }
@@ -97,8 +94,7 @@ class sfPrefetchBrowser extends sfBrowser
    */
   public function getContext($forceReload = false)
   {
-    if(null === $this->context || $forceReload)
-    {
+    if (null === $this->context || $forceReload) {
       sfContext::createInstance(
         sfCore::getApplication($this->application, $this->environment, false)
       );

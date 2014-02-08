@@ -12,8 +12,8 @@
  * @package    Sift
  * @subpackage validator
  */
-class sfValidatorError extends Exception implements Serializable {
-
+class sfValidatorError extends Exception implements Serializable
+{
   protected $validator = null,
           $arguments = array();
 
@@ -32,8 +32,7 @@ class sfValidatorError extends Exception implements Serializable {
     // override default exception message and code
     $this->code = $code;
 
-    if(!$messageFormat = $this->getMessageFormat())
-    {
+    if (!$messageFormat = $this->getMessageFormat()) {
       $messageFormat = $code;
     }
     $this->message = strtr($messageFormat, $this->getArguments());
@@ -78,16 +77,13 @@ class sfValidatorError extends Exception implements Serializable {
    */
   public function getArguments($raw = false)
   {
-    if($raw)
-    {
+    if ($raw) {
       return $this->arguments;
     }
 
     $arguments = array();
-    foreach($this->arguments as $key => $value)
-    {
-      if(is_array($value))
-      {
+    foreach ($this->arguments as $key => $value) {
+      if (is_array($value)) {
         continue;
       }
 
@@ -113,8 +109,7 @@ class sfValidatorError extends Exception implements Serializable {
   public function getMessageFormat()
   {
     $messageFormat = $this->validator->getMessage($this->code);
-    if(!$messageFormat)
-    {
+    if (!$messageFormat) {
       $messageFormat = $this->getMessage();
     }
 

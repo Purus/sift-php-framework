@@ -15,8 +15,8 @@ require_once dirname(__FILE__) . '/PEAR_bootstrap.php';
  * @package    Sift
  * @subpackage plugin_pear
  */
-class sfPearEnvironment extends sfConfigurable {
-
+class sfPearEnvironment extends sfConfigurable
+{
   protected $dispatcher = null,
     $config = null,
     $registry = null,
@@ -63,8 +63,7 @@ class sfPearEnvironment extends sfConfigurable {
   {
     $this->dispatcher = $dispatcher;
 
-    if(!is_dir($options['cache_dir']))
-    {
+    if (!is_dir($options['cache_dir'])) {
       mkdir($options['cache_dir'], 0777, true);
     }
 
@@ -130,18 +129,15 @@ class sfPearEnvironment extends sfConfigurable {
   {
     $this->config->set('auto_discover', true);
 
-    if(!$this->registry->channelExists($channel, true))
-    {
+    if (!$this->registry->channelExists($channel, true)) {
       $class = $this->getOption('downloader_base_class');
       $downloader = new $class($this->frontend, array(), $this->config);
-      if(!$downloader->discover($channel))
-      {
+      if (!$downloader->discover($channel)) {
         throw new sfPluginException(sprintf('Unable to register channel "%s"', $channel));
       }
     }
 
-    if($isDefault)
-    {
+    if ($isDefault) {
       $this->config->set('default_channel', $channel);
       $this->rest->setChannel($channel);
     }
@@ -156,8 +152,7 @@ class sfPearEnvironment extends sfConfigurable {
    */
   public function removeChannel($channel)
   {
-    if(!$this->registry->channelExists($channel, true))
-    {
+    if (!$this->registry->channelExists($channel, true)) {
       throw new sfPluginException(sprintf('Channel "%s" does not exist', $channel));
     }
 
@@ -170,8 +165,7 @@ class sfPearEnvironment extends sfConfigurable {
   protected function initializeFrontend()
   {
     $this->frontend = PEAR_Frontend::singleton('sfPearFrontendPlugin');
-    if(PEAR::isError($this->frontend))
-    {
+    if (PEAR::isError($this->frontend)) {
       throw new sfPluginException(sprintf('Unable to initialize PEAR Frontend object: %s', $this->frontend->getMessage()));
     }
 
@@ -184,8 +178,7 @@ class sfPearEnvironment extends sfConfigurable {
   protected function initializeRegistry()
   {
     $this->registry = $this->config->getRegistry();
-    if(PEAR::isError($this->registry))
-    {
+    if (PEAR::isError($this->registry)) {
       throw new sfPluginException(sprintf('Unable to initialize PEAR registry: %s', $this->registry->getMessage()));
     }
   }
@@ -207,8 +200,7 @@ class sfPearEnvironment extends sfConfigurable {
     $this->config->set('doc_dir', $pluginDir);
     $this->config->set('bin_dir', $pluginDir);
 
-    if($this->hasOption('preferred_state'))
-    {
+    if ($this->hasOption('preferred_state')) {
       $this->config->set('preferred_state', $this->getOption('preferred_state'));
     }
 

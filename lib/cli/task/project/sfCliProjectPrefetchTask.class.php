@@ -12,8 +12,8 @@
  * @package    Sift
  * @subpackage cli_task
  */
-class sfCliProjectPrefetchTask extends sfCliBaseTask {
-
+class sfCliProjectPrefetchTask extends sfCliBaseTask
+{
   /**
    * @see sfCliTask
    */
@@ -50,27 +50,21 @@ EOF;
   {
     $applications = $arguments['app'];
 
-    if(count($applications))
-    {
-      foreach($applications as $application)
-      {
+    if (count($applications)) {
+      foreach ($applications as $application) {
         $this->checkAppExists($application);
       }
-    }
-    else
-    {
+    } else {
       // find applications
       $applications = sfFinder::type('dir')->maxDepth(0)
                         ->relative()->in($this->environment->get('sf_apps_dir'));
     }
 
-    if(!count($options['hostname']))
-    {
+    if (!count($options['hostname'])) {
       $options['hostname'][] = 'localhost';
     }
 
-    foreach($applications as $application)
-    {
+    foreach ($applications as $application) {
       $this->logSection($this->getFullName(), sprintf('Prefetching "%s"', $application));
       $this->prefetchApplication($application, $options);
     }
@@ -85,19 +79,15 @@ EOF;
     $environment = $options['environment'];
 
     // we have a routes to prefetch
-    if(count($options['routes']))
-    {
+    if (count($options['routes'])) {
       $routes = $options['routes'];
-    }
-    else
-    {
+    } else {
       $routes = array('@homepage');
     }
 
     $routes = sfToolkit::varExport($routes);
 
-    foreach($options['hostname'] as $hostname)
-    {
+    foreach ($options['hostname'] as $hostname) {
       $testFile = tempnam(sys_get_temp_dir(), 'prefetch');
       file_put_contents($testFile, <<<EOF
 <?php
@@ -121,21 +111,18 @@ sfCore::bootstrap(\$sf_sift_lib_dir, \$sf_sift_data_dir);
 
 \$error = false;
 \$browser = new sfPrefetchBrowser(\$application, \$environment, \$hostname, \$remoteIp);
-foreach(\$routes as \$route)
-{
+foreach (\$routes as \$route) {
   // generate the url
   \$url = \$browser->getContext()->getController()->genUrl(\$route);
   \$browser->get(\$url);
   \$code = \$browser->getResponse()->getStatusCode();
-  if(\$code !== 200)
-  {
+  if (\$code !== 200) {
     \$error = true;
     echo sprintf('Error while fetching "%s" (route: "%s"), response code: %s', \$url, \$route, \$code) . "\\n";
   }
 }
 
-if(!\$error)
-{
+if (!\$error) {
   echo 'OK';
 }
 
@@ -147,16 +134,12 @@ EOF
       $result = ob_get_clean();
       unlink($testFile);
 
-      if($result == 'OK')
-      {
+      if ($result == 'OK') {
         $this->logSection($this->getFullName(), 'Prefetching ok.');
-      }
-      else
-      {
+      } else {
         $this->logSection($this->getFullName(), 'Error prefetching app.', null, 'ERROR');
         $confirmed = $this->askConfirmation('Display the result?');
-        if($confirmed)
-        {
+        if ($confirmed) {
           echo $result;
         }
       }

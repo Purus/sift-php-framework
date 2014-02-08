@@ -12,8 +12,8 @@
  * @package    Sift
  * @subpackage log
  */
-abstract class sfLoggerBase extends sfConfigurable implements sfILogger {
-
+abstract class sfLoggerBase extends sfConfigurable implements sfILogger
+{
   /**
    * Log level map
    *
@@ -141,8 +141,7 @@ abstract class sfLoggerBase extends sfConfigurable implements sfILogger {
    */
   public function getLevelName($level)
   {
-    if(!isset(self::$logLevelMap[$level]))
-    {
+    if (!isset(self::$logLevelMap[$level])) {
       throw new InvalidArgumentException(sprintf('The level level "%s" does not exist.', $level));
     }
 
@@ -168,20 +167,18 @@ abstract class sfLoggerBase extends sfConfigurable implements sfILogger {
    */
   protected function formatMessage($message, array $context = array())
   {
-    if(!count($context))
-    {
-      return (string)$message;
+    if (!count($context)) {
+      return (string) $message;
     }
 
     // build a replacement array with braces around the context keys
     $replace = array();
-    foreach($context as $key => $val)
-    {
+    foreach ($context as $key => $val) {
       $replace['{' . $key . '}'] = $val;
     }
 
     // interpolate replacement values into the message and return
-    return strtr((string)$message, $replace);
+    return strtr((string) $message, $replace);
   }
 
 }

@@ -14,8 +14,8 @@
  * @package    Sift
  * @subpackage exception
  */
-class sfException extends Exception {
-
+class sfException extends Exception
+{
   /**
    * Wrapped exception
    *
@@ -111,10 +111,8 @@ class sfException extends Exception {
    */
   public function printStackTrace(Exception $exception = null)
   {
-    if(!$exception)
-    {
-      if(null === $this->wrappedException)
-      {
+    if (!$exception) {
+      if (null === $this->wrappedException) {
         $this->setWrappedException($this);
       }
       $exception = $this->wrappedException;
@@ -132,22 +130,18 @@ class sfException extends Exception {
     }
 
     // we have a dispatcher
-    if($dispatcher)
-    {
+    if ($dispatcher) {
       $event = $dispatcher->notifyUntil(new sfEvent('application.throw_exception', array('exception' => $exception)));
-      if($event->isProcessed())
-      {
+      if ($event->isProcessed()) {
         return;
       }
     }
 
     $catchedOutput = 'N/A';
-    if(!sfConfig::get('sf_test') && !self::isInCli())
-    {
+    if (!sfConfig::get('sf_test') && !self::isInCli()) {
       // catchedOutput
       $catchedOutput = ob_get_contents();
-      if(!$catchedOutput)
-      {
+      if (!$catchedOutput) {
         $catchedOutput = 'N/A';
       }
       // clean current output buffer
@@ -172,8 +166,7 @@ class sfException extends Exception {
       $uri = $method = 'n/a';
 
       // log the current uri
-      if($request)
-      {
+      if ($request) {
         $uri = $request->getUri();
         $method = $request->getMethod();
       }
@@ -189,13 +182,10 @@ class sfException extends Exception {
     }
 
     $headers = true;
-    if(self::isInCli())
-    {
+    if (self::isInCli()) {
       $format = 'plain';
       $headers = false;
-    }
-    else
-    {
+    } else {
       $format = 'html';
       if($request && ((method_exists($request, 'isAjax') && $request->isAjax()) ||
            (method_exists($request, 'isXmlHttpRequest') && $request->isXmlHttpRequest())))
@@ -205,8 +195,7 @@ class sfException extends Exception {
     }
 
     // send an error 500 if not in debug mode
-    if(!sfConfig::get('sf_debug'))
-    {
+    if (!sfConfig::get('sf_debug')) {
       if(ini_get('log_errors')
         && sfToolkit::isCallable('error_log'))
       {
@@ -221,10 +210,8 @@ class sfException extends Exception {
       return;
     }
 
-    if($context && (is_object($response = $context->getResponse())))
-    {
-      if($response->getStatusCode() < 300)
-      {
+    if ($context && (is_object($response = $context->getResponse()))) {
+      if ($response->getStatusCode() < 300) {
         // status code has already been sent, but is included here for the purpose of testing
         $response->setStatusCode(500);
       }
@@ -239,8 +226,7 @@ class sfException extends Exception {
     $headers ? @header('HTTP/1.0 500 Internal Server Error') : null;
 
     $charset = class_exists('sfConfig', false) ? sfConfig::get('sf_charset') : 'UTF-8';
-    switch($format)
-    {
+    switch ($format) {
       case 'html':
         $headers ? @header(sprintf('Content-Type: text/html;charset=%s', sfConfig::get('sf_charset'))) : null;
         $decorator = new sfDebugBacktraceHtmlDecorator($backtrace, array(
@@ -250,8 +236,7 @@ class sfException extends Exception {
 
       case 'json':
 
-        if($headers)
-        {
+        if ($headers) {
           @header(sprintf('Content-Type: application/json;charset=%s', $charset));
           @header('X-Content-Type-Options: nosniff');
         }
@@ -281,8 +266,7 @@ class sfException extends Exception {
       $notify = false;
     }
 
-    if($dispatcher && $notify)
-    {
+    if ($dispatcher && $notify) {
       $result = $dispatcher->filter(new sfEvent('application.render_exception', array(
         'exception' => $exception,
         'content' => $result,
@@ -293,8 +277,7 @@ class sfException extends Exception {
     echo $result;
 
     // if test, do not exit
-    if(!sfConfig::get('sf_test'))
-    {
+    if (!sfConfig::get('sf_test')) {
       exit(1);
     }
   }

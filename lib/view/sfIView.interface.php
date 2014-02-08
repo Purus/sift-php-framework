@@ -12,8 +12,8 @@
  * @package    Sift
  * @subpackage view
  */
-interface sfIView {
-
+interface sfIView
+{
   /**
    * Initializes the view
    *

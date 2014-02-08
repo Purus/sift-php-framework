@@ -12,8 +12,8 @@
  * @package    Sift
  * @subpackage debug_panel
  */
-class sfWebDebugPanelCurrentRoute extends sfWebDebugPanel {
-
+class sfWebDebugPanelCurrentRoute extends sfWebDebugPanel
+{
   /**
    * @see sfWebDebugPanel
    */

@@ -16,8 +16,8 @@
  * @subpackage util
  * @link       http://flourishlib.com/fUTF8
  */
-class sfUtf8 {
-
+class sfUtf8
+{
   // The following constants allow for nice looking callbacks to static methods
   const ascii = 'sfUtf8::ascii';
   const chr = 'sfUtf8::chr';
@@ -555,8 +555,7 @@ class sfUtf8 {
    */
   public static function ascii($string)
   {
-    if(!self::detect($string))
-    {
+    if (!self::detect($string)) {
       return $string;
     }
     $string = strtr($string, self::$utf8_to_ascii);
@@ -574,13 +573,11 @@ class sfUtf8 {
    */
   public static function convertToUtf8($string, $inputCharset = null, $clean = false)
   {
-    if(self::isUtf8($string))
-    {
+    if (self::isUtf8($string)) {
       return $string;
     }
 
-    if(is_null($inputCharset))
-    {
+    if (is_null($inputCharset)) {
       $inputCharset = self::detectCharset($string);
     }
 
@@ -598,28 +595,23 @@ class sfUtf8 {
    */
   public static function detectCharset($string)
   {
-    if(self::isUtf8($string))
-    {
+    if (self::isUtf8($string)) {
       return 'UTF-8';
     }
 
-    if(preg_match('#[\x7F-\x9F]#', $string))
-    {
+    if (preg_match('#[\x7F-\x9F]#', $string)) {
       return 'WINDOWS-1250';
     }
 
-    if(preg_match("/^[\\x00-\\xFF]*$/u", $string))
-    {
+    if (preg_match("/^[\\x00-\\xFF]*$/u", $string)) {
       return 'ISO-8859-1';
     }
 
-    if(self::$mbstring_available === null)
-    {
+    if (self::$mbstring_available === null) {
       self::checkMbString();
     }
 
-    if(self::$mbstring_available)
-    {
+    if (self::$mbstring_available) {
       return mb_detect_encoding($string, 'ISO-8859-2,WINDOWS-1251,WINDOWS-1252');
     }
 
@@ -665,8 +657,7 @@ class sfUtf8 {
    */
   public static function chr($unicode_code_point)
   {
-    if(is_string($unicode_code_point) && substr($unicode_code_point, 0, 2) == 'U+')
-    {
+    if (is_string($unicode_code_point) && substr($unicode_code_point, 0, 2) == 'U+') {
       $unicode_code_point = substr($unicode_code_point, 2);
       $unicode_code_point = hexdec($unicode_code_point);
     }
@@ -677,29 +668,22 @@ class sfUtf8 {
     $first = $second = $third = $fourth = NULL;
 
     // One byte characters
-    if($digits <= 7)
-    {
+    if ($digits <= 7) {
       $first = chr(bindec($bin));
 
       // Two byte characters
-    }
-    elseif($digits <= 11)
-    {
+    } elseif ($digits <= 11) {
       $first = chr(bindec('110' . str_pad(substr($bin, 0, -6), 5, '0', STR_PAD_LEFT)));
       $second = chr(bindec('10' . substr($bin, -6)));
 
       // Three byte characters
-    }
-    elseif($digits <= 16)
-    {
+    } elseif ($digits <= 16) {
       $first = chr(bindec('1110' . str_pad(substr($bin, 0, -12), 4, '0', STR_PAD_LEFT)));
       $second = chr(bindec('10' . substr($bin, -12, -6)));
       $third = chr(bindec('10' . substr($bin, -6)));
 
       // Four byte characters
-    }
-    elseif($digits <= 21)
-    {
+    } elseif ($digits <= 21) {
       $first = chr(bindec('11110' . str_pad(substr($bin, 0, -18), 3, '0', STR_PAD_LEFT)));
       $second = chr(bindec('10' . substr($bin, -18, -12)));
       $third = chr(bindec('10' . substr($bin, -12, -6)));
@@ -707,8 +691,7 @@ class sfUtf8 {
     }
 
     $ord = ord($first);
-    if($digits > 21 || $ord == 0xC0 || $ord == 0xC1 || $ord > 0xF4)
-    {
+    if ($digits > 21 || $ord == 0xC0 || $ord == 0xC1 || $ord > 0xF4) {
       throw new sfException(sprintf('The code point specified, %s, is invalid.', $unicode_code_point));
     }
 
@@ -723,32 +706,24 @@ class sfUtf8 {
    */
   public static function clean($value)
   {
-    if(!is_array($value))
-    {
-      if(self::$can_ignore_invalid === NULL)
-      {
+    if (!is_array($value)) {
+      if (self::$can_ignore_invalid === NULL) {
         self::$can_ignore_invalid = strtolower(ICONV_IMPL) != 'unknown';
       }
 
-      if(!self::$can_ignore_invalid)
-      {
+      if (!self::$can_ignore_invalid) {
         try {
           return iconv('UTF-8', 'UTF-8', (string) $value);
+        } catch (sfPhpErrorException $e) {
         }
-        catch(sfPhpErrorException $e)
-        {
-        }
-      }
-      else
-      {
+      } else {
         return iconv('UTF-8', 'UTF-8//IGNORE', (string) $value);
       }
     }
 
     $keys = array_keys($value);
     $num_keys = sizeof($keys);
-    for($i = 0; $i < $num_keys; $i++)
-    {
+    for ($i = 0; $i < $num_keys; $i++) {
       $value[$keys[$i]] = self::clean($value[$keys[$i]]);
     }
 
@@ -775,8 +750,7 @@ class sfUtf8 {
     $res = strcmp($ascii_str1, $ascii_str2);
 
     // If the ASCII representations are the same, sort by the UTF-8 representations
-    if($res === 0)
-    {
+    if ($res === 0) {
       $res = strcmp($str1, $str2);
     }
 
@@ -792,8 +766,7 @@ class sfUtf8 {
    */
   private static function convertOffsetToBytes($string, $offset)
   {
-    if($offset == 0)
-    {
+    if ($offset == 0) {
       return 0;
     }
 
@@ -804,25 +777,19 @@ class sfUtf8 {
     $sign = 1;
 
     // Negative offsets require us to reverse some stuff
-    if($offset < 0)
-    {
+    if ($offset < 0) {
       $string = strrev($string);
       $sign = -1;
       $offset = abs($offset);
     }
 
-    for($i = 0; $i < $len && $measured_offset < $offset; $i++)
-    {
+    for ($i = 0; $i < $len && $measured_offset < $offset; $i++) {
       $char = $string[$i];
       ++$byte_offset;
-      if(ord($char) < 0x80)
-      {
+      if (ord($char) < 0x80) {
         ++$measured_offset;
-      }
-      else
-      {
-        switch(ord($char) & 0xF0)
-        {
+      } else {
+        switch (ord($char) & 0xF0) {
           case 0xF0:
           case 0xE0:
           case 0xD0:
@@ -860,8 +827,7 @@ class sfUtf8 {
   public static function explode($string, $delimiter = null)
   {
     // If a delimiter was passed, we just do an explode
-    if($delimiter || (!$delimiter && is_numeric($delimiter)))
-    {
+    if ($delimiter || (!$delimiter && is_numeric($delimiter))) {
       return explode($delimiter, $string);
     }
 
@@ -922,18 +888,15 @@ class sfUtf8 {
   public static function ipos($haystack, $needle, $offset=0)
   {
     // We get better performance falling back for ASCII strings
-    if(!self::detect($haystack))
-    {
+    if (!self::detect($haystack)) {
       return stripos($haystack, $needle, $offset);
     }
 
-    if(self::$mbstring_available === NULL)
-    {
+    if (self::$mbstring_available === NULL) {
       self::checkMbString();
     }
 
-    if(self::$mbstring_available && function_exists('mb_stripos'))
-    {
+    if (self::$mbstring_available && function_exists('mb_stripos')) {
       return mb_stripos($haystack, $needle, $offset, 'UTF-8');
     }
 
@@ -958,15 +921,11 @@ class sfUtf8 {
    */
   public static function ireplace($string, $search, $replace)
   {
-    if(is_array($search))
-    {
-      foreach($search as &$needle)
-      {
+    if (is_array($search)) {
+      foreach ($search as &$needle) {
         $needle = '#' . preg_quote($needle, '#') . '#ui';
       }
-    }
-    else
-    {
+    } else {
       $search = '#' . preg_quote($search, '#') . '#ui';
     }
 
@@ -988,18 +947,15 @@ class sfUtf8 {
   public static function irpos($haystack, $needle, $offset=0)
   {
     // We get better performance falling back for ASCII strings
-    if(!self::detect($haystack))
-    {
+    if (!self::detect($haystack)) {
       return strripos($haystack, $needle, $offset);
     }
 
-    if(self::$mbstring_available === NULL)
-    {
+    if (self::$mbstring_available === NULL) {
       self::checkMbString();
     }
 
-    if(self::$mbstring_available && function_exists('mb_strripos'))
-    {
+    if (self::$mbstring_available && function_exists('mb_strripos')) {
       return mb_strripos($haystack, $needle, $offset, 'UTF-8');
     }
 
@@ -1023,18 +979,15 @@ class sfUtf8 {
   public static function istr($haystack, $needle, $before_needle = false)
   {
     // We get better performance falling back for ASCII strings
-    if($before_needle == false && !self::detect($haystack))
-    {
+    if ($before_needle == false && !self::detect($haystack)) {
       return stristr($haystack, $needle);
     }
 
-    if(self::$mbstring_available === null)
-    {
+    if (self::$mbstring_available === null) {
       self::checkMbString();
     }
 
-    if(self::$mbstring_available && function_exists('mb_stristr'))
-    {
+    if (self::$mbstring_available && function_exists('mb_stristr')) {
       return mb_stristr($haystack, $needle, $before_needle, 'UTF-8');
     }
 
@@ -1043,8 +996,7 @@ class sfUtf8 {
 
     $pos = strpos($lower_haystack, $lower_needle);
 
-    if($before_needle)
-    {
+    if ($before_needle) {
       return substr($haystack, 0, $pos);
     }
 
@@ -1059,13 +1011,11 @@ class sfUtf8 {
    */
   public static function len($string)
   {
-    if(self::$mbstring_available === NULL)
-    {
+    if (self::$mbstring_available === NULL) {
       self::checkMbString();
     }
 
-    if(self::$mbstring_available)
-    {
+    if (self::$mbstring_available) {
       return mb_strlen($string, 'UTF-8');
     }
 
@@ -1081,18 +1031,15 @@ class sfUtf8 {
   public static function lower($string)
   {
     // We get better performance falling back for ASCII strings
-    if(!self::detect($string))
-    {
+    if (!self::detect($string)) {
       return strtolower($string);
     }
 
-    if(self::$mbstring_available === NULL)
-    {
+    if (self::$mbstring_available === NULL) {
       self::checkMbString();
     }
 
-    if(self::$mbstring_available)
-    {
+    if (self::$mbstring_available) {
       $string = mb_strtolower($string, 'utf-8');
       // For some reason mb_strtolower misses some character
       return strtr($string, self::$mb_upper_to_lower_fix);
@@ -1110,8 +1057,7 @@ class sfUtf8 {
    */
   public static function ltrim($string, $charlist=NULL)
   {
-    if(strlen($charlist) === 0)
-    {
+    if (strlen($charlist) === 0) {
       return ltrim($string);
     }
 
@@ -1142,8 +1088,7 @@ class sfUtf8 {
     $res = strnatcmp($ascii_str1, $ascii_str2);
 
     // If the ASCII representations are the same, sort by the UTF-8 representations
-    if($res === 0)
-    {
+    if ($res === 0) {
       $res = strnatcmp($str1, $str2);
     }
 
@@ -1161,11 +1106,9 @@ class sfUtf8 {
     $b = array_map('ord', str_split($character));
     $invalid = FALSE;
 
-    switch(strlen($character))
-    {
+    switch (strlen($character)) {
       case 1:
-        if($b[0] > 0x7F)
-        {
+        if ($b[0] > 0x7F) {
           $invalid = TRUE;
           break;
         }
@@ -1216,8 +1159,7 @@ class sfUtf8 {
         break;
     }
 
-    if($invalid)
-    {
+    if ($invalid) {
       throw new sfException('The UTF-8 character specified is invalid');
     }
 
@@ -1238,8 +1180,7 @@ class sfUtf8 {
   public static function pad($string, $pad_length, $pad_string = ' ', $pad_type = 'right')
   {
     $valid_pad_types = array('right', 'left', 'both');
-    if(!in_array($pad_type, $valid_pad_types))
-    {
+    if (!in_array($pad_type, $valid_pad_types)) {
       throw new sfException(
               sprintf('The pad type specified, %1$s, is not valid. Must be one of: %2$s.',
               $pad_type,
@@ -1248,8 +1189,7 @@ class sfUtf8 {
     }
 
     // We get better performance falling back for ASCII strings
-    if(!self::detect($string) && !self::detect($pad_string))
-    {
+    if (!self::detect($string) && !self::detect($pad_string)) {
       static $type_map = array(
                   'left' => STR_PAD_LEFT,
                   'right' => STR_PAD_RIGHT,
@@ -1265,8 +1205,7 @@ class sfUtf8 {
 
     $pad_to_length = $pad_length - $string_length;
 
-    if($pad_to_length < 1)
-    {
+    if ($pad_to_length < 1) {
       return $string;
     }
 
@@ -1275,17 +1214,14 @@ class sfUtf8 {
     $left_pad_string = '';
     $right_pad_string = '';
 
-    while($padded < $pad_to_length)
-    {
+    while ($padded < $pad_to_length) {
 
       // For pad strings over 1 characters long, they may be too long to fit
-      if($pad_to_length - $padded < $pad_string_length)
-      {
+      if ($pad_to_length - $padded < $pad_string_length) {
         $pad_string = self::sub($pad_string, 0, $pad_to_length - $padded);
       }
 
-      switch(($pad_type != 'both') ? $pad_type : $next_side)
-      {
+      switch (($pad_type != 'both') ? $pad_type : $next_side) {
         case 'right':
           $right_pad_string .= $pad_string;
           $next_side = 'left';
@@ -1313,13 +1249,11 @@ class sfUtf8 {
    */
   public static function pos($haystack, $needle, $offset=0)
   {
-    if(self::$mbstring_available === NULL)
-    {
+    if (self::$mbstring_available === NULL) {
       self::checkMbString();
     }
 
-    if(self::$mbstring_available)
-    {
+    if (self::$mbstring_available) {
       return mb_strpos($haystack, $needle, $offset, 'UTF-8');
     }
 
@@ -1327,8 +1261,7 @@ class sfUtf8 {
 
     $position = strpos($haystack, $needle, $offset);
 
-    if($position === FALSE)
-    {
+    if ($position === FALSE) {
       return FALSE;
     }
 
@@ -1379,17 +1312,12 @@ class sfUtf8 {
     static $char_lens = array(0xF0 => 4, 0xE0 => 3, 0xD0 => 2, 0xC0 => 2);
 
     $mb_char = '';
-    for($i = 0; $i < $len; $i++)
-    {
+    for ($i = 0; $i < $len; $i++) {
       $char = $string[$i];
-      if(ord($char) < 128)
-      {
+      if (ord($char) < 128) {
         $output = $char . $output;
-      }
-      else
-      {
-        switch(ord($char) & 0xF0)
-        {
+      } else {
+        switch (ord($char) & 0xF0) {
           case 0xF0:
             $output = $string[$i] . $string[$i + 1] . $string[$i + 2] . $string[$i + 3] . $output;
             $i += 3;
@@ -1423,8 +1351,7 @@ class sfUtf8 {
   public static function rpos($haystack, $needle, $offset=0)
   {
     // We get better performance falling back for ASCII strings
-    if(!self::detect($haystack))
-    {
+    if (!self::detect($haystack)) {
       return strrpos($haystack, $needle, $offset);
     }
 
@@ -1434,8 +1361,7 @@ class sfUtf8 {
 
     $position = strrpos($haystack, $needle, $offset);
 
-    if($position === FALSE)
-    {
+    if ($position === FALSE) {
       return FALSE;
     }
 
@@ -1451,8 +1377,7 @@ class sfUtf8 {
    */
   public static function rtrim($string, $charlist=NULL)
   {
-    if(strlen($charlist) === 0)
-    {
+    if (strlen($charlist) === 0) {
       return rtrim($string);
     }
 
@@ -1475,25 +1400,21 @@ class sfUtf8 {
    */
   public static function str($haystack, $needle, $before_needle=FALSE)
   {
-    if(self::$mbstring_available === NULL)
-    {
+    if (self::$mbstring_available === NULL) {
       self::checkMbString();
     }
 
-    if(self::$mbstring_available && function_exists('mb_strstr'))
-    {
+    if (self::$mbstring_available && function_exists('mb_strstr')) {
       return mb_strstr($haystack, $needle, $before_needle, 'UTF-8');
     }
 
     $pos = strpos($haystack, $needle);
 
-    if($pos === FALSE)
-    {
+    if ($pos === FALSE) {
       return $pos;
     }
 
-    if($before_needle)
-    {
+    if ($before_needle) {
       return substr($haystack, 0, $pos);
     }
 
@@ -1510,26 +1431,19 @@ class sfUtf8 {
    */
   public static function sub($string, $start, $length=NULL)
   {
-    if(self::$mbstring_available === NULL)
-    {
+    if (self::$mbstring_available === NULL) {
       self::checkMbString();
     }
 
-    if(self::$mbstring_available)
-    {
+    if (self::$mbstring_available) {
       $str_len = mb_strlen($string, 'UTF-8');
-      if(abs($start) > $str_len)
-      {
+      if (abs($start) > $str_len) {
         return FALSE;
       }
-      if($length === NULL)
-      {
-        if($start >= 0)
-        {
+      if ($length === NULL) {
+        if ($start >= 0) {
           $length = $str_len - $start;
-        }
-        else
-        {
+        } else {
           $length = abs($start);
         }
       }
@@ -1538,16 +1452,11 @@ class sfUtf8 {
     }
 
     // We get better performance falling back for ASCII strings
-    if(!self::detect($string))
-    {
-      if($lenth === NULL)
-      {
-        if($start >= 0)
-        {
+    if (!self::detect($string)) {
+      if ($lenth === NULL) {
+        if ($start >= 0) {
           $length = strlen($string) - $start;
-        }
-        else
-        {
+        } else {
           $length = abs($start);
         }
       }
@@ -1559,15 +1468,13 @@ class sfUtf8 {
     // This is the slowest version
     $str_len = strlen(utf8_decode($string));
 
-    if(abs($start) > $str_len)
-    {
+    if (abs($start) > $str_len) {
       return FALSE;
     }
 
     // Optimize looking by changing to negative start positions if the
     // start is in the second half of the string
-    if($start > $str_len / 2)
-    {
+    if ($start > $str_len / 2) {
       $start = 0 - ($str_len - $start);
     }
 
@@ -1575,8 +1482,7 @@ class sfUtf8 {
     $start = self::convertOffsetToBytes($string, $start);
     $string = substr($string, $start);
 
-    if($length === NULL)
-    {
+    if ($length === NULL) {
       return $string;
     }
 
@@ -1598,16 +1504,14 @@ class sfUtf8 {
    * @param mixed $start If start is positive, the replacing will begin at the start'th offset into string.
    *                     If start is negative, the replacing will begin at the start'th character from the end of string.
    * @param mixed $length If given and is positive, it represents the length of the portion of string which is to be replaced.
-   *                      If it is negative, it represents the number of characters from the end of string at which to stop replacing. If it is not given, then it will default to strlen( string ); i.e. end the replacing at the end of string. Of course, if length is zero then this function will have the effect of inserting replacement into string at the given start offset.
+   *                      If it is negative, it represents the number of characters from the end of string at which to stop replacing. If it is not given, then it will default to strlen(string) ; i.e. end the replacing at the end of string. Of course, if length is zero then this function will have the effect of inserting replacement into string at the given start offset.
    * @return string
    * @see http://www.php.net/manual/en/ref.mbstring.php#94220
    */
   public static function subReplace($string, $replacement, $start = null, $length = null)
   {
-    if(is_array($string))
-    {
-      foreach($string as $key => $value)
-      {
+    if (is_array($string)) {
+      foreach ($string as $key => $value) {
         $string[$key] = self::subReplace($value, $replacement,
                           is_array($start) ? $start[$key] : $start,
                           is_array($length) ? $length[$key] : $length);
@@ -1618,26 +1522,19 @@ class sfUtf8 {
 
     $string_length = self::len($string);
 
-    if($start < 0)
-    {
+    if ($start < 0) {
       $start = max(0, $string_length + $start);
-    }
-    else if($start > $string_length)
-    {
+    } else if ($start > $string_length) {
       $start = $string_length;
     }
 
-    if($length < 0)
-    {
+    if ($length < 0) {
       $length = max(0, $string_length - $start + $length);
-    }
-    else if((is_null($length) === true) || ($length > $string_length))
-    {
+    } else if ((is_null($length) === true) || ($length > $string_length)) {
       $length = $string_length;
     }
 
-    if(($start + $length) > $string_length)
-    {
+    if (($start + $length) > $string_length) {
       $length = $string_length - $start;
     }
 
@@ -1653,8 +1550,7 @@ class sfUtf8 {
    */
   public static function trim($string, $charlist=NULL)
   {
-    if(strlen($charlist) === 0)
-    {
+    if (strlen($charlist) === 0) {
       return trim($string);
     }
 
@@ -1714,18 +1610,15 @@ class sfUtf8 {
   public static function upper($string)
   {
     // We get better performance falling back for ASCII strings
-    if(!self::detect($string))
-    {
+    if (!self::detect($string)) {
       return strtoupper($string);
     }
 
-    if(self::$mbstring_available === NULL)
-    {
+    if (self::$mbstring_available === NULL) {
       self::checkMbString();
     }
 
-    if(self::$mbstring_available)
-    {
+    if (self::$mbstring_available) {
       $string = mb_strtoupper($string, 'utf-8');
       // For some reason mb_strtoupper misses some character
       return strtr($string, self::$mb_lower_to_upper_fix);
@@ -1746,8 +1639,7 @@ class sfUtf8 {
   public static function wordwrap($string, $width = 75, $break = "\n", $cut = false)
   {
     // We get better performance falling back for ASCII strings
-    if(!self::detect($string))
-    {
+    if (!self::detect($string)) {
       return wordwrap($string, $width, $break, $cut);
     }
 
@@ -1756,13 +1648,11 @@ class sfUtf8 {
     $output = '';
 
     $line_len = 0;
-    foreach($words as $word)
-    {
+    foreach ($words as $word) {
       $word_len = self::len($word);
 
       // Shorten up words that are too long
-      while($cut && $word_len > $width)
-      {
+      while ($cut && $word_len > $width) {
         $output .= $break;
         $output .= self::sub($word, 0, $width);
         $line_len = $width;
@@ -1770,8 +1660,7 @@ class sfUtf8 {
         $word_len = self::len($word);
       }
 
-      if($line_len && $line_len + $word_len > $width)
-      {
+      if ($line_len && $line_len + $word_len > $width) {
         $output .= $break;
         $line_len = 0;
       }

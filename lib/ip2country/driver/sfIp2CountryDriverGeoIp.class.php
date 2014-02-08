@@ -12,8 +12,8 @@
  * @package    Sift
  * @subpackage ip2country
  */
-class sfIp2CountryDriverGeoIp extends sfIp2Country {
-
+class sfIp2CountryDriverGeoIp extends sfIp2Country
+{
   /**
    * Connected flag
    *
@@ -51,8 +51,7 @@ class sfIp2CountryDriverGeoIp extends sfIp2Country {
       throw new InvalidArgumentException(sprintf('Database "%s" is missing or is not readable.', $database));
     }
 
-    if(!extension_loaded('pdo_SQLite'))
-    {
+    if (!extension_loaded('pdo_SQLite')) {
       throw new sfConfigurationException('sfSQLiteCache class needs "sqlite" or "pdo_sqlite" extension to be loaded.');
     }
   }
@@ -65,8 +64,7 @@ class sfIp2CountryDriverGeoIp extends sfIp2Country {
    */
   protected function connect()
   {
-    if($this->isConnected)
-    {
+    if ($this->isConnected) {
       return;
     }
 
@@ -103,8 +101,7 @@ class sfIp2CountryDriverGeoIp extends sfIp2Country {
     $statement->bindParam(1, $ip);
     $result = $statement->execute();
 
-    if($result !== true)
-    {
+    if ($result !== true) {
       return $default;
     }
 

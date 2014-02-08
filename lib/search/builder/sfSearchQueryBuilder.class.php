@@ -12,8 +12,8 @@
  * @package Sift
  * @subpackage search
  */
-class sfSearchQueryBuilder implements sfISearchQueryBuilder {
-
+class sfSearchQueryBuilder implements sfISearchQueryBuilder
+{
   /**
    * sfSearchQueryExpression holder
    *
@@ -35,8 +35,7 @@ class sfSearchQueryBuilder implements sfISearchQueryBuilder {
    */
   public function __construct(sfSearchQueryExpression $expression = null)
   {
-    if($expression)
-    {
+    if ($expression) {
       $this->setExpression($expression);
     }
   }
@@ -77,10 +76,8 @@ class sfSearchQueryBuilder implements sfISearchQueryBuilder {
     $phrases = $expression->getPhrases();
     $subExpressions = $expression->getSubExpressions();
 
-    foreach($phrases as $phrase)
-    {
-      switch($phrase->getMode())
-      {
+    foreach ($phrases as $phrase) {
+      switch ($phrase->getMode()) {
         case sfSearchQueryPhrase::MODE_AND:
         case sfSearchQueryPhrase::MODE_DEFAULT:
           $phrase->isMultiWord() ? $format = 'AND "%s" ' : $format = "AND %s ";
@@ -102,10 +99,8 @@ class sfSearchQueryBuilder implements sfISearchQueryBuilder {
       $query .= sprintf($format, $phrase);
     }
 
-    foreach($subExpressions as $subExpression)
-    {
-      switch($subExpression->getMode())
-      {
+    foreach ($subExpressions as $subExpression) {
+      switch ($subExpression->getMode()) {
         case sfSearchQueryExpression::MODE_OR:
           $query .= sprintf('OR (%s)', $this->processExpression($subExpression));
           break;

@@ -81,23 +81,17 @@ EOF;
 
     $status = false;
     $statusFile = $this->environment->get('sf_cache_dir').'/.test_all_status';
-    if ($options['only-failed'])
-    {
-      if (file_exists($statusFile))
-      {
+    if ($options['only-failed']) {
+      if (file_exists($statusFile)) {
         $status = unserialize(file_get_contents($statusFile));
       }
     }
 
-    if ($status)
-    {
-      foreach ($status as $file)
-      {
+    if ($status) {
+      foreach ($status as $file) {
         $h->register($file);
       }
-    }
-    else
-    {
+    } else {
       // filter and register all tests
       $finder = sfFinder::type('file')->followLink()->name('*Test.php');
       $h->register($this->filterTestFiles($finder->in($h->base_dir), $arguments, $options));
@@ -107,8 +101,7 @@ EOF;
 
     file_put_contents($statusFile, serialize($h->get_failed_files()));
 
-    if ($options['xml'])
-    {
+    if ($options['xml']) {
       file_put_contents($options['xml'], $h->to_xml());
     }
 

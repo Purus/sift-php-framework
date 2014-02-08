@@ -41,9 +41,8 @@ class sfImagePixelizeGD extends sfImageTransformAbstract
    */
   public function setSize($pixels)
   {
-    if (is_numeric($pixels) && $pixels > 0)
-    {
-      $this->block_size = (int)$pixels;
+    if (is_numeric($pixels) && $pixels > 0) {
+      $this->block_size = (int) $pixels;
 
       return true;
     }
@@ -74,10 +73,8 @@ class sfImagePixelizeGD extends sfImageTransformAbstract
     $resourcex = imagesx($resource);
     $resourcey = imagesy($resource);
 
-    for ($x = 0; $x < $resourcex; $x += $this->block_size)
-    {
-      for ($y = 0; $y < $resourcey; $y += $this->block_size)
-      {
+    for ($x = 0; $x < $resourcex; $x += $this->block_size) {
+      for ($y = 0; $y < $resourcey; $y += $this->block_size) {
         $rgb = imagecolorat($resource, $x, $y);
         imagefilledrectangle($resource, $x, $y, $x + $this->block_size - 1, $y + $this->block_size - 1, $rgb);
       }

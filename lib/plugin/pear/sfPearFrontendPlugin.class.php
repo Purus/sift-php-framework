@@ -15,8 +15,8 @@ require_once dirname(__FILE__) . '/PEAR_bootstrap.php';
  * @package    Sift
  * @subpackage plugin_pear
  */
-class sfPearFrontendPlugin extends PEAR_Frontend_CLI {
-
+class sfPearFrontendPlugin extends PEAR_Frontend_CLI
+{
   protected $dispatcher = null,
   $logger     = null;
 
@@ -42,8 +42,7 @@ class sfPearFrontendPlugin extends PEAR_Frontend_CLI {
 
   public function _display($text)
   {
-    if($this->logger)
-    {
+    if ($this->logger) {
       $this->logger->log($this->splitLongLine($text));
     }
     // $this->dispatcher->notify(new sfEvent($this, 'application.log', $this->splitLongLine($text)));
@@ -52,12 +51,9 @@ class sfPearFrontendPlugin extends PEAR_Frontend_CLI {
   protected function splitLongLine($text)
   {
     $lines = '';
-    foreach(explode("\n", $text) as $longline)
-    {
-      foreach(explode("\n", wordwrap($longline, 62)) as $line)
-      {
-        if($line = trim($line))
-        {
+    foreach (explode("\n", $text) as $longline) {
+      foreach (explode("\n", wordwrap($longline, 62)) as $line) {
+        if ($line = trim($line)) {
           $lines[] = $line;
         }
       }

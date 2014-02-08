@@ -63,8 +63,7 @@ EOF;
   {
     $cacheDir = $this->environment->get('sf_root_cache_dir');
 
-    if (!$cacheDir || !is_dir($cacheDir))
-    {
+    if (!$cacheDir || !is_dir($cacheDir)) {
       throw new sfException(sprintf('Cache directory "%s" does not exist.', $cacheDir));
     }
 
@@ -75,21 +74,17 @@ EOF;
     // iterate through applications
 
     $apps = null === $options['app'] ? $dirFinder->in($this->environment->get('sf_apps_dir')) : array($options['app']);
-    foreach($apps as $app)
-    {
+    foreach ($apps as $app) {
       $this->checkAppExists($app);
 
-      if(!is_dir($cacheDir.'/'.$app))
-      {
+      if (!is_dir($cacheDir.'/'.$app)) {
         continue;
       }
 
       // iterate through environments
       $envs = null === $options['env'] ? $dirFinder->in($cacheDir.'/'.$app) : array($options['env']);
-      foreach($envs as $env)
-      {
-        if (!is_dir($cacheDir.'/'.$app.'/'.$env))
-        {
+      foreach ($envs as $env) {
+        if (!is_dir($cacheDir.'/'.$app.'/'.$env)) {
           continue;
         }
 
@@ -99,8 +94,7 @@ EOF;
         $event = $this->dispatcher->notifyUntil(new sfEvent('cli_task.cache.clear',
                 array('app' => $app, 'env' => $env, 'task' => $this)));
 
-        if(!$event->isProcessed())
-        {
+        if (!$event->isProcessed()) {
           $this->clearCache($cacheDir.'/'.$app.'/'.$env);
         }
 
@@ -109,8 +103,7 @@ EOF;
     }
 
     // clear global cache
-    if(null === $options['app'])
-    {
+    if (null === $options['app']) {
       $this->getFilesystem()->remove(sfFinder::type('any')
               ->discard('.*')->in($this->environment->get('sf_root_cache_dir')));
     }

@@ -57,31 +57,25 @@ class sfWidgetFormSelectCheckbox extends sfWidgetFormChoiceBase
    */
   public function render($name, $value = null, $attributes = array(), $errors = array())
   {
-    if ('[]' != substr($name, -2))
-    {
+    if ('[]' != substr($name, -2)) {
       $name .= '[]';
     }
 
-    if (null === $value)
-    {
+    if (null === $value) {
       $value = array();
     }
 
     $choices = $this->getChoices();
 
     // with groups?
-    if (count($choices) && is_array(current($choices)))
-    {
+    if (count($choices) && is_array(current($choices))) {
       $parts = array();
-      foreach ($choices as $key => $option)
-      {
+      foreach ($choices as $key => $option) {
         $parts[] = strtr($this->getOption('template'), array('%group%' => $key, '%options%' => $this->formatChoices($name, $value, $option, $attributes)));
       }
 
       return implode("\n", $parts);
-    }
-    else
-    {
+    } else {
       return $this->formatChoices($name, $value, $choices, $attributes);
     }
   }
@@ -93,8 +87,7 @@ class sfWidgetFormSelectCheckbox extends sfWidgetFormChoiceBase
     $this->attributes = array();
 
     $inputs = array();
-    foreach ($choices as $key => $option)
-    {
+    foreach ($choices as $key => $option) {
       $baseAttributes = array(
         'name'  => $name,
         'type'  => 'checkbox',
@@ -102,8 +95,7 @@ class sfWidgetFormSelectCheckbox extends sfWidgetFormChoiceBase
         'id'    => $id = $this->generateId($name, self::escapeOnce($key)),
       );
 
-      if ((is_array($value) && in_array(strval($key), $value)) || (is_string($value) && strval($key) == strval($value)))
-      {
+      if ((is_array($value) && in_array(strval($key), $value)) || (is_string($value) && strval($key) == strval($value))) {
         $baseAttributes['checked'] = 'checked';
       }
 
@@ -111,8 +103,7 @@ class sfWidgetFormSelectCheckbox extends sfWidgetFormChoiceBase
         'for' => $id
       );
 
-      if(sfWidget::isAriaEnabled())
-      {
+      if (sfWidget::isAriaEnabled()) {
         $labelId = sprintf('%s_label', $id);
         // overwrite attribute!
         $attributes['aria-labelledby'] = $labelId;
@@ -136,20 +127,17 @@ class sfWidgetFormSelectCheckbox extends sfWidgetFormChoiceBase
     $attributes = array();
     $listAtttibutes = array();
 
-    if(sfWidget::isAriaEnabled())
-    {
+    if (sfWidget::isAriaEnabled()) {
       $attributes['role'] = 'list';
       $listAtttibutes['role'] = 'listitem';
     }
 
-    if($class = $this->getOption('class'))
-    {
+    if ($class = $this->getOption('class')) {
       $attributes['class'] = $class;
     }
 
     $rows = array();
-    foreach ($inputs as $input)
-    {
+    foreach ($inputs as $input) {
       $rows[] = $this->renderContentTag('li',
               $input['input'].$this->getOption('label_separator').$input['label'], $listAtttibutes);
     }

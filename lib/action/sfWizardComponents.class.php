@@ -12,8 +12,8 @@
  * @package    Sift
  * @subpackage action
  */
-class sfWizardComponents extends myComponents {
-
+class sfWizardComponents extends myComponents
+{
   /**
    * Storage namespace mask (should be the same in action class.)
    *

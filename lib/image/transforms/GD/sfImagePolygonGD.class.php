@@ -104,9 +104,8 @@ class sfImagePolygonGD extends sfImageTransformAbstract
    */
   public function setThickness($thickness)
   {
-    if (is_numeric($thickness))
-    {
-      $this->thickness = (int)$thickness;
+    if (is_numeric($thickness)) {
+      $this->thickness = (int) $thickness;
 
       return true;
     }
@@ -132,8 +131,7 @@ class sfImagePolygonGD extends sfImageTransformAbstract
    */
   public function setColor($color)
   {
-    if (preg_match('/#[\d\w]{6}/',$color))
-    {
+    if (preg_match('/#[\d\w]{6}/',$color)) {
       $this->color = $color;
 
       return true;
@@ -160,8 +158,7 @@ class sfImagePolygonGD extends sfImageTransformAbstract
    */
   public function setFill($fill)
   {
-    if (preg_match('/#[\d\w]{6}/',$fill))
-    {
+    if (preg_match('/#[\d\w]{6}/',$fill)) {
       $this->fill = $fill;
 
       return true;

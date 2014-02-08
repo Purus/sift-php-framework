@@ -57,8 +57,7 @@ class sfImageCallbackGeneric extends sfImageTransformAbstract
    */
   public function setFunction($function)
   {
-    if(sfToolkit::isCallable($function))
-    {
+    if (sfToolkit::isCallable($function)) {
       $this->function = $function;
 
       return true;

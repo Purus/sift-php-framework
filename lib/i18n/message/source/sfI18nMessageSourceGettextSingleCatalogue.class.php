@@ -13,8 +13,8 @@
  * @package Sift
  * @subpackage i18n
  */
-class sfI18nMessageSourceGettextSingleCatalogue extends sfI18nMessageSourceGettext {
-
+class sfI18nMessageSourceGettextSingleCatalogue extends sfI18nMessageSourceGettext
+{
   /**
    * Catalogue name
    * @var string
@@ -30,7 +30,7 @@ class sfI18nMessageSourceGettextSingleCatalogue extends sfI18nMessageSourceGette
    */
   public function __construct($source, $catalogue)
   {
-    $this->source = (string)$source;
+    $this->source = (string) $source;
     $this->catalogue = $catalogue;
   }
 

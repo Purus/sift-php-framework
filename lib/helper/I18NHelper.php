@@ -28,8 +28,7 @@ function format_number_choice($text, $args, $number, $catalogue = 'messages')
   $translated = __($text, $args, $catalogue);
   $retval = sfI18nChoiceFormatter::getInstance()->format($translated, $number);
 
-  if($retval === false)
-  {
+  if ($retval === false) {
     throw new sfException(sprintf('Unable to parse your choice "%s"', $translated));
   }
 
@@ -122,8 +121,7 @@ function i18n_culture_selector($options = array())
   $html     = array();
 
   $id = 'i18n-culture-selector';
-  if(isset($options['id']))
-  {
+  if (isset($options['id'])) {
     $id = $options['id'];
   }
 
@@ -132,11 +130,9 @@ function i18n_culture_selector($options = array())
 
   $html[]  = sprintf('<ul id="%s">', $id);
 
-  if(count($supported_langs))
-  {
+  if (count($supported_langs)) {
     $reg = array();
-    foreach($supported_langs as $supported)
-    {
+    foreach ($supported_langs as $supported) {
       $reg[substr($supported, 0, 2)] = $supported;
     }
 
@@ -144,33 +140,23 @@ function i18n_culture_selector($options = array())
     $clearServerName  = preg_replace("/($regexpr)+\./i", '', $serverName);
   }
 
-  foreach($supported_langs as $lang)
-  {
+  foreach ($supported_langs as $lang) {
     $lang = substr($lang, 0, 2);
     $f    = format_language($lang, $lang);
 
     // we have current culture
-    if($lang == $culture)
-    {
-      if($current)
-      {
+    if ($lang == $culture) {
+      if ($current) {
         $content = content_tag('span', $f);
-      }
-      else
-      {
+      } else {
         continue;
       }
-    }
-    else
-    {
+    } else {
       $link = 'http://';
 
-      if($lang == $default)
-      {
+      if ($lang == $default) {
         $link .= $clearServerName;
-      }
-      else
-      {
+      } else {
         $link .= $lang . '.' . $clearServerName;
       }
 
@@ -198,8 +184,7 @@ function get_enabled_cultures($format = true)
 {
   $enabled = sfConfig::get('sf_i18n_enabled_cultures', array());
   $cultures = array();
-  foreach($enabled as $culture)
-  {
+  foreach ($enabled as $culture) {
     $cultures[$culture] = $format ? format_language($culture) : $culture;
   }
 

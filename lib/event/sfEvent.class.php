@@ -12,8 +12,8 @@
  * @package    Sift
  * @subpackage event
  */
-class sfEvent implements ArrayAccess {
-
+class sfEvent implements ArrayAccess
+{
   protected $value = null,
   $processed = false,
   $name = '',
@@ -129,8 +129,7 @@ class sfEvent implements ArrayAccess {
    */
   public function offsetGet($name)
   {
-    if(!array_key_exists($name, $this->parameters))
-    {
+    if (!array_key_exists($name, $this->parameters)) {
       throw new InvalidArgumentException(sprintf('The event "%s" has no "%s" parameter.', $this->name, $name));
     }
 

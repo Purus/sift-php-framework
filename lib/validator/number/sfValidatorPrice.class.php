@@ -12,8 +12,8 @@
  * @package    Sift
  * @subpackage validator
  */
-class sfValidatorPrice extends sfValidatorNumber {
-
+class sfValidatorPrice extends sfValidatorNumber
+{
   /**
    * Configures the current validator.
    *
@@ -41,20 +41,15 @@ class sfValidatorPrice extends sfValidatorNumber {
    */
   protected function doClean($value)
   {
-    if(!sfToolkit::isBlank($value))
-    {
-      try
-      {
+    if (!sfToolkit::isBlank($value)) {
+      try {
         $value = sfI18nNumberFormat::getNumber($value, $this->getCulture());
-      }
-      catch(Exception $e)
-      {
+      } catch (Exception $e) {
         // we have a strict mode, it means, that the value is not formatted
         // for current culture, throw an error!
         // or
         // this value does not look like float, its all wrong
-        if($this->getOption('strict_mode') || !$this->isFloat($value))
-        {
+        if ($this->getOption('strict_mode') || !$this->isFloat($value)) {
           throw new sfValidatorError($this, 'invalid', array('value' => $value));
         }
       }

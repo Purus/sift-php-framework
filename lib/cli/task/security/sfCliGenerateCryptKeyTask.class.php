@@ -51,48 +51,39 @@ EOF;
     $filesystem = $this->getFilesystem();
 
     $app = false;
-    if(isset($arguments['app']))
-    {
+    if (isset($arguments['app'])) {
       $this->checkAppExists($arguments['app']);
       $app = $arguments['app'];
     }
 
     $this->logSection($this->getFullName(), 'Generating crypt key...');
 
-    try
-    {
+    try {
       $command = 'openssl rand -base64 2048';
       $commandOutput = $filesystem->execute($command);
       $newKey = $commandOutput[0];
-    }
-    catch(RuntimeException $e)
-    {
+    } catch (RuntimeException $e) {
       throw $e;
     }
 
     // safety check
-    if(strlen(base64_decode($newKey)) !== 2048)
-    {
+    if (strlen(base64_decode($newKey)) !== 2048) {
       throw new sfException('Generated key has incorrect size, aborting.');
     }
 
     // we are generating key for application
-    if($app)
-    {
+    if ($app) {
       $keyFilePath = $this->environment->get('sf_apps_dir') .
                      '/' . $app . '/' . $this->environment->get('sf_config_dir_name')
                      . '/crypt.key';
-    }
-    else
-    {
+    } else {
       $keyFilePath = $this->environment->get('sf_root_dir') . '/' .
                     $this->environment->get('sf_config_dir_name') . '/crypt.key';
     }
 
     $keyFileExists = file_exists($keyFilePath);
 
-    if($keyFileExists)
-    {
+    if ($keyFileExists) {
       $backupFileName = 'crypt.key.' . time() . '.backup';
       $this->logSection($this->getFullName(), 'Key already exists. Moving old to backup.');
       $filesystem->rename($keyFilePath, dirname($keyFilePath).'/'.$backupFileName);

@@ -12,8 +12,8 @@
  * @package     Sift
  * @subpackage  cli_task
  */
-class sfCliGenerateTestTask extends sfCliGeneratorBaseTask {
-
+class sfCliGenerateTestTask extends sfCliGeneratorBaseTask
+{
   /**
    * @see sfCliTask
    */
@@ -53,8 +53,7 @@ EOF;
    */
   protected function execute($arguments = array(), $options = array())
   {
-    if(!class_exists($arguments['class']))
-    {
+    if (!class_exists($arguments['class'])) {
       throw new InvalidArgumentException(sprintf('The class "%s" does not exist.', $arguments['class']));
     }
 
@@ -65,22 +64,17 @@ EOF;
     $test = $testDir . '/unit' . $path . '/' . $r->getName() . 'Test.php';
 
     // use either the test directory or project's bootstrap
-    if(!file_exists($bootstrap = $testDir . '/bootstrap/unit.php'))
-    {
+    if (!file_exists($bootstrap = $testDir . '/bootstrap/unit.php')) {
       $bootstrap = $this->environment->get('sf_test_dir') . '/bootstrap/unit.php';
     }
 
-    if(file_exists($test) && $options['force'])
-    {
+    if (file_exists($test) && $options['force']) {
       $this->getFilesystem()->remove($test);
     }
 
-    if(file_exists($test))
-    {
+    if (file_exists($test)) {
       $this->logSection('task', sprintf('A test script for the class "%s" already exists.', $r->getName()), null, 'ERROR');
-    }
-    else
-    {
+    } else {
       $this->getFilesystem()->copy($this->environment->get('sf_sift_data_dir').'/skeleton/test/unit.php', $test);
       $this->getFilesystem()->replaceTokens($test, '##', '##', array(
           'CLASS' => $r->getName(),
@@ -89,8 +83,7 @@ EOF;
       ));
     }
 
-    if(isset($options['editor-cmd']))
-    {
+    if (isset($options['editor-cmd'])) {
       $this->getFilesystem()->execute($options['editor-cmd'] . ' ' . escapeshellarg($test));
     }
   }
@@ -105,16 +98,11 @@ EOF;
    */
   protected function getBootstrapPathPhp($bootstrapFile, $testFile)
   {
-    if(0 === strpos($testFile, $path = realpath(dirname($bootstrapFile) . '/..')))
-    {
+    if (0 === strpos($testFile, $path = realpath(dirname($bootstrapFile) . '/..'))) {
       $path = str_repeat('/..', substr_count(dirname(str_replace($path, '', $testFile)), DIRECTORY_SEPARATOR));
-    }
-    else if(0 === strpos($bootstrapFile, $this->environment->get('sf_test_dir')) && 0 === strpos($testFile, $this->environment->get('sf_root_dir')))
-    {
+    } else if (0 === strpos($bootstrapFile, $this->environment->get('sf_test_dir')) && 0 === strpos($testFile, $this->environment->get('sf_root_dir'))) {
       $path = str_repeat('/..', substr_count(dirname(str_replace($this->environment->get('sf_root_dir'), '', $testFile)), DIRECTORY_SEPARATOR)) . '/test';
-    }
-    else
-    {
+    } else {
       throw new InvalidArgumentException(sprintf('A relative path from "%s" to "%s" could not be determined.', $testFile, $bootstrapFile));
     }
 
@@ -132,19 +120,13 @@ EOF;
    */
   protected function getDirectories($path)
   {
-    if(0 === strpos($path, $this->environment->get('sf_lib_dir')))
-    {
+    if (0 === strpos($path, $this->environment->get('sf_lib_dir'))) {
       return array($this->environment->get('sf_lib_dir'), $this->environment->get('sf_test_dir'));
-    }
-    else
-    {
-      foreach(glob($this->environment->get('sf_plugins_dir').'/lib/*') as $pluginLibDir)
-      {
-        if(0 === strpos($path, $pluginLibDir))
-        {
+    } else {
+      foreach (glob($this->environment->get('sf_plugins_dir').'/lib/*') as $pluginLibDir) {
+        if (0 === strpos($path, $pluginLibDir)) {
           // create the test directory before normalizing its path
-          if(!file_exists($testDir = $pluginLibDir . '/../test'))
-          {
+          if (!file_exists($testDir = $pluginLibDir . '/../test')) {
             $this->getFilesystem()->mkdirs($testDir);
           }
 

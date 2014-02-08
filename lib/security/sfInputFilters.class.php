@@ -16,8 +16,8 @@
  * @package Sift
  * @subpackage security
  */
-class sfInputFilters {
-
+class sfInputFilters
+{
   // The following constants allow for nice looking callbacks to static methods
   const TO_STRING             = 'sfInputFilters::toString';
   const TO_STRING_ARRAY       = 'sfInputFilters::toStringArray';
@@ -58,12 +58,9 @@ class sfInputFilters {
    */
   public static function toRawString($value)
   {
-    if(is_bool($value))
-    {
+    if (is_bool($value)) {
       return $value ? 'true' : 'false';
-    }
-    else
-    {
+    } else {
       return (string) $value;
     }
   }
@@ -79,16 +76,12 @@ class sfInputFilters {
    */
   public static function toBool($value)
   {
-    if(is_string($value))
-    {
+    if (is_string($value)) {
       $value = strtolower($value);
     }
-    if($value === 0 || $value === '0' || $value === 'false' || $value === '' || $value === null)
-    {
+    if ($value === 0 || $value === '0' || $value === 'false' || $value === '' || $value === null) {
       return false;
-    }
-    else
-    {
+    } else {
       return true;
     }
   }
@@ -112,7 +105,7 @@ class sfInputFilters {
    */
   public static function toFloat($value)
   {
-    return (float)str_replace(array(','), array('.'), preg_replace('/\s?/', '', $value));
+    return (float) str_replace(array(','), array('.'), preg_replace('/\s?/', '', $value));
   }
 
   /**
@@ -127,12 +120,9 @@ class sfInputFilters {
    */
   public static function toArray($value)
   {
-    if(is_array($value))
-    {
+    if (is_array($value)) {
       return $value;
-    }
-    elseif(is_string($value) && preg_match('/\w+\[(\w+)\]=(.*)/', $value, $match))
-    {
+    } elseif (is_string($value) && preg_match('/\w+\[(\w+)\]=(.*)/', $value, $match)) {
       return array($match[1] => $match[2]);
     }
 
@@ -211,21 +201,15 @@ class sfInputFilters {
   {
     $match = array();
 
-    if(is_array($value))
-    {
-      for($i = 0, $c = count($value); $i < $c; $i++)
-      {
+    if (is_array($value)) {
+      for ($i = 0, $c = count($value); $i < $c; $i++) {
         $value[$i] = call_user_func(array('sfInputFilters', $method), $value[$i]);
       }
 
       return $value;
-    }
-    elseif(is_string($value) && preg_match('/^\w+\[(\w+)\]=(.*)$/', $value, $match))
-    {
+    } elseif (is_string($value) && preg_match('/^\w+\[(\w+)\]=(.*)$/', $value, $match)) {
       return array($match[1] => call_user_func(array('sfInputFilters', $method), $match[2]));
-    }
-    else
-    {
+    } else {
       return array(call_user_func(array('sfInputFilters', $method), $value));
     }
   }
@@ -246,24 +230,19 @@ class sfInputFilters {
    */
   public static function filterVar($value, $filters)
   {
-    if(!is_array($filters))
-    {
+    if (!is_array($filters)) {
       $filters = array($filters);
     }
 
-    foreach($filters as $filter)
-    {
-      if(is_array($filter))
-      {
+    foreach ($filters as $filter) {
+      if (is_array($filter)) {
         $arguments = array();
         if(is_array($filter[0])
                 || strpos($filter[0], '::') !== false)
         {
           $callback = $filter[0];
           array_shift($filter);
-        }
-        else
-        {
+        } else {
           $callback = array_shift($filter);
         }
 
@@ -271,16 +250,13 @@ class sfInputFilters {
         array_push($arguments, $value);
 
         // push filter arguments to the array
-        foreach($filter as $a => $p)
-        {
+        foreach ($filter as $a => $p) {
           array_push($arguments, $p);
         }
 
         $value = call_user_func_array(array('sfToolkit', 'arrayMap'), $arguments);
 
-      }
-      else
-      {
+      } else {
         $value = sfToolkit::arrayMap($filter, $value);
       }
     }

@@ -12,8 +12,8 @@
  * @package Sift
  * @subpackage debug
  */
-interface sfIDebugBacktraceDecorator {
-
+interface sfIDebugBacktraceDecorator
+{
   /**
    * Renders the backtrace
    */

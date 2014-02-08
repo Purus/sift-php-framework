@@ -43,8 +43,7 @@ class sfTestFunctional extends sfTestFunctionalBase
   {
     $actionStack = $this->browser->getContext()->getActionStack();
 
-    switch ($position)
-    {
+    switch ($position) {
       case 'first':
         $entry = $actionStack->getFirstEntry();
         break;

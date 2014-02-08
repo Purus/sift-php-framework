@@ -36,8 +36,7 @@ class sfWebDebugPanelMailer extends sfWebDebugPanel
 
   public function getTitle()
   {
-    if($this->mailer && ($logger = $this->mailer->getLogger()) && ($count = $logger->countMessages()))
-    {
+    if ($this->mailer && ($logger = $this->mailer->getLogger()) && ($count = $logger->countMessages())) {
       return sprintf('%s %s', $count, $count > 1 ? 'emails' : 'email');
     }
 
@@ -65,37 +64,30 @@ class sfWebDebugPanelMailer extends sfWebDebugPanel
    */
   public function getPanelContent()
   {
-    if(!$this->mailer)
-    {
+    if (!$this->mailer) {
       return false;
     }
 
     $logger = $this->mailer->getLogger();
 
-    if(!$logger || !$logger->countMessages())
-    {
+    if (!$logger || !$logger->countMessages()) {
       return false;
     }
 
     // detect spool
-    try
-    {
+    try {
       $spool = get_class($this->mailer->getSpool());
-    }
-    catch(LogicException $e)
-    {
+    } catch (LogicException $e) {
       $spool = false;
     }
 
     // prepare messages
     $messages = array();
-    foreach($logger->getMessages() as $message)
-    {
+    foreach ($logger->getMessages() as $message) {
       $content = $message->toString();
       $subject = $message->getSubject();
       // convert charset if not the same as message
-      if(strtolower($message->getCharset()) !== strtolower(sfConfig::get('sf_charset')))
-      {
+      if (strtolower($message->getCharset()) !== strtolower(sfConfig::get('sf_charset'))) {
         $content = iconv($message->getCharset(), sfConfig::get('sf_charset'), $content);
         $subject = iconv($message->getCharset(), sfConfig::get('sf_charset'), $subject);
       }

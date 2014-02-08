@@ -27,8 +27,7 @@ abstract class sfAction extends sfComponent
     parent::initialize($context);
 
     // include security configuration
-    if($file = sfConfigCache::getInstance()->checkConfig(sfConfig::get('sf_app_module_dir_name').'/'.$this->getModuleName().'/'.sfConfig::get('sf_app_module_config_dir_name').'/security.yml', true))
-    {
+    if ($file = sfConfigCache::getInstance()->checkConfig(sfConfig::get('sf_app_module_dir_name').'/'.$this->getModuleName().'/'.sfConfig::get('sf_app_module_config_dir_name').'/security.yml', true)) {
       require $file;
     }
 
@@ -76,8 +75,7 @@ abstract class sfAction extends sfComponent
    */
   public function forward404Unless($condition, $message = '')
   {
-    if(!$condition)
-    {
+    if (!$condition) {
       throw new sfError404Exception($message);
     }
   }
@@ -92,8 +90,7 @@ abstract class sfAction extends sfComponent
    */
   public function forward404If($condition, $message = '')
   {
-    if($condition)
-    {
+    if ($condition) {
       throw new sfError404Exception($message);
     }
   }
@@ -140,8 +137,7 @@ abstract class sfAction extends sfComponent
    */
   public function forwardIf($condition, $module, $action)
   {
-    if($condition)
-    {
+    if ($condition) {
       $this->forward($module, $action);
     }
   }
@@ -159,8 +155,7 @@ abstract class sfAction extends sfComponent
    */
   public function forwardUnless($condition, $module, $action)
   {
-    if (!$condition)
-    {
+    if (!$condition) {
       $this->forward($module, $action);
     }
   }
@@ -248,8 +243,7 @@ abstract class sfAction extends sfComponent
    */
   public function redirectUnless($condition, $url, $statusCode = 302, $getParameters = array())
   {
-    if(!$condition)
-    {
+    if (!$condition) {
       $this->redirect($url, $statusCode, $getParameters);
     }
   }
@@ -270,8 +264,7 @@ abstract class sfAction extends sfComponent
    */
   public function redirectIf($condition, $url, $statusCode = 302, $getParameters = array())
   {
-    if($condition)
-    {
+    if ($condition) {
       $this->redirect($url, $statusCode, $getParameters);
     }
   }
@@ -323,13 +316,11 @@ abstract class sfAction extends sfComponent
   {
     $actionName = strtolower($this->getActionName());
 
-    if(isset($this->security[$actionName]['is_secure']))
-    {
+    if (isset($this->security[$actionName]['is_secure'])) {
       return $this->security[$actionName]['is_secure'];
     }
 
-    if(isset($this->security['all']['is_secure']))
-    {
+    if (isset($this->security['all']['is_secure'])) {
       return $this->security['all']['is_secure'];
     }
 
@@ -345,16 +336,11 @@ abstract class sfAction extends sfComponent
   {
     $actionName = strtolower($this->getActionName());
 
-    if(isset($this->security[$actionName]['credentials']))
-    {
+    if (isset($this->security[$actionName]['credentials'])) {
       $credentials = $this->security[$actionName]['credentials'];
-    }
-    else if (isset($this->security['all']['credentials']))
-    {
+    } else if (isset($this->security['all']['credentials'])) {
       $credentials = $this->security['all']['credentials'];
-    }
-    else
-    {
+    } else {
       $credentials = null;
     }
 
@@ -370,8 +356,7 @@ abstract class sfAction extends sfComponent
    */
   public function setTemplate($name)
   {
-    if (sfConfig::get('sf_logging_enabled'))
-    {
+    if (sfConfig::get('sf_logging_enabled')) {
       sfLogger::getInstance()->info('{sfAction} change template to "'.$name.'"');
     }
 
@@ -443,20 +428,16 @@ abstract class sfAction extends sfComponent
     $url = $this->getRequest()->getReferer();
 
     // try to get uri from request
-    if(!$url)
-    {
+    if (!$url) {
       $parameters = array(
         'uri', 'return_url', 'return_uri'
       );
 
-      foreach($parameters as $parameter)
-      {
-        if($this->getRequest()->hasParameter($parameter))
-        {
+      foreach ($parameters as $parameter) {
+        if ($this->getRequest()->hasParameter($parameter)) {
           $url = $this->getRequest()->getParameter($parameter);
           // is this url encoded using sfSafeUrl::encode()?
-          if(sfSafeUrl::decode($url))
-          {
+          if (sfSafeUrl::decode($url)) {
             $url = sfSafeUrl::decode($url);
           }
           break;
@@ -465,8 +446,7 @@ abstract class sfAction extends sfComponent
     }
 
     // check against open redirect attacks
-    if($url && sfSecurity::isRedirectUrlValid($url))
-    {
+    if ($url && sfSecurity::isRedirectUrlValid($url)) {
       $url = urldecode($url);
     }
 
@@ -483,10 +463,8 @@ abstract class sfAction extends sfComponent
    */
   public function getRequestParameter($name, $default = null, $clean_method = null)
   {
-    if($clean_method)
-    {
-      switch(strtolower($clean_method))
-      {
+    if ($clean_method) {
+      switch (strtolower($clean_method)) {
         case 'array':
           return $this->getRequest()->getArray($name, $default);
         break;
@@ -548,8 +526,7 @@ abstract class sfAction extends sfComponent
   public function disableLayout($turn_debug_off = true)
   {
     $this->setLayout(false);
-    if($turn_debug_off)
-    {
+    if ($turn_debug_off) {
       sfConfig::set('sf_web_debug', false);
     }
   }
@@ -563,21 +540,18 @@ abstract class sfAction extends sfComponent
    */
   public function renderJson($data, $encode = true)
   {
-    if($encode)
-    {
+    if ($encode) {
       $data = sfJson::encode($data);
     }
     $response = $this->getResponse();
     $response->setContent('');
 
     // set content type only if there is no content type set
-    if(!$response->getHttpHeader('Content-Type'))
-    {
+    if (!$response->getHttpHeader('Content-Type')) {
       $response->setContentType('application/json');
     }
 
-    if(!$response->getHttpHeader('X-Content-Type-Options'))
-    {
+    if (!$response->getHttpHeader('X-Content-Type-Options')) {
       $this->getResponse()->setHttpHeader('X-Content-Type-Options', 'nosniff');
     }
 
@@ -595,13 +569,11 @@ abstract class sfAction extends sfComponent
    */
   public function renderCallable($callable)
   {
-    if($callable instanceof sfCallable)
-    {
+    if ($callable instanceof sfCallable) {
       $callable = $callable->getCallable();
     }
 
-    if(!sfToolkit::isCallable($callable, false, $callableName))
-    {
+    if (!sfToolkit::isCallable($callable, false, $callableName)) {
       throw new InvalidArgumentException(sprintf('Invalid callable "%s" given.', $callableName));
     }
 
@@ -670,13 +642,11 @@ abstract class sfAction extends sfComponent
   protected function setupLayout($layout = 'minimal')
   {
     $extension = '.php';
-    if($class = sfConfig::get('mod_'.strtolower($this->getModuleName()).'_view_class'))
-    {
+    if ($class = sfConfig::get('mod_'.strtolower($this->getModuleName()).'_view_class')) {
       $view = $this->getContext()->getServiceContainer()->createObject(sprintf('%sView', $class));
       $extension = $view->getExtension();
     }
-    if(sfLoader::getDecoratorDir($layout . $extension))
-    {
+    if (sfLoader::getDecoratorDir($layout . $extension)) {
       $this->setLayout($layout);
     }
   }
@@ -782,13 +752,11 @@ abstract class sfAction extends sfComponent
     $this->logMessage('{sfAction} getMailBody() is deprecated. Use $mail_message->setBodyFromPartial() instead.', sfILogger::ERROR);
 
     // validate email type
-    if(!in_array($type, array('plain', 'html')))
-    {
+    if (!in_array($type, array('plain', 'html'))) {
       throw new sfConfigurationException(sprintf('Invalid email type passed ("%s"). Valid types are "plain" or "html".', $type));
     }
 
-    if(is_null($vars))
-    {
+    if (is_null($vars)) {
       $vars = array();
     }
 

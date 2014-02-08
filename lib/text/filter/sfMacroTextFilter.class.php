@@ -12,8 +12,8 @@
  * @package    Sift
  * @subpackage text_filter
  */
-class sfMacroTextFilter extends sfTextFilter {
-
+class sfMacroTextFilter extends sfTextFilter
+{
   /**
    * Array of default options
    *

@@ -19,8 +19,8 @@ spl_autoload_register(array('HTMLPurifier_Bootstrap', 'autoload'));
  * @package Sift
  * @subpackage security
  */
-class sfHtmlPurifier extends HTMLPurifier {
-
+class sfHtmlPurifier extends HTMLPurifier
+{
   /**
    * Array of instances
    *
@@ -38,8 +38,7 @@ class sfHtmlPurifier extends HTMLPurifier {
     // Create a new configuration object
     $config = HTMLPurifier_Config::createDefault();
     $settings = $this->loadSettings($type);
-    if(!isset($settings[$type]))
-    {
+    if (!isset($settings[$type])) {
       throw new sfConfigurationException(sprintf('HTMLPurifier configuration for type "%s" is missing in your sanitize.yml file.', $type));
     }
     $config->loadArray($settings[$type]);
@@ -68,22 +67,17 @@ class sfHtmlPurifier extends HTMLPurifier {
    */
   public function purify($html, $config = null)
   {
-    if(sfConfig::get('sf_debug') && sfConfig::get('sf_logging_enabled'))
-    {
+    if (sfConfig::get('sf_debug') && sfConfig::get('sf_logging_enabled')) {
       $timer = sfTimerManager::getTimer('html_purifier');
     }
 
-    if(is_array($html))
-    {
+    if (is_array($html)) {
       $result = $this->purifyArray($html, $config);
-    }
-    else
-    {
+    } else {
       $result = parent::purify($html, $config);
     }
 
-    if(sfConfig::get('sf_debug') && sfConfig::get('sf_logging_enabled'))
-    {
+    if (sfConfig::get('sf_debug') && sfConfig::get('sf_logging_enabled')) {
       $timer->addTime();
     }
 
@@ -97,8 +91,7 @@ class sfHtmlPurifier extends HTMLPurifier {
    */
   public static function instance($type = null)
   {
-    if(!isset(self::$instances[$type]))
-    {
+    if (!isset(self::$instances[$type])) {
       self::$instances[$type] = new sfHtmlPurifier($type);
     }
 

@@ -13,8 +13,8 @@
  * @package    Sift
  * @subpackage log
  */
-class sfEmailLogger extends sfVarLogger {
-
+class sfEmailLogger extends sfVarLogger
+{
   /**
    * Default options
    *
@@ -65,18 +65,15 @@ class sfEmailLogger extends sfVarLogger {
   {
     $this->setOption('xdebug_logging', false);
 
-    if(!is_readable($this->getOption('template')))
-    {
+    if (!is_readable($this->getOption('template'))) {
       throw new sfConfigurationException(sprintf('The template "%s" is not readable or does not exist', $this->getOption('template')));
     }
 
-    if(!$this->getOption('sender_email'))
-    {
+    if (!$this->getOption('sender_email')) {
       $this->setOption('sender_email', sprintf('webmaster@%s', isset($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : 'localhost'));
     }
 
-    if(is_string($this->getOption('recipients')))
-    {
+    if (is_string($this->getOption('recipients'))) {
       $recipients = sfToolkit::replaceConstants($this->getOption('recipients'));
       $this->setOption('recipients', explode(',', $recipients));
     }
@@ -88,8 +85,7 @@ class sfEmailLogger extends sfVarLogger {
   public function log($message, $level = sfILogger::INFO, array $context = array())
   {
     // we need to check level
-    if($level > $this->getOption('min_level'))
-    {
+    if ($level > $this->getOption('min_level')) {
       return;
     }
 
@@ -106,10 +102,8 @@ class sfEmailLogger extends sfVarLogger {
   protected function getHost()
   {
     $host = php_uname('n');
-    foreach(array('HTTP_HOST', 'SERVER_NAME', 'HOSTNAME') as $item)
-    {
-      if(isset($_SERVER[$item]))
-      {
+    foreach (array('HTTP_HOST', 'SERVER_NAME', 'HOSTNAME') as $item) {
+      if (isset($_SERVER[$item])) {
         $host = $_SERVER[$item];
         break;
       }
@@ -126,8 +120,7 @@ class sfEmailLogger extends sfVarLogger {
   protected function getApplication()
   {
     $application = 'n/a';
-    if(class_exists('sfConfig', false))
-    {
+    if (class_exists('sfConfig', false)) {
       $application = sfConfig::get('sf_app');
     }
 
@@ -142,8 +135,7 @@ class sfEmailLogger extends sfVarLogger {
   protected function getEnvironment()
   {
     $env = 'n/a';
-    if(class_exists('sfConfig', false))
-    {
+    if (class_exists('sfConfig', false)) {
       $env = sfConfig::get('sf_environment');
     }
 
@@ -159,29 +151,22 @@ class sfEmailLogger extends sfVarLogger {
   {
     $decorator = new sfDebugBacktraceLogDecorator();
 
-    foreach($this->logs as &$log)
-    {
+    foreach ($this->logs as &$log) {
       // debug backtrace from exception
-      if(isset($log['context'][sfILogger::CONTEXT_EXTRA]['debug_backtrace']))
-      {
+      if (isset($log['context'][sfILogger::CONTEXT_EXTRA]['debug_backtrace'])) {
         // we need to modify the trace to remove absolute paths
         // for security reasons!
         $backtrace = ($log['context'][sfILogger::CONTEXT_EXTRA]['debug_backtrace']);
 
-        if($backtrace instanceof sfDebugBacktrace)
-        {
+        if ($backtrace instanceof sfDebugBacktrace) {
           $backtrace = new sfDebugBacktrace($backtrace->get(), array(
               'shorten_file_paths' => true
           ));
-        }
-        elseif($backtrace instanceof sfDebugBacktraceDecorator)
-        {
+        } elseif ($backtrace instanceof sfDebugBacktraceDecorator) {
           $backtrace = new sfDebugBacktrace($backtrace->getBacktrace()->get(), array(
               'shorten_file_paths' => true
           ));
-        }
-        else
-        {
+        } else {
           // remove backtrace!
           $backtrace = 'Backtrace has been removed for security reasons. See the logs.';
         }
@@ -221,13 +206,11 @@ class sfEmailLogger extends sfVarLogger {
    */
   protected function removeFilePaths($string)
   {
-    if(preg_match('/\'|"([^\\"]+)"|\'/i', $string, $matches))
-    {
+    if (preg_match('/\'|"([^\\"]+)"|\'/i', $string, $matches)) {
       $string = preg_replace_callback('/\'|"([^\\"]+)"|\'/i', array($this, 'removeFilePathsCallback'), $string);
     }
     // Error message in file /usr/share/php/Foobar.class.php, line
-    elseif(preg_match('/in file ([^,]*)/i', $string, $matches, PREG_OFFSET_CAPTURE))
-    {
+    elseif (preg_match('/in file ([^,]*)/i', $string, $matches, PREG_OFFSET_CAPTURE)) {
       $string = preg_replace_callback('/\'|"([^\\"]+)"|\'/i', array($this, 'removeFilePathsCallback'), $string);
     }
 
@@ -259,15 +242,12 @@ class sfEmailLogger extends sfVarLogger {
     $values = array();
     // do not include sever and env for security reason!
     // this is sent by mail!
-    foreach(array('cookie', 'get', 'post', 'files') as $name)
-    {
-      if(!isset($GLOBALS['_' . strtoupper($name)]))
-      {
+    foreach (array('cookie', 'get', 'post', 'files') as $name) {
+      if (!isset($GLOBALS['_' . strtoupper($name)])) {
         continue;
       }
       $values[$name] = array();
-      foreach($GLOBALS['_' . strtoupper($name)] as $key => $value)
-      {
+      foreach ($GLOBALS['_' . strtoupper($name)] as $key => $value) {
         $values[$name][$key] = $value;
       }
       ksort($values[$name]);
@@ -286,8 +266,7 @@ class sfEmailLogger extends sfVarLogger {
       'sid'
     ) as $sessionName)
     {
-      if(isset($values['cookie'][$sessionName]))
-      {
+      if (isset($values['cookie'][$sessionName])) {
         $values['cookie'][$sessionName] = substr($values['cookie'][$sessionName], 0, 3) . '-the-rest-removed-for-security-reasons';
       }
     }
@@ -380,8 +359,7 @@ class sfEmailLogger extends sfVarLogger {
     }
 
     $senderEmail = $this->getOption('sender_email');
-    if($senderEmail)
-    {
+    if ($senderEmail) {
       ini_set('sendmail_from', $senderEmail);
     }
 
@@ -389,13 +367,11 @@ class sfEmailLogger extends sfVarLogger {
     $body = $this->getMailBody();
     $subject = $this->getMailSubject();
 
-    foreach($recipients as $email)
-    {
+    foreach ($recipients as $email) {
       $this->sendEmail($email, $subject, $body, $headers);
     }
 
-    if($senderEmail)
-    {
+    if ($senderEmail) {
       ini_restore('sendmail_from');
     }
   }
@@ -422,13 +398,11 @@ class sfEmailLogger extends sfVarLogger {
    */
   protected function quotedPrintableEncode($string)
   {
-    if(function_exists('quoted_printable_encode'))
-    {
+    if (function_exists('quoted_printable_encode')) {
       return quoted_printable_encode($string);
     }
 
-    if(!defined('PHP_QPRINT_MAXL'))
-    {
+    if (!defined('PHP_QPRINT_MAXL')) {
       define('PHP_QPRINT_MAXL', 75);
     }
 
@@ -438,21 +412,15 @@ class sfEmailLogger extends sfVarLogger {
     $length = strlen($string);
     $str_index = 0;
 
-    while($length--)
-    {
-      if((($c = $string[$str_index++]) == "\015") && ($string[$str_index] == "\012") && $length > 0)
-      {
+    while ($length--) {
+      if ((($c = $string[$str_index++]) == "\015") && ($string[$str_index] == "\012") && $length > 0) {
         $ret .= "\015";
         $ret .= $string[$str_index++];
         $length--;
         $lp = 0;
-      }
-      else
-      {
-        if(ctype_cntrl($c) || (ord($c) == 0x7f) || (ord($c) & 0x80) || ($c == '=') || (($c == ' ') && ($string[$str_index] == "\015")))
-        {
-          if(($lp += 3) > PHP_QPRINT_MAXL)
-          {
+      } else {
+        if (ctype_cntrl($c) || (ord($c) == 0x7f) || (ord($c) & 0x80) || ($c == '=') || (($c == ' ') && ($string[$str_index] == "\015"))) {
+          if (($lp += 3) > PHP_QPRINT_MAXL) {
             $ret .= '=';
             $ret .= "\015";
             $ret .= "\012";
@@ -461,11 +429,8 @@ class sfEmailLogger extends sfVarLogger {
           $ret .= '=';
           $ret .= $hex[ord($c) >> 4];
           $ret .= $hex[ord($c) & 0xf];
-        }
-        else
-        {
-          if((++$lp) > PHP_QPRINT_MAXL)
-          {
+        } else {
+          if ((++$lp) > PHP_QPRINT_MAXL) {
             $ret .= '=';
             $ret .= "\015";
             $ret .= "\012";

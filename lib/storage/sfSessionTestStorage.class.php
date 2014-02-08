@@ -12,8 +12,8 @@
  * @package    Sift
  * @subpackage storage
  */
-class sfSessionTestStorage extends sfStorage {
-
+class sfSessionTestStorage extends sfStorage
+{
   /**
    * Array of required options
    *
@@ -44,15 +44,12 @@ class sfSessionTestStorage extends sfStorage {
 
     $this->sessionPath = $this->getOption('session_path').'/sessions';
 
-    if(array_key_exists('session_id', $_SERVER))
-    {
+    if (array_key_exists('session_id', $_SERVER)) {
       $this->sessionId = $_SERVER['session_id'];
       // we read session data from temp file
       $file = $this->sessionPath . '/' . $this->sessionId . '.session';
       $this->sessionData = file_exists($file) ? unserialize(file_get_contents($file)) : array();
-    }
-    else
-    {
+    } else {
       $this->sessionId = md5(uniqid(rand(), true));
       $this->sessionData = array();
     }
@@ -73,8 +70,7 @@ class sfSessionTestStorage extends sfStorage {
    */
   public function read($key)
   {
-    if(isset($this->sessionData[$key]))
-    {
+    if (isset($this->sessionData[$key])) {
       return $this->sessionData[$key];
     }
   }
@@ -86,8 +82,7 @@ class sfSessionTestStorage extends sfStorage {
   {
     $retval = null;
 
-    if(isset($this->sessionData[$key]))
-    {
+    if (isset($this->sessionData[$key])) {
       $retval = $this->sessionData[$key];
       unset($this->sessionData[$key]);
     }
@@ -139,11 +134,9 @@ class sfSessionTestStorage extends sfStorage {
    */
   public function shutdown()
   {
-    if($this->sessionId)
-    {
+    if ($this->sessionId) {
       $current_umask = umask(0000);
-      if(!is_dir($this->sessionPath))
-      {
+      if (!is_dir($this->sessionPath)) {
         mkdir($this->sessionPath, 0777, true);
       }
       umask($current_umask);

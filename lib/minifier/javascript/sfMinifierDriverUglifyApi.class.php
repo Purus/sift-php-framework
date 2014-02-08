@@ -13,8 +13,8 @@
  * @subpackage minifier
  * @see http://marijnhaverbeke.nl//uglifyjs
  */
-class sfMinifierDriverUglifyApi extends sfMinifier {
-
+class sfMinifierDriverUglifyApi extends sfMinifier
+{
   /**
    * Browser holder
    *
@@ -39,8 +39,7 @@ class sfMinifierDriverUglifyApi extends sfMinifier {
   {
     $result = $this->proccess(file_get_contents($file));
 
-    if($replace)
-    {
+    if ($replace) {
       $this->replaceFile($file, $result);
     }
 
@@ -78,8 +77,7 @@ class sfMinifierDriverUglifyApi extends sfMinifier {
 
     ));
 
-    if($browser->responseIsError())
-    {
+    if ($browser->responseIsError()) {
       throw new sfException('An error occured while requesting compiler api.');
     }
 
@@ -92,8 +90,7 @@ class sfMinifierDriverUglifyApi extends sfMinifier {
    */
   protected function getBrowser()
   {
-    if(!$this->browser)
-    {
+    if (!$this->browser) {
       $this->browser = new sfWebBrowser();
     }
 

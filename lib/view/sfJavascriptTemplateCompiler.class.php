@@ -12,8 +12,8 @@
  * @package    Sift
  * @subpackage view
  */
-abstract class sfJavascriptTemplateCompiler extends sfConfigurable implements sfIJavascriptTemplateCompiler {
-
+abstract class sfJavascriptTemplateCompiler extends sfConfigurable implements sfIJavascriptTemplateCompiler
+{
   /**
    * Returns an instance of the template compiler driver
    *
@@ -25,21 +25,15 @@ abstract class sfJavascriptTemplateCompiler extends sfConfigurable implements sf
   {
     $driverClass = sprintf(sprintf('sfJavascriptTemplateCompilerDriver%s', ucfirst($driver)));
 
-    if(class_exists($driverClass))
-    {
+    if (class_exists($driverClass)) {
       $driverObj = new $driverClass($options);
-    }
-    elseif(class_exists($driver))
-    {
+    } elseif (class_exists($driver)) {
       $driverObj = new $driver($options);
-    }
-    else
-    {
+    } else {
       throw new InvalidArgumentException(sprintf('Driver "%s" does not exist.', $driver));
     }
 
-    if(!$driverObj instanceof sfIJavascriptTemplateCompiler)
-    {
+    if (!$driverObj instanceof sfIJavascriptTemplateCompiler) {
       throw new LogicException(sprintf('Driver "%s" does not implement sfIJavascriptTemplateCompiler interface.', $driver));
     }
 

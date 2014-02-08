@@ -12,8 +12,8 @@
  * @package Sift
  * @subpackage calendar
  */
-interface sfICalendarRenderer {
-
+interface sfICalendarRenderer
+{
   public function render(sfCalendar $calendar, $options = array());
 
 }

@@ -12,8 +12,8 @@
  * @package Sift
  * @subpackage image
  */
-abstract class sfExifAdapter extends sfConfigurable {
-
+abstract class sfExifAdapter extends sfConfigurable
+{
   /**
    * Logger instance holder
    *
@@ -56,25 +56,21 @@ abstract class sfExifAdapter extends sfConfigurable {
    */
   protected function processData($exif)
   {
-    if(!$exif)
-    {
+    if (!$exif) {
       return array();
     }
 
     $results = array();
     $fields = sfExif::getFields($this);
-    foreach($fields as $field => $data)
-    {
+    foreach ($fields as $field => $data) {
       $value = isset($exif[$field]) ? $exif[$field] : '';
       // Don't store empty fields.
-      if($value === '')
-      {
+      if ($value === '') {
         continue;
       }
 
       /* Special handling of GPS data */
-      if($data['type'] == 'gps')
-      {
+      if ($data['type'] == 'gps') {
         $value = $this->parseGPSData($exif[$field]);
         if(!empty($exif[$field . 'Ref']) &&
                 in_array($exif[$field . 'Ref'], array('S', 'South', 'W', 'West')))
@@ -84,21 +80,17 @@ abstract class sfExifAdapter extends sfConfigurable {
       }
 
       /* Date fields are converted to a timestamp. */
-      if($data['type'] == 'date')
-      {
+      if ($data['type'] == 'date') {
         @list($ymd, $hms) = explode(' ', $value, 2);
         @list($year, $month, $day) = explode(':', $ymd, 3);
-        if(!empty($hms) && !empty($year) && !empty($month) && !empty($day))
-        {
+        if (!empty($hms) && !empty($year) && !empty($month) && !empty($day)) {
           $time = "$month/$day/$year $hms";
           $value = strtotime($time);
         }
       }
 
-      if($data['type'] == 'array' || is_array($value))
-      {
-        if(is_array($value))
-        {
+      if ($data['type'] == 'array' || is_array($value)) {
+        if (is_array($value)) {
           $value = implode(',', $value);
         }
       }
@@ -131,50 +123,36 @@ abstract class sfExifAdapter extends sfConfigurable {
   {
     // According to EXIF standard, GPS data can be in the form of
     // dd/1 mm/1 ss/1 or as a decimal reprentation.
-    if(!is_array($data))
-    {
+    if (!is_array($data)) {
       // Assume a scalar is a decimal representation. Cast it to a float
       // which will get rid of any stray ordinal indicators. (N, S,
       // etc...)
       return (double) $data;
     }
 
-    if($data[0] == 0)
-    {
+    if ($data[0] == 0) {
       return 0;
     }
 
-    if(strpos($data[1], '/') !== false)
-    {
+    if (strpos($data[1], '/') !== false) {
       $min = explode('/', $data[1]);
-      if(count($min) > 1)
-      {
+      if (count($min) > 1) {
         $min = $min[0] / $min[1];
-      }
-      else
-      {
+      } else {
         $min = $min[0];
       }
-    }
-    else
-    {
+    } else {
       $min = $data[1];
     }
 
-    if(strpos($data[2], '/') !== false)
-    {
+    if (strpos($data[2], '/') !== false) {
       $sec = explode('/', $data[2]);
-      if(count($sec) > 1)
-      {
+      if (count($sec) > 1) {
         $sec = $sec[0] / $sec[1];
-      }
-      else
-      {
+      } else {
         $sec = $sec[0];
       }
-    }
-    else
-    {
+    } else {
       $sec = $data[2];
     }
 
@@ -203,8 +181,7 @@ abstract class sfExifAdapter extends sfConfigurable {
    */
   protected function log($message, $priority = 'info')
   {
-    if($this->logger)
-    {
+    if ($this->logger) {
       $this->logger->log($message, $priority);
     }
   }

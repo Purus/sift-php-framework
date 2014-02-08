@@ -64,18 +64,14 @@ abstract class sfWidgetFormSchemaFormatter
    */
   public function __($subject, $parameters = array())
   {
-    if (false === $subject)
-    {
+    if (false === $subject) {
       return false;
     }
 
-    if (null === self::$translationCallable)
-    {
+    if (null === self::$translationCallable) {
       // replace object with strings
-      foreach ($parameters as $key => $value)
-      {
-        if (is_object($value) && method_exists($value, '__toString'))
-        {
+      foreach ($parameters as $key => $value) {
+        if (is_object($value) && method_exists($value, '__toString')) {
           $parameters[$key] = $value->__toString();
         }
       }
@@ -85,8 +81,7 @@ abstract class sfWidgetFormSchemaFormatter
 
     $catalogue = $this->getTranslationCatalogue();
 
-    if (self::$translationCallable instanceof sfCallable)
-    {
+    if (self::$translationCallable instanceof sfCallable) {
       return self::$translationCallable->call($subject, $parameters, $catalogue);
     }
 
@@ -122,8 +117,7 @@ abstract class sfWidgetFormSchemaFormatter
    */
   public static function setTranslationCallable($callable)
   {
-    if (!$callable instanceof sfCallable && !sfToolkit::isCallable($callable))
-    {
+    if (!$callable instanceof sfCallable && !sfToolkit::isCallable($callable)) {
       throw new InvalidArgumentException('Provided i18n callable should be either an instance of sfCallable or a valid PHP callable');
     }
 
@@ -137,8 +131,7 @@ abstract class sfWidgetFormSchemaFormatter
 
   public function formatHelp($help)
   {
-    if (!$help)
-    {
+    if (!$help) {
       return '';
     }
 
@@ -157,8 +150,7 @@ abstract class sfWidgetFormSchemaFormatter
 
   public function formatErrorRow($errors)
   {
-    if (null === $errors || !$errors)
-    {
+    if (null === $errors || !$errors) {
       return '';
     }
 
@@ -167,13 +159,11 @@ abstract class sfWidgetFormSchemaFormatter
 
   public function formatErrorsForRow($errors, $widgetAttributes = array())
   {
-    if (null === $errors || !$errors)
-    {
+    if (null === $errors || !$errors) {
       return '';
     }
 
-    if (!is_array($errors))
-    {
+    if (!is_array($errors)) {
       $errors = array($errors);
     }
 
@@ -199,45 +189,34 @@ abstract class sfWidgetFormSchemaFormatter
   {
     $is_required = false;
 
-    if($this->validatorSchema && isset($this->validatorSchema[$name]))
-    {
+    if ($this->validatorSchema && isset($this->validatorSchema[$name])) {
       $validator = $this->validatorSchema[$name];
       /* @var $validator sfValidatorBase */
-      if($this->validatorMarkedFieldAsRequired($validator))
-      {
+      if ($this->validatorMarkedFieldAsRequired($validator)) {
         $is_required = true;
       }
-    }
-    elseif(isset($this->validators[$name]))
-    {
+    } elseif (isset($this->validators[$name])) {
       $validator = $this->validators[$name];
       /* @var $validator sfValidatorBase */
-      if($this->validatorMarkedFieldAsRequired($validator))
-      {
+      if ($this->validatorMarkedFieldAsRequired($validator)) {
         $is_required = true;
       }
     }
 
     $labelName = $this->generateLabelName($name);
-    if(false === $labelName)
-    {
+    if (false === $labelName) {
       return '';
     }
 
-    if (!isset($attributes['for']) && $this->widgetSchema[$name]->isLabelable())
-    {
+    if (!isset($attributes['for']) && $this->widgetSchema[$name]->isLabelable()) {
       $attributes['for'] = $this->widgetSchema->generateId($this->widgetSchema->generateName($name));
     }
 
-    if($is_required)
-    {
-      if(isset($attributes['required_label_class']))
-      {
+    if ($is_required) {
+      if (isset($attributes['required_label_class'])) {
         $class = $attributes['required_label_class'];
         unset($attributes['required_label_class']);
-      }
-      else
-      {
+      } else {
         $class = $this->requiredLabelCssClass;
       }
 
@@ -251,8 +230,7 @@ abstract class sfWidgetFormSchemaFormatter
         $attributes['class'] = $class;
     }
 
-    if(sfWidget::isAriaEnabled() && !isset($attributes['id']) && isset($attributes['for']))
-    {
+    if (sfWidget::isAriaEnabled() && !isset($attributes['id']) && isset($attributes['for'])) {
       $attributes['id'] = sprintf('%s_label', $attributes['for']);
     }
 
@@ -267,17 +245,13 @@ abstract class sfWidgetFormSchemaFormatter
    */
   public function validatorMarkedFieldAsRequired(sfValidatorBase $validator)
   {
-    if($validator->getOption('required'))
-    {
+    if ($validator->getOption('required')) {
       return true;
     }
 
-    if($validator instanceof sfValidatorAnd || $validator instanceof sfValidatorOr)
-    {
-      foreach($validator->getValidators() as $validator)
-      {
-        if($this->validatorMarkedFieldAsRequired($validator))
-        {
+    if ($validator instanceof sfValidatorAnd || $validator instanceof sfValidatorOr) {
+      foreach ($validator->getValidators() as $validator) {
+        if ($this->validatorMarkedFieldAsRequired($validator)) {
           return true;
         }
       }
@@ -311,8 +285,7 @@ abstract class sfWidgetFormSchemaFormatter
   {
     $label = $this->widgetSchema->getLabel($name);
 
-    if (!$label && false !== $label)
-    {
+    if (!$label && false !== $label) {
       $label = str_replace('_', ' ', ucfirst('_id' == substr($name, -3) ? substr($name, 0, -3) : $name));
     }
 
@@ -338,8 +311,7 @@ abstract class sfWidgetFormSchemaFormatter
    */
   public function setTranslationCatalogue($catalogue)
   {
-    if (!is_string($catalogue))
-    {
+    if (!is_string($catalogue)) {
       throw new InvalidArgumentException('Catalogue name must be a string');
     }
 
@@ -351,46 +323,35 @@ abstract class sfWidgetFormSchemaFormatter
     $newErrors = array();
 
     $attributes = array();
-    foreach($widgetAttributes as $a => $v)
-    {
+    foreach ($widgetAttributes as $a => $v) {
       $attributes[] = sprintf('%s="%s"', $a, htmlspecialchars($v, ENT_NOQUOTES,
               sfWidget::getCharset(), false));
     }
 
     $attributes = join(' ', $attributes);
 
-    foreach ($errors as $name => $error)
-    {
+    foreach ($errors as $name => $error) {
       $fieldId = isset($widgetAttributes['id']) ? $widgetAttributes['id'] : '';
-      if ($error instanceof ArrayAccess || is_array($error))
-      {
+      if ($error instanceof ArrayAccess || is_array($error)) {
         $newErrors = array_merge($newErrors,
                 $this->unnestErrors($error, ($prefix ? $prefix.' > ' : '').$name),
                 $widgetAttributes
                 );
-      }
-      else
-      {
-        if ($error instanceof sfValidatorError)
-        {
+      } else {
+        if ($error instanceof sfValidatorError) {
           $err = $this->translate($error->getMessageFormat(), $error->getArguments());
-        }
-        else
-        {
+        } else {
           $err = $this->translate($error);
         }
 
-        if (!is_integer($name))
-        {
+        if (!is_integer($name)) {
           $newErrors[] = strtr($this->getNamedErrorRowFormatInARow(),
                   array('%error%' => $err,
                         '%name%' => ($prefix ? $prefix.' > ' : '').$name,
                         '%field_id%' => $fieldId,
                         '%attributes%' => $attributes
                         ));
-        }
-        else
-        {
+        } else {
           $newErrors[] = strtr($this->getErrorRowFormatInARow(),
                   array('%error%' => $err,
                         '%field_id%' => $fieldId,

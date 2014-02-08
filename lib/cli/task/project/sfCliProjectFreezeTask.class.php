@@ -44,18 +44,15 @@ EOF;
     $sift_lib_dir = $this->environment->get('sf_sift_lib_dir');
     $sift_data_dir = $this->environment->get('sf_sift_data_dir');
 
-    if(is_readable($lib_dir.'/sift'))
-    {
+    if (is_readable($lib_dir.'/sift')) {
       throw new sfException('You can only freeze when lib/sift is empty.');
     }
 
-    if(is_readable($data_dir.'/sift'))
-    {
+    if (is_readable($data_dir.'/sift')) {
       throw new sfException('You can only freeze when data/sift is empty.');
     }
 
-    if(is_readable($web_dir.'/sf'))
-    {
+    if (is_readable($web_dir.'/sf')) {
       throw new sfException('You can only freeze when web/sf is empty.');
     }
 
@@ -63,8 +60,7 @@ EOF;
             $this->commandApplication->getName(), $this->commandApplication->getVersion()));
 
     // remove symlink
-    if(is_link($web_dir.'/sf'))
-    {
+    if (is_link($web_dir.'/sf')) {
       $this->getFilesystem()->remove($web_dir.'/sf');
     }
 

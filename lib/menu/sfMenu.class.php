@@ -12,8 +12,8 @@
  * @package    Sift
  * @subpackage menu
  */
-class sfMenu extends sfConfigurable implements ArrayAccess, Countable, IteratorAggregate {
-
+class sfMenu extends sfConfigurable implements ArrayAccess, Countable, IteratorAggregate
+{
   /**
    * Menu name
    *
@@ -135,8 +135,7 @@ class sfMenu extends sfConfigurable implements ArrayAccess, Countable, IteratorA
    */
   protected function loadHelpers()
   {
-    if(self::$helpersLoaded)
-    {
+    if (self::$helpersLoaded) {
       return;
     }
 
@@ -198,8 +197,7 @@ class sfMenu extends sfConfigurable implements ArrayAccess, Countable, IteratorA
    */
   public function requiresAuth($bool = null)
   {
-    if(!is_null($bool))
-    {
+    if (!is_null($bool)) {
       $this->requiresAuth = (boolean) $bool;
 
       return $this;
@@ -216,8 +214,7 @@ class sfMenu extends sfConfigurable implements ArrayAccess, Countable, IteratorA
    */
   public function requiresNoAuth($bool = null)
   {
-    if(!is_null($bool))
-    {
+    if (!is_null($bool)) {
       $this->requiresNoAuth = $bool;
 
       return $this;
@@ -291,28 +288,23 @@ class sfMenu extends sfConfigurable implements ArrayAccess, Countable, IteratorA
    */
   public function checkUserAccess(sfUser $user = null)
   {
-    if(!sfContext::hasInstance())
-    {
+    if (!sfContext::hasInstance()) {
       return true;
     }
 
-    if(is_null($user))
-    {
+    if (is_null($user)) {
       $user = sfContext::getInstance()->getUser();
     }
 
-    if($user->isAuthenticated() && $this->requiresNoAuth())
-    {
+    if ($user->isAuthenticated() && $this->requiresNoAuth()) {
       return false;
     }
 
-    if(!$user->isAuthenticated() && $this->requiresAuth())
-    {
+    if (!$user->isAuthenticated() && $this->requiresAuth()) {
       return false;
     }
 
-    if($this->hasCredentials())
-    {
+    if ($this->hasCredentials()) {
       return $user->hasCredential($this->getCredentials());
     }
 
@@ -327,8 +319,7 @@ class sfMenu extends sfConfigurable implements ArrayAccess, Countable, IteratorA
    */
   public function showChildren($bool = null)
   {
-    if(!is_null($bool))
-    {
+    if (!is_null($bool)) {
       $this->showChildren = $bool;
     }
 
@@ -355,12 +346,10 @@ class sfMenu extends sfConfigurable implements ArrayAccess, Countable, IteratorA
    */
   public function getLevel()
   {
-    if(is_null($this->level))
-    {
+    if (is_null($this->level)) {
       $count = -2;
       $obj = $this;
-      do
-      {
+      do {
         $count++;
       }
       while($obj = $obj->getParent());
@@ -377,11 +366,9 @@ class sfMenu extends sfConfigurable implements ArrayAccess, Countable, IteratorA
    */
   public function getRoot()
   {
-    if(is_null($this->root))
-    {
+    if (is_null($this->root)) {
       $obj = $this;
-      do
-      {
+      do {
         $found = $obj;
       }
       while($obj = $obj->getParent());
@@ -467,8 +454,7 @@ class sfMenu extends sfConfigurable implements ArrayAccess, Countable, IteratorA
    */
   public function addChild($child, $route = null, $options = array())
   {
-    if(!$child instanceof sfMenu)
-    {
+    if (!$child instanceof sfMenu) {
       $class = get_class($this);
       $child = new $class($child, $route, $options);
     }
@@ -492,8 +478,7 @@ class sfMenu extends sfConfigurable implements ArrayAccess, Countable, IteratorA
   {
     $name = ($name instanceof sfMenu) ? $name->getName() : $name;
 
-    if(isset($this->children[$name]))
-    {
+    if (isset($this->children[$name])) {
       unset($this->children[$name]);
     }
 
@@ -548,8 +533,7 @@ class sfMenu extends sfConfigurable implements ArrayAccess, Countable, IteratorA
    */
   public function getChild($name)
   {
-    if(!isset($this->children[$name]))
-    {
+    if (!isset($this->children[$name])) {
       $this->addChild($name);
     }
 
@@ -563,10 +547,8 @@ class sfMenu extends sfConfigurable implements ArrayAccess, Countable, IteratorA
    */
   public function hasChildren()
   {
-    foreach($this->children as $child)
-    {
-      if($child->checkUserAccess() && $this->checkCondition())
-      {
+    foreach ($this->children as $child) {
+      if ($child->checkUserAccess() && $this->checkCondition()) {
         return true;
       }
     }
@@ -582,16 +564,11 @@ class sfMenu extends sfConfigurable implements ArrayAccess, Countable, IteratorA
   protected function isChildCurrent()
   {
     $current = false;
-    if($this->isCurrent())
-    {
+    if ($this->isCurrent()) {
       return true;
-    }
-    else
-    {
-      foreach($this->getChildren() as $child)
-      {
-        if($child->isChildCurrent())
-        {
+    } else {
+      foreach ($this->getChildren() as $child) {
+        if ($child->isChildCurrent()) {
           return true;
         }
       }
@@ -608,8 +585,7 @@ class sfMenu extends sfConfigurable implements ArrayAccess, Countable, IteratorA
    */
   public function isCurrent($bool = null)
   {
-    if(!is_null($bool))
-    {
+    if (!is_null($bool)) {
       $this->current = $bool;
     }
 
@@ -623,12 +599,9 @@ class sfMenu extends sfConfigurable implements ArrayAccess, Countable, IteratorA
    */
   public function __toString()
   {
-    try
-    {
+    try {
       return (string) $this->render();
-    }
-    catch(Exception $e)
-    {
+    } catch (Exception $e) {
       return $e->getMessage();
     }
   }
@@ -643,11 +616,9 @@ class sfMenu extends sfConfigurable implements ArrayAccess, Countable, IteratorA
   {
     $html = '';
 
-    if($this->checkUserAccess() && $this->hasChildren() && $this->checkCondition())
-    {
+    if ($this->checkUserAccess() && $this->hasChildren() && $this->checkCondition()) {
       $html = '<ul>';
-      foreach($this->children as $child)
-      {
+      foreach ($this->children as $child) {
         $html .= $child->renderChild();
       }
       $html .= '</ul>';
@@ -665,8 +636,7 @@ class sfMenu extends sfConfigurable implements ArrayAccess, Countable, IteratorA
   public function renderChildren()
   {
     $html = '';
-    foreach($this->children as $child)
-    {
+    foreach ($this->children as $child) {
       $html .= $child->renderChild();
     }
 
@@ -683,24 +653,20 @@ class sfMenu extends sfConfigurable implements ArrayAccess, Countable, IteratorA
     $html = '';
 
     // can user access this item?
-    if($this->checkUserAccess() && $this->checkCondition())
-    {
+    if ($this->checkUserAccess() && $this->checkCondition()) {
       $attributes = array();
 
-      if($id = $this->getId())
-      {
+      if ($id = $this->getId()) {
         $attributes['id'] = $id;
       }
 
-      if($classes = $this->getCssClasses())
-      {
+      if ($classes = $this->getCssClasses()) {
         $attributes['class'] = join(' ', $classes);
       }
 
       $html = sfHtml::tag('li', $attributes, true) . $this->renderChildBody();
 
-      if($this->hasChildren() && $this->showChildren())
-      {
+      if ($this->hasChildren() && $this->showChildren()) {
         $html .= $this->render();
       }
 
@@ -719,23 +685,19 @@ class sfMenu extends sfConfigurable implements ArrayAccess, Countable, IteratorA
   {
     $classes = array();
 
-    if($class = $this->getClass())
-    {
+    if ($class = $this->getClass()) {
       $classes[] = $class;
     }
 
-    if($this->isCurrent())
-    {
+    if ($this->isCurrent()) {
       $classes[] = 'current';
     }
 
-    if($this->isFirst())
-    {
+    if ($this->isFirst()) {
       $classes[] = 'first';
     }
 
-    if($this->isLast())
-    {
+    if ($this->isLast()) {
       $classes[] = 'last';
     }
 
@@ -749,8 +711,7 @@ class sfMenu extends sfConfigurable implements ArrayAccess, Countable, IteratorA
    */
   public function renderChildBody()
   {
-    if($this->route)
-    {
+    if ($this->route) {
       return $this->renderLink();
     }
 
@@ -828,14 +789,11 @@ class sfMenu extends sfConfigurable implements ArrayAccess, Countable, IteratorA
     $children = array();
     $obj = $this;
 
-    do
-    {
+    do {
       $children[] = $withLinks && $obj->getRoute() ? $obj->renderLink() : $obj->getLabel();
-    }
-    while($obj = $obj->getParent());
+    } while ($obj = $obj->getParent());
 
-    if(!$includeRoot)
-    {
+    if (!$includeRoot) {
       // root is last item
       unset($children[count($children)-1]);
     }
@@ -875,18 +833,14 @@ class sfMenu extends sfConfigurable implements ArrayAccess, Countable, IteratorA
     $condition = $this->getCondition();
 
     // no condition is set
-    if(!$condition)
-    {
+    if (!$condition) {
       return true;
     }
 
-    if($condition instanceof sfCallable)
-    {
-      return (boolean)$condition->call($this);
-    }
-    elseif(sfToolkit::isCallable($condition))
-    {
-      return (boolean)call_user_func($condition, $this);
+    if ($condition instanceof sfCallable) {
+      return (boolean) $condition->call($this);
+    } elseif (sfToolkit::isCallable($condition)) {
+      return (boolean) call_user_func($condition, $this);
     }
 
     // pass to sfConfig, lower the condition since
@@ -907,8 +861,7 @@ class sfMenu extends sfConfigurable implements ArrayAccess, Countable, IteratorA
 
     call_user_func_array(array($this, $args[0]), $arguments);
 
-    foreach($this->children as $child)
-    {
+    foreach ($this->children as $child) {
       call_user_func_array(array($child, 'callRecursively'), $args);
     }
 
@@ -925,8 +878,7 @@ class sfMenu extends sfConfigurable implements ArrayAccess, Countable, IteratorA
     $array = array();
     $array['name'] = $this->getName();
 
-    if($route = $this->getRoute())
-    {
+    if ($route = $this->getRoute()) {
       $array['route'] = $route;
     }
 
@@ -935,8 +887,7 @@ class sfMenu extends sfConfigurable implements ArrayAccess, Countable, IteratorA
     $array['priority'] = $this->getPriority();
     $array['options'] = $this->getOptions();
 
-    foreach($this->children as $key => $child)
-    {
+    foreach ($this->children as $key => $child) {
       $array['children'][$key] = $child->toArray();
     }
 
@@ -951,40 +902,32 @@ class sfMenu extends sfConfigurable implements ArrayAccess, Countable, IteratorA
    */
   public function fromArray($array)
   {
-    if(isset($array['name']))
-    {
+    if (isset($array['name'])) {
       $this->setName($array['name']);
     }
 
-    if(isset($array['route']))
-    {
+    if (isset($array['route'])) {
       $this->setRoute($array['route']);
     }
 
-    if(isset($array['level']))
-    {
+    if (isset($array['level'])) {
       $this->setLevel($array['level']);
     }
 
-    if(isset($array['is_current']))
-    {
+    if (isset($array['is_current'])) {
       $this->isCurrent($array['is_current']);
     }
 
-    if(isset($array['priority']))
-    {
+    if (isset($array['priority'])) {
       $this->setPriority($array['priority']);
     }
 
-    if(isset($array['options']))
-    {
+    if (isset($array['options'])) {
       $this->setOptions($array['options']);
     }
 
-    if(isset($array['children']))
-    {
-      foreach($array['children'] as $name => $child)
-      {
+    if (isset($array['children'])) {
+      foreach ($array['children'] as $name => $child) {
         $this->addChild($name)->fromArray($child);
       }
     }
@@ -1004,8 +947,7 @@ class sfMenu extends sfConfigurable implements ArrayAccess, Countable, IteratorA
    */
   public function sortByPriority($culture = null)
   {
-    if(is_null($culture))
-    {
+    if (is_null($culture)) {
       $culture = sfContext::getInstance()->getUser()->getCulture();
     }
 
@@ -1042,12 +984,9 @@ class sfMenu extends sfConfigurable implements ArrayAccess, Countable, IteratorA
    */
   protected function _sortByPriority($a, $b)
   {
-    if($a->getPriority() == $b->getPriority())
-    {
+    if ($a->getPriority() == $b->getPriority()) {
       return $this->collator->compare($a->getName(), $b->getName());
-    }
-    else
-    {
+    } else {
       return $a->getPriority() > $b->getPriority() ? -1 : 1;
     }
   }
@@ -1061,8 +1000,7 @@ class sfMenu extends sfConfigurable implements ArrayAccess, Countable, IteratorA
    */
   public function __call($method, $arguments)
   {
-    if(method_exists($this, $method))
-    {
+    if (method_exists($this, $method)) {
       return call_user_func_array($method, $arguments);
     }
 
@@ -1071,12 +1009,9 @@ class sfMenu extends sfConfigurable implements ArrayAccess, Countable, IteratorA
 
     // first character lowercase
     $column[0] = strtolower($column[0]);
-    if($verb == 'get')
-    {
+    if ($verb == 'get') {
       return isset($this->$column) ? $this->$column : false;
-    }
-    elseif($verb == 'set')
-    {
+    } elseif ($verb == 'set') {
       return $this->$column = $arguments[0];
     }
 
@@ -1089,8 +1024,7 @@ class sfMenu extends sfConfigurable implements ArrayAccess, Countable, IteratorA
         'method' => $method, 'arguments' => $arguments, 'menu' => $this
     )));
 
-    if(!$event->isProcessed())
-    {
+    if (!$event->isProcessed()) {
       throw new sfException(sprintf('Call to undefined method %s::%s.', get_class($this), $method));
     }
 

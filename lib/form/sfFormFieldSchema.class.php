@@ -46,8 +46,7 @@ class sfFormFieldSchema extends sfFormField implements ArrayAccess, Iterator, Co
   {
     $output = '';
 
-    foreach ($this->getHiddenFields($recursive) as $field)
-    {
+    foreach ($this->getHiddenFields($recursive) as $field) {
       $output .= $field->render();
     }
 
@@ -65,14 +64,10 @@ class sfFormFieldSchema extends sfFormField implements ArrayAccess, Iterator, Co
   {
     $fields = array();
 
-    foreach ($this as $name => $field)
-    {
-      if ($field instanceof sfFormFieldSchema && $recursive)
-      {
+    foreach ($this as $name => $field) {
+      if ($field instanceof sfFormFieldSchema && $recursive) {
         $fields = array_merge($fields, $field->getHiddenFields($recursive));
-      }
-      else if ($field->isHidden())
-      {
+      } else if ($field->isHidden()) {
         $fields[] = $field;
       }
     }
@@ -101,26 +96,20 @@ class sfFormFieldSchema extends sfFormField implements ArrayAccess, Iterator, Co
    */
   public function offsetGet($name)
   {
-    if (!isset($this->fields[$name]))
-    {
-      if (null === $widget = $this->widget[$name])
-      {
+    if (!isset($this->fields[$name])) {
+      if (null === $widget = $this->widget[$name]) {
         throw new InvalidArgumentException(sprintf('Widget "%s" does not exist in form "%s".', $name, get_class($this->getForm())));
       }
 
       $error = isset($this->error[$name]) ? $this->error[$name] : null;
 
-      if ($widget instanceof sfWidgetFormSchema)
-      {
+      if ($widget instanceof sfWidgetFormSchema) {
         $class = 'sfFormFieldSchema';
 
-        if ($error && !$error instanceof sfValidatorErrorSchema)
-        {
+        if ($error && !$error instanceof sfValidatorErrorSchema) {
           $error = new sfValidatorErrorSchema($error->getValidator(), array($error));
         }
-      }
-      else
-      {
+      } else {
         $class = 'sfFormField';
       }
 

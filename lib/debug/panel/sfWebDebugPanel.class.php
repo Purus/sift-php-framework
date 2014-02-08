@@ -152,8 +152,7 @@ abstract class sfWebDebugPanel extends sfConfigurable
    */
   public function getDebugStack($debugStack)
   {
-    if(!$debugStack instanceof sfDebugBacktrace)
-    {
+    if (!$debugStack instanceof sfDebugBacktrace) {
       $debugStack = new sfDebugBacktrace($debugStack);
     }
 
@@ -170,16 +169,14 @@ abstract class sfWebDebugPanel extends sfConfigurable
    */
   protected function getDebugBacktraceDecorator()
   {
-    if(!$this->debugBacktraceDecorator)
-    {
+    if (!$this->debugBacktraceDecorator) {
       $options = array(
         'class' => $this->getOption('backtrace_class'),
         'template_dir' => $this->getOption('backtrace_decorator_template_dir',
                           $this->getOption('template_dir') . '/backtrace'),
       );
 
-      if($template = $this->getOption('backtrace_decorator_template'))
-      {
+      if ($template = $this->getOption('backtrace_decorator_template')) {
         $options['template'] = $template;
       }
 
@@ -198,8 +195,7 @@ abstract class sfWebDebugPanel extends sfConfigurable
    */
   public function getFileEditUrl($file, $line = null)
   {
-    if(!($linkFormat = $this->getOption('file_url_format')))
-    {
+    if (!($linkFormat = $this->getOption('file_url_format'))) {
       return '';
     }
 
@@ -226,8 +222,7 @@ abstract class sfWebDebugPanel extends sfConfigurable
   public function formatSql($sql)
   {
     static $highlighter;
-    if(!$highlighter)
-    {
+    if (!$highlighter) {
       $highlighter = sfSyntaxHighlighter::factory('sql');
     }
 

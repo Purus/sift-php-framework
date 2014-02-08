@@ -17,8 +17,8 @@
  * @see http://ux.stackexchange.com/questions/3418/what-is-the-best-ui-for-multi-select-from-a-list
  * @see http://ux.stackexchange.com/questions/2065/alternatives-to-a-dual-list-for-selecting-a-bunch-of-items-from-a-long-list
  */
-class sfWidgetFormDualList extends sfWidgetFormChoice {
-
+class sfWidgetFormDualList extends sfWidgetFormChoice
+{
   /**
    * Constructor.
    *
@@ -81,15 +81,12 @@ class sfWidgetFormDualList extends sfWidgetFormChoice {
 
     $associated_first = isset($options['associated_first']) ? $options['associated_first'] : true;
 
-    if($associated_first)
-    {
+    if ($associated_first) {
       $associatedClass = 'left';
       $availableClass = 'right';
       $iconAssociated = 'arrow-right';
       $iconUnAssociated = 'arrow-left';
-    }
-    else
-    {
+    } else {
       $associatedClass = 'right';
       $availableClass = 'left';
       $iconAssociated = 'arrow-left';
@@ -176,19 +173,16 @@ EOF
    */
   public function render($name, $selectedValues = null, $attributes = array(), $errors = array())
   {
-    if('[]' != substr($name, -2))
-    {
+    if ('[]' != substr($name, -2)) {
       $name .= '[]';
     }
 
-    if(is_null($selectedValues))
-    {
+    if (is_null($selectedValues)) {
       $selectedValues = array();
     }
 
     $choices = $this->getOption('choices');
-    if($choices instanceof sfCallable)
-    {
+    if ($choices instanceof sfCallable) {
       $choices = $choices->call();
     }
 
@@ -197,8 +191,7 @@ EOF
     $positions = array();
 
     $i = 1;
-    foreach($choices as $choice)
-    {
+    foreach ($choices as $choice) {
       $positions[$choice] = $i;
       $i++;
     }
@@ -206,8 +199,7 @@ EOF
     $associatedChoices = array();
 
     // set associated
-    foreach($selectedValues as $key => $selectedValue)
-    {
+    foreach ($selectedValues as $key => $selectedValue) {
       $associated[$selectedValue] = array(
           'value' => $choices[$selectedValue],
           'position' => $positions[$choices[$selectedValue]]
@@ -216,10 +208,8 @@ EOF
     }
 
     // set unassociated
-    foreach($choices as $key => $choice)
-    {
-      if(!in_array($choice, $associatedChoices))
-      {
+    foreach ($choices as $key => $choice) {
+      if (!in_array($choice, $associatedChoices)) {
         $unassociated[$key] = array(
           'value' => $choice,
           'position' => $positions[$choice]
@@ -228,14 +218,12 @@ EOF
     }
 
     $associatedHtml = array();
-    foreach($associated as $key => $item)
-    {
+    foreach ($associated as $key => $item) {
       $associatedHtml[] = $this->renderItem($key, $item, $name, true);
     }
 
     $unAssociatedHtml = array();
-    foreach($unassociated as $key => $value)
-    {
+    foreach ($unassociated as $key => $value) {
       $unAssociatedHtml[] = $this->renderItem($key, $value, $name);
     }
 
@@ -243,8 +231,7 @@ EOF
       'class' => $this->getOption('class')
     );
 
-    if($jsOptions = $this->getOption('javascript_options'))
-    {
+    if ($jsOptions = $this->getOption('javascript_options')) {
       $attributes['data-dual-list-options'] = sfJson::encode($jsOptions);
     }
 
@@ -283,13 +270,12 @@ EOF
       'value' => $key,
     );
 
-    if($associated)
-    {
+    if ($associated) {
       $checkboxAttributes['checked'] = 'checked';
     }
 
     $truncate = $this->getOption('truncate');
-    $value = (string)$item['value'];
+    $value = (string) $item['value'];
 
     return $this->renderContentTag('li',
               $this->renderTag('input', $checkboxAttributes) . "\n" .
@@ -332,11 +318,9 @@ EOF
 
   public function __clone()
   {
-    if($this->getOption('choices') instanceof sfCallable)
-    {
+    if ($this->getOption('choices') instanceof sfCallable) {
       $callable = $this->getOption('choices')->getCallable();
-      if(is_array($callable))
-      {
+      if (is_array($callable)) {
         $callable[0] = $this;
         $this->setOption('choices', new sfCallable($callable));
       }

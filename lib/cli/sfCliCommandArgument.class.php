@@ -34,12 +34,9 @@ class sfCliCommandArgument
    */
   public function __construct($name, $mode = null, $help = '', $default = null)
   {
-    if (null === $mode)
-    {
+    if (null === $mode) {
       $mode = self::OPTIONAL;
-    }
-    else if (is_string($mode) || $mode > 7)
-    {
+    } else if (is_string($mode) || $mode > 7) {
       throw new sfCliCommandException(sprintf('Argument mode "%s" is not valid.', $mode));
     }
 
@@ -87,19 +84,14 @@ class sfCliCommandArgument
    */
   public function setDefault($default = null)
   {
-    if (self::REQUIRED === $this->mode && null !== $default)
-    {
+    if (self::REQUIRED === $this->mode && null !== $default) {
       throw new sfCliCommandException('Cannot set a default value except for sfCommandParameter::OPTIONAL mode.');
     }
 
-    if ($this->isArray())
-    {
-      if (null === $default)
-      {
+    if ($this->isArray()) {
+      if (null === $default) {
         $default = array();
-      }
-      else if (!is_array($default))
-      {
+      } else if (!is_array($default)) {
         throw new sfCliCommandException('A default value for an array argument must be an array.');
       }
     }

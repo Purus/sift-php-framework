@@ -13,8 +13,8 @@
  * @package    Sift
  * @subpackage filter
  */
-class sfRenderingFilter extends sfFilter {
-
+class sfRenderingFilter extends sfFilter
+{
   /**
    * Array of default parameters
    *
@@ -41,18 +41,14 @@ class sfRenderingFilter extends sfFilter {
     $filterChain->execute();
 
     // rethrow sfForm and|or sfFormField __toString() exceptions (see sfForm and sfFormField)
-    if(sfForm::hasToStringException())
-    {
+    if (sfForm::hasToStringException()) {
       throw sfForm::getToStringException();
-    }
-    elseif(sfFormField::hasToStringException())
-    {
+    } elseif (sfFormField::hasToStringException()) {
       throw sfFormField::getToStringException();
     }
 
     // send headers + content
-    if(sfView::RENDER_VAR != $this->getContext()->getController()->getRenderMode())
-    {
+    if (sfView::RENDER_VAR != $this->getContext()->getController()->getRenderMode()) {
       $this->log('Render to client.', sfILogger::INFO);
       $this->prepare();
       $this->getContext()->getResponse()->send();
@@ -87,16 +83,14 @@ class sfRenderingFilter extends sfFilter {
       }
 
       // compress
-      if($this->canCompress() && ($encoding = $this->getClientEncoding()))
-      {
+      if ($this->canCompress() && ($encoding = $this->getClientEncoding())) {
         $content = $response->getContent();
 
         // no need to waste resources in compressing very little data
         if(mb_strlen($content, $this->getParameter('charset')) >
             $this->getParameter('compression_min_length'))
         {
-          try
-          {
+          try {
             $length = strlen($content);
 
             $content = $this->compress(
@@ -116,8 +110,7 @@ class sfRenderingFilter extends sfFilter {
             $response->setHttpHeader('Content-Length', strlen($content));
           }
           // not implemented type of compression, see getClientEncoding()
-          catch(LogicException $e)
-          {
+          catch(LogicException $e) {
           }
         }
       }
@@ -135,8 +128,7 @@ class sfRenderingFilter extends sfFilter {
    */
   protected function canCompress()
   {
-    if(!$this->getParameter('compress'))
-    {
+    if (!$this->getParameter('compress')) {
       return false;
     }
 
@@ -152,8 +144,7 @@ class sfRenderingFilter extends sfFilter {
    */
   protected function compress($content, $encoding, $level = 9)
   {
-    switch($encoding)
-    {
+    switch ($encoding) {
       case 'gzip':
         $content = gzencode($content, $level);
       break;
@@ -178,12 +169,9 @@ class sfRenderingFilter extends sfFilter {
   {
     $acceptEncoding = $this->getContext()->getRequest()->getHttpHeader('Accept-Encoding');
     $encoding = false;
-    if(strpos($acceptEncoding, 'gzip') !== false)
-    {
+    if (strpos($acceptEncoding, 'gzip') !== false) {
       $encoding = 'gzip';
-    }
-    else if(strpos($acceptEncoding, 'deflate') !== false)
-    {
+    } else if (strpos($acceptEncoding, 'deflate') !== false) {
       $encoding = 'deflate';
     }
 
@@ -201,14 +189,11 @@ class sfRenderingFilter extends sfFilter {
    */
   protected function removeWhitespace($content)
   {
-    try
-    {
+    try {
       $scripts = $this->matchAll($content, '!<script[^>]*>.*?<\/script>!is');
       $pres = $this->matchAll($content, '!<pre[^>]*>.*?</pre>!is');
       $textareas = $this->matchAll($content, '!<textarea[^>]+>.*?</textarea>!is');
-    }
-    catch(sfRegexpException $e)
-    {
+    } catch (sfRegexpException $e) {
       $this->log('Error while removing whitespace. {exception}', sfILogger::WARNING, array(
         'exception' => $e->getMessage()
       ));
@@ -269,8 +254,7 @@ class sfRenderingFilter extends sfFilter {
   protected function matchAll($subject, $pattern, $flags = 0, $offset = 0)
   {
     preg_match_all($pattern, $subject, $matches, ($flags & PREG_PATTERN_ORDER) ? $flags : ($flags | PREG_SET_ORDER),  $offset);
-    if($error = preg_last_error())
-    {
+    if ($error = preg_last_error()) {
       throw new sfRegexpException(null, $error, $pattern);
     }
 
@@ -290,8 +274,7 @@ class sfRenderingFilter extends sfFilter {
   protected function replaceAll(&$subject, $pattern, $replacement, $limit = -1)
   {
     $subject = preg_replace($pattern, $replacement, $subject, $limit);
-    if($error = preg_last_error())
-    {
+    if ($error = preg_last_error()) {
       throw new sfRegexpException(null, $error, $pattern);
     }
   }
@@ -307,14 +290,10 @@ class sfRenderingFilter extends sfFilter {
   {
     $length = strlen($string);
     $pos = 0;
-    for($i = 0, $count = count($replace); $i < $count; $i++)
-    {
-      if(($pos = strpos($subject, $string, $pos)) !== false)
-      {
+    for ($i = 0, $count = count($replace); $i < $count; $i++) {
+      if (($pos = strpos($subject, $string, $pos)) !== false) {
         $subject = substr_replace($subject, $replace[$i], $pos, $length);
-      }
-      else
-      {
+      } else {
         break;
       }
     }

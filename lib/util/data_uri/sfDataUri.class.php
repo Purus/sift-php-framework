@@ -44,8 +44,8 @@
  * @package Sift
  * @subpackage util
  */
-class sfDataUri {
-
+class sfDataUri
+{
   /**
    * Regular expression used for decomposition of data URI scheme
    *
@@ -238,12 +238,9 @@ class sfDataUri {
    */
   protected function assertDataLength($data, $lengthMode, $strict)
   {
-    if($strict && $lengthMode === self::LITLEN && strlen($data) > self::LIT_LIMIT)
-    {
+    if ($strict && $lengthMode === self::LITLEN && strlen($data) > self::LIT_LIMIT) {
       throw new InvalidArgumentException(sprintf('The data is too long (%s chars, max: %s).', strlen($data), self::LIT_LIMIT));
-    }
-    elseif($strict && strlen($data) > self::ATTS_TAG_LIMIT)
-    {
+    } elseif ($strict && strlen($data) > self::ATTS_TAG_LIMIT) {
       throw new InvalidArgumentException(sprintf('The data is too long (%s chars, max: %s).', strlen($data), self::ATTS_TAG_LIMIT));
     }
   }
@@ -265,8 +262,7 @@ class sfDataUri {
     $this->assertEncoding($encoding);
     $this->encoding = $encoding;
 
-    switch($encoding)
-    {
+    switch ($encoding) {
       case self::ENCODING_URL_ENCODED_OCTETS:
         $this->encodedData = rawurlencode($data);
       break;
@@ -287,16 +283,14 @@ class sfDataUri {
    */
   public function getDecodedData()
   {
-    switch($this->getEncoding())
-    {
+    switch ($this->getEncoding()) {
       case self::ENCODING_URL_ENCODED_OCTETS:
         return rawurldecode($this->getEncodedData());
       break;
 
       case self::ENCODING_BASE64:
         $b64Decoded = base64_decode($this->getEncodedData(), true);
-        if($b64Decoded !== false)
-        {
+        if ($b64Decoded !== false) {
           return $b64Decoded;
         }
       break;
@@ -323,8 +317,7 @@ class sfDataUri {
     {
       $output .= $this->getMediaType();
 
-      if($this->getEncoding() === self::ENCODING_BASE64)
-      {
+      if ($this->getEncoding() === self::ENCODING_BASE64) {
         $output .= ';' . self::BASE64_KEYWORD;
       }
     }
@@ -365,10 +358,8 @@ class sfDataUri {
    */
   public static function tryParse($dataUriString, $throwException = false, $strict = false, $lengthMode = self::TAGLEN)
   {
-    if(!self::isParsable($dataUriString))
-    {
-      if($throwException)
-      {
+    if (!self::isParsable($dataUriString)) {
+      if ($throwException) {
         throw new sfParseException(sprintf('The data uri "%s" could not be parsed', strlen($dataUriString) > 128 ? substr($dataUriString, 0, 128) : $dataUriString));
       }
 

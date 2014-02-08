@@ -12,8 +12,8 @@
  * @package    Sift
  * @subpackage form_widget
  */
-class sfWidgetFormIpAddress extends sfWidgetFormInputText {
-
+class sfWidgetFormIpAddress extends sfWidgetFormInputText
+{
   /**
    * Configures the current widget.
    *

@@ -75,9 +75,8 @@ class sfImageLineImageMagick extends sfImageTransformAbstract
    */
   public function setStartX($x)
   {
-    if (is_numeric($x))
-    {
-      $this->x1 = (int)$x;
+    if (is_numeric($x)) {
+      $this->x1 = (int) $x;
 
       return true;
     }
@@ -103,9 +102,8 @@ class sfImageLineImageMagick extends sfImageTransformAbstract
    */
   public function setStartY($y)
   {
-    if (is_numeric($y))
-    {
-      $this->y1 = (int)$y;
+    if (is_numeric($y)) {
+      $this->y1 = (int) $y;
 
       return true;
     }
@@ -131,9 +129,8 @@ class sfImageLineImageMagick extends sfImageTransformAbstract
    */
   public function setEndX($x)
   {
-    if (is_numeric($x))
-    {
-      $this->x2 = (int)$x;
+    if (is_numeric($x)) {
+      $this->x2 = (int) $x;
 
       return true;
     }
@@ -159,9 +156,8 @@ class sfImageLineImageMagick extends sfImageTransformAbstract
    */
   public function setEndY($y)
   {
-    if (is_numeric($y))
-    {
-      $this->y2 = (int)$y;
+    if (is_numeric($y)) {
+      $this->y2 = (int) $y;
 
       return true;
     }
@@ -187,9 +183,8 @@ class sfImageLineImageMagick extends sfImageTransformAbstract
    */
   public function setThickness($thickness)
   {
-    if (is_numeric($thickness))
-    {
-      $this->thickness = (int)$thickness;
+    if (is_numeric($thickness)) {
+      $this->thickness = (int) $thickness;
 
       return true;
     }
@@ -215,8 +210,7 @@ class sfImageLineImageMagick extends sfImageTransformAbstract
    */
   public function setColor($color)
   {
-    if (preg_match('/#[\d\w]{6}/',$color))
-    {
+    if (preg_match('/#[\d\w]{6}/',$color)) {
       $this->color = $color;
 
       return true;
@@ -243,8 +237,7 @@ class sfImageLineImageMagick extends sfImageTransformAbstract
    */
   public function setStyle($style)
   {
-    if (is_numeric($style = $style))
-    {
+    if (is_numeric($style = $style)) {
       $this->style = $style;
 
       return true;

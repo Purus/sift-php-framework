@@ -12,8 +12,8 @@
  * @package    Sift
  * @subpackage i18n
  */
-class sfI18nGettext {
-
+class sfI18nGettext
+{
   /**
    * strings
    *
@@ -56,8 +56,7 @@ class sfI18nGettext {
   public static function factory($format, $file = '')
   {
     $className = sprintf('sfI18nGettext%s', ucfirst(strtolower($format)));
-    if(!class_exists($className))
-    {
+    if (!class_exists($className)) {
       throw new sfException(sprintf('Class "%s" not found', $className));
     }
 
@@ -78,20 +77,17 @@ class sfI18nGettext {
    */
   public function poFile2moFile($pofile, $mofile)
   {
-    if(!is_file($pofile))
-    {
+    if (!is_file($pofile)) {
       throw new sfException(sprintf('File "%s" doesn\'t exist.', $pofile));
     }
 
     $PO = new sfI18nGettextPo($pofile);
-    if(true !== ($e = $PO->load()))
-    {
+    if (true !== ($e = $PO->load())) {
       return $e;
     }
 
     $MO = $PO->toMO();
-    if(true !== ($e = $MO->save($mofile)))
-    {
+    if (true !== ($e = $MO->save($mofile))) {
       return $e;
     }
     unset($PO, $MO);
@@ -110,15 +106,12 @@ class sfI18nGettext {
    */
   protected function prepare($string, $reverse = false)
   {
-    if($reverse)
-    {
+    if ($reverse) {
       $smap = array('"', "\n", "\t", "\r");
       $rmap = array('\"', '\\n"' . "\n" . '"', '\\t', '\\r');
 
       return (string) str_replace($smap, $rmap, $string);
-    }
-    else
-    {
+    } else {
       $string = preg_replace('/"\s+"/', '', $string);
       $smap = array('\\n', '\\r', '\\t', '\"');
       $rmap = array("\n", "\r", "\t", '"');
@@ -138,10 +131,8 @@ class sfI18nGettext {
   public function meta2array($meta)
   {
     $array = array();
-    foreach(explode("\n", $meta) as $info)
-    {
-      if($info = trim($info))
-      {
+    foreach (explode("\n", $meta) as $info) {
+      if ($info = trim($info)) {
         list($key, $value) = explode(':', $info, 2);
         $array[trim($key)] = trim($value);
       }
@@ -206,19 +197,13 @@ class sfI18nGettext {
    */
   public function fromArray($array)
   {
-    if(!array_key_exists('strings', $array))
-    {
-      if(count($array) != 2)
-      {
+    if (!array_key_exists('strings', $array)) {
+      if (count($array) != 2) {
         return false;
-      }
-      else
-      {
+      } else {
         list($this->meta, $this->strings) = $array;
       }
-    }
-    else
-    {
+    } else {
       $this->meta = @$array['meta'];
       $this->strings = @$array['strings'];
     }

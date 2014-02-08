@@ -12,8 +12,8 @@
  * @package Sift
  * @subpackage i18n_extract
  */
-abstract class sfI18nExtractUser extends sfBasicSecurityUser {
-
+abstract class sfI18nExtractUser extends sfBasicSecurityUser
+{
   /**
    * Array of options
    *

@@ -34,16 +34,12 @@ class sfTesterResponse extends sfTester
 
     $this->dom = null;
     $this->domCssSelector = null;
-    if (preg_match('/(x|ht)ml/i', $this->response->getContentType(), $matches))
-    {
+    if (preg_match('/(x|ht)ml/i', $this->response->getContentType(), $matches)) {
       $this->dom = new DOMDocument('1.0', $this->response->getCharset());
       $this->dom->validateOnParse = true;
-      if ('x' == $matches[1])
-      {
+      if ('x' == $matches[1]) {
         @$this->dom->loadXML($this->response->getContent());
-      }
-      else
-      {
+      } else {
         @$this->dom->loadHTML($this->response->getContent());
       }
       $this->domCssSelector = new sfDomCssSelector($this->dom);
@@ -61,52 +57,35 @@ class sfTesterResponse extends sfTester
    */
   public function checkElement($selector, $value = true, $options = array())
   {
-    if (null === $this->dom)
-    {
+    if (null === $this->dom) {
       throw new LogicException('The DOM is not accessible because the browser response content type is not HTML.');
     }
 
-    if (is_object($selector))
-    {
+    if (is_object($selector)) {
       $values = $selector->getValues();
-    }
-    else
-    {
+    } else {
       $values = $this->domCssSelector->matchAll($selector)->getValues();
     }
 
-    if (false === $value)
-    {
+    if (false === $value) {
       $this->tester->is(count($values), 0, sprintf('response selector "%s" does not exist', $selector));
-    }
-    else if (true === $value)
-    {
+    } else if (true === $value) {
       $this->tester->cmp_ok(count($values), '>', 0, sprintf('response selector "%s" exists', $selector));
-    }
-    else if (is_int($value))
-    {
+    } else if (is_int($value)) {
       $this->tester->is(count($values), $value, sprintf('response selector "%s" matches "%s" times', $selector, $value));
-    }
-    else if (preg_match('/^(!)?([^a-zA-Z0-9\\\\]).+?\\2[ims]?$/', $value, $match))
-    {
+    } else if (preg_match('/^(!)?([^a-zA-Z0-9\\\\]).+?\\2[ims]?$/', $value, $match)) {
       $position = isset($options['position']) ? $options['position'] : 0;
-      if ($match[1] == '!')
-      {
+      if ($match[1] == '!') {
         $this->tester->unlike(@$values[$position], substr($value, 1), sprintf('response selector "%s" does not match regex "%s"', $selector, substr($value, 1)));
-      }
-      else
-      {
+      } else {
         $this->tester->like(@$values[$position], $value, sprintf('response selector "%s" matches regex "%s"', $selector, $value));
       }
-    }
-    else
-    {
+    } else {
       $position = isset($options['position']) ? $options['position'] : 0;
       $this->tester->is(@$values[$position], $value, sprintf('response selector "%s" matches "%s"', $selector, $value));
     }
 
-    if (isset($options['count']))
-    {
+    if (isset($options['count'])) {
       $this->tester->is(count($values), $options['count'], sprintf('response selector "%s" matches "%s" times', $selector, $options['count']));
     }
 
@@ -123,28 +102,22 @@ class sfTesterResponse extends sfTester
    */
   public function checkForm($form, $selector = 'form')
   {
-    if (!$form instanceof sfForm)
-    {
+    if (!$form instanceof sfForm) {
       $form = new $form();
     }
 
     $rendered = array();
-    foreach ($this->domCssSelector->matchAll(sprintf('%1$s input, %1$s textarea, %1$s select', $selector))->getNodes() as $element)
-    {
+    foreach ($this->domCssSelector->matchAll(sprintf('%1$s input, %1$s textarea, %1$s select', $selector))->getNodes() as $element) {
       $rendered[] = $element->getAttribute('name');
     }
 
-    foreach ($form as $field => $widget)
-    {
+    foreach ($form as $field => $widget) {
       $dom = new DOMDocument('1.0', sfConfig::get('sf_charset'));
       $dom->loadHTML((string) $widget);
 
-      foreach ($dom->getElementsByTagName('*') as $element)
-      {
-        if (in_array($element->tagName, array('input', 'select', 'textarea')))
-        {
-          if (false !== $pos = array_search($element->getAttribute('name'), $rendered))
-          {
+      foreach ($dom->getElementsByTagName('*') as $element) {
+        if (in_array($element->tagName, array('input', 'select', 'textarea'))) {
+          if (false !== $pos = array_search($element->getAttribute('name'), $rendered)) {
             unset($rendered[$pos]);
           }
 
@@ -168,18 +141,15 @@ class sfTesterResponse extends sfTester
    */
   public function isValid($checkDTD = false)
   {
-    if (preg_match('/(x|ht)ml/i', $this->response->getContentType()))
-    {
+    if (preg_match('/(x|ht)ml/i', $this->response->getContentType())) {
       $revert = libxml_use_internal_errors(true);
 
       $dom = new DOMDocument('1.0', $this->response->getCharset());
       $content = $this->response->getContent();
 
-      if (true === $checkDTD)
-      {
+      if (true === $checkDTD) {
         $cache = sfConfig::get('sf_cache_dir').'/sf_tester_response/w3';
-        if ($cache[1] == ':')
-        {
+        if ($cache[1] == ':') {
           // On Windows systems the path will be like c:\project\cache\xml.dtd
           // I did not manage to get DOMDocument loading a file protocol url including the drive letter
           // file://c:\project\cache\xml.dtd or file://c:/project/cache/xml.dtd
@@ -188,14 +158,11 @@ class sfTesterResponse extends sfTester
           // file:///project/cache/xml.dtd
           // Note that all work for file_get_contents so the bug is most likely in DOMDocument.
           $local = 'file://'.substr(str_replace(DIRECTORY_SEPARATOR, '/', $cache), 2);
-        }
-        else
-        {
+        } else {
           $local = 'file://'.$cache;
         }
 
-        if (!file_exists($cache.'/TR/xhtml11/DTD/xhtml11.dtd'))
-        {
+        if (!file_exists($cache.'/TR/xhtml11/DTD/xhtml11.dtd')) {
           $filesystem = new sfFilesystem();
 
           $finder = sfFinder::type('any')->discard('.sf');
@@ -211,8 +178,7 @@ class sfTesterResponse extends sfTester
 
       $dom->loadXML($content);
 
-      switch (pathinfo($checkDTD, PATHINFO_EXTENSION))
-      {
+      switch (pathinfo($checkDTD, PATHINFO_EXTENSION)) {
         case 'xsd':
           $dom->schemaValidate($checkDTD);
           $message = sprintf('response validates per XSD schema "%s"', basename($checkDTD));
@@ -226,30 +192,23 @@ class sfTesterResponse extends sfTester
           $message = $dom->validateOnParse ? sprintf('response validates as "%s"', $dom->doctype->name) : 'response is well-formed "xml"';
       }
 
-      if (count($errors = libxml_get_errors()))
-      {
+      if (count($errors = libxml_get_errors())) {
         $lines = explode(PHP_EOL, $this->response->getContent());
 
         $this->tester->fail($message);
-        foreach ($errors as $error)
-        {
+        foreach ($errors as $error) {
           $this->tester->diag('    '.trim($error->message));
-          if (preg_match('/line (\d+)/', $error->message, $match) && $error->line != $match[1])
-          {
+          if (preg_match('/line (\d+)/', $error->message, $match) && $error->line != $match[1]) {
             $this->tester->diag('      '.str_pad($match[1].':', 6).trim($lines[$match[1] - 1]));
           }
           $this->tester->diag('      '.str_pad($error->line.':', 6).trim($lines[$error->line - 1]));
         }
-      }
-      else
-      {
+      } else {
         $this->tester->pass($message);
       }
 
       libxml_use_internal_errors($revert);
-    }
-    else
-    {
+    } else {
       throw new LogicException(sprintf('Unable to validate responses of content type "%s"', $this->response->getContentType()));
     }
 
@@ -270,55 +229,40 @@ class sfTesterResponse extends sfTester
     $ok = false;
     $regex = false;
     $mustMatch = true;
-    if(preg_match('/^(!)?([^a-zA-Z0-9\\\\]).+?\\2[ims]?$/', $value, $match))
-    {
+    if (preg_match('/^(!)?([^a-zA-Z0-9\\\\]).+?\\2[ims]?$/', $value, $match)) {
       $regex = $value;
-      if($match[1] == '!')
-      {
+      if ($match[1] == '!') {
         $mustMatch = false;
         $regex = substr($value, 1);
       }
     }
 
-    foreach($headers as $header)
-    {
-      if(false !== $regex)
-      {
-        if($mustMatch)
-        {
-          if(preg_match($regex, $header))
-          {
+    foreach ($headers as $header) {
+      if (false !== $regex) {
+        if ($mustMatch) {
+          if (preg_match($regex, $header)) {
             $ok = true;
             $this->tester->pass(sprintf('response header "%s" matches "%s" (%s)', $key, $value, $this->response->getHttpHeader($key)));
             break;
           }
-        }
-        else
-        {
-          if(preg_match($regex, $header))
-          {
+        } else {
+          if (preg_match($regex, $header)) {
             $ok = true;
             $this->tester->fail(sprintf('response header "%s" does not match "%s" (%s)', $key, $value, $this->response->getHttpHeader($key)));
             break;
           }
         }
-      }
-      elseif($header == $value)
-      {
+      } elseif ($header == $value) {
         $ok = true;
         $this->tester->pass(sprintf('response header "%s" is "%s" (%s)', $key, $value, $this->response->getHttpHeader($key)));
         break;
       }
     }
 
-    if(!$ok)
-    {
-      if(!$mustMatch)
-      {
+    if (!$ok) {
+      if (!$mustMatch) {
         $this->tester->pass(sprintf('response header "%s" matches "%s" (%s)', $key, $value, $this->response->getHttpHeader($key)));
-      }
-      else
-      {
+      } else {
         $this->tester->fail(sprintf('response header "%s" matches "%s" (%s)', $key, $value, $this->response->getHttpHeader($key)));
       }
     }
@@ -337,23 +281,16 @@ class sfTesterResponse extends sfTester
    */
   public function setsCookie($name, $value = null, $attributes = array())
   {
-    foreach ($this->response->getCookies() as $cookie)
-    {
-      if ($name == $cookie['name'])
-      {
-        if (null === $value)
-        {
+    foreach ($this->response->getCookies() as $cookie) {
+      if ($name == $cookie['name']) {
+        if (null === $value) {
           $this->tester->pass(sprintf('response sets cookie "%s"', $name));
-        }
-        else
-        {
+        } else {
           $this->tester->ok($value == $cookie['value'], sprintf('response sets cookie "%s" to "%s"', $name, $value));
         }
 
-        foreach ($attributes as $attributeName => $attributeValue)
-        {
-          if (!array_key_exists($attributeName, $cookie))
-          {
+        foreach ($attributes as $attributeName => $attributeValue) {
+          if (!array_key_exists($attributeName, $cookie)) {
             throw new LogicException(sprintf('The cookie attribute "%s" is not valid.', $attributeName));
           }
 
@@ -378,17 +315,13 @@ class sfTesterResponse extends sfTester
    */
   public function matches($regex)
   {
-    if (!preg_match('/^(!)?([^a-zA-Z0-9\\\\]).+?\\2[ims]?$/', $regex, $match))
-    {
+    if (!preg_match('/^(!)?([^a-zA-Z0-9\\\\]).+?\\2[ims]?$/', $regex, $match)) {
       throw new InvalidArgumentException(sprintf('"%s" is not a valid regular expression.', $regex));
     }
 
-    if ($match[1] == '!')
-    {
+    if ($match[1] == '!') {
       $this->tester->unlike($this->response->getContent(), substr($regex, 1), sprintf('response content does not match regex "%s"', substr($regex, 1)));
-    }
-    else
-    {
+    } else {
       $this->tester->like($this->response->getContent(), $regex, sprintf('response content matches regex "%s"', $regex));
     }
 
@@ -419,23 +352,16 @@ class sfTesterResponse extends sfTester
    */
   public function isRedirected($boolean = true, $url = null)
   {
-    if($location = $this->response->getHttpHeader('Location'))
-    {
+    if ($location = $this->response->getHttpHeader('Location')) {
       $boolean ? $this->tester->pass(sprintf('page redirected to "%s"', $location)) : $this->tester->fail(sprintf('page redirected to "%s"', $location));
-      if($url)
-      {
-        if($url == $location)
-        {
+      if ($url) {
+        if ($url == $location) {
           $this->tester->pass(sprintf('page redirect url is "%s" ("%s")', $url, $location));
-        }
-        else
-        {
+        } else {
           $this->tester->fail(sprintf('page redirect url is not "%s" ("%s")', $url, $location));
         }
       }
-    }
-    else
-    {
+    } else {
       $boolean ? $this->tester->fail('page redirected') : $this->tester->pass('page not redirected');
     }
 
@@ -453,8 +379,7 @@ class sfTesterResponse extends sfTester
   {
     print $this->tester->error('Response debug');
 
-    if (!$realOutput && null !== sfException::getLastException())
-    {
+    if (!$realOutput && null !== sfException::getLastException()) {
       // print the exception and the stack trace instead of the "normal" output
       $this->tester->comment('WARNING');
       $this->tester->comment('An error occurred when processing this request.');
@@ -463,13 +388,11 @@ class sfTesterResponse extends sfTester
 
     printf("HTTP/1.X %s\n", $this->response->getStatusCode());
 
-    foreach ($this->response->getHttpHeaders() as $name => $value)
-    {
+    foreach ($this->response->getHttpHeaders() as $name => $value) {
       printf("%s: %s\n", $name, $value);
     }
 
-    foreach ($this->response->getCookies() as $cookie)
-    {
+    foreach ($this->response->getCookies() as $cookie) {
       vprintf("Set-Cookie: %s=%s; %spath=%s%s%s%s\n", array(
         $cookie['name'],
         $cookie['value'],
@@ -482,18 +405,14 @@ class sfTesterResponse extends sfTester
     }
 
     echo "\n";
-    if (!$realOutput && null !== $exception = sfException::getLastException())
-    {
+    if (!$realOutput && null !== $exception = sfException::getLastException()) {
       echo $exception;
-    }
-    else
-    {
+    } else {
       echo $this->response->getContent();
     }
     echo "\n";
 
-    if($exit)
-    {
+    if ($exit) {
       exit(1);
     }
 

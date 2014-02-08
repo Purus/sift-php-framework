@@ -37,30 +37,23 @@ class sfCliCommandOption
    */
   public function __construct($name, $shortcut = null, $mode = null, $help = '', $default = null)
   {
-    if ('--' == substr($name, 0, 2))
-    {
+    if ('--' == substr($name, 0, 2)) {
       $name = substr($name, 2);
     }
 
-    if (empty($shortcut))
-    {
+    if (empty($shortcut)) {
       $shortcut = null;
     }
 
-    if (null !== $shortcut)
-    {
-      if ('-' == $shortcut[0])
-      {
+    if (null !== $shortcut) {
+      if ('-' == $shortcut[0]) {
         $shortcut = substr($shortcut, 1);
       }
     }
 
-    if (null === $mode)
-    {
+    if (null === $mode) {
       $mode = self::PARAMETER_NONE;
-    }
-    else if (is_string($mode) || $mode > 15)
-    {
+    } else if (is_string($mode) || $mode > 15) {
       throw new sfCliCommandException(sprintf('Option mode "%s" is not valid.', $mode));
     }
 
@@ -139,19 +132,14 @@ class sfCliCommandOption
    */
   public function setDefault($default = null)
   {
-    if (self::PARAMETER_NONE === (self::PARAMETER_NONE & $this->mode) && null !== $default)
-    {
+    if (self::PARAMETER_NONE === (self::PARAMETER_NONE & $this->mode) && null !== $default) {
       throw new sfCliCommandException('Cannot set a default value when using sfCliCommandOption::PARAMETER_NONE mode.');
     }
 
-    if ($this->isArray())
-    {
-      if (null === $default)
-      {
+    if ($this->isArray()) {
+      if (null === $default) {
         $default = array();
-      }
-      else if (!is_array($default))
-      {
+      } else if (!is_array($default)) {
         throw new sfCliCommandException('A default value for an array option must be an array.');
       }
     }

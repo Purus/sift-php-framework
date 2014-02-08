@@ -23,8 +23,7 @@ class sfYaml
    */
   public static function setSpecVersion($version)
   {
-    if (!in_array($version, array('1.1', '1.2')))
-    {
+    if (!in_array($version, array('1.1', '1.2'))) {
       throw new InvalidArgumentException(sprintf('Version %s of the YAML specifications is not supported', $version));
     }
 
@@ -64,8 +63,7 @@ class sfYaml
     $file = '';
 
     // if input is a file, process it
-    if (strpos($input, "\n") === false && is_file($input))
-    {
+    if (strpos($input, "\n") === false && is_file($input)) {
       $file = $input;
 
       ob_start();
@@ -77,32 +75,26 @@ class sfYaml
     }
 
     // if an array is returned by the config file assume it's in plain php form else in YAML
-    if (is_array($input))
-    {
+    if (is_array($input)) {
       return $input;
     }
 
     $mbConvertEncoding = false;
     $encoding = strtoupper($encoding);
-    if ('UTF-8' != $encoding && function_exists('mb_convert_encoding'))
-    {
+    if ('UTF-8' != $encoding && function_exists('mb_convert_encoding')) {
       $input = mb_convert_encoding($input, 'UTF-8', $encoding);
       $mbConvertEncoding = true;
     }
 
     $yaml = new sfYamlParser();
 
-    try
-    {
+    try {
       $ret = $yaml->parse($input);
-    }
-    catch (Exception $e)
-    {
+    } catch (Exception $e) {
       throw new InvalidArgumentException(sprintf('Unable to parse %s: %s', $file ? sprintf('file "%s"', $file) : 'string', $e->getMessage()));
     }
 
-    if ($ret && $mbConvertEncoding)
-    {
+    if ($ret && $mbConvertEncoding) {
       $ret = self::arrayConvertEncoding($ret, $encoding);
     }
 
@@ -137,22 +129,15 @@ class sfYaml
   protected static function arrayConvertEncoding(array $result, $encoding)
   {
     $convertedResult = array();
-    foreach ($result as $key => $value)
-    {
-      if (is_string($key))
-      {
+    foreach ($result as $key => $value) {
+      if (is_string($key)) {
         $key = mb_convert_encoding($key, $encoding, 'UTF-8');
       }
-      if (is_array($value))
-      {
+      if (is_array($value)) {
         $convertedResult[$key] = self::arrayConvertEncoding($value, $encoding);
-      }
-      else if (is_string($value))
-      {
+      } else if (is_string($value)) {
         $convertedResult[$key] = mb_convert_encoding($value, $encoding, 'UTF-8');
-      }
-      else
-      {
+      } else {
         $convertedResult[$key] = $value;
       }
     }

@@ -74,14 +74,10 @@ class sfImageOverlayImageMagick extends sfImageTransformAbstract
     $this->setOpacity($opacity);
     $this->setCompose($compose);
 
-    if (is_array($position) && count($position)==2)
-    {
+    if (is_array($position) && count($position)==2) {
       $this->setLeft($position[0]);
       $this->setTop($position[1]);
-    }
-
-    else
-    {
+    } else {
       $this->setPosition($position);
     }
   }
@@ -170,15 +166,13 @@ class sfImageOverlayImageMagick extends sfImageTransformAbstract
                   'top west' => 'top-left', 'top east' => 'top-right', 'south west' => 'bottom-left', 'south east' => 'bottom-right'
                 );
 
-    if($key = array_search($position, $map))
-    {
+    if ($key = array_search($position, $map)) {
       $message = sprintf('sfImageTransformPlugin overlay position \'%s\' is deprecated use \'%s\' instead', $position, $key);
       sfContext::getInstance()->getEventDispatcher()->notify(new sfEvent($this, 'application.log', array($message, 'priority' => sfLogger::ERR)));
       $this->position = $map[$key];
     }
 
-    if(in_array($position, $this->labels))
-    {
+    if (in_array($position, $this->labels)) {
       $this->position = strtolower($position);
 
       return true;
@@ -210,8 +204,7 @@ class sfImageOverlayImageMagick extends sfImageTransformAbstract
     $position = $this->getPosition();
 
     // no named position nothing to compute
-    if (is_null($position))
-    {
+    if (is_null($position)) {
       return;
     }
 
@@ -223,8 +216,7 @@ class sfImageOverlayImageMagick extends sfImageTransformAbstract
     $overlay_x  = $overlay->getImageWidth();
     $overlay_y  = $overlay->getImageHeight();
 
-    switch ($position)
-    {
+    switch ($position) {
       case 'top':
       case 'top-left':
         $this->setLeft(0);
@@ -283,18 +275,11 @@ class sfImageOverlayImageMagick extends sfImageTransformAbstract
    */
   public function setOpacity($opacity)
   {
-    if(is_numeric($opacity) && $opacity > 1)
-    {
+    if (is_numeric($opacity) && $opacity > 1) {
       $this->opacity = $opacity / 100;
-    }
-
-    else if (is_float($opacity))
-    {
+    } else if (is_float($opacity)) {
       $this->opacity = abs($opacity);
-    }
-
-    else
-    {
+    } else {
       $this->opacity = $opacity;
     }
   }
@@ -347,8 +332,7 @@ class sfImageOverlayImageMagick extends sfImageTransformAbstract
     $resource = $image->getAdapter()->getHolder();
     $overlay = $this->getOverlay();
 
-    if (!is_null($this->getOpacity()))
-    {
+    if (!is_null($this->getOpacity())) {
       $overlay->getAdapter()->getHolder()->setImageOpacity($this->getOpacity());
     }
 

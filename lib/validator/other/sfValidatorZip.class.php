@@ -12,8 +12,8 @@
  * @package    Sift
  * @subpackage validator
  */
-class sfValidatorZip extends sfValidatorBase {
-
+class sfValidatorZip extends sfValidatorBase
+{
   /**
    * Postcode patterns
    *
@@ -44,8 +44,7 @@ class sfValidatorZip extends sfValidatorBase {
 
     parent::__construct($options, $messages);
 
-    if(!$this->getOption('countries') && !$this->getOption('pattern'))
-    {
+    if (!$this->getOption('countries') && !$this->getOption('pattern')) {
       throw new InvalidArgumentException('Please specify an array of countries or PCRE regular expression pattern for your registered sfValidatorZip validator.');
     }
 
@@ -67,18 +66,14 @@ class sfValidatorZip extends sfValidatorBase {
    */
   protected function loadPatterns($countries)
   {
-    if($countries != 'all')
-    {
+    if ($countries != 'all') {
       // upper case countries
       $countries = array_map('strtoupper', $countries);
     }
 
-    if($countries == 'all')
-    {
+    if ($countries == 'all') {
       $patterns = sfCulture::getInstance()->getPostCodes();
-    }
-    else
-    {
+    } else {
       $patterns = sfCulture::getInstance()->getPostCodes($countries);
     }
 
@@ -93,38 +88,32 @@ class sfValidatorZip extends sfValidatorBase {
    */
   public function doClean($value)
   {
-    if(!$this->getOption('strict'))
-    {
+    if (!$this->getOption('strict')) {
       $value = trim(preg_replace('/\s+/', '', $value));
     }
 
     $match = false;
 
     // we will first validate countries
-    foreach($this->patterns as $country => $pattern)
-    {
-      if(preg_match('/^' . $pattern . '$/', $value))
-      {
+    foreach ($this->patterns as $country => $pattern) {
+      if (preg_match('/^' . $pattern . '$/', $value)) {
         $match = true;
         break;
       }
     }
 
     // we have found something
-    if($match)
-    {
+    if ($match) {
       return $value;
     }
 
     $pattern = $this->getOption('pattern');
 
-    if($pattern && preg_match($pattern, $value))
-    {
+    if ($pattern && preg_match($pattern, $value)) {
       $match = true;
     }
 
-    if(!$match)
-    {
+    if (!$match) {
       throw new sfValidatorError($this, 'invalid');
     }
 
@@ -136,32 +125,25 @@ class sfValidatorZip extends sfValidatorBase {
     $rules = parent::getJavascriptValidationRules();
 
     $patterns = array();
-    foreach($this->patterns as $pattern)
-    {
+    foreach ($this->patterns as $pattern) {
       $patterns[] = sprintf('new RegExp("^%s$")', preg_quote($pattern));
     }
 
     $pattern = $this->getOption('pattern');
 
-    if(!empty($pattern))
-    {
+    if (!empty($pattern)) {
       $patterns[] = sprintf('new RegExp("^%s$")', preg_quote($pattern));
     }
 
     $rules[sfFormJavascriptValidation::CUSTOM_CALLBACK] = array(
         'callback' =>
-        (sprintf('function(value, element, params)
-{
+        (sprintf('function(value, element, params) {
   var r = [%s];
   var result = false;
-  for(var i = 0; i < r.length; i++)
-  {
-    try
-    {
+  for (var i = 0; i < r.length; i++) {
+    try {
       result = r[i].test(value);
-    }
-    catch(e)
-    {
+    } catch (e) {
       result = false;
     }
   }

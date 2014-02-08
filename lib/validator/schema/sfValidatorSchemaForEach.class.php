@@ -27,8 +27,7 @@ class sfValidatorSchemaForEach extends sfValidatorSchema
   public function __construct(sfValidatorBase $validator, $count, $options = array(), $messages = array())
   {
     $fields = array();
-    for ($i = 0; $i < $count; $i++)
-    {
+    for ($i = 0; $i < $count; $i++) {
       $fields[$i] = clone $validator;
     }
 

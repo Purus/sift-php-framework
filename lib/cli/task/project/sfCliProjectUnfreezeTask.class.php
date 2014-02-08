@@ -47,8 +47,7 @@ EOF;
     $this->logSection($this->getFullName(), sprintf('Unfreezing project from %s %s',
             $this->commandApplication->getName(), $this->commandApplication->getVersion()));
 
-    if(!is_dir($lib_dir.'/sift'))
-    {
+    if (!is_dir($lib_dir.'/sift')) {
       throw new sfException('You can unfreeze only if you froze to Sift release before.');
     }
 

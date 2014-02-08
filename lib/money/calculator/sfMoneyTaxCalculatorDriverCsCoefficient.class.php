@@ -14,8 +14,8 @@
  * @link http://www.zakonyprolidi.cz/cs/2004-235#p37-2
  * @link http://www.uctovani.net/vypocet-zakladu-dane-z-pridane-hodnoty.php
  */
-class sfMoneyTaxCalculatorDriverCsCoefficient extends sfMoneyTaxCalculator {
-
+class sfMoneyTaxCalculatorDriverCsCoefficient extends sfMoneyTaxCalculator
+{
   /**
    * Array of known coefficients
    *
@@ -34,12 +34,9 @@ class sfMoneyTaxCalculatorDriverCsCoefficient extends sfMoneyTaxCalculator {
    */
   public function getTaxAmount(sfIMoneyCurrencyValue $priceWithTax, $tax, $scale = null, $roundingMode = sfRounding::NONE)
   {
-    if(isset($this->coefficients[$tax]))
-    {
+    if (isset($this->coefficients[$tax])) {
       $coefficient = $this->coefficients[$tax];
-    }
-    else
-    {
+    } else {
       $coefficient = sfMath::round(sfMath::divide($tax, sfMath::add('100', $tax), 100), 4);
     }
 

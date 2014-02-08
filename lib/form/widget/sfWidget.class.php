@@ -12,8 +12,8 @@
  * @package    Sift
  * @subpackage form_widget
  */
-abstract class sfWidget {
-
+abstract class sfWidget
+{
   protected $requiredOptions = array(),
           $attributes = array(),
           $options = array();
@@ -38,14 +38,12 @@ abstract class sfWidget {
     $optionKeys = array_keys($options);
 
     // check option names
-    if($diff = array_diff($optionKeys, array_merge($currentOptionKeys, $this->requiredOptions)))
-    {
+    if ($diff = array_diff($optionKeys, array_merge($currentOptionKeys, $this->requiredOptions))) {
       throw new InvalidArgumentException(sprintf('%s does not support the following options: \'%s\'.', get_class($this), implode('\', \'', $diff)));
     }
 
     // check required options
-    if($diff = array_diff($this->requiredOptions, array_merge($currentOptionKeys, $optionKeys)))
-    {
+    if ($diff = array_diff($this->requiredOptions, array_merge($currentOptionKeys, $optionKeys))) {
       throw new RuntimeException(sprintf('%s requires the following options: \'%s\'.', get_class($this), implode('\', \'', $diff)));
     }
 
@@ -157,8 +155,7 @@ abstract class sfWidget {
    */
   public function setOption($name, $value)
   {
-    if(!in_array($name, array_merge(array_keys($this->options), $this->requiredOptions)))
-    {
+    if (!in_array($name, array_merge(array_keys($this->options), $this->requiredOptions))) {
       throw new InvalidArgumentException(sprintf('%s does not support the following option: \'%s\'.', get_class($this), $name));
     }
 
@@ -287,10 +284,8 @@ abstract class sfWidget {
    */
   public function removeAriaAttributes()
   {
-    foreach($this->attributes as $i => $attribute)
-    {
-      if(strpos($i, 'aria-') !== false)
-      {
+    foreach ($this->attributes as $i => $attribute) {
+      if (strpos($i, 'aria-') !== false) {
         echo 'unsetting ' . $i;
         unset($this->attributes[$i]);
       }
@@ -307,10 +302,8 @@ abstract class sfWidget {
   public function getAriaAttributes()
   {
     $attributes = array();
-    foreach($this->attributes as $i => $attribute)
-    {
-      if(strpos($attribute, 'aria-') !== false)
-      {
+    foreach ($this->attributes as $i => $attribute) {
+      if (strpos($attribute, 'aria-') !== false) {
         $attributes[$i] = $this->attributes[$i];
       }
     }
@@ -412,8 +405,7 @@ abstract class sfWidget {
    */
   public function renderTag($tag, $attributes = array())
   {
-    if(empty($tag))
-    {
+    if (empty($tag)) {
       return '';
     }
 
@@ -431,8 +423,7 @@ abstract class sfWidget {
    */
   public function renderContentTag($tag, $content = null, $attributes = array())
   {
-    if(empty($tag))
-    {
+    if (empty($tag)) {
       return '';
     }
 
@@ -469,10 +460,8 @@ abstract class sfWidget {
     $spanAttributes = array();
 
     // whitelist attributes which make sense for the span enclosement
-    foreach($attributes as $attribute => $attributeValue)
-    {
-      if(in_array($attribute, array('id', 'class')))
-      {
+    foreach ($attributes as $attribute => $attributeValue) {
+      if (in_array($attribute, array('id', 'class'))) {
         $spanAttributes[$attribute] = $attributeValue;
       }
     }
@@ -535,8 +524,7 @@ abstract class sfWidget {
   protected function attributesToHtmlCallback($k, $v)
   {
     // this is a data attribute, leave it here!
-    if(strpos($k, 'data-') === 0)
-    {
+    if (strpos($k, 'data-') === 0) {
       return sprintf(' %s="%s"', $k, $this->escapeOnce($v));
     }
 

@@ -15,8 +15,8 @@
  * @package    Sift
  * @subpackage controller
  */
-class sfFrontWebController extends sfWebController {
-
+class sfFrontWebController extends sfWebController
+{
   /**
    * Dispatches a request.
    *
@@ -24,8 +24,7 @@ class sfFrontWebController extends sfWebController {
    */
   public function dispatch()
   {
-    try
-    {
+    try {
       // reinitialize filters (needed for unit and functional tests)
       sfFilter::$filterCalled = array();
 
@@ -34,21 +33,17 @@ class sfFrontWebController extends sfWebController {
       $moduleName = $request->getParameter('module');
       $actionName = $request->getParameter('action');
 
-      if(empty($moduleName) || empty($actionName))
-      {
+      if (empty($moduleName) || empty($actionName)) {
         throw new sfError404Exception(sprintf('Empty module and/or action after parsing the URL "%s" (%s/%s).', $request->getPathInfo(), $moduleName, $actionName));
       }
 
       // make the first request
       $this->forward($moduleName, $actionName);
-    }
-    catch(sfException $e)
-    {
+    } catch (sfException $e) {
       $e->printStackTrace();
     }
     // FIXME: better stacktrace for wrapper exception since it does not link to proper line of file
-    catch(Exception $e)
-    {
+    catch(Exception $e) {
       sfException::createFromException($e)->printStackTrace();
     }
   }

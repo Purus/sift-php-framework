@@ -12,8 +12,8 @@
  * @package Sift
  * @subpackage search
  */
-class sfSearchQueryPhrase {
-
+class sfSearchQueryPhrase
+{
   const MODE_DEFAULT = 'default';
   const MODE_OR = 'or';
   const MODE_AND = 'and';
@@ -33,7 +33,7 @@ class sfSearchQueryPhrase {
   {
     $this->phrase = trim($input);
     $this->mode = $mode;
-    $this->isMultiWord = (boolean)preg_match('/\s+/', $this->phrase);
+    $this->isMultiWord = (boolean) preg_match('/\s+/', $this->phrase);
   }
 
   /**
@@ -73,8 +73,7 @@ class sfSearchQueryPhrase {
    */
   public function getWords()
   {
-    if($this->isMultiWord())
-    {
+    if ($this->isMultiWord()) {
       return explode(' ', $this->phrase);
     }
 

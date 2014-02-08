@@ -6,8 +6,7 @@
  * file that was distributed with this source code.
  */
 
-if(!function_exists('http_build_url'))
-{
+if (!function_exists('http_build_url')) {
     define('HTTP_URL_REPLACE', 1);          // Replace every part of the first URL when there's one of the second URL
     define('HTTP_URL_JOIN_PATH', 2);        // Join relative paths
     define('HTTP_URL_JOIN_QUERY', 4);       // Join query strings
@@ -93,8 +92,7 @@ class sfCore
    */
   public static function getProject()
   {
-    if(!self::hasProject())
-    {
+    if (!self::hasProject()) {
       throw new RuntimeException('Sift it not bootstrapped to an existing project');
     }
 
@@ -164,13 +162,11 @@ class sfCore
    */
   public static function bootstrap($sf_sift_lib_dir, $sf_sift_data_dir, $test = false)
   {
-    if(self::$bootstrapped)
-    {
+    if (self::$bootstrapped) {
       return;
     }
 
-    if(!defined('SF_ROOT_DIR'))
-    {
+    if (!defined('SF_ROOT_DIR')) {
       throw new sfException('Root directory is not defined. Define SF_ROOT_DIR constant.');
     }
 
@@ -183,13 +179,10 @@ class sfCore
 
     $projectFile = SF_ROOT_DIR . '/lib/myProject.class.php';
 
-    if(is_readable($projectFile))
-    {
+    if (is_readable($projectFile)) {
       require_once $projectFile;
       $class = 'myProject';
-    }
-    else
-    {
+    } else {
       $class = 'sfGenericProject';
     }
 

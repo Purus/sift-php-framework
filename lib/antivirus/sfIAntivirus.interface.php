@@ -12,8 +12,8 @@
  * @package Sift
  * @subpackage antivirus
  */
-interface sfIAntivirus {
-
+interface sfIAntivirus
+{
   /**
    * File is clean
    */

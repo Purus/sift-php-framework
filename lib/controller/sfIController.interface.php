@@ -12,8 +12,8 @@
  * @package    Sift
  * @subpackage controller
  */
-interface sfIController extends sfIService {
-
+interface sfIController extends sfIService
+{
   /**
    * Dispatches a request.
    *

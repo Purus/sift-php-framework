@@ -13,8 +13,8 @@
  * @package    Sift
  * @subpackage util
  */
-class sfReflectionClass extends ReflectionClass {
-
+class sfReflectionClass extends ReflectionClass
+{
   /**
    * Checks if the class is a subclass of a specified class or implements a specified interface.
    *
@@ -23,15 +23,12 @@ class sfReflectionClass extends ReflectionClass {
    */
   public function isSubclassOf($class)
   {
-    if(!is_array($class))
-    {
+    if (!is_array($class)) {
       $class = array($class);
     }
 
-    foreach($class as $c)
-    {
-      if(parent::isSubclassOf($c))
-      {
+    foreach ($class as $c) {
+      if (parent::isSubclassOf($c)) {
         return true;
       }
     }
@@ -48,23 +45,19 @@ class sfReflectionClass extends ReflectionClass {
    */
   public function isSubclassOfOrIsEqual($class)
   {
-    if(!is_array($class))
-    {
+    if (!is_array($class)) {
       $class = array($class);
     }
 
     $name = strtolower($this->getName());
 
-    foreach($class as $c)
-    {
+    foreach ($class as $c) {
       // first check if is equal
-      if($name === strtolower($c))
-      {
+      if ($name === strtolower($c)) {
         return true;
       }
 
-      if($this->isSubclassOf($c))
-      {
+      if ($this->isSubclassOf($c)) {
         return true;
       }
     }
@@ -82,8 +75,7 @@ class sfReflectionClass extends ReflectionClass {
     $parents = array();
     $parent = $this;
 
-    while($parent = $parent->getParentClass())
-    {
+    while ($parent = $parent->getParentClass()) {
       $parents[] = $parent->getName();
     }
 

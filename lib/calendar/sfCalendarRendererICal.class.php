@@ -12,8 +12,8 @@
  * @package Sift
  * @subpackage calendar
  */
-class sfCalendarRendererICal extends sfCalendarRenderer {
-
+class sfCalendarRendererICal extends sfCalendarRenderer
+{
   /**
    * Line esding
    */
@@ -66,8 +66,7 @@ class sfCalendarRendererICal extends sfCalendarRenderer {
   {
     $events = $calendar->getEvents();
 
-    if(isset($options['name']))
-    {
+    if (isset($options['name'])) {
       $this->setName($options['name']);
     }
 
@@ -89,8 +88,7 @@ class sfCalendarRendererICal extends sfCalendarRenderer {
     $now->setTimezone($tz);
 
     // add events
-    foreach($events as $event)
-    {
+    foreach ($events as $event) {
       $eventId = sprintf('%s@%s', $event->getId() ? $event->getId() : md5(serialize($event)),
                           $this->renderValue($calendarName));
 
@@ -109,24 +107,18 @@ class sfCalendarRendererICal extends sfCalendarRenderer {
       $ics[] = sprintf('SUMMARY:%s', $this->renderValue($event->getName()));
       $ics[] = sprintf('DESCRIPTION:%s', $this->renderValue($event->getDescription()));
 
-      if($url = $event->getUrl())
-      {
+      if ($url = $event->getUrl()) {
         $ics[] = sprintf('URL;VALUE=URI:%s', $this->renderValue($url));
       }
 
-      if($location = $event->getLocation())
-      {
+      if ($location = $event->getLocation()) {
         $ics[] = sprintf('LOCATION:%s', $this->renderValue($location));
       }
 
-      if($coordinate = $event->getCoordinate())
-      {
-        if($coordinate instanceof sfGeoCoordinate)
-        {
+      if ($coordinate = $event->getCoordinate()) {
+        if ($coordinate instanceof sfGeoCoordinate) {
           $ics[] = sprintf('GEO:%s;%s', $coordinate->getLat(), $coordinate->getLon());
-        }
-        else
-        {
+        } else {
           $ics[] = sprintf('GEO:%s;%s', $coordinate[0], $coordinate[1]);
         }
       }
@@ -136,8 +128,7 @@ class sfCalendarRendererICal extends sfCalendarRenderer {
 
     $ics[] = 'END:VCALENDAR';
 
-    foreach($ics as &$line)
-    {
+    foreach ($ics as &$line) {
       $line = $this->fold($line);
     }
 
@@ -153,8 +144,7 @@ class sfCalendarRendererICal extends sfCalendarRenderer {
    */
   protected function renderValue($value, $type = 'text')
   {
-    switch(strtolower($type))
-    {
+    switch (strtolower($type)) {
       case 'text':
         $value = str_replace(",", "\,", $value);
       break;
@@ -173,14 +163,12 @@ class sfCalendarRendererICal extends sfCalendarRenderer {
   {
     $length = sfUtf8::len($line);
 
-    if($length < (self::FOLD_LENGTH + 1))
-    {
+    if ($length < (self::FOLD_LENGTH + 1)) {
       return $line;
     }
 
     $apart = array();
-    for($i = 0; $i < $length; $i += self::FOLD_LENGTH)
-    {
+    for ($i = 0; $i < $length; $i += self::FOLD_LENGTH) {
       $apart[] = sfUtf8::sub($line, $i, self::FOLD_LENGTH);
     }
 

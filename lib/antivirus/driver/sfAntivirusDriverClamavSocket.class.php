@@ -14,8 +14,8 @@
  * @link http://www.jejik.com/articles/2009/07/scanning_files_with_clamav_from_cakephp/
  * @link http://www.clamav.net/doc/latest/html/node28.html
  */
-class sfAntivirusDriverClamavSocket extends sfAntivirus {
-
+class sfAntivirusDriverClamavSocket extends sfAntivirus
+{
   /**
    * Default options
    *
@@ -44,8 +44,7 @@ class sfAntivirusDriverClamavSocket extends sfAntivirus {
    */
   protected function setup()
   {
-    if(!sfToolkit::isCallable('fsockopen'))
-    {
+    if (!sfToolkit::isCallable('fsockopen')) {
       throw new InvalidArgumentException('The driver cannot connect to sockets. Function "fsockopen" is not available. Please enable it in the php.ini or use another driver.');
     }
   }
@@ -58,28 +57,23 @@ class sfAntivirusDriverClamavSocket extends sfAntivirus {
    */
   public function scan($object)
   {
-    if(!is_file($object) && !is_dir($object))
-    {
+    if (!is_file($object) && !is_dir($object)) {
       throw new InvalidArgumentException('Cannot scan object. Object is not a directory nor a file.');
     }
 
     $command = 'SCAN';
-    if(!$response = $this->exec($command . ' ' . $object))
-    {
+    if (!$response = $this->exec($command . ' ' . $object)) {
       throw new RuntimeException('Error executing the command.');
     }
 
     $viruses = array();
     $status = self::STATUS_CLEAN;
-    foreach(explode("\n", $response) as $line)
-    {
-      if(preg_match(sfAntivirusDriverClamav::SOMETHING_FOUND_REGEXP, $line, $match))
-      {
+    foreach (explode("\n", $response) as $line) {
+      if (preg_match(sfAntivirusDriverClamav::SOMETHING_FOUND_REGEXP, $line, $match)) {
         $status = self::STATUS_INFECTED;
       }
 
-      if(preg_match(sfAntivirusDriverClamav::INFECTIONS_REGEXP, $line, $matches))
-      {
+      if (preg_match(sfAntivirusDriverClamav::INFECTIONS_REGEXP, $line, $matches)) {
         $viruses[] = $matches[1];
       }
     }
@@ -96,16 +90,14 @@ class sfAntivirusDriverClamavSocket extends sfAntivirus {
    */
   public function connect()
   {
-    if($this->isConnected())
-    {
+    if ($this->isConnected()) {
       return true;
     }
 
     $this->connection = @fsockopen($this->getOption('host'), $this->getOption('port'),
             $errNum, $errStr, $this->getOption('timeout'));
 
-    if(!empty($errNum) || !empty($errStr))
-    {
+    if (!empty($errNum) || !empty($errStr)) {
       throw new RuntimeException(sprintf('Error while opening connection to Clamav daemon. Error returned: %s (code: %s)', $errStr, $errNum));
     }
 
@@ -129,16 +121,14 @@ class sfAntivirusDriverClamavSocket extends sfAntivirus {
    */
   public function disconnect()
   {
-    if(!is_resource($this->connection))
-    {
+    if (!is_resource($this->connection)) {
       $this->connected = false;
 
       return true;
     }
 
     $this->connected = !fclose($this->connection);
-    if(!$this->connected)
-    {
+    if (!$this->connected) {
       $this->connection = null;
     }
 
@@ -152,14 +142,12 @@ class sfAntivirusDriverClamavSocket extends sfAntivirus {
    */
   public function read()
   {
-    if(!$this->connected)
-    {
+    if (!$this->connected) {
       return false;
     }
 
     $buffer = '';
-    while(!feof($this->connection))
-    {
+    while (!feof($this->connection)) {
       $buffer .= fread($this->connection, 1024);
     }
 
@@ -176,22 +164,17 @@ class sfAntivirusDriverClamavSocket extends sfAntivirus {
    */
   public function send($command)
   {
-    if(in_array($command[0], array('n', 'z')))
-    {
+    if (in_array($command[0], array('n', 'z'))) {
       $command[0] = 'n';
-    }
-    else
-    {
+    } else {
       $command = 'n' . $command;
     }
 
-    if(substr($command, -1) != "\n")
-    {
+    if (substr($command, -1) != "\n") {
       $command .= "\n";
     }
 
-    if(!$this->write($command))
-    {
+    if (!$this->write($command)) {
       $this->disconnect();
 
       return false;
@@ -209,8 +192,7 @@ class sfAntivirusDriverClamavSocket extends sfAntivirus {
    */
   public function exec($command)
   {
-    if(!$this->send($command))
-    {
+    if (!$this->send($command)) {
       return false;
     }
 
@@ -235,10 +217,8 @@ class sfAntivirusDriverClamavSocket extends sfAntivirus {
    */
   protected function write($data)
   {
-    if(!$this->isConnected())
-    {
-      if(!$this->connect())
-      {
+    if (!$this->isConnected()) {
+      if (!$this->connect()) {
         return false;
       }
     }

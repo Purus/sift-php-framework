@@ -12,8 +12,8 @@
  * @package Sift
  * @subpackage money
  */
-class sfMoneyCurrencyCZK extends sfMoneyCurrency {
-
+class sfMoneyCurrencyCZK extends sfMoneyCurrency
+{
   /**
    * Currency name
    *

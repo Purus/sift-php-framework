@@ -14,8 +14,8 @@
  * @package    Sift
  * @subpackage feed
  */
-class sfAtom1Feed extends sfFeed {
-
+class sfAtom1Feed extends sfFeed
+{
   protected $context;
 
   public function __construct($params = array())
@@ -25,8 +25,7 @@ class sfAtom1Feed extends sfFeed {
 
   protected function initContext()
   {
-    if(!$this->context)
-    {
+    if (!$this->context) {
       $this->context = sfContext::getInstance();
     }
   }
@@ -43,13 +42,11 @@ class sfAtom1Feed extends sfFeed {
   public function fromXml($feedXml)
   {
     preg_match('/^<\?xml\s*version="1\.0"\s*encoding="(.*?)".*?\?>$/mi', $feedXml, $matches);
-    if(isset($matches[1]))
-    {
+    if (isset($matches[1])) {
       $this->setEncoding($matches[1]);
     }
     $feedXml = simplexml_load_string($feedXml);
-    if(!$feedXml)
-    {
+    if (!$feedXml) {
       throw new Exception('Error creating feed from XML: string is not well-formatted XML');
     }
 
@@ -58,12 +55,10 @@ class sfAtom1Feed extends sfFeed {
     $this->setLanguage((string) $attributes['lang']);
     $this->setTitle((string) $feedXml->title);
     $feedXml->registerXPathNamespace('atom', 'http://www.w3.org/2005/Atom');
-    if($titles = $feedXml->xpath('atom:link[@rel="alternate"]'))
-    {
+    if ($titles = $feedXml->xpath('atom:link[@rel="alternate"]')) {
       $this->setLink((string) $titles[0]['href']);
     }
-    if($titles = $feedXml->xpath('atom:link[@rel="self"]'))
-    {
+    if ($titles = $feedXml->xpath('atom:link[@rel="self"]')) {
       $this->setFeedUrl((string) $titles[0]['href']);
     }
     $this->setSubtitle((string) $feedXml->subtitle);
@@ -78,60 +73,45 @@ class sfAtom1Feed extends sfFeed {
     $this->setImage($image);
 
     $categories = array();
-    foreach($feedXml->category as $category)
-    {
+    foreach ($feedXml->category as $category) {
       $categories[] = (string) $category['term'];
     }
     $this->setCategories($categories);
 
-    foreach($feedXml->entry as $itemXml)
-    {
+    foreach ($feedXml->entry as $itemXml) {
       $categories = array();
-      foreach($itemXml->category as $category)
-      {
+      foreach ($itemXml->category as $category) {
         $categories[] = (string) $category['term'];
       }
       $url = (string) $itemXml->link['href'];
       $pubdate = strtotime(str_replace(array('UT', 'Z'), '', (string) $itemXml->published));
 
-      if(!$pubdate)
-      {
-        if((string) $itemXml->updated)
-        {
+      if (!$pubdate) {
+        if ((string) $itemXml->updated) {
           $pubdate = strtotime((string) $itemXml->updated);
           // $pubdate = strtotime(str_replace(array('UT', 'Z'), '', (string) $itemXml->updated));
-        }
-        else if((string) $itemXml->modified)
-        {
+        } else if ((string) $itemXml->modified) {
           // $pubdate = strtotime(str_replace(array('UT', 'Z'), '', (string) $itemXml->modified));
           $pubdate = strtotime((string) $itemXml->modified);
-        }
-        else if(preg_match('/\d{4}\/\d{2}\/\d{2}/', $url, $matches))
-        {
+        } else if (preg_match('/\d{4}\/\d{2}\/\d{2}/', $url, $matches)) {
           $pubdate = strtotime($matches[0]);
-        }
-        else
-        {
+        } else {
           $pubdate = 0;
         }
       }
       $itemXml->registerXPathNamespace('atom', 'http://www.w3.org/2005/Atom');
-      if($enclosures = $itemXml->xpath('atom:link[@rel="enclosure"]'))
-      {
+      if ($enclosures = $itemXml->xpath('atom:link[@rel="enclosure"]')) {
         $enclosure = new sfFeedEnclosure();
         $enclosure->setUrl((string) $enclosures[0]['href']);
         $enclosure->setLength((string) $enclosures[0]['length']);
         $enclosure->setMimeType((string) $enclosures[0]['type']);
-      }
-      else
-      {
+      } else {
         $enclosure = null;
       }
 
       $content = (string) $itemXml->content;
 
-      if(!$content)
-      {
+      if (!$content) {
         $content = preg_replace('/<\/?content[^>]*>/iU', '', $itemXml->content->asXml());
       }
 
@@ -180,19 +160,15 @@ class sfAtom1Feed extends sfFeed {
     $xml = array();
     $xml[] = '<?xml version="1.0" encoding="' . $this->getEncoding() . '" ?>';
 
-    if($this->getLanguage())
-    {
+    if ($this->getLanguage()) {
       $xml[] = sprintf('<feed xmlns="%s" xml:lang="%s">', 'http://www.w3.org/2005/Atom', $this->getLanguage());
-    }
-    else
-    {
+    } else {
       $xml[] = sprintf('<feed xmlns="%s">', 'http://www.w3.org/2005/Atom');
     }
 
     $xml[] = '  <title>' . $this->getTitle() . '</title>';
     $xml[] = '  <link rel="alternate" href="' . $controller->genUrl($this->getLink(), true) . '"></link>';
-    if($this->getFeedUrl())
-    {
+    if ($this->getFeedUrl()) {
       $xml[] = '  <link rel="self" href="' . $controller->genUrl($this->getFeedUrl(), true) . '"></link>';
     }
     $xml[] = '  <id>' . $controller->genUrl($this->getLink(), true) . '</id>';
@@ -200,36 +176,29 @@ class sfAtom1Feed extends sfFeed {
     $xml[] = '  <updated>' . gmstrftime('%Y-%m-%dT%H:%M:%SZ', $this->getLatestPostDate()) . '</updated>';
     //$xml[] = '  <updated>' . gmdate(DATE_ATOM, $this->getLatestPostDate()) . '</updated>';
 
-    if($this->getAuthorName())
-    {
+    if ($this->getAuthorName()) {
       $xml[] = '  <author>';
       $xml[] = '    <name>' . $this->getAuthorName() . '</name>';
-      if($this->getAuthorEmail())
-      {
+      if ($this->getAuthorEmail()) {
         $xml[] = '    <email>' . $this->getAuthorEmail() . '</email>';
       }
-      if($this->getAuthorLink())
-      {
+      if ($this->getAuthorLink()) {
         $xml[] = '    <uri>' . $controller->genUrl($this->getAuthorLink(), true) . '</uri>';
       }
       $xml[] = '  </author>';
     }
 
-    if($this->getSubtitle())
-    {
+    if ($this->getSubtitle()) {
       $xml[] = '  <subtitle>' . $this->getSubtitle() . '</subtitle>';
     }
 
-    if($this->getImage())
-    {
+    if ($this->getImage()) {
       $xml[] = '  <icon>' . $this->getImage()->getFavicon() . '</icon>';
       $xml[] = '  <logo>' . $this->getImage()->getImage() . '</logo>';
     }
 
-    if(is_array($this->getCategories()))
-    {
-      foreach($this->getCategories() as $category)
-      {
+    if (is_array($this->getCategories())) {
+      foreach ($this->getCategories() as $category) {
         $xml[] = '  <category term="' . $category . '"></category>';
       }
     }
@@ -251,66 +220,53 @@ class sfAtom1Feed extends sfFeed {
     $controller = $this->context->getController();
     $xml = array();
 
-    foreach($this->getItems() as $item)
-    {
+    foreach ($this->getItems() as $item) {
       $xml[] = '<entry>';
       $xml[] = '  <title>' . htmlspecialchars($item->getTitle()) . '</title>';
       $xml[] = '  <link rel="alternate" href="' . $controller->genUrl($item->getLink(), true) . '"></link>';
-      if($item->getPubdate())
-      {
+      if ($item->getPubdate()) {
         $xml[] = '  <updated>' . gmstrftime('%Y-%m-%dT%H:%M:%SZ', $item->getPubdate()) . '</updated>';
       }
 
       // author information
-      if($item->getAuthorName())
-      {
+      if ($item->getAuthorName()) {
         $xml[] = '  <author>';
         $xml[] = '    <name>' . $item->getAuthorName() . '</name>';
-        if($item->getAuthorEmail())
-        {
+        if ($item->getAuthorEmail()) {
           $xml[] = '    <email>' . $item->getAuthorEmail() . '</email>';
         }
-        if($item->getAuthorLink())
-        {
+        if ($item->getAuthorLink()) {
           $xml[] = '    <uri>' . $controller->genUrl($item->getAuthorLink(), true) . '</uri>';
         }
         $xml[] = '  </author>';
       }
 
       // unique id
-      if($item->getUniqueId())
-      {
+      if ($item->getUniqueId()) {
         $uniqueId = $item->getUniqueId();
-      }
-      else
-      {
+      } else {
         $uniqueId = $this->getTagUri($item->getLink(), $item->getPubdate());
       }
       $xml[] = '  <id>' . $uniqueId . '</id>';
 
       // summary
-      if($item->getDescription())
-      {
+      if ($item->getDescription()) {
         $xml[] = sprintf('  <summary type="text">%s</summary>', htmlspecialchars($item->getDescription()));
       }
 
       // content
-      if($item->getContent())
-      {
+      if ($item->getContent()) {
         $xml[] = sprintf('  <content type="text/html"><![CDATA[%s]]></content>', $item->getContent());
       }
 
       // enclosure
-      if($enclosure = $item->getEnclosure())
-      {
+      if ($enclosure = $item->getEnclosure()) {
         $xml[] = sprintf('  <link rel="enclosure" href="%s" length="%s" type="%s"></link>', $enclosure->getUrl(), $enclosure->getLength(), $enclosure->getMimeType());
       }
 
       // categories
-      if(is_array($item->getCategories()))
-      {
-        foreach($item->getCategories() as $category)
-        {
+      if (is_array($item->getCategories())) {
+        foreach ($item->getCategories() as $category) {
           $xml[] = '  <category term="' . $category . '"></category>';
         }
       }
@@ -333,8 +289,7 @@ class sfAtom1Feed extends sfFeed {
   private function getTagUri($url, $date)
   {
     $tag = preg_replace('#^http\://#', '', $url);
-    if($date)
-    {
+    if ($date) {
       $tag = preg_replace('#/#', ',' . strftime('%Y-%m-%d', $date) . ':/', $tag, 1);
     }
     $tag = preg_replace('/#/', '/', $tag);

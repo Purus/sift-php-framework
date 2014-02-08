@@ -58,9 +58,8 @@ class sfImagePrettyThumbnailImageMagick extends sfImageTransformAbstract
    */
   public function setWidth($width)
   {
-    if (is_numeric($width))
-    {
-      $this->width = (int)$width;
+    if (is_numeric($width)) {
+      $this->width = (int) $width;
     }
   }
 
@@ -81,9 +80,8 @@ class sfImagePrettyThumbnailImageMagick extends sfImageTransformAbstract
    */
   public function setHeight($height)
   {
-    if (is_numeric($height))
-    {
-      $this->height = (int)$height;
+    if (is_numeric($height)) {
+      $this->height = (int) $height;
     }
   }
 
@@ -104,9 +102,8 @@ class sfImagePrettyThumbnailImageMagick extends sfImageTransformAbstract
    */
   public function setRadius($radius)
   {
-    if (is_numeric($radius))
-    {
-      $this->radius = (int)$radius;
+    if (is_numeric($radius)) {
+      $this->radius = (int) $radius;
     }
   }
 

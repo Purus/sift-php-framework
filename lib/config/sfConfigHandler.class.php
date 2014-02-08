@@ -14,8 +14,8 @@
  * @package    Sift
  * @subpackage config
  */
-abstract class sfConfigHandler {
-
+abstract class sfConfigHandler
+{
   protected $parameterHolder = null;
 
   /**
@@ -56,12 +56,9 @@ abstract class sfConfigHandler {
    */
   public static function replaceConstants($value)
   {
-    if(is_array($value))
-    {
+    if (is_array($value)) {
       array_walk_recursive($value, create_function('&$value', '$value = sfToolkit::replaceConstants($value);'));
-    }
-    else
-    {
+    } else {
       $value = sfToolkit::replaceConstants($value);
     }
 
@@ -81,19 +78,16 @@ abstract class sfConfigHandler {
 
     $negative = false;
     // negative
-    if(preg_match('/^!+/', $condition, $matches, PREG_OFFSET_CAPTURE))
-    {
+    if (preg_match('/^!+/', $condition, $matches, PREG_OFFSET_CAPTURE)) {
       $condition = str_replace('!', '', $condition);
       $negative = strlen($matches[0][0]);
     }
 
     $condition = filter_var($condition, FILTER_VALIDATE_BOOLEAN);
 
-    if($negative)
-    {
+    if ($negative) {
       // odd number, it means the it will be negative
-      if($negative % 2 != 0)
-      {
+      if ($negative % 2 != 0) {
         $condition = !$condition;
       }
     }
@@ -110,8 +104,7 @@ abstract class sfConfigHandler {
    */
   public static function replacePath($path)
   {
-    if(!sfToolkit::isPathAbsolute($path))
-    {
+    if (!sfToolkit::isPathAbsolute($path)) {
       // not an absolute path so we'll prepend to it
       $path = sfConfig::get('sf_app_dir') . '/' . $path;
     }

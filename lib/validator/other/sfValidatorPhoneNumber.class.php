@@ -13,8 +13,8 @@
  * @subpackage validator
  * @see http://snipplr.com/view/20539/
  */
-class sfValidatorPhoneNumber extends sfValidatorBase {
-
+class sfValidatorPhoneNumber extends sfValidatorBase
+{
   /**
    * Phone validation information
    *
@@ -96,8 +96,7 @@ class sfValidatorPhoneNumber extends sfValidatorBase {
 
     parent::__construct($options, $messages);
 
-    if(!$this->getOption('countries') && !$this->getOption('pattern'))
-    {
+    if (!$this->getOption('countries') && !$this->getOption('pattern')) {
       throw new InvalidArgumentException(sprintf('Please specify an array of countries or PCRE regular expression pattern for your registered %s validator.', get_class($this)));
     }
 
@@ -119,12 +118,9 @@ class sfValidatorPhoneNumber extends sfValidatorBase {
    */
   protected function loadValidationInfo($countries)
   {
-    if($countries == 'all')
-    {
+    if ($countries == 'all') {
       $info = sfCulture::getInstance()->getPhoneNumbers();
-    }
-    else
-    {
+    } else {
       $info = sfCulture::getInstance()->getPhoneNumbers($countries, false);
     }
 
@@ -144,20 +140,16 @@ class sfValidatorPhoneNumber extends sfValidatorBase {
     $cleaned = $this->preClean($value);
 
     // input is too long
-    if(strlen($cleaned) > $this->maxInputLength)
-    {
+    if (strlen($cleaned) > $this->maxInputLength) {
       throw new sfValidatorError($this, 'invalid', array('value' => $value));
     }
 
     // we will first validate countries
-    foreach($this->validationInfo as $country => $validation)
-    {
-      foreach($validation['patterns'] as $pattern)
-      {
+    foreach ($this->validationInfo as $country => $validation) {
+      foreach ($validation['patterns'] as $pattern) {
         $expression = $this->buildExpression($pattern, $validation);
         // prepare the expression
-        if(preg_match($expression, $cleaned))
-        {
+        if (preg_match($expression, $cleaned)) {
           $match = true;
           $cleaned = self::normalizePhoneNumber($cleaned, $country);
           break;
@@ -165,8 +157,7 @@ class sfValidatorPhoneNumber extends sfValidatorBase {
       }
     }
 
-    if(!$match)
-    {
+    if (!$match) {
       throw new sfValidatorError($this, 'invalid', array('value' => $value));
     }
 
@@ -184,8 +175,7 @@ class sfValidatorPhoneNumber extends sfValidatorBase {
     // clean spaces
     $value = preg_replace('#\s+#', '', $value);
 
-    if($this->getOption('keypad_conversion'))
-    {
+    if ($this->getOption('keypad_conversion')) {
       // fetch search and replace arrays
       $search = array_keys(self::$searchKeypadMapping);
       $replace = array_values(self::$searchKeypadMapping);
@@ -216,13 +206,11 @@ class sfValidatorPhoneNumber extends sfValidatorBase {
     $format = current(sfCulture::getInstance()->getPhoneNumbers(array($country)));
 
     // strip +420 prefix for CZ
-    if(preg_match(sprintf('/^(\+?%s)/', $format['code']), $number, $matches, PREG_OFFSET_CAPTURE))
-    {
+    if (preg_match(sprintf('/^(\+?%s)/', $format['code']), $number, $matches, PREG_OFFSET_CAPTURE)) {
       $number = substr($number, $matches[0][1] + strlen($matches[0][0]));
     }
     // strip international prefix in form 00420 for CZ
-    elseif(preg_match(sprintf('/^%s%s/', $format['iprefix'], $format['code']), $number, $matches, PREG_OFFSET_CAPTURE))
-    {
+    elseif (preg_match(sprintf('/^%s%s/', $format['iprefix'], $format['code']), $number, $matches, PREG_OFFSET_CAPTURE)) {
       $number = substr($number, $matches[0][1] + strlen($matches[0][0]));
     }
 
@@ -256,38 +244,31 @@ class sfValidatorPhoneNumber extends sfValidatorBase {
 
     $patterns = array();
 
-    foreach($this->validationInfo as $country => $validation)
-    {
-      foreach($validation['patterns'] as $pattern)
-      {
+    foreach ($this->validationInfo as $country => $validation) {
+      foreach ($validation['patterns'] as $pattern) {
         $patterns[] = sprintf('%s', $this->buildExpression($pattern, $validation));
       }
     }
 
     $replacements = array();
-    foreach(self::$searchReplaceMapping as $search => $replace)
-    {
+    foreach (self::$searchReplaceMapping as $search => $replace) {
       $replacements[] = sprintf('replace(/%s/g, "%s")', preg_quote($search, '/'), $replace);
     }
 
-    if($this->getOption('keypad_conversion'))
-    {
-      foreach(self::$searchKeypadMapping as $search => $replace)
-      {
+    if ($this->getOption('keypad_conversion')) {
+      foreach (self::$searchKeypadMapping as $search => $replace) {
         $replacements[] = sprintf('replace(/%s/g, "%s")', preg_quote($search, '/'), $replace);
       }
     }
 
     $rules[sfFormJavascriptValidation::CUSTOM_CALLBACK] = array(
         'callback' =>
-        (sprintf('function(value, element, params)
-{
+        (sprintf('function(value, element, params) {
   /**
    * Cleans up the number
    *
    */
-  var cleanNumber = function(number)
-  {
+  var cleanNumber = function(number) {
     var cleanedNumber = number.%s;
 
     return cleanedNumber;
@@ -296,18 +277,13 @@ class sfValidatorPhoneNumber extends sfValidatorBase {
   var r = [%s];
   var result = false;
   var cleaned = cleanNumber(value);
-  for(var i = 0; i < r.length; i++)
-  {
-    try
-    {
+  for (var i = 0; i < r.length; i++) {
+    try {
       result = r[i].test(cleaned);
-      if(result)
-      {
+      if (result) {
         return result;
       }
-    }
-    catch(e)
-    {
+    } catch (e) {
     }
   }
 

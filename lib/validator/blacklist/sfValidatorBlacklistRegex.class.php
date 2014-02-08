@@ -22,20 +22,16 @@ class sfValidatorBlacklistRegex extends sfValidatorBlacklist
   protected function doClean($value)
   {
     $forbiddenValues = $this->getOption('forbidden_values');
-    if ($forbiddenValues instanceof sfCallable)
-    {
+    if ($forbiddenValues instanceof sfCallable) {
       $forbiddenValues = $forbiddenValues->call();
     }
 
-    foreach($forbiddenValues as $regex)
-    {
+    foreach ($forbiddenValues as $regex) {
       $regexp = '@^'.$regex.'$@';
-      if(false === $this->getOption('case_sensitive'))
-      {
+      if (false === $this->getOption('case_sensitive')) {
         $regexp .= 'i';
       }
-      if(@preg_match($regexp, $value))
-      {
+      if (@preg_match($regexp, $value)) {
         throw new sfValidatorError($this, 'forbidden', array('value' => $value));
       }
     }

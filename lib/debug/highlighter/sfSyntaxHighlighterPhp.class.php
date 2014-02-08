@@ -12,8 +12,8 @@
  * @package Sift
  * @subpackage debug_highlighter
  */
-class sfSyntaxHighlighterPhp extends sfSyntaxHighlighterGeneric {
-
+class sfSyntaxHighlighterPhp extends sfSyntaxHighlighterGeneric
+{
   /**
    * Setups the regexes
    *

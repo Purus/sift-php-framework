@@ -13,8 +13,8 @@
  * @subpackage money
  * @link http://codereview.stackexchange.com/questions/19338/php-currency-conversion-class-with-caching
  */
-class sfMoneyCurrencyValue implements sfIMoneyCurrencyValue {
-
+class sfMoneyCurrencyValue implements sfIMoneyCurrencyValue
+{
   /**
    * Precision used in the calculations
    *
@@ -41,8 +41,7 @@ class sfMoneyCurrencyValue implements sfIMoneyCurrencyValue {
    */
   public function __construct($amount, $currency)
   {
-    if(!$currency instanceof sfMoneyCurrency)
-    {
+    if (!$currency instanceof sfMoneyCurrency) {
       $currency = sfMoneyCurrency::getInstance($currency);
     }
 
@@ -58,10 +57,9 @@ class sfMoneyCurrencyValue implements sfIMoneyCurrencyValue {
    */
   protected function assertSameCurrency(sfIMoneyCurrencyValue $other)
   {
-    if(!$this->isInSameCurrency($other))
-    {
+    if (!$this->isInSameCurrency($other)) {
       throw new InvalidArgumentException(sprintf('Can only operate with same currencies. Crrency is "%s", given "%s".',
-          (string)$this->currency, (string) $other->getCurrency()));
+          (string) $this->currency, (string) $other->getCurrency()));
     }
   }
 
@@ -174,16 +172,11 @@ class sfMoneyCurrencyValue implements sfIMoneyCurrencyValue {
   {
     $this->assertSameCurrency($other);
 
-    if($this->getAmount() < $other->getAmount())
-    {
+    if ($this->getAmount() < $other->getAmount()) {
       return -1;
-    }
-    elseif($this->getAmount() == $other->getAmount())
-    {
+    } elseif ($this->getAmount() == $other->getAmount()) {
       return 0;
-    }
-    else
-    {
+    } else {
       return 1;
     }
   }
@@ -291,7 +284,7 @@ class sfMoneyCurrencyValue implements sfIMoneyCurrencyValue {
    */
   public function __toString()
   {
-    return (string)$this->getAmount();
+    return (string) $this->getAmount();
   }
 
   /**
@@ -306,7 +299,7 @@ class sfMoneyCurrencyValue implements sfIMoneyCurrencyValue {
   public function format($format = 'c', $culture = null, $scale = null, $roundingMode = sfRounding::HALF_EVEN)
   {
     return sfI18nNumberFormatter::getInstance($culture ? $culture : sfConfig::get('sf_culture'))
-              ->format($this->getAmount($scale, $roundingMode), $format, (string)$this->getCurrency());
+              ->format($this->getAmount($scale, $roundingMode), $format, (string) $this->getCurrency());
   }
 
 }

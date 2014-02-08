@@ -41,31 +41,24 @@ abstract class sfWidgetFormChoiceBase extends sfWidgetForm
   {
     $choices = $this->getOption('choices');
 
-    if ($choices instanceof sfCallable)
-    {
+    if ($choices instanceof sfCallable) {
       $choices = $choices->call();
     }
 
-    if (!$this->getOption('translate_choices'))
-    {
+    if (!$this->getOption('translate_choices')) {
       return $choices;
     }
 
     // the choices is string!
-    if(is_string($choices))
-    {
+    if (is_string($choices)) {
       return $choices;
     }
 
     $results = array();
-    foreach ($choices as $key => $choice)
-    {
-      if (is_array($choice))
-      {
+    foreach ($choices as $key => $choice) {
+      if (is_array($choice)) {
         $results[$this->translate($key)] = $this->translateAll($choice);
-      }
-      else
-      {
+      } else {
         $results[$key] = $this->translate($choice);
       }
     }
@@ -78,11 +71,9 @@ abstract class sfWidgetFormChoiceBase extends sfWidgetForm
    */
   public function __clone()
   {
-    if ($this->getOption('choices') instanceof sfCallable)
-    {
+    if ($this->getOption('choices') instanceof sfCallable) {
       $callable = $this->getOption('choices')->getCallable();
-      if (is_array($callable) && $callable[0] instanceof self)
-      {
+      if (is_array($callable) && $callable[0] instanceof self) {
         $callable[0] = $this;
         $this->setOption('choices', new sfCallable($callable));
       }

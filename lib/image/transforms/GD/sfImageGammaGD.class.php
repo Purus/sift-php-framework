@@ -48,9 +48,8 @@ class sfImageGammaGD extends sfImageTransformAbstract
    */
   public function setInputGamma($gamma)
   {
-    if (is_float($gamma))
-    {
-      $this->input_gamma = (float)$gamma;
+    if (is_float($gamma)) {
+      $this->input_gamma = (float) $gamma;
 
       return true;
     }
@@ -75,9 +74,8 @@ class sfImageGammaGD extends sfImageTransformAbstract
    */
   public function setOutputGamma($gamma)
   {
-    if (is_numeric($gamma))
-    {
-      $this->ouput_gamma = (float)$gamma;
+    if (is_numeric($gamma)) {
+      $this->ouput_gamma = (float) $gamma;
 
       return true;
     }

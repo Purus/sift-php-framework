@@ -16,8 +16,8 @@
  * @package    Sift
  * @subpackage feed
  */
-class sfRss10Feed extends sfRssFeed {
-
+class sfRss10Feed extends sfRssFeed
+{
   /**
    * Populate the feed object from a XML feed string.
    *
@@ -30,8 +30,7 @@ class sfRss10Feed extends sfRssFeed {
   public function fromXml($feedXml)
   {
     preg_match('/^<\?xml\s*version="1\.0"\s*encoding="(.*?)".*?\?>$/mi', $feedXml, $matches);
-    if(isset($matches[1]))
-    {
+    if (isset($matches[1])) {
       $this->setEncoding($matches[1]);
     }
 
@@ -40,8 +39,7 @@ class sfRss10Feed extends sfRssFeed {
             array('<dc:', '</dc:', '<rdf:', '</rdf:', '<content:', '</content:'), array('<', '</', '<', '</', '<', '</'), $feedXml
     );
     $feedXml = simplexml_load_string($feedXml);
-    if(!$feedXml)
-    {
+    if (!$feedXml) {
       throw new Exception('Error creating feed from XML: string is not well-formatted XML');
     }
 
@@ -49,8 +47,7 @@ class sfRss10Feed extends sfRssFeed {
     $this->setLink((string) $feedXml->channel->link);
     $this->setDescription((string) $feedXml->channel->description);
 
-    foreach($feedXml->item as $itemXml)
-    {
+    foreach ($feedXml->item as $itemXml) {
       $this->addItemFromArray(array(
           'title' => (string) $itemXml->title,
           'link' => (string) $itemXml->link,
@@ -100,8 +97,7 @@ class sfRss10Feed extends sfRssFeed {
   protected function getFeedItemSequence()
   {
     $xml = array();
-    foreach($this->getItems() as $item)
-    {
+    foreach ($this->getItems() as $item) {
       $xml[] = '        <rdf:li rdf:resource="' . htmlspecialchars($this->context->getController()->genUrl($item->getLink(), true)) . '" />';
     }
 
@@ -116,25 +112,20 @@ class sfRss10Feed extends sfRssFeed {
   protected function getFeedElements()
   {
     $xml = array();
-    foreach($this->getItems() as $item)
-    {
+    foreach ($this->getItems() as $item) {
       $xml[] = '  <item rdf:about="' . htmlspecialchars($this->context->getController()->genUrl($item->getLink(), true)) . '">';
       $xml[] = '    <title>' . htmlspecialchars($item->getTitle()) . '</title>';
       $xml[] = '    <link>' . htmlspecialchars($this->context->getController()->genUrl($item->getLink(), true)) . '</link>';
-      if($item->getDescription())
-      {
+      if ($item->getDescription()) {
         $xml[] = '    <description>' . htmlspecialchars($item->getDescription()) . '</description>';
       }
-      if($item->getContent())
-      {
+      if ($item->getContent()) {
         $xml[] = '    <content:encoded><![CDATA[' . $item->getContent() . ']]></content:encoded>';
       }
-      if($item->getAuthorName())
-      {
+      if ($item->getAuthorName()) {
         $xml[] = '    <dc:creator>' . htmlspecialchars($item->getAuthorName()) . '</dc:creator>';
       }
-      if($item->getPubdate())
-      {
+      if ($item->getPubdate()) {
         $xml[] = '    <dc:date>' . gmstrftime('%Y-%m-%dT%H:%M:%SZ', $item->getPubdate()) . '</dc:date>';
       }
       $xml[] = '  </item>';

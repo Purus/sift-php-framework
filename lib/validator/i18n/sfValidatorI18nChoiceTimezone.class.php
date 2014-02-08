@@ -12,8 +12,8 @@
  * @package    Sift
  * @subpackage validator
  */
-class sfValidatorI18nChoiceTimezone extends sfValidatorChoice {
-
+class sfValidatorI18nChoiceTimezone extends sfValidatorChoice
+{
   /**
    * Configures the current validator.
    *
@@ -31,8 +31,7 @@ class sfValidatorI18nChoiceTimezone extends sfValidatorChoice {
     $allTimezones = sfCulture::getInstance()->getTimeZones();
 
     $timezones = array();
-    foreach($allTimezones as $group => $groupTimezones)
-    {
+    foreach ($allTimezones as $group => $groupTimezones) {
       $timezones = array_merge($timezones, array_keys($groupTimezones));
     }
     $this->setOption('choices', $timezones);

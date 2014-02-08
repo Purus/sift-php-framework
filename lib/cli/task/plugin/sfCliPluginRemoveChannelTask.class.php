@@ -12,8 +12,8 @@
  * @package    Sift
  * @subpackage cli_task
  */
-class sfCliPluginRemoveChannelTask extends sfCliPluginBaseTask {
-
+class sfCliPluginRemoveChannelTask extends sfCliPluginBaseTask
+{
   /**
    * @see sfCliTask
    */

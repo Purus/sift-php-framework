@@ -12,8 +12,8 @@
  * @package    Sift
  * @subpackage debug_panel
  */
-class sfWebDebugPanelMemory extends sfWebDebugPanel {
-
+class sfWebDebugPanelMemory extends sfWebDebugPanel
+{
   protected $units = array('B', 'kB', 'MB', 'GB', 'TB', 'PB', 'EB');
 
   public function getTitle()
@@ -56,8 +56,7 @@ class sfWebDebugPanelMemory extends sfWebDebugPanel {
   public function formatMemoryUsage($usage, $round = 1)
   {
     $pos = 0;
-    while($usage >= 1024)
-    {
+    while ($usage >= 1024) {
       $usage /= 1024;
       $pos++;
     }

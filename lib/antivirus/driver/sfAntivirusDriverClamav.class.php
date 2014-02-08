@@ -14,8 +14,8 @@
  * @link http://phpmaster.com/zf-clamav/
  * @link http://sourceforge.net/p/clamwin/discussion/363174/thread/a5c5aeaa
  */
-class sfAntivirusDriverClamav extends sfAntivirus {
-
+class sfAntivirusDriverClamav extends sfAntivirus
+{
   /**
    * Nothing found regexp
    */
@@ -55,8 +55,7 @@ class sfAntivirusDriverClamav extends sfAntivirus {
   protected function setup()
   {
     // check if we can execute command line scripts
-    if(!sfToolkit::isCallable('exec'))
-    {
+    if (!sfToolkit::isCallable('exec')) {
       throw new InvalidArgumentException('The driver cannot execute command line scripts. Function "exec" is not available. Please enable it in the php.ini or use another setting/driver.');
     }
   }
@@ -69,21 +68,17 @@ class sfAntivirusDriverClamav extends sfAntivirus {
    */
   public function scan($object)
   {
-    if(!is_file($object) && !is_dir($object) && !is_link($object))
-    {
+    if (!is_file($object) && !is_dir($object) && !is_link($object)) {
       throw new InvalidArgumentException('Cannot scan the object. This is not a file, symlink nor directory');
     }
 
     $output = array();
     $return = -1;
 
-    if($database = $this->getOption('database'))
-    {
+    if ($database = $this->getOption('database')) {
       $cmd = sprintf('%s --database=%s --verbose %s', $this->getOption('executable'),
           escapeshellarg($database), escapeshellarg($object));
-    }
-    else
-    {
+    } else {
       $cmd = sprintf('%s --verbose %s', $this->getOption('executable'), escapeshellarg($object));
     }
 
@@ -92,17 +87,14 @@ class sfAntivirusDriverClamav extends sfAntivirus {
     $status = self::STATUS_CLEAN;
 
     // check return code, if its not 0, we know that the status is "Infected"
-    if($return != 0)
-    {
+    if ($return != 0) {
       $status = self::STATUS_INFECTED;
     }
 
     $viruses = array();
 
-    foreach($output as $line)
-    {
-      if(preg_match(self::INFECTIONS_REGEXP, $line, $matches))
-      {
+    foreach ($output as $line) {
+      if (preg_match(self::INFECTIONS_REGEXP, $line, $matches)) {
         $viruses[] = $matches[1];
       }
     }

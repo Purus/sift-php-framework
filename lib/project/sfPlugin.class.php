@@ -12,8 +12,8 @@
  * @package    Sift
  * @subpackage project
  */
-abstract class sfPlugin extends sfConfigurable {
-
+abstract class sfPlugin extends sfConfigurable
+{
   /**
    * Project instance
    *
@@ -128,8 +128,7 @@ abstract class sfPlugin extends sfConfigurable {
    */
   public function getVersion()
   {
-    if(is_readable(($version = $this->getRootDir() . '/VERSION')))
-    {
+    if (is_readable(($version = $this->getRootDir() . '/VERSION'))) {
       return file_get_contents($version);
     }
 

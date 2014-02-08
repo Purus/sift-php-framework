@@ -13,8 +13,8 @@
  * @package Sift
  * @subpackage util
  */
-interface sfIDataUriConvertable {
-
+interface sfIDataUriConvertable
+{
   /**
    * Converts the object to data uri
    *

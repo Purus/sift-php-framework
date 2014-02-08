@@ -49,7 +49,7 @@ class sfImageResizeSimpleImageMagick extends sfImageTransformAbstract
    */
   public function setWidth($width)
   {
-    $this->width = (int)$width;
+    $this->width = (int) $width;
   }
 
   /**
@@ -69,7 +69,7 @@ class sfImageResizeSimpleImageMagick extends sfImageTransformAbstract
    */
   public function setHeight($height)
   {
-    $this->height = (int)$height;
+    $this->height = (int) $height;
   }
 
   /**
@@ -96,13 +96,9 @@ class sfImageResizeSimpleImageMagick extends sfImageTransformAbstract
     $y = $resource->getImageHeight();
 
     // If the width or height is not valid then enforce the aspect ratio
-    if (!is_numeric($this->width) || $this->width < 1)
-    {
+    if (!is_numeric($this->width) || $this->width < 1) {
       $this->width = round(($x / $y) * $this->height);
-    }
-
-    else if (!is_numeric($this->height) || $this->height < 1)
-    {
+    } else if (!is_numeric($this->height) || $this->height < 1) {
       $this->height = round(($y / $x) * $this->width);
     }
 

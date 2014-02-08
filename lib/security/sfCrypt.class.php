@@ -12,8 +12,8 @@
  * @package    Sift
  * @subpackage security
  */
-class sfCrypt {
-
+class sfCrypt
+{
   // child classes should use ::getInstance()
   private static $instance;
 
@@ -44,28 +44,24 @@ class sfCrypt {
   public function __construct($key = null, $mode = 'ecb',
           $algorithm = 'tripledes')
   {
-    if(!extension_loaded('mcrypt'))
-    {
+    if (!extension_loaded('mcrypt')) {
       throw new sfInitializationException('{sfCrypt} You must install the php mcrypt module (http://www.php.net/mcrypt)');
     }
 
     $this->mode = ($mode == null) ? sfConfig::get('sf_crypt_mode', 'ecb') : $mode;
     $this->algorithm = ($algorithm == null) ? sfConfig::get('sf_crypt_algorithm', 'tripledes') : $algorithm;
 
-    if($key == null)
-    {
+    if ($key == null) {
       $key = sfConfig::get('sf_crypt_key');
     }
 
-    if(sfToolkit::isPathAbsolute($key))
-    {
+    if (sfToolkit::isPathAbsolute($key)) {
       $key = $this->loadKeyFromFile($key);
     }
 
     $this->key = $key;
 
-    if(empty($this->key))
-    {
+    if (empty($this->key)) {
       throw new InvalidArgumentException('{sfCrypt} Encryption key is missing');
     }
 
@@ -73,15 +69,13 @@ class sfCrypt {
     $this->ivSize  = mcrypt_enc_get_iv_size($this->cryptModule);
     $this->keySize = mcrypt_enc_get_key_size($this->cryptModule);
 
-    if($this->cryptModule === false)
-    {
+    if ($this->cryptModule === false) {
       throw new sfInitializationException(sprintf('{sfCrypt} Cannot load encryption module "%s"', $this->algorithm));
     }
 
     $this->key = substr($this->key, 0, $this->keySize);
 
-    if(strlen($this->key) > 2048)
-    {
+    if (strlen($this->key) > 2048) {
       throw new UnexpectedValueException('Requested key is too large, use 2048 bytes or less.');
     }
 
@@ -94,8 +88,7 @@ class sfCrypt {
    */
   public static function getInstance()
   {
-    if(!isset(self::$instance))
-    {
+    if (!isset(self::$instance)) {
       self::$instance = new sfCrypt();
     }
 
@@ -115,15 +108,13 @@ class sfCrypt {
     //load key from file
     $key = @file_get_contents($file);
 
-    if($key === false)
-    {
+    if ($key === false) {
       throw new sfFileException(sprintf('Could not read key for cryptography from file "%s"', $file));
     }
 
     //decode key if possible
     $decodedKey = base64_decode($key);
-    if($decodedKey === false)
-    {
+    if ($decodedKey === false) {
       throw new sfFileException('Invalid key for cryptography defined. Generate new one!');
     }
 
@@ -174,8 +165,7 @@ class sfCrypt {
    */
   public function encrypt($string, $urlSafe = false)
   {
-    if(empty($string))
-    {
+    if (empty($string)) {
       throw new sfException('{sfCrypt} You can not encrypt an empty string.');
     }
 
@@ -206,16 +196,14 @@ class sfCrypt {
    */
   public function decrypt($string, $safeUrl = false)
   {
-    if(empty($string))
-    {
+    if (empty($string)) {
       throw new sfException('{sfCrypt} You can not decrypt an empty string.');
     }
 
     $string = $safeUrl ? sfSafeUrl::decode($string) : base64_decode($string);
 
     // the string length has to be at least ivSize + hashSize + 1
-    if(strlen($string) < ($this->ivSize + $this->keyHashSize + 1))
-    {
+    if (strlen($string) < ($this->ivSize + $this->keyHashSize + 1)) {
       throw new UnexpectedValueException('Ciphertext is too small.');
     }
 
@@ -226,8 +214,7 @@ class sfCrypt {
     // generate real hash ..., 32 chars long
     $hashReal  = md5($string);
     // ... and compare with given one for authentication
-    if($hashGiven !== $hashReal)
-    {
+    if ($hashGiven !== $hashReal) {
       throw new sfSecurityException('Invalid hash received.');
     }
 
@@ -256,8 +243,7 @@ class sfCrypt {
    */
   public function __destruct()
   {
-    if($this->cryptModule)
-    {
+    if ($this->cryptModule) {
       mcrypt_generic_deinit($this->cryptModule);
       mcrypt_module_close($this->cryptModule);
     }

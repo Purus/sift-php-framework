@@ -12,8 +12,8 @@
  * @package Sift
  * @subpackage calendar
  */
-class sfCalendarRendererHtml extends sfCalendarRenderer {
-
+class sfCalendarRendererHtml extends sfCalendarRenderer
+{
   /**
    * Options holder
    *
@@ -77,8 +77,7 @@ class sfCalendarRendererHtml extends sfCalendarRenderer {
     // month name
     $monthName = $monthNames[$month-1];
     $monthEventRoute = $this->getOption('month_event_route');
-    if($monthEventRoute)
-    {
+    if ($monthEventRoute) {
       $previous = sfTime::subtract($timeStamp, 1, sfTime::MONTH);
       $previousMonth = date('n', $previous);
       $previousYear = date('Y', $previous);
@@ -96,17 +95,14 @@ class sfCalendarRendererHtml extends sfCalendarRenderer {
       $html[] = sprintf('<th colspan="2" class="center"><a href="%s" class="btn btn-small"><i class="icon-chevron-right"></i> <span class="hide">%s</span></a></th></tr>',
                 $this->generateUrl(strtr($monthEventRoute, array('%month%' => $nextMonth, '%year%' => $nextYear))
                 ), $this->__('next month'));
-    }
-    else
-    {
+    } else {
       $html[] = sprintf('<tr><th colspan="7">%s %s</th></tr>', $monthName, $year);
     }
 
     $html[] = '<tr>';
 
     // day names
-    foreach($this->reformatDayNames($dayNames, $firstDayOfWeek) as $k => $dayName)
-    {
+    foreach ($this->reformatDayNames($dayNames, $firstDayOfWeek) as $k => $dayName) {
       $html[] = sprintf('    <th>%s</th>', $dayName);
     }
 
@@ -114,40 +110,33 @@ class sfCalendarRendererHtml extends sfCalendarRenderer {
     $html[] = "<tbody>\n";
 
     // we are not starting teh current month in the first column
-    if($startDay != 0)
-    {
+    if ($startDay != 0) {
       $html[] = '<tr>';
     }
 
     // previous months days
-    for($e = 0; $e <= $startDay; $e++)
-    {
+    for ($e = 0; $e <= $startDay; $e++) {
       $diff = $startDay - $e;
-      if($diff > 0)
-      {
+      if ($diff > 0) {
         $previous = sfTime::subtract($timeStamp, $diff, sfTime::DAY);
         $html[] = sprintf('<td class="muted">%s</td>', date('j', $previous));
       }
-      if($e > 0 && $e % 7 == 0)
-      {
+      if ($e > 0 && $e % 7 == 0) {
         $html[] = '</tr>';
       }
     }
 
-    for($i = 1; $i <= $daysInMonth; $i++)
-    {
+    for ($i = 1; $i <= $daysInMonth; $i++) {
       $day = $i;
       $timeStamp = mktime(0, 0, 0, $month, $day, $year);
 
       $class = array();
 
-      if($timeStamp == $today)
-      {
+      if ($timeStamp == $today) {
         $class[] = 'today';
       }
 
-      if(($startDay + $day) % 7 == 0)
-      {
+      if (($startDay + $day) % 7 == 0) {
         $class[] = 'last-day-of-week';
       }
 
@@ -155,25 +144,20 @@ class sfCalendarRendererHtml extends sfCalendarRenderer {
       $numberEvents = count($events);
       $hasEvents = $numberEvents > 0;
 
-      if($hasEvents)
-      {
+      if ($hasEvents) {
         $class[] = 'has-events';
       }
 
-      if($hasEvents)
-      {
+      if ($hasEvents) {
         $dayEventRoute = $this->getOption('day_event_route');
         $link = $dayEventRoute ?
             $this->generateUrl(strtr(
                     $dayEventRoute, array('%day%' => $day, '%month%' => $month, '%year%' => $year)
             )) : '#';
 
-        if($numberEvents > 1)
-        {
+        if ($numberEvents > 1) {
           $title = $this->__('Total %total%', array('%total%' => count($events)));
-        }
-        else
-        {
+        } else {
           $title = $events[0]->__toString();
         }
 
@@ -212,22 +196,18 @@ class sfCalendarRendererHtml extends sfCalendarRenderer {
 //
 //        $html[] = '</ul></div>';
         $html[] = '</td>';
-      }
-      else
-      {
+      } else {
         $html[] = sprintf('    <td%s>%s</td>', (count($class) ?
                 sprintf(' class="%s"', join(' ', $class)) : ''), $day);
       }
 
-      if(($startDay + $day) % 7 == 0 && $day != $daysInMonth)
-      {
+      if (($startDay + $day) % 7 == 0 && $day != $daysInMonth) {
         $html[] = '</tr><tr>';
       }
     }
 
     // next months days
-    for($e2 = 1; $e2 < (7 - (($startDay + $daysInMonth-1) % 7)); $e2++)
-    {
+    for ($e2 = 1; $e2 < (7 - (($startDay + $daysInMonth-1) % 7)); $e2++) {
       $next = sfTime::add($timeStamp, $e2, sfTime::DAY);
       $html[] = sprintf('<td class="muted">%s</td>', date('j', $next));
     }
@@ -244,8 +224,7 @@ class sfCalendarRendererHtml extends sfCalendarRenderer {
    */
   protected function reformatDayNames($dayNames, $firstDayOfWeek)
   {
-    for($i = 0; $i < $firstDayOfWeek; $i++)
-    {
+    for ($i = 0; $i < $firstDayOfWeek; $i++) {
       array_push($dayNames, array_shift($dayNames));
     }
 

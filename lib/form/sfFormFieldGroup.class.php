@@ -13,8 +13,8 @@
  * @package    Sift
  * @subpackage form
  */
-class sfFormFieldGroup implements ArrayAccess, Countable {
-
+class sfFormFieldGroup implements ArrayAccess, Countable
+{
   protected $form,
             $label,
             $fields = array();
@@ -34,7 +34,7 @@ class sfFormFieldGroup implements ArrayAccess, Countable {
     $this->form = $form;
     $this->label = $label;
     $this->fields = $fields;
-    $this->priority = (int)$priority;
+    $this->priority = (int) $priority;
   }
 
   /**
@@ -45,11 +45,9 @@ class sfFormFieldGroup implements ArrayAccess, Countable {
   public function getFields()
   {
     $return = array();
-    foreach($this->fields as $fieldName)
-    {
+    foreach ($this->fields as $fieldName) {
       // skip fields which are not present in the form
-      if(!isset($this->form[$fieldName]))
-      {
+      if (!isset($this->form[$fieldName])) {
         continue;
       }
       $return[$fieldName] = $this->form[$fieldName];
@@ -89,7 +87,7 @@ class sfFormFieldGroup implements ArrayAccess, Countable {
    */
   public function setPriority($priority)
   {
-    $this->priority = (int)$prority;
+    $this->priority = (int) $prority;
 
     return $this;
   }
@@ -172,12 +170,9 @@ class sfFormFieldGroup implements ArrayAccess, Countable {
    */
   public function __toString()
   {
-    try
-    {
+    try {
       return $this->render();
-    }
-    catch (Exception $e)
-    {
+    } catch (Exception $e) {
       sfForm::setToStringException($e);
 
       // we return a simple Exception message in case the form framework is used out of Sift framework.
@@ -196,13 +191,11 @@ class sfFormFieldGroup implements ArrayAccess, Countable {
 
     $rows = array();
 
-    foreach($this->getFields() as $field)
-    {
+    foreach ($this->getFields() as $field) {
       $rows[] = $field->renderRow();
     }
 
-    if($formatter)
-    {
+    if ($formatter) {
       return strtr($formatter->getFieldGroupFormat(), array(
           '%group_name%' => $this->__($this->getLabel()),
           '%field_rows%' => join("\n", $rows)

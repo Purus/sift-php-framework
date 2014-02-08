@@ -13,8 +13,8 @@
  * @package    Sift
  * @subpackage service
  */
-interface sfIServiceContainerAware {
-
+interface sfIServiceContainerAware
+{
   /**
    * Sets the service container
    *

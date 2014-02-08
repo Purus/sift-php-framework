@@ -70,17 +70,12 @@ EOF;
    */
   protected function execute($arguments = array(), $options = array())
   {
-    try
-    {
+    try {
       $this->checkProjectExists();
       throw new sfCliCommandArgumentsException('Sift project already exits in current directory');
-    }
-    catch(sfCliCommandException $e)
-    {
+    } catch (sfCliCommandException $e) {
       throw $e;
-    }
-    catch(sfException $e)
-    {
+    } catch (sfException $e) {
     }
 
     $this->arguments = $arguments;
@@ -91,8 +86,7 @@ EOF;
     // create basic project structure
     $this->installDir($this->environment->get('sf_sift_data_dir').'/skeleton/project', null, false);
 
-    if(isset($options['nogitstuff']))
-    {
+    if (isset($options['nogitstuff'])) {
       $files = sfFinder::type('file')->name('.gitignore')->level(0)->in($this->environment->get('sf_root_dir'));
       $this->getFilesystem()->remove($files);
     }
@@ -112,8 +106,7 @@ EOF;
     // project is generated, we have to bind to project
     $this->commandApplication->bindToProject();
 
-    try
-    {
+    try {
       // generate new crypt key for the project
       $generateCryptKey = new sfCliGenerateCryptKeyTask($this->environment,
                                                         $this->dispatcher,
@@ -121,13 +114,9 @@ EOF;
                                                         $this->logger);
       $generateCryptKey->setCommandApplication($this->commandApplication);
       $generateCryptKey->run();
-    }
-    catch(RuntimeException $e) // openssl not installed
-    {
+    } catch (RuntimeException $e) { // openssl not installed
       $this->logSection($this->getFullName(), 'Generating of crypt file failed. Please install openssl!');
-    }
-    catch(sfException $e) // error generating crypt key
-    {
+    } catch (sfException $e) { // error generating crypt key
       $this->logSection($this->getFullName(), 'Generating of crypt file failed. Regenerate it again.');
     }
 

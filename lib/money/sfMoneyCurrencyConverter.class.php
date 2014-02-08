@@ -12,8 +12,8 @@
  * @package Sift
  * @subpackage money
  */
-class sfMoneyCurrencyConverter implements sfIMoneyCurrencyValue {
-
+class sfMoneyCurrencyConverter implements sfIMoneyCurrencyValue
+{
   /**
    * @var sfIMoneyCurrency
    */
@@ -43,30 +43,26 @@ class sfMoneyCurrencyConverter implements sfIMoneyCurrencyValue {
    */
   public function __construct($conversionRate, $sourceCurrency, $targetCurrency)
   {
-    $conversionRate = (string)$conversionRate;
+    $conversionRate = (string) $conversionRate;
 
     // we have an expression like: 1/57.25
-    if(strpos($conversionRate, '/') !== false)
-    {
+    if (strpos($conversionRate, '/') !== false) {
       $parts = explode('/', $conversionRate);
 
-      if(count($parts) !== 2)
-      {
+      if (count($parts) !== 2) {
         throw new InvalidArgumentException(sprintf('Invalid conversion rate "%s" given.', $conversionRate));
       }
 
       list($a, $b) = $parts;
 
-      if($b == 0)
-      {
+      if ($b == 0) {
         throw new InvalidArgumentException(sprintf('Invalid conversion rate "%s". The conversion rate divides by zero.', $conversionRate));
       }
 
       $conversionRate = sfMath::divide($a, $b, 100);
     }
 
-    if(empty($conversionRate))
-    {
+    if (empty($conversionRate)) {
       throw new InvalidArgumentException(sprintf('Invalid conversion rate "%s" given.', $conversionRate));
     }
 
@@ -90,8 +86,7 @@ class sfMoneyCurrencyConverter implements sfIMoneyCurrencyValue {
 
     $matches = array();
 
-    if(!preg_match($pattern, $iso, $matches))
-    {
+    if (!preg_match($pattern, $iso, $matches)) {
       throw new InvalidArgumentException(sprintf('Error parsing the ISO string "%s".', $iso));
     }
 
@@ -125,13 +120,12 @@ class sfMoneyCurrencyConverter implements sfIMoneyCurrencyValue {
    */
   public function setMoney(sfIMoneyCurrencyValue $money)
   {
-    if(!$this->isInSameCurrency($money))
-    {
+    if (!$this->isInSameCurrency($money)) {
       throw new InvalidArgumentException(
         sprintf('The money value "%s" is in an incorrect currency "%s" for this converter. Expected currency: "%s".',
                 $money->getAmount(),
-                (string)$this->getSourceCurrency(),
-                (string)$money->getCurrency())
+                (string) $this->getSourceCurrency(),
+                (string) $money->getCurrency())
       );
     }
 
@@ -151,8 +145,7 @@ class sfMoneyCurrencyConverter implements sfIMoneyCurrencyValue {
   {
     $result = sfMath::multiply($this->money->getAmount(), $this->conversionRate, sfMoneyCurrencyValue::$calculationPrecision);
 
-    if(!is_null($scale))
-    {
+    if (!is_null($scale)) {
       return sfRounding::round($result, $scale, $roundingMode);
     }
 

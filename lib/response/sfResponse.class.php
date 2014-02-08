@@ -13,8 +13,8 @@
  * @package    Sift
  * @subpackage response
  */
-abstract class sfResponse extends sfConfigurable implements sfIResponse {
-
+abstract class sfResponse extends sfConfigurable implements sfIResponse
+{
   /**
    * Parameter holder
    *
@@ -88,12 +88,10 @@ abstract class sfResponse extends sfConfigurable implements sfIResponse {
       'response' => $this
     )), $content)->getReturnValue();
 
-    if(sfConfig::get('sf_logging_enabled'))
-    {
+    if (sfConfig::get('sf_logging_enabled')) {
       $length = function_exists('mb_strlen') ? mb_strlen($this->content) : strlen($this->content);
 
-      if($length > 255)
-      {
+      if ($length > 255) {
         $length = round($length / 1000).' kB';
       }
 
@@ -189,8 +187,7 @@ abstract class sfResponse extends sfConfigurable implements sfIResponse {
                        'component' => $this)
                ));
 
-    if(!$event->isProcessed())
-    {
+    if (!$event->isProcessed()) {
       throw new sfException(sprintf('Call to undefined method %s::%s', get_class($this), $method));
     }
 

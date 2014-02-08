@@ -180,8 +180,7 @@ class sfDateFormatRegexGenerator
    */
   public static function getInstance()
   {
-    if(empty(self::$instance))
-    {
+    if (empty(self::$instance)) {
       self::$instance = new sfDateFormatRegexGenerator();
     }
 
@@ -279,8 +278,7 @@ class sfDateFormatRegexGenerator
     $patternStart = ($matchEntireString) ? '/^' : '/';
     $patternEnd   = ($matchEntireString) ? '$/' : '/';
 
-    if ($escapeSpecialChars)
-    {
+    if ($escapeSpecialChars) {
       // Escape all PCRE special characters
       $format = preg_quote($format, '/');
     }
@@ -327,8 +325,7 @@ class sfDateFormatRegexGenerator
         '\\\\\\' => '\\',
       );
 
-    foreach ($this->formatCharToRegexMap as $formatChar => $regexPiece)
-    {
+    foreach ($this->formatCharToRegexMap as $formatChar => $regexPiece) {
       $localMap[$formatChar] = $this->getDelimitedRegexPiece($regexPiece);
 
       // Add the literal, "escaped" versions of formats to the map.

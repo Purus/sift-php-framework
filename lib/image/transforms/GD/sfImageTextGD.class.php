@@ -16,8 +16,8 @@
  * @package Sift
  * @subpackage image
  */
-class sfImageTextGD extends sfImageTransformAbstract {
-
+class sfImageTextGD extends sfImageTransformAbstract
+{
   /**
    * Font face.
    */
@@ -297,14 +297,11 @@ class sfImageTextGD extends sfImageTransformAbstract {
     imagealphablending($resource, true);
 
     //
-    if($strokeBorder = $this->getStrokeBorder())
-    {
+    if ($strokeBorder = $this->getStrokeBorder()) {
       $rgb = sscanf($this->getStrokeColor(), '#%2x%2x%2x');
       $strokeColor = imagecolorallocate($resource, $rgb[0], $rgb[1], $rgb[2]);
-      for($c1 = ($this->x - abs($strokeBorder)); $c1 <= ($this->x + abs($strokeBorder)); $c1++)
-      {
-        for($c2 = ($this->y + $textheight - abs($strokeBorder)); $c2 <= ($this->y + $textheight + abs($strokeBorder)); $c2++)
-        {
+      for ($c1 = ($this->x - abs($strokeBorder)); $c1 <= ($this->x + abs($strokeBorder)); $c1++) {
+        for ($c2 = ($this->y + $textheight - abs($strokeBorder)); $c2 <= ($this->y + $textheight + abs($strokeBorder)); $c2++) {
           imagettftext($resource, $this->size, $this->angle, $c1, $c2, $strokeColor, $this->font, $this->text);
         }
       }

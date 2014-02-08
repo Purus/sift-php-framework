@@ -55,8 +55,7 @@ class sfActionStack
   {
     $retval = null;
 
-    if ($index > -1 && $index < $this->count)
-    {
+    if ($index > -1 && $index < $this->count) {
       $retval = $this->stack[$index];
     }
 
@@ -87,8 +86,7 @@ class sfActionStack
   {
     $retval = null;
 
-    if (isset($this->stack[0]))
-    {
+    if (isset($this->stack[0])) {
       $retval = $this->stack[0];
     }
 
@@ -104,8 +102,7 @@ class sfActionStack
   {
     $retval = null;
 
-    if (isset($this->stack[0]))
-    {
+    if (isset($this->stack[0])) {
       $retval = $this->stack[$this->count - 1];
     }
 

@@ -72,24 +72,17 @@ EOF;
 
     $controller = $this->environment->get('sf_web_dir') . '/' . $controller . '.php';
 
-    if(is_readable($controller))
-    {
-      if(!$options['force'])
-      {
+    if (is_readable($controller)) {
+      if (!$options['force']) {
         throw new sfException(sprintf('Controller "%s" already exists', basename($controller)));
-      }
-      else
-      {
+      } else {
         $this->getFilesystem()->remove($controller);
       }
     }
 
-    if (is_readable($this->environment->get('sf_data_dir').'/skeleton/controller/controller.php'))
-    {
+    if (is_readable($this->environment->get('sf_data_dir').'/skeleton/controller/controller.php')) {
       $skeleton= $this->environment->get('sf_data_dir').'/skeleton/controller/controller.php';
-    }
-    else
-    {
+    } else {
       $skeleton = $this->environment->get('sf_sift_data_dir').'/skeleton/controller/controller.php';
     }
 
@@ -108,8 +101,7 @@ EOF;
   public static function getIpCheckCode($debug)
   {
     $code = '';
-    if($debug)
-    {
+    if ($debug) {
       $code = PHP_EOL .
         '// this check prevents access to debug front controllers that are deployed by accident to production servers.'.PHP_EOL.
         '// feel free to remove this, extend it or make something more sophisticated.'.PHP_EOL.

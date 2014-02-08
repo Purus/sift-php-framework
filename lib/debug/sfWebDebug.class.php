@@ -170,23 +170,19 @@ class sfWebDebug extends sfConfigurable
    */
   public function configure()
   {
-    foreach(array_keys($this->getOption('panels')) as $panel)
-    {
+    foreach (array_keys($this->getOption('panels')) as $panel) {
       $options = $this->getOptionsForPanel($panel);
 
       // panel is not enabled
-      if(isset($options['enabled']) && !$options['enabled'])
-      {
+      if (isset($options['enabled']) && !$options['enabled']) {
         continue;
       }
       // condition
-      elseif(isset($options['condition']) && !sfConfig::get($options['condition']))
-      {
+      elseif (isset($options['condition']) && !sfConfig::get($options['condition'])) {
         continue;
       }
 
-      if(!isset($options['class']))
-      {
+      if (!isset($options['class'])) {
         throw new sfConfigurationException(sprintf('The debug panel "%s" configuration is missing the class option.', $panel));
       }
 
@@ -236,28 +232,21 @@ class sfWebDebug extends sfConfigurable
   public function getHtml()
   {
     $status = 999;
-    foreach($this->panels as $panel)
-    {
+    foreach ($this->panels as $panel) {
       $panel->beforeRender();
       $status = min($status, $panel->getStatus());
     }
 
     // global panel status
-    if($status >= 6)
-    {
+    if ($status >= 6) {
       $status = 'success';
-    }
-    elseif($status >= 4)
-    {
+    } elseif ($status >= 4) {
       $status = 'warning';
-    }
-    else
-    {
+    } else {
       $status = 'error';
     }
 
-    if(sfConfig::get('sf_logging_enabled'))
-    {
+    if (sfConfig::get('sf_logging_enabled')) {
       sfLogger::getInstance()->debug('{sfWebDebug} Rendering web debug');
     }
 
@@ -279,7 +268,7 @@ class sfWebDebug extends sfConfigurable
    */
   protected function getOptionsForPanel($panel)
   {
-    return array_merge((array)$this->getOption(sprintf('panels.%s', $panel), array()), array(
+    return array_merge((array) $this->getOption(sprintf('panels.%s', $panel), array()), array(
       'template_dir' => sfConfig::get('sf_sift_data_dir') . '/web_debug'
     ));
   }
@@ -314,10 +303,8 @@ class sfWebDebug extends sfConfigurable
   {
     $js = array();
     $js[] = file_get_contents(sfConfig::get('sf_sift_data_dir'). '/web_debug/web_debug.min.js');
-    foreach($this->panels as $panel)
-    {
-      if($panelJs = $panel->getPanelJavascript())
-      {
+    foreach ($this->panels as $panel) {
+      if ($panelJs = $panel->getPanelJavascript()) {
         $js[] = $panelJs;
       }
     }
@@ -342,14 +329,12 @@ class sfWebDebug extends sfConfigurable
    */
   public function decorateCachedContent(sfEvent $event, $content)
   {
-    if(!$content || false === strpos($event['response']->getContentType(), 'html'))
-    {
+    if (!$content || false === strpos($event['response']->getContentType(), 'html')) {
       return $content;
     }
 
     // we are caching whole layout, do nothing here
-    if(isset($event['with_layout']))
-    {
+    if (isset($event['with_layout'])) {
       return $content;
     }
 

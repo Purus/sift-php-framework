@@ -63,15 +63,11 @@ class sfWidgetFormDate extends sfWidgetFormInputText
   {
     $pattern = $this->getOption('input_pattern');
 
-    if($value)
-    {
+    if ($value) {
       // we will try to format it
-      try
-      {
+      try {
         $value = $this->dateFormatter->format($value, $pattern);
-      }
-      catch(sfException $e)
-      {
+      } catch (sfException $e) {
       }
     }
 

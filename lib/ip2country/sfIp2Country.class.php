@@ -12,8 +12,8 @@
  * @package    Sift
  * @subpackage ip2country
  */
-abstract class sfIp2Country extends sfConfigurable implements sfIIp2Country {
-
+abstract class sfIp2Country extends sfConfigurable implements sfIIp2Country
+{
   /**
    * Creates an instance of driver with given options
    *
@@ -27,19 +27,14 @@ abstract class sfIp2Country extends sfConfigurable implements sfIIp2Country {
   {
     $driverObj = false;
 
-    if(class_exists($class = sprintf('sfIp2CountryDriver%s', ucfirst($driver))))
-    {
+    if (class_exists($class = sprintf('sfIp2CountryDriver%s', ucfirst($driver)))) {
       $driverObj = new $class($options);
-    }
-    else if(class_exists($class = $driver))
-    {
+    } else if (class_exists($class = $driver)) {
       $driverObj = new $class($options);
     }
 
-    if($driverObj)
-    {
-      if(!$driverObj instanceof sfIIp2Country)
-      {
+    if ($driverObj) {
+      if (!$driverObj instanceof sfIIp2Country) {
         throw new LogicException(sprintf('Driver "%s" does not implement sfIIp2Country interface.', $driver));
       }
 
@@ -57,7 +52,7 @@ abstract class sfIp2Country extends sfConfigurable implements sfIIp2Country {
    */
   protected function ip2int($ip)
   {
-    return (integer)sprintf('%u', ip2long($ip));
+    return (integer) sprintf('%u', ip2long($ip));
   }
 
 }

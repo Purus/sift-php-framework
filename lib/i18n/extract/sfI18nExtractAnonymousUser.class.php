@@ -14,8 +14,8 @@
  * @package Sift
  * @subpackage i18n_extract
  */
-class sfI18nExtractAnonymousUser extends sfI18nExtractUser {
-
+class sfI18nExtractAnonymousUser extends sfI18nExtractUser
+{
   public function hasCredential($credential)
   {
     return false;

@@ -12,8 +12,8 @@
  * @package    Sift
  * @subpackage cli_task
  */
-class sfCliConfigureDatabaseTask extends sfCliBaseTask {
-
+class sfCliConfigureDatabaseTask extends sfCliBaseTask
+{
   /**
    * @see sfCliTask
    */
@@ -66,22 +66,18 @@ EOF;
   protected function execute($arguments = array(), $options = array())
   {
     // update databases.yml
-    if(null !== $options['app'])
-    {
+    if (null !== $options['app']) {
       $this->checkAppExists($options['app']);
 
       $file = $this->environment->get('sf_apps_dir') . '/' . $options['app'] . '/config/databases.yml';
-    }
-    else
-    {
+    } else {
       $file = $this->environment->get('sf_config_dir') . '/databases.yml';
     }
 
     $this->logSection($this->getFullName(), 'Configuring database...');
 
     $tpl = '';
-    if(!file_exists($file))
-    {
+    if (!file_exists($file)) {
       $tpl = file_get_contents($this->environment->get('sf_sift_data_dir').'/skeleton/project/config/databases.yml');
     }
 

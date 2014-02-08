@@ -12,8 +12,8 @@
  * @package Sift
  * @subpackage calendar
  */
-abstract class sfCalendarRenderer implements sfICalendarRenderer {
-
+abstract class sfCalendarRenderer implements sfICalendarRenderer
+{
   /**
    * Options holder
    *
@@ -38,8 +38,7 @@ abstract class sfCalendarRenderer implements sfICalendarRenderer {
     $this->setOptions($options);
 
     // setup translation catalogue
-    if($this->translationCatalogue)
-    {
+    if ($this->translationCatalogue) {
       $this->setTranslationCatalogue($this->translationCatalogue);
     }
   }
@@ -52,8 +51,7 @@ abstract class sfCalendarRenderer implements sfICalendarRenderer {
    */
   public function setOptions($options)
   {
-    if(!is_array($options))
-    {
+    if (!is_array($options)) {
       throw new InvalidArgumentException(
               sprintf('Invalid argument passed. "%s" given. Options should be an array.', gettype($options))
               );
@@ -146,15 +144,12 @@ abstract class sfCalendarRenderer implements sfICalendarRenderer {
    */
   public function setTranslationCatalogue($catalogue)
   {
-    if($catalogue)
-    {
+    if ($catalogue) {
       $catalogue = sfToolkit::replaceConstants($catalogue);
-      if(!sfToolkit::isPathAbsolute($catalogue))
-      {
+      if (!sfToolkit::isPathAbsolute($catalogue)) {
         // we have to do some detection
         $parts = explode('/', $catalogue);
-        if(count($parts) != 2)
-        {
+        if (count($parts) != 2) {
           throw new InvalidArgumentException(sprintf(
             'Invalid translation catalogue "%s" given to the calendar renderer "%s"',
                   $catalogue, get_class($this)));

@@ -12,8 +12,8 @@
  * @package    Sift
  * @subpackage i18n
  */
-class sfI18n extends sfConfigurable {
-
+class sfI18n extends sfConfigurable
+{
   /**
    * Regular expression to match module and catalogue from domain
    *
@@ -116,36 +116,29 @@ class sfI18n extends sfConfigurable {
    */
   public function setup()
   {
-    if($this->getOption('cache') && !$this->getOption('cache_dir'))
-    {
+    if ($this->getOption('cache') && !$this->getOption('cache_dir')) {
       throw new InvalidArgumentException('Cache directory option "cache_dir" is missing');
     }
 
-    foreach($this->getOption('sources', array()) as $name => $source)
-    {
-      if(!$source instanceof sfII18nMessageSource)
-      {
+    foreach ($this->getOption('sources', array()) as $name => $source) {
+      if (!$source instanceof sfII18nMessageSource) {
         // skip disabled sources
-        if(isset($source['enabled']) && !$source['enabled'])
-        {
+        if (isset($source['enabled']) && !$source['enabled']) {
           continue;
         }
 
-        if(!isset($source['source']))
-        {
+        if (!isset($source['source'])) {
           throw new InvalidArgumentException(sprintf('Given source "%s" is missing "source" key', $name));
         }
 
         $arguments = array();
-        if(isset($source['arguments']))
-        {
+        if (isset($source['arguments'])) {
           $arguments = $source['arguments'];
         }
 
         $type = isset($source['type']) ? $source['type'] : $this->getOption('source_type');
 
-        if(isset($source['class']))
-        {
+        if (isset($source['class'])) {
           $type = $source['class'];
         }
 
@@ -184,70 +177,58 @@ class sfI18n extends sfConfigurable {
   {
     $culture = $culture ? $culture : $this->getCulture();
 
-    if($this->getOption('debug'))
-    {
+    if ($this->getOption('debug')) {
       $timer = sfTimerManager::getTimer('Translation');
     }
 
     list($source, $catalogue) = $this->prepareSources($catalogue, $string);
 
     $translated = false;
-    if($source)
-    {
+    if ($source) {
       $source['source']->setCulture($culture);
       $translated = $source['formatter']->formatExists($string, $args, $catalogue);
     }
 
     // we are in learning mode, catch what we translated
-    if($this->getOption('translator_mode'))
-    {
+    if ($this->getOption('translator_mode')) {
       $this->requestedTranslations[$catalogue][$string] = array(
         'source'        => $source['source'] ? $source['source']->getOriginalSource() : false,
         'target'        => $translated ? $translated : '',
         'params'        => is_array($args) ? implode(', ', array_keys($args)) : '',
-        'is_translated' => (boolean)$translated
+        'is_translated' => (boolean) $translated
       );
     }
 
-    if(!$translated)
-    {
+    if (!$translated) {
       // loop all sources and find the translation
-      foreach($this->sources as $_source)
-      {
+      foreach ($this->sources as $_source) {
         // don'ty try the same source again
-        if($_source == $source)
-        {
+        if ($_source == $source) {
           continue;
         }
 
         // we force to given culture
         $_source['source']->setCulture($culture);
 
-        try
-        {
+        try {
           $translated = $_source['formatter']->formatExists($string, $args, $catalogue);
-        }
-        catch(sfException $e)
-        {
-          if($this->getOption('debug'))
-          {
+        } catch (sfException $e) {
+          if ($this->getOption('debug')) {
             throw $e;
           }
         }
 
-        if($translated)
-        {
+        if ($translated) {
           break;
         }
       }
     }
 
-    if(isset($timer))
-    {
+    if (isset($timer)) {
       $timer->addTime();
     }
 
-    return $translated ? $translated : strtr($string, (array)$args);
+    return $translated ? $translated : strtr($string, (array) $args);
   }
 
   /**
@@ -262,8 +243,7 @@ class sfI18n extends sfConfigurable {
 
     $directory = false;
     // we have an absolute path for the catalogue
-    if(sfToolkit::isPathAbsolute($catalogue))
-    {
+    if (sfToolkit::isPathAbsolute($catalogue)) {
       $directory = dirname($catalogue);
       $catalogue = basename($catalogue);
       $hash      = sprintf('%s_%s', $directory, $catalogue);
@@ -278,42 +258,32 @@ class sfI18n extends sfConfigurable {
       $hash       = sprintf('%s_%s', join('', $directory), $catalogue);
     }
     // we have any module
-    elseif($moduleName = $this->context->getModuleName())
-    {
+    elseif ($moduleName = $this->context->getModuleName()) {
       $directory = sfLoader::getI18NDirs($moduleName);
       // current module is taken
       $hash = sprintf('%s_%s', join('', $directory), $catalogue);
     }
 
     // nothing found, unknown directory
-    if(!$directory)
-    {
+    if (!$directory) {
       return array(false, false);
     }
 
-    if(!isset($this->sources[$hash]))
-    {
+    if (!isset($this->sources[$hash])) {
       // we have directories
-      if(is_array($directory))
-      {
+      if (is_array($directory)) {
         // we will create the aggregate source only if there are more sources
-        if(count($directory) > 1)
-        {
+        if (count($directory) > 1) {
           $sources = array();
-          foreach($directory as $dir)
-          {
+          foreach ($directory as $dir) {
             $sources[] = $this->createMessageSource($this->getOption('source_type'), $dir);
           }
           // we have to create aggregate source
           $source = new sfI18nMessageSourceAggregate($sources);
-        }
-        else
-        {
+        } else {
           $source = $this->createMessageSource($this->getOption('source_type'), $directory[0]);
         }
-      }
-      else
-      {
+      } else {
         $source = $this->createMessageSource($this->getOption('source_type'), $directory);
       }
 
@@ -347,8 +317,7 @@ class sfI18n extends sfConfigurable {
   public static function i18n2Utf8($string, $from)
   {
     $from = strtoupper($from);
-    if($from != 'UTF-8')
-    {
+    if ($from != 'UTF-8') {
       $s = iconv($from, 'UTF-8', $string);  // to UTF-8
 
       return $s !== false ? $s : $string; // it could return false
@@ -369,8 +338,7 @@ class sfI18n extends sfConfigurable {
   public static function i18n2Encoding($string, $to)
   {
     $to = strtoupper($to);
-    if($to != 'UTF-8')
-    {
+    if ($to != 'UTF-8') {
       $s = iconv('UTF-8', $to, $string);
 
       return $s !== false ? $s : $string;
@@ -396,8 +364,7 @@ class sfI18n extends sfConfigurable {
     setlocale(LC_TIME, $culture . '.utf8', $culture . '.UTF8', $culture . '.utf-8', $culture . '.UTF-8');
 
     // loop all catalogues and switch culture
-    foreach($this->sources as $id => &$source)
-    {
+    foreach ($this->sources as $id => &$source) {
       $source['source']->setCulture($culture);
       $source['formatter']->reset();
     }
@@ -470,8 +437,7 @@ class sfI18n extends sfConfigurable {
   {
     $cache = false;
 
-    if($this->getOption('cache'))
-    {
+    if ($this->getOption('cache')) {
       // cache directory
       // FIXME: is this unique enough?
       // http://programmers.stackexchange.com/questions/49550/which-hashing-algorithm-is-best-for-uniqueness-and-speed
@@ -484,8 +450,7 @@ class sfI18n extends sfConfigurable {
 
     $source = sfI18nMessageSource::factory($type, $source, $arguments);
 
-    if($cache)
-    {
+    if ($cache) {
       $source->setCache($cache);
     }
 
@@ -501,8 +466,7 @@ class sfI18n extends sfConfigurable {
   public function createMessageFormatter(sfII18NMessageSource $source)
   {
     $messageFormat = new sfI18nMessageFormatter($source, $this->getOption('charset'));
-    if($this->getOption('debug'))
-    {
+    if ($this->getOption('debug')) {
       $messageFormat->setUntranslatedPS(array(
         $this->getOption('untranslated_prefix'),
         $this->getOption('untranslated_suffix'))
@@ -561,10 +525,8 @@ class sfI18n extends sfConfigurable {
    */
   public function hasMessageSource(sfII18nMessageSource $source)
   {
-    foreach($this->sources as $_source)
-    {
-      if($_source['source'] == $source)
-      {
+    foreach ($this->sources as $_source) {
+      if ($_source['source'] == $source) {
         return true;
       }
     }
@@ -632,8 +594,7 @@ class sfI18n extends sfConfigurable {
    */
   public static function getDate($date, $culture = null)
   {
-    if(!$date)
-    {
+    if (!$date) {
       return 0;
     }
 
@@ -654,20 +615,16 @@ class sfI18n extends sfConfigurable {
     ksort($tmp);
     $i = 0;
     $c = array();
-    foreach($tmp as $value)
-    {
+    foreach ($tmp as $value) {
       $c[++$i] = $value;
     }
 
     $datePositions = array_flip($c);
     // We find all elements
-    if(preg_match("~$dateRegexp~", $date, $matches))
-    {
+    if (preg_match("~$dateRegexp~", $date, $matches)) {
       // We get matching timestamp
       return array($matches[$datePositions['d']], $matches[$datePositions['m']], $matches[$datePositions['y']]);
-    }
-    else
-    {
+    } else {
       return null;
     }
   }
@@ -682,8 +639,7 @@ class sfI18n extends sfConfigurable {
    */
   public static function getTime($time, $culture = null)
   {
-    if(!$time)
-    {
+    if (!$time) {
       return;
     }
 
@@ -704,21 +660,17 @@ class sfI18n extends sfConfigurable {
     $i = 0;
     $c = array();
 
-    foreach($tmp as $value)
-    {
+    foreach ($tmp as $value) {
       $c[++$i] = $value;
     }
 
     $timePositions = array_flip($c);
 
     // We find all elements
-    if(preg_match("~$timeRegexp~", $time, $matches))
-    {
+    if (preg_match("~$timeRegexp~", $time, $matches)) {
       // We get matching timestamp
       return array($matches[$timePositions['h']], $matches[$timePositions['m']]);
-    }
-    else
-    {
+    } else {
       return null;
     }
   }

@@ -12,8 +12,8 @@
  * @package Sift
  * @subpackage form_javascript
  */
-class sfFormJavascriptValidation {
-
+class sfFormJavascriptValidation
+{
   /**
    * Required
    */
@@ -286,8 +286,7 @@ class sfFormJavascriptValidation {
     $options = sfInputFilters::toArray($options);
     $dispatcher = $form->getEventDispatcher();
 
-    if(!isset($options['id']))
-    {
+    if (!isset($options['id'])) {
       $options['id'] = $form->getKey();
     }
 
@@ -295,56 +294,44 @@ class sfFormJavascriptValidation {
     $optionKeys = array_keys($options);
 
     // check option names
-    if($diff = array_diff($optionKeys, array_merge($currentOptionKeys, self::$validOptions)))
-    {
+    if ($diff = array_diff($optionKeys, array_merge($currentOptionKeys, self::$validOptions))) {
       throw new InvalidArgumentException(sprintf('sfFormJavascriptValidation does not support the following options: \'%s\'.', implode('\', \'', $diff)));
     }
 
     $options = array_merge(self::$defaultOptions, $options);
 
-    if(!isset($options['error_placement']))
-    {
-      try
-      {
+    if (!isset($options['error_placement'])) {
+      try {
         $placement = $form->getJavascriptErrorPlacement();
-        if($placement)
-        {
+        if ($placement) {
           $options['error_placement'] = $placement;
         }
-      }
-      catch(sfException $e)
-      {
+      } catch (sfException $e) {
       }
     }
 
-    if(!isset($options['error_placement']))
-    {
+    if (!isset($options['error_placement'])) {
       $options['error_placement'] = self::getErrorPlacementExpression();
 
-      if($dispatcher)
-      {
+      if ($dispatcher) {
         $options['error_placement'] = $dispatcher->filter(
             new sfEvent('form.javascript.validation.expression.error_placement'),
             $options['error_placement'])->getReturnValue();
       }
     }
 
-    if(!isset($options['unhighlight']))
-    {
+    if (!isset($options['unhighlight'])) {
       $options['unhighlight'] = self::getUnhighlightExpression();
-      if($dispatcher)
-      {
+      if ($dispatcher) {
         $options['unhighlight'] = $dispatcher->filter(
             new sfEvent('form.javascript.validation.expression.unhighlight'),
             $options['unhighlight'])->getReturnValue();
       }
     }
 
-    if(!isset($options['submit_handler']) && ($submitHandler = self::getSubmitHandlerExpression()))
-    {
+    if (!isset($options['submit_handler']) && ($submitHandler = self::getSubmitHandlerExpression())) {
       $options['submit_handler'] = $submitHandler;
-      if($dispatcher)
-      {
+      if ($dispatcher) {
         $options['submit_handler'] = $dispatcher->filter(
             new sfEvent('form.javascript.validation.expression.submit_handler'),
             $options['submit_handler'])->getReturnValue();
@@ -356,8 +343,7 @@ class sfFormJavascriptValidation {
     list($rules, $messages) = self::getValidationRulesAndMessagesForForm($form);
 
     // we have no rules! nothing to do!
-    if(!count($rules))
-    {
+    if (!count($rules)) {
       return '';
     }
 
@@ -380,13 +366,11 @@ class sfFormJavascriptValidation {
     $js[] = sprintf('    messages: %s,', sfJson::encode($messages));
 
     // valid options
-    foreach(self::$validOptions as $option)
-    {
+    foreach (self::$validOptions as $option) {
       // skip options that are not set
       if(!isset($options[$option])) continue;
 
-      switch($option)
-      {
+      switch ($option) {
         case 'submit_handler':
           $js[] = (strpos($options[$option], 'function(') === false) ?
                     sprintf('    submitHandler: function(form) { %s },',
@@ -428,8 +412,7 @@ class sfFormJavascriptValidation {
 
     $js[] = '  });';
 
-    if($triggerValidation)
-    {
+    if ($triggerValidation) {
       $js[] = '// trigger the validation programatically';
       $js[] = sprintf('%s.form();', $validatorJsVarName);
     }
@@ -463,8 +446,7 @@ class sfFormJavascriptValidation {
     $messages = new sfFormJavascriptValidationMessagesCollection();
 
     // loop all fields
-    foreach($form->getValidatorSchema()->getFields() as $field_name => $validator)
-    {
+    foreach ($form->getValidatorSchema()->getFields() as $field_name => $validator) {
       /* @var $validator sfWidgetValidator */
       // store original field_name
       $_fieldName = $field_name;
@@ -480,8 +462,7 @@ class sfFormJavascriptValidation {
       }
 
       // we have to rewrite the name because its embeded in another form
-      if($parentForm)
-      {
+      if ($parentForm) {
         // we need to fix the field name if parent form is in deep array
         // due to form->embedFormForeach() which wraps the forms inside another sfForm form
         $field_name = str_replace(array('[[', ']]'), array('[', ']'),
@@ -492,22 +473,18 @@ class sfFormJavascriptValidation {
       $skipToNext = false;
 
       // does validator know how to validate itself?
-      if(is_callable(array($validator, 'getJavascriptValidationRules')))
-      {
+      if (is_callable(array($validator, 'getJavascriptValidationRules'))) {
         $r = $validator->getJavascriptValidationRules();
-        if($r && count($r))
-        {
+        if ($r && count($r)) {
           $rules->append(new sfFormJavascriptValidationFieldRules($_fieldName, $field_name, $r));
         }
         $skipToNext = true;
       }
 
       // does validator know what validation messages to display?
-      if(is_callable(array($validator, 'getJavascriptValidationMessages')))
-      {
+      if (is_callable(array($validator, 'getJavascriptValidationMessages'))) {
         $m = $validator->getJavascriptValidationMessages();
-        if($m && count($m))
-        {
+        if ($m && count($m)) {
           $messages->append(new sfFormJavascriptValidationFieldMessages($_fieldName, $field_name, $m));
         }
         $skipToNext = true;
@@ -520,21 +497,17 @@ class sfFormJavascriptValidation {
       }
 
       // continue to next field
-      if($skipToNext)
-      {
+      if ($skipToNext) {
         continue;
       }
     }
 
     $embeded = $form->getEmbeddedForms();
-    foreach($embeded as $embededFormName => $embededForm)
-    {
+    foreach ($embeded as $embededFormName => $embededForm) {
       // this is a fix for embeding in foreach
-      if(get_class($embededForm) == 'sfForm')
-      {
+      if (get_class($embededForm) == 'sfForm') {
         $embededForms = $embededForm->getEmbeddedForms();
-        foreach($embededForms as $name => $embededForm2)
-        {
+        foreach ($embededForms as $name => $embededForm2) {
           $embededFormName = sprintf('[%s][%s]', $embededFormName, $name);
           list($r, $m) = self::getValidationRulesAndMessagesForForm($embededForm2,
                     $embededFormName, $parentForm ? $parentForm : $form);
@@ -542,9 +515,7 @@ class sfFormJavascriptValidation {
 
           $messages->merge($m);
         }
-      }
-      else
-      {
+      } else {
         list($r, $m) = self::getValidationRulesAndMessagesForForm($embededForm,
                   $embededFormName, $parentForm ? $parentForm : $form);
         $rules->merge($r);
@@ -553,18 +524,13 @@ class sfFormJavascriptValidation {
     }
 
     // translation of messages
-    foreach($messages as $field_name => $_field_messages)
-    {
-      foreach($_field_messages as $index => $message)
-      {
-        if($message->hasParameters())
-        {
+    foreach ($messages as $field_name => $_field_messages) {
+      foreach ($_field_messages as $index => $message) {
+        if ($message->hasParameters()) {
           $msg = new sfJsonExpression(sprintf("function(parameters, element) { return '%s'.replace('%%value%%', jQuery(element).val(), 'g'); }",
                         $form->translate($message->getMessage(), $message->getParameters())
                      ));
-        }
-        else
-        {
+        } else {
           $msg = $form->translate($message->getMessage());
         }
         $message->setMessage($msg);
@@ -592,8 +558,7 @@ class sfFormJavascriptValidation {
     $message = $validator->getMessage($message);
 
     // no placeholders found, simply return message
-    if(strpos($message, '%') === false)
-    {
+    if (strpos($message, '%') === false) {
       return $message;
     }
 
@@ -601,19 +566,16 @@ class sfFormJavascriptValidation {
     // match all %param%
     preg_match_all('/%[a-zA-Z_]+%/', $message, $matches);
 
-    if(!count($matches))
-    {
+    if (!count($matches)) {
       return $message;
     }
 
     $params = array();
-    foreach($matches[0] as $match)
-    {
+    foreach ($matches[0] as $match) {
       $option = str_replace('%', '', $match);
       // skip value (it will be replaced by javascript by the input value)
       // skip also invalid options
-      if($option == 'value' || !$validator->hasOption($option))
-      {
+      if ($option == 'value' || !$validator->hasOption($option)) {
         continue;
       }
       $params[$match] = $validator->getOption($option);
@@ -631,29 +593,22 @@ class sfFormJavascriptValidation {
   {
     $expression = new sfJsonExpression(sprintf(
 'function(element, errorClass, validClass) {
-  if(element.type === \'radio\')
-  {
+  if (element.type === \'radio\') {
     public $element = this.findByName(element.name);
-  }
-  else
-  {
+  } else {
     public $element = $(element);
   }
 
   var countInvalid = 0;
-  for(i in this.invalid)
-  {
-    if(this.invalid.hasOwnProperty(i))
-    {
+  for (i in this.invalid) {
+    if (this.invalid.hasOwnProperty(i)) {
       countInvalid++;
     }
   }
 
   var countSubmitted = 0;
-  for(i in this.submitted)
-  {
-    if(this.submitted.hasOwnProperty(i))
-    {
+  for (i in this.submitted) {
+    if (this.submitted.hasOwnProperty(i)) {
       countSubmitted++;
     }
   }
@@ -662,26 +617,19 @@ class sfFormJavascriptValidation {
 
   // validate action has not been performed on the form
   // return!
-  if(!countInvalid && !countSubmitted)
-  {
+  if (!countInvalid && !countSubmitted) {
     return;
-  }
-  else if(!countInvalid && countSubmitted)
-  {
+  } else if (!countInvalid && countSubmitted) {
     // already submitted as valid
-    if(element.name in this.submitted)
-    {
+    if (element.name in this.submitted) {
       isInvalid = false;
     }
   }
 
-  if(!isInvalid)
-  {
+  if (!isInvalid) {
     $element.removeClass(errorClass).addClass(validClass)%s;
 
-  }
-  else
-  {
+  } else {
     $(element).addClass(errorClass)%s;
   }
 
@@ -704,15 +652,13 @@ class sfFormJavascriptValidation {
     // FIXME: javascript validation should know how is the input renderer
     // from form formatter!
     $placement = '
-error.click(function(e)
-{
+error.click(function(e) {
   public $that = $(this);
   element.trigger(\'myfocus.from_error_label\', [$that]);
 });
 // place after element
 var parent = element.parents(\'.form-field-wrapper:first\');
-if(!parent.length)
-{
+if (!parent.length) {
   error.insertAfter(element);
 
   return;
@@ -728,15 +674,12 @@ error.css({
 });
 ';
 
-    if(sfWidgetForm::isAriaEnabled())
-    {
+    if (sfWidgetForm::isAriaEnabled()) {
       $expression = new sfJsonExpression(sprintf('function(error, element) {
           error.attr(\'role\', \'alert\');
           %s
       }', $placement));
-    }
-    else
-    {
+    } else {
       $expression = new sfJsonExpression(sprintf('function(error, element) { %s }', $placement));
     }
 
@@ -767,8 +710,7 @@ error.css({
   public static function replacePlaceholders($string, $placeholders)
   {
     $replacement = array();
-    foreach($placeholders as $placeholder => $value)
-    {
+    foreach ($placeholders as $placeholder => $value) {
       $replacement[sprintf('%%%s%%', $placeholder)] = $value;
     }
 

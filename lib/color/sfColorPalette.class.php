@@ -12,8 +12,8 @@
  * @package Sift
  * @subpackage color
  */
-abstract class sfColorPalette implements sfIColorPallete {
-
+abstract class sfColorPalette implements sfIColorPallete
+{
   protected $swatches = array();
 
   public function getSwatches()
@@ -30,8 +30,7 @@ abstract class sfColorPalette implements sfIColorPallete {
   {
     $swatches = $this->getSwatches();
     $myColor  = $color instanceof sfColor ? $color : new sfColor($color);
-    if(count($swatches))
-    {
+    if (count($swatches)) {
       $index = $myColor->getClosestMatch($swatches);
       $myColor = new sfColor($swatches[$index]);
     }

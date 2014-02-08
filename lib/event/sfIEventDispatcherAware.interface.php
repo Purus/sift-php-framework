@@ -12,8 +12,8 @@
  * @package Sift
  * @subpackage event
  */
-interface sfIEventDispatcherAware {
-
+interface sfIEventDispatcherAware
+{
  /**
   * Sets the event dispatcher
   *

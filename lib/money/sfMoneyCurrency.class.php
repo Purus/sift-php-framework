@@ -13,8 +13,8 @@
  * @subpackage money
  * @link http://verraes.net/2011/04/fowler-money-pattern-in-php/
  */
-class sfMoneyCurrency {
-
+class sfMoneyCurrency
+{
   /**
    * Instances holder
    *
@@ -46,8 +46,7 @@ class sfMoneyCurrency {
   {
     $name = strtoupper($name);
 
-    if(!self::isValid($name))
-    {
+    if (!self::isValid($name)) {
       throw new InvalidArgumentException(sprintf('Invalid currency "%s" given.', $name));
     }
 
@@ -63,8 +62,7 @@ class sfMoneyCurrency {
    */
   public static function create($name)
   {
-    if(!empty($name) && class_exists($class = sprintf('sfMoneyCurrency%s', $name)))
-    {
+    if (!empty($name) && class_exists($class = sprintf('sfMoneyCurrency%s', $name))) {
       return new $class();
     }
 
@@ -92,8 +90,7 @@ class sfMoneyCurrency {
   public static function getInstance($name, $scale = null)
   {
     $key = $name . $scale;
-    if(!isset(self::$instances[$key]))
-    {
+    if (!isset(self::$instances[$key])) {
       self::$instances[$key] = self::create($name, $scale);
     }
 

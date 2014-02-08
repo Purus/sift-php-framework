@@ -12,8 +12,8 @@
  * @package    Sift
  * @subpackage i18n_extract
  */
-abstract class sfI18nExtract extends sfConfigurable {
-
+abstract class sfI18nExtract extends sfConfigurable
+{
   /**
    * Unknown translation domain
    *
@@ -90,18 +90,15 @@ abstract class sfI18nExtract extends sfConfigurable {
    */
   public function saveNewMessages()
   {
-    foreach($this->newMessages as $catalogue => $messages)
-    {
+    foreach ($this->newMessages as $catalogue => $messages) {
       // no new messages in this source
-      if(!count($messages))
-      {
+      if (!count($messages)) {
         continue;
       }
 
       $source = $this->sources[$catalogue];
 
-      foreach($messages as $message)
-      {
+      foreach ($messages as $message) {
         $source->append($message);
       }
 
@@ -115,15 +112,12 @@ abstract class sfI18nExtract extends sfConfigurable {
    */
   public function deleteOldMessages()
   {
-    foreach($this->oldMessages as $catalogue => $messages)
-    {
-      if(!count($messages))
-      {
+    foreach ($this->oldMessages as $catalogue => $messages) {
+      if (!count($messages)) {
         continue;
       }
       $source = $this->sources[$catalogue];
-      foreach($messages as $message)
-      {
+      foreach ($messages as $message) {
         $source->delete($message, basename($catalogue));
       }
     }
@@ -147,8 +141,7 @@ abstract class sfI18nExtract extends sfConfigurable {
   final public function getNewMessagesCount()
   {
     $count = 0;
-    foreach($this->newMessages as $messages)
-    {
+    foreach ($this->newMessages as $messages) {
       $count += count($messages);
     }
 
@@ -173,8 +166,7 @@ abstract class sfI18nExtract extends sfConfigurable {
   public function getCurrentMessagesCount()
   {
     $count = 0;
-    foreach($this->currentMessages as $source => $messages)
-    {
+    foreach ($this->currentMessages as $source => $messages) {
       $count += count($messages);
     }
 
@@ -199,8 +191,7 @@ abstract class sfI18nExtract extends sfConfigurable {
   public function getAllSeenMessagesCount()
   {
     $count = 0;
-    foreach($this->allSeenMessages as $source => $messages)
-    {
+    foreach ($this->allSeenMessages as $source => $messages) {
       $count += count($messages);
     }
 
@@ -231,8 +222,7 @@ abstract class sfI18nExtract extends sfConfigurable {
   final public function getOldMessagesCount()
   {
     $count = 0;
-    foreach($this->oldMessages as $source => $messages)
-    {
+    foreach ($this->oldMessages as $source => $messages) {
       $count += count($messages);
     }
 
@@ -246,18 +236,15 @@ abstract class sfI18nExtract extends sfConfigurable {
     $files = sfFinder::type('file')->name('*.php');
 
     $extracted = array();
-    foreach($files->in($dir) as $file)
-    {
+    foreach ($files->in($dir) as $file) {
       $e = $phpExtractor->extract(file_get_contents($file));
-      if(!count($e))
-      {
+      if (!count($e)) {
         continue;
       }
       $extracted = array_merge_recursive($extracted, $e);
     }
 
-    foreach($extracted as $domain => $messages)
-    {
+    foreach ($extracted as $domain => $messages) {
       $extracted[$domain] = array_unique($messages);
     }
 

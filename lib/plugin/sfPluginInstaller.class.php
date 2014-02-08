@@ -12,8 +12,8 @@
  * @package    Sift
  * @subpackage plugin
  */
-class sfPluginInstaller extends sfConfigurable implements sfIPluginInstaller {
-
+class sfPluginInstaller extends sfConfigurable implements sfIPluginInstaller
+{
   /**
    * Project instance
    *
@@ -133,8 +133,7 @@ class sfPluginInstaller extends sfConfigurable implements sfIPluginInstaller {
 
     $filesystem = new sfFilesystem();
 
-    foreach($directories as $dir)
-    {
+    foreach ($directories as $dir) {
       $dirName = basename($dir);
       $filesystem->mirror($dir, $webDir . '/' . $dirName, sfFinder::type('any'));
     }
@@ -210,39 +209,32 @@ class sfPluginInstaller extends sfConfigurable implements sfIPluginInstaller {
     $filesystem = new sfFilesystem();
 
     // remove files which belongs to the plugin from the project web folder
-    foreach($directories as $dir)
-    {
+    foreach ($directories as $dir) {
       $dirName = basename($dir);
       $files = sfFinder::type('file')->relative()->in($dir);
 
       $checkDirs = array();
 
-      foreach($files as $file)
-      {
+      foreach ($files as $file) {
         $toBeRemoved = $webDir . '/' . $dirName . '/' . $file;
 
-        if(dirname($file) !== '.')
-        {
+        if (dirname($file) !== '.') {
           $checkDirs[] = $dirName . '/' . dirname($file);
         }
 
-        if(file_exists($toBeRemoved))
-        {
+        if (file_exists($toBeRemoved)) {
           $filesystem->remove($toBeRemoved);
         }
       }
 
       // remove empty directories which are left by the plugin
-      foreach($checkDirs as $checkDir)
-      {
-        if(!is_dir($webDir . '/' . $checkDir))
-        {
+      foreach ($checkDirs as $checkDir) {
+        if (!is_dir($webDir . '/' . $checkDir)) {
           continue;
         }
 
         $files = sfFinder::type('file')->relative()->in($webDir . '/' . $checkDir);
-        if(!count($files))
-        {
+        if (!count($files)) {
           $filesystem->remove($webDir . '/' . $checkDir);
         }
       }

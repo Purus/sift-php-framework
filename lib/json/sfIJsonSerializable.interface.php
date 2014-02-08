@@ -12,8 +12,8 @@
  * @package Sift
  * @subpackage json
  */
-interface sfIJsonSerializable {
-
+interface sfIJsonSerializable
+{
   /**
    * Specify data which should be serialized to JSON
    *

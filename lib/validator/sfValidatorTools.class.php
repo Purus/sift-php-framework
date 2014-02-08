@@ -13,8 +13,8 @@
  * @package    Sift
  * @subpackage validator
  */
-class sfValidatorTools {
-
+class sfValidatorTools
+{
   public function __construct()
   {
     throw new sfException('This is not an validator. Just an utility library.');
@@ -33,15 +33,13 @@ class sfValidatorTools {
     $in = preg_replace('#\s+#', '', $in);
 
     // má požadovaný tvar?
-    if(!preg_match('#^\d{8}$#', $in))
-    {
+    if (!preg_match('#^\d{8}$#', $in)) {
       return false;
     }
 
     // kontrolní součet
     $a = 0;
-    for($i = 0; $i < 7; $i++)
-    {
+    for ($i = 0; $i < 7; $i++) {
       $a += $in[$i] * (8 - $i);
     }
 
@@ -68,16 +66,14 @@ class sfValidatorTools {
   public static function verifyBirthNumber($rc)
   {
     // "be liberal in what you receive"
-    if(!preg_match('#^\s*(\d\d)(\d\d)(\d\d)[ /]*(\d\d\d)(\d?)\s*$#', $rc, $matches))
-    {
+    if (!preg_match('#^\s*(\d\d)(\d\d)(\d\d)[ /]*(\d\d\d)(\d?)\s*$#', $rc, $matches)) {
       return false;
     }
 
     list(, $year, $month, $day, $ext, $c) = $matches;
 
     // do roku 1954 přidělovaná devítimístná RČ nelze ověřit
-    if($c === '')
-    {
+    if ($c === '') {
       return $year < 54;
     }
 
@@ -85,8 +81,7 @@ class sfValidatorTools {
     $mod = ($year . $month . $day . $ext) % 11;
     if($mod === 10)
       $mod = 0;
-    if($mod !== (int) $c)
-    {
+    if ($mod !== (int) $c) {
       return false;
     }
 
@@ -101,8 +96,7 @@ class sfValidatorTools {
     elseif($month > 20 && $year > 2003)
       $month -= 20;
 
-    if(!checkdate($month, $day, $year))
-    {
+    if (!checkdate($month, $day, $year)) {
       return false;
     }
 

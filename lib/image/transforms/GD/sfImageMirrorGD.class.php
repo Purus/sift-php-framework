@@ -36,8 +36,7 @@ class sfImageMirrorGD extends sfImageTransformAbstract
     $dest_resource = $image->getAdapter()->getTransparentImage($x, $y);
     imagealphablending($dest_resource,true);
 
-    for ($w = 0; $w < $x; $w++)
-    {
+    for ($w = 0; $w < $x; $w++) {
       imagecopy($dest_resource, $resource, $w, 0, $x- $w - 1, 0, 1, $y);
     }
 

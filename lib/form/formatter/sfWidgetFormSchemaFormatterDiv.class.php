@@ -49,8 +49,7 @@ class sfWidgetFormSchemaFormatterDiv extends sfWidgetFormSchemaFormatter
   {
     $inline = in_array(get_class($this->widgetSchema[$name]), $this->inlineWidgets);
 
-    if($inline)
-    {
+    if ($inline) {
       isset($attributes['class']) ?
         $attributes['class'] .= 'inline' :
         $attributes['class'] = 'inline';
@@ -64,29 +63,23 @@ class sfWidgetFormSchemaFormatterDiv extends sfWidgetFormSchemaFormatter
   {
     $inline = false;
     $large = false;
-    foreach($this->largeWidgets as $largeWidget)
-    {
-      if($widget instanceof $largeWidget)
-      {
+    foreach ($this->largeWidgets as $largeWidget) {
+      if ($widget instanceof $largeWidget) {
         $large= true;
         break;
       }
     }
 
-    foreach($this->inlineWidgets as $inlineWidget)
-    {
-      if($widget instanceof $inlineWidget)
-      {
+    foreach ($this->inlineWidgets as $inlineWidget) {
+      if ($widget instanceof $inlineWidget) {
         $inline = true;
         break;
       }
     }
 
     $special = false;
-    foreach($this->specialWidgets as $inlineWidget)
-    {
-      if($widget instanceof $inlineWidget)
-      {
+    foreach ($this->specialWidgets as $inlineWidget) {
+      if ($widget instanceof $inlineWidget) {
         $special = true;
         break;
       }
@@ -100,25 +93,19 @@ class sfWidgetFormSchemaFormatterDiv extends sfWidgetFormSchemaFormatter
     $html[] = ($inline) ? '<div class="form-field-wrapper inline">' : '<div class="form-field-wrapper">';
 
     // inline widget like checkbox is rendered first
-    if($inline)
-    {
+    if ($inline) {
       $html[] = $field;
 
-      if(!$special)
-      {
+      if (!$special) {
         $html[] = $label;
       }
-    }
-    else
-    {
-      if(!$special)
-      {
+    } else {
+      if (!$special) {
         $html[] = $label;
       }
 
       // render help
-      if($large)
-      {
+      if ($large) {
         $html[] = $this->formatHelp($help);
       }
 
@@ -126,17 +113,14 @@ class sfWidgetFormSchemaFormatterDiv extends sfWidgetFormSchemaFormatter
 
     }
 
-    if($errors)
-    {
-      if(!is_array($errors))
-      {
+    if ($errors) {
+      if (!is_array($errors)) {
         $errors = array($errors);
       }
 
       // we render error only for small widgets
       // since large widgets are large :)
-      if(!$large)
-      {
+      if (!$large) {
         $html[] = strtr($this->getErrorListFormatInARow(), array(
           '%errors%'    => implode('', $this->unnestErrors($errors, '', $widgetAttributes)),
           '%field_id%'  => $widgetAttributes['id']
@@ -147,8 +131,7 @@ class sfWidgetFormSchemaFormatterDiv extends sfWidgetFormSchemaFormatter
     $html[] = '</div>';
 
     // render help
-    if(!$large)
-    {
+    if (!$large) {
       $html[] = $this->formatHelp($help);
     }
 

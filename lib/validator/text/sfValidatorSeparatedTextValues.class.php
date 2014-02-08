@@ -13,8 +13,8 @@
  * @package    Sift
  * @subpackage validator
  */
-class sfValidatorSeparatedTextValues extends sfValidatorBase {
-
+class sfValidatorSeparatedTextValues extends sfValidatorBase
+{
   /**
    * Configures the current validator.
    *
@@ -56,20 +56,16 @@ class sfValidatorSeparatedTextValues extends sfValidatorBase {
     $clean = trim(trim($clean), $separator);
     $values = explode($separator, $value);
 
-    if($this->getOption('clean_whitespace'))
-    {
+    if ($this->getOption('clean_whitespace')) {
       $values = sfInputFilters::filterVar($values, array('sfValidatorSeparatedTextValues::cleanWhitespace'));
     }
 
-    if($this->getOption('lowercase'))
-    {
+    if ($this->getOption('lowercase')) {
       $values = sfInputFilters::filterVar($values, array(sfUtf8::lower));
     }
 
-    foreach($values as $v => $value)
-    {
-      if(empty($value))
-      {
+    foreach ($values as $v => $value) {
+      if (empty($value)) {
         unset($values[$v]);
       }
     }

@@ -12,8 +12,8 @@
  * @package    Sift
  * @subpackage text_filter
  */
-class sfTextFilterRegistry implements Countable, sfILoggerAware {
-
+class sfTextFilterRegistry implements Countable, sfILoggerAware
+{
   /**
    * Default priority
    *
@@ -64,16 +64,12 @@ class sfTextFilterRegistry implements Countable, sfILoggerAware {
   protected function loadFilters()
   {
     $configuration = include(sfConfigCache::getInstance()->checkConfig(sfConfig::get('sf_app_config_dir_name') . '/text_filters.yml'));
-    foreach($configuration['filters'] as $tagName => $filters)
-    {
-      foreach($filters as $filter)
-      {
+    foreach ($configuration['filters'] as $tagName => $filters) {
+      foreach ($filters as $filter) {
         $priority = self::DEFAULT_PRIORITY;
-        if(is_array($filter))
-        {
-          if(isset($filter['priority']))
-          {
-            $priority = (integer)$filter['priority'];
+        if (is_array($filter)) {
+          if (isset($filter['priority'])) {
+            $priority = (integer) $filter['priority'];
             unset($filter['priority']);
           }
         }
@@ -101,26 +97,20 @@ class sfTextFilterRegistry implements Countable, sfILoggerAware {
    */
   public function register($tag, $function, $priority = self::DEFAULT_PRIORITY)
   {
-    if(!$function instanceof sfTextFilterCallbackDefinition)
-    {
+    if (!$function instanceof sfTextFilterCallbackDefinition) {
       // create the definition from the function
-      if(is_string($function))
-      {
+      if (is_string($function)) {
         $function = new sfTextFilterCallbackDefinition($function);
-      }
-      elseif(is_array($function))
-      {
+      } elseif (is_array($function)) {
         $function = sfTextFilterCallbackDefinition::createFromArray($function, 'sfTextFilterCallbackDefinition');
       }
     }
 
-    if(!isset($this->filters[$tag]))
-    {
+    if (!isset($this->filters[$tag])) {
       $this->filters[$tag] = array();
     }
 
-    if(!isset($this->filters[$tag][$priority]))
-    {
+    if (!isset($this->filters[$tag][$priority])) {
       $this->filters[$tag][$priority] = array();
     }
 
@@ -137,8 +127,7 @@ class sfTextFilterRegistry implements Countable, sfILoggerAware {
    */
   public function unregister($tag)
   {
-    if(isset($this->filters[$tag]))
-    {
+    if (isset($this->filters[$tag])) {
       unset($this->filters[$tag]);
     }
 
@@ -167,8 +156,7 @@ class sfTextFilterRegistry implements Countable, sfILoggerAware {
    */
   public function apply($tag, $content)
   {
-    if(!($filters = $this->getFiltersForTag($tag)))
-    {
+    if (!($filters = $this->getFiltersForTag($tag))) {
       return $content;
     }
 
@@ -178,19 +166,16 @@ class sfTextFilterRegistry implements Countable, sfILoggerAware {
 
     // create the content object
     $content = new sfTextFilterContent($content);
-    foreach($filters as $callbacks)
-    {
-      foreach($callbacks as $callback)
-      {
+    foreach ($filters as $callbacks) {
+      foreach ($callbacks as $callback) {
         $this->callFilter($callback, $content);
-        if($content->cancelBubble())
-        {
+        if ($content->cancelBubble()) {
           break 2;
         }
       }
     }
 
-    return (string)$content;
+    return (string) $content;
   }
 
   /**
@@ -202,24 +187,19 @@ class sfTextFilterRegistry implements Countable, sfILoggerAware {
   protected function callFilter(sfCallbackDefinition $definition, sfTextFilterContent $content)
   {
     $this->log('Calling filter "{filter}"', sfILogger::INFO, array(
-      'filter' => (string)$definition
+      'filter' => (string) $definition
     ));
 
     // function
-    if(($function = $definition->getFunction()))
-    {
+    if (($function = $definition->getFunction())) {
       return call_user_func($function, $content);
     }
     // class
-    else
-    {
+    else {
       $cacheKey = md5(serialize($definition));
-      if(!isset($this->objectCache[$cacheKey]))
-      {
+      if (!isset($this->objectCache[$cacheKey])) {
         $filter = $this->objectCache[$cacheKey] = $this->serviceContainer->createObjectFromDefinition($definition);
-      }
-      else
-      {
+      } else {
         $filter = $this->objectCache[$cacheKey];
       }
 
@@ -237,17 +217,13 @@ class sfTextFilterRegistry implements Countable, sfILoggerAware {
    */
   public function resolveValue($value)
   {
-    if(is_array($value))
-    {
+    if (is_array($value)) {
       $args = array();
-      foreach($value as $k => $v)
-      {
+      foreach ($value as $k => $v) {
         $args[$this->resolveValue($k)] = $this->resolveValue($v);
       }
       $value = $args;
-    }
-    elseif(is_string($value))
-    {
+    } elseif (is_string($value)) {
       $value = $this->replaceConstants($value);
     }
 
@@ -262,11 +238,9 @@ class sfTextFilterRegistry implements Countable, sfILoggerAware {
    */
   protected function replaceConstants($value)
   {
-    if(preg_match('/%(.+?)%/', $value, $matches))
-    {
+    if (preg_match('/%(.+?)%/', $value, $matches)) {
       $name = strtolower($matches[1]);
-      if(sfConfig::has($name))
-      {
+      if (sfConfig::has($name)) {
         return sfConfig::get($name);
       }
     }
@@ -284,18 +258,15 @@ class sfTextFilterRegistry implements Countable, sfILoggerAware {
   {
     $filters = array();
     // now search the wildcarded filters
-    foreach($this->filters as $filterTag => $priority)
-    {
+    foreach ($this->filters as $filterTag => $priority) {
       // specific tag
-      if($filterTag == $tag)
-      {
+      if ($filterTag == $tag) {
         $filters = $this->merge($filters, $this->filters[$filterTag]);
         continue;
       }
 
       // we have a tag with wildcard
-      if(strpos($filterTag, '*') !== false)
-      {
+      if (strpos($filterTag, '*') !== false) {
         $parts = explode('.', $filterTag);
         $tagParts = explode('.', $tag);
         if($parts[0] == '*'
@@ -319,10 +290,8 @@ class sfTextFilterRegistry implements Countable, sfILoggerAware {
   protected function merge()
   {
     $output = array();
-    foreach(func_get_args() as $array)
-    {
-      foreach($array as $key => $value)
-      {
+    foreach (func_get_args() as $array) {
+      foreach ($array as $key => $value) {
         $output[$key] = isset($output[$key]) ?
             array_merge($output[$key], $value) : $value;
       }
@@ -339,10 +308,8 @@ class sfTextFilterRegistry implements Countable, sfILoggerAware {
   public function count()
   {
     $count = 0;
-    foreach($this->filters as $tags)
-    {
-      foreach($tags as $callbacks)
-      {
+    foreach ($this->filters as $tags) {
+      foreach ($tags as $callbacks) {
         $count += count($callbacks);
       }
     }
@@ -389,8 +356,7 @@ class sfTextFilterRegistry implements Countable, sfILoggerAware {
    */
   protected function log($message, $level = sfILogger::INFO, array $context = array())
   {
-    if($this->logger)
-    {
+    if ($this->logger) {
       $this->logger->log(sprintf('{sfTextFilterRegistry} %s', $message), $level, $context);
     }
   }

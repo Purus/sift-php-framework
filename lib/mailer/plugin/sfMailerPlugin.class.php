@@ -20,8 +20,8 @@
  * @package    Sift
  * @subpackage mailer
  */
-abstract class sfMailerPlugin extends sfConfigurable implements Swift_Events_SendListener {
-
+abstract class sfMailerPlugin extends sfConfigurable implements Swift_Events_SendListener
+{
   /**
    * Event dispatcher
    *

@@ -12,8 +12,8 @@
  * @package    Sift
  * @subpackage validator
  */
-class sfValidatorPass extends sfValidatorBase {
-
+class sfValidatorPass extends sfValidatorBase
+{
   /**
    * Dummy constructor, which does nothing
    *

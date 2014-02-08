@@ -12,8 +12,8 @@
  * @package    Sift
  * @subpackage config
  */
-class sfAssetPackagesConfigHandler extends sfSimpleYamlConfigHandler {
-
+class sfAssetPackagesConfigHandler extends sfSimpleYamlConfigHandler
+{
   /**
    * Executes this configuration handler.
    *
@@ -59,13 +59,10 @@ class sfAssetPackagesConfigHandler extends sfSimpleYamlConfigHandler {
     $config = $default;
 
     // take "all" key
-    if(isset($all['packages']))
-    {
-      foreach($all['packages'] as $package => $assetGroups)
-      {
+    if (isset($all['packages'])) {
+      foreach ($all['packages'] as $package => $assetGroups) {
         // overwrite
-        foreach($assetGroups as $group => $assets)
-        {
+        foreach ($assetGroups as $group => $assets) {
           $config['packages'][$package][$group] = $assets;
         }
       }
@@ -73,42 +70,32 @@ class sfAssetPackagesConfigHandler extends sfSimpleYamlConfigHandler {
 
     // loop all packages and check if there is any specifics for
     // the environment
-    foreach($config['packages'] as $package => $assetGroups)
-    {
-      foreach($assetGroups as $group => $assets)
-      {
+    foreach ($config['packages'] as $package => $assetGroups) {
+      foreach ($assetGroups as $group => $assets) {
         // we have environment specific setting
         // we will use this, and not the default
         // BEWARE: this behaves differently than the cascading style of other config files
-        if(isset($env['packages'][$package][$group]))
-        {
+        if (isset($env['packages'][$package][$group])) {
           $config['packages'][$package][$group] = $env['packages'][$package][$group];
-        }
-        else
-        {
+        } else {
           $config['packages'][$package][$group] = $assets;
         }
       }
     }
 
-    if(!isset($config['packages']['core']))
-    {
+    if (!isset($config['packages']['core'])) {
       throw new sfConfigurationException('{sfAssetPackagesConfigHandler} Missing core package setting in asset_packages.yml');
     }
 
     // validate
-    if(!isset($config['packages']['jquery']))
-    {
+    if (!isset($config['packages']['jquery'])) {
       throw new sfConfigurationException('{sfAssetPackagesConfigHandler} Missing jquery package setting in asset_packages.yml');
     }
 
-    foreach($config['packages'] as $key => $value)
-    {
-      foreach($value as $vk => $vv)
-      {
+    foreach ($config['packages'] as $key => $value) {
+      foreach ($value as $vk => $vv) {
         // supported keys
-        if(!in_array($vk, array('javascripts', 'stylesheets', 'require', 'i18n')))
-        {
+        if (!in_array($vk, array('javascripts', 'stylesheets', 'require', 'i18n'))) {
           throw new sfConfigurationException(sprintf('{sfAssetPackagesConfigHandler} Invalid configuration key "%s" key in your configuration.', $vk));
         }
       }

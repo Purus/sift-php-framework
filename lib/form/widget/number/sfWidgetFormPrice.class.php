@@ -34,8 +34,7 @@ class sfWidgetFormPrice extends sfWidgetFormI18nNumber
    */
   public function render($name, $value = null, $attributes = array(), $errors = array())
   {
-    if(is_numeric($value))
-    {
+    if (is_numeric($value)) {
       $value += 0;
     }
 

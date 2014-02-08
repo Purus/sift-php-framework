@@ -12,8 +12,8 @@
  * @package Sift
  * @subpackage search
  */
-class sfSearchQueryLexer implements sfISearchQueryLexer {
-
+class sfSearchQueryLexer implements sfISearchQueryLexer
+{
   /**
    * Token stack
    *
@@ -51,14 +51,10 @@ class sfSearchQueryLexer implements sfISearchQueryLexer {
 
     $tokenArray = preg_split('@(\s)|(["+():-])@', $query, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
 
-    foreach($tokenArray as $token)
-    {
-      if(isset($map[strtolower($token)]))
-      {
+    foreach ($tokenArray as $token) {
+      if (isset($map[strtolower($token)])) {
         $this->tokenStack[] = new sfSearchQueryToken($map[strtolower($token)], $token);
-      }
-      else
-      {
+      } else {
         $this->tokenStack[] = new sfSearchQueryToken(sfSearchQueryToken::STRING, $token);
       }
     }
@@ -78,23 +74,17 @@ class sfSearchQueryLexer implements sfISearchQueryLexer {
     $stringTokens = array('"' => true, '"' => true);
     $stack = array();
 
-    for($i = 0, $l = sfUtf8::len($query); $i < $l; ++$i)
-    {
+    for ($i = 0, $l = sfUtf8::len($query); $i < $l; ++$i) {
       $c = sfUtf8::sub($query, $i, 1);
       // push opening tokens to the stack (for " and ' only if there is no " or ' opened yet)
-      if(isset($tokens[$c]) && (!isset($stringTokens[$c]) || end($stack) != $c))
-      {
+      if (isset($tokens[$c]) && (!isset($stringTokens[$c]) || end($stack) != $c)) {
         $stack[] = $c;
         // closing tokens have to be matched up with the stack elements
-      }
-      elseif(isset($closeTokens[$c]))
-      {
+      } elseif (isset($closeTokens[$c])) {
         $matched = false;
-        while($top = array_pop($stack))
-        {
+        while ($top = array_pop($stack)) {
           // stack has matching opening for current closing
-          if($top == $closeTokens[$c])
-          {
+          if ($top == $closeTokens[$c]) {
             $matched = true;
             break;
           }
@@ -104,8 +94,7 @@ class sfSearchQueryLexer implements sfISearchQueryLexer {
           $l++;
         }
         // unmatched closing, insert opening at start
-        if(!$matched)
-        {
+        if (!$matched) {
           $code = $closeTokens[$c] . $query;
           $i++;
           $l++;
@@ -114,8 +103,7 @@ class sfSearchQueryLexer implements sfISearchQueryLexer {
     }
 
     // any elements still on the stack are unmatched opening, so insert closing
-    while($top = array_pop($stack))
-    {
+    while ($top = array_pop($stack)) {
       $query .= $tokens[$top];
     }
 

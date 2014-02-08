@@ -26,15 +26,13 @@ function google_analytics_tracking_code($options = array())
   $response = sfContext::getInstance()->getResponse();
   $request  = sfContext::getInstance()->getRequest();
 
-  if($response->getParameter('tracking_included', false, 'google_analytics'))
-  {
+  if ($response->getParameter('tracking_included', false, 'google_analytics')) {
     return '';
   }
 
   // exclude from google analytics cookie is set
   // FIXME: make this configurable
-  if($request->getCookie('__ga_exclude'))
-  {
+  if ($request->getCookie('__ga_exclude')) {
     return '';
   }
 
@@ -49,44 +47,36 @@ function google_analytics_tracking_code($options = array())
      && $action ==  sfConfig::get('sf_error_404_action'))
   {
     $js[] = "_gaq.push(['_trackPageview', '/error404/?page=' + document.location.pathname + document.location.search + '&from=' + document.referrer]);";
-  }
-  else
-  {
+  } else {
     $js[] = "_gaq.push(['_trackPageview']);";
   }
 
   $variables = $response->getParameter('tracking_variables', array(), 'google_analytics');
-  foreach($variables as $name => $value)
-  {
+  foreach ($variables as $name => $value) {
     $slot  = 1;
     $scope = 1; // the scope to visitor-level, 2 => page level
     $v     = $value;
-    if(is_array($value))
-    {
-      $slot  = isset($value['slot']) ? (integer)$value['slot'] : 1;
-      $name  = isset($value['name']) ? escape_javascript((string)$value['name']) : (string)$name;
-      if(isset($value['value']))
-      {
-        $v = escape_javascript((string)$value['value']);
+    if (is_array($value)) {
+      $slot  = isset($value['slot']) ? (integer) $value['slot'] : 1;
+      $name  = isset($value['name']) ? escape_javascript((string) $value['name']) : (string) $name;
+      if (isset($value['value'])) {
+        $v = escape_javascript((string) $value['value']);
       }
-      if(isset($value['scope']))
-      {
-        $scope = (integer)$value['scope'];
+      if (isset($value['scope'])) {
+        $scope = (integer) $value['scope'];
       }
     }
     $js[] = sprintf("_gaq.push(['_setCustomVar', %s, '%s', '%s', %s]);", $slot, $name, $v, $scope);
   }
 
-  if(sfConfig::get('sf_debug'))
-  {
+  if (sfConfig::get('sf_debug')) {
     $js[] = '// commented out because running in debug mode!';
     $js[] = '/*';
   }
 
   $js[] = google_analytics_include_remote_javascript();
 
-  if(sfConfig::get('sf_debug'))
-  {
+  if (sfConfig::get('sf_debug')) {
     $js[] = '*/';
   }
 
@@ -110,24 +100,20 @@ function google_analytics_base_configuration($options = array())
   $js[] = "var _gaq = _gaq || [];";
   $js[] = sprintf("_gaq.push(['_setAccount', '%s']);", google_analytics_ua());
 
-  if($allow_anchor = _get_option($options, 'allow_anchor'))
-  {
+  if ($allow_anchor = _get_option($options, 'allow_anchor')) {
     $js[] = "_gaq.push(['_setAllowAnchor', true]);";
   }
 
-  if($domain = _get_option($options, 'domain_name'))
-  {
+  if ($domain = _get_option($options, 'domain_name')) {
     $js[] = sprintf("_gaq.push(['_setDomainName', '%s']);", $domain);
   }
 
-  if($track_ip = _get_option($options, 'track_ip'))
-  {
+  if ($track_ip = _get_option($options, 'track_ip')) {
     $user = sfContext::getInstance()->getUser();
     $js[] = sprintf("_gaq.push(['_setCustomVar', 1, 'IP', '%s', 1]);", $user->getRealIp());
   }
 
-  if($track_load_time = _get_option($options, 'track_load_time'))
-  {
+  if ($track_load_time = _get_option($options, 'track_load_time')) {
     $js[] = sprintf("_gaq.push(['_trackPageLoadTime']);");
   }
 
@@ -138,8 +124,7 @@ function google_analytics_base_configuration($options = array())
 
   $return = javascript_tag(join("\n", $js));
 
-  foreach($setupScripts as $script)
-  {
+  foreach ($setupScripts as $script) {
     $return .= "\n" . javascript_include_tag($script);
   }
 
@@ -151,14 +136,10 @@ function google_analytics_include_remote_javascript($src = null)
   $secure = sfContext::getInstance()->getRequest()->isSecure();
 
   // default src of ga javascript
-  if(is_null($src))
-  {
-    if($secure)
-    {
+  if (is_null($src)) {
+    if ($secure) {
       $src = 'https://ssl.google-analytics.com/ga.js';
-    }
-    else
-    {
+    } else {
       $src = 'http://www.google-analytics.com/ga.js';
     }
   }
@@ -197,8 +178,7 @@ function google_analytics_set_tracking_variable($name, $value, $scope = null, $s
 function google_analytics_ua()
 {
   $analytics_ua = sfConfig::get('app_google_analytics_ua');
-  if(!$analytics_ua)
-  {
+  if (!$analytics_ua) {
     sfLogger::getInstance()->error('{GoogleAnalyticsHelper} Google Analytics is not configured properly. Missing "app_google_analytics_ua" configuration');
   }
 
@@ -219,18 +199,15 @@ function google_analytics_tag_links($text, $options = array())
   $gaOptions = sfConfig::get('app_google_analytics_options', array());
 
   // utm_source
-  if(!isset($options['source']))
-  {
+  if (!isset($options['source'])) {
     $options['source'] = 'email';
   }
 
-  if(!isset($options['medium']))
-  {
+  if (!isset($options['medium'])) {
     $options['medium'] = 'email';
   }
 
-  if(!isset($options['campaign']))
-  {
+  if (!isset($options['campaign'])) {
     $options['campaign'] = 'email';
   }
 
@@ -250,22 +227,17 @@ function google_analytics_tag_links($text, $options = array())
 
   $ga_options = http_build_query($ga_options, null, '&');
 
-  if(isset($options['auto_link']) && $options['auto_link'])
-  {
+  if (isset($options['auto_link']) && $options['auto_link']) {
     $text = sfText::autoLink($text);
   }
 
   $reg_exUrl = "/(http|https|ftp|ftps)\:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(\/\S*)?/";
 
   // Check if there is a url in the text
-  if(preg_match($reg_exUrl, $text, $url))
-  {
-    if($anchor)
-    {
+  if (preg_match($reg_exUrl, $text, $url)) {
+    if ($anchor) {
       $url = ($url[0].'#'.$ga_options);
-    }
-    else
-    {
+    } else {
       $url = strpos($url[0], '?') === false ?
               ($url[0].'?'.$ga_options) :($url[0].'&'.$ga_options);
     }

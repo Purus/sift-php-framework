@@ -15,8 +15,8 @@
  * @package    Sift
  * @subpackage config
  */
-class sfDatabaseConfigHandler extends sfYamlConfigHandler {
-
+class sfDatabaseConfigHandler extends sfYamlConfigHandler
+{
   /**
    * Executes this configuration handler.
    *
@@ -31,13 +31,11 @@ class sfDatabaseConfigHandler extends sfYamlConfigHandler {
   {
     list($includes, $data) = $this->parse($configFiles);
 
-    foreach($includes as $i => $include)
-    {
+    foreach ($includes as $i => $include) {
       $includes[$i] = sprintf("require_once('%s');", $include);
     }
 
-    foreach($data as $name => $database)
-    {
+    foreach ($data as $name => $database) {
       $data[$name] = sprintf("\n'%s' => new %s(%s),", $name, $database[0], $this->varExport($database[1]));
     }
 
@@ -51,14 +49,12 @@ class sfDatabaseConfigHandler extends sfYamlConfigHandler {
   {
     list($includes, $data) = $this->parse($configFiles);
 
-    foreach($includes as $i => $include)
-    {
+    foreach ($includes as $i => $include) {
       require_once($include);
     }
 
     $databases = array();
-    foreach($data as $name => $database)
-    {
+    foreach ($data as $name => $database) {
       $databases[$name] = new $database[0]($database[1]);
     }
 
@@ -76,11 +72,9 @@ class sfDatabaseConfigHandler extends sfYamlConfigHandler {
     $includes = array();
 
     // get a list of database connections
-    foreach($config as $name => $dbConfig)
-    {
+    foreach ($config as $name => $dbConfig) {
       // is this category already registered?
-      if(in_array($name, $databases))
-      {
+      if (in_array($name, $databases)) {
         // this category is already registered
         throw new sfParseException(sprintf('Configuration file "%s" specifies previously registered category "%s".', $configFiles[0], $name));
       }
@@ -89,17 +83,14 @@ class sfDatabaseConfigHandler extends sfYamlConfigHandler {
       $databases[] = $name;
 
       // let's do our fancy work
-      if(!isset($dbConfig['class']))
-      {
+      if (!isset($dbConfig['class'])) {
         // missing class key
         throw new sfParseException(sprintf('Configuration file "%s" specifies category "%s" with missing class key.', $configFiles[0], $name));
       }
 
-      if(isset($dbConfig['file']))
-      {
+      if (isset($dbConfig['file'])) {
         // we have a file to include
-        if(!is_readable($dbConfig['file']))
-        {
+        if (!is_readable($dbConfig['file'])) {
           // database file doesn't exist
           throw new sfParseException(sprintf('Configuration file "%s" specifies class "%s" with nonexistent or unreadable file "%s".', $configFiles[0], $dbConfig['class'], $dbConfig['file']));
         }
@@ -110,8 +101,7 @@ class sfDatabaseConfigHandler extends sfYamlConfigHandler {
 
       // parse parameters
       $parameters = array();
-      if(isset($dbConfig['param']))
-      {
+      if (isset($dbConfig['param'])) {
         $parameters = $dbConfig['param'];
       }
       $parameters['name'] = $name;
@@ -130,10 +120,8 @@ class sfDatabaseConfigHandler extends sfYamlConfigHandler {
   {
     $config = $this->replaceConstants(self::flattenConfigurationWithEnvironment(self::parseYamls($configFiles)));
 
-    foreach($config as $name => $dbConfig)
-    {
-      if(isset($dbConfig['file']))
-      {
+    foreach ($config as $name => $dbConfig) {
+      if (isset($dbConfig['file'])) {
         $config[$name]['file'] = self::replacePath($dbConfig['file']);
       }
     }

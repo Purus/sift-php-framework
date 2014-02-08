@@ -80,23 +80,18 @@ EOF;
     $app = $arguments['app'];
 
     // Validate the application name
-    if (!preg_match('/^[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*$/', $app))
-    {
+    if (!preg_match('/^[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*$/', $app)) {
       throw new sfCliCommandException(sprintf('The application name "%s" is invalid.', $app));
     }
 
-    if($this->checkAppExists($app, false))
-    {
+    if ($this->checkAppExists($app, false)) {
       throw new sfCliCommandException(sprintf('The application "%s" already exists.', $app));
     }
 
     // project skeleton
-    if(is_readable($this->environment->get('sf_data_dir').'/data/app'))
-    {
+    if (is_readable($this->environment->get('sf_data_dir').'/data/app')) {
       $skeletonDir = $this->environment->get('sf_data_dir').'/data/app';
-    }
-    else
-    {
+    } else {
       $skeletonDir = $this->environment->get('sf_sift_data_dir').'/skeleton/app';
     }
 
@@ -116,13 +111,11 @@ EOF;
     // Create $app.php or index.php if it is our first app
     $indexName = 'index';
     $firstApp = !file_exists($this->environment->get('sf_web_dir').'/index.php');
-    if (!$firstApp)
-    {
+    if (!$firstApp) {
       $indexName = $app;
     }
 
-    if(true === $options['csrf-secret'])
-    {
+    if (true === $options['csrf-secret']) {
       $options['csrf-secret'] = $this->generateCsrfSecret();
     }
 
@@ -198,14 +191,10 @@ EOF;
 
     $word = substr(join('', $words), 0, 32);
     $output = '';
-    for($l = 0, $len = strlen($word); $l < $len; $l++)
-    {
-      if(mt_rand(0, 1) == 1)
-      {
+    for ($l = 0, $len = strlen($word); $l < $len; $l++) {
+      if (mt_rand(0, 1) == 1) {
         $output .= strtoupper($word[$l]);
-      }
-      else
-      {
+      } else {
         $output .= strtolower($word[$l]);
       }
     }

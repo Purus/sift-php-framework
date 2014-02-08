@@ -13,8 +13,8 @@
  * @subpackage util
  * @link http://php.net/manual/en/arrayaccess.offsetget.php
  */
-interface sfIArrayAccessByReference {
-
+interface sfIArrayAccessByReference
+{
   /**
    * Set a value by reference
    *

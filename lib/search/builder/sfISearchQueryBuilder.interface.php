@@ -12,8 +12,8 @@
  * @package Sift
  * @subpackage search
  */
-interface sfISearchQueryBuilder {
-
+interface sfISearchQueryBuilder
+{
   /**
    * Sets the expression
    *

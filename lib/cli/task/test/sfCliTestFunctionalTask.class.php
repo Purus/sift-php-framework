@@ -70,30 +70,22 @@ EOF;
   {
     $app = $arguments['application'];
 
-    if (count($arguments['controller']))
-    {
+    if (count($arguments['controller'])) {
       $files = array();
 
-      foreach ($arguments['controller'] as $controller)
-      {
+      foreach ($arguments['controller'] as $controller) {
         $finder = sfFinder::type('file')->followLink()->name(basename($controller).'Test.php');
         $files = array_merge($files, $finder->in($this->environment->get('sf_test_dir').'/functional/'.$app.'/'.dirname($controller)));
       }
 
-      if($allFiles = $this->filterTestFiles($files, $arguments, $options))
-      {
-        foreach ($allFiles as $file)
-        {
+      if ($allFiles = $this->filterTestFiles($files, $arguments, $options)) {
+        foreach ($allFiles as $file) {
           include($file);
         }
-      }
-      else
-      {
+      } else {
         $this->logSection('functional', 'no controller found', null, 'ERROR');
       }
-    }
-    else
-    {
+    } else {
       require_once dirname(__FILE__).'/sfLimeHarness.class.php';
 
       $h = new sfLimeHarness(array(
@@ -113,8 +105,7 @@ EOF;
 
       $ret = $h->run() ? 0 : 1;
 
-      if ($options['xml'])
-      {
+      if ($options['xml']) {
         file_put_contents($options['xml'], $h->to_xml());
       }
 

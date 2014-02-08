@@ -12,8 +12,8 @@
  * @package    Sift
  * @subpackage text_filter
  */
-interface sfITextFilter {
-
+interface sfITextFilter
+{
   /**
    * Filters given content
    *

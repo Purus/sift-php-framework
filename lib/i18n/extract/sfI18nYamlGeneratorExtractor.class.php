@@ -12,8 +12,8 @@
  * @package    Sift
  * @subpackage i18n_extract
  */
-class sfI18nYamlGeneratorExtractor extends sfI18nYamlExtractor {
-
+class sfI18nYamlGeneratorExtractor extends sfI18nYamlExtractor
+{
   /**
    * Extracted strings
    *
@@ -48,8 +48,7 @@ class sfI18nYamlGeneratorExtractor extends sfI18nYamlExtractor {
 
     $config = sfYaml::load($content);
 
-    if(!isset($config['generator']['param']))
-    {
+    if (!isset($config['generator']['param'])) {
       return array();
     }
 
@@ -57,57 +56,46 @@ class sfI18nYamlGeneratorExtractor extends sfI18nYamlExtractor {
 
     // context less strings
     // names and help messages
-    if(isset($params['fields']))
-    {
+    if (isset($params['fields'])) {
       $this->getFromFields($params['fields']);
     }
 
     // global title
-    if(isset($params['title']))
-    {
+    if (isset($params['title'])) {
       $this->strings[] = $params['title'];
     }
 
     // extract all contexts
-    foreach($this->getOption('contexts', array()) as $context)
-    {
+    foreach ($this->getOption('contexts', array()) as $context) {
       // titles
-      if(isset($params[$context]['title']))
-      {
+      if (isset($params[$context]['title'])) {
         $this->strings[] = $params[$context]['title'];
       }
 
       // fields
-      if(isset($params[$context]['fields']))
-      {
+      if (isset($params[$context]['fields'])) {
         $this->getFromFields($params[$context]['fields']);
       }
 
       // batch actions (only valid for list context, but leave it here)
-      if(isset($params[$context]['batch_actions']))
-      {
+      if (isset($params[$context]['batch_actions'])) {
         $this->getFromActions($params[$context]['batch_actions']);
       }
 
       // object actions (only valid for list context, but leave it here)
-      if(isset($params[$context]['object_actions']))
-      {
+      if (isset($params[$context]['object_actions'])) {
         $this->getFromActions($params[$context]['object_actions']);
       }
 
       // actions
-      if(isset($params[$context]['actions']))
-      {
+      if (isset($params[$context]['actions'])) {
         $this->getFromActions($params[$context]['actions']);
       }
 
       // display categories
-      if(isset($params[$context]['display']) && !isset($params[$context]['display'][0]))
-      {
-        foreach(array_keys($params[$context]['display']) as $string)
-        {
-          if('NONE' == $string)
-          {
+      if (isset($params[$context]['display']) && !isset($params[$context]['display'][0])) {
+        foreach (array_keys($params[$context]['display']) as $string) {
+          if ('NONE' == $string) {
             continue;
           }
           $this->strings[] = $string;
@@ -129,10 +117,8 @@ class sfI18nYamlGeneratorExtractor extends sfI18nYamlExtractor {
     $strings = array_unique($strings);
     $result = array();
     $excluded = $this->getOption('excluded_strings');
-    foreach($strings as $string)
-    {
-      if(in_array($string, $excluded))
-      {
+    foreach ($strings as $string) {
+      if (in_array($string, $excluded)) {
         continue;
       }
 
@@ -149,20 +135,15 @@ class sfI18nYamlGeneratorExtractor extends sfI18nYamlExtractor {
    */
   protected function getFromActions($actions)
   {
-    foreach((array)$actions as $field => $options)
-    {
+    foreach ((array) $actions as $field => $options) {
       // this is a default action, but with custom name
-      if($field[0] == '_' && isset($options['name']) && !empty($options['name']))
-      {
+      if ($field[0] == '_' && isset($options['name']) && !empty($options['name'])) {
         $this->strings[] = $options['name'];
-      }
-      elseif(isset($options['name']) && !empty($options['name']))
-      {
+      } elseif (isset($options['name']) && !empty($options['name'])) {
         $this->strings[] = $options['name'];
       }
       // skip action names like _list, _delete
-      elseif($field[0] != '_')
-      {
+      elseif ($field[0] != '_') {
         $this->strings[] = $field;
       }
     }
@@ -175,52 +156,41 @@ class sfI18nYamlGeneratorExtractor extends sfI18nYamlExtractor {
    */
   protected function getFromFields($fields)
   {
-    foreach($fields as $field => $options)
-    {
+    foreach ($fields as $field => $options) {
       // not associative array
-      if(is_numeric($field))
-      {
+      if (is_numeric($field)) {
         $field = $options;
         $options = array();
       }
 
-      if(isset($options['name']) && !empty($options['name']))
-      {
+      if (isset($options['name']) && !empty($options['name'])) {
         $this->strings[] = $options['name'];
       }
       // name is missing will use the $field as name
-      else
-      {
+      else {
         $name = sfUtf8::ucfirst(str_replace(
                 array('_id', '_'), array('', ' '), $field));
-        if(!empty($name))
-        {
+        if (!empty($name)) {
           $this->strings[] = $name;
         }
       }
 
-      if(isset($options['help']) && !empty($options['help']))
-      {
+      if (isset($options['help']) && !empty($options['help'])) {
         $this->strings[] = $options['help'];
       }
 
-      if(isset($options['widget']['options']))
-      {
-        foreach($options['widget']['options'] as $optionName => $value)
-        {
+      if (isset($options['widget']['options'])) {
+        foreach ($options['widget']['options'] as $optionName => $value) {
           // this is label option
-          if(strpos($optionName, 'label') !== false)
-          {
-            if(!empty($value))
-            {
+          if (strpos($optionName, 'label') !== false) {
+            if (!empty($value)) {
               $this->strings[] = $value;
             }
           }
         }
       }
 
-      if(isset($options['editable']['title']))
-      {
+      if (isset($options['editable']['title'])) {
         $this->strings[] = $options['editable']['title'];
       }
     }

@@ -22,8 +22,7 @@
  */
 function mail_embeded_image_src($path, sfMailerMessage $message)
 {
-  if(!sfToolkit::isPathAbsolute($path))
-  {
+  if (!sfToolkit::isPathAbsolute($path)) {
     $path = sfConfig::get('sf_data_dir') . '/email/images/' . $path;
   }
 
@@ -56,12 +55,10 @@ function mail_image_tag($path, sfMailerMessage $message, $options = array())
 {
   $options = _parse_attributes($options);
 
-  if(!isset($options['alt']))
-  {
+  if (!isset($options['alt'])) {
     $alt = basename($path);
     $ext = strrchr($alt, '.');
-    if($ext !== false)
-    {
+    if ($ext !== false) {
       $alt = substr($alt, 0, -strlen($ext));
     }
     $options['alt'] = $alt;
@@ -80,8 +77,7 @@ function mail_get_site_signature()
 {
   $signature = sfConfig::get('app_mail_site_signature');
 
-  if(!$signature)
-  {
+  if (!$signature) {
     $signature = sfConfig::get('app_title_name');
   }
 

@@ -12,8 +12,8 @@
  * @package    Sift
  * @subpackage cli_task
  */
-class sfCliPluginDisableTask extends sfCliPluginBaseTask {
-
+class sfCliPluginDisableTask extends sfCliPluginBaseTask
+{
   /**
    * @see sfCliTask
    */
@@ -49,8 +49,7 @@ EOF;
   {
     $pluginName = $arguments['name'];
 
-    if(!$this->checkPluginExists($pluginName, false))
-    {
+    if (!$this->checkPluginExists($pluginName, false)) {
       throw new sfCliCommandException('Unable to disable the plugin. Plugin is not installed.');
     }
 
@@ -58,8 +57,7 @@ EOF;
 
     $pluginYaml = $this->environment->get('sf_config_dir') . '/plugins.yml';
 
-    if(!is_readable($pluginYaml))
-    {
+    if (!is_readable($pluginYaml)) {
       throw new LogicException(sprintf('Project plugin configuration file "%s" is missing.', $pluginYaml));
     }
 
@@ -68,31 +66,23 @@ EOF;
     $parser = new sfYamlParser();
     $config = $parser->parse(file_get_contents($pluginYaml));
 
-    if(!isset($config[$environment]))
-    {
+    if (!isset($config[$environment])) {
       $config[$environment] = array();
     }
 
     // the plugin entry does not exist
-    if(!array_key_exists($pluginName, $config[$environment]))
-    {
+    if (!array_key_exists($pluginName, $config[$environment])) {
       $config[$environment][$pluginName] = array(
         'disabled' => true
       );
-    }
-    else
-    {
-      if(!is_array($config[$environment][$pluginName]))
-      {
+    } else {
+      if (!is_array($config[$environment][$pluginName])) {
         $config[$environment][$pluginName] = array();
       }
 
-      if(!isset($config[$environment][$pluginName]['disabled']) || !$config[$environment][$pluginName]['disabled'])
-      {
+      if (!isset($config[$environment][$pluginName]['disabled']) || !$config[$environment][$pluginName]['disabled']) {
         $config[$environment][$pluginName]['disabled'] = true;
-      }
-      else
-      {
+      } else {
         throw new InvalidArgumentException('Plugin is already disabled');
       }
     }

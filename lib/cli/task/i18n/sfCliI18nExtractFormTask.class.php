@@ -76,8 +76,7 @@ EOF;
     $form = $arguments['form'];
 
     // form name does not end with "Form"
-    if(!preg_match('/Form$/i', $form))
-    {
+    if (!preg_match('/Form$/i', $form)) {
       $form .= 'Form';
     }
 
@@ -94,39 +93,31 @@ EOF;
     $this->logSection($this->getFullName(), sprintf('Found "%d" new i18n strings', $extract->getNewMessagesCount()));
     $this->logSection($this->getFullName(), sprintf('Found "%d" old i18n strings', $extract->getOldMessagesCount()));
 
-    if ($options['display-new'])
-    {
+    if ($options['display-new']) {
       $this->logSection($this->getFullName(), sprintf('Display new i18n strings', $extract->getNewMessagesCount()));
-      foreach ($extract->getNewMessages() as $domain => $messages)
-      {
-        foreach($messages as $message)
-        {
+      foreach ($extract->getNewMessages() as $domain => $messages) {
+        foreach ($messages as $message) {
           $this->log('               '.$message."\n");
         }
       }
     }
 
-    if ($options['auto-save'])
-    {
+    if ($options['auto-save']) {
       $this->logSection($this->getFullName(), 'Saving new i18n strings');
 
       $extract->saveNewMessages();
     }
 
-    if ($options['display-old'])
-    {
+    if ($options['display-old']) {
       $this->logSection($this->getFullName(), sprintf('Display old i18n strings', $extract->getOldMessagesCount()));
-      foreach($extract->getOldMessages() as $domain => $messages)
-      {
-        foreach($messages as $message)
-        {
+      foreach ($extract->getOldMessages() as $domain => $messages) {
+        foreach ($messages as $message) {
           $this->log('               '.$message."\n");
         }
       }
     }
 
-    if ($options['auto-delete'])
-    {
+    if ($options['auto-delete']) {
       $this->logSection($this->getFullName(), 'Deleting old i18n strings');
 
       $extract->deleteOldMessages();

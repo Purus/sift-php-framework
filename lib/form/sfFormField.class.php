@@ -61,12 +61,9 @@ class sfFormField
    */
   public function __toString()
   {
-    try
-    {
+    try {
       return $this->render();
-    }
-    catch (Exception $e)
-    {
+    } catch (Exception $e) {
       self::setToStringException($e);
 
       // we return a simple Exception message in case the form framework is used out of Sift framework
@@ -107,8 +104,7 @@ class sfFormField
    */
   public static function setToStringException(Exception $e)
   {
-    if (null === self::$toStringException)
-    {
+    if (null === self::$toStringException) {
       self::$toStringException = $e;
     }
   }
@@ -124,12 +120,9 @@ class sfFormField
   {
     $attributes = $this->prepareAttributes($attributes);
 
-    if($this->parent)
-    {
+    if ($this->parent) {
       return $this->parent->getWidget()->renderField($this->name, $this->value, $attributes, $this->error);
-    }
-    else
-    {
+    } else {
       return $this->widget->render($this->name, $this->value, $attributes, $this->error, null, $this->widget->getAttributes(), $this->widget);
     }
   }
@@ -141,12 +134,9 @@ class sfFormField
    */
   public function renderForJavascriptTemplate()
   {
-    if($this->parent)
-    {
+    if ($this->parent) {
       return $this->parent[$this->name]->getWidget()->renderForJavascriptTemplate();
-    }
-    else
-    {
+    } else {
       return $this->widget->renderFormJavascriptTemplate();
     }
   }
@@ -166,8 +156,7 @@ class sfFormField
    */
   public function renderRow($attributes = array(), $label = null, $help = null)
   {
-    if (null === $this->parent)
-    {
+    if (null === $this->parent) {
       throw new LogicException(sprintf('Unable to render the row for "%s".', $this->name));
     }
 
@@ -179,8 +168,7 @@ class sfFormField
 
     $help = null === $help ? $this->parent->getWidget()->getHelp($this->name) : $help;
 
-    if(!isset($attributes['id']))
-    {
+    if (!isset($attributes['id'])) {
       $attributes['id'] = $this->getId();
     }
 
@@ -194,41 +182,33 @@ class sfFormField
 
   protected function prepareAttributes($attributes)
   {
-    if($this->parent)
-    {
+    if ($this->parent) {
       $formFormatter = $this->parent->getWidget()->getFormFormatter();
-    }
-    else
-    {
+    } else {
       $formFormatter = $this->widget->getFormFormatter();
     }
 
     /* @var $formFormatter sfWidgetFormSchemaFormatter */
     $errorCssClass = $formFormatter->getErrorCssClass();
 
-    if($this->error && $errorCssClass)
-    {
+    if ($this->error && $errorCssClass) {
       $classes = array($errorCssClass);
-      if(isset($attributes['class']))
-      {
+      if (isset($attributes['class'])) {
         $classes[] = $attributes['class'];
       }
       $attributes['class'] = trim(implode(' ',
         array_merge(explode(' ', $this->widget->getAttribute('class')), $classes)));
     }
 
-    if(sfWidget::isAriaEnabled())
-    {
+    if (sfWidget::isAriaEnabled()) {
       $widgetName = $formFormatter->getWidgetSchema()->generateName($this->name);
       $id = $formFormatter->getWidgetSchema()->generateId($widgetName);
 
-      if(!$this->isHidden() && !isset($attributes['aria-labelledby']))
-      {
+      if (!$this->isHidden() && !isset($attributes['aria-labelledby'])) {
         $attributes['aria-labelledby'] = sprintf('%s_label', $id);
       }
 
-      if($this->error)
-      {
+      if ($this->error) {
         $attributes['aria-invalid'] = 'true';
       }
 
@@ -238,8 +218,7 @@ class sfFormField
         $attributes['aria-disabled'] = 'true';
       }
 
-      if(($validator = $this->getValidator()))
-      {
+      if (($validator = $this->getValidator())) {
         if($validator->hasOption('required')
             && $validator->getOption('required'))
         {
@@ -256,8 +235,7 @@ class sfFormField
               'sfWidgetFormSelectRadio',
           )))
           {
-            if(!isset($attributes['aria-required']))
-            {
+            if (!isset($attributes['aria-required'])) {
               $attributes['aria-required'] = 'true';
             }
           }
@@ -278,37 +256,29 @@ class sfFormField
    */
   public function renderError($attributes = array())
   {
-    if (null === $this->parent)
-    {
+    if (null === $this->parent) {
       throw new LogicException(sprintf('Unable to render the error for "%s".', $this->name));
     }
 
     $this->setupFormatter();
 
-    if($this->parent)
-    {
+    if ($this->parent) {
       $formFormatter = $this->parent->getWidget()->getFormFormatter();
-    }
-    else
-    {
+    } else {
       $formFormatter = $this->widget->getFormFormatter();
     }
 
     $baseAttributes = array();
 
-    if(!isset($attributes['for']))
-    {
+    if (!isset($attributes['for'])) {
       $baseAttributes['for'] = $this->getId();
     }
 
-    if(sfWidget::isAriaEnabled())
-    {
-      if(!isset($attributes['role']))
-      {
+    if (sfWidget::isAriaEnabled()) {
+      if (!isset($attributes['role'])) {
         $attributes['role'] = 'alert';
       }
-      if(!isset($attributes['id']))
-      {
+      if (!isset($attributes['id'])) {
         $attributes['id'] = sprintf('%s_label', $this->getId());
       }
     }
@@ -327,8 +297,7 @@ class sfFormField
    */
   public function renderHelp()
   {
-    if (null === $this->parent)
-    {
+    if (null === $this->parent) {
       throw new LogicException(sprintf('Unable to render the help for "%s".', $this->name));
     }
 
@@ -342,8 +311,7 @@ class sfFormField
    */
   public function getHelp()
   {
-    if (null === $this->parent)
-    {
+    if (null === $this->parent) {
       throw new LogicException(sprintf('Unable to render the help for "%s".', $this->name));
     }
 
@@ -360,13 +328,11 @@ class sfFormField
    */
   public function renderLabel($label = null, $attributes = array())
   {
-    if (null === $this->parent)
-    {
+    if (null === $this->parent) {
       throw new LogicException(sprintf('Unable to render the label for "%s".', $this->name));
     }
 
-    if (null !== $label)
-    {
+    if (null !== $label) {
       $currentLabel = $this->parent->getWidget()->getLabel($this->name);
       $this->parent->getWidget()->setLabel($this->name, $label);
     }
@@ -376,8 +342,7 @@ class sfFormField
 
     $html = $this->parent->getWidget()->getFormFormatter()->generateLabel($this->name, $attributes);
 
-    if (null !== $label)
-    {
+    if (null !== $label) {
       $this->parent->getWidget()->setLabel($this->name, $currentLabel);
     }
 
@@ -401,8 +366,7 @@ class sfFormField
    */
   public function renderLabelName()
   {
-    if (null === $this->parent)
-    {
+    if (null === $this->parent) {
       throw new LogicException(sprintf('Unable to render the label name for "%s".', $this->name));
     }
 
@@ -512,8 +476,7 @@ class sfFormField
    */
   public function getError($asTranslatedString = false)
   {
-    if($asTranslatedString)
-    {
+    if ($asTranslatedString) {
       return $this->error ? $this->form->translate($this->error->getMessageFormat(), $this->error->getArguments()) : '';
     }
 
@@ -544,8 +507,7 @@ class sfFormField
   {
     $formatter = $this->parent->getWidget()->getFormFormatter();
     /* @var $formatter sfWidgetFormSchemaFormatter */
-    if($this->getValidator() && !$formatter->hasValidator($this->name))
-    {
+    if ($this->getValidator() && !$formatter->hasValidator($this->name)) {
       $formatter->setValidator($this->name, $this->getValidator());
     }
   }

@@ -14,8 +14,8 @@
  * @package    Sift
  * @subpackage validator
  */
-abstract class sfValidatorBase implements sfIEventDispatcherAware {
-
+abstract class sfValidatorBase implements sfIEventDispatcherAware
+{
   /**
    * The event dispatcher
    *
@@ -66,20 +66,17 @@ abstract class sfValidatorBase implements sfIEventDispatcherAware {
     $optionKeys = array_keys($options);
 
     // check option names
-    if($diff = array_diff($optionKeys, array_merge($currentOptionKeys, $this->requiredOptions)))
-    {
+    if ($diff = array_diff($optionKeys, array_merge($currentOptionKeys, $this->requiredOptions))) {
       throw new InvalidArgumentException(sprintf('%s does not support the following options: \'%s\'.', get_class($this), implode('\', \'', $diff)));
     }
 
     // check error code names
-    if($diff = array_diff(array_keys($messages), array_keys($this->messages)))
-    {
+    if ($diff = array_diff(array_keys($messages), array_keys($this->messages))) {
       throw new InvalidArgumentException(sprintf('%s does not support the following error codes: \'%s\'.', get_class($this), implode('\', \'', $diff)));
     }
 
     // check required options
-    if($diff = array_diff($this->requiredOptions, array_merge($currentOptionKeys, $optionKeys)))
-    {
+    if ($diff = array_diff($this->requiredOptions, array_merge($currentOptionKeys, $optionKeys))) {
       throw new RuntimeException(sprintf('%s requires the following options: \'%s\'.', get_class($this), implode('\', \'', $diff)));
     }
 
@@ -144,8 +141,7 @@ abstract class sfValidatorBase implements sfIEventDispatcherAware {
    */
   public function setMessage($name, $value)
   {
-    if(!in_array($name, array_keys($this->messages)))
-    {
+    if (!in_array($name, array_keys($this->messages))) {
       throw new InvalidArgumentException(sprintf('%s does not support the following error code: \'%s\'.', get_class($this), $name));
     }
 
@@ -215,8 +211,7 @@ abstract class sfValidatorBase implements sfIEventDispatcherAware {
    */
   public function setOption($name, $value)
   {
-    if(!in_array($name, array_merge(array_keys($this->options), $this->requiredOptions)))
-    {
+    if (!in_array($name, array_merge(array_keys($this->options), $this->requiredOptions))) {
       throw new InvalidArgumentException(sprintf('%s does not support the following option: \'%s\'.', get_class($this), $name));
     }
 
@@ -312,17 +307,14 @@ abstract class sfValidatorBase implements sfIEventDispatcherAware {
   {
     $clean = $value;
 
-    if($this->options['trim'] && is_string($clean))
-    {
+    if ($this->options['trim'] && is_string($clean)) {
       $clean = trim($clean);
     }
 
     // empty value?
-    if($this->isEmpty($clean))
-    {
+    if ($this->isEmpty($clean)) {
       // required?
-      if($this->options['required'])
-      {
+      if ($this->options['required']) {
         throw new sfValidatorError($this, 'required');
       }
 
@@ -418,12 +410,10 @@ abstract class sfValidatorBase implements sfIEventDispatcherAware {
   public function getActiveMessages()
   {
     $messages = array();
-    if($invalid = $this->getMessage('invalid'))
-    {
+    if ($invalid = $this->getMessage('invalid')) {
       $messages[] = $invalid;
     }
-    if($this->getOption('required'))
-    {
+    if ($this->getOption('required')) {
       $messages[] = $this->getMessage('required');
     }
 
@@ -437,8 +427,7 @@ abstract class sfValidatorBase implements sfIEventDispatcherAware {
    */
   public function getJavascriptValidationRules()
   {
-    if($this->hasOption('required'))
-    {
+    if ($this->hasOption('required')) {
       return array(
           sfFormJavascriptValidation::REQUIRED => $this->getOption('required')
       );
@@ -455,8 +444,7 @@ abstract class sfValidatorBase implements sfIEventDispatcherAware {
   public function getJavascriptValidationMessages()
   {
     $messages = array();
-    if($this->getOption('required'))
-    {
+    if ($this->getOption('required')) {
       $messages[sfFormJavascriptValidation::REQUIRED] =
               sfFormJavascriptValidation::fixValidationMessage($this, 'required');
     }
@@ -531,10 +519,8 @@ abstract class sfValidatorBase implements sfIEventDispatcherAware {
     $messages = $this->messages;
 
     // remove default option values
-    foreach($this->getDefaultMessages() as $key => $value)
-    {
-      if(array_key_exists($key, $messages) && $messages[$key] === $value)
-      {
+    foreach ($this->getDefaultMessages() as $key => $value) {
+      if (array_key_exists($key, $messages) && $messages[$key] === $value) {
         unset($messages[$key]);
       }
     }
@@ -552,10 +538,8 @@ abstract class sfValidatorBase implements sfIEventDispatcherAware {
     $options = $this->options;
 
     // remove default option values
-    foreach($this->getDefaultOptions() as $key => $value)
-    {
-      if(array_key_exists($key, $options) && $options[$key] === $value)
-      {
+    foreach ($this->getDefaultOptions() as $key => $value) {
+      if (array_key_exists($key, $options) && $options[$key] === $value) {
         unset($options[$key]);
       }
     }
@@ -571,8 +555,7 @@ abstract class sfValidatorBase implements sfIEventDispatcherAware {
    */
   protected function getCulture()
   {
-    if($culture = $this->getOption('culture'))
-    {
+    if ($culture = $this->getOption('culture')) {
       return $culture;
     }
 
@@ -587,8 +570,7 @@ abstract class sfValidatorBase implements sfIEventDispatcherAware {
    */
   protected function log($message, $priority = sfLogger::INFO)
   {
-    if(class_exists('sfConfig') && sfConfig::get('sf_logging_enabled'))
-    {
+    if (class_exists('sfConfig') && sfConfig::get('sf_logging_enabled')) {
       sfLogger::getInstance()->log(
               sprintf('{%s} %s', get_class($this), $message), $priority);
     }

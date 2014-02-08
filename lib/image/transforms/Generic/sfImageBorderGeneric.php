@@ -14,8 +14,8 @@
  * @package Sift
  * @subpackage image
  */
-class sfImageBorderGeneric extends sfImageTransformAbstract {
-
+class sfImageBorderGeneric extends sfImageTransformAbstract
+{
   /**
    * thickness of the border
    */
@@ -48,8 +48,7 @@ class sfImageBorderGeneric extends sfImageTransformAbstract {
    */
   public function setThickness($thickness)
   {
-    if(is_numeric($thickness))
-    {
+    if (is_numeric($thickness)) {
       $this->thickness = (int) $thickness;
 
       return true;
@@ -75,8 +74,7 @@ class sfImageBorderGeneric extends sfImageTransformAbstract {
    */
   public function setColor($color)
   {
-    if(preg_match('/#[\d\w]{6}/', $color))
-    {
+    if (preg_match('/#[\d\w]{6}/', $color)) {
       $this->color = $color;
 
       return true;

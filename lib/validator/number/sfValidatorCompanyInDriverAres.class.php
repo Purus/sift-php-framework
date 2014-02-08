@@ -46,8 +46,7 @@ class sfValidatorCompanyInDriverAres
     $response = $browser->getResponseText();
 
     $result = array();
-    if(!$response)
-    {
+    if (!$response) {
       return false;
     }
 
@@ -55,18 +54,13 @@ class sfValidatorCompanyInDriverAres
     $xml->loadXML($response);
     $xpath = new DomXPath($xml);
 
-    while(list($key, $query) = each($this->mapping))
-    {
+    while (list($key, $query) = each($this->mapping)) {
       $list = $xpath->query($query);
       $i = 0;
-      while($node = $list->item($i))
-      {
-        if(!isset($result[$i][$key]))
-        {
+      while ($node = $list->item($i)) {
+        if (!isset($result[$i][$key])) {
           $result[$i][$key] = '';
-        }
-        else
-        {
+        } else {
           $result[$i][$key] .= ' ';
         }
         $result[$i][$key] .= trim($node->nodeValue);

@@ -12,8 +12,8 @@
  * @package    Sift
  * @subpackage database
  */
-class sfMockDatabase extends sfDatabase {
-
+class sfMockDatabase extends sfDatabase
+{
   public function connect()
   {
   }

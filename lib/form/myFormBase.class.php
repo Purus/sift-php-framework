@@ -14,8 +14,8 @@ sfWidgetFormSchema::setDefaultFormFormatterName('Div');
  * @package    Sift
  * @subpackage form
  */
-class myFormBase extends sfForm {
-
+class myFormBase extends sfForm
+{
   /**
    * Constructor.
    *
@@ -25,8 +25,7 @@ class myFormBase extends sfForm {
    */
   public function __construct($defaults = array(), $options = array(), $CSRFSecret = null)
   {
-    if($CSRFSecret === null)
-    {
+    if ($CSRFSecret === null) {
       $CSRFSecret = sfConfig::get('sf_csrf_secret');
     }
     parent::__construct($defaults, $options, $CSRFSecret);
@@ -54,8 +53,7 @@ class myFormBase extends sfForm {
     $decorator = new sfWidgetFormSchemaFormatterDiv($this->widgetSchema);
     $decorator->setValidatorSchema($this->getValidatorSchema());
 
-    if(sfConfig::get('sf_i18n') && $this->translationCatalogue)
-    {
+    if (sfConfig::get('sf_i18n') && $this->translationCatalogue) {
       $decorator->setTranslationCallable('__');
       $decorator->setTranslationCatalogue($this->getTranslationCatalogue());
     }
@@ -72,8 +70,7 @@ class myFormBase extends sfForm {
    */
   public function renderGlobalErrors($useGlobalPartial = true)
   {
-    if(!$this->hasGlobalErrors())
-    {
+    if (!$this->hasGlobalErrors()) {
       return '';
     }
 
@@ -97,8 +94,7 @@ class myFormBase extends sfForm {
    */
   public function render($attributes = array())
   {
-    if(!isset($attributes['global_template']))
-    {
+    if (!isset($attributes['global_template'])) {
       $attributes['global_template'] = 'form';
     }
 
@@ -130,8 +126,7 @@ class myFormBase extends sfForm {
   {
     // This starts like sfForm::embedForm
     $name = (string) $name;
-    if(true === $this->isBound() || true === $form->isBound())
-    {
+    if (true === $this->isBound() || true === $form->isBound()) {
       throw new LogicException('A bound form cannot be merged');
     }
     $this->embeddedForms[$name] = $form;
@@ -141,11 +136,9 @@ class myFormBase extends sfForm {
 
     // But now, copy each widget instead of the while form into the current
     // form. Each widget ist named "formname|fieldname".
-    foreach($form->getWidgetSchema()->getFields() as $field => $widget)
-    {
+    foreach ($form->getWidgetSchema()->getFields() as $field => $widget) {
       $widgetName = "$name-$field";
-      if(isset($this->widgetSchema[$widgetName]))
-      {
+      if (isset($this->widgetSchema[$widgetName])) {
         throw new LogicException("The forms cannot be merged. A field name '$widgetName' already exists.");
       }
 
@@ -153,8 +146,7 @@ class myFormBase extends sfForm {
       $this->validatorSchema[$widgetName] = $form->validatorSchema[$field]; // Copy schema
       $this->setDefault($widgetName, $form->getDefault($field));            // Copy default value
 
-      if(!$widget->getLabel())
-      {
+      if (!$widget->getLabel()) {
         // Re-create label if not set (otherwise it would be named 'ucfirst($widgetName)')
         $label = $form->getWidgetSchema()->getFormFormatter()->generateLabelName($field);
         $this->getWidgetSchema()->setLabel($widgetName, $label);

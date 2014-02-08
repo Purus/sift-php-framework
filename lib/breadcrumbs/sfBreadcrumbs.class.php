@@ -11,8 +11,8 @@
  * @package Sift
  * @subpackage breadcrumbs
  */
-class sfBreadcrumbs {
-
+class sfBreadcrumbs
+{
   /**
    * Response namespace
    *
@@ -45,8 +45,7 @@ class sfBreadcrumbs {
    */
   public static function getInstance()
   {
-    if(!isset(self::$instance))
-    {
+    if (!isset(self::$instance)) {
       self::$instance = new self();
     }
 
@@ -64,8 +63,7 @@ class sfBreadcrumbs {
   {
     $this->response = sfContext::getInstance()->getResponse();
 
-    if(!$home)
-    {
+    if (!$home) {
       $home = sfConfig::get('sf_i18n') ?
               __('Home', array(), sfConfig::get('sf_sift_data_dir')
                                     .'/i18n/catalogues/breadcrumbs')
@@ -191,8 +189,7 @@ class sfBreadcrumbs {
             )
       );
 
-    if($includeHome && is_array($this->home))
-    {
+    if ($includeHome && is_array($this->home)) {
       array_unshift($crumbs, $this->home);
     }
 

@@ -12,8 +12,8 @@
  * @package    Sift
  * @subpackage i18n
  */
-class sfI18nGettextMo extends sfI18nGettext {
-
+class sfI18nGettextMo extends sfI18nGettext
+{
   /**
    * file handle
    *
@@ -53,8 +53,7 @@ class sfI18nGettextMo extends sfI18nGettext {
    */
   protected function _read($bytes = 1)
   {
-    if(0 < $bytes = abs($bytes))
-    {
+    if (0 < $bytes = abs($bytes)) {
       return fread($this->_handle, $bytes);
     }
 
@@ -135,19 +134,16 @@ class sfI18nGettextMo extends sfI18nGettext {
    */
   public function load($file = null)
   {
-    if(!isset($file))
-    {
+    if (!isset($file)) {
       $file = $this->file;
     }
 
     // open MO file
-    if(!is_resource($this->_handle = @fopen($file, 'rb')))
-    {
+    if (!is_resource($this->_handle = @fopen($file, 'rb'))) {
       return false;
     }
     // lock MO file shared
-    if(!@flock($this->_handle, LOCK_SH))
-    {
+    if (!@flock($this->_handle, LOCK_SH)) {
       @fclose($this->_handle);
 
       return false;
@@ -155,8 +151,7 @@ class sfI18nGettextMo extends sfI18nGettext {
 
     // read (part of) magic number from MO file header and define endianess
     $unpacked = unpack('c', $this->_read(4));
-    switch($magic = array_shift($unpacked))
-    {
+    switch ($magic = array_shift($unpacked)) {
       case -34:
         $be = false;
         break;
@@ -170,8 +165,7 @@ class sfI18nGettextMo extends sfI18nGettext {
     }
 
     // check file format revision - we currently only support 0
-    if(0 !== ($_rev = $this->_readInt($be)))
-    {
+    if (0 !== ($_rev = $this->_readInt($be))) {
       return false;
     }
 
@@ -187,8 +181,7 @@ class sfI18nGettextMo extends sfI18nGettext {
     fseek($this->_handle, $offset_original);
     // read lengths and offsets of msgids
     $original = array();
-    for($i = 0; $i < $count; $i++)
-    {
+    for ($i = 0; $i < $count; $i++) {
       $original[$i] = array(
           'length' => $this->_readInt($be),
           'offset' => $this->_readInt($be)
@@ -199,8 +192,7 @@ class sfI18nGettextMo extends sfI18nGettext {
     fseek($this->_handle, $offset_translat);
     // read lengths and offsets of msgstrs
     $translat = array();
-    for($i = 0; $i < $count; $i++)
-    {
+    for ($i = 0; $i < $count; $i++) {
       $translat[$i] = array(
           'length' => $this->_readInt($be),
           'offset' => $this->_readInt($be)
@@ -208,8 +200,7 @@ class sfI18nGettextMo extends sfI18nGettext {
     }
 
     // read all
-    for($i = 0; $i < $count; $i++)
-    {
+    for ($i = 0; $i < $count; $i++) {
       $this->strings[$this->_readStr($original[$i])] =
               $this->_readStr($translat[$i]);
     }
@@ -220,8 +211,7 @@ class sfI18nGettextMo extends sfI18nGettext {
     $this->_handle = null;
 
     // check for meta info
-    if(isset($this->strings['']))
-    {
+    if (isset($this->strings[''])) {
       $this->meta = parent::meta2array($this->strings['']);
       unset($this->strings['']);
     }
@@ -238,31 +228,25 @@ class sfI18nGettextMo extends sfI18nGettext {
    */
   public function save($file = null)
   {
-    if(!isset($file))
-    {
+    if (!isset($file)) {
       $file = $this->file;
     }
 
     // open MO file
-    if(!is_resource($this->_handle = @fopen($file, 'wb')))
-    {
+    if (!is_resource($this->_handle = @fopen($file, 'wb'))) {
       return false;
     }
     // lock MO file exclusively
-    if(!@flock($this->_handle, LOCK_EX))
-    {
+    if (!@flock($this->_handle, LOCK_EX)) {
       @fclose($this->_handle);
 
       return false;
     }
 
     // write magic number
-    if($this->writeBigEndian)
-    {
+    if ($this->writeBigEndian) {
       $this->_write(pack('c*', 0x95, 0x04, 0x12, 0xde));
-    }
-    else
-    {
+    } else {
       $this->_write(pack('c*', 0xde, 0x12, 0x04, 0x95));
     }
 
@@ -289,23 +273,18 @@ class sfI18nGettextMo extends sfI18nGettext {
     $this->_writeInt($offset);
 
     // unshift meta info
-    if($meta)
-    {
+    if ($meta) {
       $meta = '';
-      foreach($this->meta as $key => $val)
-      {
+      foreach ($this->meta as $key => $val) {
         $meta .= $key . ': ' . $val . "\n";
       }
       $strings = array('' => $meta) + $this->strings;
-    }
-    else
-    {
+    } else {
       $strings = $this->strings;
     }
 
     // write offsets for original strings
-    foreach(array_keys($strings) as $o)
-    {
+    foreach (array_keys($strings) as $o) {
       $len = strlen($o);
       $this->_writeInt($len);
       $this->_writeInt($offset);
@@ -313,8 +292,7 @@ class sfI18nGettextMo extends sfI18nGettext {
     }
 
     // write offsets for translated strings
-    foreach($strings as $t)
-    {
+    foreach ($strings as $t) {
       $len = strlen($t);
       $this->_writeInt($len);
       $this->_writeInt($offset);
@@ -322,14 +300,12 @@ class sfI18nGettextMo extends sfI18nGettext {
     }
 
     // write original strings
-    foreach(array_keys($strings) as $o)
-    {
+    foreach (array_keys($strings) as $o) {
       $this->_writeStr($o);
     }
 
     // write translated strings
-    foreach($strings as $t)
-    {
+    foreach ($strings as $t) {
       $this->_writeStr($t);
     }
 

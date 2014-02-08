@@ -13,8 +13,8 @@
  * @package    Sift
  * @subpackage cli_task
  */
-class sfCliI18nFindTask extends sfCliI18nBaseTask {
-
+class sfCliI18nFindTask extends sfCliI18nBaseTask
+{
   /**
    * @see sfCliTask
    */
@@ -56,12 +56,9 @@ EOF;
   {
     list($application, $dir, $isPlugin) = $this->getApplicationOrPlugin($arguments['app']);
 
-    if($isPlugin)
-    {
+    if ($isPlugin) {
       $this->logSection($this->getFullName(), sprintf('Find non "i18n ready" strings in the "%s" plugin', $application));
-    }
-    else
-    {
+    } else {
       $this->logSection($this->getFullName(), sprintf('Find non "i18n ready" strings in the "%s" application', $application));
     }
 
@@ -70,8 +67,7 @@ EOF;
     $moduleNames = sfFinder::type('dir')->maxDepth(0)->relative()
             ->in($dir . '/' . $this->environment->get('sf_app_module_dir_name'));
 
-    foreach($moduleNames as $moduleName)
-    {
+    foreach ($moduleNames as $moduleName) {
       $dirs[] = $dir . '/' . $this->environment->get('sf_app_module_dir_name') . '/' .
                 $moduleName . '/' . $this->environment->get('sf_app_template_dir_name');
     }
@@ -79,13 +75,10 @@ EOF;
     $dirs[] = $dir . '/'. $this->environment->get('sf_app_template_dir_name');
 
     $strings = array();
-    foreach($dirs as $dir)
-    {
+    foreach ($dirs as $dir) {
       $templates = sfFinder::type('file')->name('*.php')->in($dir);
-      foreach($templates as $template)
-      {
-        if(!isset($strings[$template]))
-        {
+      foreach ($templates as $template) {
+        if (!isset($strings[$template])) {
           $strings[$template] = array();
         }
 
@@ -100,36 +93,25 @@ EOF;
         // libxml_clear_errors();
 
         $nodes = array($dom);
-        while($nodes)
-        {
+        while ($nodes) {
           $node = array_shift($nodes);
 
-          if(XML_TEXT_NODE === $node->nodeType)
-          {
-            if(!$node->isWhitespaceInElementContent())
-            {
+          if (XML_TEXT_NODE === $node->nodeType) {
+            if (!$node->isWhitespaceInElementContent()) {
               $strings[$template][] = $node->nodeValue;
             }
-          }
-          else if($node->childNodes)
-          {
-            for($i = 0, $max = $node->childNodes->length; $i < $max; $i++)
-            {
+          } else if ($node->childNodes) {
+            for ($i = 0, $max = $node->childNodes->length; $i < $max; $i++) {
               $nodes[] = $node->childNodes->item($i);
             }
-          }
-          else if('DOMProcessingInstruction' == get_class($node) && 'php' == $node->target)
-          {
+          } else if ('DOMProcessingInstruction' == get_class($node) && 'php' == $node->target) {
             // processing instruction node
             $tokens = token_get_all('<?php ' . $node->nodeValue);
-            foreach($tokens as $token)
-            {
-              if(is_array($token))
-              {
+            foreach ($tokens as $token) {
+              if (is_array($token)) {
                 list($id, $text) = $token;
                 // this is a call to php function!
-                if(T_CONSTANT_ENCAPSED_STRING === $id)
-                {
+                if (T_CONSTANT_ENCAPSED_STRING === $id) {
                   $strings[$template][] = sfUtf8::sub($text, 1, -1);
                 }
               }
@@ -139,17 +121,14 @@ EOF;
       }
     }
 
-    foreach($strings as $template => $messages)
-    {
-      if(!$messages)
-      {
+    foreach ($strings as $template => $messages) {
+      if (!$messages) {
         continue;
       }
 
       $this->logSection($this->getFullName(), sprintf('Strings in "%s"', str_replace(str_replace(DIRECTORY_SEPARATOR, '/', $this->environment->get('sf_root_dir') . '/'), '', $template)), 1000);
 
-      foreach($messages as $message)
-      {
+      foreach ($messages as $message) {
         $message = trim($message);
         $this->log("  $message\n");
       }

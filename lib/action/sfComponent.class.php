@@ -12,8 +12,8 @@
  * @package    Sift
  * @subpackage action
  */
-abstract class sfComponent {
-
+abstract class sfComponent
+{
   private $context = null,
     $dispatcher,
     $request = null,
@@ -105,8 +105,7 @@ abstract class sfComponent {
    */
   public function logMessage($message, $level = sfILogger::INFO, array $context = array())
   {
-    if(sfConfig::get('sf_logging_enabled'))
-    {
+    if (sfConfig::get('sf_logging_enabled')) {
       $this->getLogger()->log($message, $level, $context);
     }
   }
@@ -403,8 +402,7 @@ abstract class sfComponent {
                 'arguments' => $arguments,
                 'component' => $this)));
 
-    if(!$event->isProcessed())
-    {
+    if (!$event->isProcessed()) {
       throw new sfException(sprintf('Call to undefined method %s::%s.', get_class($this), $method));
     }
 

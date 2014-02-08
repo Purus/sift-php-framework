@@ -16,8 +16,8 @@
  * @package Sift
  * @subpackage security
  */
-class sfSecurity {
-
+class sfSecurity
+{
   /**
    * Default options for ip checker methods
    *
@@ -80,8 +80,7 @@ class sfSecurity {
   public static function isRouteSecure($route)
   {
     $parsed = self::getModuleActionFromRoute($route);
-    if(!$parsed)
-    {
+    if (!$parsed) {
       return null;
     }
     list($module, $action) = $parsed;
@@ -98,8 +97,7 @@ class sfSecurity {
   public static function getRouteCredentials($route)
   {
     $parsed = self::getModuleActionFromRoute($route);
-    if(!$parsed)
-    {
+    if (!$parsed) {
       return null;
     }
     list($module, $action) = $parsed;
@@ -116,14 +114,12 @@ class sfSecurity {
   public static function getUrlCredentials($url)
   {
     // non local urls are always unsecure
-    if(!self::isLocalUrl($url))
-    {
+    if (!self::isLocalUrl($url)) {
       return null;
     }
 
     $parsed = self::getModuleActionFromUrl($url);
-    if(!$parsed)
-    {
+    if (!$parsed) {
       return null;
     }
     list($module, $action) = $parsed;
@@ -140,14 +136,12 @@ class sfSecurity {
   public static function isUrlSecure($url)
   {
     // non local urls are always unsecure
-    if(!self::isLocalUrl($url))
-    {
+    if (!self::isLocalUrl($url)) {
       return false;
     }
 
     $parsed = self::getModuleActionFromUrl($url);
-    if(!$parsed)
-    {
+    if (!$parsed) {
       return null;
     }
     list($module, $action) = $parsed;
@@ -168,12 +162,10 @@ class sfSecurity {
     $isAuthenticated = $user->isAuthenticated();
     $isSuperAdmin    = $isAuthenticated && $user->isSuperAdmin();
 
-    if($isSuperAdmin || (!self::isActionSecure($module, $action)))
-    {
+    if ($isSuperAdmin || (!self::isActionSecure($module, $action))) {
       return true;
     }
-    if(($isAuthenticated) && ($user->hasCredential(self::getActionCredentials($module, $action))))
-    {
+    if (($isAuthenticated) && ($user->hasCredential(self::getActionCredentials($module, $action)))) {
       return true;
     }
 
@@ -192,13 +184,11 @@ class sfSecurity {
     $isAuthenticated = $user->isAuthenticated();
     $isSuperAdmin    = $isAuthenticated && $user->isSuperAdmin();
 
-    if($isSuperAdmin || (!self::isRouteSecure($route)))
-    {
+    if ($isSuperAdmin || (!self::isRouteSecure($route))) {
       return true;
     }
 
-    if(($isAuthenticated) && ($user->hasCredential(self::getRouteCredentials($route))))
-    {
+    if (($isAuthenticated) && ($user->hasCredential(self::getRouteCredentials($route)))) {
       return true;
     }
 
@@ -215,20 +205,17 @@ class sfSecurity {
   public static function isUserAllowedToExecuteUrl(sfISecurityUser $user, $url)
   {
     // non local urls are always executable
-    if(!self::isLocalUrl($url))
-    {
+    if (!self::isLocalUrl($url)) {
       return true;
     }
 
     $isAuthenticated = $user->isAuthenticated();
     $isSuperAdmin    = $isAuthenticated && $user->isSuperAdmin();
 
-    if($isSuperAdmin || (!self::isUrlSecure($url)))
-    {
+    if ($isSuperAdmin || (!self::isUrlSecure($url))) {
       return true;
     }
-    if(($isAuthenticated) && ($user->hasCredential(self::getUrlCredentials($url))))
-    {
+    if (($isAuthenticated) && ($user->hasCredential(self::getUrlCredentials($url)))) {
       return true;
     }
 
@@ -246,20 +233,16 @@ class sfSecurity {
    */
   protected static function getModuleSecurityValue($module, $action, $name, $default = null)
   {
-    if(!isset(self::$securityByModule[$module]))
-    {
+    if (!isset(self::$securityByModule[$module])) {
       $result = new sfSecurityCheckResult($module);
       self::$securityByModule[$module] = $result->getSecurity();
     }
 
     $action = strtolower($action);
 
-    if(isset(self::$securityByModule[$module][$action][$name]))
-    {
+    if (isset(self::$securityByModule[$module][$action][$name])) {
       return self::$securityByModule[$module][$action][$name];
-    }
-    else if(isset(self::$securityByModule[$module]['all'][$name]))
-    {
+    } else if (isset(self::$securityByModule[$module]['all'][$name])) {
       return self::$securityByModule[$module]['all'][$name];
     }
 
@@ -277,14 +260,10 @@ class sfSecurity {
    */
   protected static function getModuleActionFromRoute($route)
   {
-    try
-    {
+    try {
       $route = sfRouting::getInstance()->getRouteByName($route);
-    }
-    catch(sfException $e)
-    {
-      if(sfConfig::get('sf_debug'))
-      {
+    } catch (sfException $e) {
+      if (sfConfig::get('sf_debug')) {
         throw $e;
       }
 
@@ -322,8 +301,7 @@ class sfSecurity {
 
     sfConfig::set('sf_logging_enabled', $oldSetting);
 
-    if(!is_null($route) && $route['module'] && $route['action'])
-    {
+    if (!is_null($route) && $route['module'] && $route['action']) {
       return array($route['module'], $route['action']);
     }
 
@@ -342,8 +320,7 @@ class sfSecurity {
   public static function isRedirectUrlValid($url, $validDomains = array())
   {
     // url is empty
-    if(empty($url))
-    {
+    if (empty($url)) {
       return false;
     }
 
@@ -351,8 +328,7 @@ class sfSecurity {
     $protocol = sfContext::getInstance()->getRequest()->getProtocol();
     $parsed = parse_url($url);
 
-    if(is_array($parsed))
-    {
+    if (is_array($parsed)) {
       // valid are only common web schemas
       if(!isset($parsed['scheme']) ||
         !in_array($parsed['scheme'], array('http', 'https', 'ftp', 'ftps')))
@@ -408,42 +384,30 @@ class sfSecurity {
   {
     $options = sfToolkit::arrayDeepMerge(self::$defaultIpCheckOptions, $options);
 
-    foreach($whitelist as $ipAddress)
-    {
-      if($ip == $ipAddress)
-      {
+    foreach ($whitelist as $ipAddress) {
+      if ($ip == $ipAddress) {
         return true;
-      }
-      elseif(strpos($ipAddress, $options['wildcard']) !== false)
-      {
+      } elseif (strpos($ipAddress, $options['wildcard']) !== false) {
         $wildcardIp = str_replace($options['wildcard'], '', $ipAddress);
-        if(strpos($ip, $wildcardIp) === 0)
-        {
+        if (strpos($ip, $wildcardIp) === 0) {
           return true;
         }
-      }
-      elseif(preg_match($options['range_regex'], $ipAddress) == 1)
-      {
+      } elseif (preg_match($options['range_regex'], $ipAddress) == 1) {
         $exploded = explode($options['separator'], $ipAddress);
         $range = array_pop($exploded);
         $range = str_replace($options['range_sentinels'], '', $range);
         $ipStart = implode($options['separator'], $exploded);
 
-        if(strpos($ip, $ipStart) === 0)
-        {
+        if (strpos($ip, $ipStart) === 0) {
           list($rangeStart, $rangeEnd) = explode($options['range_delimiter'], $range);
-          for($i = $rangeStart; $i <= $rangeEnd; $i++)
-          {
+          for ($i = $rangeStart; $i <= $rangeEnd; $i++) {
             $checkIp = implode($options['separator'], array($ipStart, $i));
-            if($ip == $checkIp)
-            {
+            if ($ip == $checkIp) {
               return true;
             }
           }
         }
-      }
-      elseif(preg_match($options['cidr_regex'], $ipAddress, $ms))
-      {
+      } elseif (preg_match($options['cidr_regex'], $ipAddress, $ms)) {
         $mask = 0xFFFFFFFF << (32 - $ms[2]);
 
         return (ip2long($ip) & $mask) == (ip2long($ms[1]) & $mask);
@@ -473,14 +437,11 @@ class sfSecurity {
       array('255.255.255.0', '255.255.255.255')
     );
     $ipnum = ip2long($ip);
-    if($ipnum !== false && (long2ip($ipnum) === $ip))
-    {
-      foreach($reserved_ips as $r)
-      {
+    if ($ipnum !== false && (long2ip($ipnum) === $ip)) {
+      foreach ($reserved_ips as $r) {
         $min = ip2long($r[0]);
         $max = ip2long($r[1]);
-        if((ip2long($ip) >= $min) && (ip2long($ip) <= $max))
-        {
+        if ((ip2long($ip) >= $min) && (ip2long($ip) <= $max)) {
           return false;
         }
       }
@@ -498,12 +459,9 @@ class sfSecurity {
    */
   public static function getFirstIp($ips)
   {
-    if(($pos = strpos($ips, ',')) != false)
-    {
+    if (($pos = strpos($ips, ',')) != false) {
       return substr($ips, 0, $pos);
-    }
-    else
-    {
+    } else {
       return $ips;
     }
   }
@@ -517,19 +475,15 @@ class sfSecurity {
   protected static function isLocalUrl($url)
   {
     $parsedUrl = parse_url($url);
-    if($parsedUrl)
-    {
-      if(isset($parsedUrl['host']))
-      {
+    if ($parsedUrl) {
+      if (isset($parsedUrl['host'])) {
         $host = sfContext::getInstance()->getRequest()->getHost();
-        if($parsedUrl['host'] == $host)
-        {
+        if ($parsedUrl['host'] == $host) {
           return true;
         }
       }
       // only path is set
-      elseif(isset($parsedUrl['path']))
-      {
+      elseif (isset($parsedUrl['path'])) {
         return true;
       }
     }

@@ -12,8 +12,8 @@
  * @package    Sift
  * @subpackage log
  */
-class sfLogAnalyzerMessage {
-
+class sfLogAnalyzerMessage
+{
   /**
    * The message
    *
@@ -37,7 +37,7 @@ class sfLogAnalyzerMessage {
   public function __construct($message, $extra = '')
   {
     $this->message = $message;
-    $this->extra = (array)json_decode((string)$extra, true);
+    $this->extra = (array) json_decode((string) $extra, true);
   }
 
   /**

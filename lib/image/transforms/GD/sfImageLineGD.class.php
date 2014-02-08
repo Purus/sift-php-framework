@@ -75,9 +75,8 @@ class sfImageLineGD extends sfImageTransformAbstract
    */
   public function setStartX($x)
   {
-    if (is_numeric($x))
-    {
-      $this->x1 = (int)$x;
+    if (is_numeric($x)) {
+      $this->x1 = (int) $x;
 
       return true;
     }
@@ -103,9 +102,8 @@ class sfImageLineGD extends sfImageTransformAbstract
    */
   public function setStartY($y)
   {
-    if (is_numeric($y))
-    {
-      $this->y1 = (int)$y;
+    if (is_numeric($y)) {
+      $this->y1 = (int) $y;
 
       return true;
     }
@@ -131,9 +129,8 @@ class sfImageLineGD extends sfImageTransformAbstract
    */
   public function setEndX($x)
   {
-    if (is_numeric($x))
-    {
-      $this->x2 = (int)$x;
+    if (is_numeric($x)) {
+      $this->x2 = (int) $x;
 
       return true;
     }
@@ -159,9 +156,8 @@ class sfImageLineGD extends sfImageTransformAbstract
    */
   public function setEndY($y)
   {
-    if (is_numeric($y))
-    {
-      $this->y2 = (int)$y;
+    if (is_numeric($y)) {
+      $this->y2 = (int) $y;
 
       return true;
     }
@@ -187,9 +183,8 @@ class sfImageLineGD extends sfImageTransformAbstract
    */
   public function setThickness($thickness)
   {
-    if (is_numeric($thickness))
-    {
-      $this->thickness = (int)$thickness;
+    if (is_numeric($thickness)) {
+      $this->thickness = (int) $thickness;
 
       return true;
     }
@@ -215,8 +210,7 @@ class sfImageLineGD extends sfImageTransformAbstract
    */
   public function setColor($color)
   {
-    if (preg_match('/#[\d\w]{6}/',$color))
-    {
+    if (preg_match('/#[\d\w]{6}/',$color)) {
       $this->color = $color;
 
       return true;
@@ -243,8 +237,7 @@ class sfImageLineGD extends sfImageTransformAbstract
    */
   public function setStyle($style)
   {
-    if (is_numeric($style = $style))
-    {
+    if (is_numeric($style = $style)) {
       $this->style = $style;
 
       return true;
@@ -273,25 +266,17 @@ class sfImageLineGD extends sfImageTransformAbstract
   {
     $resource = $image->getAdapter()->getHolder();
 
-    if (!is_null($this->style))
-    {
+    if (!is_null($this->style)) {
       imagesetstyle($this->style);
     }
 
     $t = $this->thickness / 2 - 0.5;
 
-    if ($this->thickness === 1)
-    {
+    if ($this->thickness === 1) {
       imageline($resource, $this->x1, $this->y1, $this->x2, $this->y2, $image->getAdapter()->getColorByHex($resource, $this->color));
-    }
-
-    else if ($this->x1 === $this->x2 || $this->y1 === $this->y2)
-    {
+    } else if ($this->x1 === $this->x2 || $this->y1 === $this->y2) {
       imagefilledrectangle($resource, round(min($this->x1, $this->x2) - $t), round(min($this->y1, $this->y2) - $t), round(max($this->x1, $this->x2) + $t), round(max($this->y1, $this->y2) + $t), $image->getAdapter()->getColorByHex($resource, $this->color));
-    }
-
-    else
-    {
+    } else {
       $k = ($this->y2 - $this->y1) / ($this->x2 - $this->x1);
       $a = $t / sqrt(1 + pow($k, 2));
       $points = array(

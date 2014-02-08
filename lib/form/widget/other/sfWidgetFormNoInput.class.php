@@ -38,23 +38,16 @@ class sfWidgetFormNoInput extends sfWidgetForm
    */
   public function render($name, $value = null, $attributes = array(), $errors = array())
   {
-    if(!isset($attributes['class']))
-    {
+    if (!isset($attributes['class'])) {
       $attributes['class'] = 'form-no-input';
-    }
-    else
-    {
+    } else {
       $attributes['class'] .= ' form-no-input';
     }
 
-    if($renderer = $this->getOption('value_renderer'))
-    {
-      if($renderer instanceof sfCallable)
-      {
+    if ($renderer = $this->getOption('value_renderer')) {
+      if ($renderer instanceof sfCallable) {
         $value = $renderer->call($value);
-      }
-      else
-      {
+      } else {
         $value = call_user_func($renderer, $value);
       }
     }

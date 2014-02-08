@@ -25,29 +25,23 @@ function breadcrumbs($options = array())
   $force = _get_option($options, 'force', false);
 
   // don't display breadrumbs on homepage
-  if(sfRouting::getInstance()->getCurrentRouteName() == 'homepage' && !$force)
-  {
+  if (sfRouting::getInstance()->getCurrentRouteName() == 'homepage' && !$force) {
     return '';
   }
 
   $separator = _get_option($options, 'separator', '/');
 
-  if(!isset($options['class']))
-  {
+  if (!isset($options['class'])) {
     $options['class'] = 'breadcrumbs';
   }
 
   $title = '';
-  if(!isset($options['no_info']))
-  {
+  if (!isset($options['no_info'])) {
     $options['no_info'] = false;
   }
-  if(!$options['no_info'] && !isset($options['info']))
-  {
+  if (!$options['no_info'] && !isset($options['info'])) {
     $title = 'You are here:';
-  }
-  elseif(!$options['no_info'])
-  {
+  } elseif (!$options['no_info']) {
     $title = $options['info'];
   }
 
@@ -55,8 +49,7 @@ function breadcrumbs($options = array())
 
   // load crumbs
   $breadcrumbs = myBreadcrumbs::getInstance();
-  if(isset($options['home']))
-  {
+  if (isset($options['home'])) {
     $breadcrumbs->setHome($options['home']);
     unset($options['home']);
   }
@@ -64,21 +57,15 @@ function breadcrumbs($options = array())
   $crumbs = $breadcrumbs->getCrumbs();
 
   $_crumbs = array();
-  for($i = 0, $count = count($crumbs), $last = $count - 1; $i < $count; $i++)
-  {
-    if(!isset($crumbs[$i]['options']['title']))
-    {
+  for ($i = 0, $count = count($crumbs), $last = $count - 1; $i < $count; $i++) {
+    if (!isset($crumbs[$i]['options']['title'])) {
       $crumbs[$i]['options']['title'] = trim($crumbs[$i]['name']);
     }
 
-    if($i == $last)
-    {
+    if ($i == $last) {
       $_crumbs[] = content_tag('span', trim($crumbs[$i]['name']), $crumbs[$i]['options']);
-    }
-    else
-    {
-      if($i == 0)
-      {
+    } else {
+      if ($i == 0) {
         $crumbs[$i]['options']['class'] = isset($crumbs[$i]['options']['class']) ?
             array_merge($crumbs[$i]['options']['class'], array('first')) : 'first';
       }
@@ -88,37 +75,29 @@ function breadcrumbs($options = array())
     }
   }
 
-  if(sfConfig::get('sf_i18n'))
-  {
-    if(!$catalogue = _get_option($options, 'catalogue'))
-    {
+  if (sfConfig::get('sf_i18n')) {
+    if (!$catalogue = _get_option($options, 'catalogue')) {
       $catalogue = sfConfig::get('sf_sift_data_dir') . DIRECTORY_SEPARATOR .
                     'i18n' . DIRECTORY_SEPARATOR . 'catalogues' .
                     DIRECTORY_SEPARATOR . 'breadcrumbs';
     }
 
-    if(!empty($title))
-    {
+    if (!empty($title)) {
       $title = __($title, array(), $catalogue);
     }
   }
 
   $tag = _get_option($options, 'tag');
 
-  switch(strtolower($tag))
-  {
+  switch (strtolower($tag)) {
     // bootstrap compatibility
     case 'ul':
 
       $content = array();
-      for($i = 0, $count = count($_crumbs), $last = $count - 1; $i < $count; $i++)
-      {
-        if($i < $last)
-        {
+      for ($i = 0, $count = count($_crumbs), $last = $count - 1; $i < $count; $i++) {
+        if ($i < $last) {
           $li = $content[] = content_tag('li', $_crumbs[$i] . content_tag('span', '/', array('class' => 'divider')));
-        }
-        else
-        {
+        } else {
           $li = $content[] = content_tag('li', $_crumbs[$i], array('class' => 'active'));
         }
       }

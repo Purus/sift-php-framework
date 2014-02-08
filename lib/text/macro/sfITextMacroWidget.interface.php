@@ -12,8 +12,8 @@
  * @package    Sift
  * @subpackage text_macro
  */
-interface sfITextMacroWidget {
-
+interface sfITextMacroWidget
+{
   /**
    * Return the HTML code
    *

@@ -12,8 +12,8 @@
  * @package    Sift
  * @subpackage util
  */
-class sfClassManipulator {
-
+class sfClassManipulator
+{
   protected static $signatureTokens = array(
       T_FINAL,
       T_ABSTRACT,
@@ -59,8 +59,7 @@ class sfClassManipulator {
    */
   public function save()
   {
-    if(!$this->file)
-    {
+    if (!$this->file) {
       throw new LogicException('Unable to save the code as no file has been provided.');
     }
 
@@ -109,52 +108,34 @@ class sfClassManipulator {
     $code = '';
     $insideSetup = -1;
     $parens = 0;
-    foreach(token_get_all($this->code) as $token)
-    {
-      if(isset($token[1]))
-      {
-        if(-1 == $insideSetup && T_FUNCTION == $token[0])
-        {
+    foreach (token_get_all($this->code) as $token) {
+      if (isset($token[1])) {
+        if (-1 == $insideSetup && T_FUNCTION == $token[0]) {
           $insideSetup = 0;
-        }
-        elseif(0 == $insideSetup && T_STRING == $token[0])
-        {
+        } elseif (0 == $insideSetup && T_STRING == $token[0]) {
           $insideSetup = $method == $token[1] ? 1 : -1;
         }
 
         $code .= $token[1];
-      }
-      else
-      {
-        if(1 == $insideSetup && '{' == $token)
-        {
-          if(!$parens)
-          {
+      } else {
+        if (1 == $insideSetup && '{' == $token) {
+          if (!$parens) {
             $code .= $topCode ? $token . PHP_EOL . '    ' . $topCode : $token;
-          }
-          else
-          {
+          } else {
             $code .= $token;
           }
           ++$parens;
-        }
-        elseif(1 == $insideSetup && '}' == $token)
-        {
+        } elseif (1 == $insideSetup && '}' == $token) {
           --$parens;
 
-          if(!$parens)
-          {
+          if (!$parens) {
             $insideSetup = -1;
 
             $code .= $bottomCode ? '  ' . $bottomCode . PHP_EOL . '  ' . $token : $token;
-          }
-          else
-          {
+          } else {
             $code .= $token;
           }
-        }
-        else
-        {
+        } else {
           $code .= $token;
         }
       }
@@ -178,35 +159,24 @@ class sfClassManipulator {
     $break = false;
 
     $tokens = token_get_all($this->code);
-    for($i = 0; $i < count($tokens); $i++)
-    {
+    for ($i = 0; $i < count($tokens); $i++) {
       $token = $tokens[$i];
 
-      if(is_array($token))
-      {
+      if (is_array($token)) {
         $line .= $token[1];
 
-        if(-1 == $insideSetup && T_FUNCTION == $token[0])
-        {
+        if (-1 == $insideSetup && T_FUNCTION == $token[0]) {
           $insideSetup = 0;
-        }
-        elseif(0 == $insideSetup && T_STRING == $token[0])
-        {
+        } elseif (0 == $insideSetup && T_STRING == $token[0]) {
           $insideSetup = $method == $token[1] ? 1 : -1;
         }
-      }
-      else
-      {
-        if(1 == $insideSetup && '{' == $token)
-        {
+      } else {
+        if (1 == $insideSetup && '{' == $token) {
           ++$parens;
-        }
-        elseif(1 == $insideSetup && '}' == $token)
-        {
+        } elseif (1 == $insideSetup && '}' == $token) {
           --$parens;
 
-          if(!$parens)
-          {
+          if (!$parens) {
             $break = true;
           }
         }
@@ -215,35 +185,28 @@ class sfClassManipulator {
       }
 
       $lines = preg_split('/(\r?\n)/', $line, null, PREG_SPLIT_DELIM_CAPTURE);
-      if(count($lines) > 1 || $break)
-      {
+      if (count($lines) > 1 || $break) {
         $line = $break ? '' : array_pop($lines);
-        foreach(array_chunk($lines, 2) as $chunk)
-        {
+        foreach (array_chunk($lines, 2) as $chunk) {
           list($l, $eol) = array_pad($chunk, 2, '');
 
-          if(1 == $insideSetup)
-          {
+          if (1 == $insideSetup) {
             list($before, $setup) = $this->splitSetup($l);
             $code .= $before;
             $code .= call_user_func($callable, $setup . $eol);
-          }
-          else
-          {
+          } else {
             $code .= $l . $eol;
           }
         }
       }
 
-      if($break)
-      {
+      if ($break) {
         $insideSetup = -1;
         $break = false;
       }
     }
 
-    if($line)
-    {
+    if ($line) {
       $code .= $line;
     }
 
@@ -265,15 +228,13 @@ class sfClassManipulator {
 
     $method[] = '{';
 
-    foreach(explode("\n", $code) as $i => $line)
-    {
+    foreach (explode("\n", $code) as $i => $line) {
       $method[] = str_repeat(' ', $indent) . $line;
     }
 
     $method[] = '}';
 
-    foreach($method as $i => $line)
-    {
+    foreach ($method as $i => $line) {
       $method[$i] = str_repeat(' ', $indent) . $line;
     }
 
@@ -288,30 +249,22 @@ class sfClassManipulator {
     $before = '';
     $setup = '';
 
-    if($line)
-    {
-      if(false === stripos($line, '<?php'))
-      {
+    if ($line) {
+      if (false === stripos($line, '<?php')) {
         // add a function so we can accurately slice
         $tokens = token_get_all('<?php function' . $line);
         $tokens = array_slice($tokens, 2);
-      }
-      else
-      {
+      } else {
         $tokens = token_get_all($line);
       }
 
       // we're in reverse
       $inSignature = false;
-      while($token = array_pop($tokens))
-      {
+      while ($token = array_pop($tokens)) {
         $value = $this->getTokenValue($token);
-        if(is_array($token) && in_array($token[0], self::$signatureTokens))
-        {
+        if (is_array($token) && in_array($token[0], self::$signatureTokens)) {
           $inSignature = true;
-        }
-        elseif($inSignature && !preg_match('/\s+/', $value))
-        {
+        } elseif ($inSignature && !preg_match('/\s+/', $value)) {
           // clean up
           preg_match('/^\s*/', $setup, $match);
           $before = implode('', array_map(array($this, 'getTokenValue'), $tokens)) . $value . $match[0];

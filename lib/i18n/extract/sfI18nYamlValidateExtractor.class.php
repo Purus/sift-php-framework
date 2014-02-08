@@ -12,8 +12,8 @@
  * @package    Sift
  * @subpackage i18n_extract
  */
-class sfI18nYamlValidateExtractor extends sfI18nYamlExtractor {
-
+class sfI18nYamlValidateExtractor extends sfI18nYamlExtractor
+{
   /**
    * Extract i18n strings for the given content.
    *
@@ -29,21 +29,15 @@ class sfI18nYamlValidateExtractor extends sfI18nYamlExtractor {
 
     // New validate.yml format
     // fields
-    if(isset($config['fields']))
-    {
-      foreach($config['fields'] as $field => $validation)
-      {
-        foreach($validation as $type => $parameters)
-        {
-          if(!is_array($parameters))
-          {
+    if (isset($config['fields'])) {
+      foreach ($config['fields'] as $field => $validation) {
+        foreach ($validation as $type => $parameters) {
+          if (!is_array($parameters)) {
             continue;
           }
 
-          foreach($parameters as $key => $value)
-          {
-            if(preg_match('/(msg|error)$/', $key))
-            {
+          foreach ($parameters as $key => $value) {
+            if (preg_match('/(msg|error)$/', $key)) {
               $strings[] = $value;
             }
           }
@@ -52,19 +46,14 @@ class sfI18nYamlValidateExtractor extends sfI18nYamlExtractor {
     }
 
     // validators
-    if(isset($config['validators']))
-    {
-      foreach(array_keys($config['validators']) as $name)
-      {
-        if(!isset($config['validators'][$name]['param']))
-        {
+    if (isset($config['validators'])) {
+      foreach (array_keys($config['validators']) as $name) {
+        if (!isset($config['validators'][$name]['param'])) {
           continue;
         }
 
-        foreach($config['validators'][$name]['param'] as $key => $value)
-        {
-          if(preg_match('/(msg|error)$/', $key))
-          {
+        foreach ($config['validators'][$name]['param'] as $key => $value) {
+          if (preg_match('/(msg|error)$/', $key)) {
             $strings[] = $value;
           }
         }
@@ -73,26 +62,19 @@ class sfI18nYamlValidateExtractor extends sfI18nYamlExtractor {
 
     // Old validate.yml format
     // required messages
-    if(isset($config['names']))
-    {
-      foreach($config['names'] as $key => $value)
-      {
-        if(isset($value['required_msg']))
-        {
+    if (isset($config['names'])) {
+      foreach ($config['names'] as $key => $value) {
+        if (isset($value['required_msg'])) {
           $strings[] = $value['required_msg'];
         }
       }
     }
 
     // validators
-    foreach($config as $key => $value)
-    {
-      if(isset($value['param']) && isset($value['class']))
-      {
-        foreach($value['param'] as $key => $value)
-        {
-          if(preg_match('/(msg|error)$/', $key))
-          {
+    foreach ($config as $key => $value) {
+      if (isset($value['param']) && isset($value['class'])) {
+        foreach ($value['param'] as $key => $value) {
+          if (preg_match('/(msg|error)$/', $key)) {
             $strings[] = $value;
           }
         }

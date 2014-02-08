@@ -12,8 +12,8 @@
  * @package Sift
  * @subpackage form
  */
-class sfValidatormMetaTitleMode extends sfValidatorChoice {
-
+class sfValidatormMetaTitleMode extends sfValidatorChoice
+{
   /**
    *
    * @see sfValidatorChoice

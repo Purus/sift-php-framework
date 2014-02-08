@@ -12,8 +12,8 @@
  * @package    Sift
  * @subpackage text
  */
-class sfCollator {
-
+class sfCollator
+{
   /**
    * Instances holder
    *
@@ -43,8 +43,7 @@ class sfCollator {
    */
   public static function getInstance($culture)
   {
-    if(!isset(self::$instances[$culture]))
-    {
+    if (!isset(self::$instances[$culture])) {
       self::$instances[$culture] = new sfCollator($culture);
     }
 
@@ -59,20 +58,16 @@ class sfCollator {
    */
   public function __construct($culture)
   {
-    if(class_exists('Collator', false))
-    {
+    if (class_exists('Collator', false)) {
       $this->collator = new Collator($culture);
 
       // see http://stackoverflow.com/questions/13571273/sorting-array-with-collation
-      if(intl_is_failure($this->collator->getErrorCode()) || strpos($culture, $this->collator->getLocale(Locale::VALID_LOCALE)) === false)
-      {
+      if (intl_is_failure($this->collator->getErrorCode()) || strpos($culture, $this->collator->getLocale(Locale::VALID_LOCALE)) === false) {
         throw new RuntimeException(sprintf('Error creating collator for culture "%s". %s', $culture, intl_get_error_message()));
       }
 
       $this->culture = $this->collator->getLocale(Locale::VALID_LOCALE);
-    }
-    else
-    {
+    } else {
       $this->culture = $culture;
     }
   }
@@ -95,8 +90,7 @@ class sfCollator {
    */
   public function compare($string1, $string2)
   {
-    if($this->collator)
-    {
+    if ($this->collator) {
       return $this->collator->compare($string1, $string2);
     }
 
@@ -105,8 +99,7 @@ class sfCollator {
 
     // running on windows
     // since utf8 is not available there
-    if(strpos(PHP_OS, 'WIN') !== false)
-    {
+    if (strpos(PHP_OS, 'WIN') !== false) {
       // try to set windows-1250 locale
       setlocale(LC_COLLATE, sprintf('%s.1250', $this->getWindowsLocale($this->getCulture())),
               $this->getCulture(), sprintf('%s.1250', $this->getCulture()),
@@ -114,9 +107,7 @@ class sfCollator {
 
       // convert to windows 1250 and compare
       $result = strcoll(iconv('UTF-8', 'WINDOWS-1250', $string1), iconv('UTF-8', 'WINDOWS-1250', $string2));
-    }
-    else
-    {
+    } else {
       // set new locale
       setlocale(LC_COLLATE, sprintf('%s.utf8', $this->getCulture()), sprintf('%s.UTF-8', $this->getCulture()));
       $result = strcoll($string1, $string2);
@@ -136,8 +127,7 @@ class sfCollator {
    */
   public function asort(&$array, $flag = SORT_REGULAR)
   {
-    if($this->collator)
-    {
+    if ($this->collator) {
       return $this->collator->asort($array, $flag);
     }
 
@@ -153,8 +143,7 @@ class sfCollator {
    */
   public function sort(&$array, $flag = SORT_REGULAR)
   {
-    if($this->collator)
-    {
+    if ($this->collator) {
       return $this->collator->sort($array, $flag);
     }
 
@@ -169,8 +158,7 @@ class sfCollator {
    */
   public function sortWithSortKeys(&$array)
   {
-    if($this->collator)
-    {
+    if ($this->collator) {
       return $this->collator->sortWithSortKeys($array);
     }
 
@@ -186,8 +174,7 @@ class sfCollator {
    */
   public function __call($method, $arguments)
   {
-    if($this->collator && method_exists($this->collator, $method))
-    {
+    if ($this->collator && method_exists($this->collator, $method)) {
       return call_user_func_array(array($this->collator, $method), $arguments);
     }
 
@@ -205,8 +192,7 @@ class sfCollator {
     $parts = explode('_', $culture);
     $name = ucfirst(sfISO639::code2ToName($parts[0]));
 
-    if(!isset($parts[1]))
-    {
+    if (!isset($parts[1])) {
       return $name;
     }
 
@@ -214,8 +200,7 @@ class sfCollator {
     // english name
     $countries = sfCulture::getInstance('en')->getCountries();
     $country = strtoupper($parts[1]);
-    if(isset($countries[$country]))
-    {
+    if (isset($countries[$country])) {
       $country = $countries[$country];
     }
 

@@ -35,8 +35,8 @@
  * @package Sift
  * @subpackage i18n
  */
-class sfCulture {
-
+class sfCulture
+{
   /**
    * Instances holder
    *
@@ -136,8 +136,7 @@ class sfCulture {
    */
   public static function getInstance($culture = 'en')
   {
-    if(!isset(self::$instances[$culture]))
-    {
+    if (!isset(self::$instances[$culture])) {
       self::$instances[$culture] = new sfCulture($culture);
     }
 
@@ -165,12 +164,9 @@ class sfCulture {
   public function __get($name)
   {
     $getProperty = 'get' . $name;
-    if(in_array($getProperty, $this->properties))
-    {
+    if (in_array($getProperty, $this->properties)) {
       return $this->$getProperty();
-    }
-    else
-    {
+    } else {
       throw new sfException(sprintf('{sfCulture} Property %s does not exists.', $name));
     }
   }
@@ -185,12 +181,9 @@ class sfCulture {
   public function __set($name, $value)
   {
     $setProperty = 'set' . $name;
-    if(in_array($setProperty, $this->properties))
-    {
+    if (in_array($setProperty, $this->properties)) {
       $this->$setProperty($value);
-    }
-    else
-    {
+    } else {
       throw new sfException(sprintf('{sfCulture} Property %s can not be set.', $name));
     }
   }
@@ -208,8 +201,7 @@ class sfCulture {
   {
     $this->properties = get_class_methods($this);
 
-    if(empty($culture))
-    {
+    if (empty($culture)) {
       $culture = 'en';
     }
 
@@ -230,8 +222,7 @@ class sfCulture {
    */
   protected static function dataDir()
   {
-    if(!($dataDir = sfConfig::get('sf_sift_data_dir')))
-    {
+    if (!($dataDir = sfConfig::get('sf_sift_data_dir'))) {
       throw new LogicException('Missing "sf_sift_data_dir" configuration value. Please check the configuration.');
     }
 
@@ -268,10 +259,8 @@ class sfCulture {
    */
   protected function setCulture($culture)
   {
-    if(!empty($culture))
-    {
-      if(!self::validCulture($culture))
-      {
+    if (!empty($culture)) {
+      if (!self::validCulture($culture)) {
         throw new sfException(sprintf('Invalid culture supplied: %s', $culture));
       }
     }
@@ -291,29 +280,24 @@ class sfCulture {
 
     $files = array($current_part);
 
-    for($i = 1, $max = count($file_parts); $i < $max; $i++)
-    {
+    for ($i = 1, $max = count($file_parts); $i < $max; $i++) {
       $current_part .= '_' . $file_parts[$i];
       $files[] = $current_part;
     }
 
-    foreach($files as $file)
-    {
+    foreach ($files as $file) {
       $filename = $this->dataDir . $file . $this->dataFileExt;
 
-      if(is_file($filename) == false)
-      {
+      if (is_file($filename) == false) {
         throw new sfException(sprintf('Data file for "%s" was not found.', $file));
       }
 
-      if(in_array($filename, $this->dataFiles) == false)
-      {
+      if (in_array($filename, $this->dataFiles) == false) {
         array_unshift($this->dataFiles, $file);
 
         $data = &$this->getData($filename);
         $this->data[$file] = &$data;
-        if(isset($data['__ALIAS']))
-        {
+        if (isset($data['__ALIAS'])) {
           $this->loadCultureData($data['__ALIAS']);
         }
         unset($data);
@@ -334,8 +318,7 @@ class sfCulture {
     static $data = array();
     static $files = array();
 
-    if(!in_array($filename, $files))
-    {
+    if (!in_array($filename, $files)) {
       $data[$filename] = unserialize(file_get_contents($filename));
       $files[] = $filename;
     }
@@ -361,18 +344,13 @@ class sfCulture {
   protected function findInfo($path = '/', $merge = false)
   {
     $result = array();
-    foreach($this->dataFiles as $section)
-    {
+    foreach ($this->dataFiles as $section) {
       $info = $this->searchArray($this->data[$section], $path);
 
-      if($info)
-      {
-        if($merge)
-        {
+      if ($info) {
+        if ($merge) {
           $result = $this->arrayAdd($result, $info);
-        }
-        else
-        {
+        } else {
           return $info;
         }
       }
@@ -388,17 +366,12 @@ class sfCulture {
    */
   private function arrayAdd($array1, $array2)
   {
-    foreach($array2 as $key => $value)
-    {
-      if(isset($array1[$key]))
-      {
-        if(is_array($array1[$key]) && is_array($value))
-        {
+    foreach ($array2 as $key => $value) {
+      if (isset($array1[$key])) {
+        if (is_array($array1[$key]) && is_array($value)) {
           $array1[$key] = $this->arrayAdd($array1[$key], $value);
         }
-      }
-      else
-      {
+      } else {
         $array1[$key] = $value;
       }
     }
@@ -421,15 +394,11 @@ class sfCulture {
 
     $array = $info;
 
-    for($i = 0, $max = count($index); $i < $max; $i++)
-    {
+    for ($i = 0, $max = count($index); $i < $max; $i++) {
       $k = $index[$i];
-      if($i < $max - 1 && isset($array[$k]))
-      {
+      if ($i < $max - 1 && isset($array[$k])) {
         $array = $array[$k];
-      }
-      else if($i == $max - 1 && isset($array[$k]))
-      {
+      } else if ($i == $max - 1 && isset($array[$k])) {
         return $array[$k];
       }
     }
@@ -454,8 +423,7 @@ class sfCulture {
    */
   public function getDateTimeFormat()
   {
-    if(null === $this->dateTimeFormat)
-    {
+    if (null === $this->dateTimeFormat) {
       $calendar = $this->getCalendar();
 
       $info = $this->findInfo("calendar/{$calendar}", true);
@@ -498,12 +466,9 @@ class sfCulture {
     $reg = substr($this->culture, 3, 2);
     $language = $this->findInfo("languages/{$lang}");
     $region = $this->findInfo("countries/{$reg}");
-    if($region)
-    {
+    if ($region) {
       return $language . ' (' . $region . ')';
-    }
-    else
-    {
+    } else {
       return $language;
     }
   }
@@ -522,8 +487,7 @@ class sfCulture {
     $culture = $this->getInvariantCulture();
 
     $language = $culture->findInfo("languages/{$lang}");
-    if(count($language) == 0)
-    {
+    if (count($language) == 0) {
       return $this->culture;
     }
 
@@ -544,8 +508,7 @@ class sfCulture {
   {
     static $invariant;
 
-    if(null === $invariant)
-    {
+    if (null === $invariant) {
       $invariant = new sfCulture();
     }
 
@@ -572,8 +535,7 @@ class sfCulture {
    */
   public function getNumberFormat()
   {
-    if(null === $this->numberFormat)
-    {
+    if (null === $this->numberFormat) {
       $elements = $this->findInfo('numberElements', true);
       $patterns = $this->findInfo('numberPatterns', true);
       $currencies = $this->getCurrencies(null, true);
@@ -605,8 +567,7 @@ class sfCulture {
    */
   public function getParent()
   {
-    if(strlen($this->culture) == 2)
-    {
+    if (strlen($this->culture) == 2) {
       return $this->getInvariantCulture();
     }
 
@@ -632,25 +593,19 @@ class sfCulture {
     $neutral = array();
     $specific = array();
 
-    while(false !== ($entry = $dir->read()))
-    {
-      if(is_file($dataDir . $entry) && substr($entry, -4) == $dataExt && $entry != 'root' . $dataExt)
-      {
+    while (false !== ($entry = $dir->read())) {
+      if (is_file($dataDir . $entry) && substr($entry, -4) == $dataExt && $entry != 'root' . $dataExt) {
         $culture = substr($entry, 0, -4);
-        if(strlen($culture) == 2)
-        {
+        if (strlen($culture) == 2) {
           $neutral[] = $culture;
-        }
-        else
-        {
+        } else {
           $specific[] = $culture;
         }
       }
     }
     $dir->close();
 
-    switch($type)
-    {
+    switch ($type) {
       case sfCulture::ALL:
         $all = array_merge($neutral, $specific);
         sort($all);
@@ -677,8 +632,7 @@ class sfCulture {
   {
     $countries = $this->findInfo('countries', true);
 
-    if(!isset($countries[$code]))
-    {
+    if (!isset($countries[$code])) {
       throw new InvalidArgumentException(sprintf('The country %s does not exist.', $code));
     }
 
@@ -696,8 +650,7 @@ class sfCulture {
   {
     $currencies = $this->findInfo('currencies', true);
 
-    if(!isset($currencies[$code]))
-    {
+    if (!isset($currencies[$code])) {
       throw new InvalidArgumentException(sprintf('The currency %s does not exist.', $code));
     }
 
@@ -715,8 +668,7 @@ class sfCulture {
   {
     $currencies = $this->findInfo('currencies', true);
 
-    if(!isset($currencies[$code]))
-    {
+    if (!isset($currencies[$code])) {
       throw new InvalidArgumentException(sprintf('The currency %s does not exist.', $code));
     }
 
@@ -734,8 +686,7 @@ class sfCulture {
   {
     $languages = $this->findInfo('languages', true);
 
-    if(!isset($languages[$code]))
-    {
+    if (!isset($languages[$code])) {
       throw new InvalidArgumentException(sprintf('The language %s does not exist.', $code));
     }
 
@@ -755,10 +706,8 @@ class sfCulture {
     $allCountries = $this->findInfo('countries', true);
 
     // restrict countries to a sub-set
-    if(null !== $countries)
-    {
-      if($problems = array_diff($countries, array_keys($allCountries)))
-      {
+    if (null !== $countries) {
+      if ($problems = array_diff($countries, array_keys($allCountries))) {
         throw new InvalidArgumentException(sprintf('The following countries do not exist: %s.', implode(', ', $problems)));
       }
 
@@ -783,22 +732,17 @@ class sfCulture {
     $allCurrencies = $this->findInfo('currencies', true);
 
     // restrict countries to a sub-set
-    if(null !== $currencies)
-    {
-      if($problems = array_diff($currencies, array_keys($allCurrencies)))
-      {
+    if (null !== $currencies) {
+      if ($problems = array_diff($currencies, array_keys($allCurrencies))) {
         throw new InvalidArgumentException(sprintf('The following currencies do not exist: %s.', implode(', ', $problems)));
       }
 
       $allCurrencies = array_intersect_key($allCurrencies, array_flip($currencies));
     }
 
-    if(!$full)
-    {
-      foreach($allCurrencies as $key => $value)
-      {
-        if(empty($value[1]))
-        {
+    if (!$full) {
+      foreach ($allCurrencies as $key => $value) {
+        if (empty($value[1])) {
           unset($allCurrencies[$key]);
           continue;
         }
@@ -823,10 +767,8 @@ class sfCulture {
     $allLanguages = $this->findInfo('languages', true);
 
     // restrict languages to a sub-set
-    if(null !== $languages)
-    {
-      if($problems = array_diff($languages, array_keys($allLanguages)))
-      {
+    if (null !== $languages) {
+      if ($problems = array_diff($languages, array_keys($allLanguages))) {
         throw new InvalidArgumentException(sprintf('The following languages do not exist: %s.', implode(', ', $problems)));
       }
 
@@ -860,13 +802,11 @@ class sfCulture {
 
     $allPostCodes = $this->findInfo('postCodes', true);
 
-    if($countries != null)
-    {
+    if ($countries != null) {
       // all countries are in uppercase
       $countries = array_map('strtoupper', $countries);
 
-      if($problems = array_diff($countries, array_keys($allPostCodes)))
-      {
+      if ($problems = array_diff($countries, array_keys($allPostCodes))) {
         throw new InvalidArgumentException(sprintf('The following postCodes do not exist: %s.', implode(', ', $problems)));
       }
 
@@ -891,19 +831,16 @@ class sfCulture {
 
     $allPhoneNumbers = $this->findInfo('phoneNumbers', true);
 
-    if($countries != null)
-    {
+    if ($countries != null) {
       // all countries are in uppercase
       $countries = array_map('strtoupper', $countries);
 
-      if($problems = array_diff($countries, array_keys($allPhoneNumbers)))
-      {
+      if ($problems = array_diff($countries, array_keys($allPhoneNumbers))) {
         throw new InvalidArgumentException(sprintf('The following phoneNumbers do not exist: %s.', implode(', ', $problems)));
       }
 
       $result = array();
-      foreach($countries as $countryCode)
-      {
+      foreach ($countries as $countryCode) {
         $result[$countryCode] = $allPhoneNumbers[$countryCode];
       }
 
@@ -911,8 +848,7 @@ class sfCulture {
       $allPhoneNumbers = $result;
     }
 
-    if($sort)
-    {
+    if ($sort) {
       ksort($allPhoneNumbers);
     }
 
@@ -951,8 +887,7 @@ class sfCulture {
   protected function getCountryCodes($countries)
   {
     // handle special cases
-    if(is_string($countries) && strtolower($countries) == 'eu_only')
-    {
+    if (is_string($countries) && strtolower($countries) == 'eu_only') {
       $countries = sfISO3166::getEuropeanUnionCountries();
     }
 

@@ -12,8 +12,8 @@
  * @package    Sift
  * @subpackage cache
  */
-class sfFileCache extends sfCache {
-
+class sfFileCache extends sfCache
+{
   /**
    * Read data flag
    */
@@ -83,18 +83,15 @@ class sfFileCache extends sfCache {
   public function __construct($options = array())
   {
     // cache dir is not cache dir, but options!
-    if(is_array($options))
-    {
+    if (is_array($options)) {
       // BC fixes, convert option like: cacheDir to cache_dir
-      foreach($options as $optionName => $optionValue)
-      {
+      foreach ($options as $optionName => $optionValue) {
         unset($options[$optionName]);
         $options[sfInflector::tableize($optionName)] = $optionValue;
       }
     }
     // BC compatibility, $options is $cache_dir
-    elseif(is_string($options))
-    {
+    elseif (is_string($options)) {
       $options = array(
         'cache_dir' => $options
       );
@@ -134,14 +131,12 @@ class sfFileCache extends sfCache {
   protected function setupCacheDir($cacheDir)
   {
     // remove last DIRECTORY_SEPARATOR
-    if(DIRECTORY_SEPARATOR == substr($cacheDir, -1))
-    {
+    if (DIRECTORY_SEPARATOR == substr($cacheDir, -1)) {
       $cacheDir = substr($cacheDir, 0, -1);
     }
 
     // create cache dir if needed
-    if(!is_dir($cacheDir))
-    {
+    if (!is_dir($cacheDir)) {
       $current_umask = umask(0000);
       @mkdir($cacheDir, 0777, true);
       umask($current_umask);
@@ -155,15 +150,13 @@ class sfFileCache extends sfCache {
   {
     $file_path = $this->getFilePath($key);
 
-    if(!file_exists($file_path))
-    {
+    if (!file_exists($file_path)) {
       return $default;
     }
 
     $data = $this->read($file_path, self::READ_DATA);
 
-    if($data[self::READ_DATA] === null)
-    {
+    if ($data[self::READ_DATA] === null) {
       return $default;
     }
 
@@ -207,32 +200,23 @@ class sfFileCache extends sfCache {
    */
   public function removePattern($pattern)
   {
-    if(false !== strpos($pattern, '**'))
-    {
+    if (false !== strpos($pattern, '**')) {
       $pattern = str_replace(self::SEPARATOR, DIRECTORY_SEPARATOR, $pattern) . $this->getOption('suffix');
       $regexp = self::patternToRegexp($pattern);
       $paths = array();
-      foreach(new RecursiveIteratorIterator(new sfSkipDotsRecursiveDirectoryIterator($this->getOption('cache_dir'))) as $path)
-      {
-        if(preg_match($regexp, str_replace($this->getOption('cache_dir') . DIRECTORY_SEPARATOR, '', $path)))
-        {
+      foreach (new RecursiveIteratorIterator(new sfSkipDotsRecursiveDirectoryIterator($this->getOption('cache_dir'))) as $path) {
+        if (preg_match($regexp, str_replace($this->getOption('cache_dir') . DIRECTORY_SEPARATOR, '', $path))) {
           $paths[] = $path;
         }
       }
-    }
-    else
-    {
+    } else {
       $paths = sfGlob::find($this->getOption('cache_dir') . DIRECTORY_SEPARATOR . str_replace(self::SEPARATOR, DIRECTORY_SEPARATOR, $pattern) . $this->getOption('suffix'));
     }
 
-    foreach($paths as $path)
-    {
-      if(is_dir($path))
-      {
+    foreach ($paths as $path) {
+      if (is_dir($path)) {
         sfToolkit::clearDirectory($path);
-      }
-      else
-      {
+      } else {
         @unlink($path);
       }
     }
@@ -243,16 +227,13 @@ class sfFileCache extends sfCache {
    */
   public function clean($mode = self::MODE_ALL)
   {
-    if(!is_dir($this->getOption('cache_dir')))
-    {
+    if (!is_dir($this->getOption('cache_dir'))) {
       return true;
     }
 
     $result = true;
-    foreach(new RecursiveIteratorIterator(new sfSkipDotsRecursiveDirectoryIterator($this->getOption('cache_dir'))) as $file)
-    {
-      if(self::MODE_ALL == $mode || !$this->isValid($file))
-      {
+    foreach (new RecursiveIteratorIterator(new sfSkipDotsRecursiveDirectoryIterator($this->getOption('cache_dir'))) as $file) {
+      if (self::MODE_ALL == $mode || !$this->isValid($file)) {
         $result = @unlink($file) && $result;
       }
     }
@@ -267,8 +248,7 @@ class sfFileCache extends sfCache {
   {
     $path = $this->getFilePath($key);
 
-    if(!file_exists($path))
-    {
+    if (!file_exists($path)) {
       return 0;
     }
 
@@ -284,15 +264,13 @@ class sfFileCache extends sfCache {
   {
     $path = $this->getFilePath($key);
 
-    if (!file_exists($path))
-    {
+    if (!file_exists($path)) {
       return 0;
     }
 
     $data = $this->read($path, self::READ_TIMEOUT | self::READ_LAST_MODIFIED);
 
-    if ($data[self::READ_TIMEOUT] < time())
-    {
+    if ($data[self::READ_TIMEOUT] < time()) {
       return 0;
     }
 
@@ -307,8 +285,7 @@ class sfFileCache extends sfCache {
    */
   protected function isValid($path)
   {
-    if(!file_exists($path))
-    {
+    if (!file_exists($path)) {
       return false;
     }
     $data = $this->read($path, self::READ_TIMEOUT);
@@ -342,29 +319,23 @@ class sfFileCache extends sfCache {
   */
   protected function read($path, $type = self::READ_DATA)
   {
-    if(!$fp = @fopen($path, 'rb'))
-    {
+    if (!$fp = @fopen($path, 'rb')) {
       throw new sfCacheException(sprintf('Unable to read cache file "%s".', $path));
     }
 
     @flock($fp, LOCK_SH);
     $data[self::READ_TIMEOUT] = intval(@stream_get_contents($fp, 12, 0));
-    if($type != self::READ_TIMEOUT && time() < $data[self::READ_TIMEOUT])
-    {
-      if($type & self::READ_LAST_MODIFIED)
-      {
+    if ($type != self::READ_TIMEOUT && time() < $data[self::READ_TIMEOUT]) {
+      if ($type & self::READ_LAST_MODIFIED) {
         $data[self::READ_LAST_MODIFIED] = intval(@stream_get_contents($fp, 12, 12));
       }
-      if($type & self::READ_DATA)
-      {
+      if ($type & self::READ_DATA) {
         fseek($fp, 0, SEEK_END);
         $length = ftell($fp) - 24;
         fseek($fp, 24);
         $data[self::READ_DATA] = @fread($fp, $length);
       }
-    }
-    else
-    {
+    } else {
       $data[self::READ_LAST_MODIFIED] = null;
       $data[self::READ_DATA] = null;
     }
@@ -390,16 +361,14 @@ class sfFileCache extends sfCache {
     $current_umask = umask();
     umask(0000);
 
-    if (!is_dir(dirname($path)))
-    {
+    if (!is_dir(dirname($path))) {
       // create directory structure if needed
       mkdir(dirname($path), 0777, true);
     }
 
     $tmpFile = tempnam(dirname($path), basename($path));
 
-    if (!$fp = @fopen($tmpFile, 'wb'))
-    {
+    if (!$fp = @fopen($tmpFile, 'wb')) {
        throw new sfCacheException(sprintf('Unable to write cache file "%s".', $tmpFile));
     }
 
@@ -411,10 +380,8 @@ class sfFileCache extends sfCache {
     // Hack from Agavi (http://trac.agavi.org/changeset/3979)
     // With php < 5.2.6 on win32, renaming to an already existing file doesn't work, but copy does,
     // so we simply assume that when rename() fails that we are on win32 and try to use copy()
-    if (!@rename($tmpFile, $path))
-    {
-      if (copy($tmpFile, $path))
-      {
+    if (!@rename($tmpFile, $path)) {
+      if (copy($tmpFile, $path)) {
         unlink($tmpFile);
       }
     }

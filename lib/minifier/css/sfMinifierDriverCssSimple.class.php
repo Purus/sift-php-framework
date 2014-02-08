@@ -13,8 +13,8 @@
  * @subpackage minifier
  * @see http://castlesblog.com/2010/august/14/php-javascript-css-minification
  */
-class sfMinifierDriverCssSimple extends sfMinifier {
-
+class sfMinifierDriverCssSimple extends sfMinifier
+{
   /**
    * Processes the file
    *

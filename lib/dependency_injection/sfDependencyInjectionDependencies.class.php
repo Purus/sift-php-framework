@@ -12,8 +12,8 @@
  * @package Sift
  * @subpackage dependency_injection
  */
-class sfDependencyInjectionDependencies {
-
+class sfDependencyInjectionDependencies
+{
   /**
    * Array of dependencies
    *
@@ -46,17 +46,13 @@ class sfDependencyInjectionDependencies {
    */
   public function get($name)
   {
-    if(isset($this->dependencies[$name]))
-    {
-      if($this->dependencies[$name] instanceof sfServiceReference)
-      {
-        return $this->serviceContainer->get((string)$this->dependencies[$name]);
+    if (isset($this->dependencies[$name])) {
+      if ($this->dependencies[$name] instanceof sfServiceReference) {
+        return $this->serviceContainer->get((string) $this->dependencies[$name]);
       }
 
       return $this->dependencies[$name];
-    }
-    else
-    {
+    } else {
       return null;
     }
   }

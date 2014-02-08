@@ -12,8 +12,8 @@
  * @package    Sift
  * @subpackage form_widget
  */
-class sfWidgetFormInteger extends sfWidgetFormInputText {
-
+class sfWidgetFormInteger extends sfWidgetFormInputText
+{
   /**
    * Configures the current widget.
    *
@@ -27,8 +27,7 @@ class sfWidgetFormInteger extends sfWidgetFormInputText {
     parent::configure($options, $attributes);
 
     // HTML5 support
-    if(sfConfig::get('sf_html5'))
-    {
+    if (sfConfig::get('sf_html5')) {
       $this->setOption('type', 'number');
     }
 
@@ -56,22 +55,18 @@ class sfWidgetFormInteger extends sfWidgetFormInputText {
   public function render($name, $value = null, $attributes = array(), $errors = array())
   {
     // we have HTML5 type
-    if($this->getOption('type') == 'number')
-    {
+    if ($this->getOption('type') == 'number') {
       $baseAttributes = array();
 
-      if(($min = $this->getOption('min')) !== null)
-      {
+      if (($min = $this->getOption('min')) !== null) {
         $baseAttributes['min'] = $min;
       }
 
-      if(($max = $this->getOption('max')) !== null)
-      {
+      if (($max = $this->getOption('max')) !== null) {
         $baseAttributes['max'] = $max;
       }
 
-      if(($step = $this->getOption('step')) !== null)
-      {
+      if (($step = $this->getOption('step')) !== null) {
         $baseAttributes['step'] = $step;
       }
 

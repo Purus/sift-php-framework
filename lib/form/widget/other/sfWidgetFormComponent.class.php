@@ -22,8 +22,7 @@ class sfWidgetFormComponent extends sfWidgetForm
    */
   public function __construct($options = array(), $attributes = array())
   {
-    if(!is_array($options))
-    {
+    if (!is_array($options)) {
       list($module, $component) = explode('/', $options);
       $options = array(
         'component' => array($module, $component)
@@ -32,8 +31,7 @@ class sfWidgetFormComponent extends sfWidgetForm
 
     // short option like: moduleName/component will be converted
     // to array (moduleName, component)
-    if(isset($options['component']) && !is_array($options['component']))
-    {
+    if (isset($options['component']) && !is_array($options['component'])) {
       list($module, $component) = explode('/', $options['component']);
       $options['component'] = array($module, $component);
     }

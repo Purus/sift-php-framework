@@ -12,8 +12,8 @@
  * @package    Sift
  * @subpackage form_widget
  */
-class sfWidgetFormTime extends sfWidgetFormDate {
-
+class sfWidgetFormTime extends sfWidgetFormDate
+{
   /**
    * Constructor.
    *
@@ -28,13 +28,11 @@ class sfWidgetFormTime extends sfWidgetFormDate {
    */
   public function __construct($options = array(), $attributes = array())
   {
-    if(!isset($options['format_pattern']))
-    {
+    if (!isset($options['format_pattern'])) {
       $options['format_pattern'] = 't';
     }
 
-    switch($options['format_pattern'])
-    {
+    switch ($options['format_pattern']) {
       case 'short':
         $options['format_pattern'] = 't';
         break;

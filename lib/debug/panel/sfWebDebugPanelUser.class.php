@@ -12,21 +12,19 @@
  * @package    Sift
  * @subpackage debug_panel
  */
-class sfWebDebugPanelUser extends sfWebDebugPanel {
-
+class sfWebDebugPanelUser extends sfWebDebugPanel
+{
   /**
    *
    * @see sfWebDebugPanel
    */
   public function getTitle()
   {
-    if(!$context = $this->webDebug->getContext())
-    {
+    if (!$context = $this->webDebug->getContext()) {
       return;
     }
 
-    if($context->getUser()->isAuthenticated())
-    {
+    if ($context->getUser()->isAuthenticated()) {
       return sprintf('Authenticated: %s', (string) $context->getUser());
     }
 
@@ -55,8 +53,7 @@ class sfWebDebugPanelUser extends sfWebDebugPanel {
    */
   public function getPanelContent()
   {
-    if(!$context = $this->webDebug->getContext())
-    {
+    if (!$context = $this->webDebug->getContext()) {
       return;
     }
     $user = $context->getUser();

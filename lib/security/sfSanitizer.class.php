@@ -13,8 +13,8 @@
  * @package    Sift
  * @subpackage security
  */
-class sfSanitizer {
-
+class sfSanitizer
+{
   // The following constant allow for nice looking callbacks to static methods
   const sanitize = 'sfSanitizer::sanitize';
 

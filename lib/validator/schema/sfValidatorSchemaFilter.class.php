@@ -12,8 +12,8 @@
  * @package    Sift
  * @subpackage validator
  */
-class sfValidatorSchemaFilter extends sfValidatorSchema {
-
+class sfValidatorSchemaFilter extends sfValidatorSchema
+{
   /**
    * Constructor.
    *
@@ -37,24 +37,19 @@ class sfValidatorSchemaFilter extends sfValidatorSchema {
    */
   protected function doClean($values)
   {
-    if(is_null($values))
-    {
+    if (is_null($values)) {
       $values = array();
     }
 
-    if(!is_array($values))
-    {
+    if (!is_array($values)) {
       throw new InvalidArgumentException('You must pass an array parameter to the clean() method');
     }
 
     $value = isset($values[$this->getOption('field')]) ? $values[$this->getOption('field')] : null;
 
-    try
-    {
+    try {
       $values[$this->getOption('field')] = $this->getOption('validator')->clean($value);
-    }
-    catch(sfValidatorError $error)
-    {
+    } catch (sfValidatorError $error) {
       throw new sfValidatorErrorSchema($this, array($this->getOption('field') => $error));
     }
 

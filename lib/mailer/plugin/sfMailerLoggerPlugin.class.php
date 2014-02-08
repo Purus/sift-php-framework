@@ -12,8 +12,8 @@
  * @package    Sift
  * @subpackage mailer
  */
-class sfMailerLoggerPlugin extends sfMailerPlugin {
-
+class sfMailerLoggerPlugin extends sfMailerPlugin
+{
   /**
    * @var array
    */
@@ -69,8 +69,7 @@ class sfMailerLoggerPlugin extends sfMailerPlugin {
   public function sendPerformed(Swift_Events_SendEvent $evt)
   {
     $result = $evt->getResult();
-    switch($result)
-    {
+    switch ($result) {
       case Swift_Events_SendEvent::RESULT_FAILED:
         $failedRecipients = $evt->getFailedRecipients();
         $entry = sprintf('Sending failed. Failed recipients: "%s".', join(', ', $failedRecipients));
@@ -103,8 +102,7 @@ class sfMailerLoggerPlugin extends sfMailerPlugin {
    */
   public function log($entry)
   {
-    if(!sfConfig::get('sf_logging_enabled'))
-    {
+    if (!sfConfig::get('sf_logging_enabled')) {
       return;
     }
     sfLogger::getInstance()->info(sprintf('{sfMailer} %s', $entry));

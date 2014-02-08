@@ -12,8 +12,8 @@
  * @package    Sift
  * @subpackage history
  */
-class sfBrowseHistoryItem implements Serializable {
-
+class sfBrowseHistoryItem implements Serializable
+{
   /**
    * Id holder
    *
@@ -86,7 +86,7 @@ class sfBrowseHistoryItem implements Serializable {
    */
   public function setName($name)
   {
-    $this->name = (string)$name;
+    $this->name = (string) $name;
 
     return $this;
   }
@@ -162,8 +162,7 @@ class sfBrowseHistoryItem implements Serializable {
   public function unserialize($serialized)
   {
     $vars = unserialize($serialized);
-    foreach($vars as $var => $value)
-    {
+    foreach ($vars as $var => $value) {
       $this->$var = $value;
     }
   }
@@ -186,16 +185,11 @@ class sfBrowseHistoryItem implements Serializable {
     // prepend column in arguments array
     array_unshift($a, $column);
 
-    if($verb == 'get')
-    {
+    if ($verb == 'get') {
       return call_user_func_array(array($this, 'getParameter'), $a);
-    }
-    elseif($verb == 'set')
-    {
+    } elseif ($verb == 'set') {
       return call_user_func_array(array($this, 'setParameter'), $a);
-    }
-    elseif($verb == 'has')
-    {
+    } elseif ($verb == 'has') {
       return call_user_func_array(array($this, 'hasParameter'), $a);
     }
 

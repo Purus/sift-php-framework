@@ -33,8 +33,7 @@ class sfRootConfigHandler extends sfYamlConfigHandler
     // determine if we're loading the system config_handlers.yml or a module config_handlers.yml
     $moduleLevel = ($this->getParameterHolder()->get('module_level') === true) ? true : false;
 
-    if ($moduleLevel)
-    {
+    if ($moduleLevel) {
       // get the current module name
       $moduleName = $this->getParameterHolder()->get('module_name');
     }
@@ -44,31 +43,26 @@ class sfRootConfigHandler extends sfYamlConfigHandler
     $includes = array();
 
     // let's do our fancy work
-    foreach ($config as $category => $keys)
-    {
-      if ($moduleLevel)
-      {
+    foreach ($config as $category => $keys) {
+      if ($moduleLevel) {
         // module-level registration, so we must prepend the module
         // root to the category
         $category = 'modules/'.$moduleName.'/'.$category;
       }
 
-      if(!isset($keys['class']))
-      {
+      if (!isset($keys['class'])) {
         // missing class key
         throw new sfParseException(sprintf('Configuration file "%s" specifies category "%s" with missing class key', $configFiles[0], $category));
       }
 
       $class = $keys['class'];
 
-      if (isset($keys['file']))
-      {
+      if (isset($keys['file'])) {
         // we have a file to include
         $file = $this->replaceConstants($keys['file']);
         $file = $this->replacePath($file);
 
-        if (!is_readable($file))
-        {
+        if (!is_readable($file)) {
           // handler file doesn't exist
           throw new sfParseException(sprintf('Configuration file "%s" specifies class "%s" with nonexistent or unreadable file "%s"', $configFiles[0], $class, $file));
         }

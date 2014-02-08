@@ -12,8 +12,8 @@
  * @package    Sift
  * @subpackage validator
  */
-class sfValidatorAnd extends sfValidatorBase {
-
+class sfValidatorAnd extends sfValidatorBase
+{
   protected $validators = array();
 
   /**
@@ -33,19 +33,13 @@ class sfValidatorAnd extends sfValidatorBase {
    */
   public function __construct($validators = null, $options = array(), $messages = array())
   {
-    if($validators instanceof sfValidatorBase)
-    {
+    if ($validators instanceof sfValidatorBase) {
       $this->addValidator($validators);
-    }
-    else if(is_array($validators))
-    {
-      foreach($validators as $validator)
-      {
+    } else if (is_array($validators)) {
+      foreach ($validators as $validator) {
         $this->addValidator($validator);
       }
-    }
-    else if(null !== $validators)
-    {
+    } else if (null !== $validators) {
       throw new InvalidArgumentException('sfValidatorAnd constructor takes a sfValidatorBase object, or a sfValidatorBase array.');
     }
 
@@ -98,27 +92,20 @@ class sfValidatorAnd extends sfValidatorBase {
   {
     $clean = $value;
     $errors = array();
-    foreach($this->validators as $validator)
-    {
-      try
-      {
+    foreach ($this->validators as $validator) {
+      try {
         $clean = $validator->clean($clean);
-      }
-      catch(sfValidatorError $e)
-      {
+      } catch (sfValidatorError $e) {
         $errors[] = $e;
 
-        if($this->getOption('halt_on_error'))
-        {
+        if ($this->getOption('halt_on_error')) {
           break;
         }
       }
     }
 
-    if(count($errors))
-    {
-      if($this->getMessage('invalid'))
-      {
+    if (count($errors)) {
+      if ($this->getMessage('invalid')) {
         throw new sfValidatorError($this, 'invalid', array('value' => $value));
       }
 
@@ -134,22 +121,18 @@ class sfValidatorAnd extends sfValidatorBase {
   public function asString($indent = 0)
   {
     $validators = '';
-    for($i = 0, $max = count($this->validators); $i < $max; $i++)
-    {
+    for ($i = 0, $max = count($this->validators); $i < $max; $i++) {
       $validators .= "\n" . $this->validators[$i]->asString($indent + 2) . "\n";
 
-      if($i < $max - 1)
-      {
+      if ($i < $max - 1) {
         $validators .= str_repeat(' ', $indent + 2) . 'and';
       }
 
-      if($i == $max - 2)
-      {
+      if ($i == $max - 2) {
         $options = $this->getOptionsWithoutDefaults();
         $messages = $this->getMessagesWithoutDefaults();
 
-        if($options || $messages)
-        {
+        if ($options || $messages) {
           $validators .= sprintf('(%s%s)', $options ? sfYamlInline::dump($options) : ($messages ? '{}' : ''), $messages ? ', ' . sfYamlInline::dump($messages) : ''
           );
         }
@@ -163,8 +146,7 @@ class sfValidatorAnd extends sfValidatorBase {
   {
     $rules = array();
     // FIXME: possible overriding of the values
-    foreach($this->validators as $validator)
-    {
+    foreach ($this->validators as $validator) {
       $rules = array_merge($rules, $validator->getJavascriptValidationRules());
     }
 
@@ -175,8 +157,7 @@ class sfValidatorAnd extends sfValidatorBase {
   {
     $messages = array();
     // FIXME: possible overriding of the values
-    foreach($this->validators as $validator)
-    {
+    foreach ($this->validators as $validator) {
       $messages = array_merge($messages, $validator->getJavascriptValidationMessages());
     }
 
@@ -186,8 +167,7 @@ class sfValidatorAnd extends sfValidatorBase {
   public function getActiveMessages()
   {
     $messages = array_values($this->messages);
-    foreach($this->getValidators() as $validator)
-    {
+    foreach ($this->getValidators() as $validator) {
       $messages = array_merge($messages, array_values($validator->getActiveMessages()));
     }
 

@@ -23,8 +23,8 @@
  * @package Sift
  * @subpackage i18n
  */
-class sfI18nMessageFormatter {
-
+class sfI18nMessageFormatter
+{
   /**
    * The message source.
    * @var sfMessageSource
@@ -78,8 +78,7 @@ class sfI18nMessageFormatter {
   public function __construct(sfII18NMessageSource $source, $charset = 'UTF-8')
   {
     $this->source = &$source;
-    if($charset)
-    {
+    if ($charset) {
       $this->setCharset($charset);
     }
   }
@@ -130,13 +129,11 @@ class sfI18nMessageFormatter {
     // prevent collisions with different cultures
     $catalogueHash = $catalogue . $this->source->getCulture();
 
-    if(in_array($catalogueHash, $this->catalogues))
-    {
+    if (in_array($catalogueHash, $this->catalogues)) {
       return;
     }
 
-    if($this->source->load($catalogue))
-    {
+    if ($this->source->load($catalogue)) {
       $this->messages[$catalogue] = $this->source->read();
       $this->catalogues[] = $catalogueHash;
     }
@@ -157,8 +154,7 @@ class sfI18nMessageFormatter {
    */
   public function format($string, $args = array(), $catalogue = null, $charset = null)
   {
-    if(empty($charset))
-    {
+    if (empty($charset)) {
       $charset = $this->getCharset();
     }
 
@@ -178,8 +174,7 @@ class sfI18nMessageFormatter {
    */
   public function formatExists($string, $args = array(), $catalogue = null, $charset = null)
   {
-    if(empty($charset))
-    {
+    if (empty($charset)) {
       $charset = $this->getCharset();
     }
 
@@ -198,16 +193,14 @@ class sfI18nMessageFormatter {
    */
   protected function formatString($string, $args = array(), $catalogue = null)
   {
-    if(empty($args))
-    {
+    if (empty($args)) {
       $args = array();
     }
 
     $target = $this->getFormattedString($string, $args, $catalogue);
 
     // well we did not find the translation string.
-    if(!$target)
-    {
+    if (!$target) {
       $this->source->append($string);
       $target = $this->postscript[0] . $this->replaceArgs($string, $args) . $this->postscript[1];
     }
@@ -217,29 +210,24 @@ class sfI18nMessageFormatter {
 
   public function getUnformattedString($string, $catalogue = null)
   {
-    if(empty($catalogue))
-    {
+    if (empty($catalogue)) {
       $catalogue = empty($this->catalogue) ? 'messages' : $this->catalogue;
     }
 
     $this->loadCatalogue($catalogue);
 
-    foreach($this->messages[$catalogue] as $variant)
-    {
+    foreach ($this->messages[$catalogue] as $variant) {
       // we found it, so return the target translation
-      if(isset($variant[$string]))
-      {
+      if (isset($variant[$string])) {
         $target = $variant[$string];
 
         // check if it contains only strings.
-        if(is_array($target))
-        {
+        if (is_array($target)) {
           $target = array_shift($target);
         }
 
         // found, but untranslated
-        if(empty($target))
-        {
+        if (empty($target)) {
           return $string;
         }
 
@@ -260,28 +248,23 @@ class sfI18nMessageFormatter {
    */
   protected function getFormattedString($string, $args = array(), $catalogue = null)
   {
-    if(empty($catalogue))
-    {
+    if (empty($catalogue)) {
       $catalogue = empty($this->catalogue) ? 'messages' : $this->catalogue;
     }
 
-    if(empty($args))
-    {
+    if (empty($args)) {
       $args = array();
     }
 
     $this->loadCatalogue($catalogue);
 
-    foreach($this->messages[$catalogue] as $variant)
-    {
+    foreach ($this->messages[$catalogue] as $variant) {
       // we found it, so return the target translation
-      if(isset($variant[$string]))
-      {
+      if (isset($variant[$string])) {
         $target = $variant[$string];
 
         // check if it contains only strings.
-        if(is_array($target))
-        {
+        if (is_array($target)) {
           $target = array_shift($target);
         }
 
@@ -289,11 +272,9 @@ class sfI18nMessageFormatter {
         // If the translation is empty, we need to decide what to do:
         // 1) if IN translator mode, return formatted message using nontranslated prefix/suffix
         // 2) if NOT in translator mode, return null
-        if(empty($target))
-        {
+        if (empty($target)) {
           // we are in translator mode
-          if($this->isInTranslatorMode())
-          {
+          if ($this->isInTranslatorMode()) {
             return $this->postscript[0] . $this->replaceArgs($string, $args) . $this->postscript[1];
           }
 
@@ -329,10 +310,8 @@ class sfI18nMessageFormatter {
   protected function replaceArgs($string, $args)
   {
     // replace object with strings
-    foreach($args as $key => $value)
-    {
-      if(is_object($value) && method_exists($value, '__toString'))
-      {
+    foreach ($args as $key => $value) {
+      if (is_object($value) && method_exists($value, '__toString')) {
         $args[$key] = $value->__toString();
       }
     }
@@ -359,8 +338,7 @@ class sfI18nMessageFormatter {
    */
   public function setUntranslatedPS($postscript)
   {
-    if(is_array($postscript) && count($postscript) >= 2)
-    {
+    if (is_array($postscript) && count($postscript) >= 2) {
       $this->postscript[0] = $postscript[0];
       $this->postscript[1] = $postscript[1];
     }

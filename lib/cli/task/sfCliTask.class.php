@@ -12,8 +12,8 @@
  * @package    Sift
  * @subpackage cli_task
  */
-abstract class sfCliTask {
-
+abstract class sfCliTask
+{
   protected $namespace           = '',
     $name                = null,
     $aliases             = array(),
@@ -124,26 +124,19 @@ abstract class sfCliTask {
   {
     $commandManager = new sfCliCommandManager(new sfCliCommandArgumentSet($this->getArguments()), new sfCliCommandOptionSet($this->getOptions()));
 
-    if (is_array($arguments) && is_string(key($arguments)))
-    {
+    if (is_array($arguments) && is_string(key($arguments))) {
       // index arguments by name for ordering and reference
       $indexArguments = array();
-      foreach ($this->arguments as $argument)
-      {
+      foreach ($this->arguments as $argument) {
         $indexArguments[$argument->getName()] = $argument;
       }
 
-      foreach ($arguments as $name => $value)
-      {
-        if (false !== $pos = array_search($name, array_keys($indexArguments)))
-        {
-          if ($indexArguments[$name]->isArray())
-          {
+      foreach ($arguments as $name => $value) {
+        if (false !== $pos = array_search($name, array_keys($indexArguments))) {
+          if ($indexArguments[$name]->isArray()) {
             $value = join(' ', (array) $value);
             $arguments[$pos] = isset($arguments[$pos]) ? $arguments[$pos].' '.$value : $value;
-          }
-          else
-          {
+          } else {
             $arguments[$pos] = $value;
           }
 
@@ -156,17 +149,13 @@ abstract class sfCliTask {
 
     // index options by name for reference
     $indexedOptions = array();
-    foreach ($this->options as $option)
-    {
+    foreach ($this->options as $option) {
       $indexedOptions[$option->getName()] = $option;
     }
 
-    foreach ($options as $name => $value)
-    {
-      if (is_string($name))
-      {
-        if (false === $value || null === $value || (isset($indexedOptions[$name]) && $indexedOptions[$name]->isArray() && !$value))
-        {
+    foreach ($options as $name => $value) {
+      if (is_string($name)) {
+        if (false === $value || null === $value || (isset($indexedOptions[$name]) && $indexedOptions[$name]->isArray() && !$value)) {
           unset($options[$name]);
           continue;
         }
@@ -176,8 +165,7 @@ abstract class sfCliTask {
       }
 
       // add -- before each option if needed
-      if (0 !== strpos($value, '--'))
-      {
+      if (0 !== strpos($value, '--')) {
         $value = '--'.$value;
       }
 
@@ -243,14 +231,12 @@ abstract class sfCliTask {
   public function parseArgumentValue($value)
   {
     $value = trim($value);
-    if(empty($value))
-    {
+    if (empty($value)) {
       return array();
     }
     $parts = explode(';', $value);
     $result = array();
-    foreach($parts as $part)
-    {
+    foreach ($parts as $part) {
       list($name, $value) = explode('=', $part);
       $result[trim($name)] = trim($value);
     }
@@ -297,20 +283,17 @@ abstract class sfCliTask {
    */
   public function getName()
   {
-    if ($this->name)
-    {
+    if ($this->name) {
       return $this->name;
     }
 
     $name = get_class($this);
 
-    if ('sfCli' == substr($name, 0, 5))
-    {
+    if ('sfCli' == substr($name, 0, 5)) {
       $name = substr($name, 5);
     }
 
-    if ('Task' == substr($name, -4))
-    {
+    if ('Task' == substr($name, -4)) {
       $name = substr($name, 0, -4);
     }
 
@@ -368,19 +351,16 @@ abstract class sfCliTask {
   public function getSynopsis()
   {
     $options = array();
-    foreach ($this->getOptions() as $option)
-    {
+    foreach ($this->getOptions() as $option) {
       $shortcut = $option->getShortcut() ? sprintf('-%s|', $option->getShortcut()) : '';
       $options[] = sprintf('['.($option->isParameterRequired() ? '%s--%s="..."' : ($option->isParameterOptional() ? '%s--%s[="..."]' : '%s--%s')).']', $shortcut, $option->getName());
     }
 
     $arguments = array();
-    foreach ($this->getArguments() as $argument)
-    {
+    foreach ($this->getArguments() as $argument) {
       $arguments[] = sprintf($argument->isRequired() ? '%s' : '[%s]', $argument->getName().($argument->isArray() ? '1' : ''));
 
-      if ($argument->isArray())
-      {
+      if ($argument->isArray()) {
         $arguments[] = sprintf('... [%sN]', $argument->getName());
       }
     }
@@ -391,8 +371,7 @@ abstract class sfCliTask {
   protected function process(sfCliCommandManager $commandManager, $options)
   {
     $commandManager->process($options);
-    if (!$commandManager->isValid())
-    {
+    if (!$commandManager->isValid()) {
       throw new sfCliCommandArgumentsException(sprintf("The execution of task \"%s\" failed.\n- %s", $this->getFullName(), implode("\n- ", $commandManager->getErrors())));
     }
   }
@@ -417,8 +396,7 @@ abstract class sfCliTask {
 
     $this->dispatcher->notifyUntil($event);
 
-    if($event->isProcessed())
-    {
+    if ($event->isProcessed()) {
       return $event->getReturnValue();
     }
 
@@ -436,13 +414,11 @@ abstract class sfCliTask {
    */
   public function log($messages)
   {
-    if(!is_array($messages))
-    {
+    if (!is_array($messages)) {
       $messages = array($messages);
     }
 
-    foreach($messages as $message)
-    {
+    foreach ($messages as $message) {
       $this->logger->log($message);
     }
   }
@@ -478,8 +454,7 @@ abstract class sfCliTask {
    */
   public function logBlock($messages, $style)
   {
-    if (!is_array($messages))
-    {
+    if (!is_array($messages)) {
       $messages = array($messages);
     }
 
@@ -488,24 +463,20 @@ abstract class sfCliTask {
 
     $len = 0;
     $lines = array();
-    foreach ($messages as $message)
-    {
+    foreach ($messages as $message) {
       $lines[] = sprintf($large ? '  %s  ' : ' %s ', $message);
       $len = max($this->strlen($message) + ($large ? 4 : 2), $len);
     }
 
     $messages = $large ? array(str_repeat(' ', $len)) : array();
-    foreach ($lines as $line)
-    {
+    foreach ($lines as $line) {
       $messages[] = $line.str_repeat(' ', $len - $this->strlen($line));
     }
-    if ($large)
-    {
+    if ($large) {
       $messages[] = str_repeat(' ', $len);
     }
 
-    foreach ($messages as $message)
-    {
+    foreach ($messages as $message) {
       $this->log($this->formatter->format($message, $style));
     }
   }
@@ -521,12 +492,9 @@ abstract class sfCliTask {
    */
   public function ask($question, $style = 'QUESTION', $default = null)
   {
-    if (false === $style)
-    {
+    if (false === $style) {
       $this->log($question);
-    }
-    else
-    {
+    } else {
       $this->logBlock($question, null === $style ? 'QUESTION' : $style);
     }
 
@@ -549,17 +517,13 @@ abstract class sfCliTask {
   public function askConfirmation($question, $style = 'QUESTION', $default = true)
   {
     $answer = 'z';
-    while ($answer && !in_array(strtolower($answer[0]), array('y', 'n')))
-    {
+    while ($answer && !in_array(strtolower($answer[0]), array('y', 'n'))) {
       $answer = $this->ask($question, $style);
     }
 
-    if (false === $default)
-    {
+    if (false === $default) {
       return $answer && 'y' == strtolower($answer[0]);
-    }
-    else
-    {
+    } else {
       return !$answer || 'y' == strtolower($answer[0]);
     }
   }
@@ -581,8 +545,7 @@ abstract class sfCliTask {
    */
   public function askAndValidate($question, sfValidatorBase $validator, array $options = array())
   {
-    if (!is_array($question))
-    {
+    if (!is_array($question)) {
       $question = array($question);
     }
 
@@ -593,34 +556,25 @@ abstract class sfCliTask {
     ), $options);
 
     // does the provided value passes the validator?
-    if ($options['value'])
-    {
-      try
-      {
+    if ($options['value']) {
+      try {
         return $validator->clean($options['value']);
-      }
-      catch (sfValidatorError $error)
-      {
+      } catch (sfValidatorError $error) {
       }
     }
 
     // no, ask the user for a valid user
     $error = null;
-    while (false === $options['attempts'] || $options['attempts']--)
-    {
-      if (null !== $error)
-      {
+    while (false === $options['attempts'] || $options['attempts']--) {
+      if (null !== $error) {
         $this->logBlock($error->getMessage(), 'ERROR');
       }
 
       $value = $this->ask($question, $options['style'], null);
 
-      try
-      {
+      try {
         return $validator->clean($value);
-      }
-      catch (sfValidatorError $error)
-      {
+      } catch (sfValidatorError $error) {
       }
     }
 
@@ -654,15 +608,13 @@ abstract class sfCliTask {
     $helpXML->appendChild($dom->createTextNode(implode("\n ", explode("\n", $help))));
 
     $taskXML->appendChild($aliasesXML = $dom->createElement('aliases'));
-    foreach ($this->getAliases() as $alias)
-    {
+    foreach ($this->getAliases() as $alias) {
       $aliasesXML->appendChild($aliasXML = $dom->createElement('alias'));
       $aliasXML->appendChild($dom->createTextNode($alias));
     }
 
     $taskXML->appendChild($argumentsXML = $dom->createElement('arguments'));
-    foreach ($this->getArguments() as $argument)
-    {
+    foreach ($this->getArguments() as $argument) {
       $argumentsXML->appendChild($argumentXML = $dom->createElement('argument'));
       $argumentXML->setAttribute('name', $argument->getName());
       $argumentXML->setAttribute('is_required', $argument->isRequired() ? 1 : 0);
@@ -672,16 +624,14 @@ abstract class sfCliTask {
 
       $argumentXML->appendChild($defaultsXML = $dom->createElement('defaults'));
       $defaults = is_array($argument->getDefault()) ? $argument->getDefault() : ($argument->getDefault() ? array($argument->getDefault()) : array());
-      foreach ($defaults as $default)
-      {
+      foreach ($defaults as $default) {
         $defaultsXML->appendChild($defaultXML = $dom->createElement('default'));
         $defaultXML->appendChild($dom->createTextNode($default));
       }
     }
 
     $taskXML->appendChild($optionsXML = $dom->createElement('options'));
-    foreach ($this->getOptions() as $option)
-    {
+    foreach ($this->getOptions() as $option) {
       $optionsXML->appendChild($optionXML = $dom->createElement('option'));
       $optionXML->setAttribute('name', '--'.$option->getName());
       $optionXML->setAttribute('shortcut', $option->getShortcut() ? '-'.$option->getShortcut() : '');
@@ -691,12 +641,10 @@ abstract class sfCliTask {
       $optionXML->appendChild($helpXML = $dom->createElement('description'));
       $helpXML->appendChild($dom->createTextNode($option->getHelp()));
 
-      if ($option->acceptParameter())
-      {
+      if ($option->acceptParameter()) {
         $optionXML->appendChild($defaultsXML = $dom->createElement('defaults'));
         $defaults = is_array($option->getDefault()) ? $option->getDefault() : ($option->getDefault() ? array($option->getDefault()) : array());
-        foreach ($defaults as $default)
-        {
+        foreach ($defaults as $default) {
           $defaultsXML->appendChild($defaultXML = $dom->createElement('default'));
           $defaultXML->appendChild($dom->createTextNode($default));
         }
@@ -762,18 +710,12 @@ abstract class sfCliTask {
     $location = null;
     $dir = dirname(__FILE__);
     // we need to provide the location where was the dump() called
-    foreach(debug_backtrace(PHP_VERSION_ID >= 50306 ? DEBUG_BACKTRACE_IGNORE_ARGS : false) as $item)
-    {
-      if(isset($item['file']) && strpos($item['file'], $dir) === 0)
-      {
+    foreach (debug_backtrace(PHP_VERSION_ID >= 50306 ? DEBUG_BACKTRACE_IGNORE_ARGS : false) as $item) {
+      if (isset($item['file']) && strpos($item['file'], $dir) === 0) {
         continue;
-      }
-      elseif(!isset($item['file'], $item['line']) || !is_file($item['file']))
-      {
+      } elseif (!isset($item['file'], $item['line']) || !is_file($item['file'])) {
         break;
-      }
-      else
-      {
+      } else {
         $lines = file($item['file']);
         $line = $lines[$item['line'] - 1];
         $location = array(

@@ -14,8 +14,8 @@
  * @package Sift
  * @subpackage util
  */
-class sfBitwise {
-
+class sfBitwise
+{
   /**
    * Creates flag from given parameters. Use can use variable length of arguments.
    *
@@ -25,8 +25,7 @@ class sfBitwise {
   public static function createFlag(/* variable-length args */)
   {
     $val = 0;
-    foreach(func_get_args() as $flag)
-    {
+    foreach (func_get_args() as $flag) {
       $val |= (int) $flag;
     }
 

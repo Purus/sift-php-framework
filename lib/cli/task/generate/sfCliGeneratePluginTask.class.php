@@ -12,8 +12,8 @@
  * @package     Sift
  * @subpackage  cli_task
  */
-class sfCliGeneratePluginTask extends sfCliGeneratorBaseTask {
-
+class sfCliGeneratePluginTask extends sfCliGeneratorBaseTask
+{
   /**
    * @see sfCliTask
    */
@@ -73,29 +73,23 @@ EOF;
     $modules = $options['module'];
 
     // validate the plugin name
-    if('Plugin' != substr($plugin, -6) || !preg_match('/^[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*$/', $plugin))
-    {
+    if ('Plugin' != substr($plugin, -6) || !preg_match('/^[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*$/', $plugin)) {
       throw new sfCliCommandException(sprintf('The plugin name "%s" is invalid.', $plugin));
     }
 
     // validate the test application name
-    if(!preg_match('/^[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*$/', $options['test-application']))
-    {
+    if (!preg_match('/^[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*$/', $options['test-application'])) {
       throw new sfCliCommandException(sprintf('The application name "%s" is invalid.', $options['test-application']));
     }
 
     // plugin does not exist
-    if($this->checkPluginExists($plugin, false))
-    {
+    if ($this->checkPluginExists($plugin, false)) {
       throw new sfException(sprintf('Plugin "%s" already exists', $plugin));
     }
 
-    if(is_readable($this->environment->get('sf_data_dir') . '/skeleton/plugin'))
-    {
+    if (is_readable($this->environment->get('sf_data_dir') . '/skeleton/plugin')) {
       $skeletonDir = $this->environment->get('sf_data_dir') . '/skeleton/plugin';
-    }
-    else
-    {
+    } else {
       $skeletonDir = $this->environment->get('sf_sift_data_dir') . '/skeleton/plugin';
     }
 
@@ -125,13 +119,10 @@ EOF;
     $finder = sfFinder::type('file')->name('*.php', '*.yml', 'package.xml.tmpl');
     $this->getFilesystem()->replaceTokens($finder->in($pluginDir), '##', '##', $constants);
 
-    if($options['skip-test-dir'])
-    {
+    if ($options['skip-test-dir']) {
       sfToolkit::clearDirectory($pluginDir . '/test');
       $this->getFilesystem()->remove($pluginDir . '/test');
-    }
-    else
-    {
+    } else {
       // test project and app
       $finder = sfFinder::type('any')->discard('.sf');
       $this->getFilesystem()->mirror($this->environment->get('sf_sift_data_dir') . '/skeleton/project', $testProject, $finder);
@@ -159,8 +150,7 @@ EOF;
     }
 
     // modules
-    foreach($modules as $module)
-    {
+    foreach ($modules as $module) {
       $moduleTask = new sfCliGeneratePluginModuleTask($this->environment,
                       $this->dispatcher, $this->formatter, $this->logger);
       $moduleTask->setCommandApplication($this->commandApplication);

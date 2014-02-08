@@ -38,15 +38,10 @@ class sfImageOpacityGD extends sfImageTransformAbstract
    */
   public function setOpacity($opacity)
   {
-    if (is_numeric($opacity) or is_float($opacity))
-    {
-      if ($opacity < 1)
-      {
+    if (is_numeric($opacity) or is_float($opacity)) {
+      if ($opacity < 1) {
         $this->opacity  = $opacity * 100;
-      }
-
-      else
-      {
+      } else {
         $this->opacity = $opacity;
       }
       $this->opacity   = 100 - $opacity;
@@ -77,16 +72,14 @@ class sfImageOpacityGD extends sfImageTransformAbstract
     imagealphablending($new_img, false);
     imagesavealpha($new_img, true);
 
-    $opacity = (int)round(127-((127/100)*$this->getOpacity()));
+    $opacity = (int) round(127-((127/100)*$this->getOpacity()));
 
     // imagesavealpha($new_img, true);
     $width  = $image->getWidth();
     $height = $image->getHeight();
 
-    for ($x=0;$x<$width; $x++)
-    {
-      for ($y=0;$y<$height; $y++)
-      {
+    for ($x=0;$x<$width; $x++) {
+      for ($y=0;$y<$height; $y++) {
         $rgb = imagecolorat($image->getAdapter()->getHolder(), $x, $y);
         $r = ($rgb >> 16) & 0xFF;
         $g = ($rgb >> 8) & 0xFF;

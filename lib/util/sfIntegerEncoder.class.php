@@ -13,8 +13,8 @@
  * @subpackage util
  * @link http://stackoverflow.com/questions/959957/php-short-hash
  */
-class sfIntegerEncoder {
-
+class sfIntegerEncoder
+{
   /**
    * Code set
    * Readable character set excluded (0,O,1,l)
@@ -29,16 +29,15 @@ class sfIntegerEncoder {
    */
   public static function encode($n)
   {
-    $n = (string)$n;
+    $n = (string) $n;
     $base       = strlen(self::CODESET);
     $converted  = '';
-    while($n > 0)
-    {
+    while ($n > 0) {
       $converted = substr(self::CODESET, bcmod($n, $base), 1) . $converted;
       $n = self::bcFloor(bcdiv($n, $base));
     }
 
-    return (string)$converted;
+    return (string) $converted;
   }
 
   /**
@@ -51,12 +50,11 @@ class sfIntegerEncoder {
   {
     $base = strlen(self::CODESET);
     $c    = '0';
-    for($i = strlen($code); $i; $i--)
-    {
+    for ($i = strlen($code); $i; $i--) {
       $c = bcadd($c, bcmul(strpos(self::CODESET, substr($code, (-1 * ( $i - strlen($code) )), 1)), bcpow($base, $i - 1)));
     }
 
-    return (integer)bcmul($c, 1, 0);
+    return (integer) bcmul($c, 1, 0);
   }
 
   /**

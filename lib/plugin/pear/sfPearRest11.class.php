@@ -15,8 +15,8 @@ require_once dirname(__FILE__) . '/PEAR_bootstrap.php';
  * @package    Sift
  * @subpackage plugin_pear
  */
-class sfPearRest11 extends PEAR_REST_11 {
-
+class sfPearRest11 extends PEAR_REST_11
+{
   /**
    * @see PEAR_REST_11
    */

@@ -14,8 +14,8 @@
  * @subpackage form_widget
  * @link       http://vvv.tobiassjosten.net/symfony/stopping-spam-with-symfony-forms/
  */
-class sfWidgetFormSpamProtectTimer extends sfWidgetFormInputHidden {
-
+class sfWidgetFormSpamProtectTimer extends sfWidgetFormInputHidden
+{
   /**
    * Constructor.
    *

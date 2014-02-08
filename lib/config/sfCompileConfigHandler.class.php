@@ -29,8 +29,7 @@ class sfCompileConfigHandler extends sfYamlConfigHandler
   {
     // parse the yaml
     $config = array();
-    foreach ($configFiles as $configFile)
-    {
+    foreach ($configFiles as $configFile) {
       $config = array_merge($config, $this->parseYaml($configFile));
     }
 
@@ -38,13 +37,11 @@ class sfCompileConfigHandler extends sfYamlConfigHandler
     $data = '';
 
     // let's do our fancy work
-    foreach($config as $file)
-    {
+    foreach ($config as $file) {
       $file = $this->replaceConstants($file);
       $file = $this->replacePath($file);
 
-      if (!is_readable($file))
-      {
+      if (!is_readable($file)) {
         // file doesn't exist
         throw new sfParseException(sprintf('Configuration file "%s" specifies nonexistent or unreadable file "%s"', $configFiles[0], $file));
       }

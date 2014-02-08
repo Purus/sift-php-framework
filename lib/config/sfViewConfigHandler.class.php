@@ -12,8 +12,8 @@
  * @package    Sift
  * @subpackage config
  */
-class sfViewConfigHandler extends sfYamlConfigHandler {
-
+class sfViewConfigHandler extends sfYamlConfigHandler
+{
   /**
    * Executes this configuration handler.
    *
@@ -41,10 +41,8 @@ class sfViewConfigHandler extends sfYamlConfigHandler {
 
     // first pass: iterate through all view names to determine the real view name
     $first = true;
-    foreach($this->yamlConfig as $viewName => $values)
-    {
-      if($viewName == 'all')
-      {
+    foreach ($this->yamlConfig as $viewName => $values) {
+      if ($viewName == 'all') {
         continue;
       }
 
@@ -63,10 +61,8 @@ class sfViewConfigHandler extends sfYamlConfigHandler {
 
     // second pass: iterate through all real view names
     $first = true;
-    foreach($this->yamlConfig as $viewName => $values)
-    {
-      if($viewName == 'all')
-      {
+    foreach ($this->yamlConfig as $viewName => $values) {
+      if ($viewName == 'all') {
         continue;
       }
 
@@ -122,8 +118,7 @@ class sfViewConfigHandler extends sfYamlConfigHandler {
     $body_classes = $this->getConfigValue('body_class', $viewName);
 
     // check the type and throw exception only in dev mode
-    if((!is_null($body_classes) && !is_array($body_classes)) && sfConfig::get('sf_environment') == 'dev')
-    {
+    if ((!is_null($body_classes) && !is_array($body_classes)) && sfConfig::get('sf_environment') == 'dev') {
       throw new sfConfigurationException(sprintf(
                       'Body classes has been misconfigured. "body_class" setting should be an array. "%s" given for view: "%s"', gettype($body_classes), $viewName
       ));
@@ -131,13 +126,10 @@ class sfViewConfigHandler extends sfYamlConfigHandler {
 
     // If we find results from the view, check to see if there is a '-*'
     // This indicates that we will remove ALL classes EXCEPT for those passed in the current view
-    if(is_array($body_classes) AND in_array('-*', $body_classes))
-    {
+    if (is_array($body_classes) AND in_array('-*', $body_classes)) {
       $delete_all = true;
-      foreach($body_classes as $body_class)
-      {
-        if(substr($body_class, 0, 1) != '-')
-        {
+      foreach ($body_classes as $body_class) {
+        if (substr($body_class, 0, 1) != '-') {
           $omit[] = $body_class;
         }
       }
@@ -145,26 +137,21 @@ class sfViewConfigHandler extends sfYamlConfigHandler {
 
     $body_classes = $this->mergeConfigValue('body_class', $viewName);
 
-    if(is_array($body_classes))
-    {
+    if (is_array($body_classes)) {
       // remove body_classes marked with a beginning '-'
       // We exclude any body_classes that were omitted above
       $delete = array();
 
-      foreach($body_classes as $body_class)
-      {
-        if(!in_array($body_class, $omit) && (substr($body_class, 0, 1) == '-' || $delete_all == true))
-        {
+      foreach ($body_classes as $body_class) {
+        if (!in_array($body_class, $omit) && (substr($body_class, 0, 1) == '-' || $delete_all == true)) {
           $delete[] = $body_class;
           $delete[] = substr($body_class, 1);
         }
       }
       $body_classes = array_diff($body_classes, $delete);
       $body_classes = array_unique($body_classes);
-      foreach($body_classes as $body_class)
-      {
-        if($body_class)
-        {
+      foreach ($body_classes as $body_class) {
+        if ($body_class) {
           $data[] = sprintf("  \$response->addBodyClass('%s');", $body_class);
         }
       }
@@ -175,47 +162,38 @@ class sfViewConfigHandler extends sfYamlConfigHandler {
 
     // If we find results from the view, check to see if there is a '-*'
     // This indicates that we will remove ALL javascripts EXCEPT for those passed in the current view
-    if(is_array($body_onloads) AND in_array('-*', $body_onloads))
-    {
+    if (is_array($body_onloads) AND in_array('-*', $body_onloads)) {
       $delete_all = true;
-      foreach($body_onloads as $body_onload)
-      {
-        if(substr($body_onload, 0, 1) != '-')
-        {
+      foreach ($body_onloads as $body_onload) {
+        if (substr($body_onload, 0, 1) != '-') {
           $omit[] = $body_onload;
         }
       }
     }
 
     $body_onloads = $this->mergeConfigValue('body_onload', $viewName);
-    if(is_array($body_onloads))
-    {
+    if (is_array($body_onloads)) {
       // remove body_onloads marked with a beginning '-'
       // We exclude any body_onloads that were omitted above
       $delete = array();
 
-      foreach($body_onloads as $body_onload)
-      {
-        if(!in_array($body_onload, $omit) && (substr($body_onload, 0, 1) == '-' || $delete_all == true))
-        {
+      foreach ($body_onloads as $body_onload) {
+        if (!in_array($body_onload, $omit) && (substr($body_onload, 0, 1) == '-' || $delete_all == true)) {
           $delete[] = $body_onload;
           $delete[] = substr($body_onload, 1);
         }
       }
       $body_onloads = array_diff($body_onloads, $delete);
       $body_onloads = array_unique($body_onloads);
-      foreach($body_onloads as $body_onload)
-      {
-        if($body_onload)
-        {
+      foreach ($body_onloads as $body_onload) {
+        if ($body_onload) {
           $data[] = sprintf("  \$response->addBodyOnload('%s');", $body_onload);
         }
       }
     }
 
     $id = $this->getconfigValue('body_id', $viewName);
-    if($id)
-    {
+    if ($id) {
       $data[] = "  \$response->setBodyId('$id', false);";
     }
 
@@ -258,10 +236,8 @@ class sfViewConfigHandler extends sfYamlConfigHandler {
     $data = array();
 
     $components = $this->mergeConfigValue('components', $viewName);
-    foreach($components as $name => $component)
-    {
-      if(!is_array($component) || count($component) < 1)
-      {
+    foreach ($components as $name => $component) {
+      if (!is_array($component) || count($component) < 1) {
         $component = array();
       }
       $data[] = sprintf("  \$this->setComponentSlot('%s', %s);", $name, $this->varExport($component));
@@ -308,34 +284,28 @@ class sfViewConfigHandler extends sfYamlConfigHandler {
     // the user set a decorator in the action
     $data = <<<EOF
 
-  if(null !== (\$layout = sfConfig::get('sift.view.'.\$this->moduleName.'_'.\$this->actionName.'_layout')))
-  {
+  if (null !== (\$layout = sfConfig::get('sift.view.'.\$this->moduleName.'_'.\$this->actionName.'_layout'))) {
     \$this->setDecoratorTemplate(false === \$layout ? false : \$layout.\$this->getExtension());
   }
 EOF;
 
-    if($hasLocalLayout)
-    {
+    if ($hasLocalLayout) {
       // the user set a decorator in view.yml for this action
       $data .= <<<EOF
 
-  else
-  {
+  else {
     \$this->setDecoratorTemplate('' == '$layout' ? false : '$layout'.\$this->getExtension());
   }
 
 EOF;
-    }
-    else
-    {
+    } else {
       // no specific configuration
       // set the layout to the 'all' view.yml value except if:
       //   * the decorator template has already been set by "someone" (via view.configure_format for example)
       //   * the request is an XMLHttpRequest request
       $data .= <<<EOF
 
-  else if (null === \$this->getDecoratorTemplate() && !\$this->context->getRequest()->isXmlHttpRequest())
-  {
+  else if (null === \$this->getDecoratorTemplate() && !\$this->context->getRequest()->isXmlHttpRequest()) {
     \$this->setDecoratorTemplate('' == '$layout' ? false : '$layout'.\$this->getExtension());
   }
 
@@ -356,26 +326,20 @@ EOF;
   {
     $data = array();
 
-    foreach($this->mergeConfigValue('http_metas', $viewName) as $httpequiv => $content)
-    {
+    foreach ($this->mergeConfigValue('http_metas', $viewName) as $httpequiv => $content) {
       $data[] = sprintf("  \$response->addHttpMeta('%s', '%s', false);", $httpequiv, str_replace('\'', '\\\'', $content));
     }
 
-    foreach($this->mergeConfigValue('metas', $viewName) as $name => $content)
-    {
-      if($name == 'title')
-      {
+    foreach ($this->mergeConfigValue('metas', $viewName) as $name => $content) {
+      if ($name == 'title') {
         $data[] = sprintf("  \$response->setTitle('%s', true, false, true);", str_replace('\'', '\\\'', preg_replace('/&amp;(?=\w+;)/', '&', $content)));
-      }
-      else
-      {
+      } else {
         $data[] = sprintf("  \$response->addMeta('%s', '%s', false, false);", $name, str_replace('\'', '\\\'', preg_replace('/&amp;(?=\w+;)/', '&', htmlspecialchars($content, ENT_QUOTES, sfConfig::get('sf_charset')))));
       }
     }
 
     $title = $this->getConfigValue('title', $viewName);
-    if(!empty($title))
-    {
+    if (!empty($title)) {
       $data[] = sprintf("  \$response->setTitle('%s', true, false, true);", str_replace('\'', '\\\'', preg_replace('/&amp;(?=\w+;)/', '&', $title)));
     }
 
@@ -398,8 +362,7 @@ EOF;
     $packageStylesheets = array();
     $packageJavascripts = array();
 
-    foreach($packages as $package)
-    {
+    foreach ($packages as $package) {
       $packageStylesheets = array_merge($packageStylesheets, sfAssetPackage::getStylesheets($package, true, false));
       $packageJavascripts = array_merge($packageJavascripts, sfAssetPackage::getJavascripts($package, true, false));
     }
@@ -409,35 +372,25 @@ EOF;
     $stylesheets = array_merge($packageStylesheets, $stylesheets);
 
     $tmp = array();
-    foreach((array) $stylesheets as $css)
-    {
+    foreach ((array) $stylesheets as $css) {
       $position = '';
-      if(is_array($css))
-      {
+      if (is_array($css)) {
         $key = key($css);
         $options = $css[$key];
-        if(isset($options['position']))
-        {
+        if (isset($options['position'])) {
           $position = $options['position'];
           unset($options['position']);
         }
-      }
-      else
-      {
+      } else {
         $key = $css;
         $options = array();
       }
 
-      if('-*' == $key)
-      {
+      if ('-*' == $key) {
         $tmp = array();
-      }
-      else if('-' == $key[0])
-      {
+      } else if ('-' == $key[0]) {
         unset($tmp[substr($key, 1)]);
-      }
-      else
-      {
+      } else {
         $tmp[$key] = sprintf("  \$response->addStylesheet('%s', '%s', %s);", $key, $position, str_replace("\n", '', $this->varExport($options)));
       }
     }
@@ -449,35 +402,25 @@ EOF;
     $javascripts = array_merge($packageJavascripts, $javascripts);
 
     $tmp = array();
-    foreach((array) $javascripts as $js)
-    {
+    foreach ((array) $javascripts as $js) {
       $position = '';
-      if(is_array($js))
-      {
+      if (is_array($js)) {
         $key = key($js);
         $options = $js[$key];
-        if(isset($options['position']))
-        {
+        if (isset($options['position'])) {
           $position = $options['position'];
           unset($options['position']);
         }
-      }
-      else
-      {
+      } else {
         $key = $js;
         $options = array();
       }
 
-      if('-*' == $key)
-      {
+      if ('-*' == $key) {
         $tmp = array();
-      }
-      elseif('-' == $key[0])
-      {
+      } elseif ('-' == $key[0]) {
         unset($tmp[substr($key, 1)]);
-      }
-      else
-      {
+      } else {
         $tmp[$key] = sprintf("  \$response->addJavascript('%s', '%s', %s);", $key, $position, str_replace("\n", '', $this->varExport($options)));
       }
     }
@@ -500,13 +443,11 @@ EOF;
 
     $escaping = $this->getConfigValue('escaping', $viewName);
 
-    if(isset($escaping['strategy']))
-    {
+    if (isset($escaping['strategy'])) {
       $data[] = sprintf("  \$this->setEscaping(%s);", $this->varExport($escaping['strategy']));
     }
 
-    if(isset($escaping['method']))
-    {
+    if (isset($escaping['method'])) {
       $data[] = sprintf("  \$this->setEscapingMethod(%s);", $this->varExport($escaping['method']));
     }
 
@@ -524,8 +465,7 @@ EOF;
   {
     $data = array();
     $helpers = $this->getConfigValue('helpers', $viewName);
-    if($helpers)
-    {
+    if ($helpers) {
       $data[] = sprintf("  \$this->addHelpers(%s);", $this->varExport($helpers));
 
       return implode("\n", $data) . "\n";

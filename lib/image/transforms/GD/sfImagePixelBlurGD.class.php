@@ -42,8 +42,7 @@ class sfImagePixelBlurGD extends sfImageTransformAbstract
    */
   public function setBlur($pixels)
   {
-    if (is_numeric($pixels))
-    {
+    if (is_numeric($pixels)) {
       $this->blur_pixels = $pixels;
 
       return true;
@@ -76,10 +75,8 @@ class sfImagePixelBlurGD extends sfImageTransformAbstract
     $resourcex = imagesx($resource);
     $resourcey = imagesy($resource);
 
-    for ($x = 0; $x < $resourcex; ++$x)
-    {
-      for ($y = 0; $y < $resourcey; ++$y)
-      {
+    for ($x = 0; $x < $resourcex; ++$x) {
+      for ($y = 0; $y < $resourcey; ++$y) {
         $newr = 0;
         $newg = 0;
         $newb = 0;
@@ -87,33 +84,27 @@ class sfImagePixelBlurGD extends sfImageTransformAbstract
         $colours = array();
         $thiscol = imagecolorat($resource, $x, $y);
 
-        for ($k = $x - $this->blur_pixels; $k <= $x + $this->blur_pixels; ++$k)
-        {
-          for ($l = $y - $this->blur_pixels; $l <= $y + $this->blur_pixels; ++$l)
-          {
-            if ($k < 0)
-            {
+        for ($k = $x - $this->blur_pixels; $k <= $x + $this->blur_pixels; ++$k) {
+          for ($l = $y - $this->blur_pixels; $l <= $y + $this->blur_pixels; ++$l) {
+            if ($k < 0) {
               $colours[] = $thiscol;
 
               continue;
             }
 
-            if ($k >= $resourcex)
-            {
+            if ($k >= $resourcex) {
               $colours[] = $thiscol;
 
               continue;
             }
 
-            if ($l < 0)
-            {
+            if ($l < 0) {
               $colours[] = $thiscol;
 
               continue;
             }
 
-            if ($l >= $resourcey)
-            {
+            if ($l >= $resourcey) {
               $colours[] = $thiscol;
 
               continue;
@@ -123,8 +114,7 @@ class sfImagePixelBlurGD extends sfImageTransformAbstract
           }
         }
 
-        foreach($colours as $colour)
-        {
+        foreach ($colours as $colour) {
           $newr += ($colour >> 16) & 0xFF;
           $newg += ($colour >> 8) & 0xFF;
           $newb += $colour & 0xFF;

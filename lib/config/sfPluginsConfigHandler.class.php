@@ -26,17 +26,13 @@ class sfPluginsConfigHandler extends sfDefineEnvironmentConfigHandler
     $config = self::mergeEnvironment(self::parseYamls($configFiles));
 
     $myConfig = array();
-    foreach((array)$config as $plugin => $options)
-    {
-      if(!is_array($options))
-      {
+    foreach ((array) $config as $plugin => $options) {
+      if (!is_array($options)) {
         $options = array();
       }
 
-      if(isset($options['disabled']))
-      {
-        if($options['disabled'])
-        {
+      if (isset($options['disabled'])) {
+        if ($options['disabled']) {
           continue;
         }
         unset($options['disabled']);

@@ -24,8 +24,8 @@
  * @package    Sift
  * @subpackage log
  */
-class sfLogger implements sfILogger {
-
+class sfLogger implements sfILogger
+{
   /**
    * Array of loggers
    *
@@ -54,8 +54,7 @@ class sfLogger implements sfILogger {
    */
   public static function getInstance()
   {
-    if(!self::$logger)
-    {
+    if (!self::$logger) {
       $class = __CLASS__;
       self::$logger = new $class();
     }
@@ -126,13 +125,11 @@ class sfLogger implements sfILogger {
   {
     $level = $this->convertLevel($level);
 
-    if($this->getLogLevel() < $level)
-    {
+    if ($this->getLogLevel() < $level) {
       return;
     }
 
-    foreach($this->loggers as $logger)
-    {
+    foreach ($this->loggers as $logger) {
       $logger->log($message, $level, $context);
     }
   }
@@ -145,11 +142,9 @@ class sfLogger implements sfILogger {
    */
   public function convertLevel($level)
   {
-    if(is_string($level))
-    {
+    if (is_string($level)) {
       $constant = sprintf('sfILogger::%s', strtoupper($level));
-      if(defined($constant))
-      {
+      if (defined($constant)) {
         return constant($constant);
       }
     }
@@ -278,8 +273,7 @@ class sfLogger implements sfILogger {
    */
   public function shutdown()
   {
-    foreach($this->loggers as $logger)
-    {
+    foreach ($this->loggers as $logger) {
       $logger->shutdown();
     }
     $this->clear();

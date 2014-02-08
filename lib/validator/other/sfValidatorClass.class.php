@@ -12,8 +12,8 @@
  * @package    Sift
  * @subpackage validator
  */
-class sfValidatorClass extends sfValidatorString {
-
+class sfValidatorClass extends sfValidatorString
+{
   /**
    * Configures the current validator.
    *
@@ -35,17 +35,13 @@ class sfValidatorClass extends sfValidatorString {
 
     $this->setMessage('invalid', 'Class "%value%" is invalid.');
 
-    if(isset($options['extend']))
-    {
-      if(!is_array($options['extend']))
-      {
+    if (isset($options['extend'])) {
+      if (!is_array($options['extend'])) {
         $options['extend'] = array($options['extend']);
       }
 
-      foreach($options['extend'] as $extend)
-      {
-        if(!class_exists($extend) && !interface_exists($extend))
-        {
+      foreach ($options['extend'] as $extend) {
+        if (!class_exists($extend) && !interface_exists($extend)) {
           throw new sfConfigurationException(sprintf('Invalid option "extend". Class or interface "%s" does not exist.', $extend));
         }
       }
@@ -61,22 +57,18 @@ class sfValidatorClass extends sfValidatorString {
   {
     $clean = parent::doClean($value);
 
-    if(!class_exists($clean))
-    {
+    if (!class_exists($clean)) {
       throw new sfValidatorError($this, 'invalid', array('value' => $value));
     }
 
     // we have a check for extend
-    if($extend = $this->getOption('extend'))
-    {
-      if(!is_array($extend))
-      {
+    if ($extend = $this->getOption('extend')) {
+      if (!is_array($extend)) {
         $extend = array($extend);
       }
 
       $reflection = new sfReflectionClass($clean);
-      if(!$reflection->isSubclassOfOrIsEqual($extend))
-      {
+      if (!$reflection->isSubclassOfOrIsEqual($extend)) {
         throw new sfValidatorError($this, 'invalid', array('value' => $value));
       }
     }

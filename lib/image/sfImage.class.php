@@ -37,8 +37,8 @@
  * @package Sift
  * @subpackage image
  */
-class sfImage implements sfIDataUriConvertable {
-
+class sfImage implements sfIDataUriConvertable
+{
   /**
    * Empty gif string
    *
@@ -86,13 +86,11 @@ class sfImage implements sfIDataUriConvertable {
     $this->setAdapter($this->createAdapter($adapter));
 
     // Set the Image source if passed
-    if($filename !== '')
-    {
+    if ($filename !== '') {
       $this->load($filename, $mime, $fixOrientation);
     }
     // Otherwise create a new blank image
-    else
-    {
+    else {
       $this->create(null, null, null, $mime);
     }
   }
@@ -115,8 +113,7 @@ class sfImage implements sfIDataUriConvertable {
    */
   public function setAdapter($adapter)
   {
-    if(is_object($adapter))
-    {
+    if (is_object($adapter)) {
       $this->adapter = $adapter;
 
       return true;
@@ -144,21 +141,17 @@ class sfImage implements sfIDataUriConvertable {
             );
 
     // Get default width
-    if(!is_numeric($x))
-    {
+    if (!is_numeric($x)) {
       $x = 1;
-      if(isset($defaults['width']))
-      {
+      if (isset($defaults['width'])) {
         $x = (int) $defaults['width'];
       }
     }
 
     // Get default height
-    if(!is_numeric($y))
-    {
+    if (!is_numeric($y)) {
       $y = 1;
-      if(isset($defaults['height']))
-      {
+      if (isset($defaults['height'])) {
         $y = (int) $defaults['height'];
       }
     }
@@ -166,17 +159,14 @@ class sfImage implements sfIDataUriConvertable {
     $this->getAdapter()->create($x, $y);
     $this->getAdapter()->setFilename($defaults['filename']);
 
-    if(isset($defaults['mime_type']))
-    {
+    if (isset($defaults['mime_type'])) {
       $this->setMIMEType($defaults['mime_type']);
     }
 
     // Set the image color if set
-    if(is_null($color))
-    {
+    if (is_null($color)) {
       $color = '#ffffff';
-      if(isset($defaults['color']))
-      {
+      if (isset($defaults['color'])) {
         $color = $defaults['color'];
       }
     }
@@ -199,26 +189,20 @@ class sfImage implements sfIDataUriConvertable {
    */
   public function load($filename, $mime = '', $fixOrientation = true)
   {
-    if(file_exists($filename) && is_readable($filename))
-    {
-      if('' == $mime)
-      {
+    if (file_exists($filename) && is_readable($filename)) {
+      if ('' == $mime) {
         $mime = $this->autoDetectMIMETypeFromFile($filename);
-      }
-      else
-      {
+      } else {
         $mime = $this->fixMIMEType($mime);
       }
 
-      if('' == $mime)
-      {
+      if ('' == $mime) {
         throw new sfImageTransformException(sprintf('Mime type of the file "%s" not specified nor detected.', $filename));
       }
 
       $this->getAdapter()->load($filename, $mime);
 
-      if($fixOrientation)
-      {
+      if ($fixOrientation) {
         $this->fixOrientation();
       }
 
@@ -270,14 +254,12 @@ class sfImage implements sfIDataUriConvertable {
    */
   public function saveAs($filename, $mime = '')
   {
-    if('' === $mime)
-    {
+    if ('' === $mime) {
       // $mime = $this->autoDetectMIMETypeFromFilename($filename);
       $mime = $this->getMIMEType();
     }
 
-    if(!$mime)
-    {
+    if (!$mime) {
       throw new sfImageTransformException(sprintf('Unsupported file %s', $filename));
     }
 
@@ -340,40 +322,33 @@ class sfImage implements sfIDataUriConvertable {
   public function fixOrientation()
   {
     // orientation already fixed
-    if($this->orientationFixed)
-    {
+    if ($this->orientationFixed) {
       return $this;
     }
 
-    if(!($src = $this->getFilename()))
-    {
+    if (!($src = $this->getFilename())) {
       return $this;
     }
 
     // we will use exif
-    try
-    {
+    try {
       $exif = new sfExif();
       $data = $exif->getData($src);
 
       // do nothing, we don't have any data
-      if(!isset($data['Orientation']))
-      {
+      if (!isset($data['Orientation'])) {
         // throw exception which will be catched later
         throw new Exception('No orientation data present.');
       }
       $orientation = $data['Orientation'];
-    }
-    catch(Exception $e)
-    {
+    } catch (Exception $e) {
       // set to prevent multiple tries
       $this->orientationFixed = true;
 
       return;
     }
 
-    switch($orientation)
-    {
+    switch ($orientation) {
       case 1:
         // 1 is ok!
         break;
@@ -430,30 +405,24 @@ class sfImage implements sfIDataUriConvertable {
 
     // Make sure a transform class exists, either generic or adapter specific, otherwise throw an exception
     // Defaults to adapter transform
-    if(class_exists($class_adapter, true))
-    {
+    if (class_exists($class_adapter, true)) {
       $class = $class_adapter;
     }
 
     // No adapter specific transform so look for a generic transform
-    elseif(class_exists($class_generic, true))
-    {
+    elseif (class_exists($class_generic, true)) {
       $class = $class_generic;
     }
 
     // Cannot find the transform class so throw an exception
-    else
-    {
+    else {
       throw new sfImageTransformException(sprintf('Unsupported transform %s. Cannot find %s adapter or generic transform class', $name, $this->getAdapter()->getAdapterName()));
     }
 
     $reflectionObj = new ReflectionClass($class);
-    if(is_array($arguments) && count($arguments) > 0)
-    {
+    if (is_array($arguments) && count($arguments) > 0) {
       $transform = $reflectionObj->newInstanceArgs($arguments);
-    }
-    else
-    {
+    } else {
       $transform = $reflectionObj->newInstance();
     }
 
@@ -566,8 +535,7 @@ class sfImage implements sfIDataUriConvertable {
    */
   protected function fixMIMEType($mimeType)
   {
-    switch($mimeType)
-    {
+    switch ($mimeType) {
       case 'image/pjpeg': return 'image/jpeg';
     }
 
@@ -582,21 +550,18 @@ class sfImage implements sfIDataUriConvertable {
   protected function createAdapter($name)
   {
     // No adapter set so use default
-    if($name == '')
-    {
+    if ($name == '') {
       $name = sfConfig::get('sf_image_default_adapter', 'GD');
     }
 
     $adapter_class = 'sfImageTransform' . $name . 'Adapter';
 
-    if(class_exists($adapter_class))
-    {
+    if (class_exists($adapter_class)) {
       $adapter = new $adapter_class;
     }
 
     // Cannot find the adapter class so throw an exception
-    else
-    {
+    else {
       throw new sfImageTransformException(sprintf('Unsupported adapter: %s', $adapter_class));
     }
 
@@ -633,19 +598,14 @@ class sfImage implements sfIDataUriConvertable {
     $granularity = max(1, abs((int) $granularity));
 
     // loop through x axis
-    for($x = 0; $x < $width; $x += $granularity)
-    {
+    for ($x = 0; $x < $width; $x += $granularity) {
       // loop through y axis
-      for($y = 0; $y < $height; $y += $granularity)
-      {
+      for ($y = 0; $y < $height; $y += $granularity) {
         $color = $this->getAdapter()->getRGBFromPixel($x, $y);
         // we are using palette
-        if($palette)
-        {
+        if ($palette) {
           list($red, $green, $blue) = array_values($palette->getClosestColor($color)->toRgbInt());
-        }
-        else
-        {
+        } else {
           list($red, $green, $blue) = $color;
           // rounds to color value
           $red = round(round(($red / 0x33)) * 0x33);
@@ -668,28 +628,22 @@ class sfImage implements sfIDataUriConvertable {
     $pixels = $this->getTotalPixels() / pow($granularity, 2);
 
     // build the return array of the top results
-    foreach($colors as $color => $count)
-    {
-      if(round($count / $pixels * 100, 2) > $threshold)
-      {
+    foreach ($colors as $color => $count) {
+      if (round($count / $pixels * 100, 2) > $threshold) {
         $result[$color] = round(($count / $pixels) * 100, 5);
         $i++;
       }
-      if($max && $i >= $max)
-      {
+      if ($max && $i >= $max) {
         break;
       }
     }
 
     // we have to filter our colors which are not grayscale
     // since we used closest color from palette
-    if($palette && $this->isGrayscale())
-    {
-      foreach($result as $_color => $percentage)
-      {
+    if ($palette && $this->isGrayscale()) {
+      foreach ($result as $_color => $percentage) {
         $color = new sfColor($_color);
-        if(!$color->isGrayscale())
-        {
+        if (!$color->isGrayscale()) {
           // remove the color!
           unset($result[$_color]);
         }
@@ -720,8 +674,7 @@ class sfImage implements sfIDataUriConvertable {
   public function isGrayscale($toCheck = 100)
   {
     $totalPixels = $this->getTotalPixels();
-    if($toCheck > $totalPixels)
-    {
+    if ($toCheck > $totalPixels) {
       $toCheck = $totalPixels;
     }
 
@@ -729,19 +682,15 @@ class sfImage implements sfIDataUriConvertable {
     $width = $this->getWidth();
     $height = $this->getHeight();
     // now check out the pixels
-    for($i = 0; $i < $toCheck && $isGrayscale; $i++)
-    {
+    for ($i = 0; $i < $toCheck && $isGrayscale; $i++) {
       $randX = rand(0, $width - 1);
       $randY = rand(0, $height - 1);
       list($red, $green, $blue) = $this->getAdapter()->getRGBFromPixel($randX, $randY);
       // if one of the pixels isn't grayscale it breaks an you know this is a color picture
-      if($red != $green || $green != $blue)
-      {
+      if ($red != $green || $green != $blue) {
         $isGrayscale = false;
         break;
-      }
-      else
-      {
+      } else {
         $isGrayscale = true;
       }
     }

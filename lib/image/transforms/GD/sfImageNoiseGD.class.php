@@ -41,9 +41,8 @@ class sfImageNoiseGD extends sfImageTransformAbstract
    */
   public function setDensity($density)
   {
-    if (is_numeric($density))
-    {
-      $this->density = (int)$density;
+    if (is_numeric($density)) {
+      $this->density = (int) $density;
 
       return true;
     }
@@ -74,15 +73,13 @@ class sfImageNoiseGD extends sfImageTransformAbstract
     $resourcex = imagesx($resource);
     $resourcey = imagesy($resource);
 
-    for ($x = 0; $x < $resourcex; ++$x)
-    {
-      for ($y = 0; $y < $resourcey; ++$y)
-      {
+    for ($x = 0; $x < $resourcex; ++$x) {
+      for ($y = 0; $y < $resourcey; ++$y) {
         $rgb = imagecolorat($resource, $x, $y);
         $red = ($rgb >> 16) & 0xFF;
         $green = ($rgb >> 8) & 0xFF;
         $blue = $rgb & 0xFF;
-        $red = (int)(($red+$green+$blue)/3);
+        $red = (int) (($red+$green+$blue)/3);
         $modifier = rand(-$this->density,$this->density);
         $red += $modifier;
         $green += $modifier;
@@ -90,33 +87,27 @@ class sfImageNoiseGD extends sfImageTransformAbstract
 
         // Max value is 255
         // Min value is 0
-        if ($red > 255)
-        {
+        if ($red > 255) {
           $red = 255;
         }
 
-        if ($green > 255)
-        {
+        if ($green > 255) {
           $green = 255;
         }
 
-        if ($blue > 255)
-        {
+        if ($blue > 255) {
           $blue = 255;
         }
 
-        if ($red < 0)
-        {
+        if ($red < 0) {
           $red = 0;
         }
 
-        if ($green < 0)
-        {
+        if ($green < 0) {
           $green = 0;
         }
 
-        if ($blue < 0)
-        {
+        if ($blue < 0) {
           $blue = 0;
         }
 

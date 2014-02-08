@@ -53,8 +53,7 @@ class sfLogManager extends sfConfigurable
    */
   public function __construct($logDir, $options = array())
   {
-    if(!is_dir($logDir))
-    {
+    if (!is_dir($logDir)) {
       throw new InvalidArgumentException(sprintf('Directory "%s" does not exist.', $logDir));
     }
 
@@ -74,13 +73,11 @@ class sfLogManager extends sfConfigurable
    */
   public function rotate($app, $env, $period = null, $history = null, $override = false)
   {
-    if(is_null($period))
-    {
+    if (is_null($period)) {
       $period = $this->getOption('period');
     }
 
-    if(is_null($history))
-    {
+    if (is_null($history)) {
       $history = $this->getOption('history');
     }
 
@@ -90,8 +87,7 @@ class sfLogManager extends sfConfigurable
     $logFile = sprintf('%s%s%s', $app, $this->getOption('app_env_separator'), $env);
 
     // check history folder exists
-    if(!is_dir($this->logDir.'/history'))
-    {
+    if (!is_dir($this->logDir.'/history')) {
       mkdir($this->logDir.'/history', $this->getOption('dir_mode'), true);
     }
 
@@ -107,23 +103,18 @@ class sfLogManager extends sfConfigurable
 
     $recentlog = is_array($logs) ? array_pop($logs) : null;
 
-    if($recentlog)
-    {
+    if ($recentlog) {
       // calculate date to rotate logs on
       $last_rotated_on = filemtime($recentlog);
       $rotate_on = date($this->getOption('date_format'), strtotime('+ '.$period.' days', $last_rotated_on));
-    }
-    else
-    {
+    } else {
       // no rotation has occured yet
       $rotate_on = null;
     }
 
     // if rotate log on date doesn't exist, or that date is today, then rotate the log
-    if (!$rotate_on || ($rotate_on == $today) || $override)
-    {
-      if($this->getOption('lock') && ($dataDir = sfConfig::get('sf_data_dir')))
-      {
+    if (!$rotate_on || ($rotate_on == $today) || $override) {
+      if ($this->getOption('lock') && ($dataDir = sfConfig::get('sf_data_dir'))) {
         $lockFile = $dataDir .'/'.$app.'_'.$env.'.lck';
         touch($lockFile);
         chmod($lockFile, 0777);
@@ -136,27 +127,22 @@ class sfLogManager extends sfConfigurable
                   ->in($this->logDir);
 
       // loop all logs and move them to history
-      foreach($allLogs as $logFile)
-      {
+      foreach ($allLogs as $logFile) {
         $target = $this->logDir . '/history/'. basename($logFile);
 
         // we have a date information in the filename
-        if(!preg_match($this->getRegex($this->getOption('date_format')), $logFile))
-        {
+        if (!preg_match($this->getRegex($this->getOption('date_format')), $logFile)) {
           $target = $this->logDir.'/history/'.$this->generateFileName(basename($logFile),
               $this->getOption('date_prefix'), $today);
         }
 
-        if(file_exists($target))
-        {
+        if (file_exists($target)) {
           // append log to existing rotated log
           $handle = fopen($target, 'a');
           $append = file_get_contents($logFile);
           fwrite($handle, $append);
           fclose($handle);
-        }
-        else
-        {
+        } else {
           // copy log
           $fileMTime = filemtime($logFile);
           copy($logFile, $target);
@@ -177,17 +163,14 @@ class sfLogManager extends sfConfigurable
       usort($new_logs, array($this, 'sort'));
 
       // if the number of logs in history exceeds history then remove the oldest log
-      if(count($new_logs) > $history)
-      {
+      if (count($new_logs) > $history) {
         // how many to delete?
-        for($i = 0, $diff = count($new_logs) - $history; $i < $diff; $i++)
-        {
+        for ($i = 0, $diff = count($new_logs) - $history; $i < $diff; $i++) {
           unlink($new_logs[$i]);
         }
       }
 
-      if($this->getOption('lock') && $dataDir)
-      {
+      if ($this->getOption('lock') && $dataDir) {
         @unlink($lockFile);
       }
     }
@@ -205,8 +188,7 @@ class sfLogManager extends sfConfigurable
     $mTimeA = filemtime($a);
     $mTimeB = filemtime($b);
 
-    if($mTimeA == $mTimeB)
-    {
+    if ($mTimeA == $mTimeB) {
       return 0;
     }
 

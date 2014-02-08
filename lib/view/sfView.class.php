@@ -194,13 +194,11 @@ abstract class sfView implements sfIView
   {
     $method = null === $this->escapingMethod ? sfConfig::get('sf_escaping_method') : $this->escapingMethod;
 
-    if(empty($method))
-    {
+    if (empty($method)) {
       return $method;
     }
 
-    if(!defined($method))
-    {
+    if (!defined($method)) {
       throw new sfException(sprintf('Escaping method "%s" is not available; perhaps another helper needs to be loaded in?', $method));
     }
 
@@ -232,29 +230,23 @@ abstract class sfView implements sfIView
     $request = $this->context->getRequest();
 
     // get our array
-    if ($files)
-    {
+    if ($files) {
       // file names
       $array =& $request->getFiles();
-    }
-    else
-    {
+    } else {
       // parameter names
       $array =& $request->getParameterHolder()->getAll();
     }
 
     // loop through our parameter names and import them
-    foreach ($names as &$name)
-    {
-        if (preg_match('/^([a-z0-9\-_]+)\{([a-z0-9\s\-_]+)\}$/i', $name, $match))
-        {
+    foreach ($names as &$name) {
+        if (preg_match('/^([a-z0-9\-_]+)\{([a-z0-9\s\-_]+)\}$/i', $name, $match)) {
           // we have a parent
           $parent  = $match[1];
           $subname = $match[2];
 
           // load the file/parameter value for this attribute if one exists
-          if (isset($array[$parent]) && isset($array[$parent][$subname]))
-          {
+          if (isset($array[$parent]) && isset($array[$parent][$subname])) {
             $value = $array[$parent][$subname];
 
             if ($stripTags)
@@ -264,18 +256,13 @@ abstract class sfView implements sfIView
               $value = htmlspecialchars($value);
 
             $this->setAttribute($name, $value);
-          }
-          else
-          {
+          } else {
             // set an empty value
             $this->setAttribute($name, '');
           }
-        }
-        else
-        {
+        } else {
           // load the file/parameter value for this attribute if one exists
-          if (isset($array[$name]))
-          {
+          if (isset($array[$name])) {
             $value = $array[$name];
 
             if ($stripTags)
@@ -285,22 +272,16 @@ abstract class sfView implements sfIView
               $value = htmlspecialchars($value);
 
             $this->setAttribute($name, $value);
-          }
-          else
-          {
+          } else {
             // set an empty value
             $this->setAttribute($name, '');
           }
         }
 
-        if ($errors)
-        {
-          if ($request->hasError($name))
-          {
+        if ($errors) {
+          if ($request->hasError($name)) {
             $this->setAttribute($name.'_error', $request->getError($name));
-          }
-          else
-          {
+          } else {
             // set empty error
             $this->setAttribute($name.'_error', '');
           }
@@ -441,27 +422,23 @@ abstract class sfView implements sfIView
    */
   protected function preRenderCheck()
   {
-    if($this->template == null)
-    {
+    if ($this->template == null) {
       // a template has not been set
       throw new sfRenderException('A template has not been set');
     }
 
     $template = $this->directory.'/'.$this->template;
 
-    if(!is_readable($template))
-    {
+    if (!is_readable($template)) {
       // the template isn't readable
       throw new sfRenderException(sprintf('The template "%s" does not exist in: %s', $template, $this->directory));
     }
 
     // check to see if this is a decorator template
-    if($this->decorator)
-    {
+    if ($this->decorator) {
       $template = $this->decoratorDirectory.'/'.$this->decoratorTemplate;
 
-      if(!is_readable($template))
-      {
+      if (!is_readable($template)) {
         // the decorator template isn't readable
         throw new sfRenderException(sprintf('The decorator template "%s" does not exist or is unreadable', $template));
       }
@@ -508,29 +485,22 @@ abstract class sfView implements sfIView
    */
   public function setDecoratorTemplate($template)
   {
-    if(false === $template)
-    {
+    if (false === $template) {
       $this->setDecorator(false);
 
       return;
-    }
-    elseif(null === $template)
-    {
+    } elseif (null === $template) {
       return;
     }
 
-    if(strpos($template, '.') === false)
-    {
+    if (strpos($template, '.') === false) {
       $template .= $this->getExtension();
     }
 
-    if(sfToolkit::isPathAbsolute($template))
-    {
+    if (sfToolkit::isPathAbsolute($template)) {
       $this->decoratorDirectory = dirname($template);
       $this->decoratorTemplate  = basename($template);
-    }
-    else
-    {
+    } else {
       $this->decoratorTemplate = $template;
       $this->decoratorDirectory = sfLoader::getDecoratorDir($template);
     }
@@ -581,8 +551,7 @@ abstract class sfView implements sfIView
    */
   public function getComponentSlot($name)
   {
-    if(isset($this->componentSlots[$name]) && $this->componentSlots[$name])
-    {
+    if (isset($this->componentSlots[$name]) && $this->componentSlots[$name]) {
       return $this->componentSlots[$name];
     }
 
@@ -599,13 +568,10 @@ abstract class sfView implements sfIView
    */
   public function setTemplate($template)
   {
-    if(sfToolkit::isPathAbsolute($template))
-    {
+    if (sfToolkit::isPathAbsolute($template)) {
       $this->directory = dirname($template);
       $this->template  = basename($template);
-    }
-    else
-    {
+    } else {
       $this->directory = sfLoader::getTemplateDir($this->moduleName, $template);
       $this->template = $template;
     }
@@ -652,8 +618,7 @@ abstract class sfView implements sfIView
                         'arguments' => $arguments,
                         'view' => $this)));
 
-    if(!$event->isProcessed())
-    {
+    if (!$event->isProcessed()) {
       throw new sfException(sprintf('Call to undefined method %s::%s.', get_class($this), $method));
     }
 

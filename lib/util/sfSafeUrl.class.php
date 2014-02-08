@@ -15,8 +15,8 @@
  * @package    Sift
  * @subpackage util
  */
-class sfSafeUrl {
-
+class sfSafeUrl
+{
   /**
    * Encodes the string for usage in urls
    *
@@ -41,8 +41,7 @@ class sfSafeUrl {
   {
     $data = str_replace(array('-','_'), array('+','/'), $string);
     $mod4 = strlen($data) % 4;
-    if($mod4)
-    {
+    if ($mod4) {
       $data .= substr('====', $mod4);
     }
 

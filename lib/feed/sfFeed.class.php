@@ -14,8 +14,8 @@
  * @package    Sift
  * @subpackage feed
  */
-class sfFeed {
-
+class sfFeed
+{
   protected $items = array(),
           $image,
           $title,
@@ -32,8 +32,7 @@ class sfFeed {
 
   public function construct($feed_array = array())
   {
-    if($feed_array)
-    {
+    if ($feed_array) {
       $this->initialize($feed_array);
     }
   }
@@ -101,8 +100,7 @@ class sfFeed {
    */
   public function addItem($item)
   {
-    if(!($item instanceof sfFeedItem))
-    {
+    if (!($item instanceof sfFeedItem)) {
       // the object is of the wrong class
       $error = 'Parameter of addItem() is not of class sfFeedItem';
 
@@ -123,10 +121,8 @@ class sfFeed {
    */
   public function addItems($items)
   {
-    if(is_array($items))
-    {
-      foreach($items as $item)
-      {
+    if (is_array($items)) {
+      foreach ($items as $item) {
         $this->addItem($item);
       }
     }
@@ -157,8 +153,7 @@ class sfFeed {
    */
   public function keepOnlyItems($count = 10)
   {
-    if($count < count($this->items))
-    {
+    if ($count < count($this->items)) {
       $this->items = array_slice($this->items, 0, $count);
     }
 
@@ -193,8 +188,7 @@ class sfFeed {
   {
     $this->title = $title;
     //if an image is there that has no title yet set it as well
-    if($this->image instanceof sfFeedImage && !$this->image->getTitle())
-    {
+    if ($this->image instanceof sfFeedImage && !$this->image->getTitle()) {
       $this->image->setTitle($title);
     }
   }
@@ -208,8 +202,7 @@ class sfFeed {
   {
     $this->link = $link;
     //if an image is there that has no link yet set it as well
-    if($this->image instanceof sfFeedImage && !$this->image->getLink())
-    {
+    if ($this->image instanceof sfFeedImage && !$this->image->getLink()) {
       $this->image->setLink($link);
     }
   }
@@ -312,18 +305,15 @@ class sfFeed {
   public function getLatestPostDate()
   {
     $updates = array();
-    foreach($this->getItems() as $item)
-    {
-      if($pubDate = $item->getPubdate())
-      {
+    foreach ($this->getItems() as $item) {
+      if ($pubDate = $item->getPubdate()) {
         $updates[] = $pubDate;
       }
     }
 
     echo count($this->getItems());
 
-    if(count($updates))
-    {
+    if (count($updates)) {
       $updates = array_unique($updates);
       sort($updates, SORT_NUMERIC);
 

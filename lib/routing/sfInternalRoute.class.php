@@ -12,8 +12,8 @@
  * @package Sift
  * @subpackage routing
  */
-class sfInternalRoute {
-
+class sfInternalRoute
+{
   protected $internalUri;
   protected $baseRoute;
 
@@ -38,8 +38,7 @@ class sfInternalRoute {
   public static function getInstance($route = null)
   {
     $route = $route ? $route : 1;
-    if(!self::$instances[$route])
-    {
+    if (!self::$instances[$route]) {
       self::$instances[$route] = self::create($route);
     }
 
@@ -64,23 +63,19 @@ class sfInternalRoute {
    */
   public function __construct($route = null)
   {
-    if(is_null($route))
-    {
+    if (is_null($route)) {
       $route = sfRouting::getInstance()->getCurrentInternalUri(true);
     }
 
     $this->internalUri = $route;
 
-    if(strpos($this->internalUri, '?') !== false)
-    {
+    if (strpos($this->internalUri, '?') !== false) {
       list($baseRoute, $params) = explode('?', $this->internalUri);
       parse_str($params, $params);
 
       $this->baseRoute = $baseRoute;
       $this->params = $params;
-    }
-    else
-    {
+    } else {
       $this->baseRoute = $this->internalUri;
       $this->params = array();
     }
@@ -117,14 +112,11 @@ class sfInternalRoute {
    */
   public function remove($name)
   {
-    if(!is_array($name))
-    {
+    if (!is_array($name)) {
       $name = array($name);
     }
-    foreach($name as $i => $key)
-    {
-      if(isset($this->params[$key]))
-      {
+    foreach ($name as $i => $key) {
+      if (isset($this->params[$key])) {
         unset($this->params[$key]);
       }
     }
@@ -149,8 +141,7 @@ class sfInternalRoute {
   public function addFromRequest($name)
   {
     $value = $this->getRequest()->getParameter($name);
-    if(!is_null($value))
-    {
+    if (!is_null($value)) {
       $this->add($name, $value);
     }
 
@@ -167,10 +158,8 @@ class sfInternalRoute {
    */
   public function modify($name, $newValue)
   {
-    if(isset($this->params[$name]))
-    {
-      if(is_null($newValue))
-      {
+    if (isset($this->params[$name])) {
+      if (is_null($newValue)) {
         return $this->remove($name);
       }
     }
@@ -188,8 +177,7 @@ class sfInternalRoute {
    */
   public function batchModify(array $namesAndValues)
   {
-    foreach($namesAndValues as $name => $newValue)
-    {
+    foreach ($namesAndValues as $name => $newValue) {
       $this->modify($name, $newValue);
     }
 
@@ -271,8 +259,7 @@ class sfInternalRoute {
     ksort($params);
 
     // put it back, as last parameter
-    if($pagerParam && isset($pagerValue))
-    {
+    if ($pagerParam && isset($pagerValue)) {
       $params[$pagerParam] = $pagerValue;
     }
 
@@ -292,8 +279,7 @@ class sfInternalRoute {
     $pagerParamCallback = sprintf('my%sPager::getParameterName',
                             ucfirst(sfConfig::get('sf_orm')));
     $pagerParam = false;
-    if(sfToolkit::isCallable($pagerParamCallback))
-    {
+    if (sfToolkit::isCallable($pagerParamCallback)) {
       $pagerParam = call_user_func($pagerParamCallback);
     }
 

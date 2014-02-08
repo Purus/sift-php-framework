@@ -12,8 +12,8 @@
  * @package    Sift
  * @subpackage config_handler
  */
-class sfCacheConfigHandler extends sfYamlConfigHandler {
-
+class sfCacheConfigHandler extends sfYamlConfigHandler
+{
   protected $cacheConfig = array();
 
   /**
@@ -45,10 +45,8 @@ class sfCacheConfigHandler extends sfYamlConfigHandler {
     // iterate through all action names
     $data = array();
     $first = true;
-    foreach($this->yamlConfig as $actionName => $values)
-    {
-      if($actionName == 'all')
-      {
+    foreach ($this->yamlConfig as $actionName => $values) {
+      if ($actionName == 'all') {
         continue;
       }
 
@@ -95,8 +93,7 @@ class sfCacheConfigHandler extends sfYamlConfigHandler {
 
     // vary
     $vary = $this->getConfigValue('vary', $actionName, array());
-    if(!is_array($vary))
-    {
+    if (!is_array($vary)) {
       $vary = array($vary);
     }
 

@@ -7,8 +7,7 @@
  */
 
 // define dummy translation function
-if(!function_exists('__'))
-{
+if (!function_exists('__')) {
   /**
    * Translate function. Leaves the message untouched.
    *
@@ -32,8 +31,8 @@ if(!function_exists('__'))
  * @see http://trac.symfony-project.org/browser/plugins/sfI18nFormExtractorPlugin
  * @see http://snippets.symfony-project.org/snippet/342
  */
-class sfI18nFormExtract extends sfI18nExtract {
-
+class sfI18nFormExtract extends sfI18nExtract
+{
   protected $form,
           $catalogueName,
           $cataloguePath,
@@ -56,19 +55,15 @@ class sfI18nFormExtract extends sfI18nExtract {
 
     $reflection = $this->checkForm($class);
 
-    if($reflection->isSubclassOf('sfII18nExtractableForm'))
-    {
+    if ($reflection->isSubclassOf('sfII18nExtractableForm')) {
       $this->form = call_user_func(array($class, '__construct_i18n'));
-    }
-    else
-    {
+    } else {
       $this->form = $reflection->newInstanceArgs();
     }
 
     // where do the translations sit?
     $catalogue = $this->form->getTranslationCatalogue();
-    if(!$catalogue)
-    {
+    if (!$catalogue) {
       throw new sfException(sprintf('The form "%s" has no translation catalogue assigned.', $class));
     }
 
@@ -76,8 +71,7 @@ class sfI18nFormExtract extends sfI18nExtract {
     $this->catalogueName = basename($catalogue);
     $this->cataloguePath = dirname($catalogue);
 
-    if(!is_dir($this->cataloguePath))
-    {
+    if (!is_dir($this->cataloguePath)) {
       throw new sfConfigurationException(sprintf('The form catalogue specifies the path "%s" which does not exist.', $this->cataloguePath));
     }
 
@@ -89,8 +83,7 @@ class sfI18nFormExtract extends sfI18nExtract {
     $formatter = $this->form->getWidgetSchema()->getFormFormatter();
 
     // disable internal translations
-    if($formatter)
-    {
+    if ($formatter) {
       $formatter->setTranslationCallable(array($this, 'formTranslationCallable'));
       $formatter->setTranslationCatalogue('');
     }
@@ -107,34 +100,28 @@ class sfI18nFormExtract extends sfI18nExtract {
   {
     $reflection = new ReflectionClass($class);
 
-    if(!$reflection->isSubclassOf('sfForm') || $reflection->isAbstract())
-    {
+    if (!$reflection->isSubclassOf('sfForm') || $reflection->isAbstract()) {
       throw new sfCliCommandArgumentsException(sprintf('Form "%s" is not an instance of sfForm.', $class));
     }
 
     // this is not an extractable form
-    if(!$reflection->isSubclassOf('sfII18nExtractableForm'))
-    {
+    if (!$reflection->isSubclassOf('sfII18nExtractableForm')) {
       // check if we can contruct the form,
       // how do the __contructor arguments look like?
       // are the optional or array based?
       $constructor = $reflection->getConstructor();
       $parameters = $constructor->getParameters();
       $cannotCreate = false;
-      foreach($parameters as $parameter)
-      {
-        if($parameter->isOptional())
-        {
+      foreach ($parameters as $parameter) {
+        if ($parameter->isOptional()) {
           continue;
         }
-        if(!$parameter->isArray())
-        {
+        if (!$parameter->isArray()) {
           $cannotCreate = true;
           break;
         }
       }
-      if($cannotCreate)
-      {
+      if ($cannotCreate) {
         throw new sfException(sprintf('The form "%s" cannot be extracted. Constructor arguments disallow standard way of extraction. Please implement sfII18nExtractable interface to the form.', $class));
       }
     }
@@ -158,15 +145,12 @@ class sfI18nFormExtract extends sfI18nExtract {
     // grouped by the domain
     $extractedMessages = $extractor->extract($this->content);
 
-    foreach($extractedMessages as $domain => $messages)
-    {
-      if($domain === sfI18nExtract::UNKNOWN_DOMAIN)
-      {
+    foreach ($extractedMessages as $domain => $messages) {
+      if ($domain === sfI18nExtract::UNKNOWN_DOMAIN) {
         $domain = $this->catalogue;
       }
 
-      foreach($messages as $message)
-      {
+      foreach ($messages as $message) {
         $this->strings[$domain][] = $message;
       }
     }
@@ -197,12 +181,9 @@ class sfI18nFormExtract extends sfI18nExtract {
     $this->processValues();
     $this->registerErrorMessages();
 
-    foreach($this->strings as $domain => $strings)
-    {
-      foreach($strings as $id => $string)
-      {
-        if(empty($string))
-        {
+    foreach ($this->strings as $domain => $strings) {
+      foreach ($strings as $id => $string) {
+        if (empty($string)) {
           unset($strings[$id]);
         }
       }
@@ -215,8 +196,7 @@ class sfI18nFormExtract extends sfI18nExtract {
   private function registerErrorMessages()
   {
     $field_list = $this->form->getValidatorSchema()->getFields();
-    foreach($field_list as $field)
-    {
+    foreach ($field_list as $field) {
       $this->merge($field);
     }
     $this->merge($this->form->getValidatorSchema()->getPostValidator());
@@ -225,20 +205,15 @@ class sfI18nFormExtract extends sfI18nExtract {
 
   private function merge($field)
   {
-    if(!$field)
-    {
+    if (!$field) {
       return;
     }
-    if(method_exists($field, 'getActiveMessages') && method_exists($field, 'getValidators'))
-    {
+    if (method_exists($field, 'getActiveMessages') && method_exists($field, 'getValidators')) {
       $this->strings[$this->catalogue] = array_merge($this->strings[$this->catalogue], $field->getActiveMessages());
-      foreach($field->getValidators() as $f)
-      {
+      foreach ($field->getValidators() as $f) {
         $this->merge($f);
       }
-    }
-    elseif(method_exists($field, 'getActiveMessages'))
-    {
+    } elseif (method_exists($field, 'getActiveMessages')) {
       $this->strings[$this->catalogue] = array_merge($this->strings[$this->catalogue], $field->getActiveMessages());
     }
   }
@@ -246,8 +221,7 @@ class sfI18nFormExtract extends sfI18nExtract {
   private function processLabels()
   {
     $labels = $this->form->getWidgetSchema()->getLabels();
-    foreach($labels as $key => $value)
-    {
+    foreach ($labels as $key => $value) {
       $this->strings[$this->catalogue][] = $value;
     }
   }
@@ -255,10 +229,8 @@ class sfI18nFormExtract extends sfI18nExtract {
   private function processGroups()
   {
     $groups = $this->form->getGroups();
-    foreach($groups as $group)
-    {
-      if($label = $group->getLabel())
-      {
+    foreach ($groups as $group) {
+      if ($label = $group->getLabel()) {
         $this->strings[$this->catalogue][] = $label;
       }
     }
@@ -266,15 +238,11 @@ class sfI18nFormExtract extends sfI18nExtract {
 
   private function processValuesValue($value)
   {
-    if(is_array($value))
-    {
-      foreach($value as $vkey => $vvalue)
-      {
+    if (is_array($value)) {
+      foreach ($value as $vkey => $vvalue) {
         $this->processValuesValue($vvalue);
       }
-    }
-    else
-    {
+    } else {
       $this->strings[$this->catalogue][] = $value;
     }
   }
@@ -282,17 +250,13 @@ class sfI18nFormExtract extends sfI18nExtract {
   private function processValues()
   {
     $widgetSchema = $this->form->getWidgetSchema()->getFields();
-    foreach($widgetSchema as $name => $widget)
-    {
-      if($widget instanceof sfWidgetFormChoiceBase)
-      {
+    foreach ($widgetSchema as $name => $widget) {
+      if ($widget instanceof sfWidgetFormChoiceBase) {
         // translate only if allowed
-        if(!$widget->getOption('translate_choices'))
-        {
+        if (!$widget->getOption('translate_choices')) {
           continue;
         }
-        foreach($widget->getChoices() as $key => $value)
-        {
+        foreach ($widget->getChoices() as $key => $value) {
           $this->processValuesValue($value);
         }
       }
@@ -302,14 +266,10 @@ class sfI18nFormExtract extends sfI18nExtract {
   private function processHelp()
   {
     $helps = $this->form->getWidgetSchema()->getHelps();
-    foreach($helps as $key => $value)
-    {
-      if(empty($value))
-      {
+    foreach ($helps as $key => $value) {
+      if (empty($value)) {
         $this->strings[$this->catalogue][] = $key;
-      }
-      else
-      {
+      } else {
         $this->strings[$this->catalogue][] = $value;
       }
     }

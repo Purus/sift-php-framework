@@ -12,8 +12,8 @@
  * @package Sift
  * @subpackage form_widget
  */
-class sfWidgetFormTrilean extends sfWidgetFormChoice {
-
+class sfWidgetFormTrilean extends sfWidgetFormChoice
+{
   /**
    *
    */

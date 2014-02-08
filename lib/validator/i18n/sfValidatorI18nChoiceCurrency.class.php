@@ -36,10 +36,8 @@ class sfValidatorI18nChoiceCurrency extends sfValidatorChoice
     $currencies = array_keys(sfCulture::getInstance()->getCurrencies());
 
     // restrict countries to a sub-set
-    if(isset($options['currencies']))
-    {
-      if($problems = array_diff($options['currencies'], $currencies))
-      {
+    if (isset($options['currencies'])) {
+      if ($problems = array_diff($options['currencies'], $currencies)) {
         throw new InvalidArgumentException(sprintf('The following currencies do not exist: %s.', implode(', ', $problems)));
       }
 

@@ -12,8 +12,8 @@
  * @package Sift
  * @subpackage search
  */
-class sfSearchQueryParser implements sfISearchQueryParser {
-
+class sfSearchQueryParser implements sfISearchQueryParser
+{
   /**
    * Holds the parser's state
    *
@@ -105,7 +105,7 @@ class sfSearchQueryParser implements sfISearchQueryParser {
   public function parse($query)
   {
     $this->reset();
-    $query = (string)$query;
+    $query = (string) $query;
     // execute the lexer
     $this->lexer->execute($query);
     $this->tokenStack = $this->lexer->getTokens();
@@ -138,8 +138,7 @@ class sfSearchQueryParser implements sfISearchQueryParser {
    */
   protected function processTokens($tokens, sfSearchQueryExpression $expression)
   {
-    foreach($tokens as $token)
-    {
+    foreach ($tokens as $token) {
       $expression = $this->processToken($token, $expression);
     }
 
@@ -155,12 +154,10 @@ class sfSearchQueryParser implements sfISearchQueryParser {
    */
   protected function processToken(sfSearchQueryToken $token, sfSearchQueryExpression $expression)
   {
-    switch($this->state)
-    {
+    switch ($this->state) {
       case 'normal':
 
-        switch($token->type)
-        {
+        switch ($token->type) {
           // space and colon
           case sfSearchQueryToken::SPACE:
           case sfSearchQueryToken::COLON:
@@ -176,10 +173,8 @@ class sfSearchQueryParser implements sfISearchQueryParser {
           case sfSearchQueryToken::STRING:
 
             // we have prefix set!
-            if($this->prefix)
-            {
-              switch($this->prefix)
-              {
+            if ($this->prefix) {
+              switch ($this->prefix) {
                 case sfSearchQueryToken::PLUS:
                   $expression->addPhrase($this->token);
                   break;
@@ -192,11 +187,9 @@ class sfSearchQueryParser implements sfISearchQueryParser {
               $this->prefix = null;
             }
             // prefix is not set
-            else
-            {
+            else {
               // switch the stack mode
-              switch($this->stackType[$this->stackLevel])
-              {
+              switch ($this->stackType[$this->stackLevel]) {
                 case 'or':
                   $expression->addOrPhrase($token->token);
                   break;
@@ -225,8 +218,7 @@ class sfSearchQueryParser implements sfISearchQueryParser {
           case sfSearchQueryToken::BRACE_OPEN:
 
             $mode = $this->stackType[$this->stackLevel];
-            switch($mode)
-            {
+            switch ($mode) {
               case 'or':
                 $mode = sfSearchQueryExpression::MODE_OR;
                 break;
@@ -265,13 +257,11 @@ class sfSearchQueryParser implements sfISearchQueryParser {
 
       case 'in-quotes':
 
-        switch($token->type)
-        {
+        switch ($token->type) {
           // quote has ended
           case sfSearchQueryToken::QUOTE:
 
-            switch($this->stackType[$this->stackLevel])
-            {
+            switch ($this->stackType[$this->stackLevel]) {
               case 'or':
                 $expression->addOrPhrase($this->buffer);
                 break;

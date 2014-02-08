@@ -12,8 +12,8 @@
  * @package Sift
  * @subpackage storage
  */
-interface sfIStorageAware {
-
+interface sfIStorageAware
+{
   /**
    * Sets the storage instance
    *

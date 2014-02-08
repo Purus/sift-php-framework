@@ -31,13 +31,9 @@ class sfImageGreyscaleGD extends sfImageTransformAbstract
     $resourcex = imagesx($resource);
     $resourcey = imagesy($resource);
 
-    if (function_exists('imagefilter'))
-    {
+    if (function_exists('imagefilter')) {
       imagefilter($resource, IMG_FILTER_GRAYSCALE);
-    }
-
-    else
-    {
+    } else {
       throw new sfImageTransformException(sprintf('Cannot perform transform, GD does not support imagefilter '));
     }
 

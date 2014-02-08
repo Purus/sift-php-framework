@@ -31,8 +31,7 @@ class sfBasicSecurityFilter extends sfSecurityFilter
     $actionEntry    = $controller->getActionStack()->getLastEntry();
     $actionInstance = $actionEntry->getActionInstance();
 
-    if(!$actionInstance->isSecure())
-    {
+    if (!$actionInstance->isSecure()) {
       $filterChain->execute();
 
       return;
@@ -60,19 +59,14 @@ class sfBasicSecurityFilter extends sfSecurityFilter
     // NOTE: the nice thing about the Action class is that getCredential()
     //       is vague enough to describe any level of security and can be
     //       used to retrieve such data and should never have to be altered
-    if ($user->isAuthenticated())
-    {
+    if ($user->isAuthenticated()) {
       // the user is authenticated
-      if ($credential === null || $user->hasCredential($credential))
-      {
+      if ($credential === null || $user->hasCredential($credential)) {
         // the user has access, continue
         $filterChain->execute();
-      }
-      else
-      {
+      } else {
         // 403 (Forbidden)
-        if($context->getRequest()->isAjax())
-        {
+        if ($context->getRequest()->isAjax()) {
           return $this->handle403Ajax();
         }
 
@@ -81,17 +75,13 @@ class sfBasicSecurityFilter extends sfSecurityFilter
 
         throw new sfStopException();
       }
-    }
-    else
-    {
+    } else {
       // 401 (Not authorized)
-      if($context->getRequest()->isAjax())
-      {
+      if ($context->getRequest()->isAjax()) {
         return $this->handle401Ajax();
       }
 
-      if(sfConfig::get('sf_use_flash'))
-      {
+      if (sfConfig::get('sf_use_flash')) {
         // set flash error, so the user knows whats going on
         $user->setFlash('error', __('You have to be logged in to access this page.', array(), sfConfig::get('sf_sift_data_dir') . '/i18n/catalogues/action'));
       }
@@ -115,8 +105,7 @@ class sfBasicSecurityFilter extends sfSecurityFilter
     // violates the RFC
     // @see http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html
     $response->setStatusCode(401);
-    if($loginRoute = $this->getLoginRoute())
-    {
+    if ($loginRoute = $this->getLoginRoute()) {
       sfLoader::loadHelpers(array('Url'));
       $response->setContentType('application/json');
       $response->setHttpHeader('X-Content-Type-Options', 'nosniff');
@@ -124,9 +113,7 @@ class sfBasicSecurityFilter extends sfSecurityFilter
         'html' => __('This action requires you to be logged in and you are not. Redirect to login page?', array(), sfConfig::get('sf_sift_data_dir') . '/i18n/catalogues/action'),
         'redirect' => url_for($loginRoute, true)
       ))));
-    }
-    else
-    {
+    } else {
       $response->setHeaderOnly(true);
     }
 
@@ -158,12 +145,9 @@ class sfBasicSecurityFilter extends sfSecurityFilter
   protected function getLoginRoute()
   {
     $routing = sfRouting::getInstance();
-    if($routing->hasRouteName('user_login'))
-    {
+    if ($routing->hasRouteName('user_login')) {
       return sprintf('@%s', $routing->getRouteByName('user_login'));
-    }
-    elseif($routing->hasRouteName('default'))
-    {
+    } elseif ($routing->hasRouteName('default')) {
       return sprintf('%s/%s', sfConfig::get('sf_login_module'), sfConfig::get('sf_login_action'));
     }
 

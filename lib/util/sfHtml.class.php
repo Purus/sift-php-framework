@@ -12,8 +12,8 @@
  * @package    Sift
  * @subpackage util
  */
-class sfHtml {
-
+class sfHtml
+{
   protected static $xhtml = true,
     $charset = 'UTF-8';
 
@@ -47,8 +47,7 @@ class sfHtml {
    */
   public static function contentTag($tag, $content = null, $attributes = array())
   {
-    if(empty($tag))
-    {
+    if (empty($tag)) {
       return '';
     }
 
@@ -65,8 +64,7 @@ class sfHtml {
    */
   public static function tag($tag, $attributes = array(), $open = false)
   {
-    if(empty($tag))
-    {
+    if (empty($tag)) {
       return '';
     }
 
@@ -99,8 +97,7 @@ class sfHtml {
   protected static function attributesToHtmlCallback($k, $v)
   {
     // this is a data attribute, leave it here!
-    if(strpos($k, 'data-') === 0)
-    {
+    if (strpos($k, 'data-') === 0) {
       return sprintf(' %s="%s"', $k, self::escapeOnce($v));
     }
 
@@ -171,13 +168,10 @@ class sfHtml {
    */
   public static function addCssClass($class, $another)
   {
-    if(is_string($class))
-    {
+    if (is_string($class)) {
       $class = explode(' ', $class);
-    }
-    elseif(!is_array($class))
-    {
-      $class = array((string)$class);
+    } elseif (!is_array($class)) {
+      $class = array((string) $class);
     }
 
     return trim(join(' ', array_unique(array_merge($class, explode(' ', $another)))));

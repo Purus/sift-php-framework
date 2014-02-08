@@ -16,8 +16,8 @@
  * @package    Sift
  * @subpackage feed
  */
-class sfFeedImage {
-
+class sfFeedImage
+{
   private $favicon,
           $image,
           $faviconX,
@@ -30,8 +30,7 @@ class sfFeedImage {
 
   public function __construct($item_array = array())
   {
-    if($item_array)
-    {
+    if ($item_array) {
       $this->initialize($item_array);
     }
   }

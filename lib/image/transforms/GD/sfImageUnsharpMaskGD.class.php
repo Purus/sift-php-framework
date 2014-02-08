@@ -50,10 +50,9 @@ class sfImageUnsharpMaskGD extends sfImageTransformAbstract
    */
   public function setRadius($radius)
   {
-    if(is_numeric($radius) && $radius > 0 && $radius <= 50)
-    {
+    if (is_numeric($radius) && $radius > 0 && $radius <= 50) {
 
-      $this->radius = (float)$radius;
+      $this->radius = (float) $radius;
 
       return true;
     }
@@ -81,9 +80,8 @@ class sfImageUnsharpMaskGD extends sfImageTransformAbstract
    */
   public function setThreshold($threshold)
   {
-    if(is_numeric($threshold) && $threshold > 0 && $threshold <= 500)
-    {
-      $this->threshold = (float)$threshold;
+    if (is_numeric($threshold) && $threshold > 0 && $threshold <= 500) {
+      $this->threshold = (float) $threshold;
 
       return true;
     }
@@ -108,9 +106,8 @@ class sfImageUnsharpMaskGD extends sfImageTransformAbstract
    */
   public function setAmount($amount)
   {
-    if(is_numeric($amount) && $amount > 0 && $amount <= 500)
-    {
-      $this->amount = (int)$amount;
+    if (is_numeric($amount) && $amount > 0 && $amount <= 500) {
+      $this->amount = (int) $amount;
 
       return true;
     }
@@ -141,13 +138,11 @@ class sfImageUnsharpMaskGD extends sfImageTransformAbstract
     $w = $image->getWidth();
     $h = $image->getHeight();
 
-    if ($radius > 0)
-    {
+    if ($radius > 0) {
       $imgCanvas = imagecreatetruecolor($w, $h);
       $imgBlur = imagecreatetruecolor($w, $h);
 
-      if (function_exists('imageconvolution'))
-      {
+      if (function_exists('imageconvolution')) {
         $matrix = array(
           array( 1, 2, 1 ),
           array( 2, 4, 2 ),
@@ -156,15 +151,11 @@ class sfImageUnsharpMaskGD extends sfImageTransformAbstract
 
         imagecopy ($imgBlur, $resource, 0, 0, 0, 0, $w, $h);
         imageconvolution($imgBlur, $matrix, 16, 0);
-      }
-
-      else
-      {
+      } else {
 
         // Move copies of the image around one pixel at the time and merge them with weight
         // according to the matrix. The same matrix is simply repeated for higher radii.
-        for ($i = 0; $i < $radius; $i++)
-        {
+        for ($i = 0; $i < $radius; $i++) {
           imagecopy ($imgBlur, $resource, 0, 0, 1, 0, $w - 1, $h); // left
           imagecopymerge ($imgBlur, $resource, 1, 0, 0, 0, $w, $h, 50); // right
           imagecopymerge ($imgBlur, $resource, 0, 0, 0, 0, $w, $h, 50); // center
@@ -175,17 +166,14 @@ class sfImageUnsharpMaskGD extends sfImageTransformAbstract
         }
       }
 
-      if ($threshold > 0)
-      {
+      if ($threshold > 0) {
         // Calculate the difference between the blurred pixels and the original
         // and set the pixels
 
         // Each row
-        for ($x = 0; $x < $w - 1; $x++)
-        {
+        for ($x = 0; $x < $w - 1; $x++) {
           // Each pixel
-          for ($y = 0; $y < $h; $y++)
-          {
+          for ($y = 0; $y < $h; $y++) {
 
             $rgbOrig = ImageColorAt($resource, $x, $y);
             $rOrig = (($rgbOrig >> 16) & 0xFF);
@@ -201,40 +189,31 @@ class sfImageUnsharpMaskGD extends sfImageTransformAbstract
             // When the masked pixels differ less from the original
             // than the threshold specifies, they are set to their original value.
             $rNew = $rOrig;
-            if (abs($rOrig - $rBlur) >= $threshold)
-            {
+            if (abs($rOrig - $rBlur) >= $threshold) {
               $rNew = max(0, min(255, ($amount * ($rOrig - $rBlur)) + $rOrig));
             }
 
             $gNew = $gOrig;
-            if (abs($gOrig - $gBlur) >= $threshold)
-            {
+            if (abs($gOrig - $gBlur) >= $threshold) {
               $gNew = max(0, min(255, ($amount * ($gOrig - $gBlur)) + $gOrig));
             }
 
             $bNew = $bOrig;
-            if (abs($bOrig - $bBlur) >= $threshold)
-            {
+            if (abs($bOrig - $bBlur) >= $threshold) {
               $bNew = max(0, min(255, ($amount * ($bOrig - $bBlur)) + $bOrig));
             }
 
-            if (($rOrig != $rNew) || ($gOrig != $gNew) || ($bOrig != $bNew))
-            {
+            if (($rOrig != $rNew) || ($gOrig != $gNew) || ($bOrig != $bNew)) {
               $pixCol = ImageColorAllocate($resource, $rNew, $gNew, $bNew);
               ImageSetPixel($resource, $x, $y, $pixCol);
             }
           }
         }
-      }
-
-      else
-      {
+      } else {
         // each row
-        for ($x = 0; $x < $w; $x++)
-        {
+        for ($x = 0; $x < $w; $x++) {
           // each pixel
-          for ($y = 0; $y < $h; $y++)
-          {
+          for ($y = 0; $y < $h; $y++) {
             $rgbOrig = ImageColorAt($resource, $x, $y);
             $rOrig = (($rgbOrig >> 16) & 0xFF);
             $gOrig = (($rgbOrig >> 8) & 0xFF);
@@ -248,34 +227,25 @@ class sfImageUnsharpMaskGD extends sfImageTransformAbstract
 
             $rNew = ($amount * ($rOrig - $rBlur)) + $rOrig;
 
-            if($rNew > 255)
-            {
+            if ($rNew > 255) {
               $rNew = 255;
-            }
-            elseif ($rNew < 0)
-            {
+            } elseif ($rNew < 0) {
               $rNew = 0;
             }
 
             $gNew = ($amount * ($gOrig - $gBlur)) + $gOrig;
 
-            if($gNew > 255)
-            {
+            if ($gNew > 255) {
               $gNew = 255;
-            }
-            elseif ($gNew < 0)
-            {
+            } elseif ($gNew < 0) {
               $gNew = 0;
             }
 
             $bNew = ($amount * ($bOrig - $bBlur)) + $bOrig;
 
-            if ($bNew > 255)
-            {
+            if ($bNew > 255) {
               $bNew = 255;
-            }
-            elseif ($bNew < 0)
-            {
+            } elseif ($bNew < 0) {
               $bNew = 0;
             }
 

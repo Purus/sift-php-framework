@@ -49,12 +49,9 @@ class sfValidatorEmail extends sfValidatorRegex
     $this->addOption('check_mx', sfConfig::get('sf_validator_email_check_mx', false));
     $this->addOption('strict', sfConfig::get('sf_validator_email_strict_pattern', true));
 
-    if($this->getOption('strict'))
-    {
+    if ($this->getOption('strict')) {
       $this->setOption('pattern', self::REGEX_EMAIL_STRICT);
-    }
-    else
-    {
+    } else {
       $this->setOption('pattern', self::REGEX_EMAIL);
     }
   }
@@ -63,12 +60,10 @@ class sfValidatorEmail extends sfValidatorRegex
   {
     $value = parent::doClean($value);
 
-    if($this->getOption('check_mx'))
-    {
+    if ($this->getOption('check_mx')) {
       $this->log(sprintf('Checking MX records for "%s"', $value));
       $parts = explode('@', $value);
-      if(isset($parts[1]) && $parts[1] && !$this->checkMX($parts[1]))
-      {
+      if (isset($parts[1]) && $parts[1] && !$this->checkMX($parts[1])) {
         throw new sfValidatorError($this, 'mx_fail', array('value' => $value));
       }
     }
@@ -85,26 +80,20 @@ class sfValidatorEmail extends sfValidatorRegex
   private function checkMX($host)
   {
     // We have different behavior here depending of OS and PHP version
-    if(strtolower(substr(PHP_OS, 0, 3)) == 'win' && version_compare(PHP_VERSION, '5.3.0', '<'))
-    {
+    if (strtolower(substr(PHP_OS, 0, 3)) == 'win' && version_compare(PHP_VERSION, '5.3.0', '<')) {
       $output = array();
       exec('nslookup -type=MX '.escapeshellcmd($host) . ' 2>&1', $output);
-      if(empty($output))
-      {
+      if (empty($output)) {
         throw new sfException('Unable to execute DNS lookup. Are you sure PHP can call exec()?');
       }
-       foreach ($output as $line)
-       {
-        if(preg_match('/^'.$host.'/', $line))
-        {
+       foreach ($output as $line) {
+        if (preg_match('/^'.$host.'/', $line)) {
           return true;
         }
       }
 
       return false;
-    }
-    elseif(function_exists('checkdnsrr'))
-    {
+    } elseif (function_exists('checkdnsrr')) {
       return checkdnsrr($host, 'MX');
     }
 

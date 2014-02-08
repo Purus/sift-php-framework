@@ -84,26 +84,19 @@ class sfTesterRequest extends sfTester
    */
   public function hasCookie($name, $exists = true)
   {
-    if (!array_key_exists($name, $_COOKIE))
-    {
-      if ($exists)
-      {
+    if (!array_key_exists($name, $_COOKIE)) {
+      if ($exists) {
         $this->tester->fail(sprintf('cookie "%s" exists.', $name));
-      }
-      else
-      {
+      } else {
         $this->tester->pass(sprintf('cookie "%s" does not exist.', $name));
       }
 
       return $this->getObjectToReturn();
     }
 
-    if ($exists)
-    {
+    if ($exists) {
       $this->tester->pass(sprintf('cookie "%s" exists.', $name));
-    }
-    else
-    {
+    } else {
       $this->tester->fail(sprintf('cookie "%s" does not exist.', $name));
     }
 
@@ -120,26 +113,19 @@ class sfTesterRequest extends sfTester
    */
   public function isCookie($name, $value)
   {
-    if (!array_key_exists($name, $_COOKIE))
-    {
+    if (!array_key_exists($name, $_COOKIE)) {
       $this->tester->fail(sprintf('cookie "%s" does not exist.', $name));
 
       return $this->getObjectToReturn();
     }
 
-    if (preg_match('/^(!)?([^a-zA-Z0-9\\\\]).+?\\2[ims]?$/', $value, $match))
-    {
-      if ($match[1] == '!')
-      {
+    if (preg_match('/^(!)?([^a-zA-Z0-9\\\\]).+?\\2[ims]?$/', $value, $match)) {
+      if ($match[1] == '!') {
         $this->tester->unlike($_COOKIE[$name], substr($value, 1), sprintf('cookie "%s" content does not match regex "%s"', $name, $value));
-      }
-      else
-      {
+      } else {
         $this->tester->like($_COOKIE[$name], $value, sprintf('cookie "%s" content matches regex "%s"', $name, $value));
       }
-    }
-    else
-    {
+    } else {
       $this->tester->is($_COOKIE[$name], $value, sprintf('cookie "%s" content is ok', $name));
     }
 

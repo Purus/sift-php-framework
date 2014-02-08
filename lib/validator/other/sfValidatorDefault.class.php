@@ -20,8 +20,8 @@
  * @package    Sift
  * @subpackage validator
  */
-class sfValidatorDefault extends sfValidatorBase {
-
+class sfValidatorDefault extends sfValidatorBase
+{
   /**
    * Configures the current validator.
    *
@@ -55,17 +55,13 @@ class sfValidatorDefault extends sfValidatorBase {
   {
     $validator = $this->getOption('validator');
 
-    if(!$validator instanceof sfValidatorBase)
-    {
+    if (!$validator instanceof sfValidatorBase) {
       throw new InvalidArgumentException('The "validator" option must be an instance of sfValidatorBase.');
     }
 
-    try
-    {
+    try {
       return $validator->clean($value);
-    }
-    catch(sfValidatorError $error)
-    {
+    } catch (sfValidatorError $error) {
       return null === $this->getOption('default') ? $validator->getEmptyValue() : $this->getOption('default');
     }
   }

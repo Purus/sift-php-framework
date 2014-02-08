@@ -64,8 +64,7 @@ class sfModulesConfigHandler extends sfSimpleYamlConfigHandler
   public static function parseYamls($configFiles)
   {
     $config = array();
-    foreach ($configFiles as $configFile)
-    {
+    foreach ($configFiles as $configFile) {
       // we use php's builtin array_merge instead of sfToolkit::arrayDeepMerge()
       // because we have the same keys in our array and they are lost with deep merge!
       $config = array_merge($config, self::parseYaml($configFile));

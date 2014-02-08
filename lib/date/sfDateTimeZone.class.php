@@ -14,8 +14,8 @@
  * @package Sift
  * @subpackage date
  */
-class sfDateTimeZone extends DateTimeZone {
-
+class sfDateTimeZone extends DateTimeZone
+{
   /**
    * Validates the timezone name
    *
@@ -24,12 +24,9 @@ class sfDateTimeZone extends DateTimeZone {
    */
   public static function isValid($timezone)
   {
-    try
-    {
+    try {
       new DateTimeZone($timezone);
-    }
-    catch(Exception $e)
-    {
+    } catch (Exception $e) {
       return false;
     }
 
@@ -49,28 +46,23 @@ class sfDateTimeZone extends DateTimeZone {
    */
   public static function getNameFromOffset($offset, $dayLightSavings = null)
   {
-    if($dayLightSavings === null)
-    {
+    if ($dayLightSavings === null) {
       $dayLightSavings = date('I');
     }
 
-    if(!is_numeric($offset))
-    {
+    if (!is_numeric($offset)) {
       return false;
     }
 
-    $dayLightSavings = (boolean)$dayLightSavings;
+    $dayLightSavings = (boolean) $dayLightSavings;
 
     $offset *= 3600;
     $zone = timezone_name_from_abbr('', $offset, $dayLightSavings);
 
     // fallback if the zone failed
-    if($zone === false)
-    {
-      foreach(timezone_abbreviations_list() as $abbr)
-      {
-        foreach($abbr as $city)
-        {
+    if ($zone === false) {
+      foreach (timezone_abbreviations_list() as $abbr) {
+        foreach ($abbr as $city) {
           if((boolean) $city['dst'] === $dayLightSavings &&
               strlen($city['timezone_id']) > 0 &&
               $city['offset'] == $offset)

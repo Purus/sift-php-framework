@@ -18,8 +18,8 @@
  * @package Sift
  * @subpackage color
  */
-class sfColor {
-
+class sfColor
+{
   /**
    * Map of color names
    *
@@ -124,30 +124,19 @@ class sfColor {
    */
   public function __construct($color = null)
   {
-    if(is_integer($color))
-    {
+    if (is_integer($color)) {
       $this->fromInt($color);
-    }
-    elseif(is_string($color))
-    {
-      if(isset(self::$namedColors[strtolower($color)]))
-      {
+    } elseif (is_string($color)) {
+      if (isset(self::$namedColors[strtolower($color)])) {
         $this->fromNamedColor($color);
-      }
-      else
-      {
+      } else {
         $this->fromHex($color);
       }
-    }
-    elseif(is_array($color))
-    {
+    } elseif (is_array($color)) {
       // we assume its red, green, blue index array
-      if(isset($color['red']))
-      {
+      if (isset($color['red'])) {
         $this->fromRgbInt($color['red'], $color['green'], $color['blue']);
-      }
-      else
-      {
+      } else {
         $this->fromRgbInt($color[0], $color[1], $color[2]);
       }
     }
@@ -170,8 +159,7 @@ class sfColor {
   public function fromNamedColor($colorName)
   {
     $colorName = strtolower($colorName);
-    if(isset(self::$namedColors[$colorName]))
-    {
+    if (isset(self::$namedColors[$colorName])) {
       $this->color = self::$namedColors[$colorName];
     }
 
@@ -302,8 +290,7 @@ class sfColor {
     );
 
     // If v is 0, color is black
-    if($hsv['val'] == 0)
-    {
+    if ($hsv['val'] == 0) {
       return $hsv;
     }
 
@@ -316,8 +303,7 @@ class sfColor {
 
     // Calculate saturation
     $hsv['sat'] = $rgbMax - $rgbMin;
-    if($hsv['sat'] == 0)
-    {
+    if ($hsv['sat'] == 0) {
       $hsv['hue'] = 0;
 
       return $hsv;
@@ -331,20 +317,14 @@ class sfColor {
     $rgbMax = max($rgb);
 
     // Calculate hue
-    if($rgbMax == $rgb['red'])
-    {
+    if ($rgbMax == $rgb['red']) {
       $hsv['hue'] = 0.0 + 60 * ($rgb['green'] - $rgb['blue']);
-      if($hsv['hue'] < 0)
-      {
+      if ($hsv['hue'] < 0) {
         $hsv['hue'] += 360;
       }
-    }
-    else if($rgbMax == $rgb['green'])
-    {
+    } else if ($rgbMax == $rgb['green']) {
       $hsv['hue'] = 120 + (60 * ($rgb['blue'] - $rgb['red']));
-    }
-    else
-    {
+    } else {
       $hsv['hue'] = 240 + (60 * ($rgb['red'] - $rgb['green']));
     }
 
@@ -371,35 +351,27 @@ class sfColor {
     );
 
     // If value is 0, color is black
-    if($hsv['val'] == 0)
-    {
+    if ($hsv['val'] == 0) {
       return $hsv;
     }
 
     // Calculate saturation
     $hsv['sat'] = round(255 * ($rgbMax - $rgbMin) / $hsv['val']);
-    if($hsv['sat'] == 0)
-    {
+    if ($hsv['sat'] == 0) {
       $hsv['hue'] = 0;
 
       return $hsv;
     }
 
     // Calculate hue
-    if($rgbMax == $rgb['red'])
-    {
+    if ($rgbMax == $rgb['red']) {
       $hsv['hue'] = round(0 + 43 * ($rgb['green'] - $rgb['blue']) / ($rgbMax - $rgbMin));
-    }
-    else if($rgbMax == $rgb['green'])
-    {
+    } else if ($rgbMax == $rgb['green']) {
       $hsv['hue'] = round(85 + 43 * ($rgb['blue'] - $rgb['red']) / ($rgbMax - $rgbMin));
-    }
-    else
-    {
+    } else {
       $hsv['hue'] = round(171 + 43 * ($rgb['red'] - $rgb['green']) / ($rgbMax - $rgbMin));
     }
-    if($hsv['hue'] < 0)
-    {
+    if ($hsv['hue'] < 0) {
       $hsv['hue'] += 255;
     }
 
@@ -434,8 +406,7 @@ class sfColor {
   public function toString()
   {
     $str = (string) $this->toHex();
-    if(strlen($str) < 6)
-    {
+    if (strlen($str) < 6) {
       $str = str_pad($str, 6, '0', STR_PAD_LEFT);
     }
 
@@ -494,15 +465,12 @@ class sfColor {
   {
     $matchDist = 10000;
     $matchKey = null;
-    foreach($colors as $key => $color)
-    {
-      if(false === ($color instanceof sfColor))
-      {
+    foreach ($colors as $key => $color) {
+      if (false === ($color instanceof sfColor)) {
         $c = new sfColor($color);
       }
       $dist = $this->getDistanceRgbFrom($c);
-      if($dist < $matchDist)
-      {
+      if ($dist < $matchDist) {
         $matchDist = $dist;
         $matchKey = $key;
       }
@@ -521,8 +489,7 @@ class sfColor {
    */
   public function mix(sfColor $color, $alpha = 50)
   {
-    if($alpha > 100 || $alpha < 0)
-    {
+    if ($alpha > 100 || $alpha < 0) {
       throw new InvalidArgumentException('Invalid alpha given. Should be: 0 < $alpha < 100');
     }
 
@@ -560,15 +527,11 @@ class sfColor {
   public function modifyBrightness($percent)
   {
     $rgb = $this->toRgbInt();
-    foreach(array('red', 'green', 'blue') as $i)
-    {
-      if($percent > 0)
-      {
+    foreach (array('red', 'green', 'blue') as $i) {
+      if ($percent > 0) {
         // Lighter
         $rgb[$i] = round($rgb[$i] * $percent) + round(255 * (1 - $percent));
-      }
-      else
-      {
+      } else {
         // Darker
         $positivePercent = $percent - ($percent * 2);
         $rgb[$i] = round($rgb[$i] * $positivePercent) + round(0 * (1 - $positivePercent));
@@ -626,30 +589,18 @@ class sfColor {
   public function makeWebSafe()
   {
     $rgb = $this->toRgbInt();
-    foreach($rgb as $name => $color)
-    {
-      if($color < 0x1a)
-      {
+    foreach ($rgb as $name => $color) {
+      if ($color < 0x1a) {
         $color = 0x00;
-      }
-      else if($color < 0x4d)
-      {
+      } else if ($color < 0x4d) {
         $color = 0x33;
-      }
-      else if($color < 0x80)
-      {
+      } else if ($color < 0x80) {
         $color = 0x66;
-      }
-      else if($color < 0xB3)
-      {
+      } else if ($color < 0xB3) {
         $color = 0x99;
-      }
-      else if($color < 0xE6)
-      {
+      } else if ($color < 0xE6) {
         $color = 0xCC;
-      }
-      else
-      {
+      } else {
         $color = 0xFF;
       }
       $rgb[$name] = $color;

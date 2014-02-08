@@ -12,8 +12,8 @@
  * @package    Sift
  * @subpackage validator
  */
-class sfValidatorRegex extends sfValidatorString {
-
+class sfValidatorRegex extends sfValidatorString
+{
   /**
    * Configures the current validator.
    *
@@ -85,12 +85,9 @@ class sfValidatorRegex extends sfValidatorString {
   {
     $rules = parent::getJavascriptValidationRules();
 
-    if($this->getOption('must_match'))
-    {
+    if ($this->getOption('must_match')) {
       $rules[sfFormJavascriptValidation::REGEX_PATTERN] = $this->getPattern();
-    }
-    else
-    {
+    } else {
       $rules[sfFormJavascriptValidation::REGEX_PATTERN_NEGATIVE] = $this->getPattern();
     }
 

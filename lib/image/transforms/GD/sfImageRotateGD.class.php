@@ -92,34 +92,27 @@ class sfImageRotateGD extends sfImageTransformAbstract
   protected function transform(sfImage $image)
   {
     // No need to do anything
-    if ($this->angle == 0)
-    {
+    if ($this->angle == 0) {
       return $image;
     }
 
     $resource = $image->getAdapter()->getHolder();
 
     // By default use the background of the top left corner
-    if ($this->background === '')
-    {
+    if ($this->background === '') {
       $this->background = ImageColorAt($resource, 0, 0);
-    }
-
-    else
-    {
+    } else {
       $this->background = $image->getAdapter()->getColorByHex($resource, $this->background);
     }
 
     // Easy
-    if (function_exists("imagerotate"))
-    {
+    if (function_exists("imagerotate")) {
       $image->getAdapter()->setHolder(imagerotate($resource, $this->angle, $this->background));
     }
 
     // Manual
     // manual rotating based base on pilot at myupb dot com @ php.net
-    else
-    {
+    else {
       throw new sfImageTransformException(sprintf('Cannot perform transform: %s. Your install of GD does not support imagerotate',get_class($this)));
 
       // TODO: FIX ME!!
@@ -145,11 +138,9 @@ class sfImageRotateGD extends sfImageTransformAbstract
       $dsth = 0;
 
       // Loop through every pixel and transform it
-      for ($x=0;$x<$srcw;$x++)
-      {
+      for ($x=0;$x<$srcw;$x++) {
 
-        for ($y=0;$y<$srch;$y++)
-        {
+        for ($y=0;$y<$srch;$y++) {
 
           list($x1, $y1) = $this->translateCoordinate($originx, $originy, $x, $y, false);
 
@@ -160,23 +151,19 @@ class sfImageRotateGD extends sfImageTransformAbstract
           $pixels[] = array($x2, $y2, imagecolorat($resource, $x, $y));
 
           // Check our boundaries
-          if ($x2 > $maxx)
-          {
+          if ($x2 > $maxx) {
             $maxx = $x2;
           }
 
-          if ($x2 < $minx)
-          {
+          if ($x2 < $minx) {
             $minx = $x2;
           }
 
-          if ($y2 > $maxy)
-          {
+          if ($y2 > $maxy) {
             $maxy = $y2;
           }
 
-          if ($y2 < $miny)
-          {
+          if ($y2 < $miny) {
             $miny = $y2;
           }
         }
@@ -194,12 +181,11 @@ class sfImageRotateGD extends sfImageTransformAbstract
       $neworiginy = -$miny;
 
       // Fill in the pixels
-      foreach($pixels as $data)
-      {
+      foreach ($pixels as $data) {
         list($x, $y, $color) = $data;
         list($newx, $newy) = $this->translateCoordinate($neworiginx, $neworiginy, $x, $y);
 
-        imagesetpixel($dstImg, (int)$newx, (int)$newy, $color);
+        imagesetpixel($dstImg, (int) $newx, (int) $newy, $color);
       }
 
       unset($resource);
@@ -212,14 +198,10 @@ class sfImageRotateGD extends sfImageTransformAbstract
 
   protected function translateCoordinate($originx, $originy, $x, $y, $toComp=true)
   {
-    if ($toComp)
-    {
+    if ($toComp) {
       $newx = $originx + $x;
       $newy = $originy - $y;
-    }
-
-    else
-    {
+    } else {
       $newx = $x - $originx;
       $newy = $originy - $y;
     }

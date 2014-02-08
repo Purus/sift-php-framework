@@ -15,8 +15,8 @@
  * @package    Sift
  * @subpackage request
  */
-class sfRequestFiltersHolder extends sfParameterHolder implements ArrayAccess, Countable {
-
+class sfRequestFiltersHolder extends sfParameterHolder implements ArrayAccess, Countable
+{
   /**
    * @see sfParameterHolder
    */
@@ -24,8 +24,7 @@ class sfRequestFiltersHolder extends sfParameterHolder implements ArrayAccess, C
   {
     $this->default_namespace = $namespace;
 
-    if($parameters)
-    {
+    if ($parameters) {
       $this->add($parameters, $namespace);
     }
   }
@@ -95,14 +94,10 @@ class sfRequestFiltersHolder extends sfParameterHolder implements ArrayAccess, C
    */
   private function checkKey($key, $exception = false)
   {
-    if(!isset($this->parameters[$this->default_namespace][$key]))
-    {
-      if($exception)
-      {
+    if (!isset($this->parameters[$this->default_namespace][$key])) {
+      if ($exception) {
         throw new Exception(sprintf('Item index "%s" does not exist!', $key));
-      }
-      else
-      {
+      } else {
         return false;
       }
     }

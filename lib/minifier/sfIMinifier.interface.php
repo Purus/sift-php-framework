@@ -12,8 +12,8 @@
  * @package    Sift
  * @subpackage minifier
  */
-interface sfIMinifier {
-
+interface sfIMinifier
+{
   /**
    * Processes the file
    *

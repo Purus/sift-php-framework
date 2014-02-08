@@ -12,8 +12,8 @@
  * @package    Sift
  * @subpackage form_widget
  */
-class sfWidgetFormDateRange extends sfWidgetForm {
-
+class sfWidgetFormDateRange extends sfWidgetForm
+{
   /**
    * Configures the current widget.
    *

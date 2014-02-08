@@ -38,10 +38,8 @@ class sfValidatorI18nChoiceLanguage extends sfValidatorChoice
     $languages = array_keys(sfCulture::getInstance()->getLanguages());
 
     // restrict languages to a sub-set
-    if (isset($options['languages']))
-    {
-      if ($problems = array_diff($options['languages'], $languages))
-      {
+    if (isset($options['languages'])) {
+      if ($problems = array_diff($options['languages'], $languages)) {
         throw new InvalidArgumentException(sprintf('The following languages do not exist: %s.', implode(', ', $problems)));
       }
 

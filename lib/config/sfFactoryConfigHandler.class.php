@@ -13,8 +13,8 @@
  * @package    Sift
  * @subpackage config
  */
-class sfFactoryConfigHandler extends sfYamlConfigHandler {
-
+class sfFactoryConfigHandler extends sfYamlConfigHandler
+{
   /**
    * Executes this configuration handler.
    *
@@ -52,20 +52,15 @@ class sfFactoryConfigHandler extends sfYamlConfigHandler {
     $data = array();
 
     // first check the required
-    foreach($requiredServices as $required)
-    {
-      if(!isset($myConfig[$required]))
-      {
+    foreach ($requiredServices as $required) {
+      if (!isset($myConfig[$required])) {
         throw new sfParseException(sprintf('Configuration file "%s" is missing required service "%s" definition.', $configFiles[0], $required));
-      }
-      elseif(!isset($myConfig[$required]['class']))
-      {
+      } elseif (!isset($myConfig[$required]['class'])) {
         throw new sfParseException(sprintf('Configuration file "%s" specifies category "%s" with missing class key', $configFiles[0], $required));
       }
     }
 
-    foreach($myConfig as $serviceName => $definition)
-    {
+    foreach ($myConfig as $serviceName => $definition) {
       $data[] = sprintf("\$this->registerService('%s', %s);\n", $serviceName, $this->varExport($definition));
     }
 

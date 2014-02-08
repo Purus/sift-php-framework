@@ -12,8 +12,8 @@
  * @package    Sift
  * @subpackage form_enhancer
  */
-interface sfIFormEnhancer {
-
+interface sfIFormEnhancer
+{
   /**
    * Enhance form
    *

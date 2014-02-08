@@ -12,8 +12,8 @@
  * @package Sift
  * @subpackage image
  */
-class sfExif {
-
+class sfExif
+{
   /**
    * Adapter holder
    *
@@ -36,13 +36,11 @@ class sfExif {
    */
   public function __construct($adapter = null, $adapterOptions = null)
   {
-    if(!$adapter)
-    {
+    if (!$adapter) {
       $adapter = sfConfig::get('sf_image_exif_adapter', 'ExifTool');
     }
 
-    if(!$adapterOptions)
-    {
+    if (!$adapterOptions) {
       $adapterOptions = sfConfig::get('sf_image_exif_adapter_options', array());
     }
 
@@ -60,8 +58,7 @@ class sfExif {
   public static function factory($adapter = null, $options = array())
   {
     $adapterClass = sprintf('sfExifAdapter%s', ucfirst($adapter));
-    if(!class_exists($adapterClass))
-    {
+    if (!class_exists($adapterClass)) {
       throw new InvalidArgumentException(sprintf('Exif adapter "%s" not found.', $adapter));
     }
 
@@ -91,8 +88,7 @@ class sfExif {
   {
     $callback = array($this->adapter, $name);
 
-    if(!is_callable($callback))
-    {
+    if (!is_callable($callback)) {
       throw new BadMethodCallException(sprintf('Invalid method "%s" on "%s"', $name, get_class($this->adapter)));
     }
 
@@ -178,32 +174,25 @@ class sfExif {
    */
   public static function getFields($driver = null, $description_only = false)
   {
-    if(!is_null($driver) && is_array($driver))
-    {
+    if (!is_null($driver) && is_array($driver)) {
       $driver = self::factory($driver[0], $driver[1]);
     }
 
-    if($driver instanceof sfExifAdapter)
-    {
+    if ($driver instanceof sfExifAdapter) {
       $supported = $driver->supportedCategories();
-    }
-    else
-    {
+    } else {
       $supported = array('XMP', 'IPTC', 'EXIF');
     }
 
     $categories = self::getCategories();
     $flattened = array();
 
-    foreach($supported as $category)
-    {
+    foreach ($supported as $category) {
       $flattened = array_merge($flattened, $categories[$category]);
     }
 
-    if($description_only)
-    {
-      foreach($flattened as $key => $data)
-      {
+    if ($description_only) {
+      foreach ($flattened as $key => $data) {
         $return[$key] = $data['description'];
       }
 
@@ -224,21 +213,17 @@ class sfExif {
    */
   public static function __($message, $params = array())
   {
-    if(function_exists('__'))
-    {
+    if (function_exists('__')) {
       return __($message, $params, self::$translationCatalogue);
     }
 
-    if(empty($params))
-    {
+    if (empty($params)) {
       $params = array();
     }
 
     // replace object with strings
-    foreach($params as $key => $value)
-    {
-      if(is_object($value) && method_exists($value, '__toString'))
-      {
+    foreach ($params as $key => $value) {
+      if (is_object($value) && method_exists($value, '__toString')) {
         $params[$key] = $value->__toString();
       }
     }
@@ -253,26 +238,19 @@ class sfExif {
    */
   protected static function formatExposure($data)
   {
-    if($data > 0)
-    {
-      if($data > 1)
-      {
+    if ($data > 0) {
+      if ($data > 1) {
         return self::__('%duration% sec', array('%duration%' => sprintf('%d', round($data, 2))));
-      }
-      else
-      {
+      } else {
         $n = $d = 0;
         self::convertToFraction($data, $n, $d);
-        if($n <> 1)
-        {
+        if ($n <> 1) {
           return self::__('%duration% sec', array('%duration%' => sprintf("%4f", $n / $d)));
         }
 
         return self::__('%n% / %d% sec', array('%n%' => sprintf('%s', $n), '%d%' => sprintf('%s', $d)));
       }
-    }
-    else
-    {
+    } else {
       return __('Bulb', array(), self::$translationCatalogue);
     }
   }
@@ -297,8 +275,7 @@ class sfExif {
     $n_deux = 0;
     $d_deux = 1;
 
-    for($i = 0; $i < $MaxTerms; $i++)
-    {
+    for ($i = 0; $i < $MaxTerms; $i++) {
       $a = floor($f); // Get next term
       $f = $f - $a; // Get new divisor
       $n = $n_un * $a + $n_deux; // Calculate new fraction
@@ -309,12 +286,10 @@ class sfExif {
       $d_un = $d;
 
       // Quit if dividing by zero
-      if($f < $MinDivisor)
-      {
+      if ($f < $MinDivisor) {
         break;
       }
-      if(abs($v - $n / $d) < $MaxError)
-      {
+      if (abs($v - $n / $d) < $MaxError) {
         break;
       }
 
@@ -336,11 +311,9 @@ class sfExif {
    */
   public static function getHumanReadable($field, $data)
   {
-    switch($field)
-    {
+    switch ($field) {
       case 'ExposureMode':
-        switch($data)
-        {
+        switch ($data) {
           case 0: return self::__("Auto exposure");
           case 1: return self::__("Manual exposure");
           case 2: return self::__("Auto bracket");
@@ -348,8 +321,7 @@ class sfExif {
         }
 
       case 'ExposureProgram':
-        switch($data)
-        {
+        switch ($data) {
           case 1: return self::__("Manual");
           case 2: return self::__("Normal Program");
           case 3: return self::__("Aperture Priority");
@@ -363,8 +335,7 @@ class sfExif {
 
       case 'XResolution':
       case 'YResolution':
-        if(strpos($data, '/') !== false)
-        {
+        if (strpos($data, '/') !== false) {
           list($n, $d) = explode('/', $data, 2);
 
           return self::__('%resulution% dots per unit', array('%resolution%' => sprintf('%d', $n)));
@@ -373,8 +344,7 @@ class sfExif {
         return self::__('%resulution% per unit', array('%resolution%' => sprintf('%d', $data)));
 
       case 'ResolutionUnit':
-        switch($data)
-        {
+        switch ($data) {
           case 1: return self::__("Pixels");
           case 2: return self::__("Inch");
           case 3: return self::__("Centimeter");
@@ -386,8 +356,7 @@ class sfExif {
         return self::__('%width% pixeld', array('%width%' => sprintf('%d', $data)));
 
       case 'Orientation':
-        switch($data)
-        {
+        switch ($data) {
           case 1:
             return sprintf(self::__("Normal (O deg)"));
           case 2:
@@ -408,11 +377,9 @@ class sfExif {
         break;
 
       case 'ExposureTime':
-        if(strpos($data, '/') !== false)
-        {
+        if (strpos($data, '/') !== false) {
           list($n, $d) = explode('/', $data, 2);
-          if($d == 0)
-          {
+          if ($d == 0) {
             return;
           }
           $data = $n / $d;
@@ -421,18 +388,15 @@ class sfExif {
         return self::_formatExposure($data);
 
       case 'ShutterSpeedValue':
-        if(strpos($data, '/') !== false)
-        {
+        if (strpos($data, '/') !== false) {
           list($n, $d) = explode('/', $data, 2);
-          if($d == 0)
-          {
+          if ($d == 0) {
             return;
           }
           $data = $n / $d;
         }
         $data = exp($data * log(2));
-        if($data > 0)
-        {
+        if ($data > 0) {
           $data = 1 / $data;
         }
 
@@ -440,11 +404,9 @@ class sfExif {
 
       case 'ApertureValue':
       case 'MaxApertureValue':
-        if(strpos($data, '/') !== false)
-        {
+        if (strpos($data, '/') !== false) {
           list($n, $d) = explode('/', $data, 2);
-          if($d == 0)
-          {
+          if ($d == 0) {
             return;
           }
           $data = $n / $d;
@@ -457,11 +419,9 @@ class sfExif {
         return 'f/' . $data;
 
       case 'FocalLength':
-        if(strpos($data, '/') !== false)
-        {
+        if (strpos($data, '/') !== false) {
           list($n, $d) = explode('/', $data, 2);
-          if($d == 0)
-          {
+          if ($d == 0) {
             return;
           }
 
@@ -471,11 +431,9 @@ class sfExif {
         return self::__('%focal_length% mm', array('%focal_length%' => sprintf('%d', $data)));
 
       case 'FNumber':
-        if(strpos($data, '/') !== false)
-        {
+        if (strpos($data, '/') !== false) {
           list($n, $d) = explode('/', $data, 2);
-          if($d != 0)
-          {
+          if ($d != 0) {
             return 'f/' . round($n / $d, 1);
           }
         }
@@ -483,11 +441,9 @@ class sfExif {
         return 'f/' . $data;
 
       case 'ExposureBiasValue':
-        if(strpos($data, '/') !== false)
-        {
+        if (strpos($data, '/') !== false) {
           list($n, $d) = explode('/', $data, 2);
-          if($n == 0)
-          {
+          if ($n == 0) {
             return '0 EV';
           }
         }
@@ -495,8 +451,7 @@ class sfExif {
         return $data . ' EV';
 
       case 'MeteringMode':
-        switch($data)
-        {
+        switch ($data) {
           case 0: return self::__("Unknown");
           case 1: return self::__("Average");
           case 2: return self::__("Center Weighted Average");
@@ -510,8 +465,7 @@ class sfExif {
         break;
 
       case 'LightSource':
-        switch($data)
-        {
+        switch ($data) {
           case 1: return self::__("Daylight");
           case 2: return self::__("Fluorescent");
           case 3: return self::__("Tungsten");
@@ -536,8 +490,7 @@ class sfExif {
         }
 
       case 'WhiteBalance':
-        switch($data)
-        {
+        switch ($data) {
           case 0: return self::__("Auto");
           case 1: return self::__("Manual");
           default: self::__("Unknown");
@@ -548,8 +501,7 @@ class sfExif {
         return $data . ' mm';
 
       case 'Flash':
-        switch($data)
-        {
+        switch ($data) {
           case 0: return self::__("No Flash");
           case 1: return self::__("Flash");
           case 5: return self::__("Flash, strobe return light not detected");
@@ -576,8 +528,7 @@ class sfExif {
         break;
 
       case 'FileSize':
-        if($data <= 0)
-        {
+        if ($data <= 0) {
           return '0 Bytes';
         }
         $s = array('B', 'kB', 'MB', 'GB');
@@ -586,8 +537,7 @@ class sfExif {
         return round($data / pow(1024, $e), 2) . ' ' . $s[$e];
 
       case 'SensingMethod':
-        switch($data)
-        {
+        switch ($data) {
           case 1: return self::__("Not defined");
           case 2: return self::__("One Chip Color Area Sensor");
           case 3: return self::__("Two Chip Color Area Sensor");
@@ -599,15 +549,13 @@ class sfExif {
         }
 
       case 'ColorSpace':
-        switch($data)
-        {
+        switch ($data) {
           case 1: return self::__("sRGB");
           default: return self::__("Uncalibrated");
         }
 
       case 'SceneCaptureType':
-        switch($data)
-        {
+        switch ($data) {
           case 0: return self::__("Standard");
           case 1: return self::__("Landscape");
           case 2: return self::__("Portrait");

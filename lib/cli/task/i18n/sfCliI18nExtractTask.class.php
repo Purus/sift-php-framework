@@ -75,12 +75,9 @@ EOF;
     list($application, $dir, $isPlugin) = $this->getApplicationOrPlugin($arguments['app']);
 
     $culture = $arguments['culture'];
-    if($isPlugin)
-    {
+    if ($isPlugin) {
       $this->logSection($this->getFullName(), sprintf('Extracting i18n strings for the "%s" plugin ("%s")', $application, $culture));
-    }
-    else
-    {
+    } else {
       $this->logSection($this->getFullName(), sprintf('Extracting i18n strings for the "%s" application ("%s")', $application, $culture));
     }
 
@@ -91,8 +88,7 @@ EOF;
     // clears events
     sfCore::getEventDispatcher()->clear();
 
-    if($options['connection'])
-    {
+    if ($options['connection']) {
       $connection = $this->getDatabase($options['connection']);
       $connection->connect();
     }
@@ -113,70 +109,56 @@ EOF;
     $this->logSection($this->getFullName(), sprintf('Found "%d" new i18n strings', $extract->getNewMessagesCount()));
     $this->logSection($this->getFullName(), sprintf('Found "%d" old i18n strings', $extract->getOldMessagesCount()));
 
-    if($options['display-new'])
-    {
+    if ($options['display-new']) {
       $this->logSection($this->getFullName(), sprintf('Display new i18n strings', $extract->getNewMessagesCount()));
 
       $found = 0;
-      foreach($extract->getNewMessages() as $domain => $messages)
-      {
-        if(count($messages))
-        {
+      foreach ($extract->getNewMessages() as $domain => $messages) {
+        if (count($messages)) {
           $this->logSection($this->getFullName(), 'Domain: '. $this->replacePaths($domain));
         }
-        foreach($messages as $message)
-        {
+        foreach ($messages as $message) {
           $this->log('                '.$message);
           $found++;
         }
       }
-      if(!$found)
-      {
+      if (!$found) {
         $this->logSection($this->getFullName(), 'No new messages to be displayed.');
       }
     }
 
-    if ($options['auto-save'])
-    {
+    if ($options['auto-save']) {
       $this->logSection($this->getFullName(), 'Saving new i18n strings');
 
       $extract->saveNewMessages();
     }
 
-    if ($options['display-old'])
-    {
+    if ($options['display-old']) {
       $this->logSection($this->getFullName(), sprintf('Display old i18n strings', $extract->getOldMessagesCount()));
       $found = 0;
-      foreach($extract->getOldMessages() as $domain => $messages)
-      {
-        if(count($messages))
-        {
+      foreach ($extract->getOldMessages() as $domain => $messages) {
+        if (count($messages)) {
           $this->logSection($this->getFullName(), 'Domain: ' . $this->replacePaths($domain));
         }
-        foreach($messages as $message)
-        {
+        foreach ($messages as $message) {
           $this->log('                '.$message);
           $found++;
         }
       }
 
-      if(!$found)
-      {
+      if (!$found) {
         $this->logSection($this->getFullName(), 'No old messages to be displayed.');
       }
     }
 
-    if($options['auto-delete'])
-    {
+    if ($options['auto-delete']) {
       $this->logSection($this->getFullName(), 'Deleting old i18n strings');
       $extract->deleteOldMessages();
     }
 
-    if($options['ignore-errors'] && count($errors))
-    {
+    if ($options['ignore-errors'] && count($errors)) {
       $this->logSection($this->getFullName(), 'Error catched while extracting.');
-      foreach($errors as $error)
-      {
+      foreach ($errors as $error) {
         $this->logBlock(sprintf("%s\n", $error->getMessage()), 'ERROR');
       }
     }

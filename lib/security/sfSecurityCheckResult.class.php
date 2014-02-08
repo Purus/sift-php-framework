@@ -12,8 +12,8 @@
  * @package Sift
  * @subpackage security
  */
-class sfSecurityCheckResult {
-
+class sfSecurityCheckResult
+{
   public $security = array();
 
   /**
@@ -23,8 +23,7 @@ class sfSecurityCheckResult {
    */
   public function __construct($module)
   {
-    if($fn = sfConfigCache::getInstance()->checkConfig('modules/' . $module . '/config/security.yml', true))
-    {
+    if ($fn = sfConfigCache::getInstance()->checkConfig('modules/' . $module . '/config/security.yml', true)) {
       require($fn);
     }
   }

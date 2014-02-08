@@ -12,8 +12,8 @@
  * @package Sift
  * @subpackage search
  */
-class sfSearchQueryExpression {
-
+class sfSearchQueryExpression
+{
   protected $phrases = array();
   protected $subExpressions = array();
   protected $parent;
@@ -54,20 +54,16 @@ class sfSearchQueryExpression {
   {
     $valid = false;
 
-    foreach($this->phrases as $phrase)
-    {
-      if($phrase->getMode() != sfSearchQueryPhrase::MODE_EXCLUDE)
-      {
+    foreach ($this->phrases as $phrase) {
+      if ($phrase->getMode() != sfSearchQueryPhrase::MODE_EXCLUDE) {
         return true;
       }
     }
 
-    foreach($this->subExpressions as $subExpression)
-    {
+    foreach ($this->subExpressions as $subExpression) {
       $valid = $subExpression->isValid();
       // break on first valid subexpression
-      if($valid)
-      {
+      if ($valid) {
         return true;
       }
     }
@@ -197,10 +193,8 @@ class sfSearchQueryExpression {
   {
     $keywords = array();
 
-    foreach($this->getPhrases() as $phrase)
-    {
-      switch($phrase->getMode())
-      {
+    foreach ($this->getPhrases() as $phrase) {
+      switch ($phrase->getMode()) {
         case sfSearchQueryPhrase::MODE_DEFAULT:
         case sfSearchQueryPhrase::MODE_AND:
         case sfSearchQueryPhrase::MODE_OR:
@@ -212,8 +206,7 @@ class sfSearchQueryExpression {
     }
 
     $subExpressions = $this->getSubExpressions();
-    foreach($subExpressions as $subExpression)
-    {
+    foreach ($subExpressions as $subExpression) {
       $keywords = array_merge($keywords, $subExpression->collectWords());
     }
 

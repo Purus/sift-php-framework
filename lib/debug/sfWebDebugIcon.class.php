@@ -12,8 +12,8 @@
  * @package    Sift
  * @subpackage debug
  */
-class sfWebDebugIcon {
-
+class sfWebDebugIcon
+{
   /**
    * Array of icons
    *

@@ -26,19 +26,14 @@ abstract class sfRichTextEditor extends sfConfigurable implements sfIRichTextEdi
   public static function factory($driver, $options = array())
   {
     $driverObj = false;
-    if(class_exists($class = sprintf('sfRichTextEditorDriver%s', ucfirst($driver))))
-    {
+    if (class_exists($class = sprintf('sfRichTextEditorDriver%s', ucfirst($driver)))) {
       $driverObj = new $class($options);
-    }
-    else if(class_exists($class = $driver))
-    {
+    } else if (class_exists($class = $driver)) {
       $driverObj = new $class($options);
     }
 
-    if($driverObj)
-    {
-      if(!$driverObj instanceof sfIRichTextEditor)
-      {
+    if ($driverObj) {
+      if (!$driverObj instanceof sfIRichTextEditor) {
         throw new LogicException(sprintf('Driver "%s" does not implement sfIRichTextEditor interface.', $driver));
       }
 
@@ -58,8 +53,7 @@ abstract class sfRichTextEditor extends sfConfigurable implements sfIRichTextEdi
 
     parent::__construct($options);
 
-    if(sfCore::isBootstrapped())
-    {
+    if (sfCore::isBootstrapped()) {
       // allow modifications by event system hooks
       sfCore::dispatchEvent('rich_text_editor.load_options', array(
         'editor' => $this

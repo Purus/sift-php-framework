@@ -37,8 +37,7 @@ function file_mime_name($mime, $unknown = 'Unknown')
 function file_max_upload_size($format = true)
 {
   $max_size = sfToolkit::getMaxUploadSize();
-  if($format)
-  {
+  if ($format) {
     $max_size = file_format_size($max_size);
   }
 

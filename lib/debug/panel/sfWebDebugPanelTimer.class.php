@@ -12,8 +12,8 @@
  * @package    Sift
  * @subpackage debug_panel
  */
-class sfWebDebugPanelTimer extends sfWebDebugPanel {
-
+class sfWebDebugPanelTimer extends sfWebDebugPanel
+{
   public function getTitle()
   {
     return sprintf('%.0f ms', $this->getTotalTime());
@@ -30,8 +30,7 @@ class sfWebDebugPanelTimer extends sfWebDebugPanel {
 
   public function getPanelContent()
   {
-    if(!sfTimerManager::getTimers())
-    {
+    if (!sfTimerManager::getTimers()) {
       return;
     }
 
@@ -44,8 +43,7 @@ class sfWebDebugPanelTimer extends sfWebDebugPanel {
   protected function getTotalTime()
   {
     $totalTime = 0;
-    foreach(sfTimerManager::getTimers() as $timer)
-    {
+    foreach (sfTimerManager::getTimers() as $timer) {
       $totalTime += $timer->getElapsedTime() * 1000;
     }
 

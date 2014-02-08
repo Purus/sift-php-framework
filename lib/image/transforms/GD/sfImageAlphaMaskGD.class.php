@@ -48,8 +48,7 @@ class sfImageAlphaMaskGD extends sfImageTransformAbstract
 
   public function setColor($color)
   {
-    if (preg_match('/#[\d\w]{6}/',$color))
-    {
+    if (preg_match('/#[\d\w]{6}/',$color)) {
       $this->color = strtoupper($color);
 
       return true;
@@ -66,8 +65,7 @@ class sfImageAlphaMaskGD extends sfImageTransformAbstract
   protected function transform(sfImage $image)
   {
 
-    switch ($image->getMIMEType())
-    {
+    switch ($image->getMIMEType()) {
       case 'image/png':
         $this->transformAlpha($image);
         break;
@@ -96,20 +94,15 @@ class sfImageAlphaMaskGD extends sfImageTransformAbstract
     imagealphablending($canvas, false);
     imagesavealpha($canvas, true);
 
-    for ($x = 0;$x < $w;$x++)
-    {
-      for ($y = 0;$y < $h;$y++)
-      {
+    for ($x = 0;$x < $w;$x++) {
+      for ($y = 0;$y < $h;$y++) {
         $real_pixel = imagecolorsforindex($resource, imagecolorat($resource, $x, $y));
         $mask_pixel = imagecolorsforindex($mask, imagecolorat($mask, $x, $y));
         $mask_alpha = 127 - (floor($mask_pixel['red'] / 2) * (1 - ($real_pixel['alpha'] / 127)));
 
-        if (false === $this->getColor())
-        {
+        if (false === $this->getColor()) {
           $newcolor = imagecolorallocatealpha($canvas, $real_pixel['red'], $real_pixel['green'], $real_pixel['blue'], intval($mask_alpha));
-        }
-        else
-        {
+        } else {
           $newcolorPixel    = sscanf($this->getColor(), '#%2x%2x%2x');
           $newcolorPixel[0] = ($newcolorPixel[0] * $mask_alpha + $real_pixel['red'] * (127 - $mask_alpha)) / 127;
           $newcolorPixel[1] = ($newcolorPixel[1] * $mask_alpha + $real_pixel['green'] * (127 - $mask_alpha)) / 127;

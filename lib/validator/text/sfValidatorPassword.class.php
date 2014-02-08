@@ -12,8 +12,8 @@
  * @package    Sift
  * @subpackage validator
  */
-class sfValidatorPassword extends sfValidatorString {
-
+class sfValidatorPassword extends sfValidatorString
+{
   /**
    * @see sfValidatorBase
    */
@@ -44,11 +44,9 @@ class sfValidatorPassword extends sfValidatorString {
   {
     $value = parent::doClean($value);
 
-    if($this->getOption('strength_check'))
-    {
+    if ($this->getOption('strength_check')) {
       $strength = self::getPasswordStrength($value);
-      if($strength < $this->getOption('min_strength'))
-      {
+      if ($strength < $this->getOption('min_strength')) {
         throw new sfValidatorError($this, 'strength_error');
       }
     }
@@ -67,49 +65,38 @@ class sfValidatorPassword extends sfValidatorString {
     $strength = 0;
     $password_length = self::getStringLength($password);
 
-    if($password_length > 9)
-    {
+    if ($password_length > 9) {
       $strength += 10;
     }
 
-    for($i = 2; $i <= 4; $i++)
-    {
+    for ($i = 2; $i <= 4; $i++) {
       $temp = self::splitString($password, $i);
       $strength -= (ceil($password_length / $i) - count(array_unique($temp)));
     }
 
     preg_match_all('/[0-9]/', $password, $numbers);
-    if(!empty($numbers))
-    {
+    if (!empty($numbers)) {
       $numbers = count($numbers[0]);
-      if($numbers >= 2)
-      {
+      if ($numbers >= 2) {
         $strength += 5;
       }
-    }
-    else
-    {
+    } else {
       $numbers = 0;
     }
 
-    if(self::hasOrderedCharacters($password))
-    {
+    if (self::hasOrderedCharacters($password)) {
       $strength -= 20;
     }
 
     // symbols
     preg_match_all('~[!@#$%^&*()_+{}:"<>?\|\[\];\',./`\~]~', $password, $symbols);
-    if(!empty($symbols))
-    {
+    if (!empty($symbols)) {
       $symbols = count($symbols[0]);
-      if($symbols > 0)
-      {
+      if ($symbols > 0) {
         // each symbol is + 7 points
         $strength += $symbols * 7;
       }
-    }
-    else
-    {
+    } else {
       $symbols = 0;
     }
 
@@ -118,76 +105,57 @@ class sfValidatorPassword extends sfValidatorString {
     // Extended Latin A, parts OF Latin-1 Supplement
     preg_match_all('/([\x{0100}-\x{017F}\x{00C0}-\x{00CF}\x{00E0}-\x{00FF}])/u', $password, $utf8Characters);
 
-    if(!empty($lowercaseCharacters))
-    {
+    if (!empty($lowercaseCharacters)) {
       $lowercaseCharacters = count($lowercaseCharacters[0]);
-    }
-    else
-    {
+    } else {
       $lowercaseCharacters = 0;
     }
 
-    if(!empty($uppercaseCharacters))
-    {
+    if (!empty($uppercaseCharacters)) {
       $uppercaseCharacters = count($uppercaseCharacters[0]);
-    }
-    else
-    {
+    } else {
       $uppercaseCharacters = 0;
     }
 
-    if(!empty($utf8Characters))
-    {
+    if (!empty($utf8Characters)) {
       $utf8Characters = count($utf8Characters[0]);
-    }
-    else
-    {
+    } else {
       $utf8Characters = 0;
     }
 
-    if(($lowercaseCharacters > 0) && ($uppercaseCharacters > 0))
-    {
+    if (($lowercaseCharacters > 0) && ($uppercaseCharacters > 0)) {
       $strength += 10;
     }
 
-    if($utf8Characters > 0)
-    {
+    if ($utf8Characters > 0) {
       $strength += 10 * $utf8Characters;
     }
 
     $characters = $lowercaseCharacters + $uppercaseCharacters + $utf8Characters;
 
-    if(($numbers > 0) && ($symbols > 0))
-    {
+    if (($numbers > 0) && ($symbols > 0)) {
       $strength += 15;
     }
 
-    if(($numbers > 0) && ($characters > 0))
-    {
+    if (($numbers > 0) && ($characters > 0)) {
       $strength += 15;
     }
 
-    if(($symbols > 0) && ($characters > 0))
-    {
+    if (($symbols > 0) && ($characters > 0)) {
       $strength += 15;
     }
 
-    if(($numbers == 0) && ($symbols == 0))
-    {
+    if (($numbers == 0) && ($symbols == 0)) {
       $strength -= 10;
     }
 
-    if(($symbols == 0) && ($characters == 0))
-    {
+    if (($symbols == 0) && ($characters == 0)) {
       $strength -= 10;
     }
 
-    if($strength < 0)
-    {
+    if ($strength < 0) {
       $strength = 0;
-    }
-    elseif($strength > 100)
-    {
+    } elseif ($strength > 100) {
       $strength = 100;
     }
 
@@ -207,19 +175,14 @@ class sfValidatorPassword extends sfValidatorString {
     $len = self::getStringLength($string);
     $count = 0;
     $last = 0;
-    for($i = 0; $i < $len; $i++)
-    {
+    for ($i = 0; $i < $len; $i++) {
       $current = ord($string[$i]);
-      if($current == $last + 1)
-      {
+      if ($current == $last + 1) {
         $count++;
-        if($count >= $number)
-        {
+        if ($count >= $number) {
           return true;
         }
-      }
-      else
-      {
+      } else {
         $count = 1;
       }
       $last = $current;
@@ -248,12 +211,10 @@ class sfValidatorPassword extends sfValidatorString {
    */
   protected static function splitString($string, $length = 0)
   {
-    if($length > 0)
-    {
+    if ($length > 0) {
       $ret = array();
       $len = self::getStringLength($string);
-      for($i = 0; $i < $len; $i += $length)
-      {
+      for ($i = 0; $i < $len; $i += $length) {
         $ret[] = function_exists('mb_substr') ? mb_substr($string, $i, $length, self::getCharset()) :
           substr($string, $i, $length);
       }
@@ -277,25 +238,21 @@ class sfValidatorPassword extends sfValidatorString {
     $maxLength = $this->hasOption('max_length') ?
             $this->getOption('max_length') : 0;
 
-    if($this->getOption('required'))
-    {
+    if ($this->getOption('required')) {
       $rules[sfFormJavascriptValidation::REQUIRED] = true;
     }
 
     // lets build the callback
-    if($minLength > 0)
-    {
+    if ($minLength > 0) {
       $rules[sfFormJavascriptValidation::MIN_LENGTH] = $minLength;
     }
 
-    if($maxLength > 0)
-    {
+    if ($maxLength > 0) {
       $rules[sfFormJavascriptValidation::MAX_LENGTH] = $maxLength;
     }
 
     // strength check is enabled
-    if($this->getOption('strength_check'))
-    {
+    if ($this->getOption('strength_check')) {
       $rules[sfFormJavascriptValidation::PASSWORD_STRENGTH] = array(
         'minStrength' => $this->getOption('min_strength')
       );
@@ -317,27 +274,23 @@ class sfValidatorPassword extends sfValidatorString {
     $maxLength = $this->hasOption('max_length') ?
             $this->getOption('max_length') : 0;
 
-    if($this->getOption('required'))
-    {
+    if ($this->getOption('required')) {
       $messages[sfFormJavascriptValidation::REQUIRED] =
               sfFormJavascriptValidation::fixValidationMessage($this, 'required');
     }
 
-    if($minLength > 0)
-    {
+    if ($minLength > 0) {
       $messages[sfFormJavascriptValidation::MIN_LENGTH] =
               sfFormJavascriptValidation::fixValidationMessage($this, 'min_length');
     }
 
-    if($maxLength > 0)
-    {
+    if ($maxLength > 0) {
       $messages[sfFormJavascriptValidation::MAX_LENGTH] =
               sfFormJavascriptValidation::fixValidationMessage($this, 'max_length');
     }
 
     // strength check is enabled
-    if($this->getOption('strength_check'))
-    {
+    if ($this->getOption('strength_check')) {
       $messages[sfFormJavascriptValidation::PASSWORD_STRENGTH] =
           sfFormJavascriptValidation::fixValidationMessage($this, 'strength_error');
     }
@@ -351,20 +304,16 @@ class sfValidatorPassword extends sfValidatorString {
   public function getActiveMessages()
   {
     $messages = array();
-    if($this->getOption('required'))
-    {
+    if ($this->getOption('required')) {
       $messages[] = $this->getMessage('required');
     }
-    if($this->getOption('min_length') > 0)
-    {
+    if ($this->getOption('min_length') > 0) {
       $messages[] = $this->getMessage('min_length');
     }
-    if($this->getOption('max_length') > 0)
-    {
+    if ($this->getOption('max_length') > 0) {
       $messages[] = $this->getMessage('max_length');
     }
-    if($this->getOption('strength_check'))
-    {
+    if ($this->getOption('strength_check')) {
       $messages[] = $this->getMessage('strength_error');
     }
 

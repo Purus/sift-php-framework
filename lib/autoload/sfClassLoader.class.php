@@ -34,8 +34,8 @@
  * @package Sift
  * @subpackage autoload
  */
-class sfClassLoader {
-
+class sfClassLoader
+{
   private $prefixes = array();
   private $fallbackDirs = array();
   private $useIncludePath = false;
@@ -61,12 +61,9 @@ class sfClassLoader {
    */
   public function addClassMap(array $classMap)
   {
-    if($this->classMap)
-    {
+    if ($this->classMap) {
       $this->classMap = array_merge($this->classMap, $classMap);
-    }
-    else
-    {
+    } else {
       $this->classMap = $classMap;
     }
   }
@@ -79,23 +76,18 @@ class sfClassLoader {
    */
   public function add($prefix, $paths)
   {
-    if(!$prefix)
-    {
-      foreach((array) $paths as $path)
-      {
+    if (!$prefix) {
+      foreach ((array) $paths as $path) {
         $this->fallbackDirs[] = $path;
       }
 
       return;
     }
-    if(isset($this->prefixes[$prefix]))
-    {
+    if (isset($this->prefixes[$prefix])) {
       $this->prefixes[$prefix] = array_merge(
               $this->prefixes[$prefix], (array) $paths
       );
-    }
-    else
-    {
+    } else {
       $this->prefixes[$prefix] = (array) $paths;
     }
   }
@@ -128,25 +120,18 @@ class sfClassLoader {
    */
   public function register($prepend = false)
   {
-    if(version_compare(PHP_VERSION, '5.3.0', '>='))
-    {
+    if (version_compare(PHP_VERSION, '5.3.0', '>=')) {
       spl_autoload_register(array($this, 'loadClass'), true, $prepend);
-    }
-    elseif($prepend)
-    {
+    } elseif ($prepend) {
       $loaders = spl_autoload_functions();
       spl_autoload_register(array($this, 'loadClass'), true);
-      if($loaders)
-      {
-        foreach($loaders as $loader)
-        {
+      if ($loaders) {
+        foreach ($loaders as $loader) {
           spl_autoload_unregister($loader);
           spl_autoload_register($loader, true);
         }
       }
-    }
-    else
-    {
+    } else {
       spl_autoload_register(array($this, 'loadClass'));
     }
   }
@@ -167,8 +152,7 @@ class sfClassLoader {
    */
   public function loadClass($class)
   {
-    if($file = $this->findFile($class))
-    {
+    if ($file = $this->findFile($class)) {
       include $file;
 
       return true;
@@ -184,28 +168,21 @@ class sfClassLoader {
    */
   public function findFile($class)
   {
-    if('\\' == $class[0])
-    {
+    if ('\\' == $class[0]) {
       $class = substr($class, 1);
     }
 
-    if(isset($this->classMap[$class]))
-    {
+    if (isset($this->classMap[$class])) {
       return $this->classMap[$class];
-    }
-    elseif(isset($this->classMap[strtolower($class)]))
-    {
+    } elseif (isset($this->classMap[strtolower($class)])) {
       return $this->classMap[strtolower($class)];
     }
 
-    if(false !== $pos = strrpos($class, '\\'))
-    {
+    if (false !== $pos = strrpos($class, '\\')) {
       // namespaced class name
       $classPath = str_replace('\\', DIRECTORY_SEPARATOR, substr($class, 0, $pos)) . DIRECTORY_SEPARATOR;
       $className = substr($class, $pos + 1);
-    }
-    else
-    {
+    } else {
       // PEAR-like class name
       $classPath = null;
       $className = $class;
@@ -223,30 +200,23 @@ class sfClassLoader {
 
     $classPath .= str_replace('_', DIRECTORY_SEPARATOR, $className) . '.php';
 
-    foreach($this->prefixes as $prefix => $dirs)
-    {
-      if(0 === strpos($class, $prefix))
-      {
-        foreach($dirs as $dir)
-        {
-          if(file_exists($dir . DIRECTORY_SEPARATOR . $classPath))
-          {
+    foreach ($this->prefixes as $prefix => $dirs) {
+      if (0 === strpos($class, $prefix)) {
+        foreach ($dirs as $dir) {
+          if (file_exists($dir . DIRECTORY_SEPARATOR . $classPath)) {
             return $dir . DIRECTORY_SEPARATOR . $classPath;
           }
         }
       }
     }
 
-    foreach($this->fallbackDirs as $dir)
-    {
-      if(file_exists($dir . DIRECTORY_SEPARATOR . $classPath))
-      {
+    foreach ($this->fallbackDirs as $dir) {
+      if (file_exists($dir . DIRECTORY_SEPARATOR . $classPath)) {
         return $dir . DIRECTORY_SEPARATOR . $classPath;
       }
     }
 
-    if($this->useIncludePath && $file = stream_resolve_include_path($classPath))
-    {
+    if ($this->useIncludePath && $file = stream_resolve_include_path($classPath)) {
       return $file;
     }
 

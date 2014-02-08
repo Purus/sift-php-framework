@@ -39,9 +39,8 @@ class sfImageBrightnessImageMagick extends sfImageTransformAbstract
    */
   public function setBrightness($brightness)
   {
-    if (is_numeric($brightness))
-    {
-      $this->brightness = (int)$brightness;
+    if (is_numeric($brightness)) {
+      $this->brightness = (int) $brightness;
 
       return true;
     }

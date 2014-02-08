@@ -12,8 +12,8 @@
  * @package    Sift
  * @subpackage form_widget
  */
-class sfWidgetFormInput extends sfWidgetForm {
-
+class sfWidgetFormInput extends sfWidgetForm
+{
   /**
    * Constructor.
    *
@@ -53,8 +53,7 @@ class sfWidgetFormInput extends sfWidgetForm {
         'value' => $value
     );
 
-    if($size = $this->getOption('size'))
-    {
+    if ($size = $this->getOption('size')) {
       $baseAttributes['size'] = $size;
     }
 

@@ -12,8 +12,8 @@
  * @package    Sift
  * @subpackage action
  */
-abstract class sfComponents extends sfComponent {
-
+abstract class sfComponents extends sfComponent
+{
   public function execute()
   {
     throw new sfInitializationException('Initialization failed');

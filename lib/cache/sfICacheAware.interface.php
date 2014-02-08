@@ -12,8 +12,8 @@
  * @package Sift
  * @subpackage cache
  */
-interface sfICacheAware {
-
+interface sfICacheAware
+{
   /**
    * Sets cache instance
    *

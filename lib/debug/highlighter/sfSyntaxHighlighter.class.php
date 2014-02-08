@@ -15,8 +15,8 @@
  * @link http://www.craigiam.com/nijikodo
  * @link http://www.phoboslab.org/log/2007/08/generic-syntax-highlighting-with-regular-expressions
  */
-abstract class sfSyntaxHighlighter {
-
+abstract class sfSyntaxHighlighter
+{
   /**
    * Default css prefix
    *
@@ -80,8 +80,7 @@ abstract class sfSyntaxHighlighter {
    */
   public static function factory($language = null, $code = '', $charset = self::DEFAULT_CHARSET, $cssPrefix = self::DEFAULT_CSS_PREFIX)
   {
-    switch(strtolower($language))
-    {
+    switch (strtolower($language)) {
       case 'php':
         $highlighter = new sfSyntaxHighlighterPhp($code, $charset, $cssPrefix);
       break;
@@ -111,7 +110,7 @@ abstract class sfSyntaxHighlighter {
    */
   public function setCode($code, $charset = self::DEFAULT_CHARSET)
   {
-    $this->code = htmlspecialchars((string)$code, ENT_COMPAT, $charset, false);
+    $this->code = htmlspecialchars((string) $code, ENT_COMPAT, $charset, false);
     $this->processed = false;
 
     return $this;
@@ -170,8 +169,7 @@ abstract class sfSyntaxHighlighter {
    */
   public function getHtml($numberLines = false)
   {
-    if($this->processed === false)
-    {
+    if ($this->processed === false) {
       $this->process();
       $this->processed = true;
     }
@@ -188,24 +186,20 @@ abstract class sfSyntaxHighlighter {
   {
     $source = explode("\n", str_replace(array("\r\n", "\r"), "\n", $html));
     end($source);
-    $lineWidth = strlen((string)key($source));
+    $lineWidth = strlen((string) key($source));
     $out = '';
-    foreach($source as $lineNumber => $lineContent)
-    {
+    foreach ($source as $lineNumber => $lineContent) {
       $lineNumber++;
       $lineContent = str_replace(array("\r", "\n", "\t"), array('', '', '  '), $lineContent);
       preg_match_all('#<[^>]+>#', $lineContent, $tags);
       // this is the current line
-      if($lineNumber == $line)
-      {
+      if ($lineNumber == $line) {
         $out .= sprintf("<span class=\"line current\">%{$lineWidth}s: %s\n</span>%s",
           $lineNumber,
           strip_tags($lineContent),
           implode('', $tags[0])
         );
-      }
-      else
-      {
+      } else {
         $out .= sprintf("<span class=\"line\">%{$lineWidth}s:</span> %s\n",
                         $lineNumber, $lineContent);
       }
@@ -228,16 +222,12 @@ abstract class sfSyntaxHighlighter {
     array_unshift($source, null);
     $out = '';
     $spans = 0;
-    if($limitLines > 0)
-    {
+    if ($limitLines > 0) {
       $start = $i = max(0, $line - floor($limitLines * 2/3));
       // find last highlighted block
-      while(--$i >= 1)
-      {
-        if(preg_match('#.*(</?span[^>]*>)#', $source[$i], $m))
-        {
-          if($m[1] !== '</span>')
-          {
+      while (--$i >= 1) {
+        if (preg_match('#.*(</?span[^>]*>)#', $source[$i], $m)) {
+          if ($m[1] !== '</span>') {
             $spans++;
             $out .= $m[1];
           }
@@ -248,30 +238,25 @@ abstract class sfSyntaxHighlighter {
       end($source);
     }
 
-    $lineWidth = strlen((string)key($source));
-    foreach($source as $lineNumber => $lineContent)
-    {
+    $lineWidth = strlen((string) key($source));
+    foreach ($source as $lineNumber => $lineContent) {
       $spans += substr_count($lineContent, '<span') - substr_count($lineContent, '</span');
       $lineContent = str_replace(array("\r", "\n", "\t"), array('', '', '  '), $lineContent);
       preg_match_all('#<[^>]+>#', $lineContent, $tags);
       // this is the current line
-      if($lineNumber == $line)
-      {
+      if ($lineNumber == $line) {
         $out .= sprintf("<span class=\"line current\">%{$lineWidth}s: %s\n</span>%s",
           $lineNumber,
           strip_tags($lineContent),
           implode('', $tags[0])
         );
-      }
-      else
-      {
+      } else {
         $out .= sprintf("<span class=\"line\">%{$lineWidth}s:</span> %s\n",
                         $lineNumber, $lineContent);
       }
     }
     // fix endings
-    if($spans !== false)
-    {
+    if ($spans !== false) {
       $out .= str_repeat('</span>', $spans);
     }
 

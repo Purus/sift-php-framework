@@ -12,8 +12,8 @@
  * @package Sift
  * @subpackage service
  */
-interface sfIService {
-
+interface sfIService
+{
   public function shutdown();
 
 }

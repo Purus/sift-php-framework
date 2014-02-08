@@ -12,6 +12,6 @@
  * @package    Sift
  * @subpackage project
  */
-class sfGenericProject extends sfProject {
-
+class sfGenericProject extends sfProject
+{
 }

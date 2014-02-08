@@ -12,8 +12,8 @@
  * @package    Sift
  * @subpackage config
  */
-class sfAutoloadConfigHandler extends sfYamlConfigHandler {
-
+class sfAutoloadConfigHandler extends sfYamlConfigHandler
+{
   /**
    * Executes this configuration handler.
    *
@@ -39,17 +39,14 @@ class sfAutoloadConfigHandler extends sfYamlConfigHandler {
     // some classes
     $data[] = sprintf("\n// %s", 'core classes');
 
-    foreach($classes as $class => $path)
-    {
+    foreach ($classes as $class => $path) {
       $data[] = sprintf("'%s' => '%s',", $class, sfConfig::get('sf_sift_lib_dir') . '/' . $path);
     }
 
-    foreach($this->parse($configFiles) as $name => $mapping)
-    {
+    foreach ($this->parse($configFiles) as $name => $mapping) {
       $data[] = sprintf("\n  // %s", $name);
 
-      foreach($mapping as $class => $file)
-      {
+      foreach ($mapping as $class => $file) {
         $data[] = sprintf("  '%s' => '%s',", $class, str_replace('\\', '\\\\', $file));
       }
     }
@@ -72,21 +69,16 @@ class sfAutoloadConfigHandler extends sfYamlConfigHandler {
     $config = self::replaceConstants(self::parseYamls($configFiles));
     $catched = array();
     $mappings = array();
-    foreach($config['autoload'] as $name => $entry)
-    {
+    foreach ($config['autoload'] as $name => $entry) {
       $mapping = array();
 
       // file mapping or directory mapping?
-      if(isset($entry['files']))
-      {
+      if (isset($entry['files'])) {
         // file mapping
-        foreach($entry['files'] as $class => $file)
-        {
+        foreach ($entry['files'] as $class => $file) {
           $mapping[strtolower($class)] = $file;
         }
-      }
-      else
-      {
+      } else {
         // directory mapping
         $ext = isset($entry['ext']) ? $entry['ext'] : '.php';
         $path = $entry['path'];
@@ -95,21 +87,17 @@ class sfAutoloadConfigHandler extends sfYamlConfigHandler {
 
         // recursive mapping?
         $recursive = isset($entry['recursive']) ? $entry['recursive'] : false;
-        if(!$recursive)
-        {
+        if (!$recursive) {
           $finder->maxdepth(0);
         }
 
         // exclude files or directories?
-        if(isset($entry['exclude']) && is_array($entry['exclude']))
-        {
+        if (isset($entry['exclude']) && is_array($entry['exclude'])) {
           $finder->prune($entry['exclude'])->discard($entry['exclude']);
         }
 
-        if($matches = sfGlob::find($path, GLOB_BRACE | GLOB_NOSORT | GLOB_ONLYDIR))
-        {
-          foreach($finder->in($matches) as $file)
-          {
+        if ($matches = sfGlob::find($path, GLOB_BRACE | GLOB_NOSORT | GLOB_ONLYDIR)) {
+          foreach ($finder->in($matches) as $file) {
             $mapping = array_merge($mapping, $this->parseFile($path, $file, isset($entry['prefix']) ? $entry['prefix'] : ''));
             $catched[] = array($path, $file);
           }
@@ -126,19 +114,16 @@ class sfAutoloadConfigHandler extends sfYamlConfigHandler {
   {
     $mapping = array();
     preg_match_all('~^\s*(?:abstract\s+|final\s+)?(?:class|interface)\s+(\w+)~mi', file_get_contents($file), $classes);
-    foreach ($classes[1] as $class)
-    {
+    foreach ($classes[1] as $class) {
       $localPrefix = '';
-      if($prefix)
-      {
+      if ($prefix) {
         $path = str_replace('/', DIRECTORY_SEPARATOR, $path);
         $path = preg_quote($path, '~');
         $path = str_replace(array('\{', '\}', '\*'), array('{', '}', '(.+?)'), $path);
         // glob BRACE patterns
         $path = preg_replace_callback(array('/{.*}/'), array('sfAutoloadConfigHandler', 'replacePatterns'), $path);
         preg_match(sprintf('~^%s~', $path), str_replace('/', DIRECTORY_SEPARATOR, $file), $match);
-        if(isset($match[$prefix]))
-        {
+        if (isset($match[$prefix])) {
           $localPrefix = $match[$prefix] . '/';
         }
       }
@@ -157,10 +142,8 @@ class sfAutoloadConfigHandler extends sfYamlConfigHandler {
   public function evaluate($configFiles)
   {
     $mappings = array();
-    foreach($this->parse($configFiles) as $mapping)
-    {
-      foreach($mapping as $class => $file)
-      {
+    foreach ($this->parse($configFiles) as $mapping) {
+      foreach ($mapping as $class => $file) {
         $mappings[$class] = $file;
       }
     }

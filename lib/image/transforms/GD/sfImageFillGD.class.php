@@ -55,9 +55,8 @@ class sfImageFillGD extends sfImageTransformAbstract
    */
   public function setX($x)
   {
-    if (is_numeric($x))
-    {
-      $this->x = (int)$x;
+    if (is_numeric($x)) {
+      $this->x = (int) $x;
 
       return true;
     }
@@ -83,9 +82,8 @@ class sfImageFillGD extends sfImageTransformAbstract
    */
   public function setY($y)
   {
-    if (is_numeric($y))
-    {
-      $this->y = (int)$y;
+    if (is_numeric($y)) {
+      $this->y = (int) $y;
 
       return true;
     }
@@ -111,8 +109,7 @@ class sfImageFillGD extends sfImageTransformAbstract
    */
   public function setFill($fill)
   {
-    if ((is_object($fill) && class_name($fill) === 'sfImage') || preg_match('/#[\d\w]{6}/',$fill))
-    {
+    if ((is_object($fill) && class_name($fill) === 'sfImage') || preg_match('/#[\d\w]{6}/',$fill)) {
       $this->fill = $fill;
 
       return true;
@@ -141,14 +138,10 @@ class sfImageFillGD extends sfImageTransformAbstract
   {
     $resource = $image->getAdapter()->getHolder();
 
-    if (is_object($this->fill))
-    {
+    if (is_object($this->fill)) {
       imagesettile($resource, $this->fill->getAdapter()->getHolder());
       imagefill($resource, $this->x, $this->y, IMG_COLOR_TILED);
-    }
-
-    else
-    {
+    } else {
       imagefill($resource, $this->x, $this->y, $image->getAdapter()->getColorByHex($resource, $this->fill));
     }
 

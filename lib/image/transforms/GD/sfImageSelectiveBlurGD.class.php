@@ -26,12 +26,9 @@ class sfImageSelectiveBlurGD extends sfImageTransformAbstract
   {
     $resource = $image->getAdapter()->getHolder();
 
-    if (function_exists('imagefilter'))
-    {
+    if (function_exists('imagefilter')) {
       imagefilter($resource, IMG_FILTER_SELECTIVE_BLUR);
-    }
-    else
-    {
+    } else {
       throw new sfImageTransformException(sprintf('Cannot perform transform, GD does not support imagefilter '));
     }
 

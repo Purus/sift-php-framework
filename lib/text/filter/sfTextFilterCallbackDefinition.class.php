@@ -12,8 +12,8 @@
  * @package    Sift
  * @subpackage text_filter
  */
-class sfTextFilterCallbackDefinition extends sfCallbackDefinition {
-
+class sfTextFilterCallbackDefinition extends sfCallbackDefinition
+{
   /**
    * Constructor.
    *
@@ -23,11 +23,9 @@ class sfTextFilterCallbackDefinition extends sfCallbackDefinition {
   public function __construct($classOrFunction, array $arguments = array())
   {
     parent::__construct($classOrFunction, $arguments);
-    if(($class = $this->getClass()))
-    {
+    if (($class = $this->getClass())) {
       // class does not implement sfITextFilter interface!
-      if(!in_array('sfITextFilter', class_implements($class)))
-      {
+      if (!in_array('sfITextFilter', class_implements($class))) {
         throw new InvalidArgumentException(sprintf('The given class "%s" does not implement sfITextFilterInterface.', $class));
       }
     }

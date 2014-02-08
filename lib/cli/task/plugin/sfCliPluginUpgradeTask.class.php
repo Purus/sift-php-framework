@@ -12,8 +12,8 @@
  * @package    Sift
  * @subpackage cli_task
  */
-class sfCliPluginUpgradeTask extends sfCliPluginInstallTask {
-
+class sfCliPluginUpgradeTask extends sfCliPluginInstallTask
+{
   /**
    * @see sfCliTask
    */
@@ -53,20 +53,16 @@ EOF;
 
     $manager = $this->getPluginManager();
 
-    if(!$manager->isPluginInstalled($arguments['name']))
-    {
+    if (!$manager->isPluginInstalled($arguments['name'])) {
       throw new sfException(sprintf('Plugin is not installed. Try plugin:install %s', $arguments['name']));
     }
 
     $options['version'] = $options['release'];
     unset($options['release']);
 
-    if($manager->upgradePlugin($arguments['name'], $options))
-    {
+    if ($manager->upgradePlugin($arguments['name'], $options)) {
       $this->logSection($this->getFullName(), 'Done.');
-    }
-    else
-    {
+    } else {
       throw new sfException('Error upgrading plugin.');
     }
 

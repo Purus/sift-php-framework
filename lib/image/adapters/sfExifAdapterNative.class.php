@@ -12,8 +12,8 @@
  * @package Sift
  * @subpackage image
  */
-class sfExifAdapterNative extends sfExifAdapter {
-
+class sfExifAdapterNative extends sfExifAdapter
+{
   /**
    * Setup the adapter
    *
@@ -21,8 +21,7 @@ class sfExifAdapterNative extends sfExifAdapter {
    */
   public function setup()
   {
-    if(!function_exists('exif_read_data'))
-    {
+    if (!function_exists('exif_read_data')) {
       throw new BadFunctionCallException('Missing required "exif_read_data" function.');
     }
   }

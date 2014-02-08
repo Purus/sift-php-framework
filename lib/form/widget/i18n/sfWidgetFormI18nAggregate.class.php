@@ -61,8 +61,7 @@ class sfWidgetFormI18nAggregate extends sfWidgetForm
   {
     $widget = $this->getOption('widget');
 
-    if(!$widget || !$widget instanceof sfWidgetForm)
-    {
+    if (!$widget || !$widget instanceof sfWidgetForm) {
       throw new InvalidArgumentException('Widget is missing or is not a valid widget');
     }
 
@@ -71,18 +70,15 @@ class sfWidgetFormI18nAggregate extends sfWidgetForm
 
     $cultures = $this->getOption('cultures');
 
-    if($cultures instanceof sfCallable)
-    {
+    if ($cultures instanceof sfCallable) {
       $cultures = $cultures->call();
     }
 
-    if(!count($cultures))
-    {
+    if (!count($cultures)) {
       throw new InvalidArgumentException('Cultures are invalid.');
     }
 
-    if(!is_array($value))
-    {
+    if (!is_array($value)) {
       $value = array();
     }
 
@@ -92,16 +88,13 @@ class sfWidgetFormI18nAggregate extends sfWidgetForm
     $id = isset($attributes['id']) ? $attributes['id'] : $name;
 
     // render the widget for each culture
-    foreach($cultures as $culture => $cultureName)
-    {
-      if(is_numeric($culture))
-      {
+    foreach ($cultures as $culture => $cultureName) {
+      if (is_numeric($culture)) {
         $culture = $cultureName;
         $cultureName = false;
       }
 
-      if(isset($attributes['id']))
-      {
+      if (isset($attributes['id'])) {
         $attributes['id'] = sprintf('%s_%s', $id, $culture);
       }
 
@@ -110,13 +103,11 @@ class sfWidgetFormI18nAggregate extends sfWidgetForm
 
       $label = $widget->getLabel();
 
-      if($this->getOption('add_flag'))
-      {
+      if ($this->getOption('add_flag')) {
         $label = sprintf('%s %s', $this->getFlag($culture), $label);
       }
 
-      if($cultureName)
-      {
+      if ($cultureName) {
         $label= sprintf('%s %s', $label, $cultureName);
       }
 
@@ -136,12 +127,10 @@ class sfWidgetFormI18nAggregate extends sfWidgetForm
     $html[] = strtr($this->getOption('standalone_template'), $widget);
 
     // we have something left
-    if(count($widgets))
-    {
+    if (count($widgets)) {
       $widgetsHtml = array();
 
-      foreach($widgets as $culture => $widget)
-      {
+      foreach ($widgets as $culture => $widget) {
         $widgetsHtml[] =  strtr($this->getOption('widget_template'), $widget);
       }
 
@@ -165,17 +154,14 @@ class sfWidgetFormI18nAggregate extends sfWidgetForm
    */
   protected function getErrorForCulture($name, $errors, $culture)
   {
-    if(!count($errors))
-    {
+    if (!count($errors)) {
       return '';
     }
 
-    foreach($errors as $error)
-    {
+    foreach ($errors as $error) {
       /* @var $error sfValidatorError */
       $arguments = $error->getArguments(true);
-      if(isset($arguments['culture']) && $arguments['culture'] == $culture)
-      {
+      if (isset($arguments['culture']) && $arguments['culture'] == $culture) {
         return $this->getParent()->getFormFormatter()->formatErrorsForRow($error, array(
           'for' => $this->generateId(sprintf('%s[%s]', $name, $culture), $culture)
         ));
@@ -193,8 +179,7 @@ class sfWidgetFormI18nAggregate extends sfWidgetForm
    */
   protected function getFlag($culture)
   {
-    if(strlen($culture) == 5)
-    {
+    if (strlen($culture) == 5) {
       $culture = substr($culture, -2, 2);
     }
 

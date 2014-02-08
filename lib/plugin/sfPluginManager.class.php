@@ -12,8 +12,8 @@
  * @package    Sift
  * @subpackage plugin
  */
-class sfPluginManager extends sfPearPluginManager {
-
+class sfPluginManager extends sfPearPluginManager
+{
   /**
    * Array of required options
    *
@@ -112,8 +112,7 @@ class sfPluginManager extends sfPearPluginManager {
 
     $this->environment->getRegistry()->deletePackage('sift',
             $this->environment->getOption('sift_pear_channel', 'pear.lab'));
-    if(!$this->environment->getRegistry()->addPackage2($sift))
-    {
+    if (!$this->environment->getRegistry()->addPackage2($sift)) {
       throw new sfPluginException('Unable to register the Sift package');
     }
   }

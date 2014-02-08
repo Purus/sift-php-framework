@@ -34,8 +34,7 @@ abstract class sfCliBaseTask extends sfCliCommandApplicationTask
     $event = new sfEvent('command.pre_command', array('task' => &$this, 'arguments' => $commandManager->getArgumentValues(), 'options' => $commandManager->getOptionValues()));
 
     $this->dispatcher->notifyUntil($event);
-    if ($event->isProcessed())
-    {
+    if ($event->isProcessed()) {
       return $event->getReturnValue();
     }
 
@@ -45,8 +44,7 @@ abstract class sfCliBaseTask extends sfCliCommandApplicationTask
                             || $commandManager->getOptionSet()->hasOption('application');
 
     // task requires application to be run
-    if($requiresApplication && null === $this->application)
-    {
+    if ($requiresApplication && null === $this->application) {
       $application = $commandManager->getArgumentSet()->hasArgument('application') ?
                      $commandManager->getArgumentValue('application') :
                      ($commandManager->getOptionSet()->hasOption('application') ? $commandManager->getOptionValue('application') : null);
@@ -54,12 +52,10 @@ abstract class sfCliBaseTask extends sfCliCommandApplicationTask
       // environment
       $env = $commandManager->getOptionSet()->hasOption('env') ? $commandManager->getOptionValue('env') : 'cli';
 
-      if(true === $application)
-      {
+      if (true === $application) {
         $application = $this->getFirstApplication();
 
-        if($commandManager->getOptionSet()->hasOption('application'))
-        {
+        if ($commandManager->getOptionSet()->hasOption('application')) {
           $commandManager->setOption($commandManager->getOptionSet()->getOption('application'), $application);
         }
 
@@ -71,8 +67,7 @@ abstract class sfCliBaseTask extends sfCliCommandApplicationTask
       $this->environment->add($this->application->getOptions());
     }
 
-    if (null !== $this->commandApplication && !$this->commandApplication->withTrace())
-    {
+    if (null !== $this->commandApplication && !$this->commandApplication->withTrace()) {
       $this->environment->set('sf_logging_enabled', false);
     }
 
@@ -91,19 +86,16 @@ abstract class sfCliBaseTask extends sfCliCommandApplicationTask
    */
   public function createContextInstance($application = null)
   {
-    if(is_string($application))
-    {
+    if (is_string($application)) {
       $this->application = $this->getApplication($application, $this->environment->get('sf_environment'));
     }
 
-    if(!$this->application)
-    {
+    if (!$this->application) {
       throw new sfException('No application is initialized. Cannot create sfContext instance.');
     }
 
     $name = $this->application->getName();
-    if(!sfContext::hasInstance($name))
-    {
+    if (!sfContext::hasInstance($name)) {
       sfContext::createInstance($this->application, $name);
     }
   }
@@ -115,14 +107,10 @@ abstract class sfCliBaseTask extends sfCliCommandApplicationTask
    */
   public function getFilesystem()
   {
-    if (!isset($this->filesystem))
-    {
-      if (null === $this->commandApplication || $this->commandApplication->isVerbose())
-      {
+    if (!isset($this->filesystem)) {
+      if (null === $this->commandApplication || $this->commandApplication->isVerbose()) {
         $this->filesystem = new sfFilesystem($this->logger, $this->formatter);
-      }
-      else
-      {
+      } else {
         $this->filesystem = new sfFilesystem();
       }
     }
@@ -141,8 +129,7 @@ abstract class sfCliBaseTask extends sfCliCommandApplicationTask
   {
     $this->setupDatabases();
 
-    if(!isset($this->databases[$name]))
-    {
+    if (!isset($this->databases[$name])) {
       throw new sfException(sprintf('Invalid database connection. Connection "%s" does not exist.', $name));
     }
 
@@ -151,16 +138,13 @@ abstract class sfCliBaseTask extends sfCliCommandApplicationTask
 
   public function setupDatabases()
   {
-    if(!isset($this->databases))
-    {
+    if (!isset($this->databases)) {
       $configHandler = new sfDatabaseConfigHandler();
 
       $files = array();
 
-      if($appConfigDir = $this->environment->get('sf_app_config_dir'))
-      {
-        if($file = is_readable($appConfigDir . '/' . $this->environment->get('sf_app_config_dir_name') . 'databases.yml'))
-        {
+      if ($appConfigDir = $this->environment->get('sf_app_config_dir')) {
+        if ($file = is_readable($appConfigDir . '/' . $this->environment->get('sf_app_config_dir_name') . 'databases.yml')) {
           $files[] = $file;
         }
       }
@@ -179,8 +163,7 @@ abstract class sfCliBaseTask extends sfCliCommandApplicationTask
    */
   public function checkProjectExists()
   {
-    if(!file_exists('sift'))
-    {
+    if (!file_exists('sift')) {
       throw new sfException('You must be in Sift project directory.');
     }
 
@@ -197,10 +180,8 @@ abstract class sfCliBaseTask extends sfCliCommandApplicationTask
    */
   public function checkAppExists($app, $throwException = true)
   {
-    if(!is_dir($this->environment->get('sf_apps_dir').'/'.$app))
-    {
-      if($throwException)
-      {
+    if (!is_dir($this->environment->get('sf_apps_dir').'/'.$app)) {
+      if ($throwException) {
         throw new sfException(sprintf('Application "%s" does not exist', $app));
       }
 
@@ -220,10 +201,8 @@ abstract class sfCliBaseTask extends sfCliCommandApplicationTask
    */
   public function checkPluginExists($plugin, $throwException = true)
   {
-    if(!is_dir($this->environment->get('sf_plugins_dir').'/'.$plugin))
-    {
-      if($throwException)
-      {
+    if (!is_dir($this->environment->get('sf_plugins_dir').'/'.$plugin)) {
+      if ($throwException) {
         throw new sfException(sprintf('Plugin "%s" does not exist', $plugin));
       }
 
@@ -243,8 +222,7 @@ abstract class sfCliBaseTask extends sfCliCommandApplicationTask
    */
   public function checkModuleExists($app, $module)
   {
-    if (!is_dir($this->environment->get('sf_apps_dir').'/'.$app.'/modules/'.$module))
-    {
+    if (!is_dir($this->environment->get('sf_apps_dir').'/'.$app.'/modules/'.$module)) {
       throw new sfException(sprintf('Module "%s/%s" does not exist.', $app, $module));
     }
   }
@@ -280,14 +258,11 @@ abstract class sfCliBaseTask extends sfCliCommandApplicationTask
     $isPlugin = false;
 
     // this is a plugin
-    if(preg_match('|Plugin$|', $application))
-    {
+    if (preg_match('|Plugin$|', $application)) {
       $this->checkPluginExists($application);
       $isPlugin = true;
       $dir = $this->environment->get('sf_plugins_dir') . '/' . $application;
-    }
-    else
-    {
+    } else {
       $this->checkAppExists($application);
       $dir = $this->environment->get('sf_apps_dir') . '/' . $application;
     }
@@ -321,12 +296,10 @@ abstract class sfCliBaseTask extends sfCliCommandApplicationTask
   public function getProjectProperty($property, $default = null)
   {
     // load configuration
-    if(is_readable($propertyFile = $this->environment->get('sf_config_dir').'/properties.ini'))
-    {
+    if (is_readable($propertyFile = $this->environment->get('sf_config_dir').'/properties.ini')) {
       $properties = parse_ini_file($propertyFile, true);
 
-      if(isset($properties['project']))
-      {
+      if (isset($properties['project'])) {
         $find = $properties['project'];
       }
 
@@ -360,8 +333,7 @@ abstract class sfCliBaseTask extends sfCliCommandApplicationTask
   protected function initializeAutoload($application, $reload = false)
   {
     // sfAutoload
-    if($reload)
-    {
+    if ($reload) {
       $this->logSection('autoload', 'Resetting CLI autoloader');
     }
 
@@ -377,11 +349,9 @@ abstract class sfCliBaseTask extends sfCliCommandApplicationTask
    */
   protected function installDir($dir, $finder = null, $discardDirPlaceholders = true)
   {
-    if (null === $finder)
-    {
+    if (null === $finder) {
       $finder = sfFinder::type('any');
-      if($discardDirPlaceholders)
-      {
+      if ($discardDirPlaceholders) {
         $finder->discard('.sf');
       }
     }
@@ -401,8 +371,7 @@ abstract class sfCliBaseTask extends sfCliCommandApplicationTask
    */
   protected function replaceTokens($dirs = array(), $tokens = array())
   {
-    if (!$dirs)
-    {
+    if (!$dirs) {
       $dirs = array($this->environment->get('sf_config_dir'), $this->environment->get('sf_lib_dir'));
     }
 
@@ -418,8 +387,7 @@ abstract class sfCliBaseTask extends sfCliCommandApplicationTask
    */
   protected function getPhpCli()
   {
-    if(!isset($this->phpCli))
-    {
+    if (!isset($this->phpCli)) {
       $this->phpCli = sfToolkit::getPhpCli();
     }
 

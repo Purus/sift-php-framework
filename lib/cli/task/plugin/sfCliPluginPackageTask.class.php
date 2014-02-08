@@ -83,13 +83,10 @@ EOF;
 
     $cleanup = array();
 
-    if (!file_exists($this->pluginDir.'/package.xml'))
-    {
+    if (!file_exists($this->pluginDir.'/package.xml')) {
       $cleanup['temp_files'] = array();
-      foreach (sfFinder::type('dir')->in($this->pluginDir) as $dir)
-      {
-        if (!sfFinder::type('any')->maxDepth(0)->in($dir))
-        {
+      foreach (sfFinder::type('dir')->in($this->pluginDir) as $dir) {
+        if (!sfFinder::type('any')->maxDepth(0)->in($dir)) {
           $this->getFilesystem()->touch($file = $dir.'/.sf');
           $cleanup['temp_files'][] = $file;
         }
@@ -103,19 +100,15 @@ EOF;
 
     // load xml
     $xml = simplexml_load_file($this->pluginDir.'/package.xml');
-    $channel = (string)$xml->channel;
+    $channel = (string) $xml->channel;
 
-    try
-    {
+    try {
       // register the channel
       $manager->getEnvironment()->addChannel($channel);
 
       $package = $manager->packagePlugin($this->pluginDir.'/package.xml', $options);
-    }
-    catch(sfException $e)
-    {
-      if(isset($cleanup['package_file']))
-      {
+    } catch (sfException $e) {
+      if (isset($cleanup['package_file'])) {
         $cleanup['package_file'] = '.error';
       }
 
@@ -143,18 +136,15 @@ EOF;
       'temp_files'   => array(),
     ), $options);
 
-    if ($extension = $options['package_file'])
-    {
-      if (is_string($extension))
-      {
+    if ($extension = $options['package_file']) {
+      if (is_string($extension)) {
         $this->getFilesystem()->copy($this->pluginDir.'/package.xml', $this->pluginDir.'/package.xml'.$extension, array('override' => true));
       }
 
       $this->getFilesystem()->remove($this->pluginDir.'/package.xml');
     }
 
-    foreach ($options['temp_files'] as $file)
-    {
+    foreach ($options['temp_files'] as $file) {
       $this->getFilesystem()->remove($file);
     }
   }
@@ -166,8 +156,7 @@ EOF;
    */
   protected function generatePackageFile(array $arguments, array $options)
   {
-    if(!file_exists($templatePath = $this->pluginDir.'/package.xml.tmpl'))
-    {
+    if (!file_exists($templatePath = $this->pluginDir.'/package.xml.tmpl')) {
       $templatePath = $this->environment->get('sf_sift_data_dir').'/skeleton/plugin/package.xml.tmpl';
     }
 
@@ -179,8 +168,7 @@ EOF;
       'ENCODING'     => $this->environment->get('sf_charset', 'UTF-8'),
     );
 
-    if (false !== strpos($template, '##SUMMARY##'))
-    {
+    if (false !== strpos($template, '##SUMMARY##')) {
       $tokens['SUMMARY'] = $this->askAndValidate('Summarize your plugin in one line:', new sfValidatorCallback(array(
         'required' => true,
         'callback' => create_function('$a, $b', 'return htmlspecialchars($b, ENT_QUOTES, \'UTF-8\');'),
@@ -191,32 +179,28 @@ EOF;
       ));
     }
 
-    if (false !== strpos($template, '##LEAD_NAME##'))
-    {
+    if (false !== strpos($template, '##LEAD_NAME##')) {
       $validator = new sfValidatorString(array(), array('required' => 'A lead developer name is required.'));
       $tokens['LEAD_NAME'] = $this->askAndValidate('Lead developer name:', $validator, array(
         'value' => htmlspecialchars($this->getProjectProperty('author'), ENT_QUOTES, $this->environment->get('sf_charset', 'UTF-8')),
       ));
     }
 
-    if (false !== strpos($template, '##LEAD_EMAIL##'))
-    {
+    if (false !== strpos($template, '##LEAD_EMAIL##')) {
       $validator = new sfValidatorEmail(array(), array('required' => 'A valid lead developer email address is required.', 'invalid' => '"%value%" is not a valid email address.'));
       $tokens['LEAD_EMAIL'] = $this->askAndValidate('Lead developer email:', $validator, array(
         'value' => htmlspecialchars($this->getProjectProperty('author'), ENT_QUOTES, $this->environment->get('sf_charset', 'UTF-8'))
       ));
     }
 
-    if (false !== strpos($template, '##LEAD_USERNAME##'))
-    {
+    if (false !== strpos($template, '##LEAD_USERNAME##')) {
       $validator = new sfValidatorString(array(), array('required' => 'A lead developer username is required.'));
       $tokens['LEAD_USERNAME'] = $this->askAndValidate('Lead developer username:', $validator, array(
         'value' => htmlspecialchars($this->getProjectProperty('username'), ENT_QUOTES, $this->environment->get('sf_charset', 'UTF-8')),
       ));
     }
 
-    if (false !== strpos($template, '##PLUGIN_VERSION##'))
-    {
+    if (false !== strpos($template, '##PLUGIN_VERSION##')) {
       $validator = new sfValidatorRegex(array('pattern' => '/\d+\.\d+\.\d+/', ), array('required' => 'A valid version number is required.', 'invalid' => '"%value%" is not a valid version number.'));
       $tokens['PLUGIN_VERSION'] = $this->askAndValidate('Plugin version number (i.e. "1.0.5"):', $validator, array('value' => $options['plugin-version']));
 
@@ -224,14 +208,12 @@ EOF;
       $tokens['API_VERSION'] = version_compare($tokens['PLUGIN_VERSION'], '0.1.0', '>') ? join('.', array_slice(explode('.', $tokens['PLUGIN_VERSION']), 0, 2)).'.0' : $tokens['PLUGIN_VERSION'];
     }
 
-    if (false !== strpos($template, '##STABILITY##'))
-    {
+    if (false !== strpos($template, '##STABILITY##')) {
       $validator = new sfValidatorChoice(array('choices' => $choices = array('devel', 'alpha', 'beta', 'stable')), array('required' => 'A valid stability is required.', 'invalid' => '"%value%" is not a valid stability ('.join('|', $choices).').'));
       $tokens['STABILITY'] = $this->askAndValidate('Plugin stability:', $validator, array('value' => $options['plugin-stability']));
     }
 
-    if (false !== strpos($template, '##CHANNEL##'))
-    {
+    if (false !== strpos($template, '##CHANNEL##')) {
       $tokens['CHANNEL'] = $this->askAndValidate('Plugin channel:', new sfValidatorCallback(array(
         'required' => true,
         'callback' => create_function('$a, $b', 'return htmlspecialchars($b, ENT_QUOTES, \'UTF-8\');'),
@@ -265,8 +247,7 @@ EOF;
       $tokens['CONTENTS']
     );
 
-    if (count($tokens))
-    {
+    if (count($tokens)) {
       // create or update package.xml template
       $this->getFilesystem()->copy($templatePath, $this->pluginDir.'/package.xml.tmpl');
       $this->getFilesystem()->replaceTokens($this->pluginDir.'/package.xml.tmpl', '##', '##', $tokens);
@@ -284,27 +265,21 @@ EOF;
    */
   protected function buildContents($directory, sfFinder $finder = null, SimpleXMLElement $baseXml = null)
   {
-    if (null === $finder)
-    {
+    if (null === $finder) {
       $finder = sfFinder::type('any')->maxdepth(0);
     }
 
-    if (null === $baseXml)
-    {
+    if (null === $baseXml) {
       $baseXml = new SimpleXMLElement('<dir name="/"/>');
     }
 
-    foreach ($finder->in($directory) as $entry)
-    {
-      if (is_dir($entry))
-      {
+    foreach ($finder->in($directory) as $entry) {
+      if (is_dir($entry)) {
         $entryXml = $baseXml->addChild('dir');
         $entryXml['name'] = basename($entry);
 
         $this->buildContents($entry, null, $entryXml);
-      }
-      else
-      {
+      } else {
         $entryXml = $baseXml->addChild('file');
         $entryXml['name'] = basename($entry);
         $entryXml['role'] = 'data';
@@ -325,12 +300,9 @@ EOF;
    */
   public function askAndValidate($question, sfValidatorBase $validator, array $options = array())
   {
-    if ($this->interactive)
-    {
+    if ($this->interactive) {
       return parent::askAndValidate($question, $validator, $options);
-    }
-    else
-    {
+    } else {
       return $validator->clean(isset($options['value']) ? $options['value'] : null);
     }
   }

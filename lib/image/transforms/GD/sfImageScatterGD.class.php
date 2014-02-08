@@ -40,7 +40,7 @@ class sfImageScatterGD extends sfImageTransformAbstract
    */
   public function setScatterFactor($width)
   {
-    $this->width = (int)$width;
+    $this->width = (int) $width;
   }
 
   /**
@@ -66,31 +66,25 @@ class sfImageScatterGD extends sfImageTransformAbstract
     $resourcex = imagesx($resource);
     $resourcey = imagesy($resource);
 
-    for ($x = 0; $x < $resourcex; ++$x)
-    {
-      for ($y = 0; $y < $resourcey; ++$y)
-      {
+    for ($x = 0; $x < $resourcex; ++$x) {
+      for ($y = 0; $y < $resourcey; ++$y) {
         $distx = rand(-$this->scatter_factor, $this->scatter_factor);
         $disty = rand(-$this->scatter_factor, $this->scatter_factor);
 
         // keep inside the image boundaries
-        if($x + $distx >= $resourcex)
-        {
+        if ($x + $distx >= $resourcex) {
           continue;
         }
 
-        if($x + $distx < 0)
-        {
+        if ($x + $distx < 0) {
           continue;
         }
 
-        if($y + $disty >= $resourcey)
-        {
+        if ($y + $disty >= $resourcey) {
           continue;
         }
 
-        if($y + $disty < 0)
-        {
+        if ($y + $disty < 0) {
           continue;
         }
 

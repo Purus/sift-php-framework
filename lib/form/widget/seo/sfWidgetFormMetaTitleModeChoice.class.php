@@ -12,8 +12,8 @@
  * @package Sift
  * @subpackage form
  */
-class sfWidgetFormMetaTitleModeChoice extends sfWidgetFormChoice {
-
+class sfWidgetFormMetaTitleModeChoice extends sfWidgetFormChoice
+{
   /**
    *
    * @see sfWidgetFormChoice
@@ -36,8 +36,7 @@ class sfWidgetFormMetaTitleModeChoice extends sfWidgetFormChoice {
   {
     $choices = array();
 
-    if(false !== $this->getOption('add_empty'))
-    {
+    if (false !== $this->getOption('add_empty')) {
       $choices[''] = true === $this->getOption('add_empty') ? '' : $this->translate($this->getOption('add_empty'));
     }
 

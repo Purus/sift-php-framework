@@ -12,8 +12,8 @@
  * @package     Sift
  * @subpackage  debug
  */
-class sfWebDebugPanelDocumentation extends sfWebDebugPanel {
-
+class sfWebDebugPanelDocumentation extends sfWebDebugPanel
+{
   /**
    * Array of documentation links
    *

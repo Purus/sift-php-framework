@@ -15,8 +15,8 @@
  * @package    Sift
  * @subpackage util
  */
-class sfContext {
-
+class sfContext
+{
   /**
    * Application
    *
@@ -59,8 +59,7 @@ class sfContext {
    */
   public function __construct(sfApplication $application, sfServiceContainer $serviceContainer = null)
   {
-    if(sfConfig::get('sf_logging_enabled'))
-    {
+    if (sfConfig::get('sf_logging_enabled')) {
       $this->getLogger()->info('{sfContext} Initialization');
     }
 
@@ -81,8 +80,7 @@ class sfContext {
     require(sfConfigCache::getInstance()->checkConfig(sfConfig::get('sf_app_config_dir_name') . '/factories.yml'));
 
     // register existing services as dependencies
-    foreach($this->serviceContainer->getServiceIds() as $id)
-    {
+    foreach ($this->serviceContainer->getServiceIds() as $id) {
       $this->serviceContainer->getDependencies()->set($id, new sfServiceReference($id));
     }
 
@@ -95,8 +93,7 @@ class sfContext {
     )));
 
     // we need to load databases
-    if(sfConfig::get('sf_use_database'))
-    {
+    if (sfConfig::get('sf_use_database')) {
       // load databases
       $this->getDatabaseManager()->loadDatabases();
     }
@@ -113,16 +110,14 @@ class sfContext {
    */
   public static function createInstance(sfApplication $application, $name = null, $class = __CLASS__)
   {
-    if(null === $name)
-    {
+    if (null === $name) {
       $name = $application->getName();
     }
 
     self::$current = $name;
 
     $instance = new $class($application);
-    if(!$instance instanceof sfContext)
-    {
+    if (!$instance instanceof sfContext) {
       throw new sfFactoryException(sprintf('Class "%s" is not of the type sfContext.', $class));
     }
 
@@ -145,13 +140,11 @@ class sfContext {
    */
   public static function getInstance($name = null)
   {
-    if(null === $name)
-    {
+    if (null === $name) {
       $name = self::$current;
     }
 
-    if(!isset(self::$instances[$name]))
-    {
+    if (!isset(self::$instances[$name])) {
       throw new sfException(sprintf('The "%s" context does not exist.', $name));
     }
 
@@ -167,8 +160,7 @@ class sfContext {
    */
   public static function hasInstance($name = null)
   {
-    if(null === $name)
-    {
+    if (null === $name) {
       $name = self::$current;
     }
 
@@ -182,8 +174,7 @@ class sfContext {
    */
   public static function switchTo($name)
   {
-    if(!isset(self::$instances[$name]))
-    {
+    if (!isset(self::$instances[$name])) {
       $current = sfContext::getInstance()->getApplication();
       sfContext::createInstance(sfCore::getProject()->getApplication($name, $current->getEnvironment(), $current->isDebug()));
     }
@@ -269,8 +260,7 @@ class sfContext {
   public function getActionName()
   {
     // get the last action stack entry
-    if($this->actionStack && $lastEntry = $this->actionStack->getLastEntry())
-    {
+    if ($this->actionStack && $lastEntry = $this->actionStack->getLastEntry()) {
       return $lastEntry->getActionName();
     }
   }
@@ -343,8 +333,7 @@ class sfContext {
   public function retrieveObjects($class, $peerMethod, $options = array())
   {
     $retrievingClass = 'sf' . ucfirst(sfConfig::get('sf_orm')) . 'DataRetriever';
-    if(!class_exists($retrievingClass))
-    {
+    if (!class_exists($retrievingClass)) {
       throw new InvalidArgumentException(sprintf('The data retriever class "%s" does not exist'), $retrievingClass);
     }
 
@@ -370,8 +359,7 @@ class sfContext {
   public function getModuleDirectory()
   {
     // get the last action stack entry
-    if($this->actionStack && $lastEntry = $this->actionStack->getLastEntry())
-    {
+    if ($this->actionStack && $lastEntry = $this->actionStack->getLastEntry()) {
       return sfConfig::get('sf_app_module_dir') . '/' . $lastEntry->getModuleName();
     }
   }
@@ -385,8 +373,7 @@ class sfContext {
   public function getModuleName()
   {
     // get the last action stack entry
-    if($this->actionStack && $lastEntry = $this->actionStack->getLastEntry())
-    {
+    if ($this->actionStack && $lastEntry = $this->actionStack->getLastEntry()) {
       return $lastEntry->getModuleName();
     }
   }
@@ -400,8 +387,7 @@ class sfContext {
   public function getCurrentViewInstance()
   {
     // get the last action stack entry
-    if($this->actionStack && $lastEntry = $this->actionStack->getLastEntry())
-    {
+    if ($this->actionStack && $lastEntry = $this->actionStack->getLastEntry()) {
       return $lastEntry->getViewInstance();
     }
   }
@@ -494,8 +480,7 @@ class sfContext {
    */
   public function shutdown()
   {
-    if(sfConfig::get('sf_logging_enabled'))
-    {
+    if (sfConfig::get('sf_logging_enabled')) {
       sfLogger::getInstance()->info('{sfContext} Shutting down');
     }
 

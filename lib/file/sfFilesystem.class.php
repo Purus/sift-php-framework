@@ -60,27 +60,23 @@ class sfFilesystem
    */
   public function copy($originFile, $targetFile, $options = array())
   {
-    if (!array_key_exists('override', $options))
-    {
+    if (!array_key_exists('override', $options)) {
       $options['override'] = false;
     }
 
     // we create target_dir if needed
-    if (!is_dir(dirname($targetFile)))
-    {
+    if (!is_dir(dirname($targetFile))) {
       $this->mkdirs(dirname($targetFile));
     }
 
     $mostRecent = false;
-    if (file_exists($targetFile))
-    {
+    if (file_exists($targetFile)) {
       $statTarget = stat($targetFile);
       $stat_origin = stat($originFile);
       $mostRecent = ($stat_origin['mtime'] > $statTarget['mtime']) ? true : false;
     }
 
-    if ($options['override'] || !file_exists($targetFile) || $mostRecent)
-    {
+    if ($options['override'] || !file_exists($targetFile) || $mostRecent) {
       $this->logSection('file+', $targetFile);
       copy($originFile, $targetFile);
     }
@@ -121,8 +117,7 @@ class sfFilesystem
    */
   public function mkdirs($path, $mode = 0777)
   {
-    if (is_dir($path))
-    {
+    if (is_dir($path)) {
       return true;
     }
 
@@ -138,13 +133,11 @@ class sfFilesystem
    */
   public function touch($files)
   {
-    if (!is_array($files))
-    {
+    if (!is_array($files)) {
       $files = array($files);
     }
 
-    foreach ($files as $file)
-    {
+    foreach ($files as $file) {
       $this->logSection('file+', $file);
 
       touch($file);
@@ -158,22 +151,17 @@ class sfFilesystem
    */
   public function remove($files)
   {
-    if (!is_array($files))
-    {
+    if (!is_array($files)) {
       $files = array($files);
     }
 
     $files = array_reverse($files);
-    foreach ($files as $file)
-    {
-      if (is_dir($file) && !is_link($file))
-      {
+    foreach ($files as $file) {
+      if (is_dir($file) && !is_link($file)) {
         $this->logSection('dir-', $file);
 
         rmdir($file);
-      }
-      else
-      {
+      } else {
         $this->logSection(is_link($file) ? 'link-' : 'file-', $file);
 
         unlink($file);
@@ -193,13 +181,11 @@ class sfFilesystem
     $currentUmask = umask();
     umask($umask);
 
-    if (!is_array($files))
-    {
+    if (!is_array($files)) {
       $files = array($files);
     }
 
-    foreach ($files as $file)
-    {
+    foreach ($files as $file) {
       $this->logSection(sprintf('chmod %o', $mode), $file);
       chmod($file, $mode);
     }
@@ -216,8 +202,7 @@ class sfFilesystem
   public function rename($origin, $target)
   {
     // we check that target does not exist
-    if (is_readable($target))
-    {
+    if (is_readable($target)) {
       throw new sfException(sprintf('Cannot rename because the target "%" already exist.', $target));
     }
 
@@ -234,8 +219,7 @@ class sfFilesystem
    */
   public function symlink($originDir, $targetDir, $copyOnWindows = false)
   {
-    if (!function_exists('symlink') && $copyOnWindows)
-    {
+    if (!function_exists('symlink') && $copyOnWindows) {
       $finder = sfFinder::type('any');
       $this->mirror($originDir, $targetDir, $finder);
 
@@ -243,20 +227,15 @@ class sfFilesystem
     }
 
     $ok = false;
-    if (is_link($targetDir))
-    {
-      if (readlink($targetDir) != $originDir)
-      {
+    if (is_link($targetDir)) {
+      if (readlink($targetDir) != $originDir) {
         unlink($targetDir);
-      }
-      else
-      {
+      } else {
         $ok = true;
       }
     }
 
-    if (!$ok)
-    {
+    if (!$ok) {
       $this->logSection('link+', $targetDir);
       symlink($originDir, $targetDir);
     }
@@ -271,8 +250,7 @@ class sfFilesystem
    */
   public function relativeSymlink($originDir, $targetDir, $copyOnWindows = false)
   {
-    if (function_exists('symlink') || !$copyOnWindows)
-    {
+    if (function_exists('symlink') || !$copyOnWindows) {
       $originDir = $this->calculateRelativeDir($targetDir, $originDir);
     }
     $this->symlink($originDir, $targetDir, $copyOnWindows);
@@ -288,22 +266,14 @@ class sfFilesystem
    */
   public function mirror($originDir, $targetDir, $finder, $options = array())
   {
-    foreach ($finder->relative()->in($originDir) as $file)
-    {
-      if (is_dir($originDir.DIRECTORY_SEPARATOR.$file))
-      {
+    foreach ($finder->relative()->in($originDir) as $file) {
+      if (is_dir($originDir.DIRECTORY_SEPARATOR.$file)) {
         $this->mkdirs($targetDir.DIRECTORY_SEPARATOR.$file);
-      }
-      else if (is_file($originDir.DIRECTORY_SEPARATOR.$file))
-      {
+      } else if (is_file($originDir.DIRECTORY_SEPARATOR.$file)) {
         $this->copy($originDir.DIRECTORY_SEPARATOR.$file, $targetDir.DIRECTORY_SEPARATOR.$file, $options);
-      }
-      else if (is_link($originDir.DIRECTORY_SEPARATOR.$file))
-      {
+      } else if (is_link($originDir.DIRECTORY_SEPARATOR.$file)) {
         $this->symlink($originDir.DIRECTORY_SEPARATOR.$file, $targetDir.DIRECTORY_SEPARATOR.$file);
-      }
-      else
-      {
+      } else {
         throw new sfException(sprintf('Unable to guess "%s" file type.', $originDir . '/' . $file));
       }
     }
@@ -323,8 +293,7 @@ class sfFilesystem
     $content = ob_get_contents();
     ob_end_clean();
 
-    if ($return > 0)
-    {
+    if ($return > 0) {
       throw new sfException(sprintf('Problem executing command %s', "\n".$content));
     }
 
@@ -350,8 +319,7 @@ class sfFilesystem
     );
 
     $process = proc_open($cmd, $descriptorspec, $pipes);
-    if (!is_resource($process))
-    {
+    if (!is_resource($process)) {
       throw new RuntimeException('Unable to execute the command.');
     }
 
@@ -360,30 +328,22 @@ class sfFilesystem
 
     $output = '';
     $err = '';
-    while (!feof($pipes[1]) || !feof($pipes[2]))
-    {
-      foreach ($pipes as $key => $pipe)
-      {
-        if (!$line = fread($pipe, 128))
-        {
+    while (!feof($pipes[1]) || !feof($pipes[2])) {
+      foreach ($pipes as $key => $pipe) {
+        if (!$line = fread($pipe, 128)) {
           continue;
         }
 
-        if (1 == $key)
-        {
+        if (1 == $key) {
           // stdout
           $output .= $line;
-          if ($stdoutCallback)
-          {
+          if ($stdoutCallback) {
             call_user_func($stdoutCallback, $line);
           }
-        }
-        else
-        {
+        } else {
           // stderr
           $err .= $line;
-          if ($stderrCallback)
-          {
+          if ($stderrCallback) {
             call_user_func($stderrCallback, $line);
           }
         }
@@ -395,8 +355,7 @@ class sfFilesystem
     fclose($pipes[1]);
     fclose($pipes[2]);
 
-    if (($return = proc_close($process)) > 0)
-    {
+    if (($return = proc_close($process)) > 0) {
       throw new RuntimeException('Problem executing command.', $return);
     }
 
@@ -413,16 +372,13 @@ class sfFilesystem
    */
   public function replaceTokens($files, $beginToken, $endToken, $tokens)
   {
-    if (!is_array($files))
-    {
+    if (!is_array($files)) {
       $files = array($files);
     }
 
-    foreach ($files as $file)
-    {
+    foreach ($files as $file) {
       $content = file_get_contents($file);
-      foreach ($tokens as $key => $value)
-      {
+      foreach ($tokens as $key => $value) {
         $content = str_replace($beginToken.$key.$endToken, $value, $content, $count);
       }
 
@@ -440,8 +396,7 @@ class sfFilesystem
    */
   protected function logSection($section, $message)
   {
-    if($this->logger)
-    {
+    if ($this->logger) {
       $message = $this->formatter ? $this->formatter->formatSection($section, $message) : $section.' '.$message;
       $this->logger->log($message);
     }
@@ -459,13 +414,11 @@ class sfFilesystem
     $commonLength = 0;
     $minPathLength = min(strlen($from), strlen($to));
     // count how many chars the strings have in common
-    for ($i = 0; $i < $minPathLength; $i++)
-    {
+    for ($i = 0; $i < $minPathLength; $i++) {
       if ($from[$i] != $to[$i]) break;
       if ($from[$i] == DIRECTORY_SEPARATOR) $commonLength = $i + 1;
     }
-    if ($commonLength)
-    {
+    if ($commonLength) {
       $levelUp = substr_count($from, DIRECTORY_SEPARATOR, $commonLength);
       // up that many level
       $relativeDir  = str_repeat("..".DIRECTORY_SEPARATOR, $levelUp);
@@ -498,8 +451,7 @@ class sfFilesystem
   {
     // finds the last occurence of .
     $tmp = strrpos($filename, '.');
-    if(!$tmp)
-    {
+    if (!$tmp) {
       return '';
     }
 
@@ -515,8 +467,7 @@ class sfFilesystem
   public static function getFilename($filename)
   {
     $tmp = strrpos($filename, '.');
-    if(!$tmp)
-    {
+    if (!$tmp) {
       return $filename;
     }
 
@@ -534,8 +485,7 @@ class sfFilesystem
   {
     static $a = array('B', 'kB', 'MB', 'GB', 'TB', 'PB', 'EB');
     $pos = 0;
-    while($size >= 1024)
-    {
+    while ($size >= 1024) {
       $size /= 1024;
       $pos++;
     }
@@ -554,8 +504,7 @@ class sfFilesystem
   public static function getFileSize($file, $format = false, $round = 1)
   {
     $size = sprintf('%u', filesize($file));
-    if($format)
-    {
+    if ($format) {
       $size = self::formatFileSize($size, $round);
     }
 

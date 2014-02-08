@@ -12,8 +12,8 @@
  * @package    Sift
  * @subpackage filter
  */
-interface sfIFilter {
-
+interface sfIFilter
+{
   /**
    * Excecutes the filter
    *

@@ -13,8 +13,8 @@
  * @package    Sift
  * @subpackage autoload
  */
-class sfCoreAutoload {
-
+class sfCoreAutoload
+{
   /**
    * Registered flag
    *
@@ -52,8 +52,7 @@ class sfCoreAutoload {
    */
   public static function getInstance()
   {
-    if(!isset(self::$instance))
-    {
+    if (!isset(self::$instance)) {
       self::$instance = new sfCoreAutoload();
     }
 
@@ -67,13 +66,11 @@ class sfCoreAutoload {
    */
   public static function register()
   {
-    if(self::$registered)
-    {
+    if (self::$registered) {
       return;
     }
 
-    if(false === spl_autoload_register(array(self::getInstance(), 'autoload')))
-    {
+    if (false === spl_autoload_register(array(self::getInstance(), 'autoload'))) {
       throw new sfException(sprintf('Unable to register %s::autoload as an autoloading method.', get_class(self::getInstance())));
     }
 
@@ -99,13 +96,11 @@ class sfCoreAutoload {
    */
   public function autoload($class)
   {
-    if(!isset($this->classes[$class]))
-    {
+    if (!isset($this->classes[$class])) {
       return;
     }
 
-    if($path = $this->getClassPath($class))
-    {
+    if ($path = $this->getClassPath($class)) {
       require $path;
 
       return true;
@@ -123,8 +118,7 @@ class sfCoreAutoload {
    */
   public function getClassPath($class)
   {
-    if(!isset($this->classes[$class]))
-    {
+    if (!isset($this->classes[$class])) {
       return null;
     }
 
@@ -176,11 +170,9 @@ class sfCoreAutoload {
     sort($files, SORT_STRING);
 
     $classes = array();
-    foreach($files as $file)
-    {
+    foreach ($files as $file) {
       $file = str_replace(DIRECTORY_SEPARATOR, '/', $file);
-      foreach(sfToolkit::extractClasses($file) as $class)
-      {
+      foreach (sfToolkit::extractClasses($file) as $class) {
         $classes[$class] = $file;
       }
     }
@@ -188,8 +180,7 @@ class sfCoreAutoload {
     asort($classes);
 
     $php = '';
-    foreach($classes as $class => $file)
-    {
+    foreach ($classes as $class => $file) {
       $php .= sprintf("      '%s' => '%s',\n", $class, substr(str_replace($libDir, '', $file), 1));
     }
 

@@ -38,18 +38,15 @@ class sfI18nPhpExtractor extends sfConfigurable implements sfII18nExtractor
 
     $strings = array();
 
-    foreach($functions as $function)
-    {
+    foreach ($functions as $function) {
       list($domain, $toBeTranslated) = $this->getDomainAndString($function);
 
-      if(!isset($strings[$domain]))
-      {
+      if (!isset($strings[$domain])) {
         $strings[$domain] = array();
       }
 
       // make the array unique (not the same translations)
-      if(in_array($toBeTranslated, $strings[$domain]))
-      {
+      if (in_array($toBeTranslated, $strings[$domain])) {
         continue;
       }
 
@@ -71,17 +68,12 @@ class sfI18nPhpExtractor extends sfConfigurable implements sfII18nExtractor
 
     $toBeTranslated = $function['args'][0];
     // format_number_choice has the catalogue parameter as 4th parameter
-    if($function['name'] == 'format_number_choice')
-    {
-      if(isset($function['args'][3]))
-      {
+    if ($function['name'] == 'format_number_choice') {
+      if (isset($function['args'][3])) {
         $domain = $function['args'][3];
       }
-    }
-    else
-    {
-      if(isset($function['args'][2]))
-      {
+    } else {
+      if (isset($function['args'][2])) {
         $domain = $function['args'][2];
       }
     }
@@ -109,15 +101,13 @@ class sfI18nPhpExtractor extends sfConfigurable implements sfII18nExtractor
     $function_calls = array();
     $latest_comment = false;
     $in_func = false;
-    foreach($tokens as $token)
-    {
+    foreach ($tokens as $token) {
       $id = $text = null;
       if(is_array($token))
         list( $id, $text, $line ) = $token;
       if(T_WHITESPACE == $id)
         continue;
-      if(T_STRING == $id && in_array($text, $function_names) && !$in_func)
-      {
+      if (T_STRING == $id && in_array($text, $function_names) && !$in_func) {
         $in_func = true;
         $paren_level = -1;
         $args = array();
@@ -129,35 +119,29 @@ class sfI18nPhpExtractor extends sfConfigurable implements sfII18nExtractor
         $latest_comment = false;
         continue;
       }
-      if(T_COMMENT == $id)
-      {
+      if (T_COMMENT == $id) {
         $text = trim(preg_replace('%^/\*|//%', '', preg_replace('%\*/$%', '', $text)));
-        if(0 === strpos($text, $comment_prefix))
-        {
+        if (0 === strpos($text, $comment_prefix)) {
           $latest_comment = $text;
         }
       }
       if(!$in_func)
         continue;
-      if('(' == $token)
-      {
+      if ('(' == $token) {
         $paren_level++;
-        if(0 == $paren_level)
-        { // start of first argument
+        if (0 == $paren_level) { // start of first argument
           $just_got_into_func = false;
           $current_argument = null;
           $current_argument_is_just_literal = true;
         }
         continue;
       }
-      if($just_got_into_func)
-      {
+      if ($just_got_into_func) {
         // there wasn't a opening paren just after the function name -- this means it is not a function
         $in_func = false;
         $just_got_into_func = false;
       }
-      if(')' == $token)
-      {
+      if (')' == $token) {
         // if(0 == $paren_level)
         // {
           $in_func = false;
@@ -170,15 +154,13 @@ class sfI18nPhpExtractor extends sfConfigurable implements sfII18nExtractor
         $paren_level--;
         continue;
       }
-      if(',' == $token && 0 == $paren_level)
-      {
+      if (',' == $token && 0 == $paren_level) {
         $args[] = $current_argument;
         $current_argument = null;
         $current_argument_is_just_literal = true;
         continue;
       }
-      if(T_CONSTANT_ENCAPSED_STRING == $id && $current_argument_is_just_literal)
-      {
+      if (T_CONSTANT_ENCAPSED_STRING == $id && $current_argument_is_just_literal) {
         // we can use eval safely, because we are sure $text is just a string literal
         eval('$current_argument = ' . $text . ';');
         continue;

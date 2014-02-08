@@ -23,8 +23,7 @@ abstract class sfCliPluginBaseTask extends sfCliBaseTask
    */
   protected function getPluginManager()
   {
-    if(null === $this->pluginManager)
-    {
+    if (null === $this->pluginManager) {
       $environment = new sfPearEnvironment($this->dispatcher, array(
         'plugin_dir' => $this->environment->get('sf_plugins_dir'),
         'cache_dir'  => $this->environment->get('sf_root_cache_dir'). '/.pear',

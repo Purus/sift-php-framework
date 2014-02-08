@@ -41,12 +41,9 @@ class sfValidatorHtml extends sfValidatorString
   {
     $clean = (string) $value;
 
-    if ($this->getOption('strip'))
-    {
+    if ($this->getOption('strip')) {
       $clean = sfSanitizer::sanitize($clean, $this->getOptionOrFalse('allowed_tags'), $this->getOptionOrFalse('complete'), $this->getOptionOrFalse('allowed_attributes'), $this->getOptionOrFalse('allowed_styles'));
-    }
-    else
-    {
+    } else {
       throw new sfException('That should not happen strip is set in configure in sfValidatorHtml');
     }
 
@@ -58,8 +55,7 @@ class sfValidatorHtml extends sfValidatorString
   protected function getOptionOrFalse($s)
   {
     $option = $this->getOption($s);
-    if (is_null($option))
-    {
+    if (is_null($option)) {
       return false;
     }
 

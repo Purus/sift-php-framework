@@ -31,8 +31,7 @@ class sfUploadedFile implements ArrayAccess
   public static function create($file)
   {
     $self = new self($file['name'], $file['type'], $file['tmp_name'], $file['size']);
-    if(isset($file['error']))
-    {
+    if (isset($file['error'])) {
       $self->error = $file['error'];
     }
 
@@ -92,15 +91,12 @@ class sfUploadedFile implements ArrayAccess
    */
   public function save($file = null, $fileMode = 0666, $create = true, $dirMode = 0777)
   {
-    if (is_null($file))
-    {
+    if (is_null($file)) {
       $file = $this->generateFilename();
     }
 
-    if ($file[0] != '/' && $file[0] != '\\' && !(strlen($file) > 3 && ctype_alpha($file[0]) && $file[1] == ':' && ($file[2] == '\\' || $file[2] == '/')))
-    {
-      if (is_null($this->path))
-      {
+    if ($file[0] != '/' && $file[0] != '\\' && !(strlen($file) > 3 && ctype_alpha($file[0]) && $file[1] == ':' && ($file[2] == '\\' || $file[2] == '/'))) {
+      if (is_null($this->path)) {
         throw new RuntimeException('You must give a "path" when you give a relative file name.');
       }
 
@@ -110,10 +106,8 @@ class sfUploadedFile implements ArrayAccess
     // get our directory path from the destination filename
     $directory = dirname($file);
 
-    if (!is_readable($directory))
-    {
-      if ($create && !mkdir($directory, $dirMode, true))
-      {
+    if (!is_readable($directory)) {
+      if ($create && !mkdir($directory, $dirMode, true)) {
         // failed to create the directory
         throw new Exception(sprintf('Failed to create file upload directory "%s".', $directory));
       }
@@ -122,14 +116,12 @@ class sfUploadedFile implements ArrayAccess
       chmod($directory, $dirMode);
     }
 
-    if (!is_dir($directory))
-    {
+    if (!is_dir($directory)) {
       // the directory path exists but it's not a directory
       throw new Exception(sprintf('File upload path "%s" exists, but is not a directory.', $directory));
     }
 
-    if (!is_writable($directory))
-    {
+    if (!is_writable($directory)) {
       // the directory isn't writable
       throw new Exception(sprintf('File upload path "%s" is not writable.', $directory));
     }
@@ -163,8 +155,7 @@ class sfUploadedFile implements ArrayAccess
    */
   public function getGeneratedName()
   {
-    if(!$this->generatedName)
-    {
+    if (!$this->generatedName) {
       $this->generatedName = $this->generateFilename();
     }
 
@@ -369,8 +360,7 @@ class sfUploadedFile implements ArrayAccess
 
   public function offsetGet($var)
   {
-    switch($var)
-    {
+    switch ($var) {
       case 'name':
         return $this->getOriginalName();
       break;
@@ -394,8 +384,7 @@ class sfUploadedFile implements ArrayAccess
 
       default:
 
-        if(isset($this->data[$var]))
-        {
+        if (isset($this->data[$var])) {
           return $this->data[$var];
         }
 
@@ -412,12 +401,9 @@ class sfUploadedFile implements ArrayAccess
 
     // first character lowercase
     $column[0] = strtolower($column[0]);
-    if($verb == 'get')
-    {
+    if ($verb == 'get') {
       return $this->offsetGet($column);
-    }
-    elseif($verb == 'set')
-    {
+    } elseif ($verb == 'set') {
       throw new sfException('You cannot modify the uploaded file.');
     }
 

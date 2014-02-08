@@ -12,8 +12,8 @@
  * @package    Sift
  * @subpackage validator
  */
-class sfValidatorImage extends sfValidatorFile {
-
+class sfValidatorImage extends sfValidatorFile
+{
   /**
    * Configures the current validator.
    *
@@ -53,8 +53,7 @@ class sfValidatorImage extends sfValidatorFile {
     $this->addOption('persistent', isset($options['persistent']) ? $options['persistent'] : false);
 
     // we set "web images" category if nothing is provided in options array
-    if(!$this->getOption('mime_types'))
-    {
+    if (!$this->getOption('mime_types')) {
       $this->addOption('mime_types', 'web_images');
     }
 
@@ -112,8 +111,7 @@ class sfValidatorImage extends sfValidatorFile {
 
     // we have a valid uploaded file, lets check if its an image
     // and its dimensions are ok!
-    if($result instanceof $class)
-    {
+    if ($result instanceof $class) {
       $dimensions = getimagesize($result->getTempName());
       if($dimensions[0] < $this->getOption('min_width') ||
               $dimensions[1] < $this->getOption('min_height'))
@@ -123,8 +121,7 @@ class sfValidatorImage extends sfValidatorFile {
     'height' => $dimensions[1],
     'min_width' => $this->getOption('min_width'),
     'min_height' => $this->getOption('min_height')));
-      }
-      elseif($dimensions[0] > $this->getOption('max_width') ||
+      } elseif($dimensions[0] > $this->getOption('max_width') ||
               $dimensions[1] > $this->getOption('max_height'))
       {
         throw new sfValidatorError($this, 'too_large', array(
@@ -137,30 +134,25 @@ class sfValidatorImage extends sfValidatorFile {
 
     // image is valid
     // persistent
-    if($this->getOption('persistent'))
-    {
+    if ($this->getOption('persistent')) {
       $dir = $this->getPersistentDir();
 
       // collect old uploads and delete them! probability of 10%
-      if(mt_rand(0, 100) < 10)
-      {
+      if (mt_rand(0, 100) < 10) {
         $this->deleteOldUploads();
       }
 
       // we make unique filename in the directory
-      do
-      {
+      do {
         $uuid = sfUuid::generate();
         $persistentUpload = $dir . DS . $uuid . '.dat';
         $persistentUploadInfo = $dir . DS . $uuid . '.file';
-      }
-      while(file_exists($persistentUpload));
+      } while (file_exists($persistentUpload));
 
       $preview = $dimensions = false;
 
       // do we want to generate image preview?
-      if($this->getOption('preview'))
-      {
+      if ($this->getOption('preview')) {
         $previewDir = $this->getPreviewDir();
         $previewWebDir = $this->getPreviewWebDir();
 
@@ -210,10 +202,8 @@ class sfValidatorImage extends sfValidatorFile {
   public function getPersistentDir()
   {
     $dir = sfConfig::get('sf_data_dir') . DS . 'persistent_upload';
-    if(!file_exists($dir))
-    {
-      if(!@mkdir($dir))
-      {
+    if (!file_exists($dir)) {
+      if (!@mkdir($dir)) {
         throw new sfException(sprintf('Unable to create "$dir" check permissions of parent directory or create this directory manually and make sure it is writable by the web server', $dir));
       }
     }
@@ -229,10 +219,8 @@ class sfValidatorImage extends sfValidatorFile {
   public function getPreviewDir()
   {
     $dir = sfConfig::get('sf_web_dir') . DS . 'cache' . DS . 'preview';
-    if(!file_exists($dir))
-    {
-      if(!@mkdir($dir))
-      {
+    if (!file_exists($dir)) {
+      if (!@mkdir($dir)) {
         throw new sfException(sprintf('Unable to create "$dir" check permissions of parent directory or create this directory manually and make sure it is writable by the web server', $dir));
       }
     }
@@ -266,10 +254,8 @@ class sfValidatorImage extends sfValidatorFile {
                     ->name('*.dat')->name('*.file')->in($persistentDir);
     $now = time();
 
-    foreach($files as $file)
-    {
-      if($now - filemtime($file) >= $this->getOption('persistent_upload_lifetime'))
-      {
+    foreach ($files as $file) {
+      if ($now - filemtime($file) >= $this->getOption('persistent_upload_lifetime')) {
         @unlink($file);
       }
     }
@@ -279,10 +265,8 @@ class sfValidatorImage extends sfValidatorFile {
     $files = sfFinder::type('file')->ignoreVersionControl()
                     ->name('*')->in($previewDir);
 
-    foreach($files as $file)
-    {
-      if($now - filemtime($file) > $this->getOption('persistent_upload_lifetime'))
-      {
+    foreach ($files as $file) {
+      if ($now - filemtime($file) > $this->getOption('persistent_upload_lifetime')) {
         @unlink($file);
       }
     }

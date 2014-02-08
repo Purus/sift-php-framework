@@ -34,8 +34,7 @@ class sfJavascriptView extends sfPHPView
     $this->setTemplate($this->actionName.$this->viewName.$this->getExtension());
 
     // Set template directory
-    if(!$this->directory)
-    {
+    if (!$this->directory) {
       $this->setDirectory(sfLoader::getTemplateDir($this->moduleName, $this->getTemplate()));
     }
   }

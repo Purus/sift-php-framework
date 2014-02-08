@@ -56,23 +56,18 @@ EOF;
 
     $formClass = $form;
     // form name does not end with "Form"
-    if(!preg_match('/Form$/i', $form))
-    {
+    if (!preg_match('/Form$/i', $form)) {
       $formClass .= 'Form';
     }
 
-    if($options['wizard'] && $formClass != 'myWizardForm')
-    {
+    if ($options['wizard'] && $formClass != 'myWizardForm') {
       $formBaseClass = 'myWizardForm';
-    }
-    elseif($options['base-class'])
-    {
+    } elseif ($options['base-class']) {
       $formBaseClass = $options['base-class'];
       $this->validateFormClass($formBaseClass);
     }
 
-    if(class_exists($formClass))
-    {
+    if (class_exists($formClass)) {
       throw new sfCliCommandException(sprintf('Form "%s" already exists', $formClass));
     }
 
@@ -85,18 +80,14 @@ EOF;
       'FORM_BASE_CLASS_NAME' => $formBaseClass,
     );
 
-    if(is_readable($this->environment->get('sf_data_dir').'/skeleton/form/form_simple.php'))
-    {
+    if (is_readable($this->environment->get('sf_data_dir').'/skeleton/form/form_simple.php')) {
       $skeleton= $this->environment->get('sf_data_dir').'/skeleton/form/form_simple.php';
-    }
-    else
-    {
+    } else {
       $skeleton = $this->environment->get('sf_sift_data_dir').'/skeleton/form/form_simple.php';
     }
 
     $formFile = $this->environment->get('sf_root_dir').'/'.$options['dir'].'/'.$formClass.'.class.php';
-    if(is_readable($formFile))
-    {
+    if (is_readable($formFile)) {
       throw new sfCliCommandException(sprintf('A "%s" form already exists in "%s".', $formClass, $formFile));
     }
 
@@ -115,8 +106,7 @@ EOF;
    */
   protected function validateFormClass($class)
   {
-    if(!preg_match('/^[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*$/', $class))
-    {
+    if (!preg_match('/^[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*$/', $class)) {
       throw new sfCliCommandException(sprintf('The form class name "%s" is invalid.', $class));
     }
 

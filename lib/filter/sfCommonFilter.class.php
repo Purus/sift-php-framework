@@ -31,16 +31,14 @@ class sfCommonFilter extends sfFilter
     $metas = $response->getMetas();
 
     // we assume that this means that the design is responsive
-    if(isset($metas['viewport']))
-    {
+    if (isset($metas['viewport'])) {
       $this->getContext()->getEventDispatcher()->notify(new sfEvent('response.responsive', array(
         'response' => $response
       )));
     }
 
     $mode = strtolower($this->getParameter('mode', 'normal'));
-    switch($mode)
-    {
+    switch ($mode) {
       case 'normal':
         $this->includeAssetsNormal();
       break;
@@ -60,23 +58,19 @@ class sfCommonFilter extends sfFilter
     $response = $this->getContext()->getResponse();
     $content  = $response->getContent();
 
-    if(is_string($content) && false !== ($pos = strpos($content, '</head>')))
-    {
+    if (is_string($content) && false !== ($pos = strpos($content, '</head>'))) {
       sfLoader::loadHelpers(array('Tag', 'Asset'));
 
       $html = '';
-      if(!$response->getParameter('auto_discovery_links_included', false, 'sift/view/asset'))
-      {
+      if (!$response->getParameter('auto_discovery_links_included', false, 'sift/view/asset')) {
         $html .= get_auto_discovery_links();
       }
 
-      if(!$response->getParameter('stylesheets_included', false, 'sift/view/asset'))
-      {
+      if (!$response->getParameter('stylesheets_included', false, 'sift/view/asset')) {
         $html .= get_stylesheets();
       }
 
-      if(!$response->getParameter('javascripts_included', false, 'sift/view/asset'))
-      {
+      if (!$response->getParameter('javascripts_included', false, 'sift/view/asset')) {
         $html .= get_javascripts();
       }
 
@@ -86,8 +80,7 @@ class sfCommonFilter extends sfFilter
         $html .= get_javascript_configuration();
       }
 
-      if($html)
-      {
+      if ($html) {
         $response->setContent(substr($content, 0, $pos).$html.substr($content, $pos));
       }
     }
@@ -104,36 +97,30 @@ class sfCommonFilter extends sfFilter
     $response = $this->getContext()->getResponse();
     // include stylesheets
     $content = $response->getContent();
-    if(is_string($content) && false !== ($pos = strpos($content, '</head>')))
-    {
+    if (is_string($content) && false !== ($pos = strpos($content, '</head>'))) {
       sfLoader::loadHelpers(array('Tag', 'Asset'));
       $html = '';
 
-      if(!$response->getParameter('auto_discovery_links_included', false, 'sift/view/asset'))
-      {
+      if (!$response->getParameter('auto_discovery_links_included', false, 'sift/view/asset')) {
         $html .= get_auto_discovery_links();
       }
 
-      if(!$response->getParameter('stylesheets_included', false, 'sift/view/asset'))
-      {
+      if (!$response->getParameter('stylesheets_included', false, 'sift/view/asset')) {
         $html .= get_stylesheets();
       }
 
-      if($html)
-      {
+      if ($html) {
         $response->setContent(substr($content, 0, $pos) . $html . substr($content, $pos));
       }
     }
 
     // include javascripts
     $content = $response->getContent();
-    if(is_string($content) && false !== ($pos = strpos($content, '</body>')))
-    {
+    if (is_string($content) && false !== ($pos = strpos($content, '</body>'))) {
       sfLoader::loadHelpers(array('Tag', 'Asset'));
       $html = '';
 
-      if(!$response->getParameter('javascripts_included', false, 'sift/view/asset'))
-      {
+      if (!$response->getParameter('javascripts_included', false, 'sift/view/asset')) {
         $html .= get_javascripts();
       }
 
@@ -144,16 +131,13 @@ class sfCommonFilter extends sfFilter
       }
 
       // we need to get all inline scripts to be included after our javascripts!
-      if($inlineScripts = $this->getInlineScripts($content))
-      {
-        foreach($inlineScripts as $inlineScript)
-        {
+      if ($inlineScripts = $this->getInlineScripts($content)) {
+        foreach ($inlineScripts as $inlineScript) {
           $html .= $inlineScript . "\n";
         }
       }
 
-      if($html)
-      {
+      if ($html) {
         // we need to get new position where to place it,
         // since content may be modified in getInlineScripts() call
         $pos = strpos($content, '</body>');
@@ -179,8 +163,7 @@ class sfCommonFilter extends sfFilter
     // pull out the script blocks
     preg_match_all("!<script[^>]+>.*?</script>!is", $content, $match);
     $scripts = $match[0];
-    foreach($scripts as $s => $script)
-    {
+    foreach ($scripts as $s => $script) {
       // we need to detect document.write here, so the flow is not altered
       if(preg_match('~document\.write\(~i', $script)
          || strpos($script, 'LEAVE HERE') !== false)

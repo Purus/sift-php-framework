@@ -12,8 +12,8 @@
  * @package    Sift
  * @subpackage minifier
  */
-class sfMinifierDriverDummy extends sfMinifier {
-
+class sfMinifierDriverDummy extends sfMinifier
+{
   /**
    * Processes the file
    *

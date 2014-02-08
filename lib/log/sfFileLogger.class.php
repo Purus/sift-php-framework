@@ -54,8 +54,7 @@ class sfFileLogger extends sfLoggerBase
   {
     $file = $this->getOption('file');
 
-    if($dateFormat = $this->getOption('date_format'))
-    {
+    if ($dateFormat = $this->getOption('date_format')) {
       $filePrefix = substr($file, 0, strrpos($file, '.'));
       $fileSuffix = substr($file, strrpos($file, '.'), strlen($file));
       $file = $filePrefix . $this->getOption('date_prefix') . date($dateFormat) . $fileSuffix;
@@ -63,20 +62,17 @@ class sfFileLogger extends sfLoggerBase
 
     $dir = dirname($file);
 
-    if(!is_dir($dir))
-    {
+    if (!is_dir($dir)) {
       mkdir($dir, $this->getOption('dir_mode'), true);
     }
 
     $fileExists = file_exists($file);
-    if(!is_writable($dir) || ($fileExists && !is_writable($file)))
-    {
+    if (!is_writable($dir) || ($fileExists && !is_writable($file))) {
       throw new sfFileException(sprintf('Unable to open the log file "%s" for writing.', $file));
     }
 
     $this->fp = fopen($file, 'a');
-    if(!$fileExists)
-    {
+    if (!$fileExists) {
       chmod($file, $this->getOption('file_mode'));
     }
 
@@ -94,8 +90,7 @@ class sfFileLogger extends sfLoggerBase
   public function log($message, $level = sfILogger::INFO, array $context = array())
   {
     $extra = '';
-    if(isset($context[sfILogger::CONTEXT_EXTRA]) && !empty($context[sfILogger::CONTEXT_EXTRA]))
-    {
+    if (isset($context[sfILogger::CONTEXT_EXTRA]) && !empty($context[sfILogger::CONTEXT_EXTRA])) {
       $extra = sfJson::encode($context[sfILogger::CONTEXT_EXTRA]);
       unset($context[sfILogger::CONTEXT_EXTRA]);
     }
@@ -117,8 +112,7 @@ class sfFileLogger extends sfLoggerBase
    */
   public function shutdown()
   {
-    if(is_resource($this->fp))
-    {
+    if (is_resource($this->fp)) {
       fclose($this->fp);
     }
   }

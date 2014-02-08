@@ -13,8 +13,8 @@
  * @package    Sift
  * @subpackage database
  */
-abstract class sfDatabase implements sfIService {
-
+abstract class sfDatabase implements sfIService
+{
   protected $connection = null,
     $parameterHolder = null,
     $resource = null;
@@ -49,8 +49,7 @@ abstract class sfDatabase implements sfIService {
    */
   public function getConnection()
   {
-    if($this->connection == null)
-    {
+    if ($this->connection == null) {
       $this->connect();
     }
 
@@ -66,8 +65,7 @@ abstract class sfDatabase implements sfIService {
    */
   public function getResource()
   {
-    if($this->resource == null)
-    {
+    if ($this->resource == null) {
       $this->connect();
     }
 
@@ -85,13 +83,11 @@ abstract class sfDatabase implements sfIService {
    */
   public function initialize($parameters = array())
   {
-    foreach($parameters as $p => &$value)
-    {
+    foreach ($parameters as $p => &$value) {
       $value = $this->replaceEnvironmentVariables($value);
     }
 
-    if(!$this->parameterHolder)
-    {
+    if (!$this->parameterHolder) {
       $this->parameterHolder = new sfParameterHolder();
     }
 
@@ -177,12 +173,9 @@ abstract class sfDatabase implements sfIService {
    */
   protected function replaceEnvironmentVariables(&$value)
   {
-    if(is_array($value))
-    {
+    if (is_array($value)) {
       array_walk_recursive($value, array($this, 'replaceEnvironmentVariablesCallback'));
-    }
-    elseif(is_string($value))
-    {
+    } elseif (is_string($value)) {
       $value = preg_replace_callback('/%ENV_(.+?)%/', array($this, 'replaceEnvironmentVariablesCallback'), $value);
     }
 
@@ -202,14 +195,10 @@ abstract class sfDatabase implements sfIService {
   protected function replaceEnvironmentVariablesCallback($matches)
   {
     $name = $matches[1];
-    if(isset($_SERVER[$name]))
-    {
+    if (isset($_SERVER[$name])) {
       return $_SERVER[$name];
-    }
-    else
-    {
-      if(getenv($name) !== false)
-      {
+    } else {
+      if (getenv($name) !== false) {
         return getenv($name);
       }
     }

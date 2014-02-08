@@ -23,8 +23,8 @@
  * @package    Sift
  * @subpackage storage
  */
-class sfSessionStorage extends sfStorage {
-
+class sfSessionStorage extends sfStorage
+{
   protected static $sessionIdRegenerated = false,
     $sessionStarted       = false;
 
@@ -72,8 +72,7 @@ class sfSessionStorage extends sfStorage {
     // set session name
     session_name($this->getOption('session_name'));
 
-    if(!(boolean) ini_get('session.use_cookies') && $sessionId = $this->getOption('session_id'))
-    {
+    if (!(boolean) ini_get('session.use_cookies') && $sessionId = $this->getOption('session_id')) {
       session_id($sessionId);
     }
 
@@ -89,8 +88,7 @@ class sfSessionStorage extends sfStorage {
     // set cache limiter
     session_cache_limiter($limiter);
 
-    if($this->getOption('auto_start'))
-    {
+    if ($this->getOption('auto_start')) {
       $this->start();
     }
   }
@@ -100,8 +98,7 @@ class sfSessionStorage extends sfStorage {
    */
   public function read($key)
   {
-    if(isset($_SESSION[$key]))
-    {
+    if (isset($_SESSION[$key])) {
       return $_SESSION[$key];
     }
   }
@@ -111,8 +108,7 @@ class sfSessionStorage extends sfStorage {
    */
   public function remove($key)
   {
-    if(isset($_SESSION[$key]))
-    {
+    if (isset($_SESSION[$key])) {
       $retval = $_SESSION[$key];
       unset($_SESSION[$key]);
     }
@@ -142,8 +138,7 @@ class sfSessionStorage extends sfStorage {
    */
   public function regenerate($destroy = false)
   {
-    if(self::$sessionIdRegenerated)
-    {
+    if (self::$sessionIdRegenerated) {
       return;
     }
 
@@ -158,8 +153,7 @@ class sfSessionStorage extends sfStorage {
    */
   public function start()
   {
-    if(self::$sessionStarted)
-    {
+    if (self::$sessionStarted) {
       return;
     }
 
@@ -199,8 +193,7 @@ class sfSessionStorage extends sfStorage {
    */
   public function shutdown()
   {
-    if($this->isStarted())
-    {
+    if ($this->isStarted()) {
       session_write_close();
       self::$sessionStarted = false;
     }

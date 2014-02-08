@@ -12,8 +12,8 @@
  * @package    Sift
  * @subpackage form_widget
  */
-class sfWidgetFormI18nChoiceTimezone extends sfWidgetFormChoice {
-
+class sfWidgetFormI18nChoiceTimezone extends sfWidgetFormChoice
+{
   /**
    * Constructor.
    *
@@ -41,8 +41,7 @@ class sfWidgetFormI18nChoiceTimezone extends sfWidgetFormChoice {
     $timezones = array_combine($timezones, $timezones);
 
     $addEmpty = isset($options['add_empty']) ? $options['add_empty'] : false;
-    if(false !== $addEmpty)
-    {
+    if (false !== $addEmpty) {
       $timezones = array_merge(array('' => true === $addEmpty ? '' : $addEmpty), $timezones);
     }
 

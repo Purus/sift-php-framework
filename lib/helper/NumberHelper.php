@@ -22,13 +22,11 @@
  */
 function format_number($number, $culture = null)
 {
-  if(is_null($number))
-  {
+  if (is_null($number)) {
     return null;
   }
 
-  if(is_null($culture))
-  {
+  if (is_null($culture)) {
     $culture = sfContext::getInstance()->getUser()->getCulture();
   }
 
@@ -47,13 +45,11 @@ function format_number($number, $culture = null)
  */
 function format_currency($amount, $currency = null, $culture = null)
 {
-  if(is_null($amount))
-  {
+  if (is_null($amount)) {
     return null;
   }
 
-  if(is_null($culture))
-  {
+  if (is_null($culture)) {
     $culture = sfContext::getInstance()->getUser()->getCulture();
   }
 

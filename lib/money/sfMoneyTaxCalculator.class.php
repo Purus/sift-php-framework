@@ -12,8 +12,8 @@
  * @package Sift
  * @subpackage money
  */
-class sfMoneyTaxCalculator implements sfIMoneyTaxCalculator {
-
+class sfMoneyTaxCalculator implements sfIMoneyTaxCalculator
+{
   /**
    * Factory
    *
@@ -25,22 +25,17 @@ class sfMoneyTaxCalculator implements sfIMoneyTaxCalculator {
    */
   public static function factory($driver = '', $options = array())
   {
-    if(!empty($driver))
-    {
+    if (!empty($driver)) {
       $class = sprintf('sfMoneyTaxCalculatorDriver%s', $driver);
-      if(!class_exists($class))
-      {
+      if (!class_exists($class)) {
         throw new InvalidArgumentException(sprintf('Tax calculator driver class "%s" does not exist.', $class));
       }
-    }
-    else
-    {
+    } else {
       $class = 'sfMoneyTaxCalculator';
     }
 
     $object = new $class($options);
-    if(!$object instanceof sfIMoneyTaxCalculator)
-    {
+    if (!$object instanceof sfIMoneyTaxCalculator) {
       throw new LogicException(sprintf('The calculator "%s" instance does not implement sfIMoneyTaxCalculator interface.', $class));
     }
 

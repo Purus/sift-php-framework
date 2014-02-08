@@ -12,8 +12,8 @@
  * @package    Sift
  * @subpackage validator
  */
-class sfValidatorChoiceMany extends sfValidatorChoice {
-
+class sfValidatorChoiceMany extends sfValidatorChoice
+{
   /**
    * Configures the current validator.
    *

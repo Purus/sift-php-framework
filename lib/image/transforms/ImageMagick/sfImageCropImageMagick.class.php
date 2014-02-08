@@ -16,8 +16,8 @@
  * @package Sift
  * @subpackage image
  */
-class sfImageCropImageMagick extends sfImageTransformAbstract {
-
+class sfImageCropImageMagick extends sfImageTransformAbstract
+{
   /**
    * Left coordinate.
    */
@@ -61,8 +61,7 @@ class sfImageCropImageMagick extends sfImageTransformAbstract {
    */
   public function setLeft($left)
   {
-    if(is_numeric($left))
-    {
+    if (is_numeric($left)) {
       $this->left = (int) $left;
 
       return true;
@@ -88,8 +87,7 @@ class sfImageCropImageMagick extends sfImageTransformAbstract {
    */
   public function setTop($top)
   {
-    if(is_numeric($top))
-    {
+    if (is_numeric($top)) {
       $this->top = (int) $top;
 
       return true;
@@ -115,8 +113,7 @@ class sfImageCropImageMagick extends sfImageTransformAbstract {
    */
   public function setWidth($width)
   {
-    if(is_numeric($width))
-    {
+    if (is_numeric($width)) {
       $this->width = (int) $width;
 
       return true;
@@ -142,8 +139,7 @@ class sfImageCropImageMagick extends sfImageTransformAbstract {
    */
   public function setHeight($height)
   {
-    if(is_numeric($height))
-    {
+    if (is_numeric($height)) {
       $this->height = (int) $height;
 
       return true;

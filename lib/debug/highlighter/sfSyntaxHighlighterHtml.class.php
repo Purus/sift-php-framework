@@ -13,8 +13,8 @@
  * @package Sift
  * @subpackage debug_highligher
  */
-class sfSyntaxHighlighterHtml extends sfSyntaxHighlighterGeneric {
-
+class sfSyntaxHighlighterHtml extends sfSyntaxHighlighterGeneric
+{
   /**
    * @var array
    */
@@ -41,8 +41,7 @@ class sfSyntaxHighlighterHtml extends sfSyntaxHighlighterGeneric {
   {
     $this->tokenizePhp();
     parent::process();
-    foreach($this->phpBlocks as $key => $value)
-    {
+    foreach ($this->phpBlocks as $key => $value) {
       $this->html = str_replace($key, $value, $this->html);
     }
   }

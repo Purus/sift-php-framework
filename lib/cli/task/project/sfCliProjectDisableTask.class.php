@@ -52,16 +52,12 @@ EOF;
 
     $env = $arguments['env'];
 
-    foreach($applications as $app)
-    {
+    foreach ($applications as $app) {
       $this->checkAppExists($app);
       $lockFile = $this->environment->get('sf_data_dir').'/'.$app.'_'.$env.'.lck';
-      if(file_exists($lockFile))
-      {
+      if (file_exists($lockFile)) {
         $this->logSection($this->getFullName(), sprintf('%s [%s] is currently DISABLED', $app, $env));
-      }
-      else
-      {
+      } else {
         $this->getFilesystem()->touch($lockFile);
         $this->logSection($this->getFullName(), sprintf('%s [%s] has been DISABLED', $app, $env));
       }

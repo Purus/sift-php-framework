@@ -12,8 +12,8 @@
  * @package    Sift
  * @subpackage feed
  */
-class sfFeedEnclosure {
-
+class sfFeedEnclosure
+{
   private $url,
           $length,
           $mimeType;

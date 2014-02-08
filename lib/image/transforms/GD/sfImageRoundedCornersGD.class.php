@@ -12,8 +12,8 @@
  * @package Sift
  * @subpackage image
  */
-class sfImageRoundedCornersGD extends sfImageAlphaMaskGD {
-
+class sfImageRoundedCornersGD extends sfImageAlphaMaskGD
+{
   protected $radius = 5;
 
   public function __construct($radius, $color = false)
@@ -31,8 +31,7 @@ class sfImageRoundedCornersGD extends sfImageAlphaMaskGD {
 
   public function setRadius($radius)
   {
-    if(is_numeric($radius) && $radius > 0)
-    {
+    if (is_numeric($radius) && $radius > 0) {
       $this->radius = $radius;
 
       return true;
@@ -52,22 +51,16 @@ class sfImageRoundedCornersGD extends sfImageAlphaMaskGD {
     $mask = $image->getAdapter()->getTransparentImage($w, $h);
 
     // Set the masking colours
-    if(false === $this->getColor() || 'image/png' == $image->getMIMEType())
-    {
+    if (false === $this->getColor() || 'image/png' == $image->getMIMEType()) {
       $mask_black = imagecolorallocate($mask, 0, 0, 0);
-    }
-    else
-    {
+    } else {
       $mask_black = $image->getAdapter()->getColorByHex($mask, $this->getColor());
     }
 
     // Cannot use white as transparent mask if color is set to white
-    if($this->getColor() === '#FFFFFF' || $this->getColor() === false)
-    {
+    if ($this->getColor() === '#FFFFFF' || $this->getColor() === false) {
       $mask_transparent = imagecolorallocate($mask, 255, 0, 0);
-    }
-    else
-    {
+    } else {
       $mask_color = imagecolorsforindex($mask, imagecolorat($image->getAdapter()->getHolder(), 0, 0));
       $mask_transparent = imagecolorallocate($mask, $mask_color['red'], $mask_color['green'], $mask_color['blue']);
     }

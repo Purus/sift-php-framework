@@ -12,8 +12,8 @@
  * @package    Sift
  * @subpackage form_widget
  */
-class sfWidgetFormInputCheckbox extends sfWidgetFormInput {
-
+class sfWidgetFormInputCheckbox extends sfWidgetFormInput
+{
   /**
    * Constructor.
    *
@@ -51,8 +51,7 @@ class sfWidgetFormInputCheckbox extends sfWidgetFormInput {
     // when checkbox is checked, it overwrites the hidden input's value
     $this->addOption('unchecked_submitable', true);
 
-    if(isset($attributes['value']))
-    {
+    if (isset($attributes['value'])) {
       $this->setOption('value_attribute_value', $attributes['value']);
     }
   }
@@ -71,30 +70,25 @@ class sfWidgetFormInputCheckbox extends sfWidgetFormInput {
    */
   public function render($name, $value = null, $attributes = array(), $errors = array())
   {
-    if($value === '')
-    {
+    if ($value === '') {
       $value = null;
     }
 
-    if(null !== $value && $value !== false)
-    {
+    if (null !== $value && $value !== false) {
       $attributes['checked'] = 'checked';
 
-      if(sfWidget::isAriaEnabled())
-      {
+      if (sfWidget::isAriaEnabled()) {
         $attributes['aria-checked'] = 'true';
       }
     }
 
-    if(!isset($attributes['value']) && null !== $this->getOption('value_attribute_value'))
-    {
+    if (!isset($attributes['value']) && null !== $this->getOption('value_attribute_value')) {
       $attributes['value'] = $this->getOption('value_attribute_value');
     }
 
     $html = parent::render($name, null, $attributes, $errors);
 
-    if($this->getOption('unchecked_submitable'))
-    {
+    if ($this->getOption('unchecked_submitable')) {
       $html = $this->renderTag('input', array(
           'name' => $name,
           'id' => $this->generateId($name . '_unchecked', $value), // to prevent populating with id of the checkbox

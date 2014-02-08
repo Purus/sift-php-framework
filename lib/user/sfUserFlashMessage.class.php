@@ -12,8 +12,8 @@
  * @package    Sift
  * @subpackage user
  */
-class sfUserFlashMessage implements Serializable {
-
+class sfUserFlashMessage implements Serializable
+{
   /**
    * Success
    */
@@ -59,9 +59,9 @@ class sfUserFlashMessage implements Serializable {
    */
   public function __construct($message, $type = self::TYPE_INFO, $application = null)
   {
-    $this->message = (string)$message;
-    $this->type = (string)$type;
-    $this->application = $application ? (string)$application : null;
+    $this->message = (string) $message;
+    $this->type = (string) $type;
+    $this->application = $application ? (string) $application : null;
   }
 
   /**
@@ -82,7 +82,7 @@ class sfUserFlashMessage implements Serializable {
    */
   public function setMessage($message)
   {
-    $this->message = (string)$message;
+    $this->message = (string) $message;
 
     return $this;
   }
@@ -105,7 +105,7 @@ class sfUserFlashMessage implements Serializable {
    */
   public function setType($type)
   {
-    $this->type = (string)$type;
+    $this->type = (string) $type;
 
     return $this;
   }
@@ -127,7 +127,7 @@ class sfUserFlashMessage implements Serializable {
    */
   public function setApplication($application)
   {
-    $this->application = (string)$application;
+    $this->application = (string) $application;
   }
 
   /**

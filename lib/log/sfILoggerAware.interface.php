@@ -12,8 +12,8 @@
  * @package Sift
  * @subpackage log
  */
-interface sfILoggerAware {
-
+interface sfILoggerAware
+{
   /**
    * Sets a logger instance on the object
    *

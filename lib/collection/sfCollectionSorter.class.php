@@ -12,8 +12,8 @@
  * @package    Sift
  * @subpackage collection
  */
-class sfCollectionSorter  {
-
+class sfCollectionSorter
+{
   /**
    * Ascending sorting
    *
@@ -61,8 +61,7 @@ class sfCollectionSorter  {
    */
   public static function factory($strategy, $strategyArguments = array())
   {
-    switch($strategy)
-    {
+    switch ($strategy) {
       // known strategies
       case 'callback':
         $strategyClass = sprintf('sfCollectionSorterStrategy%s', ucfirst($strategy));
@@ -73,8 +72,7 @@ class sfCollectionSorter  {
       break;
     }
 
-    if(!class_exists($strategyClass))
-    {
+    if (!class_exists($strategyClass)) {
       throw new InvalidArgumentException(sprintf('Sorting strategy "%s", class "%s" does not exist.', $strategy, $strategyClass));
     }
 
@@ -86,7 +84,7 @@ class sfCollectionSorter  {
       throw new InvalidArgumentException(sprintf('Sorting stragery "%s" is not valid. It is not instantiable or does not implement sfICollectionSorterStrategy interface.', $strategy));
     }
 
-    return new self($reflection->newInstanceArgs((array)$strategyArguments));
+    return new self($reflection->newInstanceArgs((array) $strategyArguments));
   }
 
   /**
@@ -101,8 +99,7 @@ class sfCollectionSorter  {
    */
   public function compareTo($a, $b)
   {
-    if($a === $b)
-    {
+    if ($a === $b) {
       return 0;
     }
 

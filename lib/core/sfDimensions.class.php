@@ -12,8 +12,8 @@
  * @package    Sift
  * @subpackage core
  */
-class sfDimensions {
-
+class sfDimensions
+{
   /**
    * Stores the current dimensions
    *
@@ -45,13 +45,11 @@ class sfDimensions {
   {
     $this->availableDimensions = $availableDimensions;
 
-    if(null === $defaultDimension)
-    {
+    if (null === $defaultDimension) {
       $defaultDimension = array();
 
-      foreach($availableDimensions as $key => $dimension)
-      {
-        $dimension = (array)$dimension;
+      foreach ($availableDimensions as $key => $dimension) {
+        $dimension = (array) $dimension;
         $defaultDimension[$key] = array_shift($dimension);
       }
     }
@@ -67,8 +65,7 @@ class sfDimensions {
    */
   public function setCurrentDimension($dimension)
   {
-    if(!$this->isAvailable($dimension))
-    {
+    if (!$this->isAvailable($dimension)) {
       throw new InvalidArgumentException(sprintf('Dimension "%s" is not available.', var_export($dimension, true)));
     }
 
@@ -97,8 +94,7 @@ class sfDimensions {
   public function isAvailable(array $dimension)
   {
     $allowed = array_keys($dimension);
-    foreach($allowed as $name)
-    {
+    foreach ($allowed as $name) {
       if(!isset($this->availableDimensions[$name])
               || !in_array($dimension[$name], $this->availableDimensions[$name]))
       {
@@ -126,17 +122,14 @@ class sfDimensions {
    */
   public function getDimensionDirs()
   {
-    if(empty($this->currentDimensionDirectories) && !empty($this->currentDimension))
-    {
+    if (empty($this->currentDimensionDirectories) && !empty($this->currentDimension)) {
       $dimensions = array();
       $key = array_keys($this->currentDimension);
 
       $c = count($this->currentDimension);
-      for($i = 0; $i < $c; $i++)
-      {
+      for ($i = 0; $i < $c; $i++) {
         $tmp = $this->currentDimension;
-        for($j = $i; $j > 0; $j--)
-        {
+        for ($j = $i; $j > 0; $j--) {
           array_pop($tmp);
         }
         $val = $this->toString($tmp);
@@ -172,19 +165,14 @@ class sfDimensions {
    */
   public function flatten($array)
   {
-    for($x = 0; $x < sizeof($array); $x++)
-    {
+    for ($x = 0; $x < sizeof($array); $x++) {
       $element = $array[$x];
-      if(is_array($element))
-      {
+      if (is_array($element)) {
         $results = $this->flatten($element);
-        for($y = 0; $y < sizeof($results); $y++)
-        {
+        for ($y = 0; $y < sizeof($results); $y++) {
           $flat_array[] = $results[$y];
         }
-      }
-      else
-      {
+      } else {
         $flat_array[] = $element;
       }
     }
@@ -203,8 +191,7 @@ class sfDimensions {
   {
     $i = 0;
     $return = false;
-    foreach($array as $index => $val)
-    {
+    foreach ($array as $index => $val) {
       $divider = (isset($underscore) && $i > 0) ? '_' : '';
       $return .= $divider . $val;
       $i++;

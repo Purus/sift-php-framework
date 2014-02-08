@@ -27,8 +27,8 @@
  * @package    Sift
  * @subpackage util
  */
-class sfShutdownScheduler implements Countable {
-
+class sfShutdownScheduler implements Countable
+{
   /**
    * Low priority
    *
@@ -75,14 +75,12 @@ class sfShutdownScheduler implements Countable {
    */
   public function register($callback, $arguments = array(), $priority = 10)
   {
-    if($callback instanceof sfCallable)
-    {
+    if ($callback instanceof sfCallable) {
       $callback = $callback->getCallable();
     }
 
     // check the callback
-    if(!sfToolkit::isCallable($callback, false, $callableName))
-    {
+    if (!sfToolkit::isCallable($callback, false, $callableName)) {
       throw new InvalidArgumentException(sprintf('Invalid callback "%s" given.', $callableName));
     }
 
@@ -99,8 +97,7 @@ class sfShutdownScheduler implements Countable {
   public function count()
   {
     $count = 0;
-    foreach($this->callbacks as $priority => $callbacks)
-    {
+    foreach ($this->callbacks as $priority => $callbacks) {
       $count += count($this->callbacks[$priority]);
     }
 
@@ -126,17 +123,12 @@ class sfShutdownScheduler implements Countable {
     // sort by priority
     krsort($this->callbacks);
 
-    foreach($this->callbacks as $priority => $callbacks)
-    {
-      foreach($callbacks as $callback)
-      {
+    foreach ($this->callbacks as $priority => $callbacks) {
+      foreach ($callbacks as $callback) {
         list($callback, $arguments) = $callback;
-        if($callback instanceof sfCallable)
-        {
+        if ($callback instanceof sfCallable) {
           call_user_func_array(array($callback, 'call'), $arguments);
-        }
-        else
-        {
+        } else {
           call_user_func_array($callback, $arguments);
         }
       }

@@ -6,8 +6,7 @@
  * file that was distributed with this source code.
  */
 
-if(!function_exists('imagecopymergealpha'))
-{
+if (!function_exists('imagecopymergealpha')) {
   /**
    * Merge image with alpha channel support (using GD apadapter)
    *
@@ -89,8 +88,7 @@ class sfImageTransformGDAdapter extends sfImageTransformAdapterAbstract
   public function __construct()
   {
     // Check that the GD extension is installed and configured
-    if (!extension_loaded('gd'))
-    {
+    if (!extension_loaded('gd')) {
       throw new sfImageTransformException('The image processing library GD is not enabled. See PHP Manual for installation instructions.');
     }
   }
@@ -100,8 +98,7 @@ class sfImageTransformGDAdapter extends sfImageTransformAdapterAbstract
    */
   public function __destruct()
   {
-    if ($this->hasHolder())
-    {
+    if ($this->hasHolder()) {
       imagedestroy($this->getHolder());
     }
   }
@@ -126,13 +123,11 @@ class sfImageTransformGDAdapter extends sfImageTransformAdapterAbstract
    */
   public function load($filename, $mime)
   {
-    if(array_key_exists($mime, $this->loaders))
-    {
+    if (array_key_exists($mime, $this->loaders)) {
       $this->holder = $this->loaders[$mime]($filename);
       // this should work as documented on php.net
       // but does not!  but I leave it here
-      if($this->holder === false)
-      {
+      if ($this->holder === false) {
         throw new sfImageTransformException(sprintf('Cannot load file "%s" as "%s".', $filename, $mime));
       }
 
@@ -140,10 +135,7 @@ class sfImageTransformGDAdapter extends sfImageTransformAdapterAbstract
       $this->setFilename($filename);
 
       return true;
-    }
-
-    else
-    {
+    } else {
       throw new sfImageTransformException(sprintf('Cannot load file %s as %s is an unsupported file type.', $filename, $mime));
     }
   }
@@ -157,8 +149,7 @@ class sfImageTransformGDAdapter extends sfImageTransformAdapterAbstract
   {
     $resource = imagecreatefromstring($string);
 
-    if (is_resource($resource) && 'gd' === get_resource_type($resource))
-    {
+    if (is_resource($resource) && 'gd' === get_resource_type($resource)) {
       $this->setHolder($resource);
 
       return true;
@@ -201,10 +192,8 @@ class sfImageTransformGDAdapter extends sfImageTransformAdapterAbstract
    */
   public function saveAs($filename, $mime='')
   {
-    if ('' !== $mime)
-    {
-      if (!$this->setMimeType($mime))
-      {
+    if ('' !== $mime) {
+      if (!$this->setMimeType($mime)) {
         throw new sfImageTransformException(sprintf('Cannot convert as %s is an unsupported type' ,$mime));
       }
     }
@@ -238,8 +227,7 @@ class sfImageTransformGDAdapter extends sfImageTransformAdapterAbstract
    */
   public function getWidth()
   {
-    if ($this->hasHolder())
-    {
+    if ($this->hasHolder()) {
       return imagesx($this->getHolder());
     }
 
@@ -253,8 +241,7 @@ class sfImageTransformGDAdapter extends sfImageTransformAdapterAbstract
    */
   public function getHeight()
   {
-    if ($this->hasHolder())
-    {
+    if ($this->hasHolder()) {
       return imagesy($this->getHolder());
     }
 
@@ -270,8 +257,7 @@ class sfImageTransformGDAdapter extends sfImageTransformAdapterAbstract
   public function setHolder($resource)
   {
 
-    if (is_resource($resource) && 'gd' === get_resource_type($resource))
-    {
+    if (is_resource($resource) && 'gd' === get_resource_type($resource)) {
 
       $this->holder = $resource;
 
@@ -288,8 +274,7 @@ class sfImageTransformGDAdapter extends sfImageTransformAdapterAbstract
    */
   public function getHolder()
   {
-    if ($this->hasHolder())
-    {
+    if ($this->hasHolder()) {
       return $this->holder;
     }
 
@@ -303,8 +288,7 @@ class sfImageTransformGDAdapter extends sfImageTransformAdapterAbstract
    */
   public function hasHolder()
   {
-    if (is_resource($this->holder) && 'gd' === get_resource_type($this->holder))
-    {
+    if (is_resource($this->holder) && 'gd' === get_resource_type($this->holder)) {
       return true;
     }
 
@@ -329,8 +313,7 @@ class sfImageTransformGDAdapter extends sfImageTransformAdapterAbstract
    */
   public function setMIMEType($mime)
   {
-    if (array_key_exists($mime,$this->loaders))
-    {
+    if (array_key_exists($mime,$this->loaders)) {
       $this->mime_type = $mime;
 
       return true;
@@ -349,10 +332,8 @@ class sfImageTransformGDAdapter extends sfImageTransformAdapterAbstract
 
     $path = pathinfo($filename);
 
-    foreach($this->types as $type => $extensions)
-    {
-      if (in_array($path['extension'], $extensions))
-      {
+    foreach ($this->types as $type => $extensions) {
+      if (in_array($path['extension'], $extensions)) {
         return $type;
       }
 
@@ -381,8 +362,7 @@ class sfImageTransformGDAdapter extends sfImageTransformAdapterAbstract
   public function getColorByHex($image, $color)
   {
 
-    if (preg_match('/#[\d\w]{6}/',$color))
-    {
+    if (preg_match('/#[\d\w]{6}/',$color)) {
       $rgb = sscanf($color, '#%2x%2x%2x');
       $color = imagecolorallocate($image, $rgb[0], $rgb[1], $rgb[2]);
 
@@ -403,27 +383,22 @@ class sfImageTransformGDAdapter extends sfImageTransformAdapterAbstract
     $file = null;
 
     // Are we saving to file, if so get the filename to save to
-    if ($to_file)
-    {
+    if ($to_file) {
       $file = $filename;
-      if ('' === $file)
-      {
+      if ('' === $file) {
         $file = $this->getFilename();
       }
     }
 
     $mime = $this->getMimeType();
 
-    if (array_key_exists($mime,$this->creators))
-    {
+    if (array_key_exists($mime,$this->creators)) {
 
-      switch ($mime)
-      {
+      switch ($mime) {
 
         case 'image/jpeg':
         case 'image/jpg':
-          if (is_null($this->quality))
-          {
+          if (is_null($this->quality)) {
             $this->quality = 75;
           }
           $output = $this->creators[$mime]($this->holder,$file,$this->getImageSpecificQuality($this->quality, $mime));
@@ -436,12 +411,9 @@ class sfImageTransformGDAdapter extends sfImageTransformAdapterAbstract
 
         case 'image/gif':
 
-          if (!is_null($file))
-          {
+          if (!is_null($file)) {
             $output = $this->creators[$mime]($this->holder,$file);
-          }
-          else
-          {
+          } else {
             $output = $this->creators[$mime]($this->holder);
           }
           break;
@@ -449,9 +421,7 @@ class sfImageTransformGDAdapter extends sfImageTransformAdapterAbstract
         default:
           throw new sfImageTransformException(sprintf('Cannot convert as %s is an unsupported type' ,$mime));
       }
-    }
-    else
-    {
+    } else {
       throw new sfImageTransformException(sprintf('Cannot convert as %s is an unsupported type' ,$mime));
     }
 
@@ -462,8 +432,7 @@ class sfImageTransformGDAdapter extends sfImageTransformAdapterAbstract
   {
     // Range is from 0-100
 
-    if ('image/png' === $mime)
-    {
+    if ('image/png' === $mime) {
       return 9 - round($quality * (9/100));
     }
 
@@ -483,16 +452,14 @@ class sfImageTransformGDAdapter extends sfImageTransformAdapterAbstract
 
     $resource = $this->getHolder();
 
-    $dest_resource = imagecreatetruecolor((int)$w, (int)$h);
+    $dest_resource = imagecreatetruecolor((int) $w, (int) $h);
 
     // Preserve alpha transparency
-    if (in_array($this->getMIMEType(), array('image/gif','image/png')))
-    {
+    if (in_array($this->getMIMEType(), array('image/gif','image/png'))) {
       $index = imagecolortransparent($resource);
 
       // Handle transparency
-      if ($index >= 0)
-      {
+      if ($index >= 0) {
 
         // Grab the current images transparent color
         $index_color = imagecolorsforindex($resource, $index);
@@ -505,9 +472,7 @@ class sfImageTransformGDAdapter extends sfImageTransformAdapterAbstract
 
         // Set the filled background color to be transparent
         imagecolortransparent($dest_resource, $index);
-      }
-      else if ($this->getMIMEType() == 'image/png') // Always make a transparent background color for PNGs that don't have one allocated already
-      {
+      } else if ($this->getMIMEType() == 'image/png') { // Always make a transparent background color for PNGs that don't have one allocated already
 
         // Disabled blending
         imagealphablending($dest_resource, false);

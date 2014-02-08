@@ -15,8 +15,8 @@
  * @subpackage image
 
  */
-class sfImageFillImageMagick extends sfImageTransformAbstract {
-
+class sfImageFillImageMagick extends sfImageTransformAbstract
+{
   /**
    * x-coordinate.
    * @var integer
@@ -74,8 +74,7 @@ class sfImageFillImageMagick extends sfImageTransformAbstract {
    */
   public function setX($x)
   {
-    if(is_numeric($x))
-    {
+    if (is_numeric($x)) {
       $this->x = (int) $x;
 
       return true;
@@ -102,8 +101,7 @@ class sfImageFillImageMagick extends sfImageTransformAbstract {
    */
   public function setY($y)
   {
-    if(is_numeric($y))
-    {
+    if (is_numeric($y)) {
       $this->y = (int) $y;
 
       return true;
@@ -130,8 +128,7 @@ class sfImageFillImageMagick extends sfImageTransformAbstract {
    */
   public function setFuzz($fuzz)
   {
-    if(is_numeric($fuzz))
-    {
+    if (is_numeric($fuzz)) {
       $this->fuzz = (int) $fuzz;
 
       return true;
@@ -158,8 +155,7 @@ class sfImageFillImageMagick extends sfImageTransformAbstract {
    */
   public function setBorder($border)
   {
-    if(preg_match('/#[\d\w]{6}/', $border))
-    {
+    if (preg_match('/#[\d\w]{6}/', $border)) {
       $this->border = $border;
 
       return true;
@@ -186,8 +182,7 @@ class sfImageFillImageMagick extends sfImageTransformAbstract {
    */
   public function setFill($fill)
   {
-    if(preg_match('/#[\d\w]{6}/', $fill))
-    {
+    if (preg_match('/#[\d\w]{6}/', $fill)) {
       $this->fill = $fill;
 
       return true;
@@ -222,13 +217,10 @@ class sfImageFillImageMagick extends sfImageTransformAbstract {
     /*
      *  colorFloodfillImage has been depricated, use new method is available
      */
-    if(method_exists($resource, 'floodFillPaintImage') && is_null($this->border))
-    {
+    if (method_exists($resource, 'floodFillPaintImage') && is_null($this->border)) {
       $target = $resource->getImagePixelColor($this->getX(), $this->getY());
       $resource->floodFillPaintImage($fill, $this->getFuzz(), $target, $this->getX(), $this->getY(), false);
-    }
-    else
-    {
+    } else {
       $border = new ImagickPixel();
       $border->setColor($this->border);
 

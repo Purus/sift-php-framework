@@ -25,23 +25,19 @@ function rating_stars($avg_rating, $options = array())
 {
   $options = _parse_attributes($options);
 
-  if(!isset($options['size']))
-  {
+  if (!isset($options['size'])) {
     $options['size'] = 'small';
   }
 
-  if(!in_array($options['size'], array('small', 'big')))
-  {
+  if (!in_array($options['size'], array('small', 'big'))) {
     throw new InvalidArgumentException(sprintf('{RatingHelper} rating_stars() "size" - "%s" option in not valid. Valid values are: "small, big"', $options['size']));
   }
 
-  if(!isset($options['max']))
-  {
+  if (!isset($options['max'])) {
     $options['max'] = 5;
   }
 
-  if($options['max'] < 1 || $options['max'] > 10)
-  {
+  if ($options['max'] < 1 || $options['max'] > 10) {
     throw new InvalidArgumentException('{RatingHelper} rating_stars() max parameter is invalid. It should be an integer between 1 and 10');
   }
 
@@ -68,31 +64,26 @@ function rating_stars_votable($rating, $options = array())
   $options = _parse_attributes($options);
   $options = array_merge(array('max' => 5), $options);
 
-  if(!$route = _get_option($options, 'route'))
-  {
+  if (!$route = _get_option($options, 'route')) {
     throw new sfConfigurationException('{RatingHelper} rating_stars_votable() parameter "route" is missing.');
   }
 
-  if($options['max'] < 1 || $options['max'] > 10)
-  {
+  if ($options['max'] < 1 || $options['max'] > 10) {
     throw new InvalidArgumentException('{RatingHelper} rating_stars() max parameter is invalid. It should be an integer between 1 and 10');
   }
 
-  if(!isset($options['size']))
-  {
+  if (!isset($options['size'])) {
     $options['size'] = 'small';
   }
 
-  if(!in_array($options['size'], array('small', 'big')))
-  {
+  if (!in_array($options['size'], array('small', 'big'))) {
     throw new sfConfigurationException(sprintf('{RatingHelper} rating_stars() "size" - "%s" option in not valid. Valid values are: "small, big"', $options['size']));
   }
 
   $percent  = floor($rating / $options['max'] * 100);
   $width    = $percent > 0 ? $percent : 0;
 
-  if(!isset($options['id']))
-  {
+  if (!isset($options['id'])) {
     $options['id'] = 'star-rating-';
   }
 
@@ -102,8 +93,7 @@ function rating_stars_votable($rating, $options = array())
   $html[] = sprintf('<ul class="star-rating%s">', $class ? (' ' . $class) : '');
   $html[] = sprintf('<li class="current-rating" style="width:%s%%">%s</li>', $width, rating_ratio($rating, $max));
 
-  for($i = 1; $i <= $max; $i++)
-  {
+  for ($i = 1; $i <= $max; $i++) {
     $html[] = sprintf('<li><a id="%s%s" href="%s" title="Hodnotit %s" class="%s" rel="nofollow">%s</a></li>', $options['id'], $i, url_for(str_replace('%%VOTE%%', $i, $route)), $i, rating_class($i), $i);
   }
 
@@ -120,8 +110,7 @@ function rating_stars_votable($rating, $options = array())
  */
 function rating_ratio($avg_rating, $max = 5)
 {
-  if($max > 10)
-  {
+  if ($max > 10) {
     throw new sfException("{RatingHelper} Rating supports only max 10 stars!");
   }
 
@@ -138,8 +127,7 @@ function rating_ratio($avg_rating, $max = 5)
 function rating_class($i)
 {
   static $nwords = array('one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten');
-  if($i > 10)
-  {
+  if ($i > 10) {
     throw new sfException("{RatingHelper} Rating supports only max 10 stars!");
   }
   $suffix = $i > 1 ? 'stars' : 'star';

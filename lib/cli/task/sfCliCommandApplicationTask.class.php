@@ -31,8 +31,7 @@ abstract class sfCliCommandApplicationTask extends sfCliTask
    */
   public function log($messages)
   {
-    if (null === $this->commandApplication || $this->commandApplication->isVerbose())
-    {
+    if (null === $this->commandApplication || $this->commandApplication->isVerbose()) {
       parent::log($messages);
     }
   }
@@ -42,8 +41,7 @@ abstract class sfCliCommandApplicationTask extends sfCliTask
    */
   public function logSection($section, $message, $size = null, $style = 'INFO')
   {
-    if (null === $this->commandApplication || $this->commandApplication->isVerbose())
-    {
+    if (null === $this->commandApplication || $this->commandApplication->isVerbose()) {
       parent::logSection($section, $message, $size, $style);
     }
   }
@@ -59,15 +57,13 @@ abstract class sfCliCommandApplicationTask extends sfCliTask
    */
   public function createTask($name)
   {
-    if (null === $this->commandApplication)
-    {
+    if (null === $this->commandApplication) {
       throw new LogicException('Unable to create a task as no command application is associated with this task yet.');
     }
 
     $task = $this->commandApplication->getTaskToExecute($name);
 
-    if ($task instanceof sfCliCommandApplicationTask)
-    {
+    if ($task instanceof sfCliCommandApplicationTask) {
       $task->setCommandApplication($this->commandApplication);
     }
 

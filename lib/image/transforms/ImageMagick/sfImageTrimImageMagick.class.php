@@ -47,9 +47,8 @@ class sfImageTrimImageMagick extends sfImageTransformAbstract
    */
   public function setFuzz($fuzz)
   {
-    if (!is_numeric($fuzz))
-    {
-      $this->fuzz = (float)$fuzz;
+    if (!is_numeric($fuzz)) {
+      $this->fuzz = (float) $fuzz;
 
       return true;
     }
@@ -98,13 +97,10 @@ class sfImageTrimImageMagick extends sfImageTransformAbstract
     $resource = $image->getAdapter()->getHolder();
 
     // By default use the background of the top left corner
-    if (is_null($this->background))
-    {
+    if (is_null($this->background)) {
       $this->background = $resource->getImagePixelColor(0, 0);
       $background = $this->background;
-    }
-    else
-    {
+    } else {
       $background = new ImagickPixel();
       $background->setColor($this->background);
     }

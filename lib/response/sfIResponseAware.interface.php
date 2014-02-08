@@ -12,8 +12,8 @@
  * @package Sift
  * @subpackage response
  */
-interface sfIResponseAware {
-
+interface sfIResponseAware
+{
   /**
    * Sets the response
    *

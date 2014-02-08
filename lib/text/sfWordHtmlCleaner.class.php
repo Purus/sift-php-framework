@@ -13,8 +13,8 @@
  * @package    Sift
  * @subpackage text
  */
-class sfWordHtmlCleaner {
-
+class sfWordHtmlCleaner
+{
   // The following constant allow for nice looking callbacks to static methods
   const CLEAN = 'sfWordHtmlCleaner::clean';
 
@@ -27,8 +27,7 @@ class sfWordHtmlCleaner {
    */
   public static function clean($html, $convertToUtf8 = true)
   {
-    if($convertToUtf8)
-    {
+    if ($convertToUtf8) {
       $html = self::convertToUtf8($html);
     }
 

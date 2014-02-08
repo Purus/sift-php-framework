@@ -12,8 +12,8 @@
  * @package    Sift
  * @subpackage validator
  */
-class sfValidatorCallback extends sfValidatorBase {
-
+class sfValidatorCallback extends sfValidatorBase
+{
   /**
    * Configures the current validator.
    *

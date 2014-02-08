@@ -12,8 +12,8 @@
  * @package    Sift
  * @subpackage config
  */
-class sfGeneratorConfigHandler extends sfYamlConfigHandler {
-
+class sfGeneratorConfigHandler extends sfYamlConfigHandler
+{
   /**
    * Executes this configuration handler.
    *
@@ -29,27 +29,22 @@ class sfGeneratorConfigHandler extends sfYamlConfigHandler {
   {
     // parse the yaml
     $config = self::getConfiguration($configFiles);
-    if(!$config)
-    {
+    if (!$config) {
       return '';
     }
 
-    if(!isset($config['generator']))
-    {
+    if (!isset($config['generator'])) {
       throw new sfParseException(sprintf('Configuration file "%s" must specify a generator section.', isset($configFiles[1]) ? $configFiles[1] : $configFiles[0]));
     }
 
     $config = $config['generator'];
 
-    if(!isset($config['class']))
-    {
+    if (!isset($config['class'])) {
       throw new sfParseException(sprintf('Configuration file "%s" must specify a generator class section under the generator section.', isset($configFiles[1]) ? $configFiles[1] : $configFiles[0]));
     }
 
-    foreach(array('fields', 'list', 'edit') as $section)
-    {
-      if(isset($config[$section]))
-      {
+    foreach (array('fields', 'list', 'edit') as $section) {
+      if (isset($config[$section])) {
         throw new sfParseException(sprintf('Configuration file "%s" can specify a "%s" section but only under the param section.', isset($configFiles[1]) ? $configFiles[1] : $configFiles[0], $section));
       }
     }
@@ -88,12 +83,9 @@ class sfGeneratorConfigHandler extends sfYamlConfigHandler {
    */
   public static function replaceConstants($value)
   {
-    if(is_array($value))
-    {
+    if (is_array($value)) {
       array_walk_recursive($value, create_function('&$value', '$value = sfGeneratorConfigHandler::replaceConstantsForExpressions($value);'));
-    }
-    else
-    {
+    } else {
       $value = sfGeneratorConfigHandler::replaceConstantsForExpressions($value);
     }
 
@@ -111,12 +103,10 @@ class sfGeneratorConfigHandler extends sfYamlConfigHandler {
    */
   public static function replaceConstantsForExpressions($value)
   {
-    if(is_string($value) && preg_match('/%(.+?)%/', $value, $matches))
-    {
+    if (is_string($value) && preg_match('/%(.+?)%/', $value, $matches)) {
       // if no other % is present, it means that we will use it as configuration directive
       // FIXME: make this more smart
-      if(strpos($matches[1], '%') === false)
-      {
+      if (strpos($matches[1], '%') === false) {
         $value = new sfPhpExpression(sprintf('sfConfig::get(\'%s\')', strtolower($matches[1])));
       }
     }

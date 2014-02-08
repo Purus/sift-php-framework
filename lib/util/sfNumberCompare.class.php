@@ -37,8 +37,7 @@ class sfNumberCompare
 
   public function test($number)
   {
-    if (!preg_match('{^([<>]=?)?(.*?)([kmg]i?)?$}i', $this->test, $matches))
-    {
+    if (!preg_match('{^([<>]=?)?(.*?)([kmg]i?)?$}i', $this->test, $matches)) {
       throw new sfException('don\'t understand "'.$this->test.'" as a test');
     }
 
@@ -52,24 +51,15 @@ class sfNumberCompare
     if (strtolower($magnitude) == 'gi') $target *= 1024*1024*1024;
 
     $comparison = array_key_exists(1, $matches) ? $matches[1] : '==';
-    if ($comparison == '==' || $comparison == '')
-    {
+    if ($comparison == '==' || $comparison == '') {
       return ($number == $target);
-    }
-    else if ($comparison == '>')
-    {
+    } else if ($comparison == '>') {
       return ($number > $target);
-    }
-    else if ($comparison == '>=')
-    {
+    } else if ($comparison == '>=') {
       return ($number >= $target);
-    }
-    else if ($comparison == '<')
-    {
+    } else if ($comparison == '<') {
       return ($number < $target);
-    }
-    else if ($comparison == '<=')
-    {
+    } else if ($comparison == '<=') {
       return ($number <= $target);
     }
 

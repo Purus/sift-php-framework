@@ -29,19 +29,14 @@ class sfImageMergeGD extends sfImageOverlayGD
   {
     $this->setOverlay($overlay);
 
-    if (is_array($position) && count($position))
-    {
+    if (is_array($position) && count($position)) {
 
       $this->setLeft($position[0]);
 
-      if (isset($position[1]))
-      {
+      if (isset($position[1])) {
         $this->setTop($position[1]);
       }
-    }
-
-    else
-    {
+    } else {
       $this->setPosition($position);
     }
 
@@ -71,8 +66,7 @@ class sfImageMergeGD extends sfImageOverlayGD
     $resource = $image->getAdapter()->getHolder();
 
     // Check we have a valid image resource
-    if(false === $this->overlay->getAdapter()->getHolder())
-    {
+    if (false === $this->overlay->getAdapter()->getHolder()) {
       throw new sfImageTransformException(sprintf('Cannot perform transform: %s', get_class($this)));
     }
 
@@ -89,12 +83,9 @@ class sfImageMergeGD extends sfImageOverlayGD
     imagecopy($new, $resource, 0, 0, 0, 0, $image->getWidth(), $image->getHeight());
 
     $opacity = $this->getOpacity();
-    if($opacity < 100)
-    {
+    if ($opacity < 100) {
       imagecopymergealpha($new, $overlay_img, $this->left, $this->top, 0, 0, $overlay_w, $overlay_h, $opacity);
-    }
-    else
-    {
+    } else {
       imagecopy($new, $overlay_img, $this->left, $this->top, 0, 0, $overlay_w, $overlay_h);
     }
 

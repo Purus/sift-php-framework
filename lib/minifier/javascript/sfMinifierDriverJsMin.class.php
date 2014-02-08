@@ -17,8 +17,8 @@ require_once dirname(__FILE__).'/../../vendor/js_min/JSMin.php';
  * @subpackage minifier
  * @see https://github.com/mrclay/minify
  */
-class sfMinifierDriverJsMin extends sfMinifier {
-
+class sfMinifierDriverJsMin extends sfMinifier
+{
   /**
    * Processes the file
    *

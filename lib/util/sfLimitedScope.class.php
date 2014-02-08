@@ -13,8 +13,8 @@
  * @subpackage util
  * @author David Grudl
  */
-final class sfLimitedScope {
-
+final class sfLimitedScope
+{
   /**
    * Static class - cannot be instantiated.
    */
@@ -32,13 +32,11 @@ final class sfLimitedScope {
    */
   public static function evaluate(/* $code, array $vars = NULL */)
   {
-    if(func_num_args() > 1)
-    {
+    if (func_num_args() > 1) {
       extract(func_get_arg(1));
     }
     $res = eval('?>' . func_get_arg(0));
-    if($res === false && ($error = error_get_last()) && $error['type'] === E_PARSE)
-    {
+    if ($res === false && ($error = error_get_last()) && $error['type'] === E_PARSE) {
       throw new sfParseException($error['message']);
     }
 
@@ -54,8 +52,7 @@ final class sfLimitedScope {
    */
   public static function load(/* $file, array $vars = NULL */)
   {
-    if(func_num_args() > 1 && is_array(func_get_arg(1)))
-    {
+    if (func_num_args() > 1 && is_array(func_get_arg(1))) {
       extract(func_get_arg(1));
     }
 

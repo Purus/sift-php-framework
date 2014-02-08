@@ -12,8 +12,8 @@
  * @package    Sift
  * @subpackage config
  */
-class sfMailConfigHandler extends sfSimpleYamlConfigHandler {
-
+class sfMailConfigHandler extends sfSimpleYamlConfigHandler
+{
   /**
    * Executes this configuration handler.
    *

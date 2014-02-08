@@ -13,8 +13,8 @@
  * @package    Sift
  * @subpackage database
  */
-class sfDatabaseManager implements sfIService {
-
+class sfDatabaseManager implements sfIService
+{
   /**
    * Loaded flag
    *
@@ -37,8 +37,7 @@ class sfDatabaseManager implements sfIService {
    */
   public function loadDatabases($force = false)
   {
-    if($this->isLoaded && !$force)
-    {
+    if ($this->isLoaded && !$force) {
       return;
     }
     $this->loadFromConfiguration();
@@ -54,10 +53,8 @@ class sfDatabaseManager implements sfIService {
   {
     // load database configuration
     $databases = require(sfConfigCache::getInstance()->checkConfig(sfConfig::get('sf_app_config_dir_name') . '/databases.yml'));
-    foreach($databases as $name => $database)
-    {
-      if(!$database instanceof sfDatabase)
-      {
+    foreach ($databases as $name => $database) {
+      if (!$database instanceof sfDatabase) {
         throw new LogicException('The database "%s" (class: "%s") is not an instance of sfDatabase', $name, get_class($database));
       }
     }
@@ -75,12 +72,9 @@ class sfDatabaseManager implements sfIService {
   {
     $this->loadDatabases();
 
-    if(isset($this->databases[$name]))
-    {
+    if (isset($this->databases[$name])) {
       return $this->databases[$name];
-    }
-    else
-    {
+    } else {
       throw new sfDatabaseException(sprintf('Database "%s" does not exist', $name));
     }
   }
@@ -105,8 +99,7 @@ class sfDatabaseManager implements sfIService {
   public function shutdown()
   {
     // loop through databases and shutdown connections
-    foreach($this->databases as $database)
-    {
+    foreach ($this->databases as $database) {
       $database->shutdown();
     }
   }

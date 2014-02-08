@@ -12,8 +12,8 @@
  * @package    Sift
  * @subpackage util
  */
-class sfArray {
-
+class sfArray
+{
   /**
    * Gets a dot-notated key from an array, with a default value if it does
    * not exist.
@@ -26,33 +26,26 @@ class sfArray {
    */
   public static function get($array, $key, $default = null)
   {
-    if(!is_array($array) && !$array instanceof ArrayAccess)
-    {
+    if (!is_array($array) && !$array instanceof ArrayAccess) {
       throw new InvalidArgumentException('First parameter must be an array or ArrayAccess object.');
     }
 
-    if(is_null($key))
-    {
+    if (is_null($key)) {
       return $array;
     }
 
-    if(is_array($key))
-    {
+    if (is_array($key)) {
       $return = array();
-      foreach($key as $k)
-      {
+      foreach ($key as $k) {
         $return[$k] = self::get($array, $k, $default);
       }
 
       return $return;
     }
 
-    foreach(explode('.', $key) as $key_part)
-    {
-      if(($array instanceof ArrayAccess && isset($array[$key_part])) === false)
-      {
-        if(!is_array($array) || !array_key_exists($key_part, $array))
-        {
+    foreach (explode('.', $key) as $key_part) {
+      if (($array instanceof ArrayAccess && isset($array[$key_part])) === false) {
+        if (!is_array($array) || !array_key_exists($key_part, $array)) {
           return sfToolkit::getValue($default);
         }
       }
@@ -73,28 +66,21 @@ class sfArray {
    */
   public static function set(&$array, $key, $value = null)
   {
-    if(is_null($key))
-    {
+    if (is_null($key)) {
       $array = $value;
 
       return;
     }
 
-    if(is_array($key))
-    {
-      foreach($key as $k => $v)
-      {
+    if (is_array($key)) {
+      foreach ($key as $k => $v) {
         self::set($array, $k, $v);
       }
-    }
-    else
-    {
+    } else {
       $keys = explode('.', $key);
-      while(count($keys) > 1)
-      {
+      while (count($keys) > 1) {
         $key = array_shift($keys);
-        if(!isset($array[$key]) || !is_array($array[$key]))
-        {
+        if (!isset($array[$key]) || !is_array($array[$key])) {
           $array[$key] = array();
         }
         $array = &$array[$key];
@@ -113,15 +99,12 @@ class sfArray {
    */
   public static function keyExists($array, $key)
   {
-    if(strpos($key, '.') === false)
-    {
+    if (strpos($key, '.') === false) {
       return array_key_exists($key, $array);
     }
 
-    foreach(explode('.', $key) as $key_part)
-    {
-      if(!is_array($array) || !array_key_exists($key_part, $array))
-      {
+    foreach (explode('.', $key) as $key_part) {
+      if (!is_array($array) || !array_key_exists($key_part, $array)) {
         return false;
       }
 

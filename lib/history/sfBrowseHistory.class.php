@@ -13,8 +13,8 @@
  * @package    Sift
  * @subpackage history
  */
-class sfBrowseHistory implements Serializable, Countable {
-
+class sfBrowseHistory implements Serializable, Countable
+{
   /**
    * Namespace of sfUser object
    *
@@ -45,8 +45,7 @@ class sfBrowseHistory implements Serializable, Countable {
   {
     $user = sfContext::getInstance()->getUser();
 
-    if(!$user->hasAttribute('browse_history', self::$nameSpace))
-    {
+    if (!$user->hasAttribute('browse_history', self::$nameSpace)) {
       $user->setAttribute('browse_history', new self($maxItems), self::$nameSpace);
     }
 
@@ -60,8 +59,7 @@ class sfBrowseHistory implements Serializable, Countable {
    */
   public function __construct($maxItems = null)
   {
-    if(!is_null($maxItems))
-    {
+    if (!is_null($maxItems)) {
       $this->setMaxItems($maxItems);
     }
   }
@@ -108,10 +106,8 @@ class sfBrowseHistory implements Serializable, Countable {
   public function delete($id)
   {
     $i = 0;
-    foreach($this->stack as $item)
-    {
-      if($item->getId() == $id)
-      {
+    foreach ($this->stack as $item) {
+      if ($item->getId() == $id) {
         unset($this->stack[$i]);
         break;
       }
@@ -133,8 +129,7 @@ class sfBrowseHistory implements Serializable, Countable {
     $this->delete($item->getId());
 
     array_unshift($this->stack, $item);
-    while(count($this->stack) > $this->maxItems)
-    {
+    while (count($this->stack) > $this->maxItems) {
       array_pop($this->stack);
     }
 
@@ -152,15 +147,13 @@ class sfBrowseHistory implements Serializable, Countable {
   public function push($id, $name, $params = array())
   {
     $class = sprintf('%sItem', get_class($this));
-    if(!class_exists($class))
-    {
+    if (!class_exists($class)) {
       $class = 'sfBrowseHistoryItem';
     }
 
     $item = new $class($id, $name);
 
-    foreach($params as $param => $value)
-    {
+    foreach ($params as $param => $value) {
       $item->setParameter($param, $value);
     }
 
@@ -174,12 +167,9 @@ class sfBrowseHistory implements Serializable, Countable {
    */
   public function hasHistory()
   {
-    if($this->count() > 0)
-    {
+    if ($this->count() > 0) {
       return true;
-    }
-    else
-    {
+    } else {
       return false;
     }
   }
@@ -242,8 +232,7 @@ class sfBrowseHistory implements Serializable, Countable {
   public function unserialize($serialized)
   {
     $vars = unserialize($serialized);
-    foreach($vars as $var => $value)
-    {
+    foreach ($vars as $var => $value) {
       $this->$var = $value;
     }
   }

@@ -13,8 +13,8 @@
  * @package    Sift
  * @subpackage validator
  */
-class sfValidatorCompanyVat extends sfValidatorBase {
-
+class sfValidatorCompanyVat extends sfValidatorBase
+{
   /**
    * @see sfValidatorBase
    */
@@ -34,28 +34,19 @@ class sfValidatorCompanyVat extends sfValidatorBase {
 
     $prefix = substr($value, 0, 2);
 
-    if(in_array(strtoupper($prefix), array('CZ', 'SK')))
-    {
+    if (in_array(strtoupper($prefix), array('CZ', 'SK'))) {
       $v = substr($value, 2);
       $length = strlen($v);
-      if($length < 8 || $length > 11)
-      {
+      if ($length < 8 || $length > 11) {
         throw new sfValidatorError($this, 'invalid', array('value' => $value));
-      }
-      else if($length == 8)
-      {
-        if(!sfValidatorTools::validateCompanyIn($v))
-        {
+      } else if ($length == 8) {
+        if (!sfValidatorTools::validateCompanyIn($v)) {
           throw new sfValidatorError($this, 'invalid', array('value' => $value));
         }
-      }
-      else if(!sfValidatorTools::verifyBirthNumber($v))
-      {
+      } else if (!sfValidatorTools::verifyBirthNumber($v)) {
         throw new sfValidatorError($this, 'invalid', array('value' => $value));
       }
-    }
-    else // unsupported country
-    {
+    } else { // unsupported country
       throw new sfValidatorError($this, 'invalid', array('value' => $value));
     }
 
@@ -74,8 +65,7 @@ class sfValidatorCompanyVat extends sfValidatorBase {
 
   public function testICO(x)
   {
-    try
-    {
+    try {
       var a = 0;
       if(x.length == 0) return true;
       if(x.length != 8) throw 1;
@@ -88,9 +78,7 @@ class sfValidatorCompanyVat extends sfValidatorBase {
       if(a == 0) c = 1;
       if(a == 10) c = 1;
       if(parseInt(b[ 7]) != c) throw(1);
-    }
-    catch(e)
-    {
+    } catch (e) {
       return false;
     }
 
@@ -100,8 +88,7 @@ class sfValidatorCompanyVat extends sfValidatorBase {
   public function testRC(x, age)
   {
     if(!age) age = 0;
-    try
-    {
+    try {
       if(x.length == 0) return true;
       if(x.length < 9) throw 1;
       var year = parseInt(x.substr(0, 2), 10);
@@ -124,9 +111,7 @@ class sfValidatorCompanyVat extends sfValidatorBase {
       if(month > 12) throw 1;
       if(day == 0) throw 1;
       if(day > 31) throw 1;
-    }
-    catch(e)
-    {
+    } catch (e) {
       return false;
     }
 
@@ -134,28 +119,21 @@ class sfValidatorCompanyVat extends sfValidatorBase {
   };
 
   var x = value;
-  try
-  {
+  try {
     if(x.length == 0) return true;
     var id = x.substr(0, 2).toUpperCase();
     x = x.substr(2);
-    if((id == 'CZ') || (id == 'SK'))
-    {
+    if ((id == 'CZ') || (id == 'SK')) {
       if(x.length < 8) throw 1;
       if(x.length > 11) throw 1;
-      if(x.length == 8)
-      {
+      if (x.length == 8) {
         return testICO(x);
-      }
-      else
-      {
+      } else {
         return testRC(x, 18);
       }
     }
     throw 1;
-  }
-  catch(e)
-  {
+  } catch (e) {
     return false;
   }
 }"));

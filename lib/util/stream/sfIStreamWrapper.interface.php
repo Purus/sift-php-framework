@@ -13,8 +13,8 @@
  * @subpackage util_stream
  * @link http://www.php.net/manual/en/class.streamwrapper.php
  */
-interface sfIStreamWrapper {
-
+interface sfIStreamWrapper
+{
   /**
    * Register self as stream wrapper
    *

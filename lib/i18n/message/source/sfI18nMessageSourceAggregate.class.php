@@ -12,8 +12,8 @@
  * @package Sift
  * @subpackage i18n
  */
-class sfI18nMessageSourceAggregate extends sfI18nMessageSource {
-
+class sfI18nMessageSourceAggregate extends sfI18nMessageSource
+{
   /**
    * Array of message sources
    *
@@ -40,8 +40,7 @@ class sfI18nMessageSourceAggregate extends sfI18nMessageSource {
   {
     parent::setCulture($culture);
 
-    foreach ($this->messageSources as $messageSource)
-    {
+    foreach ($this->messageSources as $messageSource) {
       $messageSource->setCulture($culture);
     }
   }
@@ -55,15 +54,12 @@ class sfI18nMessageSourceAggregate extends sfI18nMessageSource {
   public function &loadData($sources)
   {
     $messages = array();
-    foreach($sources as $source)
-    {
-      if(false === $source[0]->isValidSource($source[1]))
-      {
+    foreach ($sources as $source) {
+      if (false === $source[0]->isValidSource($source[1])) {
         continue;
       }
       $data = $source[0]->loadData($source[1]);
-      if(is_array($data))
-      {
+      if (is_array($data)) {
         $messages = array_merge($data, $messages);
       }
     }
@@ -80,8 +76,7 @@ class sfI18nMessageSourceAggregate extends sfI18nMessageSource {
   public function getSource($variant)
   {
     $sources = array();
-    foreach ($this->messageSources as $messageSource)
-    {
+    foreach ($this->messageSources as $messageSource) {
       $sources[] = array($messageSource, $messageSource->getSource(str_replace($messageSource->getId(), '', $variant)));
     }
 
@@ -106,10 +101,8 @@ class sfI18nMessageSourceAggregate extends sfI18nMessageSource {
    */
   public function isValidSource($sources)
   {
-    foreach($sources as $source)
-    {
-      if(false === $source[0]->isValidSource($source[1]))
-      {
+    foreach ($sources as $source) {
+      if (false === $source[0]->isValidSource($source[1])) {
         continue;
       }
 
@@ -128,10 +121,8 @@ class sfI18nMessageSourceAggregate extends sfI18nMessageSource {
   public function getCatalogueList($catalogue = null)
   {
     $variants = array();
-    foreach($this->messageSources as $messageSource)
-    {
-      foreach($messageSource->getCatalogueList($catalogue) as $variant)
-      {
+    foreach ($this->messageSources as $messageSource) {
+      foreach ($messageSource->getCatalogueList($catalogue) as $variant) {
         $variants[] = $messageSource->getId().$variant;
       }
     }
@@ -148,10 +139,8 @@ class sfI18nMessageSourceAggregate extends sfI18nMessageSource {
   protected function getLastModified($sources)
   {
     $lastModified = time();
-    foreach ($sources as $source)
-    {
-      if (0 !== $sourceLastModified = $source[0]->getLastModified($source[1]))
-      {
+    foreach ($sources as $source) {
+      if (0 !== $sourceLastModified = $source[0]->getLastModified($source[1])) {
         $lastModified = min($lastModified, $sourceLastModified);
       }
     }
@@ -167,8 +156,7 @@ class sfI18nMessageSourceAggregate extends sfI18nMessageSource {
   public function getId()
   {
     $id = '';
-    foreach($this->messageSources as $messageSource)
-    {
+    foreach ($this->messageSources as $messageSource) {
       $id .= $messageSource->getId();
     }
 

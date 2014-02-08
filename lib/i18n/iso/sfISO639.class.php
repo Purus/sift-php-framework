@@ -15,8 +15,8 @@
  * @subpackage i18n
  * @link      http://www.loc.gov/standards/iso639-2/php/code_list.php
  */
-class sfISO639 {
-
+class sfISO639
+{
   /**
    * Maps all language names from the language database to the
    * ISO 639-1 2-letter language code.
@@ -272,8 +272,7 @@ class sfISO639 {
   public static function nameToCode2($lang)
   {
     $lang = strtolower($lang);
-    if(!isset(self::$nameToCode2[$lang]))
-    {
+    if (!isset(self::$nameToCode2[$lang])) {
       return null;
     }
 
@@ -290,8 +289,7 @@ class sfISO639 {
   public static function nameToCode3($lang)
   {
     $lang = strtolower($lang);
-    if(!isset(self::$nameToCode3[$lang]))
-    {
+    if (!isset(self::$nameToCode3[$lang])) {
       return null;
     }
 
@@ -308,8 +306,7 @@ class sfISO639 {
   public static function code2ToName($code)
   {
     $code = strtolower($code);
-    if(!isset(self::$code2ToName[$code]))
-    {
+    if (!isset(self::$code2ToName[$code])) {
       return null;
     }
 
@@ -326,8 +323,7 @@ class sfISO639 {
   public static function code3ToName($code)
   {
     $code = strtolower($code);
-    if(!isset(self::$code3ToName[$code]))
-    {
+    if (!isset(self::$code3ToName[$code])) {
       return null;
     }
 

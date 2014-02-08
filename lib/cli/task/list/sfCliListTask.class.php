@@ -52,33 +52,26 @@ EOF;
   protected function execute($arguments = array(), $options = array())
   {
     $tasks = array();
-    foreach ($this->commandApplication->getTasks() as $name => $task)
-    {
-      if ($arguments['namespace'] && $arguments['namespace'] != $task->getNamespace())
-      {
+    foreach ($this->commandApplication->getTasks() as $name => $task) {
+      if ($arguments['namespace'] && $arguments['namespace'] != $task->getNamespace()) {
         continue;
       }
 
-      if ($name != $task->getFullName())
-      {
+      if ($name != $task->getFullName()) {
         // it is an alias
         continue;
       }
 
-      if (!$task->getNamespace())
-      {
+      if (!$task->getNamespace()) {
         $name = '_default:'.$name;
       }
 
       $tasks[$name] = $task;
     }
 
-    if ($options['xml'])
-    {
+    if ($options['xml']) {
       $this->outputAsXml($arguments['namespace'], $tasks);
-    }
-    else
-    {
+    } else {
       $this->outputAsText($arguments['namespace'], $tasks);
     }
   }
@@ -89,29 +82,23 @@ EOF;
     $this->log('');
 
     $width = 0;
-    foreach ($tasks as $name => $task)
-    {
+    foreach ($tasks as $name => $task) {
       $width = strlen($task->getName()) > $width ? strlen($task->getName()) : $width;
     }
     $width += strlen($this->formatter->format('  ', 'INFO'));
 
     $messages = array();
-    if ($namespace)
-    {
+    if ($namespace) {
       $messages[] = $this->formatter->format(sprintf("Available tasks for the \"%s\" namespace:", $namespace), 'COMMENT');
-    }
-    else
-    {
+    } else {
       $messages[] = $this->formatter->format('Available tasks:', 'COMMENT');
     }
 
     // display tasks
     ksort($tasks);
     $currentNamespace = '';
-    foreach ($tasks as $name => $task)
-    {
-      if (!$namespace && $currentNamespace != $task->getNamespace())
-      {
+    foreach ($tasks as $name => $task) {
+      if (!$namespace && $currentNamespace != $task->getNamespace()) {
         $currentNamespace = $task->getNamespace();
         $messages[] = $this->formatter->format($task->getNamespace(), 'COMMENT');
       }
@@ -132,12 +119,9 @@ EOF;
 
     $siftXML->appendChild($tasksXML = $dom->createElement('tasks'));
 
-    if ($namespace)
-    {
+    if ($namespace) {
       $tasksXML->setAttribute('namespace', $namespace);
-    }
-    else
-    {
+    } else {
       $siftXML->appendChild($namespacesXML = $dom->createElement('namespaces'));
     }
 
@@ -145,18 +129,15 @@ EOF;
     ksort($tasks);
     $currentNamespace = 'foobar';
     $namespaceArrayXML = array();
-    foreach ($tasks as $name => $task)
-    {
-      if (!$namespace && $currentNamespace != $task->getNamespace())
-      {
+    foreach ($tasks as $name => $task) {
+      if (!$namespace && $currentNamespace != $task->getNamespace()) {
         $currentNamespace = $task->getNamespace();
         $namespacesXML->appendChild($namespaceArrayXML[$task->getNamespace()] = $dom->createElement('namespace'));
 
         $namespaceArrayXML[$task->getNamespace()]->setAttribute('id', $task->getNamespace() ? $task->getNamespace() : '_global');
       }
 
-      if (!$namespace)
-      {
+      if (!$namespace) {
         $namespaceArrayXML[$task->getNamespace()]->appendChild($taskXML = $dom->createElement('task'));
         $taskXML->appendChild($dom->createTextNode($task->getName()));
       }

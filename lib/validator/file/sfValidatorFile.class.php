@@ -12,8 +12,8 @@
  * @package    Sift
  * @subpackage validator
  */
-class sfValidatorFile extends sfValidatorBase {
-
+class sfValidatorFile extends sfValidatorBase
+{
   /**
    * Configures the current validator.
    *
@@ -42,8 +42,7 @@ class sfValidatorFile extends sfValidatorBase {
    */
   protected function configure($options = array(), $messages = array())
   {
-    if(!ini_get('file_uploads'))
-    {
+    if (!ini_get('file_uploads')) {
       throw new LogicException(sprintf('Unable to use a file validator as "file_uploads" is disabled in your php.ini file (%s)', get_cfg_var('cfg_file_path')));
     }
 
@@ -94,23 +93,18 @@ class sfValidatorFile extends sfValidatorBase {
   protected function doClean($value)
   {
     // multiple option, we are cleaning array of values
-    if($this->getOption('multiple'))
-    {
-      if(!is_array($value))
-      {
+    if ($this->getOption('multiple')) {
+      if (!is_array($value)) {
         throw new sfValidatorError($this, 'invalid');
       }
 
       $result = array();
-      foreach($value as $v)
-      {
+      foreach ($value as $v) {
         $result[] = $this->doCleanSingle($v);
       }
 
       return $result;
-    }
-    else
-    {
+    } else {
       return $this->doCleanSingle($value);
     }
   }
@@ -124,37 +118,30 @@ class sfValidatorFile extends sfValidatorBase {
    */
   protected function doCleanSingle($value)
   {
-    if(!is_array($value) || !isset($value['tmp_name']))
-    {
+    if (!is_array($value) || !isset($value['tmp_name'])) {
       throw new sfValidatorError($this, 'invalid');
     }
 
-    if(!isset($value['name']))
-    {
+    if (!isset($value['name'])) {
       $value['name'] = '';
     }
 
-    if(!isset($value['error']))
-    {
+    if (!isset($value['error'])) {
       $value['error'] = UPLOAD_ERR_OK;
     }
 
-    if(!isset($value['size']))
-    {
+    if (!isset($value['size'])) {
       $value['size'] = filesize($value['tmp_name']);
     }
 
-    if(!isset($value['type']))
-    {
+    if (!isset($value['type'])) {
       $value['type'] = 'application/octet-stream';
     }
 
-    switch($value['error'])
-    {
+    switch ($value['error']) {
       case UPLOAD_ERR_INI_SIZE:
         $max = ini_get('upload_max_filesize');
-        if($this->getOption('max_size'))
-        {
+        if ($this->getOption('max_size')) {
           $max = min($max, $this->getOption('max_size'));
         }
         throw new sfValidatorError($this, 'max_size', array('max_size' => $max, 'size' => (int) $value['size']));
@@ -171,24 +158,20 @@ class sfValidatorFile extends sfValidatorBase {
     }
 
     // check file size
-    if($this->hasOption('max_size') && $this->getOption('max_size') < (int) $value['size'])
-    {
+    if ($this->hasOption('max_size') && $this->getOption('max_size') < (int) $value['size']) {
       throw new sfValidatorError($this, 'max_size', array('max_size' => $this->getOption('max_size'), 'size' => (int) $value['size']));
     }
 
     $tempName = (string) $value['tmp_name'];
     $mimeType = null;
-    if($tempName)
-    {
+    if ($tempName) {
       $mimeType = $this->getMimeType($tempName, (string) $value['type']);
     }
 
     // check mime type
-    if($this->hasOption('mime_types'))
-    {
+    if ($this->hasOption('mime_types')) {
       $mimeTypes = is_array($this->getOption('mime_types')) ? $this->getOption('mime_types') : $this->getMimeTypesFromCategory($this->getOption('mime_types'));
-      if(!in_array($mimeType, array_map('strtolower', $mimeTypes)))
-      {
+      if (!in_array($mimeType, array_map('strtolower', $mimeTypes))) {
         throw new sfValidatorError($this, 'mime_types', array('mime_types' => $mimeTypes, 'mime_type' => $mimeType));
       }
     }
@@ -221,8 +204,7 @@ class sfValidatorFile extends sfValidatorBase {
   {
     $categories = $this->getOption('mime_categories');
 
-    if(!isset($categories[$category]))
-    {
+    if (!isset($categories[$category])) {
       throw new InvalidArgumentException(sprintf('Invalid mime type category "%s".', $category));
     }
 
@@ -263,13 +245,11 @@ class sfValidatorFile extends sfValidatorBase {
   {
     $rules = parent::getJavascriptValidationRules();
 
-    if($maxSize = $this->getOption('max_size'))
-    {
+    if ($maxSize = $this->getOption('max_size')) {
       $rules[sfFormJavascriptValidation::FILE_SIZE] = $maxSize;
     }
 
-    if($mime_types = $this->getOption('mime_types'))
-    {
+    if ($mime_types = $this->getOption('mime_types')) {
       $mimeTypes = is_array($mime_types) ? $mime_types : $this->getMimeTypesFromCategory($mime_types);
       $rules[sfFormJavascriptValidation::FILE_EXTENSION] = join(',', $mimeTypes);
     }

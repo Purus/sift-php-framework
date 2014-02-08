@@ -12,8 +12,8 @@
  * @package    Sift
  * @subpackage form_widget
  */
-class sfWidgetFormSelectMany extends sfWidgetFormSelect {
-
+class sfWidgetFormSelectMany extends sfWidgetFormSelect
+{
   /**
    * Configures the current widget.
    *

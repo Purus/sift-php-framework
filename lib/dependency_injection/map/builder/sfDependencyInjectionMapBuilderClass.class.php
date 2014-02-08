@@ -13,8 +13,8 @@
  * @package Sift
  * @subpackage dependency_injection
  */
-class sfDependencyInjectionMapBuilderClass extends sfDependencyInjectionMapBuilder {
-
+class sfDependencyInjectionMapBuilderClass extends sfDependencyInjectionMapBuilder
+{
   /**
    * The class name
    *
@@ -89,8 +89,7 @@ class sfDependencyInjectionMapBuilderClass extends sfDependencyInjectionMapBuild
    */
   protected function optionsFrom($classProperty)
   {
-    if(!$docComment = $classProperty->getDocComment())
-    {
+    if (!$docComment = $classProperty->getDocComment()) {
       return false;
     }
 
@@ -107,23 +106,17 @@ class sfDependencyInjectionMapBuilderClass extends sfDependencyInjectionMapBuild
   protected function buildMethods()
   {
     $methods = $this->reflection->getMethods();
-    foreach($methods as $method)
-    {
+    foreach ($methods as $method) {
       $commands = $this->optionsFrom($method);
 
-      if(!$commands)
-      {
+      if (!$commands) {
         continue;
       }
 
-      foreach($commands as $options)
-      {
-        if($method->getName() == '__construct')
-        {
+      foreach ($commands as $options) {
+        if ($method->getName() == '__construct') {
           $options['inject_with'] = sfDependencyInjectionMapItem::INJECT_WITH_CONSTRUCTOR;
-        }
-        else
-        {
+        } else {
           $options['inject_with'] = sfDependencyInjectionMapItem::INJECT_WITH_METHOD;
           $options['inject_as'] = $method->getName();
         }
@@ -141,15 +134,12 @@ class sfDependencyInjectionMapBuilderClass extends sfDependencyInjectionMapBuild
   protected function buildProperties()
   {
     $properties = $this->reflection->getProperties();
-    foreach($properties as $property)
-    {
+    foreach ($properties as $property) {
       $commands = $this->optionsFrom($property);
-      if(!$commands)
-      {
+      if (!$commands) {
         continue;
       }
-      foreach($commands as $options)
-      {
+      foreach ($commands as $options) {
         $options['inject_with'] = sfDependencyInjectionMapItem::INJECT_WITH_PROPERTY;
         $options['inject_as'] = $property->getName();
         $this->map->append(
@@ -165,12 +155,10 @@ class sfDependencyInjectionMapBuilderClass extends sfDependencyInjectionMapBuild
   protected function buildClass()
   {
     $commands = $this->optionsFrom($this->reflection);
-    if(!$commands)
-    {
+    if (!$commands) {
       return;
     }
-    foreach($commands as $options)
-    {
+    foreach ($commands as $options) {
       $this->map->append(
         $this->createItemFromArray($options)
       );

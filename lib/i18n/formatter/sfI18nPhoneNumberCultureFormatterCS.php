@@ -12,8 +12,8 @@
  * @package Sift
  * @subpackage i18n
  */
-class sfI18nPhoneNumberCultureFormatterCS implements sfII18nPhoneNumberCultureFormatter {
-
+class sfI18nPhoneNumberCultureFormatterCS implements sfII18nPhoneNumberCultureFormatter
+{
   /**
    * Format the phone number without international prefix
    *
@@ -22,8 +22,7 @@ class sfI18nPhoneNumberCultureFormatterCS implements sfII18nPhoneNumberCultureFo
    */
   public static function format($phoneNumber)
   {
-    switch(($length = strlen($phoneNumber)))
-    {
+    switch (($length = strlen($phoneNumber))) {
       // make the number look like: 606 123 456
       case 9:
         return join(' ', str_split($phoneNumber, 3));

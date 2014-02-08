@@ -143,12 +143,9 @@ class sfWidgetFormSchemaDecorator extends sfWidgetFormSchema
    */
   public function setLabel($name, $value = null)
   {
-    if (2 == func_num_args())
-    {
+    if (2 == func_num_args()) {
       $this->widget->setLabel($name, $value);
-    }
-    else
-    {
+    } else {
       $this->widget->setLabel($name);
     }
 

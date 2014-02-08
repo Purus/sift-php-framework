@@ -12,8 +12,8 @@
  * @package    Sift
  * @subpackage xml
  */
-class sfXmlElement extends SimpleXMLElement {
-
+class sfXmlElement extends SimpleXMLElement
+{
   public function asHTML()
   {
     $ele = dom_import_simplexml($this);
@@ -44,21 +44,14 @@ class sfXmlElement extends SimpleXMLElement {
   public static function elementToArray($element)
   {
     $array = array();
-    foreach($element->children() as $k => $r)
-    {
-      if(count($r->children()) == 0)
-      {
-        if($element->$k->count() == 1)
-        {
+    foreach ($element->children() as $k => $r) {
+      if (count($r->children()) == 0) {
+        if ($element->$k->count() == 1) {
           $array[$r->getName()] = strval($r);
-        }
-        else
-        {
+        } else {
           $array[$r->getName()][] = strval($r);
         }
-      }
-      else
-      {
+      } else {
         $array[$r->getName()][] = self::elementToArray($r);
       }
     }

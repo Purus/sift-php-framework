@@ -12,8 +12,8 @@
  * @package Sift
  * @subpackage config
  */
-abstract class sfConfigurable implements sfIConfigurable {
-
+abstract class sfConfigurable implements sfIConfigurable
+{
   /**
    * Default options
    *
@@ -72,17 +72,15 @@ abstract class sfConfigurable implements sfIConfigurable {
     $parent = $reflection->getParentClass();
     $defaults = array();
     do {
-      if($parent->isSubclassOf('sfConfigurable'))
-      {
+      if ($parent->isSubclassOf('sfConfigurable')) {
         $defaultProperties = $parent->getDefaultProperties();
-        if(isset($defaultProperties['defaultOptions']))
-        {
+        if (isset($defaultProperties['defaultOptions'])) {
           // we want the defaults to be overriden as inheritance goes up
           $defaults = array_merge($defaultProperties['defaultOptions'], $defaults);
         }
       }
       $parent = $parent->getParentClass();
-    } while(false !== $parent);
+    } while (false !== $parent);
 
     return array_merge($defaults, $this->defaultOptions);
   }
@@ -99,17 +97,15 @@ abstract class sfConfigurable implements sfIConfigurable {
     $parent = $reflection->getParentClass();
     $required = array();
     do {
-      if($parent->isSubclassOf('sfConfigurable'))
-      {
+      if ($parent->isSubclassOf('sfConfigurable')) {
         $defaultProperties = $parent->getDefaultProperties();
-        if(isset($defaultProperties['requiredOptions']))
-        {
+        if (isset($defaultProperties['requiredOptions'])) {
           // we want the required options to be overriden as inheritance goes up
           $required = array_merge($defaultProperties['requiredOptions'], $required);
         }
       }
       $parent = $parent->getParentClass();
-    } while(false !== $parent);
+    } while (false !== $parent);
 
     return array_unique(array_merge($required, $this->requiredOptions));
   }
@@ -125,17 +121,15 @@ abstract class sfConfigurable implements sfIConfigurable {
     $parent = $reflection->getParentClass();
     $valid = array();
     do {
-      if($parent->isSubclassOf('sfConfigurable'))
-      {
+      if ($parent->isSubclassOf('sfConfigurable')) {
         $defaultProperties = $parent->getDefaultProperties();
-        if(isset($defaultProperties['validOptions']))
-        {
+        if (isset($defaultProperties['validOptions'])) {
           // we want the valid options to be overriden as inheritance goes up
           $valid = array_merge($defaultProperties['validOptions'], $valid);
         }
       }
       $parent = $parent->getParentClass();
-    } while(false !== $parent);
+    } while (false !== $parent);
 
     return array_unique(array_merge($valid, $this->validOptions));
   }
@@ -151,8 +145,7 @@ abstract class sfConfigurable implements sfIConfigurable {
   {
     $validOptions = $this->getValidOptions();
 
-    if(!count($validOptions))
-    {
+    if (!count($validOptions)) {
       return true;
     }
 
@@ -160,8 +153,7 @@ abstract class sfConfigurable implements sfIConfigurable {
     $optionKeys = array_keys($options);
 
     // check options
-    if($diff = array_diff($optionKeys, $currentOptionKeys))
-    {
+    if ($diff = array_diff($optionKeys, $currentOptionKeys)) {
       throw new RuntimeException(sprintf('%s does not support the following options: \'%s\'. Valid options are: \'%s\'',
               get_class($this), implode('\', \'', $diff), implode('\', \'', $currentOptionKeys)));
     }
@@ -183,14 +175,10 @@ abstract class sfConfigurable implements sfIConfigurable {
   public function setOptions($options)
   {
     // first convert to array if needed
-    if(!is_array($options))
-    {
-      if(is_object($options) && is_callable(array($options, 'toArray')))
-      {
+    if (!is_array($options)) {
+      if (is_object($options) && is_callable(array($options, 'toArray'))) {
         $options = $options->toArray();
-      }
-      else
-      {
+      } else {
         throw new InvalidArgumentException(sprintf('Options for "%s" must be an array or a object with ->toArray() method', get_class($this)));
       }
     }
@@ -203,8 +191,7 @@ abstract class sfConfigurable implements sfIConfigurable {
     $currentOptionKeys = array_keys($this->options);
     $optionKeys = array_keys($options);
     // check required options
-    if($diff = array_diff($this->getRequiredOptions(), array_merge($currentOptionKeys, $optionKeys)))
-    {
+    if ($diff = array_diff($this->getRequiredOptions(), array_merge($currentOptionKeys, $optionKeys))) {
       throw new RuntimeException(sprintf('%s requires the following options: \'%s\'.', get_class($this), implode('\', \'', $diff)));
     }
 
@@ -244,12 +231,9 @@ abstract class sfConfigurable implements sfIConfigurable {
   public function setOption($name, $value)
   {
     // not dot syntax
-    if(strpos($name, '.') === false)
-    {
+    if (strpos($name, '.') === false) {
       $this->options[$name] = $value;
-    }
-    else
-    {
+    } else {
       sfArray::set($this->options, $name, sfToolkit::getValue($value));
     }
 
@@ -267,14 +251,12 @@ abstract class sfConfigurable implements sfIConfigurable {
    */
   public function getOption($name, $default = null)
   {
-    if(isset($this->options[$name]))
-    {
+    if (isset($this->options[$name])) {
       return $this->options[$name];
     }
 
     // no dot found
-    if(strpos($name, '.') === false)
-    {
+    if (strpos($name, '.') === false) {
       return $default;
     }
 
@@ -290,8 +272,7 @@ abstract class sfConfigurable implements sfIConfigurable {
    */
   public function hasOption($name)
   {
-    if(strpos($name, '.') === false)
-    {
+    if (strpos($name, '.') === false) {
       return isset($this->options[$name]);
     }
 
@@ -316,8 +297,7 @@ abstract class sfConfigurable implements sfIConfigurable {
    */
   public function addOptions($options)
   {
-    foreach($options as $o => $v)
-    {
+    foreach ($options as $o => $v) {
       $this->setOption($o, $v);
     }
 

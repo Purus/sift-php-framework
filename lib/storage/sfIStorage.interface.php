@@ -13,8 +13,8 @@
  * @package Sift
  * @subpackage storage
  */
-interface sfIStorage {
-
+interface sfIStorage
+{
   /**
    * Reads data from this storage.
    *

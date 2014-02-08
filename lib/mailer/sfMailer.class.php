@@ -16,8 +16,8 @@ require_once dirname(__FILE__).'/../vendor/swift/swift_init.php';
  * @package    Sift
  * @subpackage mailer
  */
-class sfMailer extends Swift_Mailer implements sfIConfigurable {
-
+class sfMailer extends Swift_Mailer implements sfIConfigurable
+{
   /**
    * Event dispatcher
    *
@@ -170,8 +170,7 @@ class sfMailer extends Swift_Mailer implements sfIConfigurable {
    */
   protected function setupDelivery()
   {
-    if($this->getOption('deliver'))
-    {
+    if ($this->getOption('deliver')) {
       return;
     }
     $this->getTransport()->registerPlugin(new sfMailerBlackholePlugin($this->dispatcher));
@@ -187,29 +186,20 @@ class sfMailer extends Swift_Mailer implements sfIConfigurable {
     $transports = array();
     $configured = $this->getOption('transports', array());
 
-    foreach($configured as $transportName => $transportOptions)
-    {
-      if(isset($transportOptions['class']))
-      {
+    foreach ($configured as $transportName => $transportOptions) {
+      if (isset($transportOptions['class'])) {
         $class = $transportOptions['class'];
-        if(!class_exists($class))
-        {
+        if (!class_exists($class)) {
           throw new sfConfigurationException(sprintf('Invalid mailer transport class "%s" given for "%s" transport.', $class, $transportName));
         }
         $transport = new $class();
-        if(isset($transportOptions['param']))
-        {
-          foreach($transportOptions['param'] as $key => $value)
-          {
+        if (isset($transportOptions['param'])) {
+          foreach ($transportOptions['param'] as $key => $value) {
             $method = 'set'.ucfirst($key);
-            if(method_exists($transport, $method))
-            {
+            if (method_exists($transport, $method)) {
               $transport->$method($value);
-            }
-            elseif(method_exists($transport, 'getExtensionHandlers'))
-            {
-              foreach($transport->getExtensionHandlers() as $handler)
-              {
+            } elseif (method_exists($transport, 'getExtensionHandlers')) {
+              foreach ($transport->getExtensionHandlers() as $handler) {
                 if(in_array(strtolower($method), array_map('strtolower',
                   (array) $handler->exposeMixinMethods())))
                 {
@@ -221,22 +211,18 @@ class sfMailer extends Swift_Mailer implements sfIConfigurable {
         }
       }
       // the type is specified
-      elseif(isset($transportOptions['type']))
-      {
-        switch(strtolower($transportOptions['type']))
-        {
+      elseif (isset($transportOptions['type'])) {
+        switch (strtolower($transportOptions['type'])) {
           case 'sendmail':
             $transport = Swift_SendmailTransport::newInstance();
-            if(isset($transportOptions['command']))
-            {
+            if (isset($transportOptions['command'])) {
               $transport->setCommand($transportOptions['command']);
             }
           break;
 
           case 'mail':
             $transport = Swift_MailTransport::newInstance();
-            if(isset($transportOptions['params']))
-            {
+            if (isset($transportOptions['params'])) {
               $transport->setExtraParams($transportOptions['params']);
             }
           break;
@@ -244,32 +230,25 @@ class sfMailer extends Swift_Mailer implements sfIConfigurable {
           case 'smtp':
             $transport = Swift_SmtpTransport::newInstance();
 
-            if(isset($transportOptions['host']))
-            {
+            if (isset($transportOptions['host'])) {
               $transport->setHost($transportOptions['host']);
-            }
-            elseif(isset($transportOptions['hostname']))
-            {
+            } elseif (isset($transportOptions['hostname'])) {
               $transport->setHost($transportOptions['hostname']);
             }
 
-            if(isset($transportOptions['port']))
-            {
+            if (isset($transportOptions['port'])) {
               $transport->setPort($transportOptions['port']);
             }
 
-            if(isset($transportOptions['username']))
-            {
+            if (isset($transportOptions['username'])) {
               $transport->setUsername($transportOptions['username']);
             }
 
-            if(isset($transportOptions['password']))
-            {
+            if (isset($transportOptions['password'])) {
               $transport->setPassword($transportOptions['password']);
             }
 
-            if(isset($transportOptions['encryption']))
-            {
+            if (isset($transportOptions['encryption'])) {
               $transport->setEncryption($transportOptions['encryption']);
             }
 
@@ -302,8 +281,7 @@ class sfMailer extends Swift_Mailer implements sfIConfigurable {
 
     $transports = $this->setupTransports();
 
-    switch(strtolower($type))
-    {
+    switch (strtolower($type)) {
       case 'failover':
         $transport = new Swift_Transport_FailoverTransport();
         $transport->setTransports($transports);
@@ -317,8 +295,7 @@ class sfMailer extends Swift_Mailer implements sfIConfigurable {
       // this is a transport name
       default:
 
-        if(!isset($transports[$type]))
-        {
+        if (!isset($transports[$type])) {
           throw new sfConfigurationException(sprintf('The configuration specifies "%s" to use as transport, but the transport is not configured.', $type));
         }
         $transport = $transports[$type];
@@ -328,30 +305,24 @@ class sfMailer extends Swift_Mailer implements sfIConfigurable {
     $this->realtimeTransport = $transport;
 
     // spool enabled
-    if($this->getOption('spool.enabled'))
-    {
+    if ($this->getOption('spool.enabled')) {
       $class = $this->getOption('spool.class');
 
-      if(!$class)
-      {
+      if (!$class) {
         throw new sfConfigurationException('For the spool mail delivery strategy, you must also define a spool class option.');
       }
 
-      if(!class_exists($class))
-      {
+      if (!class_exists($class)) {
         throw new sfConfigurationException(sprintf('The mailer spool class "%s" does not exist.', $class));
       }
 
       $arguments = $this->getOption('spool.arguments', array());
 
-      if($arguments)
-      {
+      if ($arguments) {
         $r = new sfReflectionClass($class);
         // FIXME: resolve arguments?
         $this->spool = $r->newInstanceArgs($arguments);
-      }
-      else
-      {
+      } else {
         $this->spool = new $class();
       }
 
@@ -368,8 +339,7 @@ class sfMailer extends Swift_Mailer implements sfIConfigurable {
   protected function setupAntiFlood()
   {
     $antiflood = $this->getOption('anti_flood');
-    if($antiflood['enabled'])
-    {
+    if ($antiflood['enabled']) {
       $limit = $antiflood['limit'] > 0 ? $antiflood['limit'] : 100;
       $sleep = $antiflood['sleep'] > 0 ? $antiflood['sleep'] : 10;
       $this->realtimeTransport->registerPlugin(new Swift_Plugins_AntiFloodPlugin($limit, $sleep));
@@ -381,8 +351,7 @@ class sfMailer extends Swift_Mailer implements sfIConfigurable {
    */
   protected function setupLogging()
   {
-    if($this->getOption('log.enabled'))
-    {
+    if ($this->getOption('log.enabled')) {
       $this->logger = new sfMailerLoggerPlugin($this->getEventDispatcher());
       $this->realtimeTransport->registerPlugin($this->logger);
     }
@@ -398,53 +367,41 @@ class sfMailer extends Swift_Mailer implements sfIConfigurable {
     // register mailer plugins
     $plugins = $this->getOption('plugins');
 
-    foreach($plugins as $pluginName => $pluginOptions)
-    {
+    foreach ($plugins as $pluginName => $pluginOptions) {
       $class = $pluginName;
-      if(isset($pluginOptions['class']))
-      {
+      if (isset($pluginOptions['class'])) {
         $class = $pluginOptions['class'];
         unset($pluginOptions['class']);
       }
 
-      if(!class_exists($class))
-      {
+      if (!class_exists($class)) {
         throw new sfConfigurationException(sprintf('Mailer plugin class "%s" does not exist.', $class));
       }
 
       $reflection = new sfReflectionClass($class);
 
       $arguments = array();
-      if(isset($pluginOptions['arguments']))
-      {
+      if (isset($pluginOptions['arguments'])) {
         $arguments = $pluginOptions['arguments'];
       }
 
-      if(isset($arguments[0]) && $arguments[0] == 'event_dispatcher')
-      {
+      if (isset($arguments[0]) && $arguments[0] == 'event_dispatcher') {
         $arguments[0] = $this->getEventDispatcher();
       }
 
-      if($reflection->isSubclassOf('sfMailerPlugin'))
-      {
-        if($arguments)
-        {
+      if ($reflection->isSubclassOf('sfMailerPlugin')) {
+        if ($arguments) {
           $plugin = $reflection->newInstanceArgs($arguments);
+        } else {
+          $plugin = new $class($this->getEventDispatcher(), (array) $pluginOptions);
         }
-        else
-        {
-          $plugin = new $class($this->getEventDispatcher(), (array)$pluginOptions);
-        }
-      }
-      else
-      {
+      } else {
         $plugin = $reflection->newInstanceArgs($arguments);
       }
 
       $this->realtimeTransport->registerPlugin($plugin);
 
-      if($this->getTransport() instanceof Swift_SpoolTransport)
-      {
+      if ($this->getTransport() instanceof Swift_SpoolTransport) {
         $this->getTransport()->registerPlugin($plugin);
       }
     }
@@ -461,13 +418,11 @@ class sfMailer extends Swift_Mailer implements sfIConfigurable {
    */
   public function getOption($name, $default = null)
   {
-    if(isset($this->options[$name]))
-    {
+    if (isset($this->options[$name])) {
       return $this->options[$name];
     }
     // no dot found
-    if(strpos($name, '.') === false)
-    {
+    if (strpos($name, '.') === false) {
       return $default;
     }
     // allow for groups and multi-dimensional arrays
@@ -485,12 +440,9 @@ class sfMailer extends Swift_Mailer implements sfIConfigurable {
   public function setOption($name, $value)
   {
     // not dot syntax
-    if(strpos($name, '.') === false)
-    {
+    if (strpos($name, '.') === false) {
       $this->options[$name] = $value;
-    }
-    else
-    {
+    } else {
       sfArray::set($this->options, $name, sfToolkit::getValue($value));
     }
 
@@ -505,8 +457,7 @@ class sfMailer extends Swift_Mailer implements sfIConfigurable {
    */
   public function hasOption($name)
   {
-    if(strpos($name, '.') === false)
-    {
+    if (strpos($name, '.') === false) {
       return isset($this->options[$name]);
     }
 
@@ -573,12 +524,10 @@ class sfMailer extends Swift_Mailer implements sfIConfigurable {
    */
   public function send(Swift_Mime_Message $message, &$failedRecipients = null)
   {
-    if($this->force)
-    {
+    if ($this->force) {
       $this->force = false;
 
-      if(!$this->realtimeTransport->isStarted())
-      {
+      if (!$this->realtimeTransport->isStarted()) {
         $this->realtimeTransport->start();
       }
 
@@ -617,34 +566,24 @@ class sfMailer extends Swift_Mailer implements sfIConfigurable {
     $cc = $message->getCc();
     $bcc = $message->getBcc();
 
-    if(!empty($cc))
-    {
+    if (!empty($cc)) {
       $message->setCc(array());
     }
-    if(!empty($bcc))
-    {
+    if (!empty($bcc)) {
       $message->setBcc(array());
     }
 
     // Use an iterator if set
-    if(isset($it))
-    {
-      while($it->hasNext())
-      {
+    if (isset($it)) {
+      while ($it->hasNext()) {
         $message->setTo($it->nextRecipient());
         $sent += $this->send($message, $failedRecipients);
       }
-    }
-    else
-    {
-      foreach($to as $address => $name)
-      {
-        if(is_int($address))
-        {
+    } else {
+      foreach ($to as $address => $name) {
+        if (is_int($address)) {
           $message->setTo($name);
-        }
-        else
-        {
+        } else {
           $message->setTo(array($address => $name));
         }
 
@@ -653,13 +592,11 @@ class sfMailer extends Swift_Mailer implements sfIConfigurable {
     }
 
     $message->setTo($to);
-    if(!empty($cc))
-    {
+    if (!empty($cc)) {
       $message->setCc($cc);
     }
 
-    if(!empty($bcc))
-    {
+    if (!empty($bcc)) {
       $message->setBcc($bcc);
     }
 
@@ -687,8 +624,7 @@ class sfMailer extends Swift_Mailer implements sfIConfigurable {
    */
   public function getSpool()
   {
-    if(!$this->spool)
-    {
+    if (!$this->spool) {
       throw new LogicException('You can send messages to the spool only if spool is enabled in your configuration.');
     }
 
@@ -767,8 +703,7 @@ class sfMailer extends Swift_Mailer implements sfIConfigurable {
                         'arguments' => $arguments,
                         'mailer' => $this
               )));
-    if(!$event->isProcessed())
-    {
+    if (!$event->isProcessed()) {
       throw new sfException(sprintf('Call to undefined method %s::%s.', get_class($this), $method));
     }
 

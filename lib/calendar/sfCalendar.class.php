@@ -12,8 +12,8 @@
  * @package Sift
  * @subpackage calendar
  */
-class sfCalendar {
-
+class sfCalendar
+{
   /**
    * Calendar version
    */
@@ -37,8 +37,7 @@ class sfCalendar {
     $this->month = $month ? $month : date('n');
     $this->year = $year ? $year : date('Y');
 
-    if(is_null($timezone))
-    {
+    if (is_null($timezone)) {
       $this->setTimeZone(sfConfig::get('sf_default_timezone', 'Europe/Prague'));
     }
   }
@@ -61,8 +60,7 @@ class sfCalendar {
    */
   public function setTimeZone($timezone)
   {
-    if(!$timezone instanceof DateTimeZone)
-    {
+    if (!$timezone instanceof DateTimeZone) {
       $timezone = new DateTimeZone($timezone);
     }
     $this->timezone = $timezone;
@@ -87,8 +85,7 @@ class sfCalendar {
    */
   public function getRenderer()
   {
-    if(!$this->renderer)
-    {
+    if (!$this->renderer) {
       $this->renderer = new sfCalendarRendererHtml();
     }
 
@@ -116,8 +113,7 @@ class sfCalendar {
   public function getJavascripts()
   {
     $renderer = $this->getRenderer();
-    if(method_exists($renderer, 'getJavascripts'))
-    {
+    if (method_exists($renderer, 'getJavascripts')) {
       return $renderer->getJavascripts();
     }
 
@@ -132,8 +128,7 @@ class sfCalendar {
   public function getStylesheets()
   {
     $renderer = $this->getRenderer();
-    if(method_exists($renderer, 'getStylesheets'))
-    {
+    if (method_exists($renderer, 'getStylesheets')) {
       return $renderer->getStylesheets();
     }
 
@@ -159,8 +154,7 @@ class sfCalendar {
   public function addEvent($event)
   {
     // create an instance of event
-    if(!$event instanceof sfICalendarEvent)
-    {
+    if (!$event instanceof sfICalendarEvent) {
       $event = sfCalendarEvent::fromArray($event);
     }
 
@@ -177,8 +171,7 @@ class sfCalendar {
    */
   public function addEvents($events)
   {
-    foreach($events as $event)
-    {
+    foreach ($events as $event) {
       $this->addEvent($event);
     }
 
@@ -195,20 +188,16 @@ class sfCalendar {
    */
   public function getEvents($month = null, $day = null, $year = null)
   {
-    if($month)
-    {
+    if ($month) {
       $events = array();
-      foreach($this->events as $event)
-      {
+      foreach ($this->events as $event) {
         if($event->takesPlace($month ? $month : $this->getMonth(),
                 $day, $year ? $year : $this->getYear()))
         {
           $events[] = $event;
         }
       }
-    }
-    else
-    {
+    } else {
       $events = $this->events;
     }
 
@@ -257,12 +246,9 @@ class sfCalendar {
    */
   protected function _sortEvents($a, $b)
   {
-    if($a->getStart() < $b->getStart())
-    {
+    if ($a->getStart() < $b->getStart()) {
       return -1;
-    }
-    elseif($a->getStart() > $b->getStart())
-    {
+    } elseif ($a->getStart() > $b->getStart()) {
       return 1;
     }
 

@@ -13,8 +13,8 @@
  * @package Sift
  * @subpackage cache
  */
-interface sfICache {
-
+interface sfICache
+{
   /**
    * Delete mode -> only old caches
    */

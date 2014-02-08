@@ -12,8 +12,8 @@
  * @package    Sift
  * @subpackage collection
  */
-interface sfICollectionSorterStrategy {
-
+interface sfICollectionSorterStrategy
+{
   /**
    * Returns 0 if a == b, -1 if a < b,
    * 1 if a > b

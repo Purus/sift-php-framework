@@ -51,8 +51,7 @@ class sfI18nYamlMenuExtractor extends sfI18nYamlExtractor
 
     $config = sfYaml::load($content);
 
-    foreach($config as $item)
-    {
+    foreach ($config as $item) {
       $this->getFromItem($item);
     }
 
@@ -66,39 +65,30 @@ class sfI18nYamlMenuExtractor extends sfI18nYamlExtractor
    */
   protected function getFromItem($item)
   {
-    if(isset($item['catalogue']))
-    {
+    if (isset($item['catalogue'])) {
       $this->domain = $this->fixCatalogue($item['catalogue'], $this->getOption('default_catalogue_name', 'messages'));
     }
     // BC compat
-    elseif(isset($item['module']))
-    {
+    elseif (isset($item['module'])) {
       $this->domain = $this->fixCatalogue($item['module'], $this->getOption('default_catalogue_name', 'messages'));
     }
 
     // get title
-    if(isset($item['title']))
-    {
+    if (isset($item['title'])) {
       $this->strings[$this->domain][] = $item['title'];
     }
 
-    if(isset($item['name']))
-    {
+    if (isset($item['name'])) {
       $this->strings[$this->domain][] = $item['name'];
     }
 
     // BC compatibility
-    if(isset($item['sub']) && is_array($item['sub']))
-    {
-      foreach($item['sub'] as $child)
-      {
+    if (isset($item['sub']) && is_array($item['sub'])) {
+      foreach ($item['sub'] as $child) {
         $this->getFromItem($child);
       }
-    }
-    elseif(isset($item['children']) && is_array($item['children']))
-    {
-      foreach($item['children'] as $child)
-      {
+    } elseif (isset($item['children']) && is_array($item['children'])) {
+      foreach ($item['children'] as $child) {
         $this->getFromItem($child);
       }
     }
@@ -116,8 +106,7 @@ class sfI18nYamlMenuExtractor extends sfI18nYamlExtractor
   {
     // we have to check the presence of catalogue name
     // if there is no catalogue name, we will use "messages"
-    if(strpos($catalogue, '/') === false)
-    {
+    if (strpos($catalogue, '/') === false) {
       $catalogue = sprintf('%s/%s', $catalogue, $default);
     }
 

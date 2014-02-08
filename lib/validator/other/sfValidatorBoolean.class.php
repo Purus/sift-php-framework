@@ -12,8 +12,8 @@
  * @package    Sift
  * @subpackage validator
  */
-class sfValidatorBoolean extends sfValidatorBase {
-
+class sfValidatorBoolean extends sfValidatorBase
+{
   /**
    * Configures the current validator.
    *
@@ -41,13 +41,11 @@ class sfValidatorBoolean extends sfValidatorBase {
    */
   protected function doClean($value)
   {
-    if(in_array($value, $this->getOption('true_values')))
-    {
+    if (in_array($value, $this->getOption('true_values'))) {
       return true;
     }
 
-    if(in_array($value, $this->getOption('false_values')))
-    {
+    if (in_array($value, $this->getOption('false_values'))) {
       return false;
     }
 

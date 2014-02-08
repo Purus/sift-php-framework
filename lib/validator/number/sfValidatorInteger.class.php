@@ -12,8 +12,8 @@
  * @package    Sift
  * @subpackage validator
  */
-class sfValidatorInteger extends sfValidatorBase {
-
+class sfValidatorInteger extends sfValidatorBase
+{
   /**
    * Configures the current validator.
    *
@@ -50,18 +50,15 @@ class sfValidatorInteger extends sfValidatorBase {
   {
     $clean = intval($value);
 
-    if(strval($clean) != $value)
-    {
+    if (strval($clean) != $value) {
       throw new sfValidatorError($this, 'invalid', array('value' => $value));
     }
 
-    if($this->hasOption('max') && $clean > $this->getOption('max'))
-    {
+    if ($this->hasOption('max') && $clean > $this->getOption('max')) {
       throw new sfValidatorError($this, 'max', array('value' => $value, 'max' => $this->getOption('max')));
     }
 
-    if($this->hasOption('min') && $clean < $this->getOption('min'))
-    {
+    if ($this->hasOption('min') && $clean < $this->getOption('min')) {
       throw new sfValidatorError($this, 'min', array('value' => $value, 'min' => $this->getOption('min')));
     }
 
@@ -74,13 +71,11 @@ class sfValidatorInteger extends sfValidatorBase {
 
     $rules[sfFormJavascriptValidation::DIGITS] = true;
 
-    if($this->hasOption('max'))
-    {
+    if ($this->hasOption('max')) {
       $rules[sfFormJavascriptValidation::MAX] = $this->getOption('max');
     }
 
-    if($this->hasOption('min'))
-    {
+    if ($this->hasOption('min')) {
       $rules[sfFormJavascriptValidation::MIN] = $this->getOption('min');
     }
 
@@ -94,14 +89,12 @@ class sfValidatorInteger extends sfValidatorBase {
     $messages[sfFormJavascriptValidation::DIGITS] =
             sfFormJavascriptValidation::fixValidationMessage($this, 'invalid');
 
-    if($this->hasOption('max'))
-    {
+    if ($this->hasOption('max')) {
       $messages[sfFormJavascriptValidation::MAX] =
           sfFormJavascriptValidation::fixValidationMessage($this, 'max');
     }
 
-    if($this->hasOption('min'))
-    {
+    if ($this->hasOption('min')) {
       $messages[sfFormJavascriptValidation::MIN] =
           sfFormJavascriptValidation::fixValidationMessage($this, 'min');
     }

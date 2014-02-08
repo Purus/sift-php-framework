@@ -12,8 +12,8 @@
  * @package Sift
  * @subpackage i18n
  */
-interface sfII18nPhoneNumberCultureFormatter {
-
+interface sfII18nPhoneNumberCultureFormatter
+{
   /**
    * Format the phone number without international prefix
    *

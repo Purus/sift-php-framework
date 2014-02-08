@@ -13,8 +13,8 @@
  * @subpackage collection
  * @link http://offshootinc.com/blog/2011/04/01/reusable-sorting-for-collection-objects-in-php/
  */
-abstract class sfCollection extends ArrayObject implements sfIArrayAccessByReference {
-
+abstract class sfCollection extends ArrayObject implements sfIArrayAccessByReference
+{
   /**
    * Type (class, interface, PHP type)
    *
@@ -45,21 +45,16 @@ abstract class sfCollection extends ArrayObject implements sfIArrayAccessByRefer
    */
   public function __construct($array = null, $type = null)
   {
-    if($type !== null)
-    {
-      if(substr($type, 0, 1) === ':')
-      {
+    if ($type !== null) {
+      if (substr($type, 0, 1) === ':') {
         $this->itemType = substr($type, 1);
         $this->checkCallback = 'is_' . $this->itemType;
-      }
-      else
-      {
+      } else {
         $this->itemType = $type;
       }
     }
 
-    if($array !== null)
-    {
+    if ($array !== null) {
       $this->import($array);
     }
   }
@@ -90,12 +85,9 @@ abstract class sfCollection extends ArrayObject implements sfIArrayAccessByRefer
   {
     $this->checkFreezed();
     $index = $this->search($item);
-    if($index === false)
-    {
+    if ($index === false) {
       return false;
-    }
-    else
-    {
+    } else {
       parent::offsetUnset($index);
 
       return true;
@@ -110,8 +102,7 @@ abstract class sfCollection extends ArrayObject implements sfIArrayAccessByRefer
    */
   public function merge(sfCollection $collection)
   {
-    foreach($collection as $item)
-    {
+    foreach ($collection as $item) {
       $this->append($item);
     }
 
@@ -127,14 +118,12 @@ abstract class sfCollection extends ArrayObject implements sfIArrayAccessByRefer
    */
   public function import($array)
   {
-    if(!(is_array($array) || $array instanceof Traversable))
-    {
+    if (!(is_array($array) || $array instanceof Traversable)) {
       throw new InvalidArgumentException('Invalid argument given. The argument must be traversable.');
     }
 
     $this->clear();
-    foreach($array as $item)
-    {
+    foreach ($array as $item) {
       $this->append($item);
     }
   }
@@ -170,7 +159,7 @@ abstract class sfCollection extends ArrayObject implements sfIArrayAccessByRefer
    */
   public function toArray()
   {
-    return (array)$this;
+    return (array) $this;
   }
 
   /**
@@ -207,21 +196,15 @@ abstract class sfCollection extends ArrayObject implements sfIArrayAccessByRefer
   {
     $this->checkFreezed();
 
-    if($this->itemType !== null)
-    {
-      if($this->checkCallback === null)
-      {
-        if(!($item instanceof $this->itemType))
-        {
+    if ($this->itemType !== null) {
+      if ($this->checkCallback === null) {
+        if (!($item instanceof $this->itemType)) {
           throw new InvalidArgumentException(
               sprintf('Cannot add item to the collection. The item must be "%s" object. Instance of "%s" given.',
                   $this->itemType, is_object($item) ? get_class($item) : gettype($item)));
         }
-      }
-      else
-      {
-        if(!call_user_func($this->checkCallback, $item))
-        {
+      } else {
+        if (!call_user_func($this->checkCallback, $item)) {
           throw new InvalidArgumentException(sprintf('Cannot add item to the collection. Item must be "%s" type. "%s" given.', $this->itemType, gettype($item)));
         }
       }
@@ -300,8 +283,7 @@ abstract class sfCollection extends ArrayObject implements sfIArrayAccessByRefer
    */
   protected function checkFreezed()
   {
-    if($this->frozen)
-    {
+    if ($this->frozen) {
       throw new InvalidStateException(sprintf('Cannot modify a frozen object "%s".', get_class($this)));
     }
   }
@@ -326,8 +308,7 @@ abstract class sfCollection extends ArrayObject implements sfIArrayAccessByRefer
   public function &offsetGetByReference($offset)
   {
     $ret = null;
-    if($this->offsetExists($offset))
-    {
+    if ($this->offsetExists($offset)) {
       $ret = parent::offsetGet($offset);
     }
 

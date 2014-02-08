@@ -43,18 +43,15 @@ class sfGeneratorManager
   {
     $path = $this->getSavePath() . DIRECTORY_SEPARATOR . $path;
 
-    if(!is_dir(dirname($path)))
-    {
+    if (!is_dir(dirname($path))) {
       $current_umask = umask(0000);
-      if(false === @mkdir(dirname($path), 0777, true))
-      {
+      if (false === @mkdir(dirname($path), 0777, true)) {
         throw new sfFileException(sprintf('Failed to make directory "%s".', dirname($path)));
       }
       umask($current_umask);
     }
 
-    if(false === $ret = @file_put_contents($path, $content))
-    {
+    if (false === $ret = @file_put_contents($path, $content)) {
       throw new sfFileException(sprintf('Failed to write file "%s".', $path));
     }
 
@@ -70,14 +67,12 @@ class sfGeneratorManager
    */
   public function generate($generatorClass, $params = array())
   {
-    if(!class_exists($generatorClass))
-    {
+    if (!class_exists($generatorClass)) {
       throw new InvalidArgumentException(sprintf('Generator class "%s" does not exist.', $generatorClass));
     }
 
     // does it implement sfIGenerator?
-    if(!in_array('sfIGenerator', class_implements($generatorClass)))
-    {
+    if (!in_array('sfIGenerator', class_implements($generatorClass))) {
       throw new InvalidArgumentException(sprintf('Generator class "%s" does not implement sfIGenerator interface.', $generatorClass));
     }
 

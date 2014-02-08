@@ -12,8 +12,8 @@
  * @package Sift
  * @subpackage calendar
  */
-interface sfICalendarEvent {
-
+interface sfICalendarEvent
+{
   public function getStart();
   public function getEnd();
 

@@ -12,8 +12,8 @@
  * @package Sift
  * @subpackage i18n_export
  */
-interface sfICultureExport {
-
+interface sfICultureExport
+{
   public function export();
 
 }

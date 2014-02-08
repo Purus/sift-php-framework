@@ -15,8 +15,8 @@
  * @package    Sift
  * @subpackage util
  */
-class sfGlob {
-
+class sfGlob
+{
   /**
    * Find pathnames matching a pattern
    *
@@ -162,7 +162,8 @@ class sfGlob {
    *  Returns false on unrecoverable errors, or all errors when
    *  GLOB_ERR is on.
    */
-  public static function scan($path, $flags, $recurse = false) {
+  public static function scan($path, $flags, $recurse = false)
+  {
     if (!is_readable($path)) {
       return false;
     }
@@ -219,7 +220,8 @@ class sfGlob {
    * @return string
    *  the escaped input
    */
-  public static function convertToRegex($input, $flags) {
+  public static function convertToRegex($input, $flags)
+  {
     $opens = array(
         '{' => array('}', 0),
         '[' => array(']', 0),
@@ -279,7 +281,8 @@ class sfGlob {
    * @param int $flags The flags passed to glob()
    * @return string a PCRE subpattern of alternatives
    */
-  protected static function convertGlobBraces($brace, $flags) {
+  protected static function convertGlobBraces($brace, $flags)
+  {
     $alternatives = explode(',', $brace);
     for ($i = count($alternatives); $i--;) {
       $alternatives[$i] = self::convertToRegex($alternatives[$i], $flags);
@@ -295,7 +298,8 @@ class sfGlob {
    * @param int $flags The flags passed to glob()
    * @return string a PCRE character class
    */
-  protected static function convertGlobCharacterClasses($class, $flags) {
+  protected static function convertGlobCharacterClasses($class, $flags)
+  {
     if (strpos($class, '-') !== false) {
       $class = strtr($class, array('-' => '')) . '-';
     }
@@ -314,7 +318,8 @@ class sfGlob {
    *
    * Sorts first by the base name, then in reverse by the extension
    */
-  protected static function noSort($a, $b) {
+  protected static function noSort($a, $b)
+  {
     $operands = array(array('full' => $a), array('full' => $b));
     foreach ($operands as $k => $v) {
       $v['pos'] = strrpos($v['full'], '.');
@@ -349,7 +354,8 @@ class sfGlob {
    *
    *
    */
-  public static function braceNosort($a, $b) {
+  public static function braceNosort($a, $b)
+  {
     if ($a[1] == $b[1]) {
       $len_a = strlen($a[0]);
       $len_b = strlen($b[0]);
@@ -372,8 +378,7 @@ class sfGlob {
    */
   protected static function braceSort($a, $b)
   {
-    if($a[1] == $b[1])
-    {
+    if ($a[1] == $b[1]) {
       return strcmp($a[0], $b[0]);
     }
 

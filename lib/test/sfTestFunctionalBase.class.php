@@ -33,8 +33,7 @@ abstract class sfTestFunctionalBase
   {
     $this->browser = $browser;
 
-    if (null === self::$test)
-    {
+    if (null === self::$test) {
       self::$test = null !== $lime ? $lime : new lime_test();
     }
 
@@ -62,13 +61,11 @@ abstract class sfTestFunctionalBase
    */
   public function with($name)
   {
-    if (!isset($this->testers[$name]))
-    {
+    if (!isset($this->testers[$name])) {
       throw new InvalidArgumentException(sprintf('The "%s" tester does not exist.', $name));
     }
 
-    if ($this->blockTester)
-    {
+    if ($this->blockTester) {
       throw new LogicException(sprintf('You cannot nest tester blocks.'));
     }
 
@@ -85,8 +82,7 @@ abstract class sfTestFunctionalBase
    */
   public function begin()
   {
-    if (!$this->currentTester)
-    {
+    if (!$this->currentTester) {
       throw new LogicException(sprintf('You must call with() before beginning a tester block.'));
     }
 
@@ -100,8 +96,7 @@ abstract class sfTestFunctionalBase
    */
   public function end()
   {
-    if (null === $this->blockTester)
-    {
+    if (null === $this->blockTester) {
       throw new LogicException(sprintf('There is no current tester block to end.'));
     }
 
@@ -117,8 +112,7 @@ abstract class sfTestFunctionalBase
    */
   public function setTesters($testers)
   {
-    foreach ($testers as $name => $tester)
-    {
+    foreach ($testers as $name => $tester) {
       $this->setTester($name, $tester);
     }
   }
@@ -131,13 +125,11 @@ abstract class sfTestFunctionalBase
    */
   public function setTester($name, $tester)
   {
-    if (is_string($tester))
-    {
+    if (is_string($tester)) {
       $tester = new $tester($this, self::$test);
     }
 
-    if (!$tester instanceof sfTester)
-    {
+    if (!$tester instanceof sfTester) {
       throw new InvalidArgumentException(sprintf('The tester "%s" is not of class sfTester.', $name));
     }
 
@@ -232,8 +224,7 @@ abstract class sfTestFunctionalBase
 
     $this->test()->comment(sprintf('%s %s', strtolower($method), $uri));
 
-    foreach ($this->testers as $tester)
-    {
+    foreach ($this->testers as $tester) {
       $tester->prepare();
     }
 
@@ -281,18 +272,12 @@ abstract class sfTestFunctionalBase
    */
   public function click($name, $arguments = array(), $options = array())
   {
-    if ($name instanceof DOMElement)
-    {
+    if ($name instanceof DOMElement) {
       list($uri, $method, $parameters) = $this->doClickElement($name, $arguments, $options);
-    }
-    else
-    {
-      try
-      {
+    } else {
+      try {
         list($uri, $method, $parameters) = $this->doClick($name, $arguments, $options);
-      }
-      catch (InvalidArgumentException $e)
-      {
+      } catch (InvalidArgumentException $e) {
         list($uri, $method, $parameters) = $this->doClickCssSelector($name, $arguments, $options);
       }
     }
@@ -354,8 +339,7 @@ abstract class sfTestFunctionalBase
   {
     $this->get($uri)->with('response')->isStatusCode();
 
-    if ($text !== null)
-    {
+    if ($text !== null) {
       $this->with('response')->contains($text);
     }
 
@@ -374,30 +358,20 @@ abstract class sfTestFunctionalBase
   {
     $e = $this->browser->getCurrentException();
 
-    if (null === $e)
-    {
+    if (null === $e) {
       $this->test()->fail('response returns an exception');
-    }
-    else
-    {
-      if (null !== $class)
-      {
+    } else {
+      if (null !== $class) {
         $this->test()->ok($e instanceof $class, sprintf('response returns an exception of class "%s"', $class));
       }
 
-      if (null !== $message && preg_match('/^(!)?([^a-zA-Z0-9\\\\]).+?\\2[ims]?$/', $message, $match))
-      {
-        if ($match[1] == '!')
-        {
+      if (null !== $message && preg_match('/^(!)?([^a-zA-Z0-9\\\\]).+?\\2[ims]?$/', $message, $match)) {
+        if ($match[1] == '!') {
           $this->test()->unlike($e->getMessage(), substr($message, 1), sprintf('response exception message does not match regex "%s"', $message));
-        }
-        else
-        {
+        } else {
           $this->test()->like($e->getMessage(), $message, sprintf('response exception message matches regex "%s"', $message));
         }
-      }
-      else if (null !== $message)
-      {
+      } else if (null !== $message) {
         $this->test()->is($e->getMessage(), $message, sprintf('response exception message is "%s"', $message));
       }
     }
@@ -414,8 +388,7 @@ abstract class sfTestFunctionalBase
    */
   public function checkCurrentExceptionIsEmpty()
   {
-    if (false === ($empty = $this->browser->checkCurrentExceptionIsEmpty()))
-    {
+    if (false === ($empty = $this->browser->checkCurrentExceptionIsEmpty())) {
       $this->test()->fail(sprintf('last request threw an uncaught exception "%s: %s"', get_class($this->browser->getCurrentException()), $this->browser->getCurrentException()->getMessage()));
     }
 
@@ -440,14 +413,12 @@ abstract class sfTestFunctionalBase
    */
   public static function handlePhpError($errno, $errstr, $errfile, $errline)
   {
-    if (($errno & error_reporting()) == 0)
-    {
+    if (($errno & error_reporting()) == 0) {
       return false;
     }
 
     $msg = sprintf('PHP sent a "%%s" error at %s line %s (%s)', $errfile, $errline, $errstr);
-    switch ($errno)
-    {
+    switch ($errno) {
       case E_WARNING:
         $msg = sprintf($msg, 'warning');
         throw new RuntimeException($msg);
@@ -488,8 +459,7 @@ abstract class sfTestFunctionalBase
 
     $traces = array();
     $lineFormat = '  at %s%s%s() in %s line %s';
-    for ($i = 0, $count = count($traceData); $i < $count; $i++)
-    {
+    for ($i = 0, $count = count($traceData); $i < $count; $i++) {
       $line = isset($traceData[$i]['line']) ? $traceData[$i]['line'] : 'n/a';
       $file = isset($traceData[$i]['file']) ? $traceData[$i]['file'] : 'n/a';
       $args = isset($traceData[$i]['args']) ? $traceData[$i]['args'] : array();

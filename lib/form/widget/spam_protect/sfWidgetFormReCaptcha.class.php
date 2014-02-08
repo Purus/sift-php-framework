@@ -29,8 +29,8 @@
  * @package    Sift
  * @subpackage form_widget
  */
-class sfWidgetFormReCaptcha extends sfWidgetForm {
-
+class sfWidgetFormReCaptcha extends sfWidgetForm
+{
   /**
    * Configures the current widget.
    *

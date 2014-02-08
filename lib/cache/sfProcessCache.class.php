@@ -25,26 +25,16 @@ class sfProcessCache
   {
     static $cacher = null;
 
-    if (null === $cacher)
-    {
-      if (!sfConfig::get('sf_use_process_cache'))
-      {
+    if (null === $cacher) {
+      if (!sfConfig::get('sf_use_process_cache')) {
         $cacher = false;
-      }
-      elseif (function_exists('apc_store'))
-      {
+      } elseif (function_exists('apc_store')) {
         $cacher = 'apc';
-      }
-      elseif (function_exists('xcache_set'))
-      {
+      } elseif (function_exists('xcache_set')) {
         $cacher = 'xcache';
-      }
-      elseif (function_exists('eaccelerator_put'))
-      {
+      } elseif (function_exists('eaccelerator_put')) {
         $cacher = 'eaccelerator';
-      }
-      else
-      {
+      } else {
         $cacher = false;
       }
     }
@@ -61,8 +51,7 @@ class sfProcessCache
   {
     static $prefix = null;
 
-    if (!$prefix)
-    {
+    if (!$prefix) {
       $prefix = md5(sfConfig::get('sf_app_dir')).'_';
     }
 
@@ -80,8 +69,7 @@ class sfProcessCache
    */
   public static function set($key, $value, $lifeTime = 0)
   {
-    switch (self::cacher())
-    {
+    switch (self::cacher()) {
       case 'apc':
         return apc_store(self::getPrefix().$key, $value, $lifeTime);
       case 'xcache':
@@ -102,8 +90,7 @@ class sfProcessCache
    */
   public static function get($key)
   {
-    switch (self::cacher())
-    {
+    switch (self::cacher()) {
       case 'apc':
         $value = apc_fetch(self::getPrefix().$key);
 
@@ -126,8 +113,7 @@ class sfProcessCache
    */
   public static function has($key)
   {
-    switch (self::cacher())
-    {
+    switch (self::cacher()) {
       case 'apc':
         return false === apc_fetch(self::getPrefix().$key) ? false : true;
       case 'xcache':
@@ -146,15 +132,12 @@ class sfProcessCache
    */
   public static function clear()
   {
-    switch (self::cacher())
-    {
+    switch (self::cacher()) {
       case 'apc':
         return apc_clear_cache('user');
       case 'xcache':
-        for ($i = 0, $max = xcache_count(XC_TYPE_VAR); $i < $max; $i++)
-        {
-          if(false === xcache_clear_cache(XC_TYPE_VAR, $i))
-          {
+        for ($i = 0, $max = xcache_count(XC_TYPE_VAR); $i < $max; $i++) {
+          if (false === xcache_clear_cache(XC_TYPE_VAR, $i)) {
             return false;
           }
         }
@@ -162,14 +145,11 @@ class sfProcessCache
         return true;
       case 'eaccelerator':
         $infos = eaccelerator_list_keys();
-        if (is_array($infos))
-        {
-          foreach ($infos as $info)
-          {
+        if (is_array($infos)) {
+          foreach ($infos as $info) {
             // eaccelerator bug (http://eaccelerator.net/ticket/287)
             $key = 0 === strpos($info['name'], ':') ? substr($info['name'], 1) : $info['name'];
-            if (!eaccelerator_rm($key))
-            {
+            if (!eaccelerator_rm($key)) {
               return false;
             }
           }

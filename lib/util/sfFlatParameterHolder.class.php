@@ -15,8 +15,8 @@
  * @package    Sift
  * @subpackage util
  */
-class sfFlatParameterHolder implements Serializable {
-
+class sfFlatParameterHolder implements Serializable
+{
   protected $parameters = array();
 
   /**
@@ -44,12 +44,9 @@ class sfFlatParameterHolder implements Serializable {
    */
   public function & get($name, $default = null)
   {
-    if(array_key_exists($name, $this->parameters))
-    {
+    if (array_key_exists($name, $this->parameters)) {
       $value = & $this->parameters[$name];
-    }
-    else
-    {
+    } else {
       $value = $default;
     }
 
@@ -100,8 +97,7 @@ class sfFlatParameterHolder implements Serializable {
   {
     $retval = $default;
 
-    if(array_key_exists($name, $this->parameters))
-    {
+    if (array_key_exists($name, $this->parameters)) {
       $retval = $this->parameters[$name];
       unset($this->parameters[$name]);
     }
@@ -145,13 +141,11 @@ class sfFlatParameterHolder implements Serializable {
    */
   public function add($parameters)
   {
-    if(null === $parameters)
-    {
+    if (null === $parameters) {
       return;
     }
 
-    foreach($parameters as $key => $value)
-    {
+    foreach ($parameters as $key => $value) {
       $this->parameters[$key] = $value;
     }
   }
@@ -166,8 +160,7 @@ class sfFlatParameterHolder implements Serializable {
    */
   public function addByRef(& $parameters)
   {
-    foreach($parameters as $key => &$value)
-    {
+    foreach ($parameters as $key => &$value) {
       $this->parameters[$key] = & $value;
     }
   }
