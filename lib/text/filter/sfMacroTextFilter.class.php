@@ -14,46 +14,49 @@
  */
 class sfMacroTextFilter extends sfTextFilter
 {
-  /**
-   * Array of default options
-   *
-   * @var array
-   */
-  protected $defaultOptions = array(
-    'allowed_tags' => array()
-  );
+    /**
+     * Array of default options
+     *
+     * @var array
+     */
+    protected $defaultOptions
+        = array(
+            'allowed_tags' => array()
+        );
 
-  /**
-   * Macro registry instance
-   *
-   * @var sfTextMacroRegistry
-   */
-  protected $registry;
+    /**
+     * Macro registry instance
+     *
+     * @var sfTextMacroRegistry
+     */
+    protected $registry;
 
-  /**
-   * Constructor
-   *
-   * @param sfTextMacroRegistry $registry The macro registry
-   * @param array $options Array of options
-   * @inject text_macro_registry
-   */
-  public function __construct(sfTextMacroRegistry $registry, $options = array())
-  {
-    $this->registry = $registry;
-    parent::__construct($options);
-  }
+    /**
+     * Constructor
+     *
+     * @param sfTextMacroRegistry $registry The macro registry
+     * @param array               $options  Array of options
+     *
+     * @inject text_macro_registry
+     */
+    public function __construct(sfTextMacroRegistry $registry, $options = array())
+    {
+        $this->registry = $registry;
+        parent::__construct($options);
+    }
 
-  /**
-   * Filters fiven text, also applied shortcodes
-   *
-   * @param string $content
-   * @param array $params
-   * @return string
-   */
-  public function filter(sfTextFilterContent $content)
-  {
-    $parsed = $this->registry->parse($content->getText(), $this->getOption('allowed_tags'));
-    $content->setText($parsed);
-  }
+    /**
+     * Filters fiven text, also applied shortcodes
+     *
+     * @param string $content
+     * @param array  $params
+     *
+     * @return string
+     */
+    public function filter(sfTextFilterContent $content)
+    {
+        $parsed = $this->registry->parse($content->getText(), $this->getOption('allowed_tags'));
+        $content->setText($parsed);
+    }
 
- }
+}

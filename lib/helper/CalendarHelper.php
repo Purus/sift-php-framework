@@ -9,25 +9,29 @@
 /**
  * Returns stylesheets for the calendar
  *
- * @package Sift
+ * @package    Sift
  * @subpackage helper_calendar
+ *
  * @param sfCalendar $calendar
+ *
  * @return array
  */
 function get_stylesheets_for_calendar(sfCalendar $calendar)
 {
-  return $calendar->getStylesheets();
+    return $calendar->getStylesheets();
 }
 
 /**
  * Returns an array of javascripts for the calendar
  *
- * @package Sift
+ * @package    Sift
  * @subpackage helper_calendar
+ *
  * @param sfCalendar $calendar
+ *
  * @return array
  */
 function get_javascripts_for_calendar(sfCalendar $calendar)
 {
-  return $calendar->getJavascripts();
+    return $calendar->getJavascripts();
 }

@@ -14,33 +14,33 @@
  */
 class sfJavascriptPartialView extends sfPartialView
 {
-  /**
-   * @see sfView
-   */
-  protected $extension = '.pjs';
+    /**
+     * @see sfView
+     */
+    protected $extension = '.pjs';
 
-  /**
-   * @see sfView
-   */
-  public function configure()
-  {
-    parent::configure();
-    // disable escaping
-    $this->setEscaping(false);
-    sfLoader::loadHelpers('Tag');
-  }
+    /**
+     * @see sfView
+     */
+    public function configure()
+    {
+        parent::configure();
+        // disable escaping
+        $this->setEscaping(false);
+        sfLoader::loadHelpers('Tag');
+    }
 
-  /**
-   * @see sfView
-   */
-  public function render($templateVars = array())
-  {
-    ob_start();
-    start_javascript();
-    echo parent::render($templateVars);
-    end_javascript();
+    /**
+     * @see sfView
+     */
+    public function render($templateVars = array())
+    {
+        ob_start();
+        start_javascript();
+        echo parent::render($templateVars);
+        end_javascript();
 
-    return ob_get_clean();
-  }
+        return ob_get_clean();
+    }
 
 }

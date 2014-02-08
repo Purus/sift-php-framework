@@ -14,39 +14,42 @@
  */
 class sfCliPluginAddChannelTask extends sfCliPluginBaseTask
 {
-  /**
-   * @see sfCliTask
-   */
-  protected function configure()
-  {
-    $this->addArguments(array(
-        new sfCliCommandArgument('name', sfCliCommandArgument::REQUIRED, 'The channel name'),
-    ));
+    /**
+     * @see sfCliTask
+     */
+    protected function configure()
+    {
+        $this->addArguments(
+            array(
+                new sfCliCommandArgument('name', sfCliCommandArgument::REQUIRED, 'The channel name'),
+            )
+        );
 
-    $this->namespace = 'plugin';
-    $this->name = 'add-channel';
+        $this->namespace = 'plugin';
+        $this->name = 'add-channel';
 
-    $this->briefDescription = 'Add a new PEAR channel';
+        $this->briefDescription = 'Add a new PEAR channel';
 
-    $scriptName = $this->environment->get('script_name');
+        $scriptName = $this->environment->get('script_name');
 
-    $this->detailedDescription = <<<EOF
+        $this->detailedDescription
+            = <<<EOF
 The [plugin:add-channel|INFO] task adds a new PEAR channel:
 
   [{$scriptName} plugin:add-channel pear.example.com|INFO]
 EOF;
-  }
+    }
 
-  /**
-   * @see sfCliTask
-   */
-  protected function execute($arguments = array(), $options = array())
-  {
-    $this->logSection($this->getFullName(), sprintf('Adding channel "%s"', $arguments['name']));
+    /**
+     * @see sfCliTask
+     */
+    protected function execute($arguments = array(), $options = array())
+    {
+        $this->logSection($this->getFullName(), sprintf('Adding channel "%s"', $arguments['name']));
 
-    $this->getPluginManager()->getEnvironment()->addChannel($arguments['name']);
+        $this->getPluginManager()->getEnvironment()->addChannel($arguments['name']);
 
-    $this->logSection($this->getFullName(), 'Done.');
-  }
+        $this->logSection($this->getFullName(), 'Done.');
+    }
 
 }

@@ -9,30 +9,30 @@
 /**
  * sfMoneyCurrencyEUR represents EUR currency
  *
- * @package Sift
+ * @package    Sift
  * @subpackage money
  */
 class sfMoneyCurrencyEUR extends sfMoneyCurrency
 {
-  /**
-   * Currency name
-   *
-   * @var string
-   */
-  protected $name = 'EUR';
+    /**
+     * Currency name
+     *
+     * @var string
+     */
+    protected $name = 'EUR';
 
-  /**
-   * Currency scale
-   *
-   * @var integer
-   */
-  public static $scale = 2;
+    /**
+     * Currency scale
+     *
+     * @var integer
+     */
+    public static $scale = 2;
 
-  /**
-   * Empty constructor
-   */
-  public function __construct()
-  {
-  }
+    /**
+     * Empty constructor
+     */
+    public function __construct()
+    {
+    }
 
 }

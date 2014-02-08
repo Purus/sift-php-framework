@@ -19,16 +19,17 @@
  * Cuts a string to the length of $length and replaces the last characters
  * with the ending if the text is longer than length.
  *
- * @param string  $text String to truncate.
- * @param integer $length Length of returned string, including ellipsis.
- * @param mixed $ending If string, will be used as Ending and appended to the trimmed string. Can also be an associative array that can contain the last three params of this method.
- * @param boolean $exact If false, $text will not be cut mid-word
+ * @param string  $text         String to truncate.
+ * @param integer $length       Length of returned string, including ellipsis.
+ * @param mixed   $ending       If string, will be used as Ending and appended to the trimmed string. Can also be an associative array that can contain the last three params of this method.
+ * @param boolean $exact        If false, $text will not be cut mid-word
  * @param boolean $considerHtml If true, HTML tags would be handled correctly
+ *
  * @return string Trimmed string.
  */
 function truncate_text($text, $length = 30, $ending = '&hellip;', $exact = false, $considerHtml = true)
 {
-  return myText::truncate($text, $length, $ending, $exact, $considerHtml);
+    return myText::truncate($text, $length, $ending, $exact, $considerHtml);
 }
 
 /**
@@ -39,7 +40,7 @@ function truncate_text($text, $length = 30, $ending = '&hellip;', $exact = false
  */
 function highlight_text($text, $phrase, $highlighter = '<strong class="highlight">\1</strong>')
 {
-  return myText::highlight($text, $phrase, $highlighter);
+    return myText::highlight($text, $phrase, $highlighter);
 }
 
 /**
@@ -52,18 +53,18 @@ function highlight_text($text, $phrase, $highlighter = '<strong class="highlight
  */
 function excerpt_text($text, $phrase, $radius = 100, $excerpt_string = '...', $excerpt_space = false)
 {
-  return myText::excerpt($text, $phrase, $radius, $excerpt_string, $excerpt_space);
+    return myText::excerpt($text, $phrase, $radius, $excerpt_string, $excerpt_space);
 }
 
 /**
  * Word wrap long lines to line_width.
  *
- * @param string $text
+ * @param string  $text
  * @param integer $line_width
  */
 function wrap_text($text, $line_width = 80)
 {
-  return myText::wrap($text, $line_width);
+    return myText::wrap($text, $line_width);
 }
 
 /**
@@ -73,12 +74,13 @@ function wrap_text($text, $line_width = 80)
  * considered a linebreak, three or more consecutive newlines are turned into two newlines
  *
  * @param string $text
- * @param array $options
+ * @param array  $options
+ *
  * @return string
  */
 function simple_format_text($text, $options = array())
 {
-  return myText::simpleFormat($text, $options);
+    return myText::simpleFormat($text, $options);
 }
 
 /**
@@ -92,79 +94,85 @@ function simple_format_text($text, $options = array())
  *
  * @param string $text
  * @param string $link One of "all", "email_addresses" or "urls"
- * @param array $href_options
+ * @param array  $href_options
+ *
  * @return string
  */
 function auto_link_text($text, $link = 'all', $href_options = array())
 {
-  return myText::autoLink($text, $link, $href_options);
+    return myText::autoLink($text, $link, $href_options);
 }
 
 /**
  * Turns all links into words, like "<a href="something">else</a>" to "else".
  *
  * @param string $text
+ *
  * @return string
  */
 function strip_links_text($text)
 {
-  return myText::stripLinks($text);
+    return myText::stripLinks($text);
 }
 
 /**
  * Formats filesize
  *
- * @param integer $size Size of the file in bytes
+ * @param integer $size  Size of the file in bytes
  * @param integer $round Precision
+ *
  * @return string Formatted filesize (100 kB)
  * @deprecated since version 1.5.8
  */
 function format_file_size($size, $round = 1)
 {
-  trigger_error('Deprecated usage of format_file_size(). Use file_format_size() is FileHelper.');
-  use_helper('File');
+    trigger_error('Deprecated usage of format_file_size(). Use file_format_size() is FileHelper.');
+    use_helper('File');
 
-  return file_format_size($size, $round);
+    return file_format_size($size, $round);
 }
 
 /**
  * Formats zip code (currently supports only czech zip codes)
  *
  * @param string $zip_code
+ *
  * @return string Formatted zipcode
  */
 function format_zip_code($zip_code)
 {
-  $zip_code = preg_replace("~[^0-9]~", '', $zip_code);
-  $first_part = substr($zip_code, 0, 3);
-  $second_part = substr($zip_code, 3, 5);
+    $zip_code = preg_replace("~[^0-9]~", '', $zip_code);
+    $first_part = substr($zip_code, 0, 3);
+    $second_part = substr($zip_code, 3, 5);
 
-  return sprintf('%s %s', $first_part, $second_part);
+    return sprintf('%s %s', $first_part, $second_part);
 }
 
 /**
  * Formats address
  *
  * @param string $address
+ *
  * @return string Formatted address
  */
 function format_address($address)
 {
-  $address = preg_replace('/,/', ',<br />', $address);
+    $address = preg_replace('/,/', ',<br />', $address);
 
-  return $address;
+    return $address;
 }
 
 /**
  * Formats phone number
  *
  * @param string $phoneNumber The phone number to format
- * @param string $culture The culture
+ * @param string $culture     The culture
+ *
  * @return string Formatted phone number
  */
 function format_phone_number($phoneNumber, $culture = null)
 {
-  return sfI18nPhoneNumberFormatter::getInstance()->format($phoneNumber, $culture);
+    return sfI18nPhoneNumberFormatter::getInstance()->format($phoneNumber, $culture);
 }
 
 /**
@@ -172,25 +180,27 @@ function format_phone_number($phoneNumber, $culture = null)
  * Toggle between $one and $two
  *
  * @access public
+ *
  * @param mixed $one Any variable/object
  * @param mixed $two Any variable/object
+ *
  * @return mixed Any variable or object, either representing one or two.
  */
 function toggle($one, $two, $section = 'a')
 {
-  static $toggle;
-  if (!isset($toggle[$section])) {
-    $toggle[$section] = array();
-  }
+    static $toggle;
+    if (!isset($toggle[$section])) {
+        $toggle[$section] = array();
+    }
 
-  $toggle[$section] = ($toggle[$section] == $one) ? $two : $one;
+    $toggle[$section] = ($toggle[$section] == $one) ? $two : $one;
 
-  return $toggle[$section];
+    return $toggle[$section];
 }
 
 function get_words_count($text)
 {
-  return myText::getWordsCount($text);
+    return myText::getWordsCount($text);
 }
 
 /**
@@ -198,16 +208,17 @@ function get_words_count($text)
  *
  * @param string $text
  * @param string $language
- * @param array $options
+ * @param array  $options
+ *
  * @return string
  */
 function hyphenate_text($text, $options = array())
 {
-  if (sfConfig::get('sf_logging_enabled')) {
-    sfLogger::getInstance()->warning('hyphenate_text() is deprecated. Use typography_text() instead');
-  }
+    if (sfConfig::get('sf_logging_enabled')) {
+        sfLogger::getInstance()->warning('hyphenate_text() is deprecated. Use typography_text() instead');
+    }
 
-  return typography_text($text, $options);
+    return typography_text($text, $options);
 }
 
 /**
@@ -215,58 +226,64 @@ function hyphenate_text($text, $options = array())
  *
  * @param string $text
  * @param string $language
- * @param array $options
+ * @param array  $options
+ *
  * @return string
  */
 function typography_text($text, $options = array())
 {
-  $options  = _parse_attributes($options);
+    $options = _parse_attributes($options);
 
-  $language = _get_option($options, 'culture', sfConfig::get('sf_i18n_default_culture'));
+    $language = _get_option($options, 'culture', sfConfig::get('sf_i18n_default_culture'));
 
-  // hyphenate text, true by default
-  $hyphenate = _get_option($options, 'hyphenate', true);
+    // hyphenate text, true by default
+    $hyphenate = _get_option($options, 'hyphenate', true);
 
-  if (!isset($options['hyphen'])) {
-    // @see http://www.utf8-chartable.de/unicode-utf8-table.pl?utf8=dec
-    $options['hyphen'] = chr(194).chr(173);
-  }
+    if (!isset($options['hyphen'])) {
+        // @see http://www.utf8-chartable.de/unicode-utf8-table.pl?utf8=dec
+        $options['hyphen'] = chr(194) . chr(173);
+    }
 
-  // convert options to method names
-  // what is this? a joke?
-  $options = array_flip(
-              array_map('lcfirst',
-                array_map('sfInflector::camelize', array_flip($options)
-            )));
+    // convert options to method names
+    // what is this? a joke?
+    $options = array_flip(
+        array_map(
+            'lcfirst',
+            array_map(
+                'sfInflector::camelize',
+                array_flip($options)
+            )
+        )
+    );
 
-  if (sfConfig::get('sf_debug')) {
-    sfTimerManager::getTimer('{sfTypography} typography_text');
-  }
+    if (sfConfig::get('sf_debug')) {
+        sfTimerManager::getTimer('{sfTypography} typography_text');
+    }
 
-  // correct the text before hyphenating?
-  $correct = _get_option($options, 'correct', true);
+    // correct the text before hyphenating?
+    $correct = _get_option($options, 'correct', true);
 
-  $typography = sfTypography::getInstance($language);
-  $typography->setOptions($options);
+    $typography = sfTypography::getInstance($language);
+    $typography->setOptions($options);
 
-  // correct the text before hyphenating?
-  $wrapWords = _get_option($options, 'wrap_words', true);
+    // correct the text before hyphenating?
+    $wrapWords = _get_option($options, 'wrap_words', true);
 
-  if ($hyphenate) {
-    $text = $typography->hyphenate($text);
-  }
+    if ($hyphenate) {
+        $text = $typography->hyphenate($text);
+    }
 
-  if ($correct) {
-    // $text = $typography->correct($text, $options);
-  }
+    if ($correct) {
+        // $text = $typography->correct($text, $options);
+    }
 
-  if ($wrapWords) {
-    // $text = $typography->wrapWords($text, $options);
-  }
+    if ($wrapWords) {
+        // $text = $typography->wrapWords($text, $options);
+    }
 
-  if (sfConfig::get('sf_debug')) {
-    sfTimerManager::getTimer('{sfTypography} typography_text')->addTime();
-  }
+    if (sfConfig::get('sf_debug')) {
+        sfTimerManager::getTimer('{sfTypography} typography_text')->addTime();
+    }
 
-  return $text;
+    return $text;
 }

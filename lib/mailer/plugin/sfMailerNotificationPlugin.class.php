@@ -22,30 +22,34 @@
  */
 class sfMailerNotificationPlugin extends sfMailerPlugin
 {
-  /**
-   * Invoked before the message is sent.
-   *
-   * @param Swift_Events_SendEvent $evt
-   */
-  public function beforeSendPerformed(Swift_Events_SendEvent $evt)
-  {
-    $this->dispatcher->notify(new sfEvent('mailer.message.before_send', array(
-        'event' => $evt,
-        'message' => $evt->getMessage()
-    )));
-  }
+    /**
+     * Invoked before the message is sent.
+     *
+     * @param Swift_Events_SendEvent $evt
+     */
+    public function beforeSendPerformed(Swift_Events_SendEvent $evt)
+    {
+        $this->dispatcher->notify(
+            new sfEvent('mailer.message.before_send', array(
+                'event'   => $evt,
+                'message' => $evt->getMessage()
+            ))
+        );
+    }
 
-  /**
-   * Invoked immediately after the message is sent.
-   *
-   * @param Swift_Events_SendEvent $evt
-   */
-  public function sendPerformed(Swift_Events_SendEvent $evt)
-  {
-    $this->dispatcher->notify(new sfEvent('mailer.message.after_send', array(
-      'event' => $evt,
-      'message' => $evt->getMessage()
-    )));
-  }
+    /**
+     * Invoked immediately after the message is sent.
+     *
+     * @param Swift_Events_SendEvent $evt
+     */
+    public function sendPerformed(Swift_Events_SendEvent $evt)
+    {
+        $this->dispatcher->notify(
+            new sfEvent('mailer.message.after_send', array(
+                'event'   => $evt,
+                'message' => $evt->getMessage()
+            ))
+        );
+    }
 
 }

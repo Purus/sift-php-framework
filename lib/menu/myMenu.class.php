@@ -13,4 +13,6 @@
  * @package    Sift
  * @subpackage menu
  */
-class myMenu extends sfMenu {}
+class myMenu extends sfMenu
+{
+}

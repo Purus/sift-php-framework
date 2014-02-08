@@ -9,33 +9,33 @@
 /**
  * Utility class used for loading result from module security.yml
  *
- * @package Sift
+ * @package    Sift
  * @subpackage security
  */
 class sfSecurityCheckResult
 {
-  public $security = array();
+    public $security = array();
 
-  /**
-   * Contructs the object
-   *
-   * @param string $module
-   */
-  public function __construct($module)
-  {
-    if ($fn = sfConfigCache::getInstance()->checkConfig('modules/' . $module . '/config/security.yml', true)) {
-      require($fn);
+    /**
+     * Contructs the object
+     *
+     * @param string $module
+     */
+    public function __construct($module)
+    {
+        if ($fn = sfConfigCache::getInstance()->checkConfig('modules/' . $module . '/config/security.yml', true)) {
+            require($fn);
+        }
     }
-  }
 
-  /**
-   * Returns secutiry setting
-   *
-   * @return array
-   */
-  public function getSecurity()
-  {
-    return $this->security;
-  }
+    /**
+     * Returns secutiry setting
+     *
+     * @return array
+     */
+    public function getSecurity()
+    {
+        return $this->security;
+    }
 
 }

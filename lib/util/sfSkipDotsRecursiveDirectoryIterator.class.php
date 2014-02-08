@@ -12,8 +12,8 @@
  * Manually skips '.' and '..' directories, since no existing method is
  * available in PHP 5.2.
  *
- * @todo Depreciate in favor of RecursiveDirectoryIterator::SKIP_DOTS once PHP 5.3 or later is required.
- * @package Sift
+ * @todo       Depreciate in favor of RecursiveDirectoryIterator::SKIP_DOTS once PHP 5.3 or later is required.
+ * @package    Sift
  * @subpackage util
  */
 class sfSkipDotsRecursiveDirectoryIterator extends RecursiveDirectoryIterator

@@ -12,4 +12,6 @@
  * @package    Sift
  * @subpackage action
  */
-class myAction extends sfActions {}
+class myAction extends sfActions
+{
+}

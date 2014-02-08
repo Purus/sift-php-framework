@@ -14,26 +14,26 @@
  */
 class sfStopException extends sfException
 {
-  /**
-   * Class constructor.
-   *
-   * @param string The error message
-   * @param int    The error code
-   */
-  public function __construct($message = null, $code = 0)
-  {
-    // disable xdebug to avoid backtrace in error log
-    if (function_exists('xdebug_disable')) {
-      xdebug_disable();
+    /**
+     * Class constructor.
+     *
+     * @param string The error message
+     * @param int    The error code
+     */
+    public function __construct($message = null, $code = 0)
+    {
+        // disable xdebug to avoid backtrace in error log
+        if (function_exists('xdebug_disable')) {
+            xdebug_disable();
+        }
+
+        parent::__construct($message, $code);
     }
 
-    parent::__construct($message, $code);
-  }
-
-  /**
-   * Stops the current action.
-   */
-  public function printStackTrace(Exception $exception = null)
-  {
-  }
+    /**
+     * Stops the current action.
+     */
+    public function printStackTrace(Exception $exception = null)
+    {
+    }
 }

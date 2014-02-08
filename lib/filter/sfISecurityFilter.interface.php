@@ -12,4 +12,6 @@
  * @package    Sift
  * @subpackage filter
  */
-interface sfISecurityFilter extends sfIFilter {}
+interface sfISecurityFilter extends sfIFilter
+{
+}

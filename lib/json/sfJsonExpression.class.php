@@ -35,32 +35,33 @@
  */
 class sfJsonExpression
 {
-  /**
-   * Storage for javascript expression.
-   *
-   * @var string
-   */
-  protected $expression;
+    /**
+     * Storage for javascript expression.
+     *
+     * @var string
+     */
+    protected $expression;
 
-  /**
-   * Constructor
-   *
-   * @param  string $expression the expression to hold.
-   * @return void
-   */
-  public function __construct($expression)
-  {
-    $this->expression = (string) $expression;
-  }
+    /**
+     * Constructor
+     *
+     * @param  string $expression the expression to hold.
+     *
+     * @return void
+     */
+    public function __construct($expression)
+    {
+        $this->expression = (string)$expression;
+    }
 
-  /**
-   * Cast to string
-   *
-   * @return string holded javascript expression.
-   */
-  public function __toString()
-  {
-    return $this->expression;
-  }
+    /**
+     * Cast to string
+     *
+     * @return string holded javascript expression.
+     */
+    public function __toString()
+    {
+        return $this->expression;
+    }
 
 }

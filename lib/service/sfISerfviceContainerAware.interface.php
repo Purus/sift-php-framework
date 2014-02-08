@@ -15,17 +15,17 @@
  */
 interface sfIServiceContainerAware
 {
-  /**
-   * Sets the service container
-   *
-   * @param sfServiceContainer $container
-   */
-  public function setServiceContainer(sfServiceContainer $container = null);
+    /**
+     * Sets the service container
+     *
+     * @param sfServiceContainer $container
+     */
+    public function setServiceContainer(sfServiceContainer $container = null);
 
-  /**
-   * Returns the service container
-   *
-   * @return sfServiceContainer|null
-   */
-  public function getServiceContainer();
+    /**
+     * Returns the service container
+     *
+     * @return sfServiceContainer|null
+     */
+    public function getServiceContainer();
 }

@@ -12,4 +12,6 @@
  * @package    Sift
  * @subpackage exception
  */
-class sfCliCommandException extends sfException {}
+class sfCliCommandException extends sfException
+{
+}

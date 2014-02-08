@@ -9,30 +9,30 @@
 /**
  * sfMoneyCurrencyCZK represents czech "koruna" currency
  *
- * @package Sift
+ * @package    Sift
  * @subpackage money
  */
 class sfMoneyCurrencyCZK extends sfMoneyCurrency
 {
-  /**
-   * Currency name
-   *
-   * @var string
-   */
-  protected $name = 'CZK';
+    /**
+     * Currency name
+     *
+     * @var string
+     */
+    protected $name = 'CZK';
 
-  /**
-   * Currency scale for CZK
-   *
-   * @var integer
-   */
-  public static $scale = 2;
+    /**
+     * Currency scale for CZK
+     *
+     * @var integer
+     */
+    public static $scale = 2;
 
-  /**
-   * Empty constructor
-   */
-  public function __construct()
-  {
-  }
+    /**
+     * Empty constructor
+     */
+    public function __construct()
+    {
+    }
 
 }

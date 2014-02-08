@@ -14,51 +14,55 @@
  */
 abstract class sfJavascriptTemplateCompiler extends sfConfigurable implements sfIJavascriptTemplateCompiler
 {
-  /**
-   * Returns an instance of the template compiler driver
-   *
-   * @param string $driver Driver name
-   * @param array $options Array of options for the driver
-   * @return sfIJavascriptTemplateCompiler
-   */
-  public static function factory($driver, $options = array())
-  {
-    $driverClass = sprintf(sprintf('sfJavascriptTemplateCompilerDriver%s', ucfirst($driver)));
+    /**
+     * Returns an instance of the template compiler driver
+     *
+     * @param string $driver Driver name
+     * @param array  $options Array of options for the driver
+     *
+     * @return sfIJavascriptTemplateCompiler
+     */
+    public static function factory($driver, $options = array())
+    {
+        $driverClass = sprintf(sprintf('sfJavascriptTemplateCompilerDriver%s', ucfirst($driver)));
 
-    if (class_exists($driverClass)) {
-      $driverObj = new $driverClass($options);
-    } elseif (class_exists($driver)) {
-      $driverObj = new $driver($options);
-    } else {
-      throw new InvalidArgumentException(sprintf('Driver "%s" does not exist.', $driver));
+        if (class_exists($driverClass)) {
+            $driverObj = new $driverClass($options);
+        } elseif (class_exists($driver)) {
+            $driverObj = new $driver($options);
+        } else {
+            throw new InvalidArgumentException(sprintf('Driver "%s" does not exist.', $driver));
+        }
+
+        if (!$driverObj instanceof sfIJavascriptTemplateCompiler) {
+            throw new LogicException(sprintf(
+                'Driver "%s" does not implement sfIJavascriptTemplateCompiler interface.',
+                $driver
+            ));
+        }
+
+        return $driverObj;
     }
 
-    if (!$driverObj instanceof sfIJavascriptTemplateCompiler) {
-      throw new LogicException(sprintf('Driver "%s" does not implement sfIJavascriptTemplateCompiler interface.', $driver));
+    /**
+     * Write cache data to a file
+     *
+     * @param string $cacheFile Path to a file
+     * @param string $data
+     */
+    public static function writeCache($cacheFile, $data)
+    {
+        return file_put_contents($cacheFile, self::getCacheFileHeader() . "\n" . $data, LOCK_EX);
     }
 
-    return $driverObj;
-  }
-
-  /**
-   * Write cache data to a file
-   *
-   * @param string $cacheFile Path to a file
-   * @param string $data
-   */
-  public static function writeCache($cacheFile, $data)
-  {
-    return file_put_contents($cacheFile, self::getCacheFileHeader() . "\n". $data, LOCK_EX);
-  }
-
-  /**
-   * Returns header text for CSS files
-   *
-   * @return  string  a header text for CSS files
-   */
-  public static function getCacheFileHeader()
-  {
-    return '/* This file is automatically compiled. Don\'t edit it manually. */';
-  }
+    /**
+     * Returns header text for CSS files
+     *
+     * @return  string  a header text for CSS files
+     */
+    public static function getCacheFileHeader()
+    {
+        return '/* This file is automatically compiled. Don\'t edit it manually. */';
+    }
 
 }

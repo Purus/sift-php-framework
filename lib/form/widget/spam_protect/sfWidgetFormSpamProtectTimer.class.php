@@ -16,18 +16,18 @@
  */
 class sfWidgetFormSpamProtectTimer extends sfWidgetFormInputHidden
 {
-  /**
-   * Constructor.
-   *
-   * @param array $options     An array of options
-   * @param array $attributes  An array of default HTML attributes
-   *
-   * @see sfWidget
-   */
-  public function __construct($options = array(), $attributes = array())
-  {
-    $attributes['value'] = base64_encode(time());
-    parent::__construct($options, $attributes);
-  }
+    /**
+     * Constructor.
+     *
+     * @param array $options    An array of options
+     * @param array $attributes An array of default HTML attributes
+     *
+     * @see sfWidget
+     */
+    public function __construct($options = array(), $attributes = array())
+    {
+        $attributes['value'] = base64_encode(time());
+        parent::__construct($options, $attributes);
+    }
 
 }

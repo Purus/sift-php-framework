@@ -14,54 +14,54 @@
  */
 interface sfIRequest extends sfIService
 {
-  /**
-   * GET
-   */
-  const GET = 'GET';
+    /**
+     * GET
+     */
+    const GET = 'GET';
 
-  /**
-   * POST
-   */
-  const POST = 'POST';
+    /**
+     * POST
+     */
+    const POST = 'POST';
 
-  /**
-   * PUT
-   */
-  const PUT = 'PUT';
+    /**
+     * PUT
+     */
+    const PUT = 'PUT';
 
-  /**
-   * DELETE
-   */
-  const DELETE = 'DELETE';
+    /**
+     * DELETE
+     */
+    const DELETE = 'DELETE';
 
-  /**
-   * HEAD
-   */
-  const HEAD = 'HEAD';
+    /**
+     * HEAD
+     */
+    const HEAD = 'HEAD';
 
-  /**
-   * Returns the request method
-   */
-  public function getMethod();
+    /**
+     * Returns the request method
+     */
+    public function getMethod();
 
-  /**
-   * Sets the request method
-   *
-   * @param string $methodCode
-   */
-  public function setMethod($methodCode);
+    /**
+     * Sets the request method
+     *
+     * @param string $methodCode
+     */
+    public function setMethod($methodCode);
 
-  /**
-   * Returns the raw content of the request
-   */
-  public function getContent();
+    /**
+     * Returns the raw content of the request
+     */
+    public function getContent();
 
-  /**
-   * Returns the parameter
-   *
-   * @param string $name The parameter name
-   * @param mixed $default The default value
-   */
-  public function getParameter($name, $default = null);
+    /**
+     * Returns the parameter
+     *
+     * @param string $name    The parameter name
+     * @param mixed  $default The default value
+     */
+    public function getParameter($name, $default = null);
 
 }

@@ -15,56 +15,62 @@
  */
 class sfWizardForm extends myForm
 {
-  /**
-   * Used for storing namespace names
-   *
-   * @var array
-   */
-  protected static $storageNamespaces = array();
+    /**
+     * Used for storing namespace names
+     *
+     * @var array
+     */
+    protected static $storageNamespaces = array();
 
-  /**
-   * Renders back button
-   *
-   * @param string $value
-   * @param array $attributes An array of button attriutes
-   * @return string
-   */
-  public function back($value = 'Back', $attributes = array())
-  {
-    $attributes = array_merge(array(
-      'type' => 'submit',
-      'name' => 'submit',
-      'value' => 'back'
-    ), $attributes);
+    /**
+     * Renders back button
+     *
+     * @param string $value
+     * @param array  $attributes An array of button attriutes
+     *
+     * @return string
+     */
+    public function back($value = 'Back', $attributes = array())
+    {
+        $attributes = array_merge(
+            array(
+                'type'  => 'submit',
+                'name'  => 'submit',
+                'value' => 'back'
+            ),
+            $attributes
+        );
 
-    return $this->renderSubmitTag($value, $attributes);
-  }
-
-  /**
-   * Sets storage namespace
-   *
-   * @param string $storageNamespace
-   * @param string $formNameMask
-   */
-  public static function setStorageNamespace($storageNamespace,
-          $formNameMask)
-  {
-    self::$storageNamespaces[$formNameMask] = $storageNamespace;
-  }
-
-  /**
-   * Returns storage namespace name for given $formNameMask
-   *
-   * @param string $formNameMask
-   * @return string
-   */
-  public static function getStorageNamespace($formNameMask = null)
-  {
-    if (is_null($formNameMask)) {
-      return current(self::$storageNamespaces);
+        return $this->renderSubmitTag($value, $attributes);
     }
 
-    return self::$storageNamespaces[$formNameMask];
-  }
+    /**
+     * Sets storage namespace
+     *
+     * @param string $storageNamespace
+     * @param string $formNameMask
+     */
+    public static function setStorageNamespace(
+        $storageNamespace,
+        $formNameMask
+    ) {
+        self::$storageNamespaces[$formNameMask] = $storageNamespace;
+    }
+
+    /**
+     * Returns storage namespace name for given $formNameMask
+     *
+     * @param string $formNameMask
+     *
+     * @return string
+     */
+    public static function getStorageNamespace($formNameMask = null)
+    {
+        if (is_null($formNameMask)) {
+            return current(self::$storageNamespaces);
+        }
+
+        return self::$storageNamespaces[$formNameMask];
+    }
 
 }

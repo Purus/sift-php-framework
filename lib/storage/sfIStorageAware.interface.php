@@ -9,23 +9,23 @@
 /**
  * sfIStorageAware interface
  *
- * @package Sift
+ * @package    Sift
  * @subpackage storage
  */
 interface sfIStorageAware
 {
-  /**
-   * Sets the storage instance
-   *
-   * @param sfIStorage $storage
-   */
-  public function setStorage(sfIStorage $storage = null);
+    /**
+     * Sets the storage instance
+     *
+     * @param sfIStorage $storage
+     */
+    public function setStorage(sfIStorage $storage = null);
 
-  /**
-   * Return the storage instance
-   *
-   * @return sfIStorage
-   */
-  public function getStorage();
+    /**
+     * Return the storage instance
+     *
+     * @return sfIStorage
+     */
+    public function getStorage();
 
 }

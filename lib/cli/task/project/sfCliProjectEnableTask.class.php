@@ -14,23 +14,27 @@
  */
 class sfCliProjectEnableTask extends sfCliBaseTask
 {
-  /**
-   * @see sfCliTask
-   */
-  protected function configure()
-  {
-    $this->addArguments(array(
-      new sfCliCommandArgument('env', sfCliCommandArgument::REQUIRED, 'The environment name'),
-      new sfCliCommandArgument('app', sfCliCommandArgument::OPTIONAL | sfCliCommandArgument::IS_ARRAY, 'The application name'),
-    ));
+    /**
+     * @see sfCliTask
+     */
+    protected function configure()
+    {
+        $this->addArguments(
+            array(
+                new sfCliCommandArgument('env', sfCliCommandArgument::REQUIRED, 'The environment name'),
+                new sfCliCommandArgument('app',
+                    sfCliCommandArgument::OPTIONAL | sfCliCommandArgument::IS_ARRAY, 'The application name'),
+            )
+        );
 
-    $this->namespace = 'project';
-    $this->name = 'enable';
-    $this->briefDescription = 'Enables an application in a given environment';
+        $this->namespace = 'project';
+        $this->name = 'enable';
+        $this->briefDescription = 'Enables an application in a given environment';
 
-    $scriptName = $this->environment->get('script_name');
+        $scriptName = $this->environment->get('script_name');
 
-    $this->detailedDescription = <<<EOF
+        $this->detailedDescription
+            = <<<EOF
 The [project:enable|INFO] task enables a specific environment:
 
   [{$scriptName} project:enable prod front|INFO]
@@ -40,33 +44,36 @@ environment:
 
   [{$scriptName} project:enable prod front backend|INFO]
 EOF;
-  }
-
-  /**
-   * @see sfCliTask
-   */
-  protected function execute($arguments = array(), $options = array())
-  {
-    $applications = count($arguments['app']) ? $arguments['app'] :
-                    sfFinder::type('dir')->relative()->maxDepth(0)->in($this->environment->get('sf_apps_dir'));
-
-    $env = $arguments['env'];
-
-    foreach ($applications as $app) {
-      $this->checkAppExists($app);
-
-      $lockFile = $this->environment->get('sf_data_dir').'/'.$app.'_'.$env.'.lck';
-      if (!file_exists($lockFile)) {
-        $this->logSection($this->getFullName(), sprintf('%s [%s] is currently ENABLED', $app, $env));
-      } else {
-        $this->getFilesystem()->remove($lockFile);
-
-        $this->logSection($this->getFullName(), sprintf('%s [%s] has been ENABLED', $app, $env));
-
-        $clearCache = new sfCliCacheClearTask($this->environment, $this->dispatcher, $this->formatter, $this->logger);
-        $clearCache->setCommandApplication($this->commandApplication);
-        $clearCache->run(array(), array('--app='.$app, '--env='.$env));
-      }
     }
-  }
+
+    /**
+     * @see sfCliTask
+     */
+    protected function execute($arguments = array(), $options = array())
+    {
+        $applications = count($arguments['app'])
+            ? $arguments['app']
+            :
+            sfFinder::type('dir')->relative()->maxDepth(0)->in($this->environment->get('sf_apps_dir'));
+
+        $env = $arguments['env'];
+
+        foreach ($applications as $app) {
+            $this->checkAppExists($app);
+
+            $lockFile = $this->environment->get('sf_data_dir') . '/' . $app . '_' . $env . '.lck';
+            if (!file_exists($lockFile)) {
+                $this->logSection($this->getFullName(), sprintf('%s [%s] is currently ENABLED', $app, $env));
+            } else {
+                $this->getFilesystem()->remove($lockFile);
+
+                $this->logSection($this->getFullName(), sprintf('%s [%s] has been ENABLED', $app, $env));
+
+                $clearCache
+                    = new sfCliCacheClearTask($this->environment, $this->dispatcher, $this->formatter, $this->logger);
+                $clearCache->setCommandApplication($this->commandApplication);
+                $clearCache->run(array(), array('--app=' . $app, '--env=' . $env));
+            }
+        }
+    }
 }

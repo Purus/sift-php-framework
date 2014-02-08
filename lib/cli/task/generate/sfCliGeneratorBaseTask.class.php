@@ -14,5 +14,5 @@
  */
 abstract class sfCliGeneratorBaseTask extends sfCliBaseTask
 {
-  // currently empty
+    // currently empty
 }

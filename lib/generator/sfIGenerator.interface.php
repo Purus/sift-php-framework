@@ -9,28 +9,28 @@
 /**
  * Generator interface
  *
- * @package Sift
+ * @package    Sift
  * @subpackage generator
  */
 interface sfIGenerator
 {
-  /**
-   * Generates classes and templates.
-   *
-   * @return string The cache for the configuration file
-   */
-  public function generate();
+    /**
+     * Generates classes and templates.
+     *
+     * @return string The cache for the configuration file
+     */
+    public function generate();
 
-  /**
-   * Return module name
-   */
-  public function getModuleName();
+    /**
+     * Return module name
+     */
+    public function getModuleName();
 
-  /**
-   * Sets module name
-   *
-   * @param string $moduleName
-   */
-  public function setModuleName($moduleName);
+    /**
+     * Sets module name
+     *
+     * @param string $moduleName
+     */
+    public function setModuleName($moduleName);
 
 }

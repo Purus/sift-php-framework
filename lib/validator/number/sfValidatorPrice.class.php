@@ -14,58 +14,58 @@
  */
 class sfValidatorPrice extends sfValidatorNumber
 {
-  /**
-   * Configures the current validator.
-   *
-   * Available options:
-   *
-   *  * culture: culture of the number
-   *
-   * @param array $options   An array of options
-   * @param array $messages  An array of error messages
-   *
-   * @see sfValidatorBase
-   * @see sfValidatorNumber
-   */
-  protected function configure($options = array(), $messages = array())
-  {
-    parent::configure($options, $messages);
-    $this->addOption('culture', null);
-    // strict mode, which allows only culture specifics
-    $this->addOption('strict_mode', false);
-    $this->setMessage('invalid', '"%value%" is not a valid price.');
-  }
-
-  /**
-   * @see sfValidatorBase
-   */
-  protected function doClean($value)
-  {
-    if (!sfToolkit::isBlank($value)) {
-      try {
-        $value = sfI18nNumberFormat::getNumber($value, $this->getCulture());
-      } catch (Exception $e) {
-        // we have a strict mode, it means, that the value is not formatted
-        // for current culture, throw an error!
-        // or
-        // this value does not look like float, its all wrong
-        if ($this->getOption('strict_mode') || !$this->isFloat($value)) {
-          throw new sfValidatorError($this, 'invalid', array('value' => $value));
-        }
-      }
+    /**
+     * Configures the current validator.
+     *
+     * Available options:
+     *
+     *  * culture: culture of the number
+     *
+     * @param array $options  An array of options
+     * @param array $messages An array of error messages
+     *
+     * @see sfValidatorBase
+     * @see sfValidatorNumber
+     */
+    protected function configure($options = array(), $messages = array())
+    {
+        parent::configure($options, $messages);
+        $this->addOption('culture', null);
+        // strict mode, which allows only culture specifics
+        $this->addOption('strict_mode', false);
+        $this->setMessage('invalid', '"%value%" is not a valid price.');
     }
 
-    return parent::doClean($value);
-  }
+    /**
+     * @see sfValidatorBase
+     */
+    protected function doClean($value)
+    {
+        if (!sfToolkit::isBlank($value)) {
+            try {
+                $value = sfI18nNumberFormat::getNumber($value, $this->getCulture());
+            } catch (Exception $e) {
+                // we have a strict mode, it means, that the value is not formatted
+                // for current culture, throw an error!
+                // or
+                // this value does not look like float, its all wrong
+                if ($this->getOption('strict_mode') || !$this->isFloat($value)) {
+                    throw new sfValidatorError($this, 'invalid', array('value' => $value));
+                }
+            }
+        }
 
-  public function getJavascriptValidationRules()
-  {
-    return array();
-  }
+        return parent::doClean($value);
+    }
 
-  public function getJavascriptValidationMessages()
-  {
-    return array();
-  }
+    public function getJavascriptValidationRules()
+    {
+        return array();
+    }
+
+    public function getJavascriptValidationMessages()
+    {
+        return array();
+    }
 
 }

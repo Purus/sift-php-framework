@@ -14,71 +14,71 @@
  */
 class sfNoLogger implements sfILogger
 {
-  /**
-   * @see sfILogger
-   */
-  public function emergency($message, array $context = array())
-  {
-  }
+    /**
+     * @see sfILogger
+     */
+    public function emergency($message, array $context = array())
+    {
+    }
 
-  /**
-   * @see sfILogger
-   */
-  public function alert($message, array $context = array())
-  {
-  }
+    /**
+     * @see sfILogger
+     */
+    public function alert($message, array $context = array())
+    {
+    }
 
-  /**
-   * @see sfILogger
-   */
-  public function critical($message, array $context = array())
-  {
-  }
+    /**
+     * @see sfILogger
+     */
+    public function critical($message, array $context = array())
+    {
+    }
 
-  /**
-   * @see sfILogger
-   */
-  public function error($message, array $context = array())
-  {
-  }
+    /**
+     * @see sfILogger
+     */
+    public function error($message, array $context = array())
+    {
+    }
 
-  /**
-   * @see sfILogger
-   */
-  public function warning($message, array $context = array())
-  {
-  }
+    /**
+     * @see sfILogger
+     */
+    public function warning($message, array $context = array())
+    {
+    }
 
-  /**
-   * @see sfILogger
-   */
-  public function notice($message, array $context = array())
-  {
-  }
+    /**
+     * @see sfILogger
+     */
+    public function notice($message, array $context = array())
+    {
+    }
 
-  /**
-   * @see sfILogger
-   */
-  public function info($message, array $context = array())
-  {
-  }
+    /**
+     * @see sfILogger
+     */
+    public function info($message, array $context = array())
+    {
+    }
 
-  /**
-   * @see sfILogger
-   */
-  public function debug($message, array $context = array())
-  {
-  }
+    /**
+     * @see sfILogger
+     */
+    public function debug($message, array $context = array())
+    {
+    }
 
-  /**
-   * @see sfILogger
-   */
-  public function log($message, $level = sfILogger::INFO, array $context = array())
-  {
-  }
+    /**
+     * @see sfILogger
+     */
+    public function log($message, $level = sfILogger::INFO, array $context = array())
+    {
+    }
 
-  public function shutdown()
-  {
-  }
+    public function shutdown()
+    {
+    }
 
 }

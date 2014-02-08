@@ -14,45 +14,43 @@
  */
 class sfMarkdownTextFilter extends sfTextFilter
 {
-  /**
-   * Markdown parser
-   *
-   * @var sfMarkdDownParser
-   */
-  protected $parser;
+    /**
+     * Markdown parser
+     *
+     * @var sfMarkdDownParser
+     */
+    protected $parser;
 
-  /**
-   * Constructor
-   *
-   * @param array $options
-   */
-  public function __construct($options = array())
-  {
-    parent::__construct($options);
-    $this->parser = new sfMarkdownParser($this->getOptionsForParser());
-  }
+    /**
+     * Constructor
+     *
+     * @param array $options
+     */
+    public function __construct($options = array())
+    {
+        parent::__construct($options);
+        $this->parser = new sfMarkdownParser($this->getOptionsForParser());
+    }
 
-  /**
-   * Returns options for the markdown parser
-   *
-   * @return array
-   */
-  protected function getOptionsForParser()
-  {
-    return array(
+    /**
+     * Returns options for the markdown parser
+     *
+     * @return array
+     */
+    protected function getOptionsForParser()
+    {
+        return array();
+    }
 
-    );
-  }
-
-  /**
-   * Filters the content
-   *
-   * @param sfTextFilterContent $content
-   */
-  public function filter(sfTextFilterContent $content)
-  {
-    $converted = $this->parser->transform($content->getText());
-    $content->setText($converted);
-  }
+    /**
+     * Filters the content
+     *
+     * @param sfTextFilterContent $content
+     */
+    public function filter(sfTextFilterContent $content)
+    {
+        $converted = $this->parser->transform($content->getText());
+        $content->setText($converted);
+    }
 
 }

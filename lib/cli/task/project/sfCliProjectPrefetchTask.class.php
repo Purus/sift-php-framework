@@ -14,83 +14,93 @@
  */
 class sfCliProjectPrefetchTask extends sfCliBaseTask
 {
-  /**
-   * @see sfCliTask
-   */
-  protected function configure()
-  {
-    $this->addArguments(array(
-      new sfCliCommandArgument('app', sfCliCommandArgument::OPTIONAL | sfCliCommandArgument::IS_ARRAY, 'The application name'),
-    ));
+    /**
+     * @see sfCliTask
+     */
+    protected function configure()
+    {
+        $this->addArguments(
+            array(
+                new sfCliCommandArgument('app',
+                    sfCliCommandArgument::OPTIONAL | sfCliCommandArgument::IS_ARRAY, 'The application name'),
+            )
+        );
 
-    $this->addOptions(array(
-      new sfCliCommandOption('hostname', 'h', sfCliCommandOption::PARAMETER_OPTIONAL | sfCliCommandOption::IS_ARRAY, 'Hostname'),
-      new sfCliCommandOption('environment', 'e', sfCliCommandOption::PARAMETER_OPTIONAL, 'The environment', 'prod'),
-      new sfCliCommandOption('remote-addr', 'r', sfCliCommandOption::PARAMETER_OPTIONAL, 'Remote address', '127.0.0.1'),
-      new sfCliCommandOption('routes', 'rt', sfCliCommandOption::PARAMETER_OPTIONAL | sfCliCommandOption::IS_ARRAY, 'Routes'),
-    ));
+        $this->addOptions(
+            array(
+                new sfCliCommandOption('hostname', 'h',
+                    sfCliCommandOption::PARAMETER_OPTIONAL | sfCliCommandOption::IS_ARRAY, 'Hostname'),
+                new sfCliCommandOption('environment', 'e', sfCliCommandOption::PARAMETER_OPTIONAL, 'The environment', 'prod'),
+                new sfCliCommandOption('remote-addr', 'r', sfCliCommandOption::PARAMETER_OPTIONAL, 'Remote address', '127.0.0.1'),
+                new sfCliCommandOption('routes', 'rt',
+                    sfCliCommandOption::PARAMETER_OPTIONAL | sfCliCommandOption::IS_ARRAY, 'Routes'),
+            )
+        );
 
-    $this->namespace = 'project';
-    $this->name = 'prefetch';
-    $this->briefDescription = 'Prefetches the application in production environment';
+        $this->namespace = 'project';
+        $this->name = 'prefetch';
+        $this->briefDescription = 'Prefetches the application in production environment';
 
-    $scriptName = $this->environment->get('script_name');
+        $scriptName = $this->environment->get('script_name');
 
-    $this->detailedDescription = <<<EOF
+        $this->detailedDescription
+            = <<<EOF
 The [project:prefetch|INFO] prefetches the application in production environment:
 
   [{$scriptName} project:prefetch front|INFO]
 EOF;
-  }
-
-  /**
-   * @see sfCliTask
-   */
-  protected function execute($arguments = array(), $options = array())
-  {
-    $applications = $arguments['app'];
-
-    if (count($applications)) {
-      foreach ($applications as $application) {
-        $this->checkAppExists($application);
-      }
-    } else {
-      // find applications
-      $applications = sfFinder::type('dir')->maxDepth(0)
-                        ->relative()->in($this->environment->get('sf_apps_dir'));
     }
 
-    if (!count($options['hostname'])) {
-      $options['hostname'][] = 'localhost';
+    /**
+     * @see sfCliTask
+     */
+    protected function execute($arguments = array(), $options = array())
+    {
+        $applications = $arguments['app'];
+
+        if (count($applications)) {
+            foreach ($applications as $application) {
+                $this->checkAppExists($application);
+            }
+        } else {
+            // find applications
+            $applications = sfFinder::type('dir')->maxDepth(0)
+                ->relative()->in($this->environment->get('sf_apps_dir'));
+        }
+
+        if (!count($options['hostname'])) {
+            $options['hostname'][] = 'localhost';
+        }
+
+        foreach ($applications as $application) {
+            $this->logSection($this->getFullName(), sprintf('Prefetching "%s"', $application));
+            $this->prefetchApplication($application, $options);
+        }
+
+        $this->logSection($this->getFullName(), 'Done.');
     }
 
-    foreach ($applications as $application) {
-      $this->logSection($this->getFullName(), sprintf('Prefetching "%s"', $application));
-      $this->prefetchApplication($application, $options);
-    }
+    protected function prefetchApplication($application, $options)
+    {
+        $rootDir = $this->environment->get('sf_root_dir');
+        $remoteAddress = $options['remote-addr'];
+        $environment = $options['environment'];
 
-    $this->logSection($this->getFullName(), 'Done.');
-  }
+        // we have a routes to prefetch
+        if (count($options['routes'])) {
+            $routes = $options['routes'];
+        } else {
+            $routes = array('@homepage');
+        }
 
-  protected function prefetchApplication($application, $options)
-  {
-    $rootDir = $this->environment->get('sf_root_dir');
-    $remoteAddress = $options['remote-addr'];
-    $environment = $options['environment'];
+        $routes = sfToolkit::varExport($routes);
 
-    // we have a routes to prefetch
-    if (count($options['routes'])) {
-      $routes = $options['routes'];
-    } else {
-      $routes = array('@homepage');
-    }
-
-    $routes = sfToolkit::varExport($routes);
-
-    foreach ($options['hostname'] as $hostname) {
-      $testFile = tempnam(sys_get_temp_dir(), 'prefetch');
-      file_put_contents($testFile, <<<EOF
-<?php
+        foreach ($options['hostname'] as $hostname) {
+            $testFile = tempnam(sys_get_temp_dir(), 'prefetch');
+            file_put_contents(
+                $testFile,
+                <<<EOF
+               <?php
 // This is a separated process to prefetch the application
 
 define('SF_ROOT_DIR', '$rootDir');
@@ -127,23 +137,23 @@ if (!\$error) {
 }
 
 EOF
-      );
+            );
 
-      ob_start();
-      passthru(sprintf('%s %s 2>&1', escapeshellarg($this->getPhpCli()), escapeshellarg($testFile)), $return);
-      $result = ob_get_clean();
-      unlink($testFile);
+            ob_start();
+            passthru(sprintf('%s %s 2>&1', escapeshellarg($this->getPhpCli()), escapeshellarg($testFile)), $return);
+            $result = ob_get_clean();
+            unlink($testFile);
 
-      if ($result == 'OK') {
-        $this->logSection($this->getFullName(), 'Prefetching ok.');
-      } else {
-        $this->logSection($this->getFullName(), 'Error prefetching app.', null, 'ERROR');
-        $confirmed = $this->askConfirmation('Display the result?');
-        if ($confirmed) {
-          echo $result;
+            if ($result == 'OK') {
+                $this->logSection($this->getFullName(), 'Prefetching ok.');
+            } else {
+                $this->logSection($this->getFullName(), 'Error prefetching app.', null, 'ERROR');
+                $confirmed = $this->askConfirmation('Display the result?');
+                if ($confirmed) {
+                    echo $result;
+                }
+            }
         }
-      }
     }
-  }
 
 }

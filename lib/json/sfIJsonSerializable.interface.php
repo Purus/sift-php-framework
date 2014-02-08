@@ -9,16 +9,16 @@
 /**
  * sfIJsonSerializable interface defines what data should be serialized using sfJson::encode()
  *
- * @package Sift
+ * @package    Sift
  * @subpackage json
  */
 interface sfIJsonSerializable
 {
-  /**
-   * Specify data which should be serialized to JSON
-   *
-   * @return array|object
-   */
-  public function jsonSerialize();
+    /**
+     * Specify data which should be serialized to JSON
+     *
+     * @return array|object
+     */
+    public function jsonSerialize();
 
 }

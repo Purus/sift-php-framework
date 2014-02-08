@@ -14,11 +14,11 @@
  */
 interface sfITextFilter
 {
-  /**
-   * Filters given content
-   *
-   * @param sfTextFilterContent $content The text filter content
-   */
-  public function filter(sfTextFilterContent $content);
+    /**
+     * Filters given content
+     *
+     * @param sfTextFilterContent $content The text filter content
+     */
+    public function filter(sfTextFilterContent $content);
 
 }

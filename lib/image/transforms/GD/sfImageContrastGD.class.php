@@ -13,71 +13,74 @@
  *
  * Reduces the level of detail of an GD image.
  *
- * @package Sift
+ * @package    Sift
  * @subpackage image
  */
 class sfImageContrastGD extends sfImageTransformAbstract
 {
-  /**
-   * Constract level to be applied.
-  */
-  protected $contrast = 0;
+    /**
+     * Constract level to be applied.
+     */
+    protected $contrast = 0;
 
-  /**
-   * Construct an sfImageContrast object.
-   *
-   * @param integer
-   */
-  public function __construct($contrast)
-  {
-    $this->setContrast($contrast);
-  }
-
-  /**
-   * Sets the contrast
-   *
-   * @param integer
-   * @return boolean
-   */
-  public function setContrast($contrast)
-  {
-    if (is_numeric($contrast)) {
-      $this->contrast = (int) $contrast;
-
-      return true;
+    /**
+     * Construct an sfImageContrast object.
+     *
+     * @param integer
+     */
+    public function __construct($contrast)
+    {
+        $this->setContrast($contrast);
     }
 
-    return false;
-  }
+    /**
+     * Sets the contrast
+     *
+     * @param integer
+     *
+     * @return boolean
+     */
+    public function setContrast($contrast)
+    {
+        if (is_numeric($contrast)) {
+            $this->contrast = (int)$contrast;
 
-  /**
-   * Gets the contrast
-   *
-   * @return integer
-   */
-  public function getContrast()
-  {
-    return $this->contrast;
-  }
+            return true;
+        }
 
-  /**
-   * Apply the transform to the sfImage object.
-   *
-   * @access protected
-   * @param sfImage
-   * @return sfImage
-   */
-  protected function transform(sfImage $image)
-  {
-    $resource = $image->getAdapter()->getHolder();
-
-    if (function_exists('imagefilter')) {
-      imagefilter($resource, IMG_FILTER_CONTRAST, $this->contrast);
-    } else {
-      throw new sfImageTransformException(sprintf('Cannot perform transform, GD does not support imagefilter '));
+        return false;
     }
 
-    return $image;
-  }
+    /**
+     * Gets the contrast
+     *
+     * @return integer
+     */
+    public function getContrast()
+    {
+        return $this->contrast;
+    }
+
+    /**
+     * Apply the transform to the sfImage object.
+     *
+     * @access protected
+     *
+     * @param sfImage
+     *
+     * @return sfImage
+     */
+    protected function transform(sfImage $image)
+    {
+        $resource = $image->getAdapter()->getHolder();
+
+        if (function_exists('imagefilter')) {
+            imagefilter($resource, IMG_FILTER_CONTRAST, $this->contrast);
+        } else {
+            throw new sfImageTransformException(sprintf('Cannot perform transform, GD does not support imagefilter '));
+        }
+
+        return $image;
+    }
 
 }

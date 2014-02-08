@@ -7,7 +7,7 @@
  */
 
 return array(
-  'Stránky sú dočasne nedostupné',
-  'Ospravedlňujeme sa, ale práve <strong> vykonávame údržbu stránok </strong>. Prosíme skúste to za 30 minút.',
-  'Děkujeme za Vaši trpělivost.'
+    'Stránky sú dočasne nedostupné',
+    'Ospravedlňujeme sa, ale práve <strong> vykonávame údržbu stránok </strong>. Prosíme skúste to za 30 minút.',
+    'Děkujeme za Vaši trpělivost.'
 );

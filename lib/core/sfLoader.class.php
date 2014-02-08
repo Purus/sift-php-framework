@@ -14,825 +14,878 @@
  */
 class sfLoader
 {
-  /**
-   * Array of application wide configuration files which can
-   * be overridden with a dimension
-   *
-   * @var array
-   */
-  protected static $applicationConfigurationFiles = array(
-    'app.yml', 'factories.yml',
-    'filters.yml', 'i18n.yml',
-    'logging.yml', 'settings.yml',
-    'databases.yml', 'routing.yml',
-    'asset_packages',
-  );
+    /**
+     * Array of application wide configuration files which can
+     * be overridden with a dimension
+     *
+     * @var array
+     */
+    protected static $applicationConfigurationFiles
+        = array(
+            'app.yml',
+            'factories.yml',
+            'filters.yml',
+            'i18n.yml',
+            'logging.yml',
+            'settings.yml',
+            'databases.yml',
+            'routing.yml',
+            'asset_packages',
+        );
 
-  /**
-   * Array of module wide configuration files which can
-   * be overridden with a dimension
-   *
-   * @var array
-   */
-  protected static $moduleConfigurationFiles = array(
-    'cache.yml', 'module.yml', 'security.yml', 'view.yml'
-  );
+    /**
+     * Array of module wide configuration files which can
+     * be overridden with a dimension
+     *
+     * @var array
+     */
+    protected static $moduleConfigurationFiles
+        = array(
+            'cache.yml',
+            'module.yml',
+            'security.yml',
+            'view.yml'
+        );
 
-  /**
-   * Array of all confuration files (app wide + module wide) which can
-   * be overridden with a dimension
-   *
-   * @var array
-   */
-  protected static $allConfigurationFiles = array(
-    'app.yml', 'factories.yml',
-    'filters.yml', 'i18n.yml',
-    'logging.yml', 'settings.yml',
-    'databases.yml', 'routing.yml',
-    'asset_packages',
-    'cache.yml', 'module.yml', 'security.yml', 'view.yml'
-  );
+    /**
+     * Array of all confuration files (app wide + module wide) which can
+     * be overridden with a dimension
+     *
+     * @var array
+     */
+    protected static $allConfigurationFiles
+        = array(
+            'app.yml',
+            'factories.yml',
+            'filters.yml',
+            'i18n.yml',
+            'logging.yml',
+            'settings.yml',
+            'databases.yml',
+            'routing.yml',
+            'asset_packages',
+            'cache.yml',
+            'module.yml',
+            'security.yml',
+            'view.yml'
+        );
 
-  /**
-   * Loaded helpers cache
-   *
-   * @var array
-   */
-  protected static $loadedHelpers = array();
+    /**
+     * Loaded helpers cache
+     *
+     * @var array
+     */
+    protected static $loadedHelpers = array();
 
-  /**
-   * Call cache
-   *
-   * @var array
-   */
-  protected static $callCache = array(
-    'config' => array(),
-    'lib' => array(),
-    'controller' => array(),
-    'helper' => array(),
-    'model' => null,
-    'template' => array(),
-    'i18n' => array(),
-    'i18n_dir' => array(),
-    'decorator' => null,
-    'generator_template' => array(),
-    'generator_skeleton' => array()
-  );
+    /**
+     * Call cache
+     *
+     * @var array
+     */
+    protected static $callCache
+        = array(
+            'config'             => array(),
+            'lib'                => array(),
+            'controller'         => array(),
+            'helper'             => array(),
+            'model'              => null,
+            'template'           => array(),
+            'i18n'               => array(),
+            'i18n_dir'           => array(),
+            'decorator'          => null,
+            'generator_template' => array(),
+            'generator_skeleton' => array()
+        );
 
-  /**
-   * Gets directories where lib files are stored for a given module.
-   *
-   * @param string $moduleName The module name
-   * @return array An array of directories
-   */
-  public static function getLibDirs($moduleName)
-  {
-    // speed things up
-    if (isset(self::$callCache['lib'][$moduleName])) {
-      return self::$callCache['lib'][$moduleName];
-    }
-
-    $libDirName = sfConfig::get('sf_app_module_lib_dir_name');
-    $moduleDirName = sfConfig::get('sf_app_module_dir_name');
-
-    $dirs = array();
-
-    // application
-    $dirs[] = sfConfig::get('sf_app_module_dir') . DS . $moduleName . DS . $libDirName;
-
-    // plugins
-    foreach (sfConfig::get('sf_plugins', array()) as $plugin) {
-      if(is_dir($dir = sfConfig::get('sf_plugins_dir') . DS . $plugin . DS .
-                $moduleDirName . DS . $moduleName . DS . $libDirName))
-      {
-        $dirs[] = $dir;
-      }
-    }
-
-    $dirs = array_merge($dirs, self::getCustomDirectories($moduleName . DS . $libDirName));
-
-    // generated templates in cache
-    $dirs[] = sfConfig::get('sf_module_cache_dir') . DS . 'auto' . ucfirst($moduleName) . DS . $libDirName;
-
-    // speed things up
-    self::$callCache['lib'][$moduleDirName] = $dirs;
-
-    return $dirs;
-  }
-
-  /**
-   * Gets directories where model classes are stored.
-   *
-   * @return array An array of directories
-   */
-  public static function getModelDirs()
-  {
-    // speed things up
-    if (isset(self::$callCache['model'])) {
-      return self::$callCache['model'];
-    }
-
-    // project
-    $dirs = array(sfConfig::get('sf_model_lib_dir'));
-
-    // plugins
-    $dirs = array_merge($dirs, self::getPluginDirectories(
-            sfConfig::get('sf_app_lib_dir_name') . DS . sfConfig::get('sf_model_dir_name'), false));
-
-    // speed things up
-    self::$callCache['model'] = $dirs;
-
-    return $dirs;
-  }
-
-  /**
-   * Gets directories where controller classes are stored for a given module.
-   *
-   * @param string The module name
-   *
-   * @return array An array of directories
-   */
-  public static function getControllerDirs($moduleName)
-  {
-    // speed things up
-    if (isset(self::$callCache['controller'][$moduleName])) {
-      return self::$callCache['controller'][$moduleName];
-    }
-
-    $suffix = $moduleName . DS . sfConfig::get('sf_app_module_action_dir_name');
-
-    $dirs = array();
-
-    // load application directories
-    foreach (self::getApplicationDirectories($suffix) as $dir) {
-      // modules in the app are automatically enabled
-      $dirs[$dir] = false;
-    }
-
-    // load custom directories
-    foreach (self::getCustomDirectories($suffix) as $dir) {
-      // enableCheck is true
-      $dirs[$dir] = true;
-    }
-
-    // plugin directories
-    foreach (self::getPluginDirectories(sfConfig::get('sf_app_module_dir_name') . DS . $suffix) as $dir) {
-      // enableCheck is true
-      $dirs[$dir] = true;
-    }
-
-    foreach (self::getCoreDirectories(sfConfig::get('sf_app_module_dir_name') . DS . $suffix) as $dir) {
-      // enable check si true
-      $dirs[$dir] = true;
-    }
-
-    // speed things up
-    self::$callCache['controller'][$moduleName] = $dirs;
-
-    return $dirs;
-  }
-
-  /**
-   * Gets directories where template files are stored for a given module.
-   *
-   * @param string The module name
-   *
-   * @return array An array of directories
-   */
-  public static function getTemplateDirs($moduleName)
-  {
-    // speed things up
-    if (isset(self::$callCache['template'][$moduleName])) {
-      return self::$callCache['template'][$moduleName];
-    }
-
-    $suffix = $moduleName . DS . sfConfig::get('sf_app_module_template_dir_name');
-    // application
-    $dirs = array_merge(array(), self::getApplicationDirectories($suffix));
-    // custom modules
-    $dirs = array_merge($dirs, self::getCustomDirectories($suffix));
-    // plugins
-    $dirs = array_merge($dirs, self::getPluginDirectories(sfConfig::get('sf_app_module_dir_name') . DS . $suffix));
-    // core
-    $dirs = array_merge($dirs, self::getCoreDirectories(sfConfig::get('sf_app_module_dir_name') . DS . $suffix));
-    // generated templates in cache
-    $dirs[] = sfConfig::get('sf_module_cache_dir') . DS . 'auto' . ucfirst($suffix);
-
-    // speed things up
-    self::$callCache['template'][$moduleName] = $dirs;
-
-    return $dirs;
-  }
-
-  /**
-   * Gets the template directory to use for a given module and template file.
-   *
-   * @param string The module name
-   * @param string The template file
-   *
-   * @return string A template directory
-   */
-  public static function getTemplateDir($moduleName, $templateFile)
-  {
-    $dirs = self::getTemplateDirs($moduleName);
-    foreach ($dirs as $dir) {
-      if (is_readable($dir . DS . $templateFile)) {
-        return $dir;
-      }
-    }
-
-    return null;
-  }
-
-  /**
-   * Gets the template to use for a given module and template file.
-   *
-   * @param string The module name
-   * @param string The template file
-   *
-   * @return string A template path
-   */
-  public static function getTemplatePath($moduleName, $templateFile)
-  {
-    $dir = self::getTemplateDir($moduleName, $templateFile);
-
-    return $dir ? $dir . DS . $templateFile : null;
-  }
-
-  /**
-   * Gets the decorator directories.
-   *
-   * @return array An array of the decorator directories
-   */
-  public static function getDecoratorDirs()
-  {
-    // speed things up
-    if (isset(self::$callCache['decorator'])) {
-      return self::$callCache['decorator'];
-    }
-
-    $dimensionDirs = sfConfig::get('sf_dimension_dirs', array());
-    $dirs = array();
-    if (is_array($dimensionDirs)) {
-      $templateDir = sfConfig::get('sf_app_template_dir');
-      foreach ($dimensionDirs as $dir) {
-        $dirs[] = $templateDir . DS . $dir;
-      }
-    }
-
-    $dirs[] = sfConfig::get('sf_app_template_dir');
-
-    // speed things up
-    self::$callCache['decorator'] = $dirs;
-
-    return $dirs;
-  }
-
-  /**
-   * Gets the decorator directory for a given template.
-   *
-   * @param string $template The template file
-   * @return string A template directory
-   */
-  public static function getDecoratorDir($template)
-  {
-    foreach (self::getDecoratorDirs() as $dir) {
-      if (is_readable($dir.'/'.$template)) {
-        return $dir;
-      }
-    }
-  }
-
-  /**
-   * Gets the i18n directory to use for a given module.
-   *
-   * @param string The module name
-   *
-   * @return string An i18n directory
-   */
-  public static function getI18NDir($moduleName)
-  {
-    // speed things up
-    if (isset(self::$callCache['i18n_dir'][$moduleName])) {
-      //return self::$callCache['i18n_dir'][$moduleName];
-    }
-
-    $suffix = $moduleName . DS . sfConfig::get('sf_app_module_i18n_dir_name');
-
-    $dir = null;
-    // application
-    if (is_dir(sfConfig::get('sf_app_module_dir') . DS . $suffix)) {
-      $dir = sfConfig::get('sf_app_module_dir') . DS . $suffix;
-    } else {
-      $moduleDirName = sfConfig::get('sf_app_module_dir_name');
-      $found = false;
-      foreach (sfConfig::get('sf_plugins', array()) as $plugin) {
-        if (is_dir($dir = sfConfig::get('sf_plugins_dir') . DS . $plugin . DS . $moduleDirName . DS . $suffix)) {
-          $found = true;
-          break;
-        }
-      }
-      if (!$found && is_dir(sfConfig::get('sf_sift_data_dir') . DS . $moduleDirName . DS . $suffix)) {
-        $dir = sfConfig::get('sf_sift_data_dir') . DS . $moduleDirName . DS . $suffix;
-      }
-    }
-
-    // speed things up
-    self::$callCache['i18n_dir'][$moduleName] = $dir;
-
-    return $dir;
-  }
-
-  /**
-   * Gets the i18n directories to use for a given module.
-   *
-   * @param string $moduleName The module name
-   *
-   * @return array An array of i18n directories
-   */
-  public static function getI18NDirs($moduleName)
-  {
-    // speed things up
-    if (isset(self::$callCache['i18n'][$moduleName])) {
-      return self::$callCache['i18n'][$moduleName];
-    }
-
-    $dirs = array();
-
-    $suffix = $moduleName . DS . sfConfig::get('sf_app_module_i18n_dir_name');
-
-    // application
-    if (is_dir($dir = sfConfig::get('sf_app_module_dir') . DS . $suffix)) {
-      $dirs[] = $dir;
-    }
-
-    $moduleDirName = sfConfig::get('sf_app_module_dir_name');
-
-    foreach (sfConfig::get('sf_plugins', array()) as $plugin) {
-      if (is_dir($dir = sfConfig::get('sf_plugins_dir') . DS . $plugin . DS . $moduleDirName . DS . $suffix)) {
-        $dirs[] = $dir;
-      }
-    }
-
-    if (is_dir($dir = sfConfig::get('sf_sift_data_dir') . DS . $moduleDirName . DS . $suffix)) {
-      $dirs[] = $dir;
-    }
-
-    // speed things up
-    self::$callCache['i18n'][$moduleName] = $dirs;
-
-    return $dirs;
-  }
-
-  /**
-   * Gets directories where template files are stored for a generator class and a specific theme.
-   *
-   * @param string The generator class name
-   * @param string The theme name
-   *
-   * @return array An array of directories
-   */
-  public static function getGeneratorTemplateDirs($class, $theme)
-  {
-    // speed things up
-    if (isset(self::$callCache['generator_template'][$class . $theme])) {
-      return self::$callCache['generator_template'][$class . $theme];
-    }
-
-    // project
-    $dirs = array(sfConfig::get('sf_data_dir') . DS . 'generator' . DS . $class . DS . $theme . DS . 'template');
-
-    // plugins
-    foreach (sfConfig::get('sf_plugins', array()) as $plugin) {
-      if(is_dir($pluginDir = (sfConfig::get('sf_plugins_dir') . DS . $plugin . DS . 'data' .
-                      DS . 'generator' . DS . $class . DS . $theme . DS . 'template')))
-      {
-        // plugin
-        $dirs[] = $pluginDir;
-      }
-    }
-
-    // core
-    if(is_dir($dir = sfConfig::get('sf_sift_data_dir') . DS . 'generator' . DS . $class . DS .
-                    $theme . DS . 'template'))
+    /**
+     * Gets directories where lib files are stored for a given module.
+     *
+     * @param string $moduleName The module name
+     *
+     * @return array An array of directories
+     */
+    public static function getLibDirs($moduleName)
     {
-      $dirs[] = $dir;
-    }
+        // speed things up
+        if (isset(self::$callCache['lib'][$moduleName])) {
+            return self::$callCache['lib'][$moduleName];
+        }
 
-    // speed things up
-    self::$callCache['generator_template'][$class . $theme] = $dirs;
+        $libDirName = sfConfig::get('sf_app_module_lib_dir_name');
+        $moduleDirName = sfConfig::get('sf_app_module_dir_name');
 
-    return $dirs;
-  }
+        $dirs = array();
 
-  /**
-   * Gets directories where the skeleton is stored for a generator class and a specific theme.
-   *
-   * @param string The generator class name
-   * @param string The theme name
-   *
-   * @return array An array of directories
-   */
-  public static function getGeneratorSkeletonDirs($class, $theme)
-  {
-    // speed things up
-    if (isset(self::$callCache['generator_skeleton'][$class . $theme])) {
-      return self::$callCache['generator_skeleton'][$class . $theme];
-    }
+        // application
+        $dirs[] = sfConfig::get('sf_app_module_dir') . DS . $moduleName . DS . $libDirName;
 
-    // project
-    $dirs = array(sfConfig::get('sf_data_dir') . DS . 'generator' . DS . $class . DS . $theme . DS . 'skeleton');
-
-    // plugins
-    foreach (sfConfig::get('sf_plugins', array()) as $plugin) {
-      if(is_dir($pluginDir = (sfConfig::get('sf_plugins_dir') . DS . $plugin .
-                DS . 'data' . DS . 'generator' . DS . $class . DS . $theme . DS . 'skeleton')))
-      {
-        $dirs[] = $pluginDir;
-      }
-    }
-
-    if (is_dir($dir = sfConfig::get('sf_sift_data_dir') . DS . 'generator' . DS . $class . DS . $theme . DS . 'skeleton')) {
-      $dirs[] = $dir;
-    }
-
-    // speed things up
-    self::$callCache['generator_skeleton'][$class . $theme] = $dirs;
-
-    return $dirs;
-  }
-
-  /**
-   * Gets the template to use for a generator class.
-   *
-   * @param string The generator class name
-   * @param string The theme name
-   * @param string The template path
-   *
-   * @return string A template path
-   *
-   * @throws sfException
-   */
-  public static function getGeneratorTemplate($class, $theme, $path)
-  {
-    $dirs = self::getGeneratorTemplateDirs($class, $theme);
-    foreach ($dirs as $dir) {
-      if (is_readable($dir . DS . $path)) {
-        return $dir . DS . $path;
-      }
-    }
-    throw new sfException(sprintf('Unable to load "%s" generator template in: %s', $path, implode(', ', $dirs)));
-  }
-
-  /**
-   * Gets the configuration file paths for a given relative configuration path.
-   *
-   * @param string The configuration path
-   * @return array An array of paths
-   */
-  public static function getConfigPaths($configPath)
-  {
-    // fix for windows paths
-    $configPath = str_replace('/', DS, $configPath);
-
-    // speed things up
-    if (isset(self::$callCache['config'][$configPath])) {
-      // return self::$callCache['config'][$configPath];
-    }
-
-    $rootDir = sfConfig::get('sf_root_dir');
-    $appDir = sfConfig::get('sf_app_dir');
-    $pluginsDir = sfConfig::get('sf_plugins_dir');
-
-    $configName = basename($configPath);
-    $globalConfigPath = basename(dirname($configPath)).DS.$configName;
-
-    // sift core
-    $files = array(
-      // sift
-      sfConfig::get('sf_sift_data_dir').DS.$globalConfigPath,
-      // sift core modules
-      sfConfig::get('sf_sift_data_dir').DS.$configPath,
-    );
-
-    // plugins, global
-    foreach (sfConfig::get('sf_plugins', array()) as $plugin) {
-      $files[] = $pluginsDir.DS.$plugin.DS.$globalConfigPath;
-    }
-
-    // project
-    $files[] = $rootDir.DS.$globalConfigPath;
-    $files[] = $rootDir.DS.$configPath;
-
-    // application
-    $files[] = $appDir.DS.$globalConfigPath;
-
-    // generated modules
-    if (strpos($configPath, sfConfig::get('sf_app_module_dir_name')) !== false) {
-      // strip modules from the path which looks like:
-      // moduleName/config/foo.yml
-      // we need to convert it to: autoModuleName/config/foo.yml
-      $generateConfig =
-              'auto' . ucfirst(str_replace(sfConfig::get('sf_app_module_dir_name') . DS, '', $configPath));
-      // generated modules
-      $files[] = sfConfig::get('sf_module_cache_dir').DS.$generateConfig;
-    }
-
-    // plugins, but local
-    foreach (sfConfig::get('sf_plugins', array()) as $plugin) {
-      $files[] = $pluginsDir.DS.$plugin.DS.$configPath;
-    }
-
-    // module
-    $files[] = $appDir.DS.$configPath;
-
-    // If the configuration file can be overridden with a dimension, inject the appropriate path
-    if ((in_array($configName, self::$allConfigurationFiles) || (strpos($configPath, 'validate')))) {
-      $dimensionDirs = sfConfig::get('sf_dimension_dirs');
-      if (is_array($dimensionDirs) && !empty($dimensionDirs)) {
-        // reverse dimensions for proper cascading
-        $dimensionDirs = array_reverse($dimensionDirs);
-
-        $applicationDimensionDirectory = $appDir . DS . dirname($globalConfigPath) . DS . '%s' . DS . $configName;
-        $moduleDimensionDirectory = $appDir . DS . dirname($configPath) . DS . '%s' . DS . $configName;
-
-        foreach ($dimensionDirs as $dimension) {
-          // application
-          if (in_array($configName, self::$allConfigurationFiles)) {
-            foreach ($dimensionDirs as $dimension) {
-              $files[] = sprintf($applicationDimensionDirectory, $dimension);
+        // plugins
+        foreach (sfConfig::get('sf_plugins', array()) as $plugin) {
+            if (is_dir(
+                $dir = sfConfig::get('sf_plugins_dir') . DS . $plugin . DS .
+                    $moduleDirName . DS . $moduleName . DS . $libDirName
+            )
+            ) {
+                $dirs[] = $dir;
             }
-          }
+        }
 
-          // module
-          if (in_array($configName, self::$moduleConfigurationFiles) || strpos($configPath, 'validate')) {
-            foreach ($dimensionDirs as $dimension) {
-              $files[] = sprintf($moduleDimensionDirectory, $dimension);
+        $dirs = array_merge($dirs, self::getCustomDirectories($moduleName . DS . $libDirName));
+
+        // generated templates in cache
+        $dirs[] = sfConfig::get('sf_module_cache_dir') . DS . 'auto' . ucfirst($moduleName) . DS . $libDirName;
+
+        // speed things up
+        self::$callCache['lib'][$moduleDirName] = $dirs;
+
+        return $dirs;
+    }
+
+    /**
+     * Gets directories where model classes are stored.
+     *
+     * @return array An array of directories
+     */
+    public static function getModelDirs()
+    {
+        // speed things up
+        if (isset(self::$callCache['model'])) {
+            return self::$callCache['model'];
+        }
+
+        // project
+        $dirs = array(sfConfig::get('sf_model_lib_dir'));
+
+        // plugins
+        $dirs = array_merge(
+            $dirs,
+            self::getPluginDirectories(
+                sfConfig::get('sf_app_lib_dir_name') . DS . sfConfig::get('sf_model_dir_name'),
+                false
+            )
+        );
+
+        // speed things up
+        self::$callCache['model'] = $dirs;
+
+        return $dirs;
+    }
+
+    /**
+     * Gets directories where controller classes are stored for a given module.
+     *
+     * @param string The module name
+     *
+     * @return array An array of directories
+     */
+    public static function getControllerDirs($moduleName)
+    {
+        // speed things up
+        if (isset(self::$callCache['controller'][$moduleName])) {
+            return self::$callCache['controller'][$moduleName];
+        }
+
+        $suffix = $moduleName . DS . sfConfig::get('sf_app_module_action_dir_name');
+
+        $dirs = array();
+
+        // load application directories
+        foreach (self::getApplicationDirectories($suffix) as $dir) {
+            // modules in the app are automatically enabled
+            $dirs[$dir] = false;
+        }
+
+        // load custom directories
+        foreach (self::getCustomDirectories($suffix) as $dir) {
+            // enableCheck is true
+            $dirs[$dir] = true;
+        }
+
+        // plugin directories
+        foreach (self::getPluginDirectories(sfConfig::get('sf_app_module_dir_name') . DS . $suffix) as $dir) {
+            // enableCheck is true
+            $dirs[$dir] = true;
+        }
+
+        foreach (self::getCoreDirectories(sfConfig::get('sf_app_module_dir_name') . DS . $suffix) as $dir) {
+            // enable check si true
+            $dirs[$dir] = true;
+        }
+
+        // speed things up
+        self::$callCache['controller'][$moduleName] = $dirs;
+
+        return $dirs;
+    }
+
+    /**
+     * Gets directories where template files are stored for a given module.
+     *
+     * @param string The module name
+     *
+     * @return array An array of directories
+     */
+    public static function getTemplateDirs($moduleName)
+    {
+        // speed things up
+        if (isset(self::$callCache['template'][$moduleName])) {
+            return self::$callCache['template'][$moduleName];
+        }
+
+        $suffix = $moduleName . DS . sfConfig::get('sf_app_module_template_dir_name');
+        // application
+        $dirs = array_merge(array(), self::getApplicationDirectories($suffix));
+        // custom modules
+        $dirs = array_merge($dirs, self::getCustomDirectories($suffix));
+        // plugins
+        $dirs = array_merge($dirs, self::getPluginDirectories(sfConfig::get('sf_app_module_dir_name') . DS . $suffix));
+        // core
+        $dirs = array_merge($dirs, self::getCoreDirectories(sfConfig::get('sf_app_module_dir_name') . DS . $suffix));
+        // generated templates in cache
+        $dirs[] = sfConfig::get('sf_module_cache_dir') . DS . 'auto' . ucfirst($suffix);
+
+        // speed things up
+        self::$callCache['template'][$moduleName] = $dirs;
+
+        return $dirs;
+    }
+
+    /**
+     * Gets the template directory to use for a given module and template file.
+     *
+     * @param string The module name
+     * @param string The template file
+     *
+     * @return string A template directory
+     */
+    public static function getTemplateDir($moduleName, $templateFile)
+    {
+        $dirs = self::getTemplateDirs($moduleName);
+        foreach ($dirs as $dir) {
+            if (is_readable($dir . DS . $templateFile)) {
+                return $dir;
             }
-          }
         }
-      }
+
+        return null;
     }
 
-    $configs = array();
-    foreach (array_unique($files) as $file) {
-      // check existance
-      if (is_readable($file)) {
-        $configs[] = $file;
-      }
+    /**
+     * Gets the template to use for a given module and template file.
+     *
+     * @param string The module name
+     * @param string The template file
+     *
+     * @return string A template path
+     */
+    public static function getTemplatePath($moduleName, $templateFile)
+    {
+        $dir = self::getTemplateDir($moduleName, $templateFile);
+
+        return $dir ? $dir . DS . $templateFile : null;
     }
 
-    // speed things up
-    self::$callCache['config'][$configPath] = $configs;
-
-    return $configs;
-  }
-
-  /**
-   * Gets the helper directories for a given module name.
-   *
-   * @param string The module name
-   *
-   * @return array An array of directories
-   */
-  public static function getHelperDirs($moduleName = '')
-  {
-    // speed things up
-    if (isset(self::$callCache['helper'][$moduleName])) {
-      return self::$callCache['helper'][$moduleName];
-    }
-
-    $dirs = array();
-    if ($moduleName) {
-      if(is_dir($dir = sfConfig::get('sf_app_module_dir') . DS . $moduleName . DS .
-              sfConfig::get('sf_app_module_lib_dir_name') . DS . 'helper'))
-      {
-        $dirs[] = $dir;
-      }
-
-      // plugins
-      foreach (sfConfig::get('sf_plugins', array()) as $plugin) {
-        if(is_dir($dir = (sfConfig::get('sf_plugins_dir') . DS . $plugin . DS . 'modules' . DS .
-                $moduleName . DS . 'lib' . DS . 'helper')))
-        {
-          $dirs[] = $dir;
+    /**
+     * Gets the decorator directories.
+     *
+     * @return array An array of the decorator directories
+     */
+    public static function getDecoratorDirs()
+    {
+        // speed things up
+        if (isset(self::$callCache['decorator'])) {
+            return self::$callCache['decorator'];
         }
-      }
-    }
 
-    // application
-    if (is_dir($dir = sfConfig::get('sf_app_lib_dir') . DS . 'helper')) {
-      $dirs[] = $dir;
-    }
-
-    // project
-    if (is_dir($dir = sfConfig::get('sf_lib_dir') . DS . 'helper')) {
-      $dirs[] = $dir;
-    }
-
-    // plugins
-    foreach (sfConfig::get('sf_plugins', array()) as $plugin) {
-      if (is_dir($dir = sfConfig::get('sf_plugins_dir') . DS . $plugin . DS . 'lib' . DS . 'helper')) {
-        $dirs[] = $dir;
-      }
-    }
-
-    // core
-    $dirs[] = sfConfig::get('sf_sift_lib_dir') . DS . 'helper';
-
-    // speed things up
-    self::$callCache['helper'][$moduleName] = $dirs;
-
-    return $dirs;
-  }
-
-  /**
-   * Loads helpers.
-   *
-   * @param array  An array of helpers to load
-   * @param string A module name (optional)
-   *
-   * @throws sfViewException
-   */
-  public static function loadHelpers($helpers, $moduleName = '')
-  {
-    $dirs = self::getHelperDirs($moduleName);
-
-    foreach ((array) $helpers as $helperName) {
-      if (isset(self::$loadedHelpers[$helperName])) {
-        continue;
-      }
-
-      $fileName = $helperName . 'Helper.php';
-      foreach ($dirs as $dir) {
-        $included = false;
-        if (is_readable($dir . DS . $fileName)) {
-          include($dir . DS . $fileName);
-          $included = true;
-          break;
+        $dimensionDirs = sfConfig::get('sf_dimension_dirs', array());
+        $dirs = array();
+        if (is_array($dimensionDirs)) {
+            $templateDir = sfConfig::get('sf_app_template_dir');
+            foreach ($dimensionDirs as $dir) {
+                $dirs[] = $templateDir . DS . $dir;
+            }
         }
-      }
 
-      if (!$included) {
-        // search in the include path
-        if ((@include('helper' . DS . $fileName)) === false) {
-          $dirs = array_merge($dirs, explode(PATH_SEPARATOR, get_include_path()));
-          // remove sf_root_dir from dirs
-          foreach ($dirs as &$dir) {
-            $dir = str_replace('%SF_ROOT_DIR%', sfConfig::get('sf_root_dir'), $dir);
-          }
-          throw new sfViewException(sprintf('Unable to load "%sHelper.php" helper in: %s', $helperName, implode(', ', $dirs)));
+        $dirs[] = sfConfig::get('sf_app_template_dir');
+
+        // speed things up
+        self::$callCache['decorator'] = $dirs;
+
+        return $dirs;
+    }
+
+    /**
+     * Gets the decorator directory for a given template.
+     *
+     * @param string $template The template file
+     *
+     * @return string A template directory
+     */
+    public static function getDecoratorDir($template)
+    {
+        foreach (self::getDecoratorDirs() as $dir) {
+            if (is_readable($dir . '/' . $template)) {
+                return $dir;
+            }
         }
-      }
-
-      // mark as loaded
-      self::$loadedHelpers[$helperName] = true;
     }
-  }
 
-  /**
-   * Returns application directories for given path suffix
-   *
-   * @param string $suffix Path suffix to look for
-   * @param boolean $dimensions Look for dimensions directories?
-   * @return array
-   */
-  protected static function getApplicationDirectories($suffix, $dimensions = true)
-  {
-    $appModuleDir = sfConfig::get('sf_app_module_dir');
-    $dimensionDirs = sfConfig::get('sf_dimension_dirs', array());
-    $dirs = array();
-    if ($dimensions && is_array($dimensionDirs)) {
-      foreach ($dimensionDirs as $dimension) {
-        if (is_dir($dir = $appModuleDir . DS . $suffix . DS . $dimension)) {
-          $dirs[] = $dir;
+    /**
+     * Gets the i18n directory to use for a given module.
+     *
+     * @param string The module name
+     *
+     * @return string An i18n directory
+     */
+    public static function getI18NDir($moduleName)
+    {
+        // speed things up
+        if (isset(self::$callCache['i18n_dir'][$moduleName])) {
+            //return self::$callCache['i18n_dir'][$moduleName];
         }
-      }
+
+        $suffix = $moduleName . DS . sfConfig::get('sf_app_module_i18n_dir_name');
+
+        $dir = null;
+        // application
+        if (is_dir(sfConfig::get('sf_app_module_dir') . DS . $suffix)) {
+            $dir = sfConfig::get('sf_app_module_dir') . DS . $suffix;
+        } else {
+            $moduleDirName = sfConfig::get('sf_app_module_dir_name');
+            $found = false;
+            foreach (sfConfig::get('sf_plugins', array()) as $plugin) {
+                if (is_dir(
+                    $dir = sfConfig::get('sf_plugins_dir') . DS . $plugin . DS . $moduleDirName . DS . $suffix
+                )
+                ) {
+                    $found = true;
+                    break;
+                }
+            }
+            if (!$found && is_dir(sfConfig::get('sf_sift_data_dir') . DS . $moduleDirName . DS . $suffix)) {
+                $dir = sfConfig::get('sf_sift_data_dir') . DS . $moduleDirName . DS . $suffix;
+            }
+        }
+
+        // speed things up
+        self::$callCache['i18n_dir'][$moduleName] = $dir;
+
+        return $dir;
     }
 
-    if (is_dir($appModuleDir . DS . $suffix)) {
-      // application
-      $dirs[] = $appModuleDir . DS . $suffix;
-    }
+    /**
+     * Gets the i18n directories to use for a given module.
+     *
+     * @param string $moduleName The module name
+     *
+     * @return array An array of i18n directories
+     */
+    public static function getI18NDirs($moduleName)
+    {
+        // speed things up
+        if (isset(self::$callCache['i18n'][$moduleName])) {
+            return self::$callCache['i18n'][$moduleName];
+        }
 
-    return $dirs;
-  }
+        $dirs = array();
 
-  /**
-   * Returns plugin directories for given path suffix
-   *
-   * @param string $suffix Path suffix to look for
-   * @param boolean $dimensions Look for dimensions directories?
-   * @return array
-   */
-  protected static function getPluginDirectories($suffix, $dimensions = true)
-  {
-    $dimensionDirs = sfConfig::get('sf_dimension_dirs');
-    $pluginsDir = sfConfig::get('sf_plugins_dir');
-    $dirs = array();
-    foreach (sfConfig::get('sf_plugins', array()) as $plugin) {
-      if ($dimensions && is_array($dimensionDirs)) {
-        foreach ($dimensionDirs as $dimension) {
-          if (is_dir($dir = $pluginsDir . DS . $plugin . DS . $suffix . DS . $dimension)) {
-            // enable checks if true for plugin
+        $suffix = $moduleName . DS . sfConfig::get('sf_app_module_i18n_dir_name');
+
+        // application
+        if (is_dir($dir = sfConfig::get('sf_app_module_dir') . DS . $suffix)) {
             $dirs[] = $dir;
-          }
         }
-      }
-      if (is_dir($dir = (sfConfig::get('sf_plugins_dir') . DS . $plugin . DS . $suffix))) {
-        $dirs[] = $dir;
-      }
-    }
 
-    return $dirs;
-  }
+        $moduleDirName = sfConfig::get('sf_app_module_dir_name');
 
-  /**
-   * Returns custom directories for $suffix. Takes "sf_module_dirs" setting and looks
-   * for the directories. Also handles dimension directories setting "sf_dimension_dirs"
-   *
-   * @param string $suffix Path suffix to look for
-   * @param boolean $dimensions Look for dimensions directories?
-   * @return array
-   */
-  protected static function getCustomDirectories($suffix, $dimensions = true)
-  {
-    $dimensionDirs = sfConfig::get('sf_dimension_dirs');
-    $dirs = array();
+        foreach (sfConfig::get('sf_plugins', array()) as $plugin) {
+            if (is_dir($dir = sfConfig::get('sf_plugins_dir') . DS . $plugin . DS . $moduleDirName . DS . $suffix)) {
+                $dirs[] = $dir;
+            }
+        }
 
-    // check sf_module_dirs
-    foreach (sfConfig::get('sf_module_dirs', array()) as $key => $value) {
-      if (is_numeric($key)) {
-        $key = $value;
-      }
-
-      // add paths for each dimension to search for new controller
-      if ($dimensions && is_array($dimensionDirs)) {
-        foreach ($dimensionDirs as $dimension) {
-          if (is_dir($dir = $key . DS . $suffix . DS . $dimension)) {
+        if (is_dir($dir = sfConfig::get('sf_sift_data_dir') . DS . $moduleDirName . DS . $suffix)) {
             $dirs[] = $dir;
-          }
         }
-      }
 
-      if (is_dir($dir = $key . DS . $suffix)) {
-        $dirs[] = $dir;
-      }
+        // speed things up
+        self::$callCache['i18n'][$moduleName] = $dirs;
+
+        return $dirs;
     }
 
-    return $dirs;
-  }
-
-  /**
-   * Returns Sift core directories for given path suffix
-   *
-   * @param string $suffix Path suffix to look for
-   * @param boolean $dimensions Look for dimensions directories?
-   * @return array
-   */
-  protected static function getCoreDirectories($suffix, $dimensions = true)
-  {
-    $dimensionDirs = sfConfig::get('sf_dimension_dirs', array());
-    $dataDir = sfConfig::get('sf_sift_data_dir');
-
-    $dirs = array();
-
-    if ($dimensions && is_array($dimensionDirs)) {
-      foreach ($dimensionDirs as $dimension) {
-        if (is_dir($dir = $dataDir . DS . $suffix . DS . $dimension)) {
-          $dirs[] = $dir;
+    /**
+     * Gets directories where template files are stored for a generator class and a specific theme.
+     *
+     * @param string The generator class name
+     * @param string The theme name
+     *
+     * @return array An array of directories
+     */
+    public static function getGeneratorTemplateDirs($class, $theme)
+    {
+        // speed things up
+        if (isset(self::$callCache['generator_template'][$class . $theme])) {
+            return self::$callCache['generator_template'][$class . $theme];
         }
-      }
+
+        // project
+        $dirs = array(sfConfig::get('sf_data_dir') . DS . 'generator' . DS . $class . DS . $theme . DS . 'template');
+
+        // plugins
+        foreach (sfConfig::get('sf_plugins', array()) as $plugin) {
+            if (is_dir(
+                $pluginDir = (sfConfig::get('sf_plugins_dir') . DS . $plugin . DS . 'data' .
+                    DS . 'generator' . DS . $class . DS . $theme . DS . 'template')
+            )
+            ) {
+                // plugin
+                $dirs[] = $pluginDir;
+            }
+        }
+
+        // core
+        if (is_dir(
+            $dir = sfConfig::get('sf_sift_data_dir') . DS . 'generator' . DS . $class . DS .
+                $theme . DS . 'template'
+        )
+        ) {
+            $dirs[] = $dir;
+        }
+
+        // speed things up
+        self::$callCache['generator_template'][$class . $theme] = $dirs;
+
+        return $dirs;
     }
 
-    // core modules
-    if (is_dir($dir = $dataDir . DS . $suffix)) {
-      $dirs[] = $dir;
+    /**
+     * Gets directories where the skeleton is stored for a generator class and a specific theme.
+     *
+     * @param string The generator class name
+     * @param string The theme name
+     *
+     * @return array An array of directories
+     */
+    public static function getGeneratorSkeletonDirs($class, $theme)
+    {
+        // speed things up
+        if (isset(self::$callCache['generator_skeleton'][$class . $theme])) {
+            return self::$callCache['generator_skeleton'][$class . $theme];
+        }
+
+        // project
+        $dirs = array(sfConfig::get('sf_data_dir') . DS . 'generator' . DS . $class . DS . $theme . DS . 'skeleton');
+
+        // plugins
+        foreach (sfConfig::get('sf_plugins', array()) as $plugin) {
+            if (is_dir(
+                $pluginDir = (sfConfig::get('sf_plugins_dir') . DS . $plugin .
+                    DS . 'data' . DS . 'generator' . DS . $class . DS . $theme . DS . 'skeleton')
+            )
+            ) {
+                $dirs[] = $pluginDir;
+            }
+        }
+
+        if (is_dir(
+            $dir = sfConfig::get('sf_sift_data_dir') . DS . 'generator' . DS . $class . DS . $theme . DS . 'skeleton'
+        )
+        ) {
+            $dirs[] = $dir;
+        }
+
+        // speed things up
+        self::$callCache['generator_skeleton'][$class . $theme] = $dirs;
+
+        return $dirs;
     }
 
-    return $dirs;
-  }
+    /**
+     * Gets the template to use for a generator class.
+     *
+     * @param string The generator class name
+     * @param string The theme name
+     * @param string The template path
+     *
+     * @return string A template path
+     *
+     * @throws sfException
+     */
+    public static function getGeneratorTemplate($class, $theme, $path)
+    {
+        $dirs = self::getGeneratorTemplateDirs($class, $theme);
+        foreach ($dirs as $dir) {
+            if (is_readable($dir . DS . $path)) {
+                return $dir . DS . $path;
+            }
+        }
+        throw new sfException(sprintf('Unable to load "%s" generator template in: %s', $path, implode(', ', $dirs)));
+    }
 
-  /**
-   * Resets the call cache
-   *
-   * @return void
-   */
-  public static function resetCache()
-  {
-    self::$callCache = array(
-      'config' => array(),
-      'lib' => array(),
-      'controller' => array(),
-      'helper' => array(),
-      'model' => null,
-      'template' => array(),
-      'i18n' => array(),
-      'i18n_dir' => array(),
-      'decorator' => null,
-      'generator_template' => array(),
-      'generator_skeleton' => array()
-    );
-  }
+    /**
+     * Gets the configuration file paths for a given relative configuration path.
+     *
+     * @param string The configuration path
+     *
+     * @return array An array of paths
+     */
+    public static function getConfigPaths($configPath)
+    {
+        // fix for windows paths
+        $configPath = str_replace('/', DS, $configPath);
+
+        // speed things up
+        if (isset(self::$callCache['config'][$configPath])) {
+            // return self::$callCache['config'][$configPath];
+        }
+
+        $rootDir = sfConfig::get('sf_root_dir');
+        $appDir = sfConfig::get('sf_app_dir');
+        $pluginsDir = sfConfig::get('sf_plugins_dir');
+
+        $configName = basename($configPath);
+        $globalConfigPath = basename(dirname($configPath)) . DS . $configName;
+
+        // sift core
+        $files = array(
+            // sift
+            sfConfig::get('sf_sift_data_dir') . DS . $globalConfigPath,
+            // sift core modules
+            sfConfig::get('sf_sift_data_dir') . DS . $configPath,
+        );
+
+        // plugins, global
+        foreach (sfConfig::get('sf_plugins', array()) as $plugin) {
+            $files[] = $pluginsDir . DS . $plugin . DS . $globalConfigPath;
+        }
+
+        // project
+        $files[] = $rootDir . DS . $globalConfigPath;
+        $files[] = $rootDir . DS . $configPath;
+
+        // application
+        $files[] = $appDir . DS . $globalConfigPath;
+
+        // generated modules
+        if (strpos($configPath, sfConfig::get('sf_app_module_dir_name')) !== false) {
+            // strip modules from the path which looks like:
+            // moduleName/config/foo.yml
+            // we need to convert it to: autoModuleName/config/foo.yml
+            $generateConfig
+                = 'auto' . ucfirst(str_replace(sfConfig::get('sf_app_module_dir_name') . DS, '', $configPath));
+            // generated modules
+            $files[] = sfConfig::get('sf_module_cache_dir') . DS . $generateConfig;
+        }
+
+        // plugins, but local
+        foreach (sfConfig::get('sf_plugins', array()) as $plugin) {
+            $files[] = $pluginsDir . DS . $plugin . DS . $configPath;
+        }
+
+        // module
+        $files[] = $appDir . DS . $configPath;
+
+        // If the configuration file can be overridden with a dimension, inject the appropriate path
+        if ((in_array($configName, self::$allConfigurationFiles) || (strpos($configPath, 'validate')))) {
+            $dimensionDirs = sfConfig::get('sf_dimension_dirs');
+            if (is_array($dimensionDirs) && !empty($dimensionDirs)) {
+                // reverse dimensions for proper cascading
+                $dimensionDirs = array_reverse($dimensionDirs);
+
+                $applicationDimensionDirectory
+                    = $appDir . DS . dirname($globalConfigPath) . DS . '%s' . DS . $configName;
+                $moduleDimensionDirectory = $appDir . DS . dirname($configPath) . DS . '%s' . DS . $configName;
+
+                foreach ($dimensionDirs as $dimension) {
+                    // application
+                    if (in_array($configName, self::$allConfigurationFiles)) {
+                        foreach ($dimensionDirs as $dimension) {
+                            $files[] = sprintf($applicationDimensionDirectory, $dimension);
+                        }
+                    }
+
+                    // module
+                    if (in_array($configName, self::$moduleConfigurationFiles) || strpos($configPath, 'validate')) {
+                        foreach ($dimensionDirs as $dimension) {
+                            $files[] = sprintf($moduleDimensionDirectory, $dimension);
+                        }
+                    }
+                }
+            }
+        }
+
+        $configs = array();
+        foreach (array_unique($files) as $file) {
+            // check existance
+            if (is_readable($file)) {
+                $configs[] = $file;
+            }
+        }
+
+        // speed things up
+        self::$callCache['config'][$configPath] = $configs;
+
+        return $configs;
+    }
+
+    /**
+     * Gets the helper directories for a given module name.
+     *
+     * @param string The module name
+     *
+     * @return array An array of directories
+     */
+    public static function getHelperDirs($moduleName = '')
+    {
+        // speed things up
+        if (isset(self::$callCache['helper'][$moduleName])) {
+            return self::$callCache['helper'][$moduleName];
+        }
+
+        $dirs = array();
+        if ($moduleName) {
+            if (is_dir(
+                $dir = sfConfig::get('sf_app_module_dir') . DS . $moduleName . DS .
+                    sfConfig::get('sf_app_module_lib_dir_name') . DS . 'helper'
+            )
+            ) {
+                $dirs[] = $dir;
+            }
+
+            // plugins
+            foreach (sfConfig::get('sf_plugins', array()) as $plugin) {
+                if (is_dir(
+                    $dir = (sfConfig::get('sf_plugins_dir') . DS . $plugin . DS . 'modules' . DS .
+                        $moduleName . DS . 'lib' . DS . 'helper')
+                )
+                ) {
+                    $dirs[] = $dir;
+                }
+            }
+        }
+
+        // application
+        if (is_dir($dir = sfConfig::get('sf_app_lib_dir') . DS . 'helper')) {
+            $dirs[] = $dir;
+        }
+
+        // project
+        if (is_dir($dir = sfConfig::get('sf_lib_dir') . DS . 'helper')) {
+            $dirs[] = $dir;
+        }
+
+        // plugins
+        foreach (sfConfig::get('sf_plugins', array()) as $plugin) {
+            if (is_dir($dir = sfConfig::get('sf_plugins_dir') . DS . $plugin . DS . 'lib' . DS . 'helper')) {
+                $dirs[] = $dir;
+            }
+        }
+
+        // core
+        $dirs[] = sfConfig::get('sf_sift_lib_dir') . DS . 'helper';
+
+        // speed things up
+        self::$callCache['helper'][$moduleName] = $dirs;
+
+        return $dirs;
+    }
+
+    /**
+     * Loads helpers.
+     *
+     * @param array  An array of helpers to load
+     * @param string A module name (optional)
+     *
+     * @throws sfViewException
+     */
+    public static function loadHelpers($helpers, $moduleName = '')
+    {
+        $dirs = self::getHelperDirs($moduleName);
+
+        foreach ((array)$helpers as $helperName) {
+            if (isset(self::$loadedHelpers[$helperName])) {
+                continue;
+            }
+
+            $fileName = $helperName . 'Helper.php';
+            foreach ($dirs as $dir) {
+                $included = false;
+                if (is_readable($dir . DS . $fileName)) {
+                    include($dir . DS . $fileName);
+                    $included = true;
+                    break;
+                }
+            }
+
+            if (!$included) {
+                // search in the include path
+                if ((@include('helper' . DS . $fileName)) === false) {
+                    $dirs = array_merge($dirs, explode(PATH_SEPARATOR, get_include_path()));
+                    // remove sf_root_dir from dirs
+                    foreach ($dirs as &$dir) {
+                        $dir = str_replace('%SF_ROOT_DIR%', sfConfig::get('sf_root_dir'), $dir);
+                    }
+                    throw new sfViewException(sprintf(
+                        'Unable to load "%sHelper.php" helper in: %s',
+                        $helperName,
+                        implode(', ', $dirs)
+                    ));
+                }
+            }
+
+            // mark as loaded
+            self::$loadedHelpers[$helperName] = true;
+        }
+    }
+
+    /**
+     * Returns application directories for given path suffix
+     *
+     * @param string  $suffix     Path suffix to look for
+     * @param boolean $dimensions Look for dimensions directories?
+     *
+     * @return array
+     */
+    protected static function getApplicationDirectories($suffix, $dimensions = true)
+    {
+        $appModuleDir = sfConfig::get('sf_app_module_dir');
+        $dimensionDirs = sfConfig::get('sf_dimension_dirs', array());
+        $dirs = array();
+        if ($dimensions && is_array($dimensionDirs)) {
+            foreach ($dimensionDirs as $dimension) {
+                if (is_dir($dir = $appModuleDir . DS . $suffix . DS . $dimension)) {
+                    $dirs[] = $dir;
+                }
+            }
+        }
+
+        if (is_dir($appModuleDir . DS . $suffix)) {
+            // application
+            $dirs[] = $appModuleDir . DS . $suffix;
+        }
+
+        return $dirs;
+    }
+
+    /**
+     * Returns plugin directories for given path suffix
+     *
+     * @param string  $suffix     Path suffix to look for
+     * @param boolean $dimensions Look for dimensions directories?
+     *
+     * @return array
+     */
+    protected static function getPluginDirectories($suffix, $dimensions = true)
+    {
+        $dimensionDirs = sfConfig::get('sf_dimension_dirs');
+        $pluginsDir = sfConfig::get('sf_plugins_dir');
+        $dirs = array();
+        foreach (sfConfig::get('sf_plugins', array()) as $plugin) {
+            if ($dimensions && is_array($dimensionDirs)) {
+                foreach ($dimensionDirs as $dimension) {
+                    if (is_dir($dir = $pluginsDir . DS . $plugin . DS . $suffix . DS . $dimension)) {
+                        // enable checks if true for plugin
+                        $dirs[] = $dir;
+                    }
+                }
+            }
+            if (is_dir($dir = (sfConfig::get('sf_plugins_dir') . DS . $plugin . DS . $suffix))) {
+                $dirs[] = $dir;
+            }
+        }
+
+        return $dirs;
+    }
+
+    /**
+     * Returns custom directories for $suffix. Takes "sf_module_dirs" setting and looks
+     * for the directories. Also handles dimension directories setting "sf_dimension_dirs"
+     *
+     * @param string  $suffix     Path suffix to look for
+     * @param boolean $dimensions Look for dimensions directories?
+     *
+     * @return array
+     */
+    protected static function getCustomDirectories($suffix, $dimensions = true)
+    {
+        $dimensionDirs = sfConfig::get('sf_dimension_dirs');
+        $dirs = array();
+
+        // check sf_module_dirs
+        foreach (sfConfig::get('sf_module_dirs', array()) as $key => $value) {
+            if (is_numeric($key)) {
+                $key = $value;
+            }
+
+            // add paths for each dimension to search for new controller
+            if ($dimensions && is_array($dimensionDirs)) {
+                foreach ($dimensionDirs as $dimension) {
+                    if (is_dir($dir = $key . DS . $suffix . DS . $dimension)) {
+                        $dirs[] = $dir;
+                    }
+                }
+            }
+
+            if (is_dir($dir = $key . DS . $suffix)) {
+                $dirs[] = $dir;
+            }
+        }
+
+        return $dirs;
+    }
+
+    /**
+     * Returns Sift core directories for given path suffix
+     *
+     * @param string  $suffix     Path suffix to look for
+     * @param boolean $dimensions Look for dimensions directories?
+     *
+     * @return array
+     */
+    protected static function getCoreDirectories($suffix, $dimensions = true)
+    {
+        $dimensionDirs = sfConfig::get('sf_dimension_dirs', array());
+        $dataDir = sfConfig::get('sf_sift_data_dir');
+
+        $dirs = array();
+
+        if ($dimensions && is_array($dimensionDirs)) {
+            foreach ($dimensionDirs as $dimension) {
+                if (is_dir($dir = $dataDir . DS . $suffix . DS . $dimension)) {
+                    $dirs[] = $dir;
+                }
+            }
+        }
+
+        // core modules
+        if (is_dir($dir = $dataDir . DS . $suffix)) {
+            $dirs[] = $dir;
+        }
+
+        return $dirs;
+    }
+
+    /**
+     * Resets the call cache
+     *
+     * @return void
+     */
+    public static function resetCache()
+    {
+        self::$callCache = array(
+            'config'             => array(),
+            'lib'                => array(),
+            'controller'         => array(),
+            'helper'             => array(),
+            'model'              => null,
+            'template'           => array(),
+            'i18n'               => array(),
+            'i18n_dir'           => array(),
+            'decorator'          => null,
+            'generator_template' => array(),
+            'generator_skeleton' => array()
+        );
+    }
 
 }

@@ -12,4 +12,6 @@
  * @package    Sift
  * @subpackage util_stream
  */
-abstract class sfStreamWrapper implements sfIStreamWrapper {}
+abstract class sfStreamWrapper implements sfIStreamWrapper
+{
+}

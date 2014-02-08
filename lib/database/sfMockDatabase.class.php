@@ -14,12 +14,12 @@
  */
 class sfMockDatabase extends sfDatabase
 {
-  public function connect()
-  {
-  }
+    public function connect()
+    {
+    }
 
-  public function shutdown()
-  {
-  }
+    public function shutdown()
+    {
+    }
 
 }

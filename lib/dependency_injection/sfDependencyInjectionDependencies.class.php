@@ -9,78 +9,80 @@
 /**
  * Service dependencies
  *
- * @package Sift
+ * @package    Sift
  * @subpackage dependency_injection
  */
 class sfDependencyInjectionDependencies
 {
-  /**
-   * Array of dependencies
-   *
-   * @var array
-   */
-  private $dependencies = array();
+    /**
+     * Array of dependencies
+     *
+     * @var array
+     */
+    private $dependencies = array();
 
-  /**
-   * service container
-   *
-   * @var sfServiceContainer
-   */
-  protected $serviceContainer;
+    /**
+     * service container
+     *
+     * @var sfServiceContainer
+     */
+    protected $serviceContainer;
 
-  /**
-   * Constructor
-   *
-   * @param sfDependencyInjectionContainer $container
-   */
-  public function __construct(sfServiceContainer $container)
-  {
-    $this->serviceContainer = $container;
-  }
-
-  /**
-   * Returns a dependency by name. If dependency is not found, null is returned.
-   *
-   * @param string $name
-   * @return mixed dependency
-   */
-  public function get($name)
-  {
-    if (isset($this->dependencies[$name])) {
-      if ($this->dependencies[$name] instanceof sfServiceReference) {
-        return $this->serviceContainer->get((string) $this->dependencies[$name]);
-      }
-
-      return $this->dependencies[$name];
-    } else {
-      return null;
+    /**
+     * Constructor
+     *
+     * @param sfDependencyInjectionContainer $container
+     */
+    public function __construct(sfServiceContainer $container)
+    {
+        $this->serviceContainer = $container;
     }
-  }
 
-  /**
-   * Sets a depenedency by name
-   *
-   * @param string $name
-   * @param mixed $dependency resource
-   * @return sfDependencyInjectionDependencies
-   */
-  public function set($name, $dependency)
-  {
-    $this->dependencies[$name] = $dependency;
+    /**
+     * Returns a dependency by name. If dependency is not found, null is returned.
+     *
+     * @param string $name
+     *
+     * @return mixed dependency
+     */
+    public function get($name)
+    {
+        if (isset($this->dependencies[$name])) {
+            if ($this->dependencies[$name] instanceof sfServiceReference) {
+                return $this->serviceContainer->get((string)$this->dependencies[$name]);
+            }
 
-    return $this;
-  }
+            return $this->dependencies[$name];
+        } else {
+            return null;
+        }
+    }
 
-  /**
-   * Clears
-   *
-   * @return sfDependencyInjectionDependencies
-   */
-  public function clear()
-  {
-    $this->dependencies = array();
+    /**
+     * Sets a depenedency by name
+     *
+     * @param string $name
+     * @param mixed  $dependency resource
+     *
+     * @return sfDependencyInjectionDependencies
+     */
+    public function set($name, $dependency)
+    {
+        $this->dependencies[$name] = $dependency;
 
-    return $this;
-  }
+        return $this;
+    }
+
+    /**
+     * Clears
+     *
+     * @return sfDependencyInjectionDependencies
+     */
+    public function clear()
+    {
+        $this->dependencies = array();
+
+        return $this;
+    }
 
 }

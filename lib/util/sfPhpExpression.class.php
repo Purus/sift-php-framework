@@ -28,36 +28,37 @@
  * @package    Sift
  * @subpackage util
  * @see        sfToolkit::varExport()
- * @link http://www.php.net/manual/en/language.oop5.magic.php#object.set-state
+ * @link       http://www.php.net/manual/en/language.oop5.magic.php#object.set-state
  */
 class sfPhpExpression
 {
-  /**
-   * Storage for php expression.
-   *
-   * @var string
-   */
-  protected $_expression;
+    /**
+     * Storage for php expression.
+     *
+     * @var string
+     */
+    protected $_expression;
 
-  /**
-   * Constructor
-   *
-   * @param  string $expression the expression to hold.
-   * @return void
-   */
-  public function __construct($expression)
-  {
-    $this->_expression = (string) $expression;
-  }
+    /**
+     * Constructor
+     *
+     * @param  string $expression the expression to hold.
+     *
+     * @return void
+     */
+    public function __construct($expression)
+    {
+        $this->_expression = (string)$expression;
+    }
 
-  /**
-   * Cast to string
-   *
-   * @return string holded php expression.
-   */
-  public function __toString()
-  {
-    return $this->_expression;
-  }
+    /**
+     * Cast to string
+     *
+     * @return string holded php expression.
+     */
+    public function __toString()
+    {
+        return $this->_expression;
+    }
 
 }

@@ -12,4 +12,6 @@
  * @package    Sift
  * @subpackage exception
  */
-class sfCalendarException extends sfException {}
+class sfCalendarException extends sfException
+{
+}

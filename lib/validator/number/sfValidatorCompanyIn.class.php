@@ -16,111 +16,118 @@
 class sfValidatorCompanyIn extends sfValidatorBase
 {
 
-  /**
-   * Constructs the validator
-   *
-   * @param array $options Array of options
-   * @param array $messages Array of messages
-   */
-  public function __construct($options = array(), $messages = array())
-  {
-    // check against public database
-    $this->addOption('public_database_check', isset($options['public_database_check']) ?
-            $options['public_database_check'] : 'ares');
+    /**
+     * Constructs the validator
+     *
+     * @param array $options  Array of options
+     * @param array $messages Array of messages
+     */
+    public function __construct($options = array(), $messages = array())
+    {
+        // check against public database
+        $this->addOption(
+            'public_database_check',
+            isset($options['public_database_check']) ?
+                $options['public_database_check'] : 'ares'
+        );
 
-    parent::__construct($options, $messages);
-  }
-
-  /**
-   * @see sfValidatorBase
-   */
-  public function configure($options = array(), $messages = array())
-  {
-    $this->setMessage('invalid', '"%value%" is invalid company IN number.');
-  }
-
-  /**
-   * @see sfValidatorString
-   */
-  public function doClean($value)
-  {
-    // be liberal in what you recieve
-    $value = preg_replace('#\s+#', '', $value);
-
-    if (!sfValidatorTools::validateCompanyIn($value)) {
-      throw new sfValidatorError($this, 'invalid', array('value' => $value));
+        parent::__construct($options, $messages);
     }
 
-    if ($database = $this->getOption('public_database_check')) {
-      // FIXME: pass as option
-      $options = array();
-      $this->validateUsingPublicDatabaseApi($value, $database, $options);
+    /**
+     * @see sfValidatorBase
+     */
+    public function configure($options = array(), $messages = array())
+    {
+        $this->setMessage('invalid', '"%value%" is invalid company IN number.');
     }
 
-    return $value;
-  }
+    /**
+     * @see sfValidatorString
+     */
+    public function doClean($value)
+    {
+        // be liberal in what you recieve
+        $value = preg_replace('#\s+#', '', $value);
 
-  public function getJavascriptValidationRules()
-  {
-    $rules = parent::getJavascriptValidationRules();
+        if (!sfValidatorTools::validateCompanyIn($value)) {
+            throw new sfValidatorError($this, 'invalid', array('value' => $value));
+        }
 
-    // $rules[sfFormJavascriptValidation::NUMBER] = true;
-    $rules[sfFormJavascriptValidation::CUSTOM_CALLBACK] = array('callback' => (
-"function(value, element, params) {
-  var x = value;
-  try {
-    var a = 0;
-    if(x.length == 0) return true;
-    if(x.length != 8) throw 1;
-    var b = x.split('');
-    var c = 0;
-    for(var i = 0; i < 7; i++) a += (parseInt(b[i]) * (8 - i));
-    a = a % 11;
-    c = 11 - a;
-    if(a == 1) c = 0;
-    if(a == 0) c = 1;
-    if(a == 10) c = 1;
-    if(parseInt(b[7]) != c) throw 1;
-  } catch (e) {
-    return false;
-  }
+        if ($database = $this->getOption('public_database_check')) {
+            // FIXME: pass as option
+            $options = array();
+            $this->validateUsingPublicDatabaseApi($value, $database, $options);
+        }
 
-  return true;
-}"));
-
-    return $rules;
-  }
-
-  public function getJavascriptValidationMessages()
-  {
-    $messages = parent::getJavascriptValidationMessages();
-    $messages[sfFormJavascriptValidation::CUSTOM_CALLBACK] =
-            sfFormJavascriptValidation::fixValidationMessage($this, 'invalid');
-
-    return $messages;
-  }
-
-  /**
-   * Validates using public database API
-   *
-   */
-  protected function validateUsingPublicDatabaseApi($value, $driver = 'ares',
-          $driverOptions = array())
-  {
-    $driver = sprintf('sfValidatorCompanyInDriver%s', ucfirst($driver));
-    if (!class_exists($driver)) {
-      throw new InvalidArgumentException(sprintf('Invalid driver "%s"', $driver));
+        return $value;
     }
 
-    $checker = new $driver($driverOptions);
+    public function getJavascriptValidationRules()
+    {
+        $rules = parent::getJavascriptValidationRules();
 
-    $valid = $checker->validate($value);
+        // $rules[sfFormJavascriptValidation::NUMBER] = true;
+        $rules[sfFormJavascriptValidation::CUSTOM_CALLBACK] = array(
+            'callback' => (
+                "function(value, element, params) {
+                  var x = value;
+                  try {
+                    var a = 0;
+                    if(x.length == 0) return true;
+                    if(x.length != 8) throw 1;
+                    var b = x.split('');
+                    var c = 0;
+                    for(var i = 0; i < 7; i++) a += (parseInt(b[i]) * (8 - i));
+                    a = a % 11;
+                    c = 11 - a;
+                    if(a == 1) c = 0;
+                    if(a == 0) c = 1;
+                    if(a == 10) c = 1;
+                    if(parseInt(b[7]) != c) throw 1;
+                  } catch (e) {
+                    return false;
+                  }
 
-    if (!$valid) {
-      throw new sfValidatorError($this, 'invalid', array('value' => $value));
+                  return true;
+                }")
+        );
+
+        return $rules;
     }
 
-    return $value;
-  }
+    public function getJavascriptValidationMessages()
+    {
+        $messages = parent::getJavascriptValidationMessages();
+        $messages[sfFormJavascriptValidation::CUSTOM_CALLBACK]
+            = sfFormJavascriptValidation::fixValidationMessage($this, 'invalid');
+
+        return $messages;
+    }
+
+    /**
+     * Validates using public database API
+     *
+     */
+    protected function validateUsingPublicDatabaseApi(
+        $value,
+        $driver = 'ares',
+        $driverOptions = array()
+    ) {
+        $driver = sprintf('sfValidatorCompanyInDriver%s', ucfirst($driver));
+        if (!class_exists($driver)) {
+            throw new InvalidArgumentException(sprintf('Invalid driver "%s"', $driver));
+        }
+
+        $checker = new $driver($driverOptions);
+
+        $valid = $checker->validate($value);
+
+        if (!$valid) {
+            throw new sfValidatorError($this, 'invalid', array('value' => $value));
+        }
+
+        return $value;
+    }
 
 }

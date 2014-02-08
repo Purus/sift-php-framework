@@ -15,50 +15,56 @@
  */
 class sfValidatorHtml extends sfValidatorString
 {
-  /**
-   * Configures the current validator.
-   *
-   * @param array $options   An array of options
-   * @param array $messages  An array of error messages
-   *
-   * @see sfValidatorBase
-   */
-  protected function configure($options = array(), $messages = array())
-  {
-    $this->addMessage('allowed_tags', 'The text contains unallowed HTML tags.');
+    /**
+     * Configures the current validator.
+     *
+     * @param array $options An array of options
+     * @param array $messages An array of error messages
+     *
+     * @see sfValidatorBase
+     */
+    protected function configure($options = array(), $messages = array())
+    {
+        $this->addMessage('allowed_tags', 'The text contains unallowed HTML tags.');
 
-    $this->addOption('strip', true);
-    // Mandatory. We don't complain about HTML here, we clean it
-    $this->setOption('strip', true);
+        $this->addOption('strip', true);
+        // Mandatory. We don't complain about HTML here, we clean it
+        $this->setOption('strip', true);
 
-    parent::configure($options, $messages);
-  }
-
-  /**
-   * @see sfValidatorBase
-   */
-  protected function doClean($value)
-  {
-    $clean = (string) $value;
-
-    if ($this->getOption('strip')) {
-      $clean = sfSanitizer::sanitize($clean, $this->getOptionOrFalse('allowed_tags'), $this->getOptionOrFalse('complete'), $this->getOptionOrFalse('allowed_attributes'), $this->getOptionOrFalse('allowed_styles'));
-    } else {
-      throw new sfException('That should not happen strip is set in configure in sfValidatorHtml');
+        parent::configure($options, $messages);
     }
 
-    $clean = parent::doClean($clean);
+    /**
+     * @see sfValidatorBase
+     */
+    protected function doClean($value)
+    {
+        $clean = (string)$value;
 
-    return $clean;
-  }
+        if ($this->getOption('strip')) {
+            $clean = sfSanitizer::sanitize(
+                $clean,
+                $this->getOptionOrFalse('allowed_tags'),
+                $this->getOptionOrFalse('complete'),
+                $this->getOptionOrFalse('allowed_attributes'),
+                $this->getOptionOrFalse('allowed_styles')
+            );
+        } else {
+            throw new sfException('That should not happen strip is set in configure in sfValidatorHtml');
+        }
 
-  protected function getOptionOrFalse($s)
-  {
-    $option = $this->getOption($s);
-    if (is_null($option)) {
-      return false;
+        $clean = parent::doClean($clean);
+
+        return $clean;
     }
 
-    return $option;
-  }
+    protected function getOptionOrFalse($s)
+    {
+        $option = $this->getOption($s);
+        if (is_null($option)) {
+            return false;
+        }
+
+        return $option;
+    }
 }

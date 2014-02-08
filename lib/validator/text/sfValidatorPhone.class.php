@@ -14,24 +14,24 @@
  */
 class sfValidatorPhone extends sfValidatorRegex
 {
-  /**
-   * Configures the current validator.
-   *
-   * Available options:
-   *
-   *  * pattern: A regex pattern compatible with PCRE (required)
-   *
-   * @param array $options   An array of options
-   * @param array $messages  An array of error messages
-   *
-   * @see sfValidatorString
-   */
-  protected function configure($options = array(), $messages = array())
-  {
-    parent::configure($options, $messages);
+    /**
+     * Configures the current validator.
+     *
+     * Available options:
+     *
+     *  * pattern: A regex pattern compatible with PCRE (required)
+     *
+     * @param array $options  An array of options
+     * @param array $messages An array of error messages
+     *
+     * @see sfValidatorString
+     */
+    protected function configure($options = array(), $messages = array())
+    {
+        parent::configure($options, $messages);
 
-    $this->setMessage('required', 'Phone number is required.');
-    $this->setMessage('invalid', '"%value%" is invalid phone number.');
-  }
+        $this->setMessage('required', 'Phone number is required.');
+        $this->setMessage('invalid', '"%value%" is invalid phone number.');
+    }
 
 }

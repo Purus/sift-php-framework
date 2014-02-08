@@ -58,505 +58,511 @@
  *  --------------------------------------------------------------------------
  * </code>
  *
- * @package Sift
+ * @package    Sift
  * @subpackage i18n
  */
 class sfI18nDateTimeFormat
 {
-  const SHORT_DATE = 'd';
-  const LONG_DATE = 'D';
+    const SHORT_DATE = 'd';
+    const LONG_DATE = 'D';
 
-  /**
-   * CLDR date time formatting data.
-   */
-  protected $data = array();
+    /**
+     * CLDR date time formatting data.
+     */
+    protected $data = array();
 
-  /**
-   * A list of properties that are accessable/writable.
-   */
-  protected $properties = array();
+    /**
+     * A list of properties that are accessable/writable.
+     */
+    protected $properties = array();
 
-  /**
-   * Allows functions that begins with 'set' to be called directly
-   * as an attribute/property to retrieve the value.
-   *
-   * @return mixed
-   */
-  public function __get($name)
-  {
-    $getProperty = 'get' . $name;
-    if (in_array($getProperty, $this->properties)) {
-      return $this->$getProperty();
-    } else {
-      throw new sfException(sprintf('Property %s does not exists.', $name));
-    }
-  }
-
-  /**
-   * Allows functions that begins with 'set' to be called directly
-   * as an attribute/property to set the value.
-   */
-  public function __set($name, $value)
-  {
-    $setProperty = 'set' . $name;
-    if (in_array($setProperty, $this->properties)) {
-      $this->$setProperty($value);
-    } else {
-      throw new sfException(sprintf('Property %s can not be set.', $name));
-    }
-  }
-
-  /**
-   * Initializes a new writable instance of the sfI18nDateTimeFormat class
-   * that is dependent on the CLDR data for date time formatting
-   * information. <b>N.B.</b>You should not initialize this class directly
-   * unless you know what you are doing. Please use use
-   * sfI18nDateTimeFormat::getInstance() to create an instance.
-   *
-   * @param array   $data CLDR data for date time formatting.
-   * @see getInstance()
-   */
-  public function __construct($data = array())
-  {
-    $this->properties = get_class_methods($this);
-
-    if (empty($data)) {
-      throw new sfException('Please provide the CLDR data to initialize.');
-    }
-
-    $this->data = $data;
-  }
-
-  /**
-   * Gets the internal CLDR data for date time formatting.
-   *
-   * @return array CLDR date time formatting data.
-   */
-  protected function getData()
-  {
-    return $this->data;
-  }
-
-  /**
-   * Gets the default sfI18nDateTimeFormat that is culture-independent (invariant).
-   *
-   * @return sfI18nDateTimeFormat default sfI18nDateTimeFormat.
-   */
-  public static function getInvariantInfo()
-  {
-    static $invariant;
-
-    if (null === $invariant) {
-      $invariant = sfCulture::getInvariantCulture()->getDateTimeFormat();
-    }
-
-    return $invariant;
-  }
-
-  /**
-   * Returns the sfI18nDateTimeFormat associated with the specified culture.
-   *
-   * @param sfCulture $culture The culture
-   * @return sfDateTimeFormat sfDateTimeFormat for the specified culture.
-   */
-  public static function getInstance($culture = null)
-  {
-    if ($culture instanceof sfCulture) {
-      return $culture->getDateTimeFormat();
-    } elseif (is_string($culture)) {
-      return sfCulture::getInstance($culture)->getDateTimeFormat();
-    } else {
-      return sfCulture::getInvariantCulture()->getDateTimeFormat();
-    }
-  }
-
-  /**
-   * A one-dimensional array of type String containing
-   * the culture-specific abbreviated names of the days
-   * of the week. The array for InvariantInfo contains
-   * "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", and "Sat".
-   *
-   * @return array abbreviated day names
-   */
-  public function getAbbreviatedDayNames()
-  {
-    return $this->data['dayNames']['format']['abbreviated'];
-  }
-
-  /**
-   * Sets the abbreviated day names. The value should be
-   * an array of string starting with Sunday and ends in Saturady.
-   * For example,
-   * <code>array("Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat");</code>
-   *
-   * @param array $value abbreviated day names.
-   */
-  public function setAbbreviatedDayNames($value)
-  {
-    $this->data['dayNames']['format']['abbreviated'] = $value;
-  }
-
-  /**
-   * A one-dimensional array of type String containing
-   * the culture-specific narrow names of the days
-   * of the week. The array for InvariantInfo contains
-   * "S", "M", "T", "W", "T", "F", and "S".
-   *
-   * @return array narrow day names
-   */
-  public function getNarrowDayNames()
-  {
-    return $this->data['dayNames']['stand-alone']['narrow'];
-  }
-
-  /**
-   * Sets the narrow day names. The value should be
-   * an array of string starting with Sunday and ends in Saturady.
-   * For example,
-   * <code>array("S", "M", "T", "W", "T", "F", "S");</code>
-   *
-   * @param array $value narrow day names.
-   */
-  public function setNarrowDayNames($value)
-  {
-    $this->data['dayNames']['stand-alone']['narrow'] = $value;
-  }
-
-  /**
-   * A one-dimensional array of type String containing the
-   * culture-specific full names of the days of the week.
-   * The array for InvariantInfo contains "Sunday", "Monday",
-   * "Tuesday", "Wednesday", "Thursday", "Friday", and "Saturday".
-   *
-   * @return array day names
-   */
-  public function getDayNames()
-  {
-    return $this->data['dayNames']['format']['wide'];
-  }
-
-  /**
-   * Sets the day names. The value should be
-   * an array of string starting with Sunday and ends in Saturady.
-   * For example,
-   * <code>array("Sunday", "Monday", "Tuesday", "Wednesday", "Thursday",
-   * "Friday", "Saturday".);</code>
-   *
-   * @param array $value day names.
-   */
-  public function setDayNames($value)
-  {
-    $this->data['dayNames']['format']['wide'] = $value;
-  }
-
-  /**
-   * A one-dimensional array of type String containing the
-   * culture-specific narrow names of the months. The array
-   * for InvariantInfo contains "J", "F", "M", "A", "M", "J",
-   * "J", "A", "S", "O", "N", and "D".
-   *
-   * @return array narrow month names.
-   */
-  public function getNarrowMonthNames()
-  {
-    return $this->data['monthNames']['stand-alone']['narrow'];
-  }
-
-  /**
-   * Sets the narrow month names. The value should be
-   * an array of string starting with J and ends in D.
-   * For example,
-   * <code>array("J","F","M","A","M","J","J","A","S","O","N","D");</code>
-   *
-   * @param array $value month names.
-   */
-  public function setNarrowMonthNames($value)
-  {
-    $this->data['monthNames']['stand-alone']['narrow'] = $value;
-  }
-
-  /**
-   * A one-dimensional array of type String containing the
-   * culture-specific abbreviated names of the months. The array
-   * for InvariantInfo contains "Jan", "Feb", "Mar", "Apr", "May",
-   * "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", and "Dec".
-   *
-   * Returns wide names if abbreviated names doesn't exist.
-   *
-   * @return array abbreviated month names.
-   */
-  public function getAbbreviatedMonthNames()
-  {
-    if (isset($this->data['monthNames']['format']['abbreviated'])) {
-      return $this->data['monthNames']['format']['abbreviated'];
-    } else {
-      return $this->data['monthNames']['format']['wide'];
-    }
-  }
-
-  /**
-   * Sets the abbreviated month names. The value should be
-   * an array of string starting with Jan and ends in Dec.
-   * For example,
-   * <code>array("Jan", "Feb", "Mar", "Apr", "May", "Jun",
-   * "Jul", "Aug", "Sep","Oct","Nov","Dec");</code>
-   *
-   * @param array $value month names.
-   */
-  public function setAbbreviatedMonthNames($value)
-  {
-    $this->data['monthNames']['format']['abbreviated'] = $value;
-  }
-
-  /**
-   * A one-dimensional array of type String containing the
-   * culture-specific full names of the months. The array for
-   * InvariantInfo contains "January", "February", "March", "April",
-   * "May", "June", "July", "August", "September", "October", "November",
-   * and "December"
-   *
-   * @return array month names.
-   */
-  public function getMonthNames()
-  {
-    return $this->data['monthNames']['format']['wide'];
-  }
-
-  /**
-   * A one-dimensional array of type String containing the
-   * culture-specific full names of the months. The array for
-   * InvariantInfo contains "January", "February", "March", "April",
-   * "May", "June", "July", "August", "September", "October", "November",
-   * and "December"
-   *
-   * @return array month names.
-   */
-  public function getStandAloneMonthNames()
-  {
-    if(isset($this->data['monthNames']['stand-alone']['wide'])
-            && count($this->data['monthNames']['stand-alone']['wide']))
+    /**
+     * Allows functions that begins with 'set' to be called directly
+     * as an attribute/property to retrieve the value.
+     *
+     * @return mixed
+     */
+    public function __get($name)
     {
-      return $this->data['monthNames']['stand-alone']['wide'];
+        $getProperty = 'get' . $name;
+        if (in_array($getProperty, $this->properties)) {
+            return $this->$getProperty();
+        } else {
+            throw new sfException(sprintf('Property %s does not exists.', $name));
+        }
     }
 
-    return $this->data['monthNames']['format']['wide'];
-  }
+    /**
+     * Allows functions that begins with 'set' to be called directly
+     * as an attribute/property to set the value.
+     */
+    public function __set($name, $value)
+    {
+        $setProperty = 'set' . $name;
+        if (in_array($setProperty, $this->properties)) {
+            $this->$setProperty($value);
+        } else {
+            throw new sfException(sprintf('Property %s can not be set.', $name));
+        }
+    }
 
-  /**
-   * Sets the month names. The value should be
-   * an array of string starting with Janurary and ends in December.
-   * For example,
-   * <code>array("January", "February", "March", "April", "May", "June",
-   * "July", "August", "September","October","November","December");</code>
-   *
-   * @param array $value month names.
-   */
-  public function setMonthNames($value)
-  {
-    $this->data['monthNames']['format']['wide'] = $value;
-  }
+    /**
+     * Initializes a new writable instance of the sfI18nDateTimeFormat class
+     * that is dependent on the CLDR data for date time formatting
+     * information. <b>N.B.</b>You should not initialize this class directly
+     * unless you know what you are doing. Please use use
+     * sfI18nDateTimeFormat::getInstance() to create an instance.
+     *
+     * @param array $data CLDR data for date time formatting.
+     *
+     * @see getInstance()
+     */
+    public function __construct($data = array())
+    {
+        $this->properties = get_class_methods($this);
 
-  /**
-   * A string containing the name of the era.
-   *
-   * @param int $era era The integer representing the era.
-   * @return string the era name.
-   */
-  public function getEra($era)
-  {
-    return $this->data['eras'][$era];
-  }
+        if (empty($data)) {
+            throw new sfException('Please provide the CLDR data to initialize.');
+        }
 
-  /**
-   * The string designator for hours that are "ante meridiem" (before noon).
-   * The default for InvariantInfo is "AM".
-   *
-   * @return string AM designator.
-   */
-  public function getAMDesignator()
-  {
-    $result = $this->getAMPMMarkers();
+        $this->data = $data;
+    }
 
-    return $result[0];
-  }
+    /**
+     * Gets the internal CLDR data for date time formatting.
+     *
+     * @return array CLDR date time formatting data.
+     */
+    protected function getData()
+    {
+        return $this->data;
+    }
 
-  /**
-   * Sets the AM Designator. For example, 'AM'.
-   *
-   * @param string $value AM designator.
-   */
-  public function setAMDesignator($value)
-  {
-    $markers = $this->getAMPMMarkers();
-    $markers[0] = $value;
-    $this->setAMPMMarkers($markers);
-  }
+    /**
+     * Gets the default sfI18nDateTimeFormat that is culture-independent (invariant).
+     *
+     * @return sfI18nDateTimeFormat default sfI18nDateTimeFormat.
+     */
+    public static function getInvariantInfo()
+    {
+        static $invariant;
 
-  /**
-   * The string designator for hours that are "post meridiem" (after noon).
-   * The default for InvariantInfo is "PM".
-   *
-   * @return string PM designator.
-   */
-  public function getPMDesignator()
-  {
-    $result = $this->getAMPMMarkers();
+        if (null === $invariant) {
+            $invariant = sfCulture::getInvariantCulture()->getDateTimeFormat();
+        }
 
-    return $result[1];
-  }
+        return $invariant;
+    }
 
-  /**
-   * Sets the PM Designator. For example, 'PM'.
-   *
-   * @param string $value PM designator.
-   */
-  public function setPMDesignator($value)
-  {
-    $markers = $this->getAMPMMarkers();
-    $markers[1] = $value;
-    $this->setAMPMMarkers($markers);
-  }
+    /**
+     * Returns the sfI18nDateTimeFormat associated with the specified culture.
+     *
+     * @param sfCulture $culture The culture
+     *
+     * @return sfDateTimeFormat sfDateTimeFormat for the specified culture.
+     */
+    public static function getInstance($culture = null)
+    {
+        if ($culture instanceof sfCulture) {
+            return $culture->getDateTimeFormat();
+        } elseif (is_string($culture)) {
+            return sfCulture::getInstance($culture)->getDateTimeFormat();
+        } else {
+            return sfCulture::getInvariantCulture()->getDateTimeFormat();
+        }
+    }
 
-  /**
-   * Gets the AM and PM markers array.
-   * Default InvariantInfo for AM and PM is <code>array('AM','PM');</code>
-   *
-   * @return array AM and PM markers
-   */
-  public function getAMPMMarkers()
-  {
-    return $this->data['amPmMarkers'];
-  }
+    /**
+     * A one-dimensional array of type String containing
+     * the culture-specific abbreviated names of the days
+     * of the week. The array for InvariantInfo contains
+     * "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", and "Sat".
+     *
+     * @return array abbreviated day names
+     */
+    public function getAbbreviatedDayNames()
+    {
+        return $this->data['dayNames']['format']['abbreviated'];
+    }
 
-  /**
-   * Sets the AM and PM markers array.
-   * For example <code>array('AM','PM');</code>
-   *
-   * @param array $value AM and PM markers
-   */
-  public function setAMPMMarkers($value)
-  {
-    $this->data['amPmMarkers'] = $value;
-  }
+    /**
+     * Sets the abbreviated day names. The value should be
+     * an array of string starting with Sunday and ends in Saturady.
+     * For example,
+     * <code>array("Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat");</code>
+     *
+     * @param array $value abbreviated day names.
+     */
+    public function setAbbreviatedDayNames($value)
+    {
+        $this->data['dayNames']['format']['abbreviated'] = $value;
+    }
 
-  /**
-   * Returns the full time pattern "HH:mm:ss z" (default).
-   * This is culture sensitive.
-   *
-   * @return string pattern "HH:mm:ss z".
-   */
-  public function getFullTimePattern()
-  {
-    return $this->data['timeFormats']['full'];
-  }
+    /**
+     * A one-dimensional array of type String containing
+     * the culture-specific narrow names of the days
+     * of the week. The array for InvariantInfo contains
+     * "S", "M", "T", "W", "T", "F", and "S".
+     *
+     * @return array narrow day names
+     */
+    public function getNarrowDayNames()
+    {
+        return $this->data['dayNames']['stand-alone']['narrow'];
+    }
 
-  /**
-   * Returns the long time pattern "HH:mm:ss z" (default).
-   * This is culture sensitive.
-   *
-   * @return string pattern "HH:mm:ss z".
-   */
-  public function getLongTimePattern()
-  {
-    return $this->data['timeFormats']['long'];
-  }
+    /**
+     * Sets the narrow day names. The value should be
+     * an array of string starting with Sunday and ends in Saturady.
+     * For example,
+     * <code>array("S", "M", "T", "W", "T", "F", "S");</code>
+     *
+     * @param array $value narrow day names.
+     */
+    public function setNarrowDayNames($value)
+    {
+        $this->data['dayNames']['stand-alone']['narrow'] = $value;
+    }
 
-  /**
-   * Returns the medium time pattern "HH:mm:ss" (default).
-   * This is culture sensitive.
-   *
-   * @return string pattern "HH:mm:ss".
-   */
-  public function getMediumTimePattern()
-  {
-    return $this->data['timeFormats']['medium'];
-  }
+    /**
+     * A one-dimensional array of type String containing the
+     * culture-specific full names of the days of the week.
+     * The array for InvariantInfo contains "Sunday", "Monday",
+     * "Tuesday", "Wednesday", "Thursday", "Friday", and "Saturday".
+     *
+     * @return array day names
+     */
+    public function getDayNames()
+    {
+        return $this->data['dayNames']['format']['wide'];
+    }
 
-  /**
-   * Returns the short time pattern "HH:mm" (default).
-   * This is culture sensitive.
-   *
-   * @return string pattern "HH:mm".
-   */
-  public function getShortTimePattern()
-  {
-    return $this->data['timeFormats']['short'];
-  }
+    /**
+     * Sets the day names. The value should be
+     * an array of string starting with Sunday and ends in Saturady.
+     * For example,
+     * <code>array("Sunday", "Monday", "Tuesday", "Wednesday", "Thursday",
+     * "Friday", "Saturday".);</code>
+     *
+     * @param array $value day names.
+     */
+    public function setDayNames($value)
+    {
+        $this->data['dayNames']['format']['wide'] = $value;
+    }
 
-  /**
-   * Returns the full date pattern "EEEE, yyyy MMMM dd" (default).
-   * This is culture sensitive.
-   * @return string pattern "EEEE, yyyy MMMM dd".
-   */
-  public function getFullDatePattern()
-  {
-    return $this->data['dateFormats']['full'];
-  }
+    /**
+     * A one-dimensional array of type String containing the
+     * culture-specific narrow names of the months. The array
+     * for InvariantInfo contains "J", "F", "M", "A", "M", "J",
+     * "J", "A", "S", "O", "N", and "D".
+     *
+     * @return array narrow month names.
+     */
+    public function getNarrowMonthNames()
+    {
+        return $this->data['monthNames']['stand-alone']['narrow'];
+    }
 
-  /**
-   * Returns the long date pattern "yyyy MMMM d" (default).
-   * This is culture sensitive.
-   * @return string pattern "yyyy MMMM d".
-   */
-  public function getLongDatePattern()
-  {
-    return $this->data['dateFormats']['long'];
-  }
+    /**
+     * Sets the narrow month names. The value should be
+     * an array of string starting with J and ends in D.
+     * For example,
+     * <code>array("J","F","M","A","M","J","J","A","S","O","N","D");</code>
+     *
+     * @param array $value month names.
+     */
+    public function setNarrowMonthNames($value)
+    {
+        $this->data['monthNames']['stand-alone']['narrow'] = $value;
+    }
 
-  /**
-   * Returns the medium date pattern "yyyy MMMM d" (default).
-   * This is culture sensitive.
-   * @return string pattern "yyyy MMM d".
-   */
-  public function getMediumDatePattern()
-  {
-    return $this->data['dateFormats']['medium'];
-  }
+    /**
+     * A one-dimensional array of type String containing the
+     * culture-specific abbreviated names of the months. The array
+     * for InvariantInfo contains "Jan", "Feb", "Mar", "Apr", "May",
+     * "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", and "Dec".
+     *
+     * Returns wide names if abbreviated names doesn't exist.
+     *
+     * @return array abbreviated month names.
+     */
+    public function getAbbreviatedMonthNames()
+    {
+        if (isset($this->data['monthNames']['format']['abbreviated'])) {
+            return $this->data['monthNames']['format']['abbreviated'];
+        } else {
+            return $this->data['monthNames']['format']['wide'];
+        }
+    }
 
-  /**
-   * Returns the short date pattern "yy/MM/dd" (default).
-   * This is culture sensitive.
-   *
-   * @return string pattern "yy/MM/dd".
-   */
-  public function getShortDatePattern()
-  {
-    return $this->data['dateFormats']['short'];
-  }
+    /**
+     * Sets the abbreviated month names. The value should be
+     * an array of string starting with Jan and ends in Dec.
+     * For example,
+     * <code>array("Jan", "Feb", "Mar", "Apr", "May", "Jun",
+     * "Jul", "Aug", "Sep","Oct","Nov","Dec");</code>
+     *
+     * @param array $value month names.
+     */
+    public function setAbbreviatedMonthNames($value)
+    {
+        $this->data['monthNames']['format']['abbreviated'] = $value;
+    }
 
-  /**
-   * Returns a zero-based index for first day of the week,
-   * as used by the local (Gregorian) calendar.
-   * e.g. Sunday (returns 0), or Monday (returns 1)
-   *
-   * @return integer
-   */
-  public function getFirstDayOfWeek()
-  {
-    return $this->data['firstDayOfWeek'];
-  }
+    /**
+     * A one-dimensional array of type String containing the
+     * culture-specific full names of the months. The array for
+     * InvariantInfo contains "January", "February", "March", "April",
+     * "May", "June", "July", "August", "September", "October", "November",
+     * and "December"
+     *
+     * @return array month names.
+     */
+    public function getMonthNames()
+    {
+        return $this->data['monthNames']['format']['wide'];
+    }
 
-  /**
-   * Returns the date time order pattern, "{1} {0}" (default).
-   * This is culture sensitive.
-   *
-   * @return string pattern "{1} {0}".
-   */
-  public function getDateTimeOrderPattern()
-  {
-    // FIXME: find CLDR equiavalent
-    return "{1} {0}";
-  }
+    /**
+     * A one-dimensional array of type String containing the
+     * culture-specific full names of the months. The array for
+     * InvariantInfo contains "January", "February", "March", "April",
+     * "May", "June", "July", "August", "September", "October", "November",
+     * and "December"
+     *
+     * @return array month names.
+     */
+    public function getStandAloneMonthNames()
+    {
+        if (isset($this->data['monthNames']['stand-alone']['wide'])
+            && count($this->data['monthNames']['stand-alone']['wide'])
+        ) {
+            return $this->data['monthNames']['stand-alone']['wide'];
+        }
 
-  /**
-   * Formats the date and time in a culture sensitive paterrn.
-   * The default is "Date Time".
-   *
-   * @return string date and time formated
-   */
-  public function formatDateTime($date, $time)
-  {
-    return str_replace(array('{0}', '{1}'), array($time, $date), $this->getDateTimeOrderPattern());
-  }
+        return $this->data['monthNames']['format']['wide'];
+    }
+
+    /**
+     * Sets the month names. The value should be
+     * an array of string starting with Janurary and ends in December.
+     * For example,
+     * <code>array("January", "February", "March", "April", "May", "June",
+     * "July", "August", "September","October","November","December");</code>
+     *
+     * @param array $value month names.
+     */
+    public function setMonthNames($value)
+    {
+        $this->data['monthNames']['format']['wide'] = $value;
+    }
+
+    /**
+     * A string containing the name of the era.
+     *
+     * @param int $era era The integer representing the era.
+     *
+     * @return string the era name.
+     */
+    public function getEra($era)
+    {
+        return $this->data['eras'][$era];
+    }
+
+    /**
+     * The string designator for hours that are "ante meridiem" (before noon).
+     * The default for InvariantInfo is "AM".
+     *
+     * @return string AM designator.
+     */
+    public function getAMDesignator()
+    {
+        $result = $this->getAMPMMarkers();
+
+        return $result[0];
+    }
+
+    /**
+     * Sets the AM Designator. For example, 'AM'.
+     *
+     * @param string $value AM designator.
+     */
+    public function setAMDesignator($value)
+    {
+        $markers = $this->getAMPMMarkers();
+        $markers[0] = $value;
+        $this->setAMPMMarkers($markers);
+    }
+
+    /**
+     * The string designator for hours that are "post meridiem" (after noon).
+     * The default for InvariantInfo is "PM".
+     *
+     * @return string PM designator.
+     */
+    public function getPMDesignator()
+    {
+        $result = $this->getAMPMMarkers();
+
+        return $result[1];
+    }
+
+    /**
+     * Sets the PM Designator. For example, 'PM'.
+     *
+     * @param string $value PM designator.
+     */
+    public function setPMDesignator($value)
+    {
+        $markers = $this->getAMPMMarkers();
+        $markers[1] = $value;
+        $this->setAMPMMarkers($markers);
+    }
+
+    /**
+     * Gets the AM and PM markers array.
+     * Default InvariantInfo for AM and PM is <code>array('AM','PM');</code>
+     *
+     * @return array AM and PM markers
+     */
+    public function getAMPMMarkers()
+    {
+        return $this->data['amPmMarkers'];
+    }
+
+    /**
+     * Sets the AM and PM markers array.
+     * For example <code>array('AM','PM');</code>
+     *
+     * @param array $value AM and PM markers
+     */
+    public function setAMPMMarkers($value)
+    {
+        $this->data['amPmMarkers'] = $value;
+    }
+
+    /**
+     * Returns the full time pattern "HH:mm:ss z" (default).
+     * This is culture sensitive.
+     *
+     * @return string pattern "HH:mm:ss z".
+     */
+    public function getFullTimePattern()
+    {
+        return $this->data['timeFormats']['full'];
+    }
+
+    /**
+     * Returns the long time pattern "HH:mm:ss z" (default).
+     * This is culture sensitive.
+     *
+     * @return string pattern "HH:mm:ss z".
+     */
+    public function getLongTimePattern()
+    {
+        return $this->data['timeFormats']['long'];
+    }
+
+    /**
+     * Returns the medium time pattern "HH:mm:ss" (default).
+     * This is culture sensitive.
+     *
+     * @return string pattern "HH:mm:ss".
+     */
+    public function getMediumTimePattern()
+    {
+        return $this->data['timeFormats']['medium'];
+    }
+
+    /**
+     * Returns the short time pattern "HH:mm" (default).
+     * This is culture sensitive.
+     *
+     * @return string pattern "HH:mm".
+     */
+    public function getShortTimePattern()
+    {
+        return $this->data['timeFormats']['short'];
+    }
+
+    /**
+     * Returns the full date pattern "EEEE, yyyy MMMM dd" (default).
+     * This is culture sensitive.
+     *
+     * @return string pattern "EEEE, yyyy MMMM dd".
+     */
+    public function getFullDatePattern()
+    {
+        return $this->data['dateFormats']['full'];
+    }
+
+    /**
+     * Returns the long date pattern "yyyy MMMM d" (default).
+     * This is culture sensitive.
+     *
+     * @return string pattern "yyyy MMMM d".
+     */
+    public function getLongDatePattern()
+    {
+        return $this->data['dateFormats']['long'];
+    }
+
+    /**
+     * Returns the medium date pattern "yyyy MMMM d" (default).
+     * This is culture sensitive.
+     *
+     * @return string pattern "yyyy MMM d".
+     */
+    public function getMediumDatePattern()
+    {
+        return $this->data['dateFormats']['medium'];
+    }
+
+    /**
+     * Returns the short date pattern "yy/MM/dd" (default).
+     * This is culture sensitive.
+     *
+     * @return string pattern "yy/MM/dd".
+     */
+    public function getShortDatePattern()
+    {
+        return $this->data['dateFormats']['short'];
+    }
+
+    /**
+     * Returns a zero-based index for first day of the week,
+     * as used by the local (Gregorian) calendar.
+     * e.g. Sunday (returns 0), or Monday (returns 1)
+     *
+     * @return integer
+     */
+    public function getFirstDayOfWeek()
+    {
+        return $this->data['firstDayOfWeek'];
+    }
+
+    /**
+     * Returns the date time order pattern, "{1} {0}" (default).
+     * This is culture sensitive.
+     *
+     * @return string pattern "{1} {0}".
+     */
+    public function getDateTimeOrderPattern()
+    {
+        // FIXME: find CLDR equiavalent
+        return "{1} {0}";
+    }
+
+    /**
+     * Formats the date and time in a culture sensitive paterrn.
+     * The default is "Date Time".
+     *
+     * @return string date and time formated
+     */
+    public function formatDateTime($date, $time)
+    {
+        return str_replace(array('{0}', '{1}'), array($time, $date), $this->getDateTimeOrderPattern());
+    }
 
 }

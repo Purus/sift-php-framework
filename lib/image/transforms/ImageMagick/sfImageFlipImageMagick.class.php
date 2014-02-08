@@ -13,23 +13,24 @@
  *
  * Flips the image vertically.
  *
- * @package Sift
+ * @package    Sift
  * @subpackage image
  */
 class sfImageFlipImageMagick extends sfImageTransformAbstract
 {
-  /**
-   * Apply the transform to the sfImage object.
-   *
-   * @param integer
-   * @return sfImage
-   */
-  protected function transform(sfImage $image)
-  {
-    $resource = $image->getAdapter()->getHolder();
+    /**
+     * Apply the transform to the sfImage object.
+     *
+     * @param integer
+     *
+     * @return sfImage
+     */
+    protected function transform(sfImage $image)
+    {
+        $resource = $image->getAdapter()->getHolder();
 
-    $resource->flipImage();
+        $resource->flipImage();
 
-    return $image;
-  }
+        return $image;
+    }
 }

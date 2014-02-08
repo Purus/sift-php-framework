@@ -12,4 +12,6 @@
  * @package    Sift
  * @subpackage config
  */
-class sfTextFiltersConfigHandler extends sfSimpleYamlConfigHandler {}
+class sfTextFiltersConfigHandler extends sfSimpleYamlConfigHandler
+{
+}

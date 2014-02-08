@@ -14,14 +14,15 @@
  */
 interface sfIDataRetriever
 {
-  /**
-   * Retrieve objects
-   *
-   * @param string $class Class of the model
-   * @param string $peerMethod Peer method
-   * @param array $options Array of options
-   * @return mixed
-   */
-  public static function retrieveObjects($class, $peerMethod = null, $options = array());
+    /**
+     * Retrieve objects
+     *
+     * @param string $class      Class of the model
+     * @param string $peerMethod Peer method
+     * @param array  $options    Array of options
+     *
+     * @return mixed
+     */
+    public static function retrieveObjects($class, $peerMethod = null, $options = array());
 
 }

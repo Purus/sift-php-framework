@@ -12,4 +12,6 @@
  * @package    Sift
  * @subpackage action
  */
-class myComponents extends sfComponents {}
+class myComponents extends sfComponents
+{
+}

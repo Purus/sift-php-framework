@@ -9,7 +9,9 @@
 /**
  * Color palette
  *
- * @package Sift
+ * @package    Sift
  * @subpackage color
  */
-class myColorPalette extends sfColorPalette {}
+class myColorPalette extends sfColorPalette
+{
+}

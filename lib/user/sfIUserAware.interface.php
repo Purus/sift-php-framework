@@ -14,18 +14,18 @@
  */
 interface sfIUserAware
 {
-  /**
-   * Sets the user
-   *
-   * @param sfIUser The user instance
-   */
-  public function setUser(sfIUser $user = null);
+    /**
+     * Sets the user
+     *
+     * @param sfIUser The user instance
+     */
+    public function setUser(sfIUser $user = null);
 
-  /**
-   * Returns the user
-   *
-   * @return sfIUser|null
-   */
-  public function getUser();
+    /**
+     * Returns the user
+     *
+     * @return sfIUser|null
+     */
+    public function getUser();
 
 }

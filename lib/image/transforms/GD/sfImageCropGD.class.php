@@ -13,176 +13,178 @@
  *
  * This class crops a image to a set size.
  *
- * @package Sift
+ * @package    Sift
  * @subpackage image
  */
 class sfImageCropGD extends sfImageTransformAbstract
 {
-  /**
-   * Left coordinate.
-  */
-  protected $left = 0;
+    /**
+     * Left coordinate.
+     */
+    protected $left = 0;
 
-  /**
-   * Top coordinate
-  */
-  protected $top = 0;
+    /**
+     * Top coordinate
+     */
+    protected $top = 0;
 
-  /**
-   * Cropped area width.
-  */
-  protected $width;
+    /**
+     * Cropped area width.
+     */
+    protected $width;
 
-  /**
-   * Cropped area height
-  */
-  protected $height;
+    /**
+     * Cropped area height
+     */
+    protected $height;
 
-  /**
-   * Construct an sfImageCrop object.
-   *
-   * @param integer
-   * @param integer
-   * @param integer
-   * @param integer
-   */
-  public function __construct($left, $top, $width, $height)
-  {
-    $this->setLeft($left);
-    $this->setTop($top);
-    $this->setWidth($width);
-    $this->setHeight($height);
-  }
-
-  /**
-   * Sets the left coordinate
-   *
-   * @param integer
-   */
-  public function setLeft($left)
-  {
-    if (is_numeric($left)) {
-      $this->left = (int) $left;
-
-      return true;
+    /**
+     * Construct an sfImageCrop object.
+     *
+     * @param integer
+     * @param integer
+     * @param integer
+     * @param integer
+     */
+    public function __construct($left, $top, $width, $height)
+    {
+        $this->setLeft($left);
+        $this->setTop($top);
+        $this->setWidth($width);
+        $this->setHeight($height);
     }
 
-    return false;
-  }
+    /**
+     * Sets the left coordinate
+     *
+     * @param integer
+     */
+    public function setLeft($left)
+    {
+        if (is_numeric($left)) {
+            $this->left = (int)$left;
 
-  /**
-   * returns the left coordinate
-   *
-   * @return integer
-   */
-  public function getLeft()
-  {
-    return $this->left;
-  }
+            return true;
+        }
 
-  /**
-   * set the top coordinate.
-   *
-   * @param integer
-   */
-  public function setTop($top)
-  {
-    if (is_numeric($top)) {
-      $this->top = (int) $top;
-
-      return true;
+        return false;
     }
 
-    return false;
-  }
-
-  /**
-   * returns the top coordinate
-   *
-   * @return integer
-   */
-  public function getTop()
-  {
-    return $this->top;
-  }
-
-  /**
-   * set the width.
-   *
-   * @param integer
-   */
-  public function setWidth($width)
-  {
-    if (is_numeric($width)) {
-      $this->width = (int) $width;
-
-      return true;
+    /**
+     * returns the left coordinate
+     *
+     * @return integer
+     */
+    public function getLeft()
+    {
+        return $this->left;
     }
 
-    return false;
-  }
+    /**
+     * set the top coordinate.
+     *
+     * @param integer
+     */
+    public function setTop($top)
+    {
+        if (is_numeric($top)) {
+            $this->top = (int)$top;
 
-  /**
-   * returns the width of the thumbnail
-   *
-   * @return integer
-   */
-  public function getWidth()
-  {
-    return $this->width;
-  }
+            return true;
+        }
 
-  /**
-   * set the height.
-   *
-   * @param integer
-   */
-  public function setHeight($height)
-  {
-    if (is_numeric($height)) {
-      $this->height = (int) $height;
-
-      return true;
+        return false;
     }
 
-    return false;
-  }
+    /**
+     * returns the top coordinate
+     *
+     * @return integer
+     */
+    public function getTop()
+    {
+        return $this->top;
+    }
 
-  /**
-   * returns the height of the thumbnail
-   *
-   * @return integer
-   */
-  public function getHeight()
-  {
-    return $this->height;
-  }
+    /**
+     * set the width.
+     *
+     * @param integer
+     */
+    public function setWidth($width)
+    {
+        if (is_numeric($width)) {
+            $this->width = (int)$width;
 
-  /**
-   * Apply the transform to the sfImage object.
-   *
-   * @access protected
-   * @param sfImage
-   * @return sfImage
-   */
-  protected function transform(sfImage $image)
-  {
+            return true;
+        }
 
-    $resource = $image->getAdapter()->getHolder();
-    $dest_resource = $image->getAdapter()->getTransparentImage($this->width, $this->height);
+        return false;
+    }
 
-    // Preserving transparency for alpha PNGs
-    imagealphablending($dest_resource, false);
-    imagesavealpha($dest_resource, true);
+    /**
+     * returns the width of the thumbnail
+     *
+     * @return integer
+     */
+    public function getWidth()
+    {
+        return $this->width;
+    }
 
-    imagecopy($dest_resource, $resource, 0, 0, $this->left, $this->top, $this->width, $this->height);
+    /**
+     * set the height.
+     *
+     * @param integer
+     */
+    public function setHeight($height)
+    {
+        if (is_numeric($height)) {
+            $this->height = (int)$height;
 
-    // Tidy up
-    imagedestroy($resource);
+            return true;
+        }
 
-    // Replace old image with flipped version
-    $image->getAdapter()->setHolder($dest_resource);
+        return false;
+    }
 
-    return $image;
-  }
+    /**
+     * returns the height of the thumbnail
+     *
+     * @return integer
+     */
+    public function getHeight()
+    {
+        return $this->height;
+    }
+
+    /**
+     * Apply the transform to the sfImage object.
+     *
+     * @access protected
+     *
+     * @param sfImage
+     *
+     * @return sfImage
+     */
+    protected function transform(sfImage $image)
+    {
+
+        $resource = $image->getAdapter()->getHolder();
+        $dest_resource = $image->getAdapter()->getTransparentImage($this->width, $this->height);
+
+        // Preserving transparency for alpha PNGs
+        imagealphablending($dest_resource, false);
+        imagesavealpha($dest_resource, true);
+
+        imagecopy($dest_resource, $resource, 0, 0, $this->left, $this->top, $this->width, $this->height);
+
+        // Tidy up
+        imagedestroy($resource);
+
+        // Replace old image with flipped version
+        $image->getAdapter()->setHolder($dest_resource);
+
+        return $image;
+    }
 }

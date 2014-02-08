@@ -12,4 +12,6 @@
  * @package    Sift
  * @subpackage plugin
  */
-class sfPluginRestException extends sfPluginException {}
+class sfPluginRestException extends sfPluginException
+{
+}

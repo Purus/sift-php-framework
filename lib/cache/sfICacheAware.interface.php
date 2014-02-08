@@ -9,23 +9,23 @@
 /**
  * sfICacheAware interface
  *
- * @package Sift
+ * @package    Sift
  * @subpackage cache
  */
 interface sfICacheAware
 {
-  /**
-   * Sets cache instance
-   *
-   * @param sfICache $cache
-   */
-  public function setCache(sfICache $cache = null);
+    /**
+     * Sets cache instance
+     *
+     * @param sfICache $cache
+     */
+    public function setCache(sfICache $cache = null);
 
-  /**
-   * Return the cache instance
-   *
-   * @return sfICache
-   */
-  public function getCache();
+    /**
+     * Return the cache instance
+     *
+     * @return sfICache
+     */
+    public function getCache();
 
 }

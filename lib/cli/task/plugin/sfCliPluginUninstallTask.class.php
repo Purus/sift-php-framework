@@ -14,28 +14,33 @@
  */
 class sfCliPluginUninstallTask extends sfCliPluginBaseTask
 {
-  /**
-   * @see sfCliTask
-   */
-  protected function configure()
-  {
-    $this->addArguments(array(
-      new sfCliCommandArgument('name', sfCliCommandArgument::REQUIRED, 'The plugin name'),
-    ));
+    /**
+     * @see sfCliTask
+     */
+    protected function configure()
+    {
+        $this->addArguments(
+            array(
+                new sfCliCommandArgument('name', sfCliCommandArgument::REQUIRED, 'The plugin name'),
+            )
+        );
 
-    $this->addOptions(array(
-      new sfCliCommandOption('channel', 'c', sfCliCommandOption::PARAMETER_REQUIRED, 'The PEAR channel name', null),
-      new sfCliCommandOption('install_deps', 'd', sfCliCommandOption::PARAMETER_NONE, 'Whether to force installation of dependencies', null),
-    ));
+        $this->addOptions(
+            array(
+                new sfCliCommandOption('channel', 'c', sfCliCommandOption::PARAMETER_REQUIRED, 'The PEAR channel name', null),
+                new sfCliCommandOption('install_deps', 'd', sfCliCommandOption::PARAMETER_NONE, 'Whether to force installation of dependencies', null),
+            )
+        );
 
-    $this->namespace = 'plugin';
-    $this->name = 'uninstall';
+        $this->namespace = 'plugin';
+        $this->name = 'uninstall';
 
-    $scriptName = $this->environment->get('script_name');
+        $scriptName = $this->environment->get('script_name');
 
-    $this->briefDescription = 'Uninstalls a plugin';
+        $this->briefDescription = 'Uninstalls a plugin';
 
-    $this->detailedDescription = <<<EOF
+        $this->detailedDescription
+            = <<<EOF
 The [plugin:uninstall|INFO] task uninstalls a plugin:
 
   [{$scriptName} plugin:uninstall sfGuardPlugin|INFO]
@@ -59,15 +64,15 @@ If the plugin contains some web content (images, stylesheets or javascripts),
 the task also removes the [web/%name%|COMMENT] symbolic link (on *nix)
 or directory (on Windows).
 EOF;
-  }
+    }
 
-  /**
-   * @see sfCliTask
-   */
-  protected function execute($arguments = array(), $options = array())
-  {
-    $this->logSection('plugin', sprintf('Uninstalling plugin "%s"', $arguments['name']));
+    /**
+     * @see sfCliTask
+     */
+    protected function execute($arguments = array(), $options = array())
+    {
+        $this->logSection('plugin', sprintf('Uninstalling plugin "%s"', $arguments['name']));
 
-    $this->getPluginManager()->uninstallPlugin($arguments['name'], $options['channel']);
-  }
+        $this->getPluginManager()->uninstallPlugin($arguments['name'], $options['channel']);
+    }
 }

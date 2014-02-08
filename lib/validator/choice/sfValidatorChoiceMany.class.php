@@ -14,16 +14,16 @@
  */
 class sfValidatorChoiceMany extends sfValidatorChoice
 {
-  /**
-   * Configures the current validator.
-   *
-   * @see sfValidatorChoice
-   */
-  protected function configure($options = array(), $messages = array())
-  {
-    parent::configure($options, $messages);
+    /**
+     * Configures the current validator.
+     *
+     * @see sfValidatorChoice
+     */
+    protected function configure($options = array(), $messages = array())
+    {
+        parent::configure($options, $messages);
 
-    $this->setOption('multiple', true);
-  }
+        $this->setOption('multiple', true);
+    }
 
 }

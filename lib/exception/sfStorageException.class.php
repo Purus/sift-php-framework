@@ -13,4 +13,6 @@
  * @package    Sift
  * @subpackage exception
  */
-class sfStorageException extends sfException {}
+class sfStorageException extends sfException
+{
+}

@@ -14,52 +14,52 @@
  */
 class sfValidatorCSRFToken extends sfValidatorBase
 {
-  /**
-   * @see sfValidatorBase
-   */
-  protected function configure($options = array(), $messages = array())
-  {
-    $this->addRequiredOption('token');
+    /**
+     * @see sfValidatorBase
+     */
+    protected function configure($options = array(), $messages = array())
+    {
+        $this->addRequiredOption('token');
 
-    $this->setOption('required', true);
+        $this->setOption('required', true);
 
-    $this->addMessage('csrf_attack', 'This session has expired. Please reload the page and try again.');
-  }
-
-  /**
-   * @see sfValidatorBase
-   */
-  protected function doClean($value)
-  {
-    if ($value != $this->getOption('token')) {
-      throw new sfValidatorError($this, 'csrf_attack');
+        $this->addMessage('csrf_attack', 'This session has expired. Please reload the page and try again.');
     }
 
-    return $value;
-  }
+    /**
+     * @see sfValidatorBase
+     */
+    protected function doClean($value)
+    {
+        if ($value != $this->getOption('token')) {
+            throw new sfValidatorError($this, 'csrf_attack');
+        }
 
-  /**
-   * @return sfValidatorBase
-   */
-  public function getActiveMessages()
-  {
-    return array($this->getMessage('csrf_attack'));
-  }
+        return $value;
+    }
 
-  /**
-   * @see sfValidatorBase
-   */
-  public function getJavascriptValidationRules()
-  {
-    return false;
-  }
+    /**
+     * @return sfValidatorBase
+     */
+    public function getActiveMessages()
+    {
+        return array($this->getMessage('csrf_attack'));
+    }
 
-  /**
-   * @see sfValidatorBase
-   */
-  public function getJavascriptValidationMessages()
-  {
-    return false;
-  }
+    /**
+     * @see sfValidatorBase
+     */
+    public function getJavascriptValidationRules()
+    {
+        return false;
+    }
+
+    /**
+     * @see sfValidatorBase
+     */
+    public function getJavascriptValidationMessages()
+    {
+        return false;
+    }
 
 }

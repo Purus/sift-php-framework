@@ -23,12 +23,12 @@
  */
 function link_to_function($name, $function, $html_options = array())
 {
-  $html_options = _parse_attributes($html_options);
+    $html_options = _parse_attributes($html_options);
 
-  $html_options['href'] = isset($html_options['href']) ? $html_options['href'] : '#';
-  $html_options['onclick'] = $function . '; return false;';
+    $html_options['href'] = isset($html_options['href']) ? $html_options['href'] : '#';
+    $html_options['onclick'] = $function . '; return false;';
 
-  return content_tag('a', $name, $html_options);
+    return content_tag('a', $name, $html_options);
 }
 
 /**
@@ -40,13 +40,13 @@ function link_to_function($name, $function, $html_options = array())
  */
 function button_to_function($name, $function, $html_options = array())
 {
-  $html_options = _parse_attributes($html_options);
+    $html_options = _parse_attributes($html_options);
 
-  $html_options['onclick'] = $function . '; return false;';
-  $html_options['type'] = 'button';
-  $html_options['value'] = $name;
+    $html_options['onclick'] = $function . '; return false;';
+    $html_options['type'] = 'button';
+    $html_options['value'] = $name;
 
-  return tag('input', $html_options);
+    return tag('input', $html_options);
 }
 
 /**
@@ -55,7 +55,7 @@ function button_to_function($name, $function, $html_options = array())
  */
 function if_javascript()
 {
-  ob_start();
+    ob_start();
 }
 
 /**
@@ -64,7 +64,7 @@ function if_javascript()
  */
 function end_if_javascript()
 {
-  $content = ob_get_clean();
+    $content = ob_get_clean();
 
-  echo javascript_tag("document.write('" . esc_js_no_entities($content) . "');");
+    echo javascript_tag("document.write('" . esc_js_no_entities($content) . "');");
 }

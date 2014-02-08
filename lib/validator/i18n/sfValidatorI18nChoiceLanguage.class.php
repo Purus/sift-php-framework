@@ -14,40 +14,43 @@
  */
 class sfValidatorI18nChoiceLanguage extends sfValidatorChoice
 {
-  /**
-   * Configures the current validator.
-   *
-   * Available options:
-   *
-   *  * languages: An array of language codes to use (ISO 639-1)
-   *
-   * @param array $options   An array of options
-   * @param array $messages  An array of error messages
-   *
-   * @see sfValidatorChoice
-   */
-  protected function configure($options = array(), $messages = array())
-  {
-    parent::configure($options, $messages);
+    /**
+     * Configures the current validator.
+     *
+     * Available options:
+     *
+     *  * languages: An array of language codes to use (ISO 639-1)
+     *
+     * @param array $options An array of options
+     * @param array $messages An array of error messages
+     *
+     * @see sfValidatorChoice
+     */
+    protected function configure($options = array(), $messages = array())
+    {
+        parent::configure($options, $messages);
 
-    // culture is deprecated
-    $this->addOption('culture');
-    $this->addOption('languages');
+        // culture is deprecated
+        $this->addOption('culture');
+        $this->addOption('languages');
 
-    // populate choices with all languages
-    $languages = array_keys(sfCulture::getInstance()->getLanguages());
+        // populate choices with all languages
+        $languages = array_keys(sfCulture::getInstance()->getLanguages());
 
-    // restrict languages to a sub-set
-    if (isset($options['languages'])) {
-      if ($problems = array_diff($options['languages'], $languages)) {
-        throw new InvalidArgumentException(sprintf('The following languages do not exist: %s.', implode(', ', $problems)));
-      }
+        // restrict languages to a sub-set
+        if (isset($options['languages'])) {
+            if ($problems = array_diff($options['languages'], $languages)) {
+                throw new InvalidArgumentException(sprintf(
+                    'The following languages do not exist: %s.',
+                    implode(', ', $problems)
+                ));
+            }
 
-      $languages = $options['languages'];
+            $languages = $options['languages'];
+        }
+
+        sort($languages);
+
+        $this->setOption('choices', $languages);
     }
-
-    sort($languages);
-
-    $this->setOption('choices', $languages);
-  }
 }

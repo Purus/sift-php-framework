@@ -9,12 +9,14 @@
 /**
  * Color palette interface
  *
- * @package Sift
+ * @package    Sift
  * @subpackage color
  */
 interface sfIColorPallete
 {
-  public function getSwatches();
-  public function getClosestColor($color);
-  public function getId();
+    public function getSwatches();
+
+    public function getClosestColor($color);
+
+    public function getId();
 }

@@ -13,4 +13,6 @@
  * @package    Sift
  * @subpackage exception
  */
-class sfConfigurationException extends sfException {}
+class sfConfigurationException extends sfException
+{
+}

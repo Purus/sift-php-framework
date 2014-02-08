@@ -16,26 +16,26 @@
  */
 class sfValidatorBlacklistRegex extends sfValidatorBlacklist
 {
-  /**
-   * @see sfValidatorBase
-   */
-  protected function doClean($value)
-  {
-    $forbiddenValues = $this->getOption('forbidden_values');
-    if ($forbiddenValues instanceof sfCallable) {
-      $forbiddenValues = $forbiddenValues->call();
-    }
+    /**
+     * @see sfValidatorBase
+     */
+    protected function doClean($value)
+    {
+        $forbiddenValues = $this->getOption('forbidden_values');
+        if ($forbiddenValues instanceof sfCallable) {
+            $forbiddenValues = $forbiddenValues->call();
+        }
 
-    foreach ($forbiddenValues as $regex) {
-      $regexp = '@^'.$regex.'$@';
-      if (false === $this->getOption('case_sensitive')) {
-        $regexp .= 'i';
-      }
-      if (@preg_match($regexp, $value)) {
-        throw new sfValidatorError($this, 'forbidden', array('value' => $value));
-      }
-    }
+        foreach ($forbiddenValues as $regex) {
+            $regexp = '@^' . $regex . '$@';
+            if (false === $this->getOption('case_sensitive')) {
+                $regexp .= 'i';
+            }
+            if (@preg_match($regexp, $value)) {
+                throw new sfValidatorError($this, 'forbidden', array('value' => $value));
+            }
+        }
 
-    return $value;
-  }
+        return $value;
+    }
 }

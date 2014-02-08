@@ -14,19 +14,19 @@
  */
 interface sfIFilter
 {
-  /**
-   * Excecutes the filter
-   *
-   * @param sfFilterChain $filterChain
-   */
-  public function execute(sfFilterChain $filterChain);
+    /**
+     * Excecutes the filter
+     *
+     * @param sfFilterChain $filterChain
+     */
+    public function execute(sfFilterChain $filterChain);
 
-  /**
-   * Initializes the filter
-   *
-   * @param sfContext $context The current context
-   * @param array $parameters
-   */
-  public function initialize(sfContext $context, $parameters = array());
+    /**
+     * Initializes the filter
+     *
+     * @param sfContext $context The current context
+     * @param array     $parameters
+     */
+    public function initialize(sfContext $context, $parameters = array());
 
 }

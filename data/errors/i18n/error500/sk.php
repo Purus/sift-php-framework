@@ -7,8 +7,8 @@
  */
 
 return array(
-  'Interná chyba servera',
-  'Ospravedlňujeme sa, ale pri vybavovaní Vašej požiadavky došlo k internej chybe servera.',
-  'Chyba bola uložená pre administrátora systému. Ak sa bude chyba zobrazovať aj naďalej, prosím kontaktujte webmastera <a href="mailto:%email%" title="Odeslat email webmasterovi">%email%</a>.',
-  'Ďakujeme za Vašu trpezlivosť.'
+    'Interná chyba servera',
+    'Ospravedlňujeme sa, ale pri vybavovaní Vašej požiadavky došlo k internej chybe servera.',
+    'Chyba bola uložená pre administrátora systému. Ak sa bude chyba zobrazovať aj naďalej, prosím kontaktujte webmastera <a href="mailto:%email%" title="Odeslat email webmasterovi">%email%</a>.',
+    'Ďakujeme za Vašu trpezlivosť.'
 );

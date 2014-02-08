@@ -12,4 +12,6 @@
  * @package    Sift
  * @subpackage exception
  */
-class sfCacheException extends sfException {}
+class sfCacheException extends sfException
+{
+}

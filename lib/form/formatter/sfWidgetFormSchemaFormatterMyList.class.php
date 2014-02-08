@@ -14,8 +14,8 @@
  */
 class sfWidgetFormSchemaFormatterMyList extends sfWidgetFormSchemaFormatter
 {
-  protected $rowFormat       = "<li class=\"form-element clear\">\n  %error%%label%\n  %field%%help%\n%hidden_fields%</li>\n",
-    $errorRowFormat  = "<li>\n%errors%</li>\n",
-    $helpFormat      = '<div class="help-wrap">%help%</div>',
-    $decoratorFormat = "<ul class=\"form-elements\">\n  %content%</ul>";
+    protected $rowFormat = "<li class=\"form-element clear\">\n  %error%%label%\n  %field%%help%\n%hidden_fields%</li>\n",
+        $errorRowFormat = "<li>\n%errors%</li>\n",
+        $helpFormat = '<div class="help-wrap">%help%</div>',
+        $decoratorFormat = "<ul class=\"form-elements\">\n  %content%</ul>";
 }

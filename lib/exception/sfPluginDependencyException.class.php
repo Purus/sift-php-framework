@@ -12,4 +12,6 @@
  * @package    Sift
  * @subpackage plugin
  */
-class sfPluginDependencyException extends sfPluginException {}
+class sfPluginDependencyException extends sfPluginException
+{
+}

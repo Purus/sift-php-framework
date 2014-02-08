@@ -12,4 +12,6 @@
  * @package    Sift
  * @subpackage form_widget
  */
-class sfWidgetFormFilterDateTime extends sfWidgetFormFilterDate {}
+class sfWidgetFormFilterDateTime extends sfWidgetFormFilterDate
+{
+}

@@ -14,39 +14,42 @@
  */
 class sfValidatorI18nChoiceCurrency extends sfValidatorChoice
 {
-  /**
-   * Configures the current validator.
-   *
-   * Available options:
-   *
-   *  * countries: An array of country codes to use (ISO 3166)
-   *
-   * @param array $options   An array of options
-   * @param array $messages  An array of error messages
-   *
-   * @see sfValidatorChoice
-   */
-  protected function configure($options = array(), $messages = array())
-  {
-    parent::configure($options, $messages);
+    /**
+     * Configures the current validator.
+     *
+     * Available options:
+     *
+     *  * countries: An array of country codes to use (ISO 3166)
+     *
+     * @param array $options An array of options
+     * @param array $messages An array of error messages
+     *
+     * @see sfValidatorChoice
+     */
+    protected function configure($options = array(), $messages = array())
+    {
+        parent::configure($options, $messages);
 
-    $this->addOption('currencies');
+        $this->addOption('currencies');
 
-    // populate choices with all countries
-    $currencies = array_keys(sfCulture::getInstance()->getCurrencies());
+        // populate choices with all countries
+        $currencies = array_keys(sfCulture::getInstance()->getCurrencies());
 
-    // restrict countries to a sub-set
-    if (isset($options['currencies'])) {
-      if ($problems = array_diff($options['currencies'], $currencies)) {
-        throw new InvalidArgumentException(sprintf('The following currencies do not exist: %s.', implode(', ', $problems)));
-      }
+        // restrict countries to a sub-set
+        if (isset($options['currencies'])) {
+            if ($problems = array_diff($options['currencies'], $currencies)) {
+                throw new InvalidArgumentException(sprintf(
+                    'The following currencies do not exist: %s.',
+                    implode(', ', $problems)
+                ));
+            }
 
-      $currencies = $options['currencies'];
+            $currencies = $options['currencies'];
+        }
+
+        sort($currencies);
+
+        $this->setOption('choices', $currencies);
     }
-
-    sort($currencies);
-
-    $this->setOption('choices', $currencies);
-  }
 
 }

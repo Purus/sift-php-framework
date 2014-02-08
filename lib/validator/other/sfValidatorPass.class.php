@@ -14,39 +14,39 @@
  */
 class sfValidatorPass extends sfValidatorBase
 {
-  /**
-   * Dummy constructor, which does nothing
-   *
-   * @param array $options
-   * @param array $messages
-   */
-  public function __construct($options = array(), $messages = array())
-  {
+    /**
+     * Dummy constructor, which does nothing
+     *
+     * @param array $options
+     * @param array $messages
+     */
+    public function __construct($options = array(), $messages = array())
+    {
 
-  }
+    }
 
-  /**
-   * @see sfValidatorBase
-   */
-  public function clean($value)
-  {
-    return $this->doClean($value);
-  }
+    /**
+     * @see sfValidatorBase
+     */
+    public function clean($value)
+    {
+        return $this->doClean($value);
+    }
 
-  /**
-   * @see sfValidatorBase
-   */
-  protected function doClean($value)
-  {
-    return $value;
-  }
+    /**
+     * @see sfValidatorBase
+     */
+    protected function doClean($value)
+    {
+        return $value;
+    }
 
-  /**
-   * @see sfValidatorBase
-   */
-  public function getActiveMessages()
-  {
-    return array();
-  }
+    /**
+     * @see sfValidatorBase
+     */
+    public function getActiveMessages()
+    {
+        return array();
+    }
 
 }

@@ -15,421 +15,463 @@
  */
 class sfAssetPackagerFilter extends sfFilter
 {
-  /**
-   * Cache holder of path aliases
-   *
-   * @var array
-   */
-  protected $pathAliases;
+    /**
+     * Cache holder of path aliases
+     *
+     * @var array
+     */
+    protected $pathAliases;
 
-  /**
-   * Executes the filter
-   *
-   * @param sfFilterChain $filterChain
-   */
-  public function execute(sfFilterChain $filterChain)
-  {
-    $filterChain->execute();
+    /**
+     * Executes the filter
+     *
+     * @param sfFilterChain $filterChain
+     */
+    public function execute(sfFilterChain $filterChain)
+    {
+        $filterChain->execute();
 
-    if ($this->isFirstCall() && $this->canPackage()) {
-      sfLoader::loadHelpers(array('Tag', 'Asset'));
-      $this->handleStylesheets();
-      $this->handleJavascripts();
+        if ($this->isFirstCall() && $this->canPackage()) {
+            sfLoader::loadHelpers(array('Tag', 'Asset'));
+            $this->handleStylesheets();
+            $this->handleJavascripts();
+        }
     }
-  }
 
-  /**
-   * Can be the assets packaged?
-   *
-   * @return boolean
-   */
-  protected function canPackage()
-  {
-    return !$this->getContext()->getRequest()->isAjax()
-            && strpos($this->getContext()->getResponse()->getContentType(), 'text/html') !== false;
-  }
+    /**
+     * Can be the assets packaged?
+     *
+     * @return boolean
+     */
+    protected function canPackage()
+    {
+        return !$this->getContext()->getRequest()->isAjax()
+        && strpos($this->getContext()->getResponse()->getContentType(), 'text/html') !== false;
+    }
 
-  /**
-   * Handles javascript files
-   *
-   */
-  protected function handleJavascripts()
-  {
-    $context = $this->getContext();
-    $response = $context->getResponse();
-    $request = $context->getRequest();
-    $invalid = $valid = $already_seen = array();
-    $baseDomain = sfConfig::get('sf_base_domain');
-    $lastModified = 0;
-    $lastModifiedPreserved = array();
+    /**
+     * Handles javascript files
+     *
+     */
+    protected function handleJavascripts()
+    {
+        $context = $this->getContext();
+        $response = $context->getResponse();
+        $request = $context->getRequest();
+        $invalid = $valid = $already_seen = array();
+        $baseDomain = sfConfig::get('sf_base_domain');
+        $lastModified = 0;
+        $lastModifiedPreserved = array();
 
-    foreach (array('first', '', 'last') as $position) {
-      $valid[$position] = array();
-      $invalid[$position] = array();
-      $preserved[$position] = array();
+        foreach (array('first', '', 'last') as $position) {
+            $valid[$position] = array();
+            $invalid[$position] = array();
+            $preserved[$position] = array();
 
-      foreach ($response->getJavascripts($position) as $files => $options) {
-        if (!is_array($files)) {
-          $files = array($files);
+            foreach ($response->getJavascripts($position) as $files => $options) {
+                if (!is_array($files)) {
+                    $files = array($files);
+                }
+
+                foreach ($files as $file) {
+                    // generated script
+                    if (!isset($options['generated']) || !$options['generated']) {
+                        $file = javascript_path($file);
+                    }
+
+                    if (isset($already_seen[$file])) {
+                        continue;
+                    }
+
+                    $already_seen[$file] = true;
+
+                    // can be packaged?
+                    if (!$this->canBePackaged($file, $options, $baseDomain)) {
+                        $invalid[$position][$file] = $options;
+                    } else {
+                        $file = $this->stripBaseDomain($file, $baseDomain);
+                        $filePath = $this->getFilePath($file);
+
+                        if (!is_readable($filePath)) {
+                            $this->log(
+                                'The file "{file}" is not readable or does not exist.',
+                                sfILogger::ERROR,
+                                array(
+                                    'file' => $file
+                                )
+                            );
+                            // mark as invalid
+                            $invalid[$position][$file] = $options;
+                            continue;
+                        }
+
+                        // we have some options, dont touch it
+                        if (count($options)) {
+                            $preserved[$position][$file] = $options;
+                            $lastModifiedPreserved[$position][$file] = filemtime($filePath);
+                        } else {
+                            $valid[$position][] = $file;
+                            $lastModified = max($lastModified, filemtime($filePath));
+                        }
+                    }
+                }
+            }
         }
 
-        foreach ($files as $file) {
-          // generated script
-          if (!isset($options['generated']) || !$options['generated']) {
-            $file = javascript_path($file);
-          }
+        // remove all scripts from response
+        $response->clearJavascripts();
 
-          if (isset($already_seen[$file])) {
-            continue;
-          }
+        $root = $request->getRelativeUrlRoot();
 
-          $already_seen[$file] = true;
-
-          // can be packaged?
-          if (!$this->canBePackaged($file, $options, $baseDomain)) {
-            $invalid[$position][$file] = $options;
-          } else {
-            $file = $this->stripBaseDomain($file, $baseDomain);
-            $filePath = $this->getFilePath($file);
-
-            if (!is_readable($filePath)) {
-              $this->log('The file "{file}" is not readable or does not exist.', sfILogger::ERROR, array(
-                'file' => $file
-              ));
-              // mark as invalid
-              $invalid[$position][$file] = $options;
-              continue;
-            }
-
-            // we have some options, dont touch it
-            if (count($options)) {
-              $preserved[$position][$file] = $options;
-              $lastModifiedPreserved[$position][$file] = filemtime($filePath);
+        if (count($valid)) {
+            if ($baseDomain) {
+                $path = sprintf(
+                    'http' . ($request->isSecure() ? 's' : '') . '://' . $baseDomain .
+                    '%s/min/%s/f=',
+                    ($root ? ('/' . $root) : ('')),
+                    $lastModified
+                );
             } else {
-              $valid[$position][] = $file;
-              $lastModified = max($lastModified, filemtime($filePath));
-            }
-          }
-        }
-      }
-    }
-
-    // remove all scripts from response
-    $response->clearJavascripts();
-
-    $root = $request->getRelativeUrlRoot();
-
-    if (count($valid)) {
-      if ($baseDomain) {
-        $path = sprintf('http'.($request->isSecure() ? 's' : '') . '://' . $baseDomain .
-                        '%s/min/%s/f=', ($root ? ('/'.$root) : ('')) , $lastModified);
-      } else {
-        $path = sprintf('%s/min/%s/f=', $root, $lastModified);
-      }
-
-      foreach ($valid as $position => $scripts) {
-        foreach ($this->makeChunks($scripts, $path) as $javascripts) {
-          if (!count($javascripts)) {
-            continue;
-          }
-          $response->addJavascript(sprintf('%s/min/%s/f=%s', $root, $lastModified, join(',', $javascripts)), $position);
-        }
-      }
-    }
-
-    foreach ($invalid as $position => $scripts) {
-      foreach ($scripts as $script => $options) {
-        $response->addJavascript($script, $position, $options);
-      }
-    }
-
-    foreach ($preserved as $position => $allScripts) {
-      if (!count($allScripts)) {
-        continue;
-      }
-
-      // put the preserved back to response
-      foreach ($allScripts as $script => $options) {
-        $path = sprintf('%s/min/%s/f=%s', $root, $lastModifiedPreserved[$position][$script], $script);
-
-        if ($baseDomain) {
-          $path = 'http'.($request->isSecure() ? 's' : '') . '://' . $baseDomain . $path;
-        }
-
-        $response->addJavascript($path, $position, $options);
-      }
-    }
-  }
-
-  /**
-   * Handles stylesheets
-   *
-   */
-  protected function handleStylesheets()
-  {
-    $context  = $this->getContext();
-    $response = $context->getResponse();
-    $request  = $context->getRequest();
-
-    $invalid = $valid = $preserved = $already_seen = array();
-
-    $baseDomain   = sfConfig::get('sf_base_domain');
-    $lastModified = array();
-    $lastModifiedPreserved = array();
-
-    foreach (array('first', '', 'last') as $position) {
-      $invalid[$position] = array();
-
-      foreach ($response->getStylesheets($position) as $files => $options) {
-        if (!is_array($files)) {
-          $files = array($files);
-        }
-
-        foreach ($files as $file) {
-          if (isset($options['generated'])) {
-            $file = _dynamic_path($file);
-          } else {
-            // less support
-            if (isset($options['less']) || preg_match('/\.less$/i', $file)) {
-              $file = stylesheet_path($file);
-
-              // is base domain is affecting the path, we need to take care of it
-              if ($baseDomain = sfConfig::get('sf_base_domain')) {
-                $file = preg_replace(sprintf('~https?://%s%s~', $baseDomain,
-                    sfContext::getInstance()->getRequest()->getRelativeUrlRoot()), '', $file);
-              }
-
-              $file = $this->context->getService('less_compiler')->compileStylesheetIfNeeded($file);
-
-              if ($baseDomain) {
-                $file = stylesheet_path($file);
-              }
-
-              unset($options['less']);
-            } else {
-              $file = stylesheet_path($file);
-            }
-          }
-
-          if (isset($already_seen[$file])) {
-            continue;
-          }
-
-          $already_seen[$file] = true;
-
-          if (!$this->canBePackaged($file)) {
-            $invalid[$position][$file] = $options;
-          } else {
-            $file = $this->stripBaseDomain($file, $baseDomain);
-            $filePath = $this->getFilePath($file);
-
-            if (!is_readable($filePath)) {
-              $invalid[$position][$file] = $options;
-              $this->log('The file "{file}" is not readable or does not exist.', sfILogger::ERROR, array(
-                'file' => $file
-              ));
-              continue;
+                $path = sprintf('%s/min/%s/f=', $root, $lastModified);
             }
 
-            if (isset($options['media'])) {
-              $media = trim($options['media']);
-            } else {
-              // we assume when no media set, use for all except print!
-              $media = $this->getParameter('default_stylesheet_media', 'screen,projection,tv');
+            foreach ($valid as $position => $scripts) {
+                foreach ($this->makeChunks($scripts, $path) as $javascripts) {
+                    if (!count($javascripts)) {
+                        continue;
+                    }
+                    $response->addJavascript(
+                        sprintf('%s/min/%s/f=%s', $root, $lastModified, join(',', $javascripts)),
+                        $position
+                    );
+                }
+            }
+        }
+
+        foreach ($invalid as $position => $scripts) {
+            foreach ($scripts as $script => $options) {
+                $response->addJavascript($script, $position, $options);
+            }
+        }
+
+        foreach ($preserved as $position => $allScripts) {
+            if (!count($allScripts)) {
+                continue;
             }
 
-            // we preserve stylesheets with ids or ie conditions!
-            if (isset($options['id']) || isset($options['ie_condition'])) {
-              $preserved[$position][$file] = $options;
-              $lastModifiedPreserved[$position][$file] = filemtime($filePath);
-            } else {
-              $valid[$position][$media][] = $file;
-              if (!isset($lastModified[$position][$media])) {
-                $lastModified[$position][$media] = 0;
-              }
-              $lastModified[$position][$media] = max($lastModified[$position][$media], filemtime($filePath));
+            // put the preserved back to response
+            foreach ($allScripts as $script => $options) {
+                $path = sprintf('%s/min/%s/f=%s', $root, $lastModifiedPreserved[$position][$script], $script);
+
+                if ($baseDomain) {
+                    $path = 'http' . ($request->isSecure() ? 's' : '') . '://' . $baseDomain . $path;
+                }
+
+                $response->addJavascript($path, $position, $options);
             }
-          }
         }
-      }
     }
 
-    $response->clearStylesheets();
+    /**
+     * Handles stylesheets
+     *
+     */
+    protected function handleStylesheets()
+    {
+        $context = $this->getContext();
+        $response = $context->getResponse();
+        $request = $context->getRequest();
 
-    $relativeUrlRoot = $this->getContext()->getRequest()->getRelativeUrlRoot();
+        $invalid = $valid = $preserved = $already_seen = array();
 
-    foreach ($invalid as $position => $stylesheets) {
-      foreach ($stylesheets as $stylesheet => $options) {
-        $response->addStylesheet($stylesheet, $position, $options);
-      }
-    }
+        $baseDomain = sfConfig::get('sf_base_domain');
+        $lastModified = array();
+        $lastModifiedPreserved = array();
 
-    foreach ($valid as $position => $allStylesheets) {
-      foreach ($allStylesheets as $media => $stylesheets) {
-        if (!count($stylesheets)) {
-          continue;
+        foreach (array('first', '', 'last') as $position) {
+            $invalid[$position] = array();
+
+            foreach ($response->getStylesheets($position) as $files => $options) {
+                if (!is_array($files)) {
+                    $files = array($files);
+                }
+
+                foreach ($files as $file) {
+                    if (isset($options['generated'])) {
+                        $file = _dynamic_path($file);
+                    } else {
+                        // less support
+                        if (isset($options['less']) || preg_match('/\.less$/i', $file)) {
+                            $file = stylesheet_path($file);
+
+                            // is base domain is affecting the path, we need to take care of it
+                            if ($baseDomain = sfConfig::get('sf_base_domain')) {
+                                $file = preg_replace(
+                                    sprintf(
+                                        '~https?://%s%s~',
+                                        $baseDomain,
+                                        sfContext::getInstance()->getRequest()->getRelativeUrlRoot()
+                                    ),
+                                    '',
+                                    $file
+                                );
+                            }
+
+                            $file = $this->context->getService('less_compiler')->compileStylesheetIfNeeded($file);
+
+                            if ($baseDomain) {
+                                $file = stylesheet_path($file);
+                            }
+
+                            unset($options['less']);
+                        } else {
+                            $file = stylesheet_path($file);
+                        }
+                    }
+
+                    if (isset($already_seen[$file])) {
+                        continue;
+                    }
+
+                    $already_seen[$file] = true;
+
+                    if (!$this->canBePackaged($file)) {
+                        $invalid[$position][$file] = $options;
+                    } else {
+                        $file = $this->stripBaseDomain($file, $baseDomain);
+                        $filePath = $this->getFilePath($file);
+
+                        if (!is_readable($filePath)) {
+                            $invalid[$position][$file] = $options;
+                            $this->log(
+                                'The file "{file}" is not readable or does not exist.',
+                                sfILogger::ERROR,
+                                array(
+                                    'file' => $file
+                                )
+                            );
+                            continue;
+                        }
+
+                        if (isset($options['media'])) {
+                            $media = trim($options['media']);
+                        } else {
+                            // we assume when no media set, use for all except print!
+                            $media = $this->getParameter('default_stylesheet_media', 'screen,projection,tv');
+                        }
+
+                        // we preserve stylesheets with ids or ie conditions!
+                        if (isset($options['id']) || isset($options['ie_condition'])) {
+                            $preserved[$position][$file] = $options;
+                            $lastModifiedPreserved[$position][$file] = filemtime($filePath);
+                        } else {
+                            $valid[$position][$media][] = $file;
+                            if (!isset($lastModified[$position][$media])) {
+                                $lastModified[$position][$media] = 0;
+                            }
+                            $lastModified[$position][$media] = max(
+                                $lastModified[$position][$media],
+                                filemtime($filePath)
+                            );
+                        }
+                    }
+                }
+            }
         }
 
-        if ($baseDomain) {
-          $path = sprintf('http'.($request->isSecure() ? 's' : '') . '://' .
-                  $baseDomain . $relativeUrlRoot . '/min/%s/f=', $lastModified[$position][$media]);
-        } else {
-          $path = sprintf('%s/min/%s/f=', $relativeUrlRoot, $lastModified[$position][$media]);
+        $response->clearStylesheets();
+
+        $relativeUrlRoot = $this->getContext()->getRequest()->getRelativeUrlRoot();
+
+        foreach ($invalid as $position => $stylesheets) {
+            foreach ($stylesheets as $stylesheet => $options) {
+                $response->addStylesheet($stylesheet, $position, $options);
+            }
         }
 
-        foreach ($this->makeChunks($stylesheets, $path) as $chunk) {
-          $response->addStylesheet(sprintf('%s%s', $path, join(',', $chunk)), $position, array('media' => $media));
+        foreach ($valid as $position => $allStylesheets) {
+            foreach ($allStylesheets as $media => $stylesheets) {
+                if (!count($stylesheets)) {
+                    continue;
+                }
+
+                if ($baseDomain) {
+                    $path = sprintf(
+                        'http' . ($request->isSecure() ? 's' : '') . '://' .
+                        $baseDomain . $relativeUrlRoot . '/min/%s/f=',
+                        $lastModified[$position][$media]
+                    );
+                } else {
+                    $path = sprintf('%s/min/%s/f=', $relativeUrlRoot, $lastModified[$position][$media]);
+                }
+
+                foreach ($this->makeChunks($stylesheets, $path) as $chunk) {
+                    $response->addStylesheet(
+                        sprintf('%s%s', $path, join(',', $chunk)),
+                        $position,
+                        array('media' => $media)
+                    );
+                }
+            }
         }
-      }
+
+        foreach ($preserved as $position => $allStylesheets) {
+            // put the preserved back to response
+            foreach ($allStylesheets as $stylesheet => $options) {
+                $path = sprintf(
+                    '%s/min/%s/f=%s',
+                    $relativeUrlRoot,
+                    $lastModifiedPreserved[$position][$stylesheet],
+                    $stylesheet
+                );
+
+                if ($baseDomain) {
+                    $path = 'http' . ($request->isSecure() ? 's' : '') . '://' . $baseDomain . $path;
+                }
+
+                $response->addStylesheet($path, $position, $options);
+            }
+        }
     }
 
-    foreach ($preserved as $position => $allStylesheets) {
-      // put the preserved back to response
-      foreach ($allStylesheets as $stylesheet => $options) {
-        $path = sprintf('%s/min/%s/f=%s', $relativeUrlRoot, $lastModifiedPreserved[$position][$stylesheet], $stylesheet);
+    /**
+     * Make chunks of array to length limit of 2083 chars
+     *
+     * @param array  $array Array to ochunk
+     * @param string $path  Path
+     *
+     * @return array
+     */
+    protected function makeChunks($array, $path)
+    {
+        $context = $this->getContext();
+        $request = $context->getRequest();
+        $server = $request->getHttpHeader('server_name', '');
 
-        if ($baseDomain) {
-          $path = 'http'.($request->isSecure() ? 's' : '') . '://' . $baseDomain . $path;
+        $chunks = array();
+        $rest = array();
+
+        while (($length = strlen($server) + strlen($path) + array_sum(array_map('strlen', $array))) > 2083) {
+            $rest[] = array_pop($array);
         }
 
-        $response->addStylesheet($path, $position, $options);
-      }
-    }
-  }
+        $chunks[] = $array;
 
-  /**
-   * Make chunks of array to length limit of 2083 chars
-   *
-   * @param array $array Array to ochunk
-   * @param string $path Path
-   * @return array
-   */
-  protected function makeChunks($array, $path)
-  {
-    $context = $this->getContext();
-    $request = $context->getRequest();
-    $server = $request->getHttpHeader('server_name', '');
+        if (count($rest)) {
+            $chunks = array_merge($chunks, $this->makeChunks($rest, $path));
+        }
 
-    $chunks = array();
-    $rest   = array();
-
-    while (($length = strlen($server) + strlen($path) + array_sum(array_map('strlen', $array))) > 2083) {
-      $rest[] = array_pop($array);
+        return $chunks;
     }
 
-    $chunks[] = $array;
+    /**
+     * Parses url. Handles protocol less urls.
+     *
+     * @param string $url
+     *
+     * @return array
+     * @see parse_url
+     */
+    protected function parseUrl($url)
+    {
+        // this is a protocol less url
+        if (preg_match('~^//~', $url)) {
+            $url = sprintf('http:%s', $url);
+        }
 
-    if (count($rest)) {
-      $chunks = array_merge($chunks, $this->makeChunks($rest, $path));
+        return parse_url($url);
     }
 
-    return $chunks;
-  }
+    /**
+     * Returns path to a file on the disk. Does not check if file exists.
+     *
+     * @param string $file Web path to a file
+     *
+     * @return string Path to a file on the disk
+     */
+    protected function getFilePath($file)
+    {
+        $filePath = sfConfig::get('sf_web_dir') . DIRECTORY_SEPARATOR . $file;
+        $relativeUrlRoot = $this->getContext()->getRequest()->getRelativeUrlRoot();
 
-  /**
-   * Parses url. Handles protocol less urls.
-   *
-   * @param string $url
-   * @return array
-   * @see parse_url
-   */
-  protected function parseUrl($url)
-  {
-    // this is a protocol less url
-    if (preg_match('~^//~', $url)) {
-      $url = sprintf('http:%s', $url);
+        // check path aliases
+        foreach ($this->getPathAliases() as $alias => $path) {
+            if (!$path) {
+                continue;
+            }
+
+            if (preg_match(sprintf('#^%s%s#', $relativeUrlRoot, preg_quote($alias, '#')), $file)) {
+                $filePath = $path . '/' . ltrim($file, '/');
+                break;
+            }
+        }
+
+        return $filePath;
     }
 
-    return parse_url($url);
-  }
+    /**
+     * Returns an array of path aliases
+     *
+     * @return array
+     */
+    protected function getPathAliases()
+    {
+        if (!$this->pathAliases) {
+            $aliases = $this->getParameter('path_aliases', array());
+            $aliases = $this->getContext()
+                ->getEventDispatcher()->filter(new sfEvent('filter.asset_packager.path_aliases'), $aliases)
+                ->getReturnValue();
+            $this->pathAliases = $aliases;
+        }
 
-  /**
-   * Returns path to a file on the disk. Does not check if file exists.
-   *
-   * @param string $file Web path to a file
-   * @return string Path to a file on the disk
-   */
-  protected function getFilePath($file)
-  {
-    $filePath = sfConfig::get('sf_web_dir') . DIRECTORY_SEPARATOR . $file;
-    $relativeUrlRoot = $this->getContext()->getRequest()->getRelativeUrlRoot();
-
-    // check path aliases
-    foreach ($this->getPathAliases() as $alias => $path) {
-      if (!$path) {
-        continue;
-      }
-
-      if (preg_match(sprintf('#^%s%s#', $relativeUrlRoot, preg_quote($alias, '#')), $file)) {
-        $filePath = $path . '/' . ltrim($file, '/');
-        break;
-      }
+        return $this->pathAliases;
     }
 
-    return $filePath;
-  }
+    /**
+     * Strips base domain from the file web path
+     *
+     * @param string $file       Path to a file (accesed from web)
+     * @param string $baseDomain Base domain
+     *
+     * @return string
+     */
+    protected function stripBaseDomain($file, $baseDomain)
+    {
+        if (empty($baseDomain)) {
+            return $file;
+        }
 
-  /**
-   * Returns an array of path aliases
-   *
-   * @return array
-   */
-  protected function getPathAliases()
-  {
-    if (!$this->pathAliases) {
-      $aliases = $this->getParameter('path_aliases', array());
-      $aliases = $this->getContext()
-                  ->getEventDispatcher()->filter(new sfEvent('filter.asset_packager.path_aliases'), $aliases)
-                  ->getReturnValue();
-      $this->pathAliases = $aliases;
+        return preg_replace(sprintf('~(https?://)+%s~', $baseDomain), '', $file);
     }
 
-    return $this->pathAliases;
-  }
+    /**
+     * Can the $file be packaged?
+     *
+     * @param string $file
+     * @param array  $options    Options for the asset
+     * @param string $baseDomain Base domain
+     *
+     * @return boolean
+     */
+    protected function canBePackaged($file, $options = array(), $baseDomain = '')
+    {
+        // generated?
+        if (isset($options['generated']) && $options['generated']) {
+            return false;
+        }
 
-  /**
-   * Strips base domain from the file web path
-   *
-   * @param string $file Path to a file (accesed from web)
-   * @param string $baseDomain Base domain
-   * @return string
-   */
-  protected function stripBaseDomain($file, $baseDomain)
-  {
-    if (empty($baseDomain)) {
-      return $file;
+        $request = $this->getContext()->getRequest();
+
+        $url = $this->parseUrl($file);
+        // this file is not possible to minify
+        // its either:
+        // * generated by the application
+        // * from different host
+        if ((isset($url['host']) && $url['host'] != $request->getHost() && $url['host'] != $baseDomain)) {
+            return false;
+        }
+
+        return true;
     }
-
-    return preg_replace(sprintf('~(https?://)+%s~', $baseDomain), '', $file);
-  }
-
-  /**
-   * Can the $file be packaged?
-   *
-   * @param string $file
-   * @param array $options Options for the asset
-   * @param string $baseDomain Base domain
-   * @return boolean
-   */
-  protected function canBePackaged($file, $options = array(), $baseDomain = '')
-  {
-    // generated?
-    if (isset($options['generated']) && $options['generated']) {
-      return false;
-    }
-
-    $request = $this->getContext()->getRequest();
-
-    $url = $this->parseUrl($file);
-    // this file is not possible to minify
-    // its either:
-    // * generated by the application
-    // * from different host
-    if ((isset($url['host']) && $url['host'] != $request->getHost() && $url['host'] != $baseDomain)) {
-      return false;
-    }
-
-    return true;
-  }
 
 }

@@ -14,45 +14,45 @@
  */
 class sfWidgetFormI18nNumber extends sfWidgetFormInput
 {
-  /**
-   * Constructor.
-   *
-   * Available options:
-   *
-   *  * type: The widget type (text by default)
-   *
-   * @param array $options     An array of options
-   * @param array $attributes  An array of default HTML attributes
-   *
-   * @see sfWidgetForm
-   */
-  protected function configure($options = array(), $attributes = array())
-  {
-    parent::configure($options, $attributes);
-    $this->addOption('culture', null);
-  }
-
-  /**
-   * @param  string $name        The element name
-   * @param  string $value       The value displayed in this widget
-   * @param  array  $attributes  An array of HTML attributes to be merged with the default HTML attributes
-   * @param  array  $errors      An array of errors for the field
-   *
-   * @return string An HTML tag string
-   *
-   * @see sfWidgetForm
-   */
-  public function render($name, $value = null, $attributes = array(), $errors = array())
-  {
-    if ($value instanceof sfMoneyCurrencyValue) {
-      $value = $value->getAmount();
+    /**
+     * Constructor.
+     *
+     * Available options:
+     *
+     *  * type: The widget type (text by default)
+     *
+     * @param array $options    An array of options
+     * @param array $attributes An array of default HTML attributes
+     *
+     * @see sfWidgetForm
+     */
+    protected function configure($options = array(), $attributes = array())
+    {
+        parent::configure($options, $attributes);
+        $this->addOption('culture', null);
     }
 
-    if (!is_null($value) && is_numeric($value)) {
-      $value = sfI18nNumberFormatter::getInstance($this->getCulture())->format($value);
-    }
+    /**
+     * @param  string $name       The element name
+     * @param  string $value      The value displayed in this widget
+     * @param  array  $attributes An array of HTML attributes to be merged with the default HTML attributes
+     * @param  array  $errors     An array of errors for the field
+     *
+     * @return string An HTML tag string
+     *
+     * @see sfWidgetForm
+     */
+    public function render($name, $value = null, $attributes = array(), $errors = array())
+    {
+        if ($value instanceof sfMoneyCurrencyValue) {
+            $value = $value->getAmount();
+        }
 
-    return parent::render($name, $value, $attributes, $errors);
-  }
+        if (!is_null($value) && is_numeric($value)) {
+            $value = sfI18nNumberFormatter::getInstance($this->getCulture())->format($value);
+        }
+
+        return parent::render($name, $value, $attributes, $errors);
+    }
 
 }

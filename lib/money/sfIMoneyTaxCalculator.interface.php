@@ -9,12 +9,23 @@
 /**
  * sfIMoneyTaxCalculator interface
  *
- * @package Sift
+ * @package    Sift
  * @subpackage money
  */
 interface sfIMoneyTaxCalculator
 {
-  public function getTaxAmount(sfIMoneyCurrencyValue $priceWithTax, $tax, $scale = null, $roundingMode = sfRounding::HALF_EVEN);
-  public function getPriceWithTax(sfIMoneyCurrencyValue $price, $tax, $scale = null, $roundingMode = sfRounding::HALF_EVEN);
+    public function getTaxAmount(
+        sfIMoneyCurrencyValue $priceWithTax,
+        $tax,
+        $scale = null,
+        $roundingMode = sfRounding::HALF_EVEN
+    );
+
+    public function getPriceWithTax(
+        sfIMoneyCurrencyValue $price,
+        $tax,
+        $scale = null,
+        $roundingMode = sfRounding::HALF_EVEN
+    );
 
 }

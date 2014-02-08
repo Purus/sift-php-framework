@@ -13,4 +13,6 @@
  * @package    Sift
  * @subpackage action
  */
-class myWizardActions extends sfWizardActions {}
+class myWizardActions extends sfWizardActions
+{
+}

@@ -14,12 +14,12 @@
  */
 interface sfITextMacroFilter
 {
-  /**
-   * Filters given content
-   *
-   * @param array $attributes The array of attributes
-   * @param string $value The value
-   */
-  public function filter($attributes, $value = null);
+    /**
+     * Filters given content
+     *
+     * @param array  $attributes The array of attributes
+     * @param string $value      The value
+     */
+    public function filter($attributes, $value = null);
 
 }

@@ -14,33 +14,35 @@
  */
 class sfWizardComponents extends myComponents
 {
-  /**
-   * Storage namespace mask (should be the same in action class.)
-   *
-   * @var string
-   */
-  protected $formNameMask = 'myFormStep%s';
+    /**
+     * Storage namespace mask (should be the same in action class.)
+     *
+     * @var string
+     */
+    protected $formNameMask = 'myFormStep%s';
 
-  /**
-   * Returns storage namespace
-   *
-   * @return string
-   */
-  protected function getWizardStorageNamespace()
-  {
-    return myWizardForm::getStorageNamespace($this->formNameMask);
-  }
+    /**
+     * Returns storage namespace
+     *
+     * @return string
+     */
+    protected function getWizardStorageNamespace()
+    {
+        return myWizardForm::getStorageNamespace($this->formNameMask);
+    }
 
-  /**
-   * Returns stored values for the $step
-   *
-   * @param integer $step
-   * @return array
-   */
-  protected function getStepValues($step)
-  {
-    return $this->getUser()->getAttributeHolder()->getAll(
-      self::getWizardStorageNamespace(). '/'.$step);
-  }
+    /**
+     * Returns stored values for the $step
+     *
+     * @param integer $step
+     *
+     * @return array
+     */
+    protected function getStepValues($step)
+    {
+        return $this->getUser()->getAttributeHolder()->getAll(
+            self::getWizardStorageNamespace() . '/' . $step
+        );
+    }
 
 }

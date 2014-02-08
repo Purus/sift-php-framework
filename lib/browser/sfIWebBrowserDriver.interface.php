@@ -14,6 +14,6 @@
  */
 interface sfIWebBrowserDriver
 {
-  public function call($browser, $uri, $method = 'GET', $parameters = array(), $headers = array());
+    public function call($browser, $uri, $method = 'GET', $parameters = array(), $headers = array());
 
 }

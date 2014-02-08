@@ -14,18 +14,19 @@
  */
 class sfCliProjectClearControllersTask extends sfCliBaseTask
 {
-  /**
-   * @see sfCliTask
-   */
-  protected function configure()
-  {
-    $this->namespace = 'project';
-    $this->name = 'clear-controllers';
-    $this->briefDescription = 'Clears all non production environment controllers';
+    /**
+     * @see sfCliTask
+     */
+    protected function configure()
+    {
+        $this->namespace = 'project';
+        $this->name = 'clear-controllers';
+        $this->briefDescription = 'Clears all non production environment controllers';
 
-    $scriptName = $this->environment->get('script_name');
+        $scriptName = $this->environment->get('script_name');
 
-    $this->detailedDescription = <<<EOF
+        $this->detailedDescription
+            = <<<EOF
 The [project:clear-controllers|INFO] task clears all non production environment
 controllers:
 
@@ -51,26 +52,32 @@ controller scripts are left in [web/|COMMENT]:
 Those two controllers are safe because debug mode and the web debug
 toolbar is disabled.
 EOF;
-  }
-
-  /**
-   * @see sfCliTask
-   */
-  protected function execute($arguments = array(), $options = array())
-  {
-    $finder = sfFinder::type('file')->maxDepth(1)->name('*.php');
-    foreach ($finder->in($this->environment->get('sf_web_dir')) as $controller) {
-      $content = file_get_contents($controller);
-      preg_match('/\'SF_APP\',[\s]*\'(.*)\'\)/', $content, $found_app);
-      preg_match('/\'SF_ENVIRONMENT\',[\s]*\'(.*)\'\)/', $content, $env);
-
-      if (isset($found_app[1]) && isset($env[1]) && $env[1] != 'prod') {
-        $this->logSection($this->getFullName(), sprintf('Clear "%s" (%s, %s environment)',
-                          basename($controller),
-                          $found_app[1], $env[1]));
-        $this->getFilesystem()->remove($controller);
-      }
     }
-  }
+
+    /**
+     * @see sfCliTask
+     */
+    protected function execute($arguments = array(), $options = array())
+    {
+        $finder = sfFinder::type('file')->maxDepth(1)->name('*.php');
+        foreach ($finder->in($this->environment->get('sf_web_dir')) as $controller) {
+            $content = file_get_contents($controller);
+            preg_match('/\'SF_APP\',[\s]*\'(.*)\'\)/', $content, $found_app);
+            preg_match('/\'SF_ENVIRONMENT\',[\s]*\'(.*)\'\)/', $content, $env);
+
+            if (isset($found_app[1]) && isset($env[1]) && $env[1] != 'prod') {
+                $this->logSection(
+                    $this->getFullName(),
+                    sprintf(
+                        'Clear "%s" (%s, %s environment)',
+                        basename($controller),
+                        $found_app[1],
+                        $env[1]
+                    )
+                );
+                $this->getFilesystem()->remove($controller);
+            }
+        }
+    }
 
 }

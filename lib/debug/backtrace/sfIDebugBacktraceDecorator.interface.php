@@ -9,28 +9,28 @@
 /**
  * sfIDebugBacktraceDecorator is an interface for backtrace decorators
  *
- * @package Sift
+ * @package    Sift
  * @subpackage debug
  */
 interface sfIDebugBacktraceDecorator
 {
-  /**
-   * Renders the backtrace
-   */
-  public function toString();
+    /**
+     * Renders the backtrace
+     */
+    public function toString();
 
-  /**
-   * Sets the backtrace
-   *
-   * @param sfDebugBacktrace $backtrace
-   */
-  public function setBacktrace(sfDebugBacktrace $backtrace);
+    /**
+     * Sets the backtrace
+     *
+     * @param sfDebugBacktrace $backtrace
+     */
+    public function setBacktrace(sfDebugBacktrace $backtrace);
 
-  /**
-   * Returns the backtrace
-   *
-   * @return sfDebugBacktrace
-   */
-  public function getBacktrace();
+    /**
+     * Returns the backtrace
+     *
+     * @return sfDebugBacktrace
+     */
+    public function getBacktrace();
 
 }

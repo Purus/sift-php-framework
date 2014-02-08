@@ -15,11 +15,11 @@
  */
 interface sfII18nExtractableForm
 {
-  /**
-   * Construct the form for extraction
-   *
-   * @return sfForm
-   */
-  public static function __construct_I18n();
+    /**
+     * Construct the form for extraction
+     *
+     * @return sfForm
+     */
+    public static function __construct_I18n();
 
 }

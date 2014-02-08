@@ -9,7 +9,9 @@
 /**
  * sfImageTransformException is thrown when an fatal error occurs while manipulating a image.
  *
- * @package Sift
+ * @package    Sift
  * @subpackage exception
  */
-class sfImageTransformException extends sfException {}
+class sfImageTransformException extends sfException
+{
+}

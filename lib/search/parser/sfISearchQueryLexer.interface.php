@@ -9,23 +9,23 @@
 /**
  * File containing the sfISearchQueryLexer interface.
  *
- * @package Sift
+ * @package    Sift
  * @subpackage search
  */
 interface sfISearchQueryLexer
 {
-  /**
-   * Executes the lexer
-   *
-   * @param string $query
-   */
-  public function execute($query);
+    /**
+     * Executes the lexer
+     *
+     * @param string $query
+     */
+    public function execute($query);
 
-  /**
-   * Returns array of tokens
-   *
-   * @return array
-   */
-  public function getTokens();
+    /**
+     * Returns array of tokens
+     *
+     * @return array
+     */
+    public function getTokens();
 
 }

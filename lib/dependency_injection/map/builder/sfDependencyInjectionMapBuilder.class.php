@@ -10,50 +10,51 @@
 /**
  * Abstract class for building maps
  *
- * @package Sift
+ * @package    Sift
  * @subpackage dependency_injection
  */
 abstract class sfDependencyInjectionMapBuilder
 {
-  /**
-   * @var sfDependencyInjectionMap
-   */
-  protected $map;
+    /**
+     * @var sfDependencyInjectionMap
+     */
+    protected $map;
 
-  /**
-   * Constructor
-   */
-  public function __construct()
-  {
-    $this->map = new sfDependencyInjectionMap();
-  }
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->map = new sfDependencyInjectionMap();
+    }
 
-  /**
-   * Builds the map
-   *
-   * @return sfDependencyInjectionMapBuilder
-   */
-  abstract protected function build();
+    /**
+     * Builds the map
+     *
+     * @return sfDependencyInjectionMapBuilder
+     */
+    abstract protected function build();
 
-  /**
-   * The map
-   *
-   * @return sfDependencyInjectionMap
-   */
-  public function getMap()
-  {
-    return $this->map;
-  }
+    /**
+     * The map
+     *
+     * @return sfDependencyInjectionMap
+     */
+    public function getMap()
+    {
+        return $this->map;
+    }
 
-  /**
-   * Creates a map item based off options array
-   *
-   * @param array $options Array of options
-   * @return sfDependencyInjectionMapItem
-   */
-  protected function createItemFromArray($options)
-  {
-    return sfDependencyInjectionMapItem::createFromArray($options);
-  }
+    /**
+     * Creates a map item based off options array
+     *
+     * @param array $options Array of options
+     *
+     * @return sfDependencyInjectionMapItem
+     */
+    protected function createItemFromArray($options)
+    {
+        return sfDependencyInjectionMapItem::createFromArray($options);
+    }
 
 }

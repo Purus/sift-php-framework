@@ -12,4 +12,6 @@
  * @package    Sift
  * @subpackage form
  */
-class myForm extends myFormBase {}
+class myForm extends myFormBase
+{
+}

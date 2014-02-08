@@ -9,11 +9,11 @@
 /**
  * Service interface
  *
- * @package Sift
+ * @package    Sift
  * @subpackage service
  */
 interface sfIService
 {
-  public function shutdown();
+    public function shutdown();
 
 }

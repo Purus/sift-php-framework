@@ -10,139 +10,139 @@
 /**
  * sfFormJavascriptValidationMessage represents a collection of messages for given form field
  *
- * @package Sift
+ * @package    Sift
  * @subpackage form_javascript
  */
 class sfFormJavascriptValidationFieldMessages implements ArrayAccess, Iterator
 {
-  /**
-   * Field name (short version)
-   *
-   * @var string
-   */
-  protected $fieldName;
+    /**
+     * Field name (short version)
+     *
+     * @var string
+     */
+    protected $fieldName;
 
-  /**
-   * Field name used in the form ie. formName[fieldName]
-   *
-   * @var string
-   */
-  protected $formFieldName;
+    /**
+     * Field name used in the form ie. formName[fieldName]
+     *
+     * @var string
+     */
+    protected $formFieldName;
 
-  /**
-   * Array of messages
-   *
-   * @var array
-   */
-  protected $messages = array();
+    /**
+     * Array of messages
+     *
+     * @var array
+     */
+    protected $messages = array();
 
-  /**
-   * Constructs the object
-   *
-   * @param string $fieldName
-   * @param string $formField
-   * @param array $messages Array of messages
-   */
-  public function __construct($fieldName, $formFieldName, $messages = null)
-  {
-    $this->fieldName = $fieldName;
-    $this->formFieldName = $formFieldName;
+    /**
+     * Constructs the object
+     *
+     * @param string $fieldName
+     * @param string $formField
+     * @param array  $messages Array of messages
+     */
+    public function __construct($fieldName, $formFieldName, $messages = null)
+    {
+        $this->fieldName = $fieldName;
+        $this->formFieldName = $formFieldName;
 
-    foreach ($messages as $i => $message) {
-      if (!$message instanceof sfFormJavascriptValidationMessage) {
-        $messages[$i] = new sfFormJavascriptValidationMessage($message);
-      }
+        foreach ($messages as $i => $message) {
+            if (!$message instanceof sfFormJavascriptValidationMessage) {
+                $messages[$i] = new sfFormJavascriptValidationMessage($message);
+            }
+        }
+
+        $this->messages = $messages;
     }
 
-    $this->messages = $messages;
-  }
-
-  /**
-   * Return field name
-   *
-   * @return string
-   */
-  public function getFieldName()
-  {
-    return $this->fieldName;
-  }
-
-  /**
-   * Return form field name
-   *
-   * @return string
-   */
-  public function getFormFieldName()
-  {
-    return $this->formFieldName;
-  }
-
-  /**
-   * Return messages
-   *
-   * @return array
-   */
-  public function getMessages()
-  {
-    return $this->messages;
-  }
-
-  public function offsetGet($name)
-  {
-    return $this->messages[$name];
-  }
-
-  public function offsetSet($name, $value)
-  {
-    if (!$value instanceof sfFormJavascriptValidationMessage) {
-      $value = new sfFormJavascriptValidationMessage($value);
+    /**
+     * Return field name
+     *
+     * @return string
+     */
+    public function getFieldName()
+    {
+        return $this->fieldName;
     }
 
-    return $this->messages[$name] = $value;
-  }
+    /**
+     * Return form field name
+     *
+     * @return string
+     */
+    public function getFormFieldName()
+    {
+        return $this->formFieldName;
+    }
 
-  public function offsetExists($name)
-  {
-    return array_key_exists($name, $this->messages);
-  }
+    /**
+     * Return messages
+     *
+     * @return array
+     */
+    public function getMessages()
+    {
+        return $this->messages;
+    }
 
-  public function offsetUnset($name)
-  {
-    unset($this->messages[$name]);
-  }
+    public function offsetGet($name)
+    {
+        return $this->messages[$name];
+    }
 
-  public function rewind()
-  {
-    reset($this->messages);
-  }
+    public function offsetSet($name, $value)
+    {
+        if (!$value instanceof sfFormJavascriptValidationMessage) {
+            $value = new sfFormJavascriptValidationMessage($value);
+        }
 
-  public function current()
-  {
-    $var = current($this->messages);
+        return $this->messages[$name] = $value;
+    }
 
-    return $var;
-  }
+    public function offsetExists($name)
+    {
+        return array_key_exists($name, $this->messages);
+    }
 
-  public function key()
-  {
-    $var = key($this->messages);
+    public function offsetUnset($name)
+    {
+        unset($this->messages[$name]);
+    }
 
-    return $var;
-  }
+    public function rewind()
+    {
+        reset($this->messages);
+    }
 
-  public function next()
-  {
-    $var = next($this->messages);
+    public function current()
+    {
+        $var = current($this->messages);
 
-    return $var;
-  }
+        return $var;
+    }
 
-  public function valid()
-  {
-    $key = key($this->messages);
-    $var = ($key !== null && $key !== false);
+    public function key()
+    {
+        $var = key($this->messages);
 
-    return $var;
-  }
+        return $var;
+    }
+
+    public function next()
+    {
+        $var = next($this->messages);
+
+        return $var;
+    }
+
+    public function valid()
+    {
+        $key = key($this->messages);
+        $var = ($key !== null && $key !== false);
+
+        return $var;
+    }
 
 }

@@ -15,17 +15,18 @@
  */
 class sfRichTextEditorDriverCKEditor extends sfRichTextEditor
 {
-  /**
-   * Returns the rich text editor as HTML.
-   *
-   * @param string $name Field name
-   * @param string $content Text content
-   * @param array $options Array of options
-   * @return string Rich text editor HTML representation
-   */
-  public function toHTML($name, $content, $options = array())
-  {
-    // not implemented yet
-  }
+    /**
+     * Returns the rich text editor as HTML.
+     *
+     * @param string $name    Field name
+     * @param string $content Text content
+     * @param array  $options Array of options
+     *
+     * @return string Rich text editor HTML representation
+     */
+    public function toHTML($name, $content, $options = array())
+    {
+        // not implemented yet
+    }
 
 }

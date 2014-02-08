@@ -9,13 +9,15 @@
 /**
  * sfIMoneyCurrencyValue inteface
  *
- * @package Sift
+ * @package    Sift
  * @subpackage money
  */
 interface sfIMoneyCurrencyValue
 {
-  public function getAmount($scale = null, $roundingMode = sfRounding::HALF_EVEN);
-  public function getCurrency();
-  public function isInSameCurrency(sfIMoneyCurrencyValue $value);
+    public function getAmount($scale = null, $roundingMode = sfRounding::HALF_EVEN);
+
+    public function getCurrency();
+
+    public function isInSameCurrency(sfIMoneyCurrencyValue $value);
 
 }

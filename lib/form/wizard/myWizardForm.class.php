@@ -12,4 +12,6 @@
  * @package    Sift
  * @subpackage form
  */
-class myWizardForm extends sfWizardForm {}
+class myWizardForm extends sfWizardForm
+{
+}

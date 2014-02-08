@@ -14,106 +14,106 @@
  */
 interface sfISecurityUser extends sfIUser
 {
-  /**
-   * Super admin credential
-   */
-  const CREDENTIAL_SUPER_ADMIN = 'super_admin';
+    /**
+     * Super admin credential
+     */
+    const CREDENTIAL_SUPER_ADMIN = 'super_admin';
 
-  /**
-   * Add a credential to this user.
-   *
-   * @param mixed Credential data.
-   *
-   * @return void
-   */
-  public function addCredential($credential);
+    /**
+     * Add a credential to this user.
+     *
+     * @param mixed Credential data.
+     *
+     * @return void
+     */
+    public function addCredential($credential);
 
-  /**
-   * Clear all credentials associated with this user.
-   *
-   * @return void
-   */
-  public function clearCredentials();
+    /**
+     * Clear all credentials associated with this user.
+     *
+     * @return void
+     */
+    public function clearCredentials();
 
-  /**
-   * Indicates whether or not this user has a credential.
-   *
-   * @param mixed Credential data.
-   *
-   * @return bool true, if this user has the credential, otherwise false.
-   */
-  public function hasCredential($credential);
+    /**
+     * Indicates whether or not this user has a credential.
+     *
+     * @param mixed Credential data.
+     *
+     * @return bool true, if this user has the credential, otherwise false.
+     */
+    public function hasCredential($credential);
 
-  /**
-   * Indicates whether or not this user is authenticated.
-   *
-   * @return bool true, if this user is authenticated, otherwise false.
-   */
-  public function isAuthenticated();
+    /**
+     * Indicates whether or not this user is authenticated.
+     *
+     * @return bool true, if this user is authenticated, otherwise false.
+     */
+    public function isAuthenticated();
 
-  /**
-   * Remove a credential from this user.
-   *
-   * @param mixed Credential data.
-   *
-   * @return void
-   */
-  public function removeCredential($credential);
+    /**
+     * Remove a credential from this user.
+     *
+     * @param mixed Credential data.
+     *
+     * @return void
+     */
+    public function removeCredential($credential);
 
-  /**
-   * Set the authenticated status of this user.
-   *
-   * @param bool A flag indicating the authenticated status of this user.
-   *
-   * @return void
-   */
-  public function setAuthenticated($authenticated);
+    /**
+     * Set the authenticated status of this user.
+     *
+     * @param bool A flag indicating the authenticated status of this user.
+     *
+     * @return void
+     */
+    public function setAuthenticated($authenticated);
 
-  /**
-   * Is the user super admin?
-   *
-   * @return boolean
-   */
-  public function isSuperAdmin();
+    /**
+     * Is the user super admin?
+     *
+     * @return boolean
+     */
+    public function isSuperAdmin();
 
-  /**
-   * Returns user id
-   *
-   * @return integer
-   */
-  public function getId();
+    /**
+     * Returns user id
+     *
+     * @return integer
+     */
+    public function getId();
 
-  /**
-   * Set user id
-   *
-   * @param integer $id The user identifier
-   */
-  public function setId($id);
+    /**
+     * Set user id
+     *
+     * @param integer $id The user identifier
+     */
+    public function setId($id);
 
-  /**
-   * Set the user timeout status
-   *
-   * @param boolean $flag
-   */
-  public function setTimedOut($flag = true);
+    /**
+     * Set the user timeout status
+     *
+     * @param boolean $flag
+     */
+    public function setTimedOut($flag = true);
 
-  /**
-   * Is the user timed out?
-   */
-  public function isTimedOut();
+    /**
+     * Is the user timed out?
+     */
+    public function isTimedOut();
 
-  /**
-   * Returns last request time
-   *
-   * @return integer
-   */
-  public function getLastRequestTime();
+    /**
+     * Returns last request time
+     *
+     * @return integer
+     */
+    public function getLastRequestTime();
 
-  /**
-   * Converts the user to string. Usually to get the user nickname
-   *
-   * @return string
-   */
-  public function __toString();
+    /**
+     * Converts the user to string. Usually to get the user nickname
+     *
+     * @return string
+     */
+    public function __toString();
 
 }

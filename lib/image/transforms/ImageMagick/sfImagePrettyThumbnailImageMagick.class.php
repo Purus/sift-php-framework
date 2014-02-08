@@ -13,134 +13,135 @@
  *
  * Scales, adds drop shadow and rounded corners
  *
- * @package Sift
+ * @package    Sift
  * @subpackage image
  */
 class sfImagePrettyThumbnailImageMagick extends sfImageTransformAbstract
 {
-  /**
-   * The thumbnail width
-   *
-   * @var integer
-  */
-  protected $width = null;
+    /**
+     * The thumbnail width
+     *
+     * @var integer
+     */
+    protected $width = null;
 
-  /**
-   * The thumbnail height
-   *
-   * @var integer
-  */
-  protected $height = null;
+    /**
+     * The thumbnail height
+     *
+     * @var integer
+     */
+    protected $height = null;
 
-  /**
-   * The thumbnail corner radius
-   *
-   * @var integer
-  */
-  protected $radius = null;
+    /**
+     * The thumbnail corner radius
+     *
+     * @var integer
+     */
+    protected $radius = null;
 
-  /**
-   * Construct an sfImageScale object.
-   *
-   * @param float
-   */
-  public function __construct($width, $height, $radius)
-  {
-    $this->setWidth($width);
-    $this->setHeight($height);
-    $this->setRadius($radius);
-  }
-
-  /**
-   * Set the thumbnail's width.
-   *
-   * @param integer
-   */
-  public function setWidth($width)
-  {
-    if (is_numeric($width)) {
-      $this->width = (int) $width;
+    /**
+     * Construct an sfImageScale object.
+     *
+     * @param float
+     */
+    public function __construct($width, $height, $radius)
+    {
+        $this->setWidth($width);
+        $this->setHeight($height);
+        $this->setRadius($radius);
     }
-  }
 
-  /**
-   * Gets the thumbnail's width.
-   *
-   * @return integer
-   */
-  public function getWidth()
-  {
-    return $this->width;
-  }
-
-  /**
-   * Set the thumbnail's height.
-   *
-   * @param integer
-   */
-  public function setHeight($height)
-  {
-    if (is_numeric($height)) {
-      $this->height = (int) $height;
+    /**
+     * Set the thumbnail's width.
+     *
+     * @param integer
+     */
+    public function setWidth($width)
+    {
+        if (is_numeric($width)) {
+            $this->width = (int)$width;
+        }
     }
-  }
 
-  /**
-   * Gets the thumbnail's height.
-   *
-   * @return integer
-   */
-  public function getHeight()
-  {
-    return $this->height;
-  }
-
-  /**
-   * Set the thumbnail's corner radius.
-   *
-   * @param integer
-   */
-  public function setRadius($radius)
-  {
-    if (is_numeric($radius)) {
-      $this->radius = (int) $radius;
+    /**
+     * Gets the thumbnail's width.
+     *
+     * @return integer
+     */
+    public function getWidth()
+    {
+        return $this->width;
     }
-  }
 
-  /**
-   * Gets the thumbnail's radius.
-   *
-   * @return integer
-   */
-  public function getRadius()
-  {
-    return $this->radius;
-  }
+    /**
+     * Set the thumbnail's height.
+     *
+     * @param integer
+     */
+    public function setHeight($height)
+    {
+        if (is_numeric($height)) {
+            $this->height = (int)$height;
+        }
+    }
 
-  /**
-   * Apply the transform to the sfImage object.
-   *
-   * @param sfImage
-   * @return sfImage
-   */
-  protected function transform(sfImage $image)
-  {
+    /**
+     * Gets the thumbnail's height.
+     *
+     * @return integer
+     */
+    public function getHeight()
+    {
+        return $this->height;
+    }
 
-    $resource = $image->getAdapter()->getHolder();
+    /**
+     * Set the thumbnail's corner radius.
+     *
+     * @param integer
+     */
+    public function setRadius($radius)
+    {
+        if (is_numeric($radius)) {
+            $this->radius = (int)$radius;
+        }
+    }
 
-    $image->resize( $this->getWidth(), $this->getHeight() );
+    /**
+     * Gets the thumbnail's radius.
+     *
+     * @return integer
+     */
+    public function getRadius()
+    {
+        return $this->radius;
+    }
 
-    $resource->roundCorners( $this->getRadius(), $this->getRadius() );
+    /**
+     * Apply the transform to the sfImage object.
+     *
+     * @param sfImage
+     *
+     * @return sfImage
+     */
+    protected function transform(sfImage $image)
+    {
 
-    $shadow = $resource->clone();
+        $resource = $image->getAdapter()->getHolder();
 
-    $shadow->setImageBackgroundColor( new ImagickPixel( 'black' ) );
+        $image->resize($this->getWidth(), $this->getHeight());
 
-    $shadow->shadowImage( 80, 3, 5, 5 );
+        $resource->roundCorners($this->getRadius(), $this->getRadius());
 
-    $shadow->compositeImage( $resource, Imagick::COMPOSITE_OVER, 0, 0 );
+        $shadow = $resource->clone();
 
-    return $image;
+        $shadow->setImageBackgroundColor(new ImagickPixel('black'));
 
-  }
+        $shadow->shadowImage(80, 3, 5, 5);
+
+        $shadow->compositeImage($resource, Imagick::COMPOSITE_OVER, 0, 0);
+
+        return $image;
+
+    }
 }

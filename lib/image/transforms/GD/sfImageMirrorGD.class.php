@@ -13,39 +13,40 @@
  *
  * Creates a mirror image of the original image.
  *
- * @package Sift
+ * @package    Sift
  * @subpackage image
  */
 class sfImageMirrorGD extends sfImageTransformAbstract
 {
-  /**
-   * Apply the transform to the sfImage object.
-   *
-   * @param integer
-   * @return sfImage
-   */
-  protected function transform(sfImage $image)
-  {
-    $resource = $image->getAdapter()->getHolder();
+    /**
+     * Apply the transform to the sfImage object.
+     *
+     * @param integer
+     *
+     * @return sfImage
+     */
+    protected function transform(sfImage $image)
+    {
+        $resource = $image->getAdapter()->getHolder();
 
-    $x = imagesx($resource);
-    $y = imagesy($resource);
+        $x = imagesx($resource);
+        $y = imagesy($resource);
 
-    imagealphablending($resource,true);
+        imagealphablending($resource, true);
 
-    $dest_resource = $image->getAdapter()->getTransparentImage($x, $y);
-    imagealphablending($dest_resource,true);
+        $dest_resource = $image->getAdapter()->getTransparentImage($x, $y);
+        imagealphablending($dest_resource, true);
 
-    for ($w = 0; $w < $x; $w++) {
-      imagecopy($dest_resource, $resource, $w, 0, $x- $w - 1, 0, 1, $y);
+        for ($w = 0; $w < $x; $w++) {
+            imagecopy($dest_resource, $resource, $w, 0, $x - $w - 1, 0, 1, $y);
+        }
+
+        // Tidy up
+        imagedestroy($resource);
+
+        // Replace old image with flipped version
+        $image->getAdapter()->setHolder($dest_resource);
+
+        return $image;
     }
-
-    // Tidy up
-    imagedestroy($resource);
-
-    // Replace old image with flipped version
-    $image->getAdapter()->setHolder($dest_resource);
-
-    return $image;
-  }
 }

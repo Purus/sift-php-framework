@@ -9,87 +9,92 @@
 /**
  * Image transformation to apply rounded corners to the image
  *
- * @package Sift
+ * @package    Sift
  * @subpackage image
  */
 class sfImageRoundedCornersGD extends sfImageAlphaMaskGD
 {
-  protected $radius = 5;
+    protected $radius = 5;
 
-  public function __construct($radius, $color = false)
-  {
-    $this->setRadius($radius);
-    $this->setColor($color);
-  }
-
-  protected function transform(sfImage $image)
-  {
-    $this->setMask($this->createMask($image, $image->getWidth(), $image->getHeight()));
-
-    return parent::transform($image);
-  }
-
-  public function setRadius($radius)
-  {
-    if (is_numeric($radius) && $radius > 0) {
-      $this->radius = $radius;
-
-      return true;
+    public function __construct($radius, $color = false)
+    {
+        $this->setRadius($radius);
+        $this->setColor($color);
     }
 
-    return false;
-  }
+    protected function transform(sfImage $image)
+    {
+        $this->setMask($this->createMask($image, $image->getWidth(), $image->getHeight()));
 
-  public function getRadius()
-  {
-    return $this->radius;
-  }
-
-  protected function createMask(sfImage $image, $w, $h)
-  {
-    // Create a mask png image of the area you want in the circle/ellipse (a 'magicpink' image with a black shape on it, with black set to the colour of alpha transparency) - $mask
-    $mask = $image->getAdapter()->getTransparentImage($w, $h);
-
-    // Set the masking colours
-    if (false === $this->getColor() || 'image/png' == $image->getMIMEType()) {
-      $mask_black = imagecolorallocate($mask, 0, 0, 0);
-    } else {
-      $mask_black = $image->getAdapter()->getColorByHex($mask, $this->getColor());
+        return parent::transform($image);
     }
 
-    // Cannot use white as transparent mask if color is set to white
-    if ($this->getColor() === '#FFFFFF' || $this->getColor() === false) {
-      $mask_transparent = imagecolorallocate($mask, 255, 0, 0);
-    } else {
-      $mask_color = imagecolorsforindex($mask, imagecolorat($image->getAdapter()->getHolder(), 0, 0));
-      $mask_transparent = imagecolorallocate($mask, $mask_color['red'], $mask_color['green'], $mask_color['blue']);
+    public function setRadius($radius)
+    {
+        if (is_numeric($radius) && $radius > 0) {
+            $this->radius = $radius;
+
+            return true;
+        }
+
+        return false;
     }
 
-    imagecolortransparent($mask, $mask_transparent);
-    imagefill($mask, 0, 0, $mask_black);
+    public function getRadius()
+    {
+        return $this->radius;
+    }
 
-    // Draw the rounded rectangle for the mask
-    $this->imagefillroundedrect($mask, 0, 0, $w, $h, $this->getRadius(), $mask_transparent);
+    protected function createMask(sfImage $image, $w, $h)
+    {
+        // Create a mask png image of the area you want in the circle/ellipse (a 'magicpink' image with a black shape on it, with black set to the colour of alpha transparency) - $mask
+        $mask = $image->getAdapter()->getTransparentImage($w, $h);
 
-    $mask_image = clone $image;
-    $mask_image->getAdapter()->setHolder($mask);
+        // Set the masking colours
+        if (false === $this->getColor() || 'image/png' == $image->getMIMEType()) {
+            $mask_black = imagecolorallocate($mask, 0, 0, 0);
+        } else {
+            $mask_black = $image->getAdapter()->getColorByHex($mask, $this->getColor());
+        }
 
-    return $mask_image;
-  }
+        // Cannot use white as transparent mask if color is set to white
+        if ($this->getColor() === '#FFFFFF' || $this->getColor() === false) {
+            $mask_transparent = imagecolorallocate($mask, 255, 0, 0);
+        } else {
+            $mask_color = imagecolorsforindex($mask, imagecolorat($image->getAdapter()->getHolder(), 0, 0));
+            $mask_transparent = imagecolorallocate(
+                $mask,
+                $mask_color['red'],
+                $mask_color['green'],
+                $mask_color['blue']
+            );
+        }
 
-  protected function imagefillroundedrect($im, $x, $y, $cx, $cy, $rad, $col)
-  {
-    // Draw the middle cross shape of the rectangle
-    imagefilledrectangle($im, $x, $y + $rad, $cx, $cy - $rad, $col);
-    imagefilledrectangle($im, $x + $rad, $y, $cx - $rad, $cy, $col);
+        imagecolortransparent($mask, $mask_transparent);
+        imagefill($mask, 0, 0, $mask_black);
 
-    $dia = $rad * 2;
+        // Draw the rounded rectangle for the mask
+        $this->imagefillroundedrect($mask, 0, 0, $w, $h, $this->getRadius(), $mask_transparent);
 
-    // Now fill in the rounded corners
-    imagefilledellipse($im, $x + $rad, $y + $rad, $rad * 2, $dia, $col);
-    imagefilledellipse($im, $x + $rad, $cy - $rad, $rad * 2, $dia, $col);
-    imagefilledellipse($im, $cx - $rad, $cy - $rad, $rad * 2, $dia, $col);
-    imagefilledellipse($im, $cx - $rad, $y + $rad, $rad * 2, $dia, $col);
-  }
+        $mask_image = clone $image;
+        $mask_image->getAdapter()->setHolder($mask);
+
+        return $mask_image;
+    }
+
+    protected function imagefillroundedrect($im, $x, $y, $cx, $cy, $rad, $col)
+    {
+        // Draw the middle cross shape of the rectangle
+        imagefilledrectangle($im, $x, $y + $rad, $cx, $cy - $rad, $col);
+        imagefilledrectangle($im, $x + $rad, $y, $cx - $rad, $cy, $col);
+
+        $dia = $rad * 2;
+
+        // Now fill in the rounded corners
+        imagefilledellipse($im, $x + $rad, $y + $rad, $rad * 2, $dia, $col);
+        imagefilledellipse($im, $x + $rad, $cy - $rad, $rad * 2, $dia, $col);
+        imagefilledellipse($im, $cx - $rad, $cy - $rad, $rad * 2, $dia, $col);
+        imagefilledellipse($im, $cx - $rad, $y + $rad, $rad * 2, $dia, $col);
+    }
 
 }

@@ -14,13 +14,13 @@
  */
 interface sfII18nExtractor
 {
-  /**
-   * Extract i18n strings for the given content.
-   *
-   * @param  string The content
-   *
-   * @return array An array of i18n strings
-   */
-  public function extract($content);
+    /**
+     * Extract i18n strings for the given content.
+     *
+     * @param  string The content
+     *
+     * @return array An array of i18n strings
+     */
+    public function extract($content);
 
 }

@@ -14,20 +14,21 @@
  */
 interface sfIFormEnhancer
 {
-  /**
-   * Enhance form
-   *
-   * @param sfForm $form
-   */
-  public function enhance(sfForm $form);
+    /**
+     * Enhance form
+     *
+     * @param sfForm $form
+     */
+    public function enhance(sfForm $form);
 
-  /**
-   * Enhances any forms before they're passed to the template.
-   *
-   * @param sfEvent $event
-   * @param array $variables Array of variables passed to the template
-   * @return array Variables
-   */
-  public function filterTemplateVariables(sfEvent $event, array $variables);
+    /**
+     * Enhances any forms before they're passed to the template.
+     *
+     * @param sfEvent $event
+     * @param array   $variables Array of variables passed to the template
+     *
+     * @return array Variables
+     */
+    public function filterTemplateVariables(sfEvent $event, array $variables);
 
 }

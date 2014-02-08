@@ -7,6 +7,6 @@
  */
 
 return array(
-  'Site is unavailable.',
-  'Site is under maintenance, please try again in 30 minutes.'
+    'Site is unavailable.',
+    'Site is under maintenance, please try again in 30 minutes.'
 );

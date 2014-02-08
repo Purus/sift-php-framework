@@ -9,7 +9,9 @@
 /**
  * This exception is thrown when response sent to browser is not in a valid format.
  *
- * @package Sift
+ * @package    Sift
  * @subpackage exception
  */
-class sfWebBrowserInvalidResponseException extends sfException {}
+class sfWebBrowserInvalidResponseException extends sfException
+{
+}

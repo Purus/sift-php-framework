@@ -7,7 +7,7 @@
  */
 
 return array(
-  'Internal server error',
-  'We\'re sorry, but there was an internal server error during processing your request.',  
-  'The error has been logged for system administrator. If you continue to get this error, please contact webmaster <a href="mailto:%email%" title="Email the webmaster">%email%</a>.'
+    'Internal server error',
+    'We\'re sorry, but there was an internal server error during processing your request.',
+    'The error has been logged for system administrator. If you continue to get this error, please contact webmaster <a href="mailto:%email%" title="Email the webmaster">%email%</a>.'
 );

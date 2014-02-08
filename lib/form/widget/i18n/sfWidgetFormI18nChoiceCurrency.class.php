@@ -14,40 +14,42 @@
  */
 class sfWidgetFormI18nChoiceCurrency extends sfWidgetFormChoice
 {
-  /**
-   * Constructor.
-   *
-   * Available options:
-   *
-   *  * culture:    The culture to use for internationalized strings
-   *  * currencies: An array of currency codes to use (ISO 4217)
-   *  * add_empty:  Whether to add a first empty value or not (false by default)
-   *                If the option is not a Boolean, the value will be used as the text value
-   *
-   * @param array $options     An array of options
-   * @param array $attributes  An array of default HTML attributes
-   *
-   * @see sfWidgetFormChoice
-   */
-  protected function configure($options = array(), $attributes = array())
-  {
-    parent::configure($options, $attributes);
+    /**
+     * Constructor.
+     *
+     * Available options:
+     *
+     *  * culture:    The culture to use for internationalized strings
+     *  * currencies: An array of currency codes to use (ISO 4217)
+     *  * add_empty:  Whether to add a first empty value or not (false by default)
+     *                If the option is not a Boolean, the value will be used as the text value
+     *
+     * @param array $options An array of options
+     * @param array $attributes An array of default HTML attributes
+     *
+     * @see sfWidgetFormChoice
+     */
+    protected function configure($options = array(), $attributes = array())
+    {
+        parent::configure($options, $attributes);
 
-    $this->addOption('culture');
-    $this->addOption('currencies');
-    $this->addOption('add_empty', false);
-    $this->setOption('translate_choices', false);
+        $this->addOption('culture');
+        $this->addOption('currencies');
+        $this->addOption('add_empty', false);
+        $this->setOption('translate_choices', false);
 
-    // populate choices with all currencies
-    $culture = isset($options['culture']) ? $options['culture'] : 'en';
+        // populate choices with all currencies
+        $culture = isset($options['culture']) ? $options['culture'] : 'en';
 
-    $currencies = sfCulture::getInstance($culture)->getCurrencies(isset($options['currencies']) ? $options['currencies'] : null);
+        $currencies = sfCulture::getInstance($culture)->getCurrencies(
+            isset($options['currencies']) ? $options['currencies'] : null
+        );
 
-    $addEmpty = isset($options['add_empty']) ? $options['add_empty'] : false;
-    if (false !== $addEmpty) {
-      $currencies = array_merge(array('' => true === $addEmpty ? '' : $addEmpty), $currencies);
+        $addEmpty = isset($options['add_empty']) ? $options['add_empty'] : false;
+        if (false !== $addEmpty) {
+            $currencies = array_merge(array('' => true === $addEmpty ? '' : $addEmpty), $currencies);
+        }
+
+        $this->setOption('choices', $currencies);
     }
-
-    $this->setOption('choices', $currencies);
-  }
 }

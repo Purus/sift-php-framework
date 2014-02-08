@@ -17,13 +17,13 @@ require_once dirname(__FILE__) . '/PEAR_bootstrap.php';
  */
 class sfPearConfig extends PEAR_Config
 {
-  public function &getREST($version, $options = array())
-  {
-    $class = 'sfPearRest' . str_replace('.', '', $version);
+    public function &getREST($version, $options = array())
+    {
+        $class = 'sfPearRest' . str_replace('.', '', $version);
 
-    $remote = new $class($this, $options);
+        $remote = new $class($this, $options);
 
-    return $remote;
-  }
+        return $remote;
+    }
 
 }

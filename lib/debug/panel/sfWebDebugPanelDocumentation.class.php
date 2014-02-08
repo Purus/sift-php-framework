@@ -14,49 +14,56 @@
  */
 class sfWebDebugPanelDocumentation extends sfWebDebugPanel
 {
-  /**
-   * Array of documentation links
-   *
-   * @var array
-   */
-  protected $links = array(
-    'Sift Wiki on Bitbucket' => 'https://bitbucket.org/mishal/sift-php-framework/wiki/Home'
-  );
+    /**
+     * Array of documentation links
+     *
+     * @var array
+     */
+    protected $links
+        = array(
+            'Sift Wiki on Bitbucket' => 'https://bitbucket.org/mishal/sift-php-framework/wiki/Home'
+        );
 
-  /**
-   * @see sfWebDebugPanel
-   */
-  public function getTitle()
-  {
-    return 'docs';
-  }
+    /**
+     * @see sfWebDebugPanel
+     */
+    public function getTitle()
+    {
+        return 'docs';
+    }
 
-  /**
-   * @see sfWebDebugPanel
-   */
-  public function getPanelTitle()
-  {
-    return 'Documentation';
-  }
+    /**
+     * @see sfWebDebugPanel
+     */
+    public function getPanelTitle()
+    {
+        return 'Documentation';
+    }
 
-  /**
-   * @see sfWebDebugPanel
-   */
-  public function getPanelContent()
-  {
-    return $this->webDebug->render($this->getOption('template_dir').'/panel/documentation.php', array(
-      'links' => $this->getLinks()
-    ));
-  }
+    /**
+     * @see sfWebDebugPanel
+     */
+    public function getPanelContent()
+    {
+        return $this->webDebug->render(
+            $this->getOption('template_dir') . '/panel/documentation.php',
+            array(
+                'links' => $this->getLinks()
+            )
+        );
+    }
 
-  /**
-   * Returns links to documentation
-   *
-   * @return array
-   */
-  protected function getLinks()
-  {
-    return $this->webDebug->getEventDispatcher()->filter(new sfEvent('web_debug.filter_documentation_links'), $this->links)->getReturnValue();
-  }
+    /**
+     * Returns links to documentation
+     *
+     * @return array
+     */
+    protected function getLinks()
+    {
+        return $this->webDebug->getEventDispatcher()->filter(
+            new sfEvent('web_debug.filter_documentation_links'),
+            $this->links
+        )->getReturnValue();
+    }
 
 }

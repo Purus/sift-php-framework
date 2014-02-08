@@ -9,237 +9,245 @@
 /**
  * Compiles javascripts
  *
- * @package Sift
+ * @package    Sift
  * @subpackage build
  */
-class sfCliBuildCompileJsTask extends sfCliBaseBuildTask {
+class sfCliBuildCompileJsTask extends sfCliBaseBuildTask
+{
 
-  /**
-   * @see sfCliTask
-   */
-  protected function configure()
-  {
-    $this->addArguments(array(
-      new sfCliCommandArgument('package', sfCliCommandArgument::IS_ARRAY, 'The package to compile'),
-    ));
+    /**
+     * @see sfCliTask
+     */
+    protected function configure()
+    {
+        $this->addArguments(
+            array(
+                new sfCliCommandArgument('package', sfCliCommandArgument::IS_ARRAY, 'The package to compile'),
+            )
+        );
 
-    $this->aliases = array();
-    $this->namespace = '';
-    $this->name = 'compile-js';
-    $this->briefDescription = 'Compiles javascript files';
+        $this->aliases = array();
+        $this->namespace = '';
+        $this->name = 'compile-js';
+        $this->briefDescription = 'Compiles javascript files';
 
-    $this->packages = array(
-      'core', 'bootstrap'
-    );
+        $this->packages = array(
+            'core',
+            'bootstrap'
+        );
 
-    $this->detailedDescription = <<<EOF
+        $this->detailedDescription
+            = <<<EOF
 The [compile-js|INFO] task compiles javascript files for production usage
 
 EOF;
-  }
-
-  /**
-   * @see sfCliTask
-   */
-  protected function execute($arguments = array(), $options = array())
-  {
-    $this->logSection($this->getFullName(), 'Compiling scripts');
-
-    foreach($arguments['package'] as $package)
-    {
-      if(!in_array($package, $this->packages))
-      {
-        throw new sfCliCommandException(sprintf('Invalid package "%s"', $package));
-      }
     }
 
-    foreach($arguments['package'] as $package)
+    /**
+     * @see sfCliTask
+     */
+    protected function execute($arguments = array(), $options = array())
     {
-      $this->build($package);
+        $this->logSection($this->getFullName(), 'Compiling scripts');
+
+        foreach ($arguments['package'] as $package) {
+            if (!in_array($package, $this->packages)) {
+                throw new sfCliCommandException(sprintf('Invalid package "%s"', $package));
+            }
+        }
+
+        foreach ($arguments['package'] as $package) {
+            $this->build($package);
+        }
+
+        $this->logSection($this->getFullName(), 'Done.');
     }
 
-    $this->logSection($this->getFullName(), 'Done.');
-  }
-
-  protected function build($package)
-  {
-    $this->logSection($this->getFullName(), sprintf('Building package "%s"', $package));
-
-    if(method_exists($this, ($method = sprintf('build%s', ucfirst($package)))))
+    protected function build($package)
     {
-      $result = $this->$method();
-    }
-  }
+        $this->logSection($this->getFullName(), sprintf('Building package "%s"', $package));
 
-  /**
-   * Compiles core package
-   */
-  protected function buildCore()
-  {
-    $files = array(
-      'exception.js',
-      'config.js',
-      'cookie.js',
-      'local_storage.js',
-      'request_storage.js',
-      'cache_response.js',
-      'ajax_queue.js',
-      'globalize.js',
-      'i18n.js',
-      'plugins.js',
-      'load_mask.js',
-      'application.js',
-      'api.js',
-      'forms.js',
-      'bootstrap.js',
-      'logger.js',
-      'tools.js'
-    );
-
-    $jsDir = $this->environment->get('sf_sift_data_dir'). '/web/sf/js';
-
-    $tmpFile = tempnam(sys_get_temp_dir(), 'core_compile');
-
-    $fileContents = array();
-    foreach($files as $file)
-    {
-      $fileContents[] = file_get_contents($jsDir.'/core/'.$file);
+        if (method_exists($this, ($method = sprintf('build%s', ucfirst($package))))) {
+            $result = $this->$method();
+        }
     }
 
-    file_put_contents($tmpFile, join("\n\n", $fileContents));
-
-    $command[] = sprintf('--js %s', $tmpFile);
-
-    // output file
-    $command[] = sprintf('> %s', $jsDir.'/core/core.min.js');
-    $command = join(' ', $command);
-    $this->callCompiler($command);
-
-    // we need to compile translations too
-    $source = sfI18nMessageSource::factory('gettext', $this->environment->get('sf_sift_data_dir') . '/i18n/catalogues');
-
-    $jsCatalogueName = 'js_core';
-
-    $cultures = array_map('trim', explode("\n", file_get_contents($this->environment->get('build_data_dir').'/cultures.txt')));
-
-    foreach($cultures as $culture)
+    /**
+     * Compiles core package
+     */
+    protected function buildCore()
     {
-      // we are building gettext -> json format
-      $source->setCulture($culture);
-      $source->load($jsCatalogueName);
+        $files = array(
+            'exception.js',
+            'config.js',
+            'cookie.js',
+            'local_storage.js',
+            'request_storage.js',
+            'cache_response.js',
+            'ajax_queue.js',
+            'globalize.js',
+            'i18n.js',
+            'plugins.js',
+            'load_mask.js',
+            'application.js',
+            'api.js',
+            'forms.js',
+            'bootstrap.js',
+            'logger.js',
+            'tools.js'
+        );
 
-      $_messages = $source->read();
+        $jsDir = $this->environment->get('sf_sift_data_dir') . '/web/sf/js';
 
-      if(count($_messages))
-      {
-        $_messages = current($_messages);
-      }
+        $tmpFile = tempnam(sys_get_temp_dir(), 'core_compile');
 
-      $messages = array();
-      foreach($_messages as $original => $translatedProperties)
-      {
-        $messages[$original] = $translatedProperties[0];
-      }
+        $fileContents = array();
+        foreach ($files as $file) {
+            $fileContents[] = file_get_contents($jsDir . '/core/' . $file);
+        }
 
-      $i18n = $this->getI18n($culture);
-      $baseCulture = substr($culture, 0, 2);
+        file_put_contents($tmpFile, join("\n\n", $fileContents));
 
-      $content = sprintf(
-'/*
- * This file is part of Sift PHP framework.
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
+        $command[] = sprintf('--js %s', $tmpFile);
 
-/**
- * This file is automatically generated by a build task for culture "%s".
- * Do not modify it manually. See the compiler script for more information.
- *
- * @link https://bitbucket.org/mishal/sift-php-framework/wiki/Javascript
- */
+        // output file
+        $command[] = sprintf('> %s', $jsDir . '/core/core.min.js');
+        $command = join(' ', $command);
+        $this->callCompiler($command);
 
-// add translation strings
-%s
+        // we need to compile translations too
+        $source = sfI18nMessageSource::factory(
+            'gettext',
+            $this->environment->get('sf_sift_data_dir') . '/i18n/catalogues'
+        );
 
-// add culture information information
-Globalize.addCultureInfo(\'%s\', \'%s\', %s);
+        $jsCatalogueName = 'js_core';
 
-',  $culture, (count($messages) ? sprintf('I18n.addTranslation(%s);', sfJson::encode($messages)) : '// nothing'),
-        str_replace('_', '-', $culture), 'default', sfJson::encode($i18n));
+        $cultures = array_map(
+            'trim',
+            explode("\n", file_get_contents($this->environment->get('build_data_dir') . '/cultures.txt'))
+        );
 
-      $cultureFile = sprintf($jsDir.'/core/i18n/%s.js', $culture);
-      $cultureMinFile = sprintf($jsDir.'/core/i18n/%s.min.js', $culture);
+        foreach ($cultures as $culture) {
+            // we are building gettext -> json format
+            $source->setCulture($culture);
+            $source->load($jsCatalogueName);
 
-      file_put_contents($cultureFile, $content);
+            $_messages = $source->read();
 
-      $command = array();
-      $command[] = sprintf('--js %s', $cultureFile);
-      $command[] = sprintf('> %s', $cultureMinFile);
-      $command = join(' ', $command);
-      $this->callCompiler($command);
+            if (count($_messages)) {
+                $_messages = current($_messages);
+            }
+
+            $messages = array();
+            foreach ($_messages as $original => $translatedProperties) {
+                $messages[$original] = $translatedProperties[0];
+            }
+
+            $i18n = $this->getI18n($culture);
+            $baseCulture = substr($culture, 0, 2);
+
+            $content = sprintf(
+                '/*
+                 * This file is part of Sift PHP framework.
+                 *
+                 * For the full copyright and license information, please view the LICENSE
+                 * file that was distributed with this source code.
+                 */
+
+                /**
+                 * This file is automatically generated by a build task for culture "%s".
+                 * Do not modify it manually. See the compiler script for more information.
+                 *
+                 * @link https://bitbucket.org/mishal/sift-php-framework/wiki/Javascript
+                 */
+
+                // add translation strings
+                %s
+
+                // add culture information information
+                Globalize.addCultureInfo(\'%s\', \'%s\', %s);
+
+                ',
+                $culture,
+                (count($messages) ? sprintf('I18n.addTranslation(%s);', sfJson::encode($messages)) : '// nothing'),
+                str_replace('_', '-', $culture),
+                'default',
+                sfJson::encode($i18n)
+            );
+
+            $cultureFile = sprintf($jsDir . '/core/i18n/%s.js', $culture);
+            $cultureMinFile = sprintf($jsDir . '/core/i18n/%s.min.js', $culture);
+
+            file_put_contents($cultureFile, $content);
+
+            $command = array();
+            $command[] = sprintf('--js %s', $cultureFile);
+            $command[] = sprintf('> %s', $cultureMinFile);
+            $command = join(' ', $command);
+            $this->callCompiler($command);
+        }
     }
-  }
 
-  public function buildBootstrap($options = array())
-  {
-    $files = array(
-      'bootstrap-transition.js',
-      'bootstrap-alert.js',
-      'bootstrap-button.js',
-      'bootstrap-carousel.js',
-      'bootstrap-collapse.js',
-      'bootstrap-dropdown.js',
-      'bootstrap-modal.js',
-      'bootstrap-tooltip.js',
-      'bootstrap-popover.js',
-      'bootstrap-scrollspy.js',
-      'bootstrap-tab.js',
-      'bootstrap-typeahead.js',
-      'bootstrap-inputmask.js',
-      'bootstrap-rowlink.js',
-      'bootstrap-fileupload.js',
-      'bootstrap-affix.js'
-    );
-
-    $tmpFile = tempnam(sys_get_temp_dir(), 'btstrp_compile');
-
-    $jsDir = $this->environment->get('sf_sift_data_dir'). '/web/sf/js';
-
-    $fileContents = array();
-    foreach($files as $file)
+    public function buildBootstrap($options = array())
     {
-      $fileContents[] = file_get_contents($jsDir . '/bootstrap/' . $file);
+        $files = array(
+            'bootstrap-transition.js',
+            'bootstrap-alert.js',
+            'bootstrap-button.js',
+            'bootstrap-carousel.js',
+            'bootstrap-collapse.js',
+            'bootstrap-dropdown.js',
+            'bootstrap-modal.js',
+            'bootstrap-tooltip.js',
+            'bootstrap-popover.js',
+            'bootstrap-scrollspy.js',
+            'bootstrap-tab.js',
+            'bootstrap-typeahead.js',
+            'bootstrap-inputmask.js',
+            'bootstrap-rowlink.js',
+            'bootstrap-fileupload.js',
+            'bootstrap-affix.js'
+        );
+
+        $tmpFile = tempnam(sys_get_temp_dir(), 'btstrp_compile');
+
+        $jsDir = $this->environment->get('sf_sift_data_dir') . '/web/sf/js';
+
+        $fileContents = array();
+        foreach ($files as $file) {
+            $fileContents[] = file_get_contents($jsDir . '/bootstrap/' . $file);
+        }
+
+        file_put_contents($tmpFile, join("\n\n", $fileContents));
+
+        $command = array();
+        $command[] = sprintf('--js %s', $tmpFile);
+
+        // $command[] = '--compilation_level WHITESPACE_ONLY';
+        // SIMPLE_OPTIMIZATIONS | ADVANCED_OPTIMIZATIONS]
+
+        // $command[] = sprintf('--js_output_file %s', escapeshellarg($options['js_data_dir'] . '/globalize/globalize.min.js'));
+        // output file
+        $command[] = sprintf('> %s', $jsDir . '/bootstrap/bootstrap.min.js');
+
+        $command = join(' ', $command);
+
+        $this->callCompiler($command);
     }
 
-    file_put_contents($tmpFile, join("\n\n", $fileContents));
+    protected function getI18n($culture)
+    {
+        // FIXME: HACK to make it work!
+        sfConfig::set('sf_sift_data_dir', $this->environment->get('sf_sift_data_dir'));
+        $export = sfCultureExport::factory('globalize', $culture);
 
-    $command = array();
-    $command[] = sprintf('--js %s', $tmpFile);
+        return $export->export();
+    }
 
-    // $command[] = '--compilation_level WHITESPACE_ONLY';
-    // SIMPLE_OPTIMIZATIONS | ADVANCED_OPTIMIZATIONS]
-
-    // $command[] = sprintf('--js_output_file %s', escapeshellarg($options['js_data_dir'] . '/globalize/globalize.min.js'));
-    // output file
-    $command[] = sprintf('> %s', $jsDir . '/bootstrap/bootstrap.min.js');
-
-    $command = join(' ', $command);
-
-    $this->callCompiler($command);
-  }
-
-  protected function getI18n($culture)
-  {
-    // FIXME: HACK to make it work!
-    sfConfig::set('sf_sift_data_dir', $this->environment->get('sf_sift_data_dir'));
-    $export = sfCultureExport::factory('globalize', $culture);
-    return $export->export();
-  }
-
-  protected function callCompiler($command)
-  {
-    passthru(sprintf('compiler %s', ($command)));
-  }
+    protected function callCompiler($command)
+    {
+        passthru(sprintf('compiler %s', ($command)));
+    }
 
 }

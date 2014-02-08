@@ -14,20 +14,20 @@
  */
 interface sfIRichTextEditor extends sfIConfigurable
 {
-  /**
-   * Renders the field with given $name as rich editor
-   *
-   * @param string $name Name of the field
-   * @param string $content Text content
-   * @param array $options Array of options
-   */
-  public function toHtml($name, $content, $options = array());
+    /**
+     * Renders the field with given $name as rich editor
+     *
+     * @param string $name    Name of the field
+     * @param string $content Text content
+     * @param array  $options Array of options
+     */
+    public function toHtml($name, $content, $options = array());
 
-  /**
-   * Returns options for javascript usage
-   *
-   * @return array
-   */
-  public function getOptionsForJavascript();
+    /**
+     * Returns options for javascript usage
+     *
+     * @return array
+     */
+    public function getOptionsForJavascript();
 
 }

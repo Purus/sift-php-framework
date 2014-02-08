@@ -9,28 +9,31 @@
 /**
  * Launches all tests.
  *
- * @package Sift
+ * @package    Sift
  * @subpackage cli_task
  */
 class sfCliTestAllTask extends sfCliTestBaseTask
 {
-  /**
-   * @see sfTask
-   */
-  protected function configure()
-  {
-    $this->addOptions(array(
-      new sfCliCommandOption('only-failed', 'f', sfCliCommandOption::PARAMETER_NONE, 'Only run tests that failed last time'),
-      new sfCliCommandOption('xml', null, sfCliCommandOption::PARAMETER_REQUIRED, 'The file name for the JUnit compatible XML log file'),
-    ));
+    /**
+     * @see sfTask
+     */
+    protected function configure()
+    {
+        $this->addOptions(
+            array(
+                new sfCliCommandOption('only-failed', 'f', sfCliCommandOption::PARAMETER_NONE, 'Only run tests that failed last time'),
+                new sfCliCommandOption('xml', null, sfCliCommandOption::PARAMETER_REQUIRED, 'The file name for the JUnit compatible XML log file'),
+            )
+        );
 
-    $this->namespace = 'test';
-    $this->name = 'all';
-    $this->briefDescription = 'Launches all tests';
+        $this->namespace = 'test';
+        $this->name = 'all';
+        $this->briefDescription = 'Launches all tests';
 
-    $scriptName = $this->environment->get('script_name');
+        $scriptName = $this->environment->get('script_name');
 
-    $this->detailedDescription = <<<EOF
+        $this->detailedDescription
+            = <<<EOF
 The [test:all|INFO] task launches all unit and functional tests:
 
   [$scriptName test:all|INFO]
@@ -61,50 +64,50 @@ options:
 
   [$scriptName test:all --xml=log.xml|INFO]
 EOF;
-  }
-
-  /**
-   * @see sfTask
-   */
-  protected function execute($arguments = array(), $options = array())
-  {
-    require_once dirname(__FILE__).'/sfLimeHarness.class.php';
-
-    $h = new sfLimeHarness(array(
-      'force_colors' => isset($options['color']) && $options['color'],
-      'verbose'      => isset($options['trace']) && $options['trace'],
-    ));
-
-    $project = $this->commandApplication->getProject();
-    $h->addPlugins(array_map(array($project, 'getPluginConfiguration'), $project->getPlugins()));
-    $h->base_dir = $this->environment->get('sf_test_dir');
-
-    $status = false;
-    $statusFile = $this->environment->get('sf_cache_dir').'/.test_all_status';
-    if ($options['only-failed']) {
-      if (file_exists($statusFile)) {
-        $status = unserialize(file_get_contents($statusFile));
-      }
     }
 
-    if ($status) {
-      foreach ($status as $file) {
-        $h->register($file);
-      }
-    } else {
-      // filter and register all tests
-      $finder = sfFinder::type('file')->followLink()->name('*Test.php');
-      $h->register($this->filterTestFiles($finder->in($h->base_dir), $arguments, $options));
+    /**
+     * @see sfTask
+     */
+    protected function execute($arguments = array(), $options = array())
+    {
+        require_once dirname(__FILE__) . '/sfLimeHarness.class.php';
+
+        $h = new sfLimeHarness(array(
+            'force_colors' => isset($options['color']) && $options['color'],
+            'verbose'      => isset($options['trace']) && $options['trace'],
+        ));
+
+        $project = $this->commandApplication->getProject();
+        $h->addPlugins(array_map(array($project, 'getPluginConfiguration'), $project->getPlugins()));
+        $h->base_dir = $this->environment->get('sf_test_dir');
+
+        $status = false;
+        $statusFile = $this->environment->get('sf_cache_dir') . '/.test_all_status';
+        if ($options['only-failed']) {
+            if (file_exists($statusFile)) {
+                $status = unserialize(file_get_contents($statusFile));
+            }
+        }
+
+        if ($status) {
+            foreach ($status as $file) {
+                $h->register($file);
+            }
+        } else {
+            // filter and register all tests
+            $finder = sfFinder::type('file')->followLink()->name('*Test.php');
+            $h->register($this->filterTestFiles($finder->in($h->base_dir), $arguments, $options));
+        }
+
+        $ret = $h->run() ? 0 : 1;
+
+        file_put_contents($statusFile, serialize($h->get_failed_files()));
+
+        if ($options['xml']) {
+            file_put_contents($options['xml'], $h->to_xml());
+        }
+
+        return $ret;
     }
-
-    $ret = $h->run() ? 0 : 1;
-
-    file_put_contents($statusFile, serialize($h->get_failed_files()));
-
-    if ($options['xml']) {
-      file_put_contents($options['xml'], $h->to_xml());
-    }
-
-    return $ret;
-  }
 }

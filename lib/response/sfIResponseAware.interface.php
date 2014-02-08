@@ -9,23 +9,23 @@
 /**
  * sfIResponseAware interface
  *
- * @package Sift
+ * @package    Sift
  * @subpackage response
  */
 interface sfIResponseAware
 {
-  /**
-   * Sets the response
-   *
-   * @param sfResponse $response
-   */
-  public function setResponse(sfResponse $response = null);
+    /**
+     * Sets the response
+     *
+     * @param sfResponse $response
+     */
+    public function setResponse(sfResponse $response = null);
 
-  /**
-   * Get the response
-   *
-   * @return sfResponse
-   */
-  public function getResponse();
+    /**
+     * Get the response
+     *
+     * @return sfResponse
+     */
+    public function getResponse();
 
 }

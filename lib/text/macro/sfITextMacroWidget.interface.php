@@ -14,26 +14,26 @@
  */
 interface sfITextMacroWidget
 {
-  /**
-   * Return the HTML code
-   *
-   * @param array $attributes Array of attributes
-   * @param string $value The value
-   */
-  public function getHtml($attributes, $value = null);
+    /**
+     * Return the HTML code
+     *
+     * @param array  $attributes Array of attributes
+     * @param string $value      The value
+     */
+    public function getHtml($attributes, $value = null);
 
-  /**
-   * Returns an array of stylesheets
-   *
-   * @return array
-   */
-  public function getStylesheets();
+    /**
+     * Returns an array of stylesheets
+     *
+     * @return array
+     */
+    public function getStylesheets();
 
-  /**
-   * Returns an array of javascripts
-   *
-   * @return array
-   */
-  public function getJavascripts();
+    /**
+     * Returns an array of javascripts
+     *
+     * @return array
+     */
+    public function getJavascripts();
 
 }

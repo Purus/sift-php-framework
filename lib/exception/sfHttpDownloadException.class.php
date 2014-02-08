@@ -12,4 +12,6 @@
  * @package    Sift
  * @subpackage exception
  */
-class sfHttpDownloadException extends sfException {}
+class sfHttpDownloadException extends sfException
+{
+}

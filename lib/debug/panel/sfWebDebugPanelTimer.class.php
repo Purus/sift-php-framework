@@ -14,40 +14,43 @@
  */
 class sfWebDebugPanelTimer extends sfWebDebugPanel
 {
-  public function getTitle()
-  {
-    return sprintf('%.0f ms', $this->getTotalTime());
-  }
-
-  public function getIcon()
-  {
-  }
-
-  public function getPanelTitle()
-  {
-    return 'Timers';
-  }
-
-  public function getPanelContent()
-  {
-    if (!sfTimerManager::getTimers()) {
-      return;
+    public function getTitle()
+    {
+        return sprintf('%.0f ms', $this->getTotalTime());
     }
 
-    return $this->webDebug->render($this->getOption('template_dir') . '/panel/timer.php', array(
-      'total_time' => $this->getTotalTime(),
-      'timers' => sfTimerManager::getTimers()
-    ));
-  }
-
-  protected function getTotalTime()
-  {
-    $totalTime = 0;
-    foreach (sfTimerManager::getTimers() as $timer) {
-      $totalTime += $timer->getElapsedTime() * 1000;
+    public function getIcon()
+    {
     }
 
-    return $totalTime;
-  }
+    public function getPanelTitle()
+    {
+        return 'Timers';
+    }
+
+    public function getPanelContent()
+    {
+        if (!sfTimerManager::getTimers()) {
+            return;
+        }
+
+        return $this->webDebug->render(
+            $this->getOption('template_dir') . '/panel/timer.php',
+            array(
+                'total_time' => $this->getTotalTime(),
+                'timers'     => sfTimerManager::getTimers()
+            )
+        );
+    }
+
+    protected function getTotalTime()
+    {
+        $totalTime = 0;
+        foreach (sfTimerManager::getTimers() as $timer) {
+            $totalTime += $timer->getElapsedTime() * 1000;
+        }
+
+        return $totalTime;
+    }
 
 }

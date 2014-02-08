@@ -14,24 +14,24 @@
  */
 class sfTestRenderingFilter extends sfRenderingFilter
 {
-  /**
-   * Executes the filter
-   *
-   * @param sfFilterChain $filterChain
-   */
-  public function execute(sfFilterChain $filterChain)
-  {
-    $filterChain->execute();
+    /**
+     * Executes the filter
+     *
+     * @param sfFilterChain $filterChain
+     */
+    public function execute(sfFilterChain $filterChain)
+    {
+        $filterChain->execute();
 
-    // rethrow sfForm and|or sfFormField __toString() exceptions (see sfForm and sfFormField)
-    if (sfForm::hasToStringException()) {
-      throw sfForm::getToStringException();
-    } elseif (sfFormField::hasToStringException()) {
-      throw sfFormField::getToStringException();
+        // rethrow sfForm and|or sfFormField __toString() exceptions (see sfForm and sfFormField)
+        if (sfForm::hasToStringException()) {
+            throw sfForm::getToStringException();
+        } elseif (sfFormField::hasToStringException()) {
+            throw sfFormField::getToStringException();
+        }
+
+        $this->prepare();
+        $this->getContext()->getResponse()->sendContent();
     }
-
-    $this->prepare();
-    $this->getContext()->getResponse()->sendContent();
-  }
 
 }

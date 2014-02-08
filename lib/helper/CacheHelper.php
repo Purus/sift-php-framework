@@ -23,37 +23,38 @@
  * <?php endif; ?>
  * </pre>
  *
- * @param string $name The cache name
+ * @param string  $name     The cache name
  * @param integer $lifeTime The cache lifetime
+ *
  * @return boolean
  * @throws sfCacheException
  */
 function cache($name, $lifeTime = 86400)
 {
-  if (!sfConfig::get('sf_cache')) {
-    return false;
-  }
+    if (!sfConfig::get('sf_cache')) {
+        return false;
+    }
 
-  $context = sfContext::getInstance();
-  $request = $context->getRequest();
-  $cache = $context->getViewCacheManager();
+    $context = sfContext::getInstance();
+    $request = $context->getRequest();
+    $cache = $context->getViewCacheManager();
 
-  if (!is_null($request->getAttribute('started', null, 'sift/action/sfAction/cache'))) {
-    throw new sfCacheException('Cache already started');
-  }
+    if (!is_null($request->getAttribute('started', null, 'sift/action/sfAction/cache'))) {
+        throw new sfCacheException('Cache already started');
+    }
 
-  $data = $cache->start($name, $lifeTime);
+    $data = $cache->start($name, $lifeTime);
 
-  if ($data === null) {
-    $request->setAttribute('started', 1, 'sift/action/sfAction/cache');
-    $request->setAttribute('current_name', $name, 'sift/action/sfAction/cache');
+    if ($data === null) {
+        $request->setAttribute('started', 1, 'sift/action/sfAction/cache');
+        $request->setAttribute('current_name', $name, 'sift/action/sfAction/cache');
 
-    return false;
-  } else {
-    echo $data;
+        return false;
+    } else {
+        echo $data;
 
-    return true;
-  }
+        return true;
+    }
 }
 
 /**
@@ -64,25 +65,25 @@ function cache($name, $lifeTime = 86400)
  */
 function cache_save()
 {
-  if (!sfConfig::get('sf_cache')) {
-    return false;
-  }
+    if (!sfConfig::get('sf_cache')) {
+        return false;
+    }
 
-  $context = sfContext::getInstance();
-  $request = $context->getRequest();
+    $context = sfContext::getInstance();
+    $request = $context->getRequest();
 
-  if (is_null($request->getAttribute('started', null, 'sift/action/sfAction/cache'))) {
-    throw new sfCacheException('Cache not started');
-  }
+    if (is_null($request->getAttribute('started', null, 'sift/action/sfAction/cache'))) {
+        throw new sfCacheException('Cache not started');
+    }
 
-  $name = $request->getAttribute('current_name', '', 'sift/action/sfAction/cache');
-  $data = $context->getViewCacheManager()->stop($name);
+    $name = $request->getAttribute('current_name', '', 'sift/action/sfAction/cache');
+    $data = $context->getViewCacheManager()->stop($name);
 
-  $request->setAttribute('started', null, 'sift/action/sfAction/cache');
-  $request->setAttribute('current_name', null, 'sift/action/sfAction/cache');
+    $request->setAttribute('started', null, 'sift/action/sfAction/cache');
+    $request->setAttribute('current_name', null, 'sift/action/sfAction/cache');
 
-  // output the data
-  echo $data;
+    // output the data
+    echo $data;
 
-  return true;
+    return true;
 }

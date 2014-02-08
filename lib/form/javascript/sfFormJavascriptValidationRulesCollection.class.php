@@ -9,41 +9,42 @@
 /**
  * sfFormJavascriptValidationRulesCollection represents a collection of javascript validation rules
  *
- * @package Sift
+ * @package    Sift
  * @subpackage form_javascript
  */
 class sfFormJavascriptValidationRulesCollection extends sfCollection implements sfIJsonSerializable
 {
-  protected $itemType = 'sfFormJavascriptValidationFieldRules';
+    protected $itemType = 'sfFormJavascriptValidationFieldRules';
 
-  /**
-   * Offset get the rule with the given $name.
-   *
-   * @param string $name
-   * @return sfFormJavascriptValidationRule|null
-   */
-  public function offsetGet($name)
-  {
-    foreach ($this as $rule) {
-      if ($rule->getFieldName() == $name) {
-        return $rule;
-      }
-    }
-  }
-
-  /**
-   * Return data which should be serialized to JSON
-   *
-   * @return array
-   */
-  public function jsonSerialize()
-  {
-    $data = array();
-    foreach ($this as $rule) {
-      $data[$rule->getFormFieldName()] = $rule->getRules();
+    /**
+     * Offset get the rule with the given $name.
+     *
+     * @param string $name
+     *
+     * @return sfFormJavascriptValidationRule|null
+     */
+    public function offsetGet($name)
+    {
+        foreach ($this as $rule) {
+            if ($rule->getFieldName() == $name) {
+                return $rule;
+            }
+        }
     }
 
-    return $data;
-  }
+    /**
+     * Return data which should be serialized to JSON
+     *
+     * @return array
+     */
+    public function jsonSerialize()
+    {
+        $data = array();
+        foreach ($this as $rule) {
+            $data[$rule->getFormFieldName()] = $rule->getRules();
+        }
+
+        return $data;
+    }
 
 }

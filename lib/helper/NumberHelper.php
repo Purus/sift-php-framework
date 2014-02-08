@@ -17,43 +17,45 @@
  * Formats given number using I18n specification
  *
  * @param integer $number
- * @param string $culture
+ * @param string  $culture
+ *
  * @return mixed
  */
 function format_number($number, $culture = null)
 {
-  if (is_null($number)) {
-    return null;
-  }
+    if (is_null($number)) {
+        return null;
+    }
 
-  if (is_null($culture)) {
-    $culture = sfContext::getInstance()->getUser()->getCulture();
-  }
+    if (is_null($culture)) {
+        $culture = sfContext::getInstance()->getUser()->getCulture();
+    }
 
-  $numberFormat = new sfI18nNumberFormatter($culture);
+    $numberFormat = new sfI18nNumberFormatter($culture);
 
-  return $numberFormat->format($number);
+    return $numberFormat->format($number);
 }
 
 /**
  * Formats given number as currency
  *
- * @param mixed $amount
+ * @param mixed  $amount
  * @param string $currency
  * @param string $culture
+ *
  * @return mixed
  */
 function format_currency($amount, $currency = null, $culture = null)
 {
-  if (is_null($amount)) {
-    return null;
-  }
+    if (is_null($amount)) {
+        return null;
+    }
 
-  if (is_null($culture)) {
-    $culture = sfContext::getInstance()->getUser()->getCulture();
-  }
+    if (is_null($culture)) {
+        $culture = sfContext::getInstance()->getUser()->getCulture();
+    }
 
-  $numberFormat = new sfI18nNumberFormatter($culture);
+    $numberFormat = new sfI18nNumberFormatter($culture);
 
-  return $numberFormat->format($amount, 'c', $currency);
+    return $numberFormat->format($amount, 'c', $currency);
 }

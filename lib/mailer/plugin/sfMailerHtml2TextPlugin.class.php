@@ -18,34 +18,34 @@
  */
 class sfMailerHtml2TextPlugin extends sfMailerPlugin
 {
-  /**
-   * Invoked immediately before the message is sent.
-   *
-   * @param Swift_Events_SendEvent $evt
-   */
-  public function beforeSendPerformed(Swift_Events_SendEvent $evt)
-  {
-    $mail = $evt->getMessage();
-    if ($mail instanceof sfMailerMessage && !$mail->getPlainTextBody()) {
-      $body = $mail->getHtmlBody();
-      if (!$body) {
-        return;
-      }
-      try {
-        $converted = sfHtml2Text::convert($body);
-        $mail->setPlaintextBody($converted);
-      } catch (Exception $e) {
-      }
+    /**
+     * Invoked immediately before the message is sent.
+     *
+     * @param Swift_Events_SendEvent $evt
+     */
+    public function beforeSendPerformed(Swift_Events_SendEvent $evt)
+    {
+        $mail = $evt->getMessage();
+        if ($mail instanceof sfMailerMessage && !$mail->getPlainTextBody()) {
+            $body = $mail->getHtmlBody();
+            if (!$body) {
+                return;
+            }
+            try {
+                $converted = sfHtml2Text::convert($body);
+                $mail->setPlaintextBody($converted);
+            } catch (Exception $e) {
+            }
+        }
     }
-  }
 
-  /**
-   * Invoked immediately after the message is sent.
-   *
-   * @param Swift_Events_SendEvent $evt
-   */
-  public function sendPerformed(Swift_Events_SendEvent $evt)
-  {
-  }
+    /**
+     * Invoked immediately after the message is sent.
+     *
+     * @param Swift_Events_SendEvent $evt
+     */
+    public function sendPerformed(Swift_Events_SendEvent $evt)
+    {
+    }
 
 }

@@ -33,33 +33,34 @@
  *
  * @param  string feed type ('rss', 'atom')
  * @param  string 'module/action' or '@rule' of the feed
- * @param  array additional HTML compliant <link> tag parameters
+ * @param  array  additional HTML compliant <link> tag parameters
+ *
  * @return string HTML <link> tag
  */
 function auto_discovery_link_tag($type = 'rss', $url, $tag_options = array())
 {
-  $params = array(
-      'rel' => isset($tag_options['rel']) ? $tag_options['rel'] : 'alternate',
-      'href' => url_for($url, true)
-  );
+    $params = array(
+        'rel'  => isset($tag_options['rel']) ? $tag_options['rel'] : 'alternate',
+        'href' => url_for($url, true)
+    );
 
-  if (isset($tag_options['type'])) {
-    $params['type'] = $tag_options['type'];
-  } elseif (!empty($type)) {
-    if (strpos($type, 'application/') !== false) {
-      $params['type'] = $type;
-    } else {
-      $params['type'] = 'application/' . $type . '+xml';
+    if (isset($tag_options['type'])) {
+        $params['type'] = $tag_options['type'];
+    } elseif (!empty($type)) {
+        if (strpos($type, 'application/') !== false) {
+            $params['type'] = $type;
+        } else {
+            $params['type'] = 'application/' . $type . '+xml';
+        }
     }
-  }
 
-  if (isset($tag_options['title'])) {
-    $params['title'] = $tag_options['title'];
-  } else {
-    $params['title'] = ucfirst($type);
-  }
+    if (isset($tag_options['title'])) {
+        $params['title'] = $tag_options['title'];
+    } else {
+        $params['title'] = ucfirst($type);
+    }
 
-  return tag('link', $params);
+    return tag('link', $params);
 }
 
 /**
@@ -77,13 +78,19 @@ function auto_discovery_link_tag($type = 'rss', $url, $tag_options = array())
  * - file name without extension, like "myscript", that gets expanded to "/js/myscript.js"
  *
  * @param  string asset name
- * @param  bool return absolute path ?
+ * @param  bool   return absolute path ?
+ *
  * @return string file path to the JavaScript file
  * @see    javascript_include_tag
  */
 function javascript_path($source, $absolute = false)
 {
-  return _compute_public_path(_replace_constants($source), sfConfig::get('sf_web_js_dir_name', 'js'), 'js', $absolute);
+    return _compute_public_path(
+        _replace_constants($source),
+        sfConfig::get('sf_web_js_dir_name', 'js'),
+        'js',
+        $absolute
+    );
 }
 
 /**
@@ -99,55 +106,55 @@ function javascript_path($source, $absolute = false)
  * </code>
  *
  * @param  string asset names
- * @param  array additional HTML compliant <link> tag parameters
+ * @param  array  additional HTML compliant <link> tag parameters
  *
  * @return string XHTML compliant <script> tag(s)
  * @see    javascript_path
  */
 function javascript_include_tag()
 {
-  $sources = func_get_args();
-  $sourceOptions = (func_num_args() > 1 && is_array($sources[func_num_args() - 1])) ? array_pop($sources) : array();
+    $sources = func_get_args();
+    $sourceOptions = (func_num_args() > 1 && is_array($sources[func_num_args() - 1])) ? array_pop($sources) : array();
 
-  $html = '';
-  foreach ($sources as $source) {
-    $absolute = false;
-    if (isset($sourceOptions['absolute'])) {
-      unset($sourceOptions['absolute']);
-      $absolute = true;
+    $html = '';
+    foreach ($sources as $source) {
+        $absolute = false;
+        if (isset($sourceOptions['absolute'])) {
+            unset($sourceOptions['absolute']);
+            $absolute = true;
+        }
+
+        $condition = null;
+        if (isset($sourceOptions['ie_condition'])) {
+            $condition = $sourceOptions['ie_condition'];
+            unset($sourceOptions['ie_condition']);
+        }
+
+        $raw = false;
+        if (isset($sourceOptions['raw'])) {
+            $raw = true;
+            unset($sourceOptions['raw']);
+        } elseif (isset($sourceOptions['generated'])) {
+            $source = _dynamic_path($source, $absolute);
+            $raw = true;
+            unset($sourceOptions['generated']);
+        }
+
+        if (!$raw) {
+            $source = javascript_path($source, $absolute);
+        }
+
+        $options = array_merge(array('type' => 'text/javascript', 'src' => $source), $sourceOptions);
+        $tag = content_tag('script', '', $options);
+
+        if (!is_null($condition)) {
+            $tag = ie_conditional_comment($condition, $tag);
+        }
+
+        $html .= $tag . "\n";
     }
 
-    $condition = null;
-    if (isset($sourceOptions['ie_condition'])) {
-      $condition = $sourceOptions['ie_condition'];
-      unset($sourceOptions['ie_condition']);
-    }
-
-    $raw = false;
-    if (isset($sourceOptions['raw'])) {
-      $raw = true;
-      unset($sourceOptions['raw']);
-    } elseif (isset($sourceOptions['generated'])) {
-      $source = _dynamic_path($source, $absolute);
-      $raw = true;
-      unset($sourceOptions['generated']);
-    }
-
-    if (!$raw) {
-      $source = javascript_path($source, $absolute);
-    }
-
-    $options = array_merge(array('type' => 'text/javascript', 'src' => $source), $sourceOptions);
-    $tag = content_tag('script', '', $options);
-
-    if (!is_null($condition)) {
-      $tag = ie_conditional_comment($condition, $tag);
-    }
-
-    $html .= $tag . "\n";
-  }
-
-  return $html;
+    return $html;
 }
 
 /**
@@ -165,13 +172,19 @@ function javascript_include_tag()
  * - file name without extension, like "style", that gets expanded to "/css/style.css"
  *
  * @param  string asset name
- * @param  bool return absolute path ?
+ * @param  bool   return absolute path ?
+ *
  * @return string file path to the stylesheet file
  * @see    stylesheet_tag
  */
 function stylesheet_path($source, $absolute = false)
 {
-  return _compute_public_path(_replace_constants($source), sfConfig::get('sf_web_css_dir_name', 'css'), 'css', $absolute);
+    return _compute_public_path(
+        _replace_constants($source),
+        sfConfig::get('sf_web_css_dir_name', 'css'),
+        'css',
+        $absolute
+    );
 }
 
 /**
@@ -195,79 +208,91 @@ function stylesheet_path($source, $absolute = false)
  * </code>
  *
  * @param  string asset names
- * @param  array additional HTML compliant <link> tag parameters
+ * @param  array  additional HTML compliant <link> tag parameters
+ *
  * @return string HTML compliant <link> tag(s)
  * @see    stylesheet_path
  */
 function stylesheet_tag()
 {
-  $sources = func_get_args();
-  $sourceOptions = (func_num_args() > 1 && is_array($sources[func_num_args() - 1])) ? array_pop($sources) : array();
+    $sources = func_get_args();
+    $sourceOptions = (func_num_args() > 1 && is_array($sources[func_num_args() - 1])) ? array_pop($sources) : array();
 
-  $html = '';
-  foreach ($sources as $source) {
-    $absolute = false;
-    if (isset($sourceOptions['absolute'])) {
-      unset($sourceOptions['absolute']);
-      $absolute = true;
-    }
-
-    $raw = false;
-    if (isset($sourceOptions['raw'])) {
-      $raw = true;
-      unset($sourceOptions['raw']);
-    } elseif (isset($sourceOptions['generated'])) {
-      $raw = true;
-      unset($sourceOptions['generated']);
-    }
-
-    $condition = null;
-    if (isset($sourceOptions['ie_condition'])) {
-      $condition = $sourceOptions['ie_condition'];
-      unset($sourceOptions['ie_condition']);
-    }
-
-    if (!$raw) {
-      // less support
-      if(isset($sourceOptions['less'])
-              || preg_match('/\.less$/i', $source))
-      {
-        $source = stylesheet_path($source);
-
-        // is base domain is affecting the path, we need to take care of it
-        if ($baseDomain = sfConfig::get('sf_base_domain')) {
-          $source = preg_replace(sprintf('~https?://%s%s~', $baseDomain,
-              sfContext::getInstance()->getRequest()->getRelativeUrlRoot()), '', $source);
+    $html = '';
+    foreach ($sources as $source) {
+        $absolute = false;
+        if (isset($sourceOptions['absolute'])) {
+            unset($sourceOptions['absolute']);
+            $absolute = true;
         }
 
-        $source = sfContext::getInstance()->getService('less_compiler')->compileStylesheetIfNeeded($source);
-
-        if ($baseDomain) {
-          $source = stylesheet_path($source);
+        $raw = false;
+        if (isset($sourceOptions['raw'])) {
+            $raw = true;
+            unset($sourceOptions['raw']);
+        } elseif (isset($sourceOptions['generated'])) {
+            $raw = true;
+            unset($sourceOptions['generated']);
         }
 
-        unset($sourceOptions['less']);
-      } else {
-        $source = stylesheet_path($source, $absolute);
-      }
+        $condition = null;
+        if (isset($sourceOptions['ie_condition'])) {
+            $condition = $sourceOptions['ie_condition'];
+            unset($sourceOptions['ie_condition']);
+        }
+
+        if (!$raw) {
+            // less support
+            if (isset($sourceOptions['less'])
+                || preg_match('/\.less$/i', $source)
+            ) {
+                $source = stylesheet_path($source);
+
+                // is base domain is affecting the path, we need to take care of it
+                if ($baseDomain = sfConfig::get('sf_base_domain')) {
+                    $source = preg_replace(
+                        sprintf(
+                            '~https?://%s%s~',
+                            $baseDomain,
+                            sfContext::getInstance()->getRequest()->getRelativeUrlRoot()
+                        ),
+                        '',
+                        $source
+                    );
+                }
+
+                $source = sfContext::getInstance()->getService('less_compiler')->compileStylesheetIfNeeded($source);
+
+                if ($baseDomain) {
+                    $source = stylesheet_path($source);
+                }
+
+                unset($sourceOptions['less']);
+            } else {
+                $source = stylesheet_path($source, $absolute);
+            }
+        }
+
+        $options = array_merge(
+            array(
+                'rel'   => 'stylesheet',
+                'type'  => 'text/css',
+                'media' => sfConfig::get('sf_default_stylesheet_media', 'screen,projection,tv'),
+                'href'  => $source
+            ),
+            $sourceOptions
+        );
+
+        $tag = tag('link', $options);
+
+        if (!is_null($condition)) {
+            $tag = ie_conditional_comment($condition, $tag);
+        }
+
+        $html .= $tag . "\n";
     }
 
-    $options = array_merge(array(
-        'rel' => 'stylesheet',
-        'type' => 'text/css',
-        'media' => sfConfig::get('sf_default_stylesheet_media', 'screen,projection,tv'),
-        'href' => $source), $sourceOptions);
-
-    $tag = tag('link', $options);
-
-    if (!is_null($condition)) {
-      $tag = ie_conditional_comment($condition, $tag);
-    }
-
-    $html .= $tag . "\n";
-  }
-
-  return $html;
+    return $html;
 }
 
 /**
@@ -277,13 +302,13 @@ function stylesheet_tag()
  */
 function use_stylesheet($css, $position = '', $options = array())
 {
-  if (!is_array($css)) {
-    $css = array($css);
-  }
+    if (!is_array($css)) {
+        $css = array($css);
+    }
 
-  foreach ($css as $stylesheet) {
-    sfContext::getInstance()->getResponse()->addStylesheet($stylesheet, $position, $options);
-  }
+    foreach ($css as $stylesheet) {
+        sfContext::getInstance()->getResponse()->addStylesheet($stylesheet, $position, $options);
+    }
 }
 
 /**
@@ -293,13 +318,13 @@ function use_stylesheet($css, $position = '', $options = array())
  */
 function use_javascript($js, $position = '', $options = array())
 {
-  if (!is_array($js)) {
-    $js = array($js => array());
-  }
+    if (!is_array($js)) {
+        $js = array($js => array());
+    }
 
-  foreach ($js as $javascript => $options) {
-    sfContext::getInstance()->getResponse()->addJavascript($javascript, $position, $options);
-  }
+    foreach ($js as $javascript => $options) {
+        sfContext::getInstance()->getResponse()->addJavascript($javascript, $position, $options);
+    }
 }
 
 /**
@@ -309,12 +334,12 @@ function use_javascript($js, $position = '', $options = array())
  */
 function decorate_with($layout)
 {
-  $view = sfContext::getInstance()->getActionStack()->getLastEntry()->getViewInstance();
-  if (false === $layout) {
-    $view->setDecorator(false);
-  } else {
-    $view->setDecoratorTemplate($layout);
-  }
+    $view = sfContext::getInstance()->getActionStack()->getLastEntry()->getViewInstance();
+    if (false === $layout) {
+        $view->setDecorator(false);
+    } else {
+        $view->setDecoratorTemplate($layout);
+    }
 }
 
 /**
@@ -332,13 +357,19 @@ function decorate_with($layout)
  * - file name without extension, like "logo", that gets expanded to "/images/logo.png"
  *
  * @param  string asset name
- * @param  bool return absolute path ?
+ * @param  bool   return absolute path ?
+ *
  * @return string file path to the image file
  * @see    image_tag
  */
 function image_path($source, $absolute = false)
 {
-  return _compute_public_path(_replace_constants($source), sfConfig::get('sf_web_images_dir_name', 'images'), 'png', $absolute);
+    return _compute_public_path(
+        _replace_constants($source),
+        sfConfig::get('sf_web_images_dir_name', 'images'),
+        'png',
+        $absolute
+    );
 }
 
 /**
@@ -358,101 +389,103 @@ function image_path($source, $absolute = false)
  * </code>
  *
  * @param  string image asset name
- * @param  array additional HTML compliant <img> tag parameters
+ * @param  array  additional HTML compliant <img> tag parameters
+ *
  * @return string XHTML compliant <img> tag
  * @see    image_path
  */
 function image_tag($source, $options = array())
 {
-  if (!$source) {
-    return '';
-  }
-
-  $options = _parse_attributes($options);
-
-  $absolute = false;
-  if (isset($options['absolute'])) {
-    unset($options['absolute']);
-    $absolute = true;
-  }
-
-  // source is mail embed image source cid:1267089287.4b863f87c8b37@server
-  if (strpos($source, 'cid:') !== false) {
-    $options['src'] = $source;
-  } else {
-    $options['src'] = image_path($source, $absolute);
-  }
-
-  if (!isset($options['alt'])) {
-    $path_pos = strrpos($source, '/');
-    $dot_pos = strrpos($source, '.');
-    $begin = $path_pos ? $path_pos + 1 : 0;
-    $nb_str = ($dot_pos ? $dot_pos : strlen($source)) - $begin;
-    $options['alt'] = ucfirst(substr($source, $begin, $nb_str));
-  }
-
-  if (isset($options['size'])) {
-    if (strpos($options['size'], 'x') == false) {
-      if (sfConfig::get('sf_debug')) {
-        throw new InvalidArgumentException(sprintf('Size option "%s" is not valid', $options['size']));
-      }
+    if (!$source) {
+        return '';
     }
-    list($options['width'], $options['height']) = explode('x', $options['size'], 2);
-    unset($options['size']);
-  }
 
-  return tag('img', $options);
+    $options = _parse_attributes($options);
+
+    $absolute = false;
+    if (isset($options['absolute'])) {
+        unset($options['absolute']);
+        $absolute = true;
+    }
+
+    // source is mail embed image source cid:1267089287.4b863f87c8b37@server
+    if (strpos($source, 'cid:') !== false) {
+        $options['src'] = $source;
+    } else {
+        $options['src'] = image_path($source, $absolute);
+    }
+
+    if (!isset($options['alt'])) {
+        $path_pos = strrpos($source, '/');
+        $dot_pos = strrpos($source, '.');
+        $begin = $path_pos ? $path_pos + 1 : 0;
+        $nb_str = ($dot_pos ? $dot_pos : strlen($source)) - $begin;
+        $options['alt'] = ucfirst(substr($source, $begin, $nb_str));
+    }
+
+    if (isset($options['size'])) {
+        if (strpos($options['size'], 'x') == false) {
+            if (sfConfig::get('sf_debug')) {
+                throw new InvalidArgumentException(sprintf('Size option "%s" is not valid', $options['size']));
+            }
+        }
+        list($options['width'], $options['height']) = explode('x', $options['size'], 2);
+        unset($options['size']);
+    }
+
+    return tag('img', $options);
 }
 
 /**
  * Computes public path for given $source
  *
- * @param string $source Source
- * @param string $dir Directory
- * @param string $ext Default extension
+ * @param string  $source   Source
+ * @param string  $dir      Directory
+ * @param string  $ext      Default extension
  * @param boolean $absolute Absolute path?
+ *
  * @return string
  */
 function _compute_public_path($source, $dir, $ext, $absolute = false)
 {
-  // absolute url or absolute url without protocol?
-  if (strpos($source, '://') || strpos($source, '//') === 0) {
-    return $source;
-  }
+    // absolute url or absolute url without protocol?
+    if (strpos($source, '://') || strpos($source, '//') === 0) {
+        return $source;
+    }
 
-  $request = sfContext::getInstance()->getRequest();
-  $sf_relative_url_root = $request->getRelativeUrlRoot();
-  if (0 !== strpos($source, '/')) {
-    $source = $sf_relative_url_root . '/' . $dir . '/' . $source;
-  }
+    $request = sfContext::getInstance()->getRequest();
+    $sf_relative_url_root = $request->getRelativeUrlRoot();
+    if (0 !== strpos($source, '/')) {
+        $source = $sf_relative_url_root . '/' . $dir . '/' . $source;
+    }
 
-  $query_string = '';
-  if (false !== $pos = strpos($source, '?')) {
-    $query_string = substr($source, $pos);
-    $source = substr($source, 0, $pos);
-  }
+    $query_string = '';
+    if (false !== $pos = strpos($source, '?')) {
+        $query_string = substr($source, $pos);
+        $source = substr($source, 0, $pos);
+    }
 
-  if (false === strpos(basename($source), '.')) {
-    $source .= '.' . $ext;
-  }
+    if (false === strpos(basename($source), '.')) {
+        $source .= '.' . $ext;
+    }
 
-  if ($sf_relative_url_root && 0 !== strpos($source, $sf_relative_url_root)) {
-    $source = $sf_relative_url_root . $source;
-  }
+    if ($sf_relative_url_root && 0 !== strpos($source, $sf_relative_url_root)) {
+        $source = $sf_relative_url_root . $source;
+    }
 
-  $host = $request->getHost();
+    $host = $request->getHost();
 
-  $baseDomain = sfConfig::get('sf_base_domain');
-  if ($baseDomain && $baseDomain != $request->getHost()) {
-    $absolute = true;
-    $host = $baseDomain;
-  }
+    $baseDomain = sfConfig::get('sf_base_domain');
+    if ($baseDomain && $baseDomain != $request->getHost()) {
+        $absolute = true;
+        $host = $baseDomain;
+    }
 
-  if ($absolute) {
-    $source = 'http' . ($request->isSecure() ? 's' : '') . '://' . $host . $source;
-  }
+    if ($absolute) {
+        $source = 'http' . ($request->isSecure() ? 's' : '') . '://' . $host . $source;
+    }
 
-  return $source . $query_string;
+    return $source . $query_string;
 }
 
 /**
@@ -472,9 +505,9 @@ function _compute_public_path($source, $dir, $ext, $absolute = false)
  */
 function include_metas()
 {
-  foreach (sfContext::getInstance()->getResponse()->getMetas() as $name => $content) {
-    echo tag('meta', array('name' => $name, 'content' => $content)) . "\n";
-  }
+    foreach (sfContext::getInstance()->getResponse()->getMetas() as $name => $content) {
+        echo tag('meta', array('name' => $name, 'content' => $content)) . "\n";
+    }
 }
 
 /**
@@ -494,9 +527,9 @@ function include_metas()
  */
 function include_http_metas()
 {
-  foreach (sfContext::getInstance()->getResponse()->getHttpMetas() as $httpequiv => $value) {
-    echo tag('meta', array('http-equiv' => $httpequiv, 'content' => $value)) . "\n";
-  }
+    foreach (sfContext::getInstance()->getResponse()->getHttpMetas() as $httpequiv => $value) {
+        echo tag('meta', array('http-equiv' => $httpequiv, 'content' => $value)) . "\n";
+    }
 }
 
 /**
@@ -509,7 +542,7 @@ function include_http_metas()
  */
 function include_title($withGlobal = true)
 {
-  echo content_tag('title', get_title($withGlobal)) . "\n";
+    echo content_tag('title', get_title($withGlobal)) . "\n";
 }
 
 /**
@@ -519,7 +552,7 @@ function include_title($withGlobal = true)
  */
 function get_title($withGlobal = true)
 {
-  return apply_filters('html.title', sfContext::getInstance()->getResponse()->getTitle($withGlobal));
+    return apply_filters('html.title', sfContext::getInstance()->getResponse()->getTitle($withGlobal));
 }
 
 /**
@@ -533,31 +566,31 @@ function get_title($withGlobal = true)
  */
 function get_javascripts()
 {
-  $response = sfContext::getInstance()->getResponse();
-  $response->setParameter('javascripts_included', true, 'sift/view/asset');
+    $response = sfContext::getInstance()->getResponse();
+    $response->setParameter('javascripts_included', true, 'sift/view/asset');
 
-  $already_seen = array();
-  $html = '';
+    $already_seen = array();
+    $html = '';
 
-  foreach (array('first', '', 'last') as $position) {
-    foreach ($response->getJavascripts($position) as $files => $options) {
-      if (!is_array($files)) {
-        $files = array($files);
-      }
-      foreach ($files as $file) {
-        $tag = javascript_include_tag($file, $options);
+    foreach (array('first', '', 'last') as $position) {
+        foreach ($response->getJavascripts($position) as $files => $options) {
+            if (!is_array($files)) {
+                $files = array($files);
+            }
+            foreach ($files as $file) {
+                $tag = javascript_include_tag($file, $options);
 
-        if (isset($already_seen[$tag])) {
-          continue;
+                if (isset($already_seen[$tag])) {
+                    continue;
+                }
+
+                $html .= $tag;
+                $already_seen[$tag] = true;
+            }
         }
-
-        $html .= $tag;
-        $already_seen[$tag] = true;
-      }
     }
-  }
 
-  return $html;
+    return $html;
 }
 
 /**
@@ -567,7 +600,7 @@ function get_javascripts()
  */
 function include_javascripts()
 {
-  echo get_javascripts();
+    echo get_javascripts();
 }
 
 /**
@@ -581,31 +614,31 @@ function include_javascripts()
  */
 function get_stylesheets()
 {
-  $response = sfContext::getInstance()->getResponse();
-  $response->setParameter('stylesheets_included', true, 'sift/view/asset');
+    $response = sfContext::getInstance()->getResponse();
+    $response->setParameter('stylesheets_included', true, 'sift/view/asset');
 
-  $already_seen = array();
-  $html = '';
+    $already_seen = array();
+    $html = '';
 
-  foreach (array('first', '', 'last') as $position) {
-    foreach ($response->getStylesheets($position) as $files => $options) {
-      if (!is_array($files)) {
-        $files = array($files);
-      }
+    foreach (array('first', '', 'last') as $position) {
+        foreach ($response->getStylesheets($position) as $files => $options) {
+            if (!is_array($files)) {
+                $files = array($files);
+            }
 
-      foreach ($files as $file) {
-        $tag = stylesheet_tag($file, $options);
-        if (isset($already_seen[$tag])) {
-          continue;
+            foreach ($files as $file) {
+                $tag = stylesheet_tag($file, $options);
+                if (isset($already_seen[$tag])) {
+                    continue;
+                }
+
+                $already_seen[$tag] = true;
+                $html .= $tag;
+            }
         }
-
-        $already_seen[$tag] = true;
-        $html .= $tag;
-      }
     }
-  }
 
-  return $html;
+    return $html;
 }
 
 /**
@@ -615,23 +648,24 @@ function get_stylesheets()
  */
 function include_stylesheets()
 {
-  echo get_stylesheets();
+    echo get_stylesheets();
 }
 
 /**
  * Returns html code for all auto discovery links assigned to response object
+ *
  * @return string
  */
 function get_auto_discovery_links()
 {
-  $response = sfContext::getInstance()->getResponse();
-  $response->setParameter('auto_discovery_links_included', true, 'sift/view/asset');
-  $html = array();
-  foreach ($response->getAutoDiscoveryLinks() as $link) {
-    $html[] = auto_discovery_link_tag($link['type'], $link['url'], $link['tag_options']);
-  }
+    $response = sfContext::getInstance()->getResponse();
+    $response->setParameter('auto_discovery_links_included', true, 'sift/view/asset');
+    $html = array();
+    foreach ($response->getAutoDiscoveryLinks() as $link) {
+        $html[] = auto_discovery_link_tag($link['type'], $link['url'], $link['tag_options']);
+    }
 
-  return join("\n", $html) . "\n";
+    return join("\n", $html) . "\n";
 }
 
 /**
@@ -640,7 +674,7 @@ function get_auto_discovery_links()
  */
 function include_auto_discovery_links()
 {
-  echo get_auto_discovery_links();
+    echo get_auto_discovery_links();
 }
 
 /**
@@ -649,13 +683,13 @@ function include_auto_discovery_links()
  * Autodiscovery link is something like:
  * <link rel="alternate" type="application/rss+xml" title="RSS" href="http://www.curenthost.com/module/feed" />
  *
- * @param string url of the feed (not routing rule!)
- * @param string feed type ('rss', 'atom')
- * @param  array additional HTML compliant <link> tag parameters
+ * @param  string url of the feed (not routing rule!)
+ * @param  string feed type ('rss', 'atom')
+ * @param  array  additional HTML compliant <link> tag parameters
  */
 function add_auto_discovery_link($url, $type = 'rss', $tag_options = array())
 {
-  sfContext::getInstance()->getResponse()->addAutoDiscoveryLink($url, $type, $tag_options);
+    sfContext::getInstance()->getResponse()->addAutoDiscoveryLink($url, $type, $tag_options);
 }
 
 /**
@@ -665,34 +699,37 @@ function add_auto_discovery_link($url, $type = 'rss', $tag_options = array())
  */
 function set_canonical_url($url)
 {
-  sfContext::getInstance()->getResponse()->setCanonicalUrl($url);
+    sfContext::getInstance()->getResponse()->setCanonicalUrl($url);
 }
 
 /**
  * Gets canonical url from response
  *
- * @param boolean $raw Raw Url or include inside <link rel="canonical" href="url" />
+ * @param boolean $raw    Raw Url or include inside <link rel="canonical" href="url" />
  * @param boolean $detect Detect the canonical url from the current URI?
+ *
  * @return string string
  */
 function get_canonical_url($raw = true, $detect = true)
 {
-  // custom
-  $url = sfContext::getInstance()->getResponse()->getCanonicalUrl();
+    // custom
+    $url = sfContext::getInstance()->getResponse()->getCanonicalUrl();
 
-  if (!$url && $detect) {
-    if(sfContext::getInstance()->getModuleName() == sfConfig::get('sf_error_404_module')
-        && sfContext::getInstance()->getActionName() == sfConfig::get('sf_error_404_action'))
-    {
-      return '';
-    } else if (($route = sfRouting::getInstance()->getCurrentInternalUri(false))) {
-      $url = url_for($route, true);
-    } else {
-      $url = sfContext::getInstance()->getRequest()->getUri();
+    if (!$url && $detect) {
+        if (sfContext::getInstance()->getModuleName() == sfConfig::get('sf_error_404_module')
+            && sfContext::getInstance()->getActionName() == sfConfig::get('sf_error_404_action')
+        ) {
+            return '';
+        } else {
+            if (($route = sfRouting::getInstance()->getCurrentInternalUri(false))) {
+                $url = url_for($route, true);
+            } else {
+                $url = sfContext::getInstance()->getRequest()->getUri();
+            }
+        }
     }
-  }
 
-  return $raw ? $url : tag('link', array('rel' => 'canonical', 'href' => $url));
+    return $raw ? $url : tag('link', array('rel' => 'canonical', 'href' => $url));
 }
 
 /**
@@ -702,7 +739,7 @@ function get_canonical_url($raw = true, $detect = true)
  */
 function clear_canonical_url()
 {
-  sfContext::getInstance()->getResponse()->clearCanonicalUrl();
+    sfContext::getInstance()->getResponse()->clearCanonicalUrl();
 }
 
 /**
@@ -712,50 +749,51 @@ function clear_canonical_url()
  */
 function include_canonical_url()
 {
-  if (!($canonicalUrl = get_canonical_url(false, true))) {
-    return;
-  }
-  echo $canonicalUrl . "\n";
+    if (!($canonicalUrl = get_canonical_url(false, true))) {
+        return;
+    }
+    echo $canonicalUrl . "\n";
 }
 
 /**
  * Returns javascript configuration for application
  *
- * @param array $options
+ * @param array  $options
  * @param string $app
+ *
  * @return string string
  */
 function get_javascript_configuration($options = array(), $app = null)
 {
-  $response = sfContext::getInstance()->getResponse();
-  $response->setParameter('javascript_configuration_included', true, 'sift/view/asset');
+    $response = sfContext::getInstance()->getResponse();
+    $response->setParameter('javascript_configuration_included', true, 'sift/view/asset');
 
-  if (is_null($app)) {
-    $app = sfConfig::get('sf_app');
-  }
+    if (is_null($app)) {
+        $app = sfConfig::get('sf_app');
+    }
 
-  // default configuration
-  $default = array(
-    'culture' => sfContext::getInstance()->getUser()->getCulture(),
-    'debug' => sfConfig::get('sf_debug'),
-    'cookie_domain' => '.' . sfContext::getInstance()->getRequest()->getBaseDomain(), // cross domain cookie
-    'cookie_path' => sfConfig::get('sf_relative_url_root') ? sfConfig::get('sf_relative_url_root') : '/',
-    'homepage_url' => url_for('@homepage'),
-    'url_suffix' => sfConfig::get('sf_suffix'),
-    'ajax_timeout' => sfConfig::get('sf_ajax_timeout'),
-    'timezones_enabled' => sfConfig::get('sf_timezones_enabled')
-  );
+    // default configuration
+    $default = array(
+        'culture'           => sfContext::getInstance()->getUser()->getCulture(),
+        'debug'             => sfConfig::get('sf_debug'),
+        'cookie_domain'     => '.' . sfContext::getInstance()->getRequest()->getBaseDomain(), // cross domain cookie
+        'cookie_path'       => sfConfig::get('sf_relative_url_root') ? sfConfig::get('sf_relative_url_root') : '/',
+        'homepage_url'      => url_for('@homepage'),
+        'url_suffix'        => sfConfig::get('sf_suffix'),
+        'ajax_timeout'      => sfConfig::get('sf_ajax_timeout'),
+        'timezones_enabled' => sfConfig::get('sf_timezones_enabled')
+    );
 
-  use_package('core');
+    use_package('core');
 
-  $config = array_merge($default, $options);
+    $config = array_merge($default, $options);
 
-  // filter config thru event system
-  $event = new sfEvent('core.javascript.configuration', array('app' => $app));
-  sfCore::getEventDispatcher()->filter($event, $config);
-  $config = $event->getReturnValue();
+    // filter config thru event system
+    $event = new sfEvent('core.javascript.configuration', array('app' => $app));
+    sfCore::getEventDispatcher()->filter($event, $config);
+    $config = $event->getReturnValue();
 
-  return javascript_tag(sprintf('Config.add(%s);', sfJson::encode($config))) . "\n";
+    return javascript_tag(sprintf('Config.add(%s);', sfJson::encode($config))) . "\n";
 }
 
 /**
@@ -764,7 +802,7 @@ function get_javascript_configuration($options = array(), $app = null)
  */
 function use_jquery()
 {
-  use_package('jquery');
+    use_package('jquery');
 }
 
 /**
@@ -773,7 +811,7 @@ function use_jquery()
  */
 function use_jquery_ui()
 {
-  use_package('ui');
+    use_package('ui');
 }
 
 /**
@@ -783,35 +821,35 @@ function use_jquery_ui()
  */
 function use_package()
 {
-  foreach (func_get_args() as $name) {
-    foreach (sfAssetPackage::getJavascripts($name) as $javascript) {
-      $options = array();
-      if (is_array($javascript)) {
-        $options = (array) current($javascript);
-        $javascript = key($javascript);
-      }
-      $position = '';
-      if (isset($options['position'])) {
-        $position = $options['position'];
-        unset($options['position']);
-      }
-      use_javascript($javascript, $position, $options);
-    }
+    foreach (func_get_args() as $name) {
+        foreach (sfAssetPackage::getJavascripts($name) as $javascript) {
+            $options = array();
+            if (is_array($javascript)) {
+                $options = (array)current($javascript);
+                $javascript = key($javascript);
+            }
+            $position = '';
+            if (isset($options['position'])) {
+                $position = $options['position'];
+                unset($options['position']);
+            }
+            use_javascript($javascript, $position, $options);
+        }
 
-    foreach (sfAssetPackage::getStylesheets($name) as $stylesheet) {
-      $options = array();
-      if (is_array($stylesheet)) {
-        $options = (array) current($stylesheet);
-        $stylesheet = key($stylesheet);
-      }
-      $position = '';
-      if (isset($options['position'])) {
-        $position = $options['position'];
-        unset($options['position']);
-      }
-      use_stylesheet($stylesheet, $position, $options);
+        foreach (sfAssetPackage::getStylesheets($name) as $stylesheet) {
+            $options = array();
+            if (is_array($stylesheet)) {
+                $options = (array)current($stylesheet);
+                $stylesheet = key($stylesheet);
+            }
+            $position = '';
+            if (isset($options['position'])) {
+                $position = $options['position'];
+                unset($options['position']);
+            }
+            use_stylesheet($stylesheet, $position, $options);
+        }
     }
-  }
 }
 
 /**
@@ -823,10 +861,10 @@ function use_package()
  */
 function use_jquery_plugin()
 {
-  use_jquery();
-  foreach (func_get_args() as $name) {
-    use_package($name);
-  }
+    use_jquery();
+    foreach (func_get_args() as $name) {
+        use_package($name);
+    }
 }
 
 /**
@@ -835,7 +873,7 @@ function use_jquery_plugin()
  */
 function include_jquery()
 {
-  return use_jquery();
+    return use_jquery();
 }
 
 /**
@@ -843,24 +881,24 @@ function include_jquery()
  */
 function use_jquery_validation()
 {
-  use_package('validation');
+    use_package('validation');
 }
 
 /**
  * Returns a <script> include tag for the given internal URI.
  *
- * @param  string $uri       The internal URI for the dynamic javascript
- * @param  bool   $absolute  Whether to generate an absolute URL
- * @param  array  $options   An array of options
+ * @param  string $uri      The internal URI for the dynamic javascript
+ * @param  bool   $absolute Whether to generate an absolute URL
+ * @param  array  $options  An array of options
  *
  * @return string  HTML compliant <script> tag(s)
  * @see    javascript_include_tag
  */
 function dynamic_javascript_include_tag($uri, $absolute = false, $options = array())
 {
-  $options['raw'] = true;
+    $options['raw'] = true;
 
-  return javascript_include_tag(_dynamic_path($uri, $absolute), $options);
+    return javascript_include_tag(_dynamic_path($uri, $absolute), $options);
 }
 
 /**
@@ -872,9 +910,9 @@ function dynamic_javascript_include_tag($uri, $absolute = false, $options = arra
  */
 function use_dynamic_javascript($js, $position = '', $options = array())
 {
-  $options['raw'] = true;
+    $options['raw'] = true;
 
-  return use_javascript(_dynamic_path($js), $position, $options);
+    return use_javascript(_dynamic_path($js), $position, $options);
 }
 
 /**
@@ -886,21 +924,22 @@ function use_dynamic_javascript($js, $position = '', $options = array())
  */
 function use_dynamic_stylesheet($css, $position = '', $options = array())
 {
-  $options['raw'] = true;
+    $options['raw'] = true;
 
-  return use_stylesheet(_dynamic_path($css), $position, $options);
+    return use_stylesheet(_dynamic_path($css), $position, $options);
 }
 
 /**
  * Returns url for the internal $uri
  *
- * @param string $uri Internal uri
+ * @param string  $uri      Internal uri
  * @param boolean $absolute Absolute url?
+ *
  * @return string
  */
 function _dynamic_path($uri, $absolute = false)
 {
-  return url_for($uri, $absolute);
+    return url_for($uri, $absolute);
 }
 
 /**
@@ -908,32 +947,34 @@ function _dynamic_path($uri, $absolute = false)
  *
  * @param string $tag
  * @param string $string
+ *
  * @return string
  */
 function apply_filters($tag, $string)
 {
-  if(sfContext::hasInstance()
-      && sfContext::getInstance()->hasService('text_filters_registry'))
-  {
-    return sfContext::getInstance()
+    if (sfContext::hasInstance()
+        && sfContext::getInstance()->hasService('text_filters_registry')
+    ) {
+        return sfContext::getInstance()
             ->getService('text_filters_registry')
             ->apply($tag, $string);
-  }
+    }
 
-  return $string;
+    return $string;
 }
 
 /**
  * Replaces constants with modifiers. Allows to use constants in paths.
  *
  * @param string $value
+ *
  * @internal
  */
 function _replace_constants($value)
 {
-  if (strpos($value, '%') !== false) {
-    return sfAssetPackage::replaceVariables($value);
-  }
+    if (strpos($value, '%') !== false) {
+        return sfAssetPackage::replaceVariables($value);
+    }
 
-  return $value;
+    return $value;
 }

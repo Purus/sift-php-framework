@@ -14,21 +14,25 @@
  */
 class sfFormManager
 {
-  /**
-   * Returns form instance based on its name.
-   *
-   * @param string $name
-   * @return myForm
-   */
-  public static function getForm($name, $defaults = array(), $options = array(),
-                                 $CSRFSecret = null)
-  {
-    $formClass = $name.'Form';
-    if (!class_exists($formClass = $name.'Form') && !class_exists($formClass = $name)) {
-      throw new sfException(sprintf('The form manager has no "%s" form.', $formClass));
-    }
+    /**
+     * Returns form instance based on its name.
+     *
+     * @param string $name
+     *
+     * @return myForm
+     */
+    public static function getForm(
+        $name,
+        $defaults = array(),
+        $options = array(),
+        $CSRFSecret = null
+    ) {
+        $formClass = $name . 'Form';
+        if (!class_exists($formClass = $name . 'Form') && !class_exists($formClass = $name)) {
+            throw new sfException(sprintf('The form manager has no "%s" form.', $formClass));
+        }
 
-    return new $formClass($defaults, $options, $CSRFSecret);
-  }
+        return new $formClass($defaults, $options, $CSRFSecret);
+    }
 
 }

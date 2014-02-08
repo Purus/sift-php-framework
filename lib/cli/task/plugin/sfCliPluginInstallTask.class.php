@@ -14,31 +14,36 @@
  */
 class sfCliPluginInstallTask extends sfCliPluginBaseTask
 {
-  /**
-   * @see sfCliTask
-   */
-  protected function configure()
-  {
-    $this->addArguments(array(
-        new sfCliCommandArgument('name', sfCliCommandArgument::REQUIRED, 'The plugin name'),
-    ));
+    /**
+     * @see sfCliTask
+     */
+    protected function configure()
+    {
+        $this->addArguments(
+            array(
+                new sfCliCommandArgument('name', sfCliCommandArgument::REQUIRED, 'The plugin name'),
+            )
+        );
 
-    $this->addOptions(array(
-        new sfCliCommandOption('stability', 's', sfCliCommandOption::PARAMETER_REQUIRED, 'The preferred stability (stable, beta, alpha)', null),
-        new sfCliCommandOption('release', 'r', sfCliCommandOption::PARAMETER_REQUIRED, 'The preferred version', null),
-        new sfCliCommandOption('channel', 'c', sfCliCommandOption::PARAMETER_REQUIRED, 'The PEAR channel name', null),
-        new sfCliCommandOption('install-deps', 'd', sfCliCommandOption::PARAMETER_NONE, 'Whether to force installation of required dependencies', null),
-        new sfCliCommandOption('force-license', null, sfCliCommandOption::PARAMETER_NONE, 'Whether to force installation even if the license is not MIT like'),
-    ));
+        $this->addOptions(
+            array(
+                new sfCliCommandOption('stability', 's', sfCliCommandOption::PARAMETER_REQUIRED, 'The preferred stability (stable, beta, alpha)', null),
+                new sfCliCommandOption('release', 'r', sfCliCommandOption::PARAMETER_REQUIRED, 'The preferred version', null),
+                new sfCliCommandOption('channel', 'c', sfCliCommandOption::PARAMETER_REQUIRED, 'The PEAR channel name', null),
+                new sfCliCommandOption('install-deps', 'd', sfCliCommandOption::PARAMETER_NONE, 'Whether to force installation of required dependencies', null),
+                new sfCliCommandOption('force-license', null, sfCliCommandOption::PARAMETER_NONE, 'Whether to force installation even if the license is not MIT like'),
+            )
+        );
 
-    $this->namespace = 'plugin';
-    $this->name = 'install';
+        $this->namespace = 'plugin';
+        $this->name = 'install';
 
-    $this->briefDescription = 'Installs a plugin';
+        $this->briefDescription = 'Installs a plugin';
 
-    $scriptName = $this->environment->get('script_name');
+        $scriptName = $this->environment->get('script_name');
 
-    $this->detailedDescription = <<<EOF
+        $this->detailedDescription
+            = <<<EOF
 The [plugin:install|INFO] task installs a plugin:
 
   [{$scriptName} plugin:install myGuardPlugin|INFO]
@@ -81,37 +86,43 @@ If the plugin contains some web content (images, stylesheets or javascripts),
 the task creates a [%name%|COMMENT] symbolic link for those assets under [web/|COMMENT].
 On Windows, the task copy all the files to the [web/%name%|COMMENT] directory.
 EOF;
-  }
-
-  /**
-   * @see sfCliTask
-   */
-  protected function execute($arguments = array(), $options = array())
-  {
-    $this->logSection($this->getFullName(), sprintf('Installing plugin "%s"', $arguments['name']));
-
-    $options['version'] = $options['release'];
-    unset($options['release']);
-
-    // license compatible?
-    if (!$options['force-license']) {
-      try {
-        $license = $this->getPluginManager()->getPluginLicense($arguments['name'], $options);
-      } catch (Exception $e) {
-        throw new sfCliCommandException(sprintf('%s (use --force-license to force installation)', $e->getMessage()));
-      }
-
-      if (false !== $license) {
-        $temp = trim(str_replace('license', '', strtolower($license)));
-        if (null !== $license && !in_array($temp, array('mit', 'bsd', 'lgpl', 'php', 'apache'))) {
-          throw new sfCliCommandException(sprintf('The license of this plugin "%s" is not MIT like (use --force-license to force installation).', $license));
-        }
-      }
     }
 
-    $this->getPluginManager()->installPlugin($arguments['name'], $options);
+    /**
+     * @see sfCliTask
+     */
+    protected function execute($arguments = array(), $options = array())
+    {
+        $this->logSection($this->getFullName(), sprintf('Installing plugin "%s"', $arguments['name']));
 
-    $this->logSection($this->getFullName(), 'Done.');
-  }
+        $options['version'] = $options['release'];
+        unset($options['release']);
+
+        // license compatible?
+        if (!$options['force-license']) {
+            try {
+                $license = $this->getPluginManager()->getPluginLicense($arguments['name'], $options);
+            } catch (Exception $e) {
+                throw new sfCliCommandException(sprintf(
+                    '%s (use --force-license to force installation)',
+                    $e->getMessage()
+                ));
+            }
+
+            if (false !== $license) {
+                $temp = trim(str_replace('license', '', strtolower($license)));
+                if (null !== $license && !in_array($temp, array('mit', 'bsd', 'lgpl', 'php', 'apache'))) {
+                    throw new sfCliCommandException(sprintf(
+                        'The license of this plugin "%s" is not MIT like (use --force-license to force installation).',
+                        $license
+                    ));
+                }
+            }
+        }
+
+        $this->getPluginManager()->installPlugin($arguments['name'], $options);
+
+        $this->logSection($this->getFullName(), 'Done.');
+    }
 
 }

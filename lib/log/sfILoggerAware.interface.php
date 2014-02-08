@@ -9,24 +9,25 @@
 /**
  * Logger aware interface
  *
- * @package Sift
+ * @package    Sift
  * @subpackage log
  */
 interface sfILoggerAware
 {
-  /**
-   * Sets a logger instance on the object
-   *
-   * @param sfILogger $logger
-   * @return null
-   */
-  public function setLogger(sfILogger $logger = null);
+    /**
+     * Sets a logger instance on the object
+     *
+     * @param sfILogger $logger
+     *
+     * @return null
+     */
+    public function setLogger(sfILogger $logger = null);
 
-  /**
-   * Returns the logger
-   *
-   * @return sfILogger
-   */
-  public function getLogger();
+    /**
+     * Returns the logger
+     *
+     * @return sfILogger
+     */
+    public function getLogger();
 
 }

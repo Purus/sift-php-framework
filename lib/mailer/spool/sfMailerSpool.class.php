@@ -12,4 +12,6 @@
  * @package    Sift
  * @subpackage mailer
  */
-abstract class sfMailerSpool extends sfConfigurable implements Swift_Spool {}
+abstract class sfMailerSpool extends sfConfigurable implements Swift_Spool
+{
+}

@@ -20,11 +20,11 @@
  */
 function admin_app_url()
 {
-  $url    = 'admin.' . sfContext::getInstance()->getRequest()->getBaseDomain();
-  $script = $_SERVER['SCRIPT_NAME'];
-  if ($script == '/index.php') {
-    $script = '/';
-  }
+    $url = 'admin.' . sfContext::getInstance()->getRequest()->getBaseDomain();
+    $script = $_SERVER['SCRIPT_NAME'];
+    if ($script == '/index.php') {
+        $script = '/';
+    }
 
-  return 'http://' . $url . $script;
+    return 'http://' . $url . $script;
 }

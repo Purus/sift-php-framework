@@ -19,55 +19,55 @@
  */
 class sfNoStorage extends sfStorage
 {
-  /**
-   * @see sfIStorage
-   */
-  public function read($key)
-  {
-  }
+    /**
+     * @see sfIStorage
+     */
+    public function read($key)
+    {
+    }
 
-  /**
-   * @see sfIStorage
-   */
-  public function remove($key)
-  {
-  }
+    /**
+     * @see sfIStorage
+     */
+    public function remove($key)
+    {
+    }
 
-  /**
-   * @see sfIStorage
-   */
-  public function write($key, $data)
-  {
-  }
+    /**
+     * @see sfIStorage
+     */
+    public function write($key, $data)
+    {
+    }
 
-  /**
-   * @see sfIStorage
-   */
-  public function regenerate($destroy = false)
-  {
-    return true;
-  }
+    /**
+     * @see sfIStorage
+     */
+    public function regenerate($destroy = false)
+    {
+        return true;
+    }
 
-  /**
-   * @see sfIStorage
-   */
-  public function start()
-  {
-  }
+    /**
+     * @see sfIStorage
+     */
+    public function start()
+    {
+    }
 
-  /**
-   * @see sfIStorage
-   */
-  public function isStarted()
-  {
-    return true;
-  }
+    /**
+     * @see sfIStorage
+     */
+    public function isStarted()
+    {
+        return true;
+    }
 
-  /**
-   * @see sfIService
-   */
-  public function shutdown()
-  {
-  }
+    /**
+     * @see sfIService
+     */
+    public function shutdown()
+    {
+    }
 
 }

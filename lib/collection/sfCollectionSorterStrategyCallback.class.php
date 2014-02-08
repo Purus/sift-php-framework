@@ -14,40 +14,41 @@
  */
 class sfCollectionSorterStrategyCallback implements sfICollectionSorterStrategy
 {
-  /**
-   * Callback
-   *
-   * @var string|array|Closure
-   */
-  protected $callback;
+    /**
+     * Callback
+     *
+     * @var string|array|Closure
+     */
+    protected $callback;
 
-  /**
-   * Constructor
-   *
-   * @param string|array|sfCallbale $callback Valid callback function for sorting
-   * @throws InvalidArgumentException If callback is invalid
-   */
-  public function __construct($callback)
-  {
-    if ($callback instanceof sfCallable) {
-      $callback = $callback->getCallable();
+    /**
+     * Constructor
+     *
+     * @param string|array|sfCallbale $callback Valid callback function for sorting
+     *
+     * @throws InvalidArgumentException If callback is invalid
+     */
+    public function __construct($callback)
+    {
+        if ($callback instanceof sfCallable) {
+            $callback = $callback->getCallable();
+        }
+
+        // check the callback
+        if (!sfToolkit::isCallable($callback, false, $callableName)) {
+            throw new InvalidArgumentException(sprintf('Invalid callback "%s" given.', $callableName));
+        }
+
+        $this->callback = $callback;
     }
 
-    // check the callback
-    if (!sfToolkit::isCallable($callback, false, $callableName)) {
-      throw new InvalidArgumentException(sprintf('Invalid callback "%s" given.', $callableName));
+    /**
+     *
+     * @see sfICollectionStragegy::compareTo
+     */
+    public function compareTo($a, $b)
+    {
+        return call_user_func($this->callback, $a, $b);
     }
-
-    $this->callback = $callback;
-  }
-
-  /**
-   *
-   * @see sfICollectionStragegy::compareTo
-   */
-  public function compareTo($a, $b)
-  {
-    return call_user_func($this->callback, $a, $b);
-  }
 
 }

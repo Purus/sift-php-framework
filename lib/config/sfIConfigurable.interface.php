@@ -9,14 +9,17 @@
 /**
  * Configurable interface
  *
- * @package Sift
+ * @package    Sift
  * @subpackage config
  */
 interface sfIConfigurable
 {
-  public function getOption($name, $default = null);
-  public function setOption($name, $value);
-  public function hasOption($name);
-  public function getOptions();
+    public function getOption($name, $default = null);
+
+    public function setOption($name, $value);
+
+    public function hasOption($name);
+
+    public function getOptions();
 
 }

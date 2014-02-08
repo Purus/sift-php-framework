@@ -9,16 +9,16 @@
 /**
  * sfServiceDefinition represents a service definition.
  *
- * @package Sift
+ * @package    Sift
  * @subpackage service
  */
 class sfServiceDefinition extends sfObjectCallbackDefinition
 {
-  /**
-   * @inheritdoc
-   */
-  public static function createFromArray(array $array, $class = __CLASS__)
-  {
-    return parent::createFromArray($array, $class);
-  }
+    /**
+     * @inheritdoc
+     */
+    public static function createFromArray(array $array, $class = __CLASS__)
+    {
+        return parent::createFromArray($array, $class);
+    }
 }

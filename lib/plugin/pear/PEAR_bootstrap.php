@@ -10,7 +10,7 @@
  * Loads all dependencies from PEAR, also removed ugly E_DEPRECATED and E_STRICT notices
  * which PEAR produces
  *
- * @package Sift
+ * @package    Sift
  * @subpackage plugin_pear
  */
 

@@ -12,4 +12,6 @@
  * @package    Sift
  * @subpackage plugin
  */
-class sfPluginRecursiveDependencyException extends sfPluginException {}
+class sfPluginRecursiveDependencyException extends sfPluginException
+{
+}

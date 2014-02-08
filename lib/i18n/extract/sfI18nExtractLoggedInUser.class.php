@@ -11,24 +11,24 @@
  * strings from forms (which can be dynamically configured to display fields only
  * for logged in user)
  *
- * @package Sift
+ * @package    Sift
  * @subpackage i18n_extract
  */
 class sfI18nExtractLoggedInUser extends sfI18nExtractUser
 {
-  public function hasCredential($credential)
-  {
-    return true;
-  }
+    public function hasCredential($credential)
+    {
+        return true;
+    }
 
-  public function isAuthenticated()
-  {
-    return true;
-  }
+    public function isAuthenticated()
+    {
+        return true;
+    }
 
-  public function isLoggedIn()
-  {
-    return true;
-  }
+    public function isLoggedIn()
+    {
+        return true;
+    }
 
 }

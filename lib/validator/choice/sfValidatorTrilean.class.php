@@ -14,28 +14,28 @@
  */
 class sfValidatorTrilean extends sfValidatorBoolean
 {
-  /**
-   * @see sfValidatorBase
-   */
-  public function doClean($value)
-  {
-    if (in_array($value, $this->getOption('true_values'))) {
-      return true;
+    /**
+     * @see sfValidatorBase
+     */
+    public function doClean($value)
+    {
+        if (in_array($value, $this->getOption('true_values'))) {
+            return true;
+        }
+
+        if (in_array($value, $this->getOption('false_values'))) {
+            return false;
+        }
+
+        return null;
     }
 
-    if (in_array($value, $this->getOption('false_values'))) {
-      return false;
+    /**
+     * @see sfValidatorBase
+     */
+    public function isEmpty($value)
+    {
+        return false;
     }
-
-    return null;
-  }
-
-  /**
-   * @see sfValidatorBase
-   */
-  public function isEmpty($value)
-  {
-    return false;
-  }
 
 }

@@ -14,15 +14,15 @@
  */
 class sfConsoleLogger extends sfStreamLogger
 {
-  /**
-   * Constructor
-   *
-   * @param array $options Array of options
-   */
-  public function __construct($options = array())
-  {
-    $options['stream'] = defined('STDOUT') ? STDOUT : fopen('php://stdout', 'w');
-    parent::__construct($options);
-  }
+    /**
+     * Constructor
+     *
+     * @param array $options Array of options
+     */
+    public function __construct($options = array())
+    {
+        $options['stream'] = defined('STDOUT') ? STDOUT : fopen('php://stdout', 'w');
+        parent::__construct($options);
+    }
 
 }

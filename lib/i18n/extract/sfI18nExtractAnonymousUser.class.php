@@ -11,24 +11,24 @@
  * strings from forms (which can be dynamically configured to display fields only
  * for anonymous user)
  *
- * @package Sift
+ * @package    Sift
  * @subpackage i18n_extract
  */
 class sfI18nExtractAnonymousUser extends sfI18nExtractUser
 {
-  public function hasCredential($credential)
-  {
-    return false;
-  }
+    public function hasCredential($credential)
+    {
+        return false;
+    }
 
-  public function isAuthenticated()
-  {
-    return false;
-  }
+    public function isAuthenticated()
+    {
+        return false;
+    }
 
-  public function isLoggedIn()
-  {
-    return false;
-  }
+    public function isLoggedIn()
+    {
+        return false;
+    }
 
 }

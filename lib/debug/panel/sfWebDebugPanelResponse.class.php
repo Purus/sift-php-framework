@@ -14,33 +14,33 @@
  */
 class sfWebDebugPanelResponse extends sfWebDebugPanel
 {
-  /**
-   * @see sfWebDebugPanel
-   */
-  public function getTitle()
-  {
-    if (!$context = $this->webDebug->getContext()) {
-      return;
+    /**
+     * @see sfWebDebugPanel
+     */
+    public function getTitle()
+    {
+        if (!$context = $this->webDebug->getContext()) {
+            return;
+        }
+        $response = $context->getResponse();
+        $code = $response->getStatusCode();
+        $title = $response->getStatusText();
+
+        return sprintf('<span class="%s" title="%s">%s</span>', $code == 200 ? 'success' : 'error', $title, $code);
     }
-    $response = $context->getResponse();
-    $code = $response->getStatusCode();
-    $title = $response->getStatusText();
 
-    return sprintf('<span class="%s" title="%s">%s</span>', $code == 200 ? 'success' : 'error', $title, $code);
-  }
+    /**
+     * @see sfWebDebugPanel
+     */
+    public function getPanelTitle()
+    {
+    }
 
-  /**
-   * @see sfWebDebugPanel
-   */
-  public function getPanelTitle()
-  {
-  }
-
-  /**
-   * @see sfWebDebugPanel
-   */
-  public function getPanelContent()
-  {
-  }
+    /**
+     * @see sfWebDebugPanel
+     */
+    public function getPanelContent()
+    {
+    }
 
 }

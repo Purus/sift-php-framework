@@ -9,49 +9,57 @@
 /**
  * Builds API documentation
  *
- * @package Sift
+ * @package    Sift
  * @subpackage build
  */
-class sfCliBuildApiDocsTask extends sfCliBaseBuildTask {
+class sfCliBuildApiDocsTask extends sfCliBaseBuildTask
+{
 
-  /**
-   * @see sfCliTask
-   */
-  protected function configure()
-  {
-    $this->aliases = array();
-    $this->namespace = '';
-    $this->name = 'api-docs';
-    $this->briefDescription = 'Builds API documentation';
+    /**
+     * @see sfCliTask
+     */
+    protected function configure()
+    {
+        $this->aliases = array();
+        $this->namespace = '';
+        $this->name = 'api-docs';
+        $this->briefDescription = 'Builds API documentation';
 
-    $this->detailedDescription = <<<EOF
+        $this->detailedDescription
+            = <<<EOF
 The [api-docs|INFO] task builds API documentation using ApiGen
 
 EOF;
-  }
+    }
 
-  /**
-   * @see sfCliTask
-   */
-  protected function execute($arguments = array(), $options = array())
-  {
-    $this->logSection($this->getFullName(), 'Generating Sift API docs');
+    /**
+     * @see sfCliTask
+     */
+    protected function execute($arguments = array(), $options = array())
+    {
+        $this->logSection($this->getFullName(), 'Generating Sift API docs');
 
-    $this->build();
+        $this->build();
 
-    $this->logSection($this->getFullName(), 'Done.');
-  }
+        $this->logSection($this->getFullName(), 'Done.');
+    }
 
-  protected function build()
-  {
-    $targetDir  = realpath($this->environment->get('project_root_dir') . '/../sift_docs.git/api');
-    $libDir     = $this->environment->get('sf_sift_lib_dir');
-    $excludeDir = realpath($this->environment->get('sf_sift_lib_dir'). '/vendor').'/*';
+    protected function build()
+    {
+        $targetDir = realpath($this->environment->get('project_root_dir') . '/../sift_docs.git/api');
+        $libDir = $this->environment->get('sf_sift_lib_dir');
+        $excludeDir = realpath($this->environment->get('sf_sift_lib_dir') . '/vendor') . '/*';
 
-    $title  = 'API docs ~ Sift PHP framework';
-    passthru(sprintf('apigen --source %s --exclude %s --title %s --destination %s',
-                escapeshellarg($libDir), escapeshellarg($excludeDir),
-                escapeshellarg($title), escapeshellarg($targetDir)));
-  }
+        $title = 'API docs ~ Sift PHP framework';
+        passthru(
+            sprintf(
+                'apigen --source %s --exclude %s --title %s --destination %s',
+                escapeshellarg($libDir),
+                escapeshellarg($excludeDir),
+                escapeshellarg($title),
+                escapeshellarg($targetDir)
+            )
+        );
+    }
 
 }

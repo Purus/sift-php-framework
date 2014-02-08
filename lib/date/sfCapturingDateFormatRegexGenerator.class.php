@@ -46,48 +46,48 @@
  * For performance reasons, this class is a singleton. Use the
  * <code>getInstance()</code> method to obtain an instance.
  *
- * @package Sift
+ * @package    Sift
  * @subpackage date
  */
 class sfCapturingDateFormatRegexGenerator extends sfDateFormatRegexGenerator
 {
-  /**
-   * The current singleton instance of
-   * <code>sfCapturingDateFormatRegexGenerator</code>.
-   *
-   * @var sfCapturingDateFormatRegexGenerator
-   */
-  protected static $instance;
+    /**
+     * The current singleton instance of
+     * <code>sfCapturingDateFormatRegexGenerator</code>.
+     *
+     * @var sfCapturingDateFormatRegexGenerator
+     */
+    protected static $instance;
 
-  /**
-   *
-   * @return sfCapturingDateFormatRegexGenerator
-   */
-  public static function getInstance()
-  {
-    if (empty(self::$instance)) {
-      self::$instance = new sfCapturingDateFormatRegexGenerator();
+    /**
+     *
+     * @return sfCapturingDateFormatRegexGenerator
+     */
+    public static function getInstance()
+    {
+        if (empty(self::$instance)) {
+            self::$instance = new sfCapturingDateFormatRegexGenerator();
+        }
+
+        return self::$instance;
     }
 
-    return self::$instance;
-  }
-
-  /**
-   * Override of <code>DateFormatRegexGenerator::getDelimitedRegexPiece()</code>
-   * that uses capturing-parentheses as the delimiter, so that each part of the
-   * date string can be obtained after a match.
-   *
-   * @see sfDateFormatRegexGenerator::getDelimitedRegexPiece()
-   *
-   * @param string  $regexPiece
-   *                The regular expression piece that needs delimiters.
-   *
-   * @return        string
-   *                The resulting, properly-delimited regular expression piece.
-   */
-  protected function getDelimitedRegexPiece($regex)
-  {
-    // Capturing
-    return '(' . $regex . ')';
-  }
+    /**
+     * Override of <code>DateFormatRegexGenerator::getDelimitedRegexPiece()</code>
+     * that uses capturing-parentheses as the delimiter, so that each part of the
+     * date string can be obtained after a match.
+     *
+     * @see sfDateFormatRegexGenerator::getDelimitedRegexPiece()
+     *
+     * @param string $regexPiece
+     *                The regular expression piece that needs delimiters.
+     *
+     * @return        string
+     *                The resulting, properly-delimited regular expression piece.
+     */
+    protected function getDelimitedRegexPiece($regex)
+    {
+        // Capturing
+        return '(' . $regex . ')';
+    }
 }

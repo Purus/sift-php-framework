@@ -14,15 +14,17 @@
  */
 abstract class sfCliI18nBaseTask extends sfCliBaseTask
 {
-  /**
-   * @see sfCliTask
-   */
-  protected function configure()
-  {
-    $this->addArguments(array(
-      new sfCliCommandArgument('app', sfCliCommandArgument::REQUIRED, 'The application or plugin name'),
-      new sfCliCommandArgument('culture', sfCliCommandArgument::REQUIRED, 'The target culture'),
-    ));
-  }
+    /**
+     * @see sfCliTask
+     */
+    protected function configure()
+    {
+        $this->addArguments(
+            array(
+                new sfCliCommandArgument('app', sfCliCommandArgument::REQUIRED, 'The application or plugin name'),
+                new sfCliCommandArgument('culture', sfCliCommandArgument::REQUIRED, 'The target culture'),
+            )
+        );
+    }
 
 }

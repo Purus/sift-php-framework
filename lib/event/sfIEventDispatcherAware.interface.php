@@ -9,24 +9,25 @@
 /**
  * Event dispatcher aware interface
  *
- * @package Sift
+ * @package    Sift
  * @subpackage event
  */
 interface sfIEventDispatcherAware
 {
- /**
-  * Sets the event dispatcher
-  *
-  * @param sfEventDispatcher
-  * @return void
-  */
-  public function setEventDispatcher(sfEventDispatcher $dispatcher = null);
+    /**
+     * Sets the event dispatcher
+     *
+     * @param sfEventDispatcher
+     *
+     * @return void
+     */
+    public function setEventDispatcher(sfEventDispatcher $dispatcher = null);
 
-  /**
-   * Returns the event dispatcher instance
-   *
-   * @return sfEventDispatcher|null
-   */
-  public function getEventDispatcher();
+    /**
+     * Returns the event dispatcher instance
+     *
+     * @return sfEventDispatcher|null
+     */
+    public function getEventDispatcher();
 
 }

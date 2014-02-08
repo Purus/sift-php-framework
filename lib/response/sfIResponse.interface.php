@@ -9,29 +9,30 @@
 /**
  * sfIResponse interface for response objects
  *
- * @package Sift
+ * @package    Sift
  * @subpackage response
  */
 interface sfIResponse extends Serializable, sfIService, sfIConfigurable
 {
-  /**
-   * Sets the response content
-   *
-   * @param string Content
-   * @return sfResponse
-   */
-  public function setContent($content);
+    /**
+     * Sets the response content
+     *
+     * @param string Content
+     *
+     * @return sfResponse
+     */
+    public function setContent($content);
 
-  /**
-   * Gets the current response content
-   *
-   * @return string Content
-   */
-  public function getContent();
+    /**
+     * Gets the current response content
+     *
+     * @return string Content
+     */
+    public function getContent();
 
-  /**
-   * Sends the response to the client
-   */
-  public function send();
+    /**
+     * Sends the response to the client
+     */
+    public function send();
 
 }

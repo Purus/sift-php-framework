@@ -9,11 +9,11 @@
 /**
  * Culture export interface
  *
- * @package Sift
+ * @package    Sift
  * @subpackage i18n_export
  */
 interface sfICultureExport
 {
-  public function export();
+    public function export();
 
 }

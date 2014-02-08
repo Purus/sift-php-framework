@@ -12,4 +12,6 @@
  * @package    Sift
  * @subpackage form_widget
  */
-class sfWidgetFormDateTimeRange extends sfWidgetFormDateRange {}
+class sfWidgetFormDateTimeRange extends sfWidgetFormDateRange
+{
+}

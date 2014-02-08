@@ -15,202 +15,218 @@
  */
 class sfEventDispatcher implements sfIService
 {
-  /**
-   * Listeners
-   *
-   * @var array
-   */
-  protected $listeners = array();
+    /**
+     * Listeners
+     *
+     * @var array
+     */
+    protected $listeners = array();
 
-  /**
-   * Default priority
-   *
-   */
-  const DEFAULT_PRIORITY = 10;
+    /**
+     * Default priority
+     *
+     */
+    const DEFAULT_PRIORITY = 10;
 
-  /**
-   * Connects a listener to a given event name.
-   *
-   * @param string  $name      An event name
-   * @param mixed   $listener  A PHP callable
-   * @param integer $priority  Priority
-   *
-   * @return sfEventDispatcher
-   */
-  public function connect($name, $listener, $priority = self::DEFAULT_PRIORITY)
-  {
-    if (!isset($this->listeners[$name])) {
-      $this->listeners[$name] = array();
-    }
-
-    $priority = (int) $priority;
-
-    if (!isset($this->listeners[$name][$priority])) {
-      $this->listeners[$name][$priority] = array();
-    }
-
-    $this->listeners[$name][$priority][] = $listener;
-
-    return $this;
-  }
-
-  /**
-   * Disconnects a listener for a given event name.
-   *
-   * @param string   $name      An event name
-   * @param mixed    $listener  A PHP callable
-   *
-   * @return mixed false if listener does not exist, true otherwise
-   */
-  public function disconnect($name, $listener)
-  {
-    if (!isset($this->listeners[$name])) {
-      return false;
-    }
-
-    foreach ($this->listeners[$name] as $priority => $listeners) {
-      foreach ($listeners as $index => $callable) {
-        if ($listener === $callable) {
-          unset($this->listeners[$name][$priority][$index]);
-
-          return true;
+    /**
+     * Connects a listener to a given event name.
+     *
+     * @param string  $name     An event name
+     * @param mixed   $listener A PHP callable
+     * @param integer $priority Priority
+     *
+     * @return sfEventDispatcher
+     */
+    public function connect($name, $listener, $priority = self::DEFAULT_PRIORITY)
+    {
+        if (!isset($this->listeners[$name])) {
+            $this->listeners[$name] = array();
         }
-      }
-    }
 
-    return false;
-  }
+        $priority = (int)$priority;
 
-  /**
-   * Notifies all listeners of a given event.
-   *
-   * @param myEvent $event A myEvent instance
-   *
-   * @return myEvent The myEvent instance
-   */
-  public function notify($event)
-  {
-    if (sfConfig::get('sf_logging_enabled')) {
-      sfLogger::getInstance()->log('{sfEventDispatcher} Notifying of "{name}" event.', sfILogger::DEBUG, array(
-        'name' => $event->getName()
-      ));
-    }
-    foreach ($this->getListeners($event->getName()) as $priority => $listeners) {
-      foreach ($listeners as $listener) {
-        if (!sfToolkit::isCallable($listener, false, $callableName)) {
-          throw new sfException(sprintf('Invalid callable "%s" listens to "%s"', $callableName, $event->getName()));
+        if (!isset($this->listeners[$name][$priority])) {
+            $this->listeners[$name][$priority] = array();
         }
-        call_user_func($listener, $event);
-      }
+
+        $this->listeners[$name][$priority][] = $listener;
+
+        return $this;
     }
 
-    return $event;
-  }
-
-  /**
-   * Notifies all listeners of a given event until one returns a non null value.
-   *
-   * @param  myEvent $event A myEvent instance
-   *
-   * @return myEvent The myEvent instance
-   */
-  public function notifyUntil($event)
-  {
-    if (sfConfig::get('sf_logging_enabled')) {
-      sfLogger::getInstance()->log('{sfEventDispatcher} Notifying until of "{name}" event', sfILogger::DEBUG, array(
-        'name' => $event->getName()
-      ));
-    }
-    foreach ($this->getListeners($event->getName()) as $priority => $listeners) {
-      foreach ($listeners as $listener) {
-        if (call_user_func($listener, $event)) {
-          $event->setProcessed(true);
-          break 2;
+    /**
+     * Disconnects a listener for a given event name.
+     *
+     * @param string $name     An event name
+     * @param mixed  $listener A PHP callable
+     *
+     * @return mixed false if listener does not exist, true otherwise
+     */
+    public function disconnect($name, $listener)
+    {
+        if (!isset($this->listeners[$name])) {
+            return false;
         }
-      }
+
+        foreach ($this->listeners[$name] as $priority => $listeners) {
+            foreach ($listeners as $index => $callable) {
+                if ($listener === $callable) {
+                    unset($this->listeners[$name][$priority][$index]);
+
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
-    return $event;
-  }
+    /**
+     * Notifies all listeners of a given event.
+     *
+     * @param myEvent $event A myEvent instance
+     *
+     * @return myEvent The myEvent instance
+     */
+    public function notify($event)
+    {
+        if (sfConfig::get('sf_logging_enabled')) {
+            sfLogger::getInstance()->log(
+                '{sfEventDispatcher} Notifying of "{name}" event.',
+                sfILogger::DEBUG,
+                array(
+                    'name' => $event->getName()
+                )
+            );
+        }
+        foreach ($this->getListeners($event->getName()) as $priority => $listeners) {
+            foreach ($listeners as $listener) {
+                if (!sfToolkit::isCallable($listener, false, $callableName)) {
+                    throw new sfException(sprintf(
+                        'Invalid callable "%s" listens to "%s"',
+                        $callableName,
+                        $event->getName()
+                    ));
+                }
+                call_user_func($listener, $event);
+            }
+        }
 
-  /**
-   * Filters a value by calling all listeners of a given event.
-   *
-   * @param  myEvent  $event   A myEvent instance
-   * @param  mixed    $value   The value to be filtered
-   *
-   * @return myEvent The myEvent instance
-   */
-  public function filter($event, $value)
-  {
-    if (sfConfig::get('sf_logging_enabled')) {
-      sfLogger::getInstance()->log('{sfEventDispatcher} Filtering value by "{name}" event', sfILogger::DEBUG, array(
-        'name' => $event->getName()
-      ));
-    }
-    foreach ($this->getListeners($event->getName()) as $priority => $listeners) {
-      foreach ($listeners as $listener) {
-        $value = call_user_func_array($listener, array($event, $value));
-      }
-    }
-    $event->setReturnValue($value);
-
-    return $event;
-  }
-
-  /**
-   * Returns true if the given event name has some listeners.
-   *
-   * @param  string   $name    The event name
-   *
-   * @return Boolean true if some listeners are connected, false otherwise
-   */
-  public function hasListeners($name)
-  {
-    if (!isset($this->listeners[$name])) {
-      $this->listeners[$name] = array();
+        return $event;
     }
 
-    return (boolean) count($this->listeners[$name]);
-  }
+    /**
+     * Notifies all listeners of a given event until one returns a non null value.
+     *
+     * @param  myEvent $event A myEvent instance
+     *
+     * @return myEvent The myEvent instance
+     */
+    public function notifyUntil($event)
+    {
+        if (sfConfig::get('sf_logging_enabled')) {
+            sfLogger::getInstance()->log(
+                '{sfEventDispatcher} Notifying until of "{name}" event',
+                sfILogger::DEBUG,
+                array(
+                    'name' => $event->getName()
+                )
+            );
+        }
+        foreach ($this->getListeners($event->getName()) as $priority => $listeners) {
+            foreach ($listeners as $listener) {
+                if (call_user_func($listener, $event)) {
+                    $event->setProcessed(true);
+                    break 2;
+                }
+            }
+        }
 
-  /**
-   * Returns all listeners associated with a given event name.
-   *
-   * @param  string   $name    The event name
-   *
-   * @return array  An array of listeners
-   */
-  public function getListeners($name)
-  {
-    if (!isset($this->listeners[$name])) {
-      return array();
+        return $event;
     }
-    $listeners = $this->listeners[$name];
-    // sort by priority
-    krsort($listeners);
 
-    return $listeners;
-  }
+    /**
+     * Filters a value by calling all listeners of a given event.
+     *
+     * @param  myEvent $event A myEvent instance
+     * @param  mixed   $value The value to be filtered
+     *
+     * @return myEvent The myEvent instance
+     */
+    public function filter($event, $value)
+    {
+        if (sfConfig::get('sf_logging_enabled')) {
+            sfLogger::getInstance()->log(
+                '{sfEventDispatcher} Filtering value by "{name}" event',
+                sfILogger::DEBUG,
+                array(
+                    'name' => $event->getName()
+                )
+            );
+        }
+        foreach ($this->getListeners($event->getName()) as $priority => $listeners) {
+            foreach ($listeners as $listener) {
+                $value = call_user_func_array($listener, array($event, $value));
+            }
+        }
+        $event->setReturnValue($value);
 
-  /**
-   * Clears all listeners
-   *
-   * @return sfEventDispatcher
-   */
-  public function clear()
-  {
-    $this->listeners = array();
+        return $event;
+    }
 
-    return $this;
-  }
+    /**
+     * Returns true if the given event name has some listeners.
+     *
+     * @param  string $name The event name
+     *
+     * @return Boolean true if some listeners are connected, false otherwise
+     */
+    public function hasListeners($name)
+    {
+        if (!isset($this->listeners[$name])) {
+            $this->listeners[$name] = array();
+        }
 
-  /**
-   * Shutdown
-   */
-  public function shutdown()
-  {
-    $this->clear();
-  }
+        return (boolean)count($this->listeners[$name]);
+    }
+
+    /**
+     * Returns all listeners associated with a given event name.
+     *
+     * @param  string $name The event name
+     *
+     * @return array  An array of listeners
+     */
+    public function getListeners($name)
+    {
+        if (!isset($this->listeners[$name])) {
+            return array();
+        }
+        $listeners = $this->listeners[$name];
+        // sort by priority
+        krsort($listeners);
+
+        return $listeners;
+    }
+
+    /**
+     * Clears all listeners
+     *
+     * @return sfEventDispatcher
+     */
+    public function clear()
+    {
+        $this->listeners = array();
+
+        return $this;
+    }
+
+    /**
+     * Shutdown
+     */
+    public function shutdown()
+    {
+        $this->clear();
+    }
 
 }

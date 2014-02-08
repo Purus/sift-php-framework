@@ -12,4 +12,6 @@
  * @package    Sift
  * @subpackage action
  */
-class myWizardComponents extends sfWizardComponents {}
+class myWizardComponents extends sfWizardComponents
+{
+}

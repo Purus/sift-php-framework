@@ -17,31 +17,31 @@ require_once dirname(__FILE__) . '/PEAR_bootstrap.php';
  */
 class sfPearPackager extends PEAR_Packager
 {
-  protected $logger;
+    protected $logger;
 
-  public function setLogger(sfILogger $logger = null)
-  {
-    $this->logger = $logger;
-  }
-
-  /**
-   * Logging method.
-   *
-   * @param int    $level  log level (0 is quiet, higher is noisier)
-   * @param string $msg    message to write to the log
-   *
-   * @return void
-   *
-   * @access public
-   * @static
-   */
-  public function log($level, $msg, $append_crlf = true)
-  {
-    if ($this->logger) {
-      $this->logger->log('pear-packager: ' . $msg, $level);
-    } else {
-      echo $msg . "\n";
+    public function setLogger(sfILogger $logger = null)
+    {
+        $this->logger = $logger;
     }
-  }
+
+    /**
+     * Logging method.
+     *
+     * @param int    $level log level (0 is quiet, higher is noisier)
+     * @param string $msg   message to write to the log
+     *
+     * @return void
+     *
+     * @access public
+     * @static
+     */
+    public function log($level, $msg, $append_crlf = true)
+    {
+        if ($this->logger) {
+            $this->logger->log('pear-packager: ' . $msg, $level);
+        } else {
+            echo $msg . "\n";
+        }
+    }
 
 }

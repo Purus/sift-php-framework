@@ -9,26 +9,26 @@
 /**
  * Antivirus interface
  *
- * @package Sift
+ * @package    Sift
  * @subpackage antivirus
  */
 interface sfIAntivirus
 {
-  /**
-   * File is clean
-   */
-  const STATUS_CLEAN = 'OK';
+    /**
+     * File is clean
+     */
+    const STATUS_CLEAN = 'OK';
 
-  /**
-   * File is infected
-   */
-  const STATUS_INFECTED = 'INFECTED';
+    /**
+     * File is infected
+     */
+    const STATUS_INFECTED = 'INFECTED';
 
-  /**
-   * Scans object
-   *
-   * @param string $object
-   */
-  public function scan($object);
+    /**
+     * Scans object
+     *
+     * @param string $object
+     */
+    public function scan($object);
 
 }

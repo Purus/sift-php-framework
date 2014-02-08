@@ -14,8 +14,8 @@
  */
 class sfWidgetFormSchemaFormatterTable extends sfWidgetFormSchemaFormatter
 {
-  protected $rowFormat       = "<tr>\n  <th>%label%</th>\n  <td>%error%%field%%help%%hidden_fields%</td>\n</tr>\n",
-    $errorRowFormat  = "<tr><td colspan=\"2\">\n%errors%</td></tr>\n",
-    $helpFormat      = '<br />%help%',
-    $decoratorFormat = "<table>\n  %content%</table>";
+    protected $rowFormat = "<tr>\n  <th>%label%</th>\n  <td>%error%%field%%help%%hidden_fields%</td>\n</tr>\n",
+        $errorRowFormat = "<tr><td colspan=\"2\">\n%errors%</td></tr>\n",
+        $helpFormat = '<br />%help%',
+        $decoratorFormat = "<table>\n  %content%</table>";
 }

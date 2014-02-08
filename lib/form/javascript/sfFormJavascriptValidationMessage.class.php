@@ -9,111 +9,113 @@
 /**
  * sfFormJavascriptValidationMessage represents a message used for javascript validation
  *
- * @package Sift
+ * @package    Sift
  * @subpackage form_javascript
  */
 class sfFormJavascriptValidationMessage implements sfIJsonSerializable
 {
-  /**
-   * Message
-   *
-   * @var string
-   */
-  public $message = '';
+    /**
+     * Message
+     *
+     * @var string
+     */
+    public $message = '';
 
-  /**
-   * Parameters for translation
-   *
-   * @var array
-   */
-  public $parameters = array();
+    /**
+     * Parameters for translation
+     *
+     * @var array
+     */
+    public $parameters = array();
 
-  /**
-   * Constructs the object
-   *
-   * @param string $message Message
-   * @param array $parameters Array of parameters for translation string
-   */
-  public function __construct($message, $parameters = array())
-  {
-    $this->message = (string) $message;
-    $this->parameters = (array) ($parameters);
-  }
+    /**
+     * Constructs the object
+     *
+     * @param string $message    Message
+     * @param array  $parameters Array of parameters for translation string
+     */
+    public function __construct($message, $parameters = array())
+    {
+        $this->message = (string)$message;
+        $this->parameters = (array)($parameters);
+    }
 
-  /**
-   * Sets the message
-   *
-   * @param string $message
-   * @return sfFormJavascriptValidationMessage
-   */
-  public function setMessage($message)
-  {
-    $this->message = $message;
+    /**
+     * Sets the message
+     *
+     * @param string $message
+     *
+     * @return sfFormJavascriptValidationMessage
+     */
+    public function setMessage($message)
+    {
+        $this->message = $message;
 
-    return $this;
-  }
+        return $this;
+    }
 
-  /**
-   * Returns message
-   *
-   * @return string
-   */
-  public function getMessage()
-  {
-    return $this->message;
-  }
+    /**
+     * Returns message
+     *
+     * @return string
+     */
+    public function getMessage()
+    {
+        return $this->message;
+    }
 
-  /**
-   * Converts the object to string
-   *
-   * @return string
-   */
-  public function __toString()
-  {
-    return strtr($this->message, $this->parameters);
-  }
+    /**
+     * Converts the object to string
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+        return strtr($this->message, $this->parameters);
+    }
 
-  /**
-   * Serialize to JSON
-   *
-   * @return string
-   */
-  public function jsonSerialize()
-  {
-    return $this->__toString();
-  }
+    /**
+     * Serialize to JSON
+     *
+     * @return string
+     */
+    public function jsonSerialize()
+    {
+        return $this->__toString();
+    }
 
-  /**
-   * Returns an array of parameters
-   *
-   * @return array
-   */
-  public function getParameters()
-  {
-    return $this->parameters;
-  }
+    /**
+     * Returns an array of parameters
+     *
+     * @return array
+     */
+    public function getParameters()
+    {
+        return $this->parameters;
+    }
 
-  /**
-   * Has any parameters?
-   *
-   * @return boolean
-   */
-  public function hasParameters()
-  {
-    return (count($this->parameters) > 0);
-  }
+    /**
+     * Has any parameters?
+     *
+     * @return boolean
+     */
+    public function hasParameters()
+    {
+        return (count($this->parameters) > 0);
+    }
 
-  /**
-   * Sets translation parameters
-   *
-   * @param array $parameters Array of translation parameters
-   * @return sfFormJavascriptValidationMessage
-   */
-  public function setParameters(array $parameters)
-  {
-    $this->parameters = $parameters;
+    /**
+     * Sets translation parameters
+     *
+     * @param array $parameters Array of translation parameters
+     *
+     * @return sfFormJavascriptValidationMessage
+     */
+    public function setParameters(array $parameters)
+    {
+        $this->parameters = $parameters;
 
-    return $this;
-  }
+        return $this;
+    }
 
 }

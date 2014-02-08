@@ -17,14 +17,20 @@ require_once dirname(__FILE__) . '/PEAR_bootstrap.php';
  */
 class sfPearRest extends PEAR_REST
 {
-  /**
-   * @see PEAR_REST::downloadHttp()
-   */
-  public function downloadHttp($url, $lastmodified = null, $accept = false, $channel = false)
-  {
-    return parent::downloadHttp($url, $lastmodified, array_merge(
-            false !== $accept ? $accept : array(),
-            array(/*"\r\nX-SIFT-VERSION: " . SIFT_VERSION*/)), $channel);
-  }
+    /**
+     * @see PEAR_REST::downloadHttp()
+     */
+    public function downloadHttp($url, $lastmodified = null, $accept = false, $channel = false)
+    {
+        return parent::downloadHttp(
+            $url,
+            $lastmodified,
+            array_merge(
+                false !== $accept ? $accept : array(),
+                array( /*"\r\nX-SIFT-VERSION: " . SIFT_VERSION*/)
+            ),
+            $channel
+        );
+    }
 
 }

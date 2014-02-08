@@ -31,60 +31,68 @@
  */
 class sfWidgetFormReCaptcha extends sfWidgetForm
 {
-  /**
-   * Configures the current widget.
-   *
-   * Available options:
-   *
-   *  * public_key:     The ReCaptcha public key
-   *  * use_ssl:        Whether to use SSL or not (false by default)
-   *  * server_url:     The URL for the HTTP API
-   *  * server_url_ssl: The URL for the HTTPS API (when use_ssl is true)
-   *  * theme:          The ReCaptcha theme
-   *  * culture:        The ReCaptcha language
-   *
-   * @see sfWidgetForm
-   */
-  public function configure($options = array(), $messages = array())
-  {
-    $this->addRequiredOption('public_key');
+    /**
+     * Configures the current widget.
+     *
+     * Available options:
+     *
+     *  * public_key:     The ReCaptcha public key
+     *  * use_ssl:        Whether to use SSL or not (false by default)
+     *  * server_url:     The URL for the HTTP API
+     *  * server_url_ssl: The URL for the HTTPS API (when use_ssl is true)
+     *  * theme:          The ReCaptcha theme
+     *  * culture:        The ReCaptcha language
+     *
+     * @see sfWidgetForm
+     */
+    public function configure($options = array(), $messages = array())
+    {
+        $this->addRequiredOption('public_key');
 
-    $this->addOption('use_ssl', false);
-    $this->addOption('server_url', 'http://api.recaptcha.net');
-    $this->addOption('server_url_ssl', 'https://api-secure.recaptcha.net');
-    $this->addOption('theme', 'clean');
-    $this->addOption('culture', 'en');
-  }
+        $this->addOption('use_ssl', false);
+        $this->addOption('server_url', 'http://api.recaptcha.net');
+        $this->addOption('server_url_ssl', 'https://api-secure.recaptcha.net');
+        $this->addOption('theme', 'clean');
+        $this->addOption('culture', 'en');
+    }
 
-  /**
-   * @see sfWidgetForm
-   */
-  public function render($name, $value = null, $attributes = array(), $errors = array())
-  {
-    $server = $this->getServerUrl();
-    $key = $this->getOption('public_key');
-    $theme = $this->getOption('theme');
-    $culture = $this->getOption('culture');
+    /**
+     * @see sfWidgetForm
+     */
+    public function render($name, $value = null, $attributes = array(), $errors = array())
+    {
+        $server = $this->getServerUrl();
+        $key = $this->getOption('public_key');
+        $theme = $this->getOption('theme');
+        $culture = $this->getOption('culture');
 
-    return sprintf('
-    <script type="text/javascript">
-    var RecaptchaOptions = {
-    theme : \'%s\',
-    lang : \'%s\'
-    };
-    </script>
-    <script type="text/javascript" src="%s/challenge?k=%s"></script>
-    <noscript>
-      <iframe src="%s/noscript?k=%s" height="300" width="500" frameborder="0"></iframe><br />
-      <textarea name="recaptcha_challenge_field" rows="3" cols="40"></textarea>
-      <input type="hidden" name="recaptcha_response_field" value="manual_challenge" />
-    </noscript>
-    ', $theme, $culture, $server, $key, $server, $key);
-  }
+        return sprintf(
+            '
+                <script type="text/javascript">
+                var RecaptchaOptions = {
+                theme : \'%s\',
+                lang : \'%s\'
+                };
+                </script>
+                <script type="text/javascript" src="%s/challenge?k=%s"></script>
+                <noscript>
+                  <iframe src="%s/noscript?k=%s" height="300" width="500" frameborder="0"></iframe><br />
+                  <textarea name="recaptcha_challenge_field" rows="3" cols="40"></textarea>
+                  <input type="hidden" name="recaptcha_response_field" value="manual_challenge" />
+                </noscript>
+                ',
+            $theme,
+            $culture,
+            $server,
+            $key,
+            $server,
+            $key
+        );
+    }
 
-  protected function getServerUrl()
-  {
-    return $this->getOption('use_ssl') ? $this->getOption('server_url_ssl') : $this->getOption('server_url');
-  }
+    protected function getServerUrl()
+    {
+        return $this->getOption('use_ssl') ? $this->getOption('server_url_ssl') : $this->getOption('server_url');
+    }
 
 }

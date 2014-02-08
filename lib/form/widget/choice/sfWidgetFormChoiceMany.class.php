@@ -14,17 +14,17 @@
  */
 class sfWidgetFormChoiceMany extends sfWidgetFormChoice
 {
-  /**
-   * @param array $options     An array of options
-   * @param array $attributes  An array of default HTML attributes
-   *
-   * @see sfWidgetFormChoice
-   */
-  protected function configure($options = array(), $attributes = array())
-  {
-    parent::configure($options, $attributes);
+    /**
+     * @param array $options    An array of options
+     * @param array $attributes An array of default HTML attributes
+     *
+     * @see sfWidgetFormChoice
+     */
+    protected function configure($options = array(), $attributes = array())
+    {
+        parent::configure($options, $attributes);
 
-    $this->setOption('multiple', true);
-  }
+        $this->setOption('multiple', true);
+    }
 
 }

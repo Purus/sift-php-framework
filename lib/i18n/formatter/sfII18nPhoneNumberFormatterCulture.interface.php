@@ -9,16 +9,16 @@
 /**
  * Culture specific phone number formatter interface
  *
- * @package Sift
+ * @package    Sift
  * @subpackage i18n
  */
 interface sfII18nPhoneNumberCultureFormatter
 {
-  /**
-   * Format the phone number without international prefix
-   *
-   * @param string $phoneNumber The number without international prefix
-   */
-  public static function format($phoneNumber);
+    /**
+     * Format the phone number without international prefix
+     *
+     * @param string $phoneNumber The number without international prefix
+     */
+    public static function format($phoneNumber);
 
 }

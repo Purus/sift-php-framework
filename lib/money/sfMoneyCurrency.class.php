@@ -9,143 +9,148 @@
 /**
  * sfMoneyCurrency
  *
- * @package Sift
+ * @package    Sift
  * @subpackage money
- * @link http://verraes.net/2011/04/fowler-money-pattern-in-php/
+ * @link       http://verraes.net/2011/04/fowler-money-pattern-in-php/
  */
 class sfMoneyCurrency
 {
-  /**
-   * Instances holder
-   *
-   * @var array
-   */
-  protected static $instances = array();
+    /**
+     * Instances holder
+     *
+     * @var array
+     */
+    protected static $instances = array();
 
-  /**
-   * Name
-   *
-   * @var string
-   */
-  protected $name;
+    /**
+     * Name
+     *
+     * @var string
+     */
+    protected $name;
 
-  /**
-   * Scale
-   *
-   * @var integer
-   */
-  public static $scale = 2;
+    /**
+     * Scale
+     *
+     * @var integer
+     */
+    public static $scale = 2;
 
-  /**
-   * Constructs the currency
-   *
-   * @param string $name
-   * @throws InvalidArgumentException
-   */
-  public function __construct($name)
-  {
-    $name = strtoupper($name);
+    /**
+     * Constructs the currency
+     *
+     * @param string $name
+     *
+     * @throws InvalidArgumentException
+     */
+    public function __construct($name)
+    {
+        $name = strtoupper($name);
 
-    if (!self::isValid($name)) {
-      throw new InvalidArgumentException(sprintf('Invalid currency "%s" given.', $name));
+        if (!self::isValid($name)) {
+            throw new InvalidArgumentException(sprintf('Invalid currency "%s" given.', $name));
+        }
+
+        $this->name = $name;
     }
 
-    $this->name = $name;
-  }
+    /**
+     * Creates new currency
+     *
+     * @param string  $name  Name of the currency
+     * @param integer $scale Scale
+     *
+     * @return sfMoneyCurrency
+     */
+    public static function create($name)
+    {
+        if (!empty($name) && class_exists($class = sprintf('sfMoneyCurrency%s', $name))) {
+            return new $class();
+        }
 
-  /**
-   * Creates new currency
-   *
-   * @param string $name Name of the currency
-   * @param integer $scale Scale
-   * @return sfMoneyCurrency
-   */
-  public static function create($name)
-  {
-    if (!empty($name) && class_exists($class = sprintf('sfMoneyCurrency%s', $name))) {
-      return new $class();
+        return new self($name);
     }
 
-    return new self($name);
-  }
-
-  /**
-   * Check if the given $currency is valid.
-   *
-   * @param string $currency The currency ISO code
-   * @return boolean True if is valid, false otherwise
-   */
-  public static function isValid($currency)
-  {
-    return sfISO4217::isValidCode($currency);
-  }
-
-  /**
-   * Returns an instance of the currency
-   *
-   * @param string $name
-   * @param integer $scale
-   * @return sfMoneyCurrency
-   */
-  public static function getInstance($name, $scale = null)
-  {
-    $key = $name . $scale;
-    if (!isset(self::$instances[$key])) {
-      self::$instances[$key] = self::create($name, $scale);
+    /**
+     * Check if the given $currency is valid.
+     *
+     * @param string $currency The currency ISO code
+     *
+     * @return boolean True if is valid, false otherwise
+     */
+    public static function isValid($currency)
+    {
+        return sfISO4217::isValidCode($currency);
     }
 
-    return self::$instances[$key];
-  }
+    /**
+     * Returns an instance of the currency
+     *
+     * @param string  $name
+     * @param integer $scale
+     *
+     * @return sfMoneyCurrency
+     */
+    public static function getInstance($name, $scale = null)
+    {
+        $key = $name . $scale;
+        if (!isset(self::$instances[$key])) {
+            self::$instances[$key] = self::create($name, $scale);
+        }
 
-  /**
-   * Returns currency name
-   *
-   * @return string
-   */
-  public function getName()
-  {
-    return $this->name;
-  }
+        return self::$instances[$key];
+    }
 
-  /**
-   * Returns scale
-   *
-   * @return string
-   */
-  public function getScale()
-  {
-    return self::$scale;
-  }
+    /**
+     * Returns currency name
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
 
-  /**
-   * To string
-   *
-   * @return string
-   */
-  public function toString()
-  {
-    return $this->name;
-  }
+    /**
+     * Returns scale
+     *
+     * @return string
+     */
+    public function getScale()
+    {
+        return self::$scale;
+    }
 
-  /**
-   * To string magic method
-   *
-   * @return string
-   */
-  public function __toString()
-  {
-    return $this->name;
-  }
+    /**
+     * To string
+     *
+     * @return string
+     */
+    public function toString()
+    {
+        return $this->name;
+    }
 
-  /**
-   * Is the $other currency the same?
-   *
-   * @param sfCurrency $other
-   * @return boolean
-   */
-  public function equals(sfMoneyCurrency $other)
-  {
-    return $this->getName() === $other->getName();
-  }
+    /**
+     * To string magic method
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->name;
+    }
+
+    /**
+     * Is the $other currency the same?
+     *
+     * @param sfCurrency $other
+     *
+     * @return boolean
+     */
+    public function equals(sfMoneyCurrency $other)
+    {
+        return $this->getName() === $other->getName();
+    }
 
 }

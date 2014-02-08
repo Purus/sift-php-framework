@@ -9,31 +9,32 @@
 /**
  * File containing the sfISearchQueryParser interface.
  *
- * @package Sift
+ * @package    Sift
  * @subpackage search
  */
 interface sfISearchQueryParser
 {
-  /**
-   * Set the query lexer
-   *
-   * @param sfISearchQueryLexer $lexer
-   */
-  public function setLexer(sfISearchQueryLexer $lexer);
+    /**
+     * Set the query lexer
+     *
+     * @param sfISearchQueryLexer $lexer
+     */
+    public function setLexer(sfISearchQueryLexer $lexer);
 
-  /**
-   * Returns the query lexer
-   *
-   * @return sfISearchQueryLexer
-   */
-  public function getLexer();
+    /**
+     * Returns the query lexer
+     *
+     * @return sfISearchQueryLexer
+     */
+    public function getLexer();
 
-  /**
-   * Parse the query
-   *
-   * @param string $query
-   * @return sfSearchQueryExpression
-   */
-  public function parse($query);
+    /**
+     * Parse the query
+     *
+     * @param string $query
+     *
+     * @return sfSearchQueryExpression
+     */
+    public function parse($query);
 
 }

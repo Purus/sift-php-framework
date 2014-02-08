@@ -14,12 +14,12 @@
  */
 interface sfICollectionSorterStrategy
 {
-  /**
-   * Returns 0 if a == b, -1 if a < b,
-   * 1 if a > b
-   *
-   * @return int
-   */
-  public function compareTo($a, $b);
+    /**
+     * Returns 0 if a == b, -1 if a < b,
+     * 1 if a > b
+     *
+     * @return int
+     */
+    public function compareTo($a, $b);
 
 }

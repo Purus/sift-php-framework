@@ -16,584 +16,629 @@
  */
 abstract class sfValidatorBase implements sfIEventDispatcherAware
 {
-  /**
-   * The event dispatcher
-   *
-   * @var sfEventDispatcher
-   */
-  protected $dispatcher;
+    /**
+     * The event dispatcher
+     *
+     * @var sfEventDispatcher
+     */
+    protected $dispatcher;
 
-  protected static $charset = 'UTF-8',
-    $globalDefaultMessages = array(
-      'invalid' => 'This value is invalid.',
-      'required' => 'This value is required.'
+    protected static $charset = 'UTF-8',
+        $globalDefaultMessages
+        = array(
+        'invalid'  => 'This value is invalid.',
+        'required' => 'This value is required.'
     );
 
-  protected $requiredOptions = array(),
-    $defaultMessages = array(),
-    $defaultOptions = array(),
-    $messages = array(),
-    $options = array();
+    protected $requiredOptions = array(),
+        $defaultMessages = array(),
+        $defaultOptions = array(),
+        $messages = array(),
+        $options = array();
 
-  /**
-   * Constructor.
-   *
-   * Available options:
-   *
-   *  * required:    true if the value is required, false otherwise (default to true)
-   *  * trim:        true if the value must be trimmed, false otherwise (default to false)
-   *  * empty_value: empty value when value is not required
-   *
-   * Available error codes:
-   *
-   *  * required
-   *  * invalid
-   *
-   * @param array $options   An array of options
-   * @param array $messages  An array of error messages
-   */
-  public function __construct($options = array(), $messages = array())
-  {
-    $this->options = array_merge(array('required' => true, 'trim' => false, 'empty_value' => null), $this->options);
-    $this->messages = array_merge(array('required' => self::$globalDefaultMessages['required'], 'invalid' => self::$globalDefaultMessages['invalid']), $this->messages);
+    /**
+     * Constructor.
+     *
+     * Available options:
+     *
+     *  * required:    true if the value is required, false otherwise (default to true)
+     *  * trim:        true if the value must be trimmed, false otherwise (default to false)
+     *  * empty_value: empty value when value is not required
+     *
+     * Available error codes:
+     *
+     *  * required
+     *  * invalid
+     *
+     * @param array $options  An array of options
+     * @param array $messages An array of error messages
+     */
+    public function __construct($options = array(), $messages = array())
+    {
+        $this->options = array_merge(array('required' => true, 'trim' => false, 'empty_value' => null), $this->options);
+        $this->messages = array_merge(
+            array(
+                'required' => self::$globalDefaultMessages['required'],
+                'invalid'  => self::$globalDefaultMessages['invalid']
+            ),
+            $this->messages
+        );
 
-    $this->configure($options, $messages);
+        $this->configure($options, $messages);
 
-    $this->setDefaultOptions($this->getOptions());
-    $this->setDefaultMessages($this->getMessages());
+        $this->setDefaultOptions($this->getOptions());
+        $this->setDefaultMessages($this->getMessages());
 
-    $currentOptionKeys = array_keys($this->options);
-    $optionKeys = array_keys($options);
+        $currentOptionKeys = array_keys($this->options);
+        $optionKeys = array_keys($options);
 
-    // check option names
-    if ($diff = array_diff($optionKeys, array_merge($currentOptionKeys, $this->requiredOptions))) {
-      throw new InvalidArgumentException(sprintf('%s does not support the following options: \'%s\'.', get_class($this), implode('\', \'', $diff)));
+        // check option names
+        if ($diff = array_diff($optionKeys, array_merge($currentOptionKeys, $this->requiredOptions))) {
+            throw new InvalidArgumentException(sprintf(
+                '%s does not support the following options: \'%s\'.',
+                get_class($this),
+                implode('\', \'', $diff)
+            ));
+        }
+
+        // check error code names
+        if ($diff = array_diff(array_keys($messages), array_keys($this->messages))) {
+            throw new InvalidArgumentException(sprintf(
+                '%s does not support the following error codes: \'%s\'.',
+                get_class($this),
+                implode('\', \'', $diff)
+            ));
+        }
+
+        // check required options
+        if ($diff = array_diff($this->requiredOptions, array_merge($currentOptionKeys, $optionKeys))) {
+            throw new RuntimeException(sprintf(
+                '%s requires the following options: \'%s\'.',
+                get_class($this),
+                implode('\', \'', $diff)
+            ));
+        }
+
+        $this->options = array_merge($this->options, $options);
+        $this->messages = array_merge($this->messages, $messages);
     }
 
-    // check error code names
-    if ($diff = array_diff(array_keys($messages), array_keys($this->messages))) {
-      throw new InvalidArgumentException(sprintf('%s does not support the following error codes: \'%s\'.', get_class($this), implode('\', \'', $diff)));
+    /**
+     * Configures the current validator.
+     *
+     * This method allows each validator to add options and error messages
+     * during validator creation.
+     *
+     * If some options and messages are given in the sfValidatorBase constructor
+     * they will take precedence over the options and messages you configure
+     * in this method.
+     *
+     * @param array $options  An array of options
+     * @param array $messages An array of error messages
+     *
+     * @see __construct()
+     */
+    protected function configure($options = array(), $messages = array())
+    {
+
     }
 
-    // check required options
-    if ($diff = array_diff($this->requiredOptions, array_merge($currentOptionKeys, $optionKeys))) {
-      throw new RuntimeException(sprintf('%s requires the following options: \'%s\'.', get_class($this), implode('\', \'', $diff)));
+    /**
+     * Returns an error message given an error code.
+     *
+     * @param  string $name The error code
+     *
+     * @return string The error message, or the empty string if the error code does not exist
+     */
+    public function getMessage($name)
+    {
+        return isset($this->messages[$name]) ? $this->messages[$name] : '';
     }
 
-    $this->options = array_merge($this->options, $options);
-    $this->messages = array_merge($this->messages, $messages);
-  }
+    /**
+     * Adds a new error code with a default error message.
+     *
+     * @param string $name  The error code
+     * @param string $value The error message
+     *
+     * @return sfValidatorBase The current validator instance
+     */
+    public function addMessage($name, $value)
+    {
+        $this->messages[$name] = isset(self::$globalDefaultMessages[$name]) ? self::$globalDefaultMessages[$name]
+            : $value;
 
-  /**
-   * Configures the current validator.
-   *
-   * This method allows each validator to add options and error messages
-   * during validator creation.
-   *
-   * If some options and messages are given in the sfValidatorBase constructor
-   * they will take precedence over the options and messages you configure
-   * in this method.
-   *
-   * @param array $options   An array of options
-   * @param array $messages  An array of error messages
-   *
-   * @see __construct()
-   */
-  protected function configure($options = array(), $messages = array())
-  {
-
-  }
-
-  /**
-   * Returns an error message given an error code.
-   *
-   * @param  string $name  The error code
-   *
-   * @return string The error message, or the empty string if the error code does not exist
-   */
-  public function getMessage($name)
-  {
-    return isset($this->messages[$name]) ? $this->messages[$name] : '';
-  }
-
-  /**
-   * Adds a new error code with a default error message.
-   *
-   * @param string $name   The error code
-   * @param string $value  The error message
-   *
-   * @return sfValidatorBase The current validator instance
-   */
-  public function addMessage($name, $value)
-  {
-    $this->messages[$name] = isset(self::$globalDefaultMessages[$name]) ? self::$globalDefaultMessages[$name] : $value;
-
-    return $this;
-  }
-
-  /**
-   * Changes an error message given the error code.
-   *
-   * @param string $name   The error code
-   * @param string $value  The error message
-   *
-   * @return sfValidatorBase The current validator instance
-   */
-  public function setMessage($name, $value)
-  {
-    if (!in_array($name, array_keys($this->messages))) {
-      throw new InvalidArgumentException(sprintf('%s does not support the following error code: \'%s\'.', get_class($this), $name));
+        return $this;
     }
 
-    $this->messages[$name] = $value;
+    /**
+     * Changes an error message given the error code.
+     *
+     * @param string $name  The error code
+     * @param string $value The error message
+     *
+     * @return sfValidatorBase The current validator instance
+     */
+    public function setMessage($name, $value)
+    {
+        if (!in_array($name, array_keys($this->messages))) {
+            throw new InvalidArgumentException(sprintf(
+                '%s does not support the following error code: \'%s\'.',
+                get_class($this),
+                $name
+            ));
+        }
 
-    return $this;
-  }
+        $this->messages[$name] = $value;
 
-  /**
-   * Returns an array of current error messages.
-   *
-   * @return array An array of messages
-   */
-  public function getMessages()
-  {
-    return $this->messages;
-  }
-
-  /**
-   * Changes all error messages.
-   *
-   * @param array $values  An array of error messages
-   *
-   * @return sfValidatorBase The current validator instance
-   */
-  public function setMessages($values)
-  {
-    $this->messages = array_merge(array('required' => self::$globalDefaultMessages['required'], 'invalid' => self::$globalDefaultMessages['invalid']), $values);
-
-    return $this;
-  }
-
-  /**
-   * Gets an option value.
-   *
-   * @param  string $name  The option name
-   *
-   * @return mixed  The option value
-   */
-  public function getOption($name)
-  {
-    return isset($this->options[$name]) ? $this->options[$name] : null;
-  }
-
-  /**
-   * Adds a new option value with a default value.
-   *
-   * @param string $name   The option name
-   * @param mixed  $value  The default value
-   *
-   * @return sfValidatorBase The current validator instance
-   */
-  public function addOption($name, $value = null)
-  {
-    $this->options[$name] = $value;
-
-    return $this;
-  }
-
-  /**
-   * Changes an option value.
-   *
-   * @param string $name   The option name
-   * @param mixed  $value  The value
-   *
-   * @return sfValidatorBase The current validator instance
-   */
-  public function setOption($name, $value)
-  {
-    if (!in_array($name, array_merge(array_keys($this->options), $this->requiredOptions))) {
-      throw new InvalidArgumentException(sprintf('%s does not support the following option: \'%s\'.', get_class($this), $name));
+        return $this;
     }
 
-    $this->options[$name] = $value;
-
-    return $this;
-  }
-
-  /**
-   * Returns true if the option exists.
-   *
-   * @param  string $name  The option name
-   *
-   * @return bool true if the option exists, false otherwise
-   */
-  public function hasOption($name)
-  {
-    return isset($this->options[$name]);
-  }
-
-  /**
-   * Returns all options.
-   *
-   * @return array An array of options
-   */
-  public function getOptions()
-  {
-    return $this->options;
-  }
-
-  /**
-   * Changes all options.
-   *
-   * @param array $values  An array of options
-   *
-   * @return sfValidatorBase The current validator instance
-   */
-  public function setOptions($values)
-  {
-    $this->options = array_merge(array('required' => true, 'trim' => false, 'empty_value' => null), $values);
-
-    return $this;
-  }
-
-  /**
-   * Adds a required option.
-   *
-   * @param string $name  The option name
-   *
-   * @return sfValidatorBase The current validator instance
-   */
-  public function addRequiredOption($name)
-  {
-    $this->requiredOptions[] = $name;
-
-    return $this;
-  }
-
-  /**
-   * Returns all required option names.
-   *
-   * @return array An array of required option names
-   */
-  public function getRequiredOptions()
-  {
-    return $this->requiredOptions;
-  }
-
-  /**
-   * Sets the default message for a given name.
-   *
-   * @param string $name    The name of the message
-   * @param string $message The default message string
-   */
-  public static function setDefaultMessage($name, $message)
-  {
-    self::$globalDefaultMessages[$name] = $message;
-  }
-
-  /**
-   * Cleans the input value.
-   *
-   * This method is also responsible for trimming the input value
-   * and checking the required option.
-   *
-   * @param  mixed $value  The input value
-   *
-   * @return mixed The cleaned value
-   *
-   * @throws sfValidatorError
-   */
-  public function clean($value)
-  {
-    $clean = $value;
-
-    if ($this->options['trim'] && is_string($clean)) {
-      $clean = trim($clean);
+    /**
+     * Returns an array of current error messages.
+     *
+     * @return array An array of messages
+     */
+    public function getMessages()
+    {
+        return $this->messages;
     }
 
-    // empty value?
-    if ($this->isEmpty($clean)) {
-      // required?
-      if ($this->options['required']) {
-        throw new sfValidatorError($this, 'required');
-      }
+    /**
+     * Changes all error messages.
+     *
+     * @param array $values An array of error messages
+     *
+     * @return sfValidatorBase The current validator instance
+     */
+    public function setMessages($values)
+    {
+        $this->messages = array_merge(
+            array(
+                'required' => self::$globalDefaultMessages['required'],
+                'invalid'  => self::$globalDefaultMessages['invalid']
+            ),
+            $values
+        );
 
-      return $this->getEmptyValue();
+        return $this;
     }
 
-    return $this->doClean($clean);
-  }
-
-  /**
-   * Cleans the input value.
-   *
-   * Every subclass must implement this method.
-   *
-   * @param  mixed $value  The input value
-   *
-   * @return mixed The cleaned value
-   *
-   * @throws sfValidatorError
-   */
-  abstract protected function doClean($value);
-
-  /**
-   * Sets the charset to use when validating strings.
-   *
-   * @param string $charset  The charset
-   */
-  public static function setCharset($charset)
-  {
-    self::$charset = $charset;
-  }
-
-  /**
-   * Returns the charset to use when validating strings.
-   *
-   * @return string The charset (default to UTF-8)
-   */
-  public static function getCharset()
-  {
-    return self::$charset;
-  }
-
-  /**
-   * Returns true if the value is empty.
-   *
-   * @param  mixed $value  The input value
-   *
-   * @return bool true if the value is empty, false otherwise
-   */
-  protected function isEmpty($value)
-  {
-    return in_array($value, array(null, '', array()), true);
-  }
-
-  /**
-   * Returns an empty value for this validator.
-   *
-   * @return mixed The empty value for this validator
-   */
-  protected function getEmptyValue()
-  {
-    return $this->getOption('empty_value');
-  }
-
-  /**
-   * Returns an array of all error codes for this validator.
-   *
-   * @return array An array of possible error codes
-   *
-   * @see getDefaultMessages()
-   */
-  final public function getErrorCodes()
-  {
-    return array_keys($this->getDefaultMessages());
-  }
-
-  /**
-   * Returns default messages for all possible error codes.
-   *
-   * @return array An array of default error codes and messages
-   */
-  public function getDefaultMessages()
-  {
-    return $this->defaultMessages;
-  }
-
-  /**
-   * Returns messages used by the validator. This method is usefull to
-   * i18n extract which extract only those messages which are in use
-   *
-   * @return array Array of messages.
-   */
-  public function getActiveMessages()
-  {
-    $messages = array();
-    if ($invalid = $this->getMessage('invalid')) {
-      $messages[] = $invalid;
-    }
-    if ($this->getOption('required')) {
-      $messages[] = $this->getMessage('required');
+    /**
+     * Gets an option value.
+     *
+     * @param  string $name The option name
+     *
+     * @return mixed  The option value
+     */
+    public function getOption($name)
+    {
+        return isset($this->options[$name]) ? $this->options[$name] : null;
     }
 
-    return $messages;
-  }
+    /**
+     * Adds a new option value with a default value.
+     *
+     * @param string $name  The option name
+     * @param mixed  $value The default value
+     *
+     * @return sfValidatorBase The current validator instance
+     */
+    public function addOption($name, $value = null)
+    {
+        $this->options[$name] = $value;
 
-  /**
-   * Returns javascript validation rules
-   *
-   * @return array
-   */
-  public function getJavascriptValidationRules()
-  {
-    if ($this->hasOption('required')) {
-      return array(
-          sfFormJavascriptValidation::REQUIRED => $this->getOption('required')
-      );
+        return $this;
     }
 
-    return array();
-  }
+    /**
+     * Changes an option value.
+     *
+     * @param string $name  The option name
+     * @param mixed  $value The value
+     *
+     * @return sfValidatorBase The current validator instance
+     */
+    public function setOption($name, $value)
+    {
+        if (!in_array($name, array_merge(array_keys($this->options), $this->requiredOptions))) {
+            throw new InvalidArgumentException(sprintf(
+                '%s does not support the following option: \'%s\'.',
+                get_class($this),
+                $name
+            ));
+        }
 
-  /**
-   * Returns javascript validation messages
-   *
-   * @return array
-   */
-  public function getJavascriptValidationMessages()
-  {
-    $messages = array();
-    if ($this->getOption('required')) {
-      $messages[sfFormJavascriptValidation::REQUIRED] =
-              sfFormJavascriptValidation::fixValidationMessage($this, 'required');
+        $this->options[$name] = $value;
+
+        return $this;
     }
 
-    return $messages;
-  }
-
-  /**
-   * Returns an array of javascript validation rules and messages
-   *
-   * @return array
-   */
-  public function getJavascriptValidation()
-  {
-    return array($this->getJavascriptValidationRules(),
-        $this->getJavascriptValidationMessages());
-  }
-
-  /**
-   * Sets default messages for all possible error codes.
-   *
-   * @param array $messages  An array of default error codes and messages
-   */
-  protected function setDefaultMessages($messages)
-  {
-    $this->defaultMessages = $messages;
-  }
-
-  /**
-   * Returns default option values.
-   *
-   * @return array An array of default option values
-   */
-  public function getDefaultOptions()
-  {
-    return $this->defaultOptions;
-  }
-
-  /**
-   * Sets default option values.
-   *
-   * @param array $options  An array of default option values
-   */
-  protected function setDefaultOptions($options)
-  {
-    $this->defaultOptions = $options;
-  }
-
-  /**
-   * Returns a string representation of this validator.
-   *
-   * @param  int $indent  Indentation (number of spaces before each line)
-   *
-   * @return string The string representation of the validator
-   */
-  public function asString($indent = 0)
-  {
-    $options = $this->getOptionsWithoutDefaults();
-    $messages = $this->getMessagesWithoutDefaults();
-
-    return sprintf('%s%s(%s%s)', str_repeat(' ', $indent), str_replace('sfValidator', '', get_class($this)), $options ? sfYamlInline::dump($options) : ($messages ? '{}' : ''), $messages ? ', ' . sfYamlInline::dump($messages) : ''
-    );
-  }
-
-  /**
-   * Returns all error messages with non default values.
-   *
-   * @return string A string representation of the error messages
-   */
-  protected function getMessagesWithoutDefaults()
-  {
-    $messages = $this->messages;
-
-    // remove default option values
-    foreach ($this->getDefaultMessages() as $key => $value) {
-      if (array_key_exists($key, $messages) && $messages[$key] === $value) {
-        unset($messages[$key]);
-      }
+    /**
+     * Returns true if the option exists.
+     *
+     * @param  string $name The option name
+     *
+     * @return bool true if the option exists, false otherwise
+     */
+    public function hasOption($name)
+    {
+        return isset($this->options[$name]);
     }
 
-    return $messages;
-  }
-
-  /**
-   * Returns all options with non default values.
-   *
-   * @return string  A string representation of the options
-   */
-  protected function getOptionsWithoutDefaults()
-  {
-    $options = $this->options;
-
-    // remove default option values
-    foreach ($this->getDefaultOptions() as $key => $value) {
-      if (array_key_exists($key, $options) && $options[$key] === $value) {
-        unset($options[$key]);
-      }
+    /**
+     * Returns all options.
+     *
+     * @return array An array of options
+     */
+    public function getOptions()
+    {
+        return $this->options;
     }
 
-    return $options;
-  }
+    /**
+     * Changes all options.
+     *
+     * @param array $values An array of options
+     *
+     * @return sfValidatorBase The current validator instance
+     */
+    public function setOptions($values)
+    {
+        $this->options = array_merge(array('required' => true, 'trim' => false, 'empty_value' => null), $values);
 
-  /**
-   * Returns culture as passed from options or current user culture
-   * or culture from "sf_i18n_default_culture" setting or "en" as fallback
-   *
-   * @return string
-   */
-  protected function getCulture()
-  {
-    if ($culture = $this->getOption('culture')) {
-      return $culture;
+        return $this;
     }
 
-    return sfConfig::get('sf_culture', sfConfig::get('sf_i18n_default_culture', 'en'));
-  }
+    /**
+     * Adds a required option.
+     *
+     * @param string $name The option name
+     *
+     * @return sfValidatorBase The current validator instance
+     */
+    public function addRequiredOption($name)
+    {
+        $this->requiredOptions[] = $name;
 
-  /**
-   * Logs to Sift logger (only if configured)
-   *
-   * @param string $message
-   * @param string $priority
-   */
-  protected function log($message, $priority = sfLogger::INFO)
-  {
-    if (class_exists('sfConfig') && sfConfig::get('sf_logging_enabled')) {
-      sfLogger::getInstance()->log(
-              sprintf('{%s} %s', get_class($this), $message), $priority);
+        return $this;
     }
-  }
 
-  /**
-   * Sets the event dispatcher
-   *
-   * @param sfEventDispatcher $dispatcher
-   */
-  public function setEventDispatcher(sfEventDispatcher $dispatcher = null)
-  {
-    $this->dispatcher = $dispatcher;
-  }
+    /**
+     * Returns all required option names.
+     *
+     * @return array An array of required option names
+     */
+    public function getRequiredOptions()
+    {
+        return $this->requiredOptions;
+    }
 
-  /**
-   * Return the event dispatcher
-   *
-   * @return sfEventDispatcher
-   */
-  public function getEventDispatcher()
-  {
-    return $this->dispatcher;
-  }
+    /**
+     * Sets the default message for a given name.
+     *
+     * @param string $name    The name of the message
+     * @param string $message The default message string
+     */
+    public static function setDefaultMessage($name, $message)
+    {
+        self::$globalDefaultMessages[$name] = $message;
+    }
+
+    /**
+     * Cleans the input value.
+     *
+     * This method is also responsible for trimming the input value
+     * and checking the required option.
+     *
+     * @param  mixed $value The input value
+     *
+     * @return mixed The cleaned value
+     *
+     * @throws sfValidatorError
+     */
+    public function clean($value)
+    {
+        $clean = $value;
+
+        if ($this->options['trim'] && is_string($clean)) {
+            $clean = trim($clean);
+        }
+
+        // empty value?
+        if ($this->isEmpty($clean)) {
+            // required?
+            if ($this->options['required']) {
+                throw new sfValidatorError($this, 'required');
+            }
+
+            return $this->getEmptyValue();
+        }
+
+        return $this->doClean($clean);
+    }
+
+    /**
+     * Cleans the input value.
+     *
+     * Every subclass must implement this method.
+     *
+     * @param  mixed $value The input value
+     *
+     * @return mixed The cleaned value
+     *
+     * @throws sfValidatorError
+     */
+    abstract protected function doClean($value);
+
+    /**
+     * Sets the charset to use when validating strings.
+     *
+     * @param string $charset The charset
+     */
+    public static function setCharset($charset)
+    {
+        self::$charset = $charset;
+    }
+
+    /**
+     * Returns the charset to use when validating strings.
+     *
+     * @return string The charset (default to UTF-8)
+     */
+    public static function getCharset()
+    {
+        return self::$charset;
+    }
+
+    /**
+     * Returns true if the value is empty.
+     *
+     * @param  mixed $value The input value
+     *
+     * @return bool true if the value is empty, false otherwise
+     */
+    protected function isEmpty($value)
+    {
+        return in_array($value, array(null, '', array()), true);
+    }
+
+    /**
+     * Returns an empty value for this validator.
+     *
+     * @return mixed The empty value for this validator
+     */
+    protected function getEmptyValue()
+    {
+        return $this->getOption('empty_value');
+    }
+
+    /**
+     * Returns an array of all error codes for this validator.
+     *
+     * @return array An array of possible error codes
+     *
+     * @see getDefaultMessages()
+     */
+    final public function getErrorCodes()
+    {
+        return array_keys($this->getDefaultMessages());
+    }
+
+    /**
+     * Returns default messages for all possible error codes.
+     *
+     * @return array An array of default error codes and messages
+     */
+    public function getDefaultMessages()
+    {
+        return $this->defaultMessages;
+    }
+
+    /**
+     * Returns messages used by the validator. This method is usefull to
+     * i18n extract which extract only those messages which are in use
+     *
+     * @return array Array of messages.
+     */
+    public function getActiveMessages()
+    {
+        $messages = array();
+        if ($invalid = $this->getMessage('invalid')) {
+            $messages[] = $invalid;
+        }
+        if ($this->getOption('required')) {
+            $messages[] = $this->getMessage('required');
+        }
+
+        return $messages;
+    }
+
+    /**
+     * Returns javascript validation rules
+     *
+     * @return array
+     */
+    public function getJavascriptValidationRules()
+    {
+        if ($this->hasOption('required')) {
+            return array(
+                sfFormJavascriptValidation::REQUIRED => $this->getOption('required')
+            );
+        }
+
+        return array();
+    }
+
+    /**
+     * Returns javascript validation messages
+     *
+     * @return array
+     */
+    public function getJavascriptValidationMessages()
+    {
+        $messages = array();
+        if ($this->getOption('required')) {
+            $messages[sfFormJavascriptValidation::REQUIRED] = sfFormJavascriptValidation::fixValidationMessage(
+                $this,
+                'required'
+            );
+        }
+
+        return $messages;
+    }
+
+    /**
+     * Returns an array of javascript validation rules and messages
+     *
+     * @return array
+     */
+    public function getJavascriptValidation()
+    {
+        return array(
+            $this->getJavascriptValidationRules(),
+            $this->getJavascriptValidationMessages()
+        );
+    }
+
+    /**
+     * Sets default messages for all possible error codes.
+     *
+     * @param array $messages An array of default error codes and messages
+     */
+    protected function setDefaultMessages($messages)
+    {
+        $this->defaultMessages = $messages;
+    }
+
+    /**
+     * Returns default option values.
+     *
+     * @return array An array of default option values
+     */
+    public function getDefaultOptions()
+    {
+        return $this->defaultOptions;
+    }
+
+    /**
+     * Sets default option values.
+     *
+     * @param array $options An array of default option values
+     */
+    protected function setDefaultOptions($options)
+    {
+        $this->defaultOptions = $options;
+    }
+
+    /**
+     * Returns a string representation of this validator.
+     *
+     * @param  int $indent Indentation (number of spaces before each line)
+     *
+     * @return string The string representation of the validator
+     */
+    public function asString($indent = 0)
+    {
+        $options = $this->getOptionsWithoutDefaults();
+        $messages = $this->getMessagesWithoutDefaults();
+
+        return sprintf(
+            '%s%s(%s%s)',
+            str_repeat(' ', $indent),
+            str_replace('sfValidator', '', get_class($this)),
+            $options ? sfYamlInline::dump($options) : ($messages ? '{}' : ''),
+            $messages ? ', ' . sfYamlInline::dump($messages) : ''
+        );
+    }
+
+    /**
+     * Returns all error messages with non default values.
+     *
+     * @return string A string representation of the error messages
+     */
+    protected function getMessagesWithoutDefaults()
+    {
+        $messages = $this->messages;
+
+        // remove default option values
+        foreach ($this->getDefaultMessages() as $key => $value) {
+            if (array_key_exists($key, $messages) && $messages[$key] === $value) {
+                unset($messages[$key]);
+            }
+        }
+
+        return $messages;
+    }
+
+    /**
+     * Returns all options with non default values.
+     *
+     * @return string  A string representation of the options
+     */
+    protected function getOptionsWithoutDefaults()
+    {
+        $options = $this->options;
+
+        // remove default option values
+        foreach ($this->getDefaultOptions() as $key => $value) {
+            if (array_key_exists($key, $options) && $options[$key] === $value) {
+                unset($options[$key]);
+            }
+        }
+
+        return $options;
+    }
+
+    /**
+     * Returns culture as passed from options or current user culture
+     * or culture from "sf_i18n_default_culture" setting or "en" as fallback
+     *
+     * @return string
+     */
+    protected function getCulture()
+    {
+        if ($culture = $this->getOption('culture')) {
+            return $culture;
+        }
+
+        return sfConfig::get('sf_culture', sfConfig::get('sf_i18n_default_culture', 'en'));
+    }
+
+    /**
+     * Logs to Sift logger (only if configured)
+     *
+     * @param string $message
+     * @param string $priority
+     */
+    protected function log($message, $priority = sfLogger::INFO)
+    {
+        if (class_exists('sfConfig') && sfConfig::get('sf_logging_enabled')) {
+            sfLogger::getInstance()->log(
+                sprintf('{%s} %s', get_class($this), $message),
+                $priority
+            );
+        }
+    }
+
+    /**
+     * Sets the event dispatcher
+     *
+     * @param sfEventDispatcher $dispatcher
+     */
+    public function setEventDispatcher(sfEventDispatcher $dispatcher = null)
+    {
+        $this->dispatcher = $dispatcher;
+    }
+
+    /**
+     * Return the event dispatcher
+     *
+     * @return sfEventDispatcher
+     */
+    public function getEventDispatcher()
+    {
+        return $this->dispatcher;
+    }
 
 }

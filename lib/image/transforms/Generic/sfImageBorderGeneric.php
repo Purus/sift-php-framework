@@ -11,104 +11,105 @@
  *
  * draws a basic border around the image
  *
- * @package Sift
+ * @package    Sift
  * @subpackage image
  */
 class sfImageBorderGeneric extends sfImageTransformAbstract
 {
-  /**
-   * thickness of the border
-   */
-  protected $thickness = 1;
+    /**
+     * thickness of the border
+     */
+    protected $thickness = 1;
 
-  /**
-   * Hex color.
-   *
-   * @var string
-   */
-  protected $color = '';
+    /**
+     * Hex color.
+     *
+     * @var string
+     */
+    protected $color = '';
 
-  /**
-   * Construct an sfImageBorderGeneric object.
-   *
-   * @param integer
-   * @param string
-   */
-  public function __construct($thickness, $color = null)
-  {
-    $this->setThickness($thickness);
-    $this->setColor($color);
-  }
-
-  /**
-   * Sets the thickness
-   *
-   * @param integer
-   * @return boolean
-   */
-  public function setThickness($thickness)
-  {
-    if (is_numeric($thickness)) {
-      $this->thickness = (int) $thickness;
-
-      return true;
+    /**
+     * Construct an sfImageBorderGeneric object.
+     *
+     * @param integer
+     * @param string
+     */
+    public function __construct($thickness, $color = null)
+    {
+        $this->setThickness($thickness);
+        $this->setColor($color);
     }
 
-    return false;
-  }
+    /**
+     * Sets the thickness
+     *
+     * @param integer
+     *
+     * @return boolean
+     */
+    public function setThickness($thickness)
+    {
+        if (is_numeric($thickness)) {
+            $this->thickness = (int)$thickness;
 
-  /**
-   * Gets the thickness
-   *
-   * @return integer
-   */
-  public function getThickness()
-  {
-    return $this->thickness;
-  }
+            return true;
+        }
 
-  /**
-   * Sets the border color in hex
-   *
-   * @return boolean
-   */
-  public function setColor($color)
-  {
-    if (preg_match('/#[\d\w]{6}/', $color)) {
-      $this->color = $color;
-
-      return true;
+        return false;
     }
 
-    return false;
-  }
+    /**
+     * Gets the thickness
+     *
+     * @return integer
+     */
+    public function getThickness()
+    {
+        return $this->thickness;
+    }
 
-  /**
-   * Gets the color
-   *
-   * @return integer
-   */
-  public function getColor()
-  {
-    return $this->color;
-  }
+    /**
+     * Sets the border color in hex
+     *
+     * @return boolean
+     */
+    public function setColor($color)
+    {
+        if (preg_match('/#[\d\w]{6}/', $color)) {
+            $this->color = $color;
 
-  /**
-   * Apply the transformation to the image and returns the image thumbnail
-   */
-  protected function transform(sfImage $image)
-  {
+            return true;
+        }
 
-    // Work out where we need to draw to
-    $offset = $this->getThickness() / 2;
-    $mod = $this->getThickness() % 2;
+        return false;
+    }
 
-    $x2 = $image->getWidth() - $offset - ($mod === 0 ? 1 : 0);
-    $y2 = $image->getHeight() - $offset - ($mod === 0 ? 1 : 0);
+    /**
+     * Gets the color
+     *
+     * @return integer
+     */
+    public function getColor()
+    {
+        return $this->color;
+    }
 
-    $image->rectangle($offset, $offset, $x2, $y2, $this->getThickness(), $this->getColor());
+    /**
+     * Apply the transformation to the image and returns the image thumbnail
+     */
+    protected function transform(sfImage $image)
+    {
 
-    return $image;
-  }
+        // Work out where we need to draw to
+        $offset = $this->getThickness() / 2;
+        $mod = $this->getThickness() % 2;
+
+        $x2 = $image->getWidth() - $offset - ($mod === 0 ? 1 : 0);
+        $y2 = $image->getHeight() - $offset - ($mod === 0 ? 1 : 0);
+
+        $image->rectangle($offset, $offset, $x2, $y2, $this->getThickness(), $this->getColor());
+
+        return $image;
+    }
 
 }

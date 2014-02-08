@@ -14,30 +14,35 @@
  */
 class sfCliGenerateModuleTask extends sfCliGeneratorBaseTask
 {
-  /**
-   * @see sfCliTask
-   */
-  protected function configure()
-  {
-    $this->addArguments(array(
-      new sfCliCommandArgument('application', sfCliCommandArgument::REQUIRED, 'The application name'),
-      new sfCliCommandArgument('module', sfCliCommandArgument::REQUIRED, 'The module name'),
-    ));
+    /**
+     * @see sfCliTask
+     */
+    protected function configure()
+    {
+        $this->addArguments(
+            array(
+                new sfCliCommandArgument('application', sfCliCommandArgument::REQUIRED, 'The application name'),
+                new sfCliCommandArgument('module', sfCliCommandArgument::REQUIRED, 'The module name'),
+            )
+        );
 
-    $this->addOptions(array(
-      new sfCliCommandOption('secured', null, sfCliCommandOption::PARAMETER_NONE, 'Secure the module?', null),
-      new sfCliCommandOption('internal', null, sfCliCommandOption::PARAMETER_NONE, 'IS the module internal only? (Not accessible via web)', null),
-      new sfCliCommandOption('credentials', null, sfCliCommandOption::PARAMETER_OPTIONAL, 'User credentials for accessing the module', ''),
-    ));
+        $this->addOptions(
+            array(
+                new sfCliCommandOption('secured', null, sfCliCommandOption::PARAMETER_NONE, 'Secure the module?', null),
+                new sfCliCommandOption('internal', null, sfCliCommandOption::PARAMETER_NONE, 'IS the module internal only? (Not accessible via web)', null),
+                new sfCliCommandOption('credentials', null, sfCliCommandOption::PARAMETER_OPTIONAL, 'User credentials for accessing the module', ''),
+            )
+        );
 
-    $this->namespace = 'generate';
-    $this->name = 'module';
+        $this->namespace = 'generate';
+        $this->name = 'module';
 
-    $this->briefDescription = 'Generates a new module';
+        $this->briefDescription = 'Generates a new module';
 
-    $scriptName = $this->environment->get('script_name');
+        $scriptName = $this->environment->get('script_name');
 
-    $this->detailedDescription = <<<EOF
+        $this->detailedDescription
+            = <<<EOF
 The [generate:module|INFO] task creates the basic directory structure
 for a new module in an existing application:
 
@@ -60,89 +65,102 @@ that does not pass by default.
 If a module with the same name already exists in the application,
 it throws a [sfCliCommandException|COMMENT].
 EOF;
-  }
-
-  /**
-   * @see sfCliTask
-   */
-  protected function execute($arguments = array(), $options = array())
-  {
-    $app    = $arguments['application'];
-    $module = $arguments['module'];
-
-    // Validate the module name
-    if (!preg_match('/^[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*$/', $module)) {
-      throw new sfCliCommandException(sprintf('The module name "%s" is invalid.', $module));
     }
 
-    $this->checkAppExists($app);
+    /**
+     * @see sfCliTask
+     */
+    protected function execute($arguments = array(), $options = array())
+    {
+        $app = $arguments['application'];
+        $module = $arguments['module'];
 
-    $moduleDir = $this->environment->get('sf_apps_dir'). '/' . $app. '/' .
-                 $this->environment->get('sf_app_module_dir_name') . '/' . $module;
+        // Validate the module name
+        if (!preg_match('/^[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*$/', $module)) {
+            throw new sfCliCommandException(sprintf('The module name "%s" is invalid.', $module));
+        }
 
-    if (is_dir($moduleDir)) {
-      throw new sfCliCommandException(sprintf('The module "%s" already exists in the "%s" application.', $module, $app));
+        $this->checkAppExists($app);
+
+        $moduleDir = $this->environment->get('sf_apps_dir') . '/' . $app . '/' .
+            $this->environment->get('sf_app_module_dir_name') . '/' . $module;
+
+        if (is_dir($moduleDir)) {
+            throw new sfCliCommandException(sprintf(
+                'The module "%s" already exists in the "%s" application.',
+                $module,
+                $app
+            ));
+        }
+
+        $this->logSection($this->getFullName(), sprintf('Creating module "%s".', $module));
+
+        $projectName = '';
+
+        // fallback for projectName
+        if (!$projectName) {
+            // base on directory name
+            $projectName = ucfirst(str_replace('.', '', basename($this->environment->get('sf_root_dir'))));
+        }
+
+        // module credentials
+        $credentials = isset($options['credentials']) ? (array)$options['credentials'] : array();
+
+        $constants = array(
+            'PROJECT_NAME' => $projectName,
+            'APP_NAME'     => $app,
+            'MODULE_NAME'  => $module,
+            'AUTHOR_NAME'  => $this->getProjectProperty('author', 'Your name here'),
+            'CREDENTIALS'  => 'credentials: ' . sfYamlInline::dump($credentials)
+        );
+
+        if (is_readable($this->environment->get('sf_data_dir') . '/skeleton/module')) {
+            $skeletonDir = $this->environment->get('sf_data_dir') . '/skeleton/module';
+        } else {
+            // FIXME: load from sf_sift_data_dir
+            $skeletonDir = $this->environment->get('sf_sift_data_dir') . '/skeleton/module';
+        }
+
+        // create basic application structure
+        $finder = sfFinder::type('any')->discard('.*');
+        $this->getFilesystem()->mirror($skeletonDir . '/module', $moduleDir, $finder);
+
+        // create basic test
+        $this->getFilesystem()->copy(
+            $skeletonDir . '/test/actionsTest.php',
+            $this->environment->get('sf_test_dir') . '/functional/' . $app . '/' . $module . 'ActionsTest.php'
+        );
+
+        // customize test file
+        $this->getFilesystem()->replaceTokens(
+            $this->environment->get('sf_test_dir') . '/functional/' . $app . DIRECTORY_SEPARATOR . $module
+            . 'ActionsTest.php',
+            '##',
+            '##',
+            $constants
+        );
+
+        // customize php and yml files
+        $finder = sfFinder::type('file')->name('*.php', '*.yml');
+        $this->getFilesystem()->replaceTokens($finder->in($moduleDir), '##', '##', $constants);
+
+        if (!$options['secured']) {
+            $this->getFilesystem()->remove($moduleDir . '/config/security.yml');
+            // FIXME: check if there are any files left, if yes, discard the dir!
+        }
+
+        $moduleYaml = array();
+
+        if ($options['internal']) {
+            $moduleYaml[] = 'all:';
+            $moduleYaml[] = '  is_internal: true';
+        }
+
+        if (count($moduleYaml)) {
+            file_put_contents($moduleDir . '/config/module.yml', join("\n", $moduleYaml));
+        }
+
+        $this->logSection($this->getFullName(), 'Done.');
     }
-
-    $this->logSection($this->getFullName(), sprintf('Creating module "%s".', $module));
-
-    $projectName = '';
-
-    // fallback for projectName
-    if (!$projectName) {
-      // base on directory name
-      $projectName = ucfirst(str_replace('.', '', basename($this->environment->get('sf_root_dir'))));
-    }
-
-    // module credentials
-    $credentials = isset($options['credentials']) ? (array) $options['credentials'] : array();
-
-    $constants = array(
-      'PROJECT_NAME' => $projectName,
-      'APP_NAME'     => $app,
-      'MODULE_NAME'  => $module,
-      'AUTHOR_NAME'  => $this->getProjectProperty('author', 'Your name here'),
-      'CREDENTIALS'  => 'credentials: ' . sfYamlInline::dump($credentials)
-    );
-
-    if (is_readable($this->environment->get('sf_data_dir').'/skeleton/module')) {
-      $skeletonDir = $this->environment->get('sf_data_dir').'/skeleton/module';
-    } else {
-      // FIXME: load from sf_sift_data_dir
-      $skeletonDir = $this->environment->get('sf_sift_data_dir').'/skeleton/module';
-    }
-
-    // create basic application structure
-    $finder = sfFinder::type('any')->discard('.*');
-    $this->getFilesystem()->mirror($skeletonDir.'/module', $moduleDir, $finder);
-
-    // create basic test
-    $this->getFilesystem()->copy($skeletonDir.'/test/actionsTest.php', $this->environment->get('sf_test_dir').'/functional/'.$app.'/'.$module.'ActionsTest.php');
-
-    // customize test file
-    $this->getFilesystem()->replaceTokens($this->environment->get('sf_test_dir').'/functional/'.$app.DIRECTORY_SEPARATOR.$module.'ActionsTest.php', '##', '##', $constants);
-
-    // customize php and yml files
-    $finder = sfFinder::type('file')->name('*.php', '*.yml');
-    $this->getFilesystem()->replaceTokens($finder->in($moduleDir), '##', '##', $constants);
-
-    if (!$options['secured']) {
-      $this->getFilesystem()->remove($moduleDir . '/config/security.yml');
-      // FIXME: check if there are any files left, if yes, discard the dir!
-    }
-
-    $moduleYaml = array();
-
-    if ($options['internal']) {
-      $moduleYaml[] = 'all:';
-      $moduleYaml[] = '  is_internal: true';
-    }
-
-    if (count($moduleYaml)) {
-      file_put_contents($moduleDir . '/config/module.yml', join("\n", $moduleYaml));
-    }
-
-    $this->logSection($this->getFullName(), 'Done.');
-  }
 
 }

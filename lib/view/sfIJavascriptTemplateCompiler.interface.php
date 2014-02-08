@@ -14,12 +14,12 @@
  */
 interface sfIJavascriptTemplateCompiler
 {
-  /**
-   * Compile the string
-   *
-   * @param string $string Compiles the string
-   * @param array $options Array of options for the compilation
-   */
-  public function compile($string, $options = array());
+    /**
+     * Compile the string
+     *
+     * @param string $string  Compiles the string
+     * @param array  $options Array of options for the compilation
+     */
+    public function compile($string, $options = array());
 
 }

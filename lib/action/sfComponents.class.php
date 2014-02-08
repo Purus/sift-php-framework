@@ -14,9 +14,9 @@
  */
 abstract class sfComponents extends sfComponent
 {
-  public function execute()
-  {
-    throw new sfInitializationException('Initialization failed');
-  }
+    public function execute()
+    {
+        throw new sfInitializationException('Initialization failed');
+    }
 
 }

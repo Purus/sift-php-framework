@@ -12,4 +12,6 @@
  * @package    Sift
  * @subpackage text
  */
-class myText extends sfText {}
+class myText extends sfText
+{
+}

@@ -10,17 +10,18 @@
 /**
  * DataUri convertable interface
  *
- * @package Sift
+ * @package    Sift
  * @subpackage util
  */
 interface sfIDataUriConvertable
 {
-  /**
-   * Converts the object to data uri
-   *
-   * @param boolean $raw Return raw data uri or sfDataUri object?
-   * @return string|sfDataUri
-   */
-  public function toDataUri($raw = true);
+    /**
+     * Converts the object to data uri
+     *
+     * @param boolean $raw Return raw data uri or sfDataUri object?
+     *
+     * @return string|sfDataUri
+     */
+    public function toDataUri($raw = true);
 
 }

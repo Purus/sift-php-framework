@@ -9,7 +9,9 @@
 /**
  * sfDateTimeException is thrown when an error occurs while manipulating dates.
  *
- * @package Sift
+ * @package    Sift
  * @subpackage exception
  */
-class sfDateTimeException extends sfException {}
+class sfDateTimeException extends sfException
+{
+}

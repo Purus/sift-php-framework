@@ -12,4 +12,6 @@
  * @package    Sift
  * @subpackage text_filter
  */
-abstract class sfTextFilter extends sfConfigurable implements sfITextFilter {}
+abstract class sfTextFilter extends sfConfigurable implements sfITextFilter
+{
+}

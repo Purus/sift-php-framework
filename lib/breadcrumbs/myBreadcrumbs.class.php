@@ -9,7 +9,9 @@
 /**
  * myBreadcrumbs provides easy interface for building breadcrumb navigation.
  *
- * @package Sift
+ * @package    Sift
  * @subpackage breadcrumbs
  */
-class myBreadcrumbs extends sfBreadcrumbs {}
+class myBreadcrumbs extends sfBreadcrumbs
+{
+}

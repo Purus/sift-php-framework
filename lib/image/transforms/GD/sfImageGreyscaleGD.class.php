@@ -13,30 +13,31 @@
  *
  * Reduces the level of detail of an image.
  *
- * @package Sift
+ * @package    Sift
  * @subpackage image
  */
 class sfImageGreyscaleGD extends sfImageTransformAbstract
 {
-  /**
-   * Apply the transform to the sfImage object.
-   *
-   * @param sfImage
-   * @return sfImage
-   */
-  protected function transform(sfImage $image)
-  {
-    $resource = $image->getAdapter()->getHolder();
+    /**
+     * Apply the transform to the sfImage object.
+     *
+     * @param sfImage
+     *
+     * @return sfImage
+     */
+    protected function transform(sfImage $image)
+    {
+        $resource = $image->getAdapter()->getHolder();
 
-    $resourcex = imagesx($resource);
-    $resourcey = imagesy($resource);
+        $resourcex = imagesx($resource);
+        $resourcey = imagesy($resource);
 
-    if (function_exists('imagefilter')) {
-      imagefilter($resource, IMG_FILTER_GRAYSCALE);
-    } else {
-      throw new sfImageTransformException(sprintf('Cannot perform transform, GD does not support imagefilter '));
+        if (function_exists('imagefilter')) {
+            imagefilter($resource, IMG_FILTER_GRAYSCALE);
+        } else {
+            throw new sfImageTransformException(sprintf('Cannot perform transform, GD does not support imagefilter '));
+        }
+
+        return $image;
     }
-
-    return $image;
-  }
 }

@@ -14,9 +14,9 @@
  */
 class sfDatabaseException extends sfException
 {
-  /**
-   * Session open fails
-   */
-  const SESSION_ERROR = 1;
+    /**
+     * Session open fails
+     */
+    const SESSION_ERROR = 1;
 
 }

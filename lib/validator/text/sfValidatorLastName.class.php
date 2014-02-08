@@ -12,4 +12,6 @@
  * @package    Sift
  * @subpackage validator
  */
-class sfValidatorLastName extends sfValidatorFirstName {}
+class sfValidatorLastName extends sfValidatorFirstName
+{
+}

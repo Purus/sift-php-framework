@@ -14,6 +14,6 @@
  */
 class sfRss091Feed extends sfRssFeed
 {
-  protected $version = '0.91';
+    protected $version = '0.91';
 
 }

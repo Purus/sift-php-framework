@@ -14,95 +14,95 @@
  */
 class sfActionStackEntry
 {
-  protected $actionInstance = null,
-    $actionName     = null,
-    $moduleName     = null,
-    $presentation   = null,
-    $viewInstance   = null;
+    protected $actionInstance = null,
+        $actionName = null,
+        $moduleName = null,
+        $presentation = null,
+        $viewInstance = null;
 
-  /**
-   * Class constructor.
-   *
-   * @param string A module name
-   * @param string An action name
-   * @param sfAction An sfAction implementation instance
-   */
-  public function __construct($moduleName, $actionName, $actionInstance)
-  {
-    $this->actionName     = $actionName;
-    $this->actionInstance = $actionInstance;
-    $this->moduleName     = $moduleName;
-  }
+    /**
+     * Class constructor.
+     *
+     * @param string   A module name
+     * @param string   An action name
+     * @param sfAction An sfAction implementation instance
+     */
+    public function __construct($moduleName, $actionName, $actionInstance)
+    {
+        $this->actionName = $actionName;
+        $this->actionInstance = $actionInstance;
+        $this->moduleName = $moduleName;
+    }
 
-  /**
-   * Retrieves this entry's action name.
-   *
-   * @return string An action name
-   */
-  public function getActionName()
-  {
-    return $this->actionName;
-  }
+    /**
+     * Retrieves this entry's action name.
+     *
+     * @return string An action name
+     */
+    public function getActionName()
+    {
+        return $this->actionName;
+    }
 
-  /**
-   * Retrieves this entry's action instance.
-   *
-   * @return sfAction An sfAction implementation instance
-   */
-  public function getActionInstance()
-  {
-    return $this->actionInstance;
-  }
+    /**
+     * Retrieves this entry's action instance.
+     *
+     * @return sfAction An sfAction implementation instance
+     */
+    public function getActionInstance()
+    {
+        return $this->actionInstance;
+    }
 
-  /**
-   * Retrieves this entry's view instance.
-   *
-   * @return sfView A sfView implementation instance.
-   */
-  public function getViewInstance()
-  {
-    return $this->viewInstance;
-  }
+    /**
+     * Retrieves this entry's view instance.
+     *
+     * @return sfView A sfView implementation instance.
+     */
+    public function getViewInstance()
+    {
+        return $this->viewInstance;
+    }
 
-  /**
-   * Sets this entry's view instance.
-   *
-   * @param sfView A sfView implementation instance.
-   */
-  public function setViewInstance($viewInstance)
-  {
-    $this->viewInstance = $viewInstance;
-  }
+    /**
+     * Sets this entry's view instance.
+     *
+     * @param sfView A sfView implementation instance.
+     */
+    public function setViewInstance($viewInstance)
+    {
+        $this->viewInstance = $viewInstance;
+    }
 
-  /**
-   * Retrieves this entry's module name.
-   *
-   * @return string A module name
-   */
-  public function getModuleName()
-  {
-    return $this->moduleName;
-  }
+    /**
+     * Retrieves this entry's module name.
+     *
+     * @return string A module name
+     */
+    public function getModuleName()
+    {
+        return $this->moduleName;
+    }
 
-  /**
-   * Retrieves this entry's rendered view presentation.
-   *
-   * This will only exist if the view has processed and the render mode is set to sfView::RENDER_VAR.
-   *
-   * @return string Rendered view presentation
-   */
-  public function & getPresentation()
-  {
-    return $this->presentation;
-  }
+    /**
+     * Retrieves this entry's rendered view presentation.
+     *
+     * This will only exist if the view has processed and the render mode is set to sfView::RENDER_VAR.
+     *
+     * @return string Rendered view presentation
+     */
+    public function & getPresentation()
+    {
+        return $this->presentation;
+    }
 
-  /**
-   * Sets the rendered presentation for this action.
-   *
-   * @param string A rendered presentation.
-   */
-  public function setPresentation(&$presentation)
-  {
-    $this->presentation =& $presentation;
-  }
+    /**
+     * Sets the rendered presentation for this action.
+     *
+     * @param string A rendered presentation.
+     */
+    public function setPresentation(&$presentation)
+    {
+        $this->presentation =& $presentation;
+    }
 }

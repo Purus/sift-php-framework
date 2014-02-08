@@ -9,50 +9,51 @@
 /**
  * sfFormJavascriptValidationMessagesCollection represents a collection of javascript validation messages
  *
- * @package Sift
+ * @package    Sift
  * @subpackage form_javascript
  */
 class sfFormJavascriptValidationMessagesCollection extends sfCollection implements sfIJsonSerializable
 {
-  /**
-   * Allowed type for this collection
-   *
-   * @var string
-   */
-  protected $itemType = 'sfFormJavascriptValidationFieldMessages';
+    /**
+     * Allowed type for this collection
+     *
+     * @var string
+     */
+    protected $itemType = 'sfFormJavascriptValidationFieldMessages';
 
-  /**
-   * Offset get the messages with the given $name.
-   *
-   * @param string $name
-   * @return sfFormJavascriptValidationFieldMessages|null
-   */
-  public function offsetGet($name)
-  {
-    foreach ($this as $messages) {
-      if ($messages->getFieldName() == $name) {
-        return $messages;
-      }
-    }
-  }
-
-  /**
-   * Return data which should be serialized to JSON
-   *
-   * @return array
-   */
-  public function jsonSerialize()
-  {
-    $data = array();
-    foreach ($this as $message) {
-      $serializableMessages = array();
-      foreach ($message->getMessages() as $name => $singleMessage) {
-        $serializableMessages[$name] = $singleMessage->__toString();
-      }
-      $data[$message->getFormFieldName()] = $serializableMessages;
+    /**
+     * Offset get the messages with the given $name.
+     *
+     * @param string $name
+     *
+     * @return sfFormJavascriptValidationFieldMessages|null
+     */
+    public function offsetGet($name)
+    {
+        foreach ($this as $messages) {
+            if ($messages->getFieldName() == $name) {
+                return $messages;
+            }
+        }
     }
 
-    return $data;
-  }
+    /**
+     * Return data which should be serialized to JSON
+     *
+     * @return array
+     */
+    public function jsonSerialize()
+    {
+        $data = array();
+        foreach ($this as $message) {
+            $serializableMessages = array();
+            foreach ($message->getMessages() as $name => $singleMessage) {
+                $serializableMessages[$name] = $singleMessage->__toString();
+            }
+            $data[$message->getFormFieldName()] = $serializableMessages;
+        }
+
+        return $data;
+    }
 
 }

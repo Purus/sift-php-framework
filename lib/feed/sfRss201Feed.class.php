@@ -14,7 +14,7 @@
  */
 class sfRss201Feed extends sfRssFeed
 {
-  // the 2.0.1 spec says: "version attribute must be 2.0"
-  protected $version = '2.0';
+    // the 2.0.1 spec says: "version attribute must be 2.0"
+    protected $version = '2.0';
 
 }

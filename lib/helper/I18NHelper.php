@@ -20,19 +20,20 @@
  * @param array $args
  * @param integer $number
  * @param string $catalogue
+ *
  * @return string
  * @throws sfException If choice cannot be formatted
  */
 function format_number_choice($text, $args, $number, $catalogue = 'messages')
 {
-  $translated = __($text, $args, $catalogue);
-  $retval = sfI18nChoiceFormatter::getInstance()->format($translated, $number);
+    $translated = __($text, $args, $catalogue);
+    $retval = sfI18nChoiceFormatter::getInstance()->format($translated, $number);
 
-  if ($retval === false) {
-    throw new sfException(sprintf('Unable to parse your choice "%s"', $translated));
-  }
+    if ($retval === false) {
+        throw new sfException(sprintf('Unable to parse your choice "%s"', $translated));
+    }
 
-  return $retval;
+    return $retval;
 }
 
 /**
@@ -40,15 +41,18 @@ function format_number_choice($text, $args, $number, $catalogue = 'messages')
  *
  * @param string $country_iso
  * @param string $culture
+ *
  * @return string
  */
 function format_country($country_iso, $culture = null)
 {
-  $countries = sfCulture::getInstance($culture === null ?
-                  sfContext::getInstance()->getUser()->getCulture() : $culture)
-                  ->getCountries();
+    $countries = sfCulture::getInstance(
+        $culture === null ?
+            sfContext::getInstance()->getUser()->getCulture() : $culture
+    )
+        ->getCountries();
 
-  return isset($countries[$country_iso]) ? $countries[$country_iso] : '';
+    return isset($countries[$country_iso]) ? $countries[$country_iso] : '';
 }
 
 /**
@@ -56,17 +60,20 @@ function format_country($country_iso, $culture = null)
  *
  * @param string $language_iso
  * @param string $culture
+ *
  * @return string
  */
 function format_language($language_iso, $culture = null)
 {
-  $language_iso = substr($language_iso, 0, 2);
+    $language_iso = substr($language_iso, 0, 2);
 
-  $languages = sfCulture::getInstance($culture === null ?
-                  sfContext::getInstance()->getUser()->getCulture() : $culture)
-                ->getLanguages();
+    $languages = sfCulture::getInstance(
+        $culture === null ?
+            sfContext::getInstance()->getUser()->getCulture() : $culture
+    )
+        ->getLanguages();
 
-  return isset($languages[$language_iso]) ? $languages[$language_iso] : '';
+    return isset($languages[$language_iso]) ? $languages[$language_iso] : '';
 }
 
 /**
@@ -74,13 +81,16 @@ function format_language($language_iso, $culture = null)
  *
  * @param string $currency_iso Currency ISO code
  * @param string $culture
+ *
  * @return string The currency name
  */
 function get_currency_name($currency_iso, $culture = null)
 {
-  return sfCulture::getInstance($culture === null ?
-          sfContext::getInstance()->getUser()->getCulture() : $culture)
-          ->getCurrency($currency_iso);
+    return sfCulture::getInstance(
+        $culture === null ?
+            sfContext::getInstance()->getUser()->getCulture() : $culture
+    )
+        ->getCurrency($currency_iso);
 }
 
 /**
@@ -88,15 +98,18 @@ function get_currency_name($currency_iso, $culture = null)
  *
  * @param string $currency_iso Currency ISO code
  * @param string $culture
+ *
  * @return string The symbol or $currency_iso when symbol is not set
  */
 function get_currency_symbol($currency_iso, $culture = null)
 {
-  $symbol = sfCulture::getInstance($culture === null ?
-          sfContext::getInstance()->getUser()->getCulture() : $culture)
-          ->getCurrencySymbol($currency_iso);
+    $symbol = sfCulture::getInstance(
+        $culture === null ?
+            sfContext::getInstance()->getUser()->getCulture() : $culture
+    )
+        ->getCurrencySymbol($currency_iso);
 
-  return $symbol ? $symbol : $currency_iso;
+    return $symbol ? $symbol : $currency_iso;
 }
 
 /**
@@ -106,87 +119,96 @@ function get_currency_symbol($currency_iso, $culture = null)
  */
 function i18n_culture_selector($options = array())
 {
-  $options = _parse_attributes($options);
+    $options = _parse_attributes($options);
 
-  $supported_langs  = sfConfig::get('sf_i18n_enabled_cultures', array());
+    $supported_langs = sfConfig::get('sf_i18n_enabled_cultures', array());
 
-  // en_BG => en
-  $culture    = substr(sfContext::getInstance()->getUser()->getCulture(), 0, 2);
-  // default culture
-  $default    = substr(sfConfig::get('sf_i18n_default_culture'), 0, 2);
-  // hostname
-  $serverName = sfContext::getInstance()->getRequest()->getHost();
+    // en_BG => en
+    $culture = substr(sfContext::getInstance()->getUser()->getCulture(), 0, 2);
+    // default culture
+    $default = substr(sfConfig::get('sf_i18n_default_culture'), 0, 2);
+    // hostname
+    $serverName = sfContext::getInstance()->getRequest()->getHost();
 
-  // prepare output
-  $html     = array();
+    // prepare output
+    $html = array();
 
-  $id = 'i18n-culture-selector';
-  if (isset($options['id'])) {
-    $id = $options['id'];
-  }
-
-  // display current culture?
-  $current = _get_option($options, 'current');
-
-  $html[]  = sprintf('<ul id="%s">', $id);
-
-  if (count($supported_langs)) {
-    $reg = array();
-    foreach ($supported_langs as $supported) {
-      $reg[substr($supported, 0, 2)] = $supported;
+    $id = 'i18n-culture-selector';
+    if (isset($options['id'])) {
+        $id = $options['id'];
     }
 
-    $regexpr = implode('|', array_keys($reg));
-    $clearServerName  = preg_replace("/($regexpr)+\./i", '', $serverName);
-  }
+    // display current culture?
+    $current = _get_option($options, 'current');
 
-  foreach ($supported_langs as $lang) {
-    $lang = substr($lang, 0, 2);
-    $f    = format_language($lang, $lang);
+    $html[] = sprintf('<ul id="%s">', $id);
 
-    // we have current culture
-    if ($lang == $culture) {
-      if ($current) {
-        $content = content_tag('span', $f);
-      } else {
-        continue;
-      }
-    } else {
-      $link = 'http://';
+    if (count($supported_langs)) {
+        $reg = array();
+        foreach ($supported_langs as $supported) {
+            $reg[substr($supported, 0, 2)] = $supported;
+        }
 
-      if ($lang == $default) {
-        $link .= $clearServerName;
-      } else {
-        $link .= $lang . '.' . $clearServerName;
-      }
-
-      $link    = url_for($link, true) . url_for('@homepage');
-      $content =  content_tag('a', sprintf('<span><span>%s</span></span>', $f), array('title' => $f, 'href' => $link));
+        $regexpr = implode('|', array_keys($reg));
+        $clearServerName = preg_replace("/($regexpr)+\./i", '', $serverName);
     }
 
-    $html[] = tag('li', array('id' => sprintf('culture-%s', $lang), 'class' => $lang == $culture ? 'current' : 'not-current'), true);
-    $html[] = $content;
-    $html[] = '</li>';
-  }
+    foreach ($supported_langs as $lang) {
+        $lang = substr($lang, 0, 2);
+        $f = format_language($lang, $lang);
 
-  $html[] = '</ul>';
+        // we have current culture
+        if ($lang == $culture) {
+            if ($current) {
+                $content = content_tag('span', $f);
+            } else {
+                continue;
+            }
+        } else {
+            $link = 'http://';
 
-  return join("\n", $html);
+            if ($lang == $default) {
+                $link .= $clearServerName;
+            } else {
+                $link .= $lang . '.' . $clearServerName;
+            }
+
+            $link = url_for($link, true) . url_for('@homepage');
+            $content = content_tag(
+                'a',
+                sprintf('<span><span>%s</span></span>', $f),
+                array('title' => $f, 'href' => $link)
+            );
+        }
+
+        $html[] = tag(
+            'li',
+            array('id' => sprintf('culture-%s', $lang), 'class' => $lang == $culture ? 'current' : 'not-current'),
+            true
+        );
+        $html[] = $content;
+        $html[] = '</li>';
+    }
+
+    $html[] = '</ul>';
+
+    return join("\n", $html);
 }
 
 /**
  * Returns an array of enabled cultures
  *
  * @param boolean $format Format using format_language() ?
+ *
  * @return array Array of enabled cultures
  */
 function get_enabled_cultures($format = true)
 {
-  $enabled = sfConfig::get('sf_i18n_enabled_cultures', array());
-  $cultures = array();
-  foreach ($enabled as $culture) {
-    $cultures[$culture] = $format ? format_language($culture) : $culture;
-  }
+    $enabled = sfConfig::get('sf_i18n_enabled_cultures', array());
+    $cultures = array();
+    foreach ($enabled as $culture) {
+        $cultures[$culture] = $format ? format_language($culture) : $culture;
+    }
 
-  return $cultures;
+    return $cultures;
 }

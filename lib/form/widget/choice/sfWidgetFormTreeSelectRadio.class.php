@@ -14,15 +14,15 @@
  */
 class sfWidgetFormTreeSelectRadio extends sfWidgetFormTreeSelectCheckbox
 {
-  /**
-   * @param array $options     An array of options
-   * @param array $attributes  An array of default HTML attributes
-   *
-   * @see sfWidgetFormChoice
-   */
-  protected function configure($options = array(), $attributes = array())
-  {
-    parent::configure($options, $attributes);
-    $this->setOption('input_type', 'radio');
-  }
+    /**
+     * @param array $options    An array of options
+     * @param array $attributes An array of default HTML attributes
+     *
+     * @see sfWidgetFormChoice
+     */
+    protected function configure($options = array(), $attributes = array())
+    {
+        parent::configure($options, $attributes);
+        $this->setOption('input_type', 'radio');
+    }
 }

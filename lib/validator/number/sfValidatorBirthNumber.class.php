@@ -15,24 +15,24 @@
  */
 class sfValidatorBirthNumber extends sfValidatorBase
 {
-  /**
-   * @see sfValidatorBase
-   */
-  protected function configure($options = array(), $messages = array())
-  {
-    $this->setMessage('invalid', '"%value%" is invalid birth number.');
-  }
-
-  /**
-   * @see sfValidatorBase
-   */
-  public function doClean($value)
-  {
-    if (!sfValidatorTools::verifyBirthNumber($value)) {
-      throw new sfValidatorError($this, 'invalid', array('value' => $value));
+    /**
+     * @see sfValidatorBase
+     */
+    protected function configure($options = array(), $messages = array())
+    {
+        $this->setMessage('invalid', '"%value%" is invalid birth number.');
     }
 
-    return $value;
-  }
+    /**
+     * @see sfValidatorBase
+     */
+    public function doClean($value)
+    {
+        if (!sfValidatorTools::verifyBirthNumber($value)) {
+            throw new sfValidatorError($this, 'invalid', array('value' => $value));
+        }
+
+        return $value;
+    }
 
 }

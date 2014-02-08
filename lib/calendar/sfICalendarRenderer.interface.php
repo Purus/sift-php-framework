@@ -9,11 +9,11 @@
 /**
  * sfICalendarRenderer is an interface for calendar renderers
  *
- * @package Sift
+ * @package    Sift
  * @subpackage calendar
  */
 interface sfICalendarRenderer
 {
-  public function render(sfCalendar $calendar, $options = array());
+    public function render(sfCalendar $calendar, $options = array());
 
 }

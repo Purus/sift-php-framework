@@ -11,117 +11,122 @@
  *
  * Adapter abstract class.
  *
- * @package Sift
+ * @package    Sift
  * @subpackage image
  */
 abstract class sfImageTransformAdapterAbstract
 {
- /**
-   * Image filename.
-   * @access protected
-   * @var string
-  */
-  protected $filename = 'Untitled.png';
+    /**
+     * Image filename.
+     *
+     * @access protected
+     * @var string
+     */
+    protected $filename = 'Untitled.png';
 
-  /**
-   * Default ouput mime type.
-   * @access protected
-   * @var string
-  */
-  protected $mime_type = 'image/png';
+    /**
+     * Default ouput mime type.
+     *
+     * @access protected
+     * @var string
+     */
+    protected $mime_type = 'image/png';
 
-  /**
-   * Quality.
-   * @access protected
-   * @var string
-  */
-  protected $quality = null;
+    /**
+     * Quality.
+     *
+     * @access protected
+     * @var string
+     */
+    protected $quality = null;
 
-  abstract public function create($x=1, $y=1);
+    abstract public function create($x = 1, $y = 1);
 
-  abstract public function load($filename, $mime);
+    abstract public function load($filename, $mime);
 
-  abstract public function loadString($string);
+    abstract public function loadString($string);
 
-  abstract public function save();
+    abstract public function save();
 
-  abstract public function saveAs($filename, $mime='');
+    abstract public function saveAs($filename, $mime = '');
 
-  abstract public function copy();
+    abstract public function copy();
 
-  abstract public function getWidth();
+    abstract public function getWidth();
 
-  abstract public function getHeight();
+    abstract public function getHeight();
 
-  abstract public function hasHolder();
+    abstract public function hasHolder();
 
-  abstract public function getHolder();
+    abstract public function getHolder();
 
-  abstract public function setHolder($holder);
+    abstract public function setHolder($holder);
 
-  abstract public function getMIMEType();
+    abstract public function getMIMEType();
 
-  abstract public function setMIMEType($mime);
+    abstract public function setMIMEType($mime);
 
-  abstract public function __toString();
+    abstract public function __toString();
 
-  abstract public function getAdapterName();
+    abstract public function getAdapterName();
 
-  abstract public function getRGBFromPixel($x, $y);
+    abstract public function getRGBFromPixel($x, $y);
 
-  /**
-   * Sets the image filename
-   * @param string
-   *
-   * @return boolean
-   */
-  public function setFilename($filename)
-  {
-    if ('' !== $filename) {
-      $this->filename = $filename;
+    /**
+     * Sets the image filename
+     *
+     * @param string
+     *
+     * @return boolean
+     */
+    public function setFilename($filename)
+    {
+        if ('' !== $filename) {
+            $this->filename = $filename;
 
-      return true;
+            return true;
+        }
+
+        return false;
+
     }
 
-    return false;
-
-  }
-
-  /**
-   * Returns the image full filename
-   *
-   * @return string
-   */
-  public function getFilename()
-  {
-    return $this->filename;
-  }
-
-  /**
-   * Sets the image filename
-   * @param integer Quality of the image
-   *
-   * @return boolean
-   */
-  public function setQuality($quality)
-  {
-    if (is_numeric($quality) && $quality >= 0 && $quality <= 100) {
-      $this->quality = $quality;
-
-      return true;
+    /**
+     * Returns the image full filename
+     *
+     * @return string
+     */
+    public function getFilename()
+    {
+        return $this->filename;
     }
 
-    return false;
-  }
+    /**
+     * Sets the image filename
+     *
+     * @param integer Quality of the image
+     *
+     * @return boolean
+     */
+    public function setQuality($quality)
+    {
+        if (is_numeric($quality) && $quality >= 0 && $quality <= 100) {
+            $this->quality = $quality;
 
-  /**
-   * Returns the current setting for the image quality
-   *
-   * @return integer
-   */
-  public function getQuality()
-  {
-    return $this->quality;
-  }
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Returns the current setting for the image quality
+     *
+     * @return integer
+     */
+    public function getQuality()
+    {
+        return $this->quality;
+    }
 
 }

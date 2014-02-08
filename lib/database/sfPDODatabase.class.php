@@ -14,57 +14,57 @@
  */
 class sfPDODatabase extends sfDatabase
 {
-  /**
-   * Connects to the database.
-   *
-   * @throws sfDatabaseException If a connection could not be created
-   */
-  public function connect()
-  {
-    // determine how to get our parameters
-    $method = $this->getParameter('method', 'dsn');
+    /**
+     * Connects to the database.
+     *
+     * @throws sfDatabaseException If a connection could not be created
+     */
+    public function connect()
+    {
+        // determine how to get our parameters
+        $method = $this->getParameter('method', 'dsn');
 
-    // get parameters
-    switch ($method) {
-      case 'dsn':
-        $dsn = $this->getParameter('dsn');
-        if ($dsn == null) {
-          // missing required dsn parameter
-          throw new sfDatabaseException('Database configuration specifies method "dsn", but is missing dsn parameter');
+        // get parameters
+        switch ($method) {
+            case 'dsn':
+                $dsn = $this->getParameter('dsn');
+                if ($dsn == null) {
+                    // missing required dsn parameter
+                    throw new sfDatabaseException('Database configuration specifies method "dsn", but is missing dsn parameter');
+                }
+                break;
         }
-        break;
+
+        try {
+            $pdo_username = $this->getParameter('username');
+            $pdo_password = $this->getParameter('password');
+            // driver specific options
+            $options = $this->getParameter('options', array());
+            $this->connection = new sfPDO($dsn, $pdo_username, $pdo_password, $options);
+        } catch (PDOException $e) {
+            throw new sfDatabaseException($e->getMessage());
+        }
+
+        // lets generate exceptions instead of silent failures
+        if (defined('PDO::ATTR_ERRMODE')) {
+            $this->connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        } else {
+            $this->connection->setAttribute(PDO_ATTR_ERRMODE, PDO_ERRMODE_EXCEPTION);
+        }
     }
 
-    try {
-      $pdo_username = $this->getParameter('username');
-      $pdo_password = $this->getParameter('password');
-      // driver specific options
-      $options      = $this->getParameter('options', array());
-      $this->connection = new sfPDO($dsn, $pdo_username, $pdo_password, $options);
-    } catch (PDOException $e) {
-      throw new sfDatabaseException($e->getMessage());
+    /**
+     * Executes the shutdown procedure.
+     *
+     * @return void
+     *
+     * @throws sfDatabaseException If an error occurs while shutting down this database
+     */
+    public function shutdown()
+    {
+        if ($this->connection !== null) {
+            $this->connection = null;
+        }
     }
-
-    // lets generate exceptions instead of silent failures
-    if (defined('PDO::ATTR_ERRMODE')) {
-      $this->connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    } else {
-      $this->connection->setAttribute(PDO_ATTR_ERRMODE, PDO_ERRMODE_EXCEPTION);
-    }
-  }
-
-  /**
-   * Executes the shutdown procedure.
-   *
-   * @return void
-   *
-   * @throws sfDatabaseException If an error occurs while shutting down this database
-   */
-  public function shutdown()
-  {
-    if ($this->connection !== null) {
-      $this->connection = null;
-    }
-  }
 
 }

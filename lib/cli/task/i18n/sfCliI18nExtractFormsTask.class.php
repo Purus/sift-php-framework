@@ -14,30 +14,33 @@
  */
 class sfCliI18nExtractFormsTask extends sfCliI18nExtractFormTask
 {
-  protected $formFiles = array();
+    protected $formFiles = array();
 
-  /**
-   * @see sfCliTask
-   */
-  protected function configure()
-  {
-    parent::configure();
+    /**
+     * @see sfCliTask
+     */
+    protected function configure()
+    {
+        parent::configure();
 
-    $this->addOptions(array(
-      new sfCliCommandOption('exclude-global', null, sfCliCommandOption::PARAMETER_NONE, 'Exclude project wide forms?'),
-      new sfCliCommandOption('display-new', null, sfCliCommandOption::PARAMETER_NONE, 'Output all new found strings'),
-      new sfCliCommandOption('display-old', null, sfCliCommandOption::PARAMETER_NONE, 'Output all old strings'),
-      new sfCliCommandOption('auto-save', null, sfCliCommandOption::PARAMETER_NONE, 'Save the new strings'),
-      new sfCliCommandOption('auto-delete', null, sfCliCommandOption::PARAMETER_NONE, 'Delete old strings'),
-    ));
+        $this->addOptions(
+            array(
+                new sfCliCommandOption('exclude-global', null, sfCliCommandOption::PARAMETER_NONE, 'Exclude project wide forms?'),
+                new sfCliCommandOption('display-new', null, sfCliCommandOption::PARAMETER_NONE, 'Output all new found strings'),
+                new sfCliCommandOption('display-old', null, sfCliCommandOption::PARAMETER_NONE, 'Output all old strings'),
+                new sfCliCommandOption('auto-save', null, sfCliCommandOption::PARAMETER_NONE, 'Save the new strings'),
+                new sfCliCommandOption('auto-delete', null, sfCliCommandOption::PARAMETER_NONE, 'Delete old strings'),
+            )
+        );
 
-    $this->namespace = 'i18n';
-    $this->name = 'extract-forms';
-    $this->briefDescription = 'Extracts i18n strings from forms from an application or plugin';
+        $this->namespace = 'i18n';
+        $this->name = 'extract-forms';
+        $this->briefDescription = 'Extracts i18n strings from forms from an application or plugin';
 
-    $scriptName = $this->environment->get('script_name');
+        $scriptName = $this->environment->get('script_name');
 
-    $this->detailedDescription = <<<EOF
+        $this->detailedDescription
+            = <<<EOF
 The [i18n:extract|INFO] task extracts i18n strings from a form:
 
   [{$scriptName} i18n:extract-forms myForm cs_CZ|INFO]
@@ -63,88 +66,88 @@ To automatically delete old strings, use the [--auto-delete|COMMENT]
 
   [{$scriptName} i18n:extract-forms --auto-delete myForm cs_CZ|INFO]
 EOF;
-  }
-
-  /**
-   * @see sfCliTask
-   */
-  public function execute($arguments = array(), $options = array())
-  {
-    $application = $arguments['application'];
-
-    // autoload all forms
-    $this->loadForms();
-
-    $this->checkAppExists($application);
-
-    $dirs = array();
-
-    // find all form in the application
-    $finder = sfFinder::type('file')->name('*Form.class.php');
-
-    // application specific forms
-    if (is_dir($formPath = $this->environment->get('sf_apps_dir').'/' . $application . '/lib/form')) {
-      $dirs[] = $formPath;
     }
 
-    if (!$options['exclude-global']) {
-      if (is_dir($formPath = $this->environment->get('sf_root_dir').'/lib/form')) {
-        $dirs[] = $formPath;
-      }
-    }
+    /**
+     * @see sfCliTask
+     */
+    public function execute($arguments = array(), $options = array())
+    {
+        $application = $arguments['application'];
 
-    $dirs = array_unique($dirs);
-    $finder = sfFinder::type('file')->name('*Form.class.php');
+        // autoload all forms
+        $this->loadForms();
 
-    foreach ($finder->in($dirs) as $file) {
-      $form = basename($file, '.class.php');
+        $this->checkAppExists($application);
 
-      $this->checkFormClass($form);
+        $dirs = array();
 
-      $this->logSection($this->getFullName(), sprintf('Extracting strings from "%s"', $form));
+        // find all form in the application
+        $finder = sfFinder::type('file')->name('*Form.class.php');
 
-      $extract = new sfI18nFormExtract(array(
-        'culture' => $arguments['culture'],
-        'form'    => $form
-      ));
-
-      $extract->extract();
-
-      $this->logSection('i18n', sprintf('found "%d" new i18n strings', $extract->getNewMessagesCount()));
-      $this->logSection('i18n', sprintf('found "%d" old i18n strings', $extract->getOldMessagesCount()));
-
-      if ($options['display-new']) {
-        $this->logSection('i18n', sprintf('display new i18n strings', $extract->getNewMessagesCount()));
-        foreach ($extract->getNewMessages() as $domain => $messages) {
-          foreach ($messages as $message) {
-            $this->log('               '.$message."\n");
-          }
+        // application specific forms
+        if (is_dir($formPath = $this->environment->get('sf_apps_dir') . '/' . $application . '/lib/form')) {
+            $dirs[] = $formPath;
         }
-      }
 
-      if ($options['auto-save']) {
-        $this->logSection('i18n', 'saving new i18n strings');
-
-        $extract->saveNewMessages();
-      }
-
-      if ($options['display-old']) {
-        $this->logSection('i18n', sprintf('display old i18n strings', $extract->getOldMessagesCount()));
-        foreach ($extract->getOldMessages() as $domain => $messages) {
-          foreach ($messages as $message) {
-            $this->log('               '.$message."\n");
-          }
+        if (!$options['exclude-global']) {
+            if (is_dir($formPath = $this->environment->get('sf_root_dir') . '/lib/form')) {
+                $dirs[] = $formPath;
+            }
         }
-      }
 
-      if ($options['auto-delete']) {
-        $this->logSection('i18n', 'deleting old i18n strings');
+        $dirs = array_unique($dirs);
+        $finder = sfFinder::type('file')->name('*Form.class.php');
 
-        $extract->deleteOldMessages();
-      }
+        foreach ($finder->in($dirs) as $file) {
+            $form = basename($file, '.class.php');
+
+            $this->checkFormClass($form);
+
+            $this->logSection($this->getFullName(), sprintf('Extracting strings from "%s"', $form));
+
+            $extract = new sfI18nFormExtract(array(
+                'culture' => $arguments['culture'],
+                'form'    => $form
+            ));
+
+            $extract->extract();
+
+            $this->logSection('i18n', sprintf('found "%d" new i18n strings', $extract->getNewMessagesCount()));
+            $this->logSection('i18n', sprintf('found "%d" old i18n strings', $extract->getOldMessagesCount()));
+
+            if ($options['display-new']) {
+                $this->logSection('i18n', sprintf('display new i18n strings', $extract->getNewMessagesCount()));
+                foreach ($extract->getNewMessages() as $domain => $messages) {
+                    foreach ($messages as $message) {
+                        $this->log('               ' . $message . "\n");
+                    }
+                }
+            }
+
+            if ($options['auto-save']) {
+                $this->logSection('i18n', 'saving new i18n strings');
+
+                $extract->saveNewMessages();
+            }
+
+            if ($options['display-old']) {
+                $this->logSection('i18n', sprintf('display old i18n strings', $extract->getOldMessagesCount()));
+                foreach ($extract->getOldMessages() as $domain => $messages) {
+                    foreach ($messages as $message) {
+                        $this->log('               ' . $message . "\n");
+                    }
+                }
+            }
+
+            if ($options['auto-delete']) {
+                $this->logSection('i18n', 'deleting old i18n strings');
+
+                $extract->deleteOldMessages();
+            }
+
+        }
 
     }
-
-  }
 
 }

@@ -9,16 +9,16 @@
 /**
  * Partial view interface
  *
- * @package Sift
+ * @package    Sift
  * @subpackage helper
  */
 interface sfIPartialView extends sfIView
 {
-  /**
-   * Set partial vars
-   *
-   * @param array $partialVars
-   */
-  public function setPartialVars(array $partialVars);
+    /**
+     * Set partial vars
+     *
+     * @param array $partialVars
+     */
+    public function setPartialVars(array $partialVars);
 
 }

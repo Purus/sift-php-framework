@@ -9,122 +9,123 @@
 /**
  * sfFormJavascriptValidationFielsRules represents javascript validation rules for a form field
  *
- * @package Sift
+ * @package    Sift
  * @subpackage form_javascript
  */
 class sfFormJavascriptValidationFieldRules implements ArrayAccess, sfIJsonSerializable
 {
-  /**
-   * Field name (short version)
-   *
-   * @var string
-   */
-  protected $fieldName;
+    /**
+     * Field name (short version)
+     *
+     * @var string
+     */
+    protected $fieldName;
 
-  /**
-   * Field name used in the form ie. formName[fieldName]
-   *
-   * @var string
-   */
-  protected $formFieldName;
+    /**
+     * Field name used in the form ie. formName[fieldName]
+     *
+     * @var string
+     */
+    protected $formFieldName;
 
-  /**
-   * Array of rules
-   *
-   * @var array
-   */
-  protected $rules;
+    /**
+     * Array of rules
+     *
+     * @var array
+     */
+    protected $rules;
 
-  /**
-   * Constructor
-   *
-   * @param string $fieldName
-   * @param string $formFieldName
-   * @param array $rules
-   */
-  public function __construct($fieldName, $formFieldName, $rules)
-  {
-    $this->fieldName = $fieldName;
-    $this->formFieldName = $formFieldName;
-    $this->rules = (array) $rules;
-  }
+    /**
+     * Constructor
+     *
+     * @param string $fieldName
+     * @param string $formFieldName
+     * @param array  $rules
+     */
+    public function __construct($fieldName, $formFieldName, $rules)
+    {
+        $this->fieldName = $fieldName;
+        $this->formFieldName = $formFieldName;
+        $this->rules = (array)$rules;
+    }
 
-  /**
-   * Is this rule required?
-   *
-   * @return boolean
-   */
-  public function isRequired()
-  {
-    return isset($this->rules['required']) && $this->rules['required'];
-  }
+    /**
+     * Is this rule required?
+     *
+     * @return boolean
+     */
+    public function isRequired()
+    {
+        return isset($this->rules['required']) && $this->rules['required'];
+    }
 
-  /**
-   * Return field name
-   *
-   * @return string
-   */
-  public function getFieldName()
-  {
-    return $this->fieldName;
-  }
+    /**
+     * Return field name
+     *
+     * @return string
+     */
+    public function getFieldName()
+    {
+        return $this->fieldName;
+    }
 
-  /**
-   * Return form field name
-   *
-   * @return string
-   */
-  public function getFormFieldName()
-  {
-    return $this->formFieldName;
-  }
+    /**
+     * Return form field name
+     *
+     * @return string
+     */
+    public function getFormFieldName()
+    {
+        return $this->formFieldName;
+    }
 
-  /**
-   * Return rules
-   *
-   * @return array
-   */
-  public function getRules()
-  {
-    return $this->rules;
-  }
+    /**
+     * Return rules
+     *
+     * @return array
+     */
+    public function getRules()
+    {
+        return $this->rules;
+    }
 
-  /**
-   * Set rules
-   *
-   * @param array $rules
-   * @return sfFormJavascriptValidationRule
-   */
-  public function setRules($rules)
-  {
-    $this->rules = $rules;
+    /**
+     * Set rules
+     *
+     * @param array $rules
+     *
+     * @return sfFormJavascriptValidationRule
+     */
+    public function setRules($rules)
+    {
+        $this->rules = $rules;
 
-    return $this;
-  }
+        return $this;
+    }
 
-  public function offsetGet($name)
-  {
-    return $this->rules[$name];
-  }
+    public function offsetGet($name)
+    {
+        return $this->rules[$name];
+    }
 
-  public function offsetSet($name, $value)
-  {
-    return $this->rules[$name] = $value;
-  }
+    public function offsetSet($name, $value)
+    {
+        return $this->rules[$name] = $value;
+    }
 
-  public function offsetExists($name)
-  {
-    return array_key_exists($name, $this->rules);
-  }
+    public function offsetExists($name)
+    {
+        return array_key_exists($name, $this->rules);
+    }
 
-  public function offsetUnset($name)
-  {
-    unset($this->rules[$name]);
-  }
+    public function offsetUnset($name)
+    {
+        unset($this->rules[$name]);
+    }
 
-  public function jsonSerialize()
-  {
-    return $this->rules;
-  }
+    public function jsonSerialize()
+    {
+        return $this->rules;
+    }
 
 }

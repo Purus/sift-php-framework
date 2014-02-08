@@ -22,24 +22,25 @@
  */
 abstract class sfMailerPlugin extends sfConfigurable implements Swift_Events_SendListener
 {
-  /**
-   * Event dispatcher
-   *
-   * @var sfEventDispatcher
-   */
-  protected $dispatcher;
+    /**
+     * Event dispatcher
+     *
+     * @var sfEventDispatcher
+     */
+    protected $dispatcher;
 
-  /**
-   * Constructs the plugin
-   *
-   * @param sfEventDispatcher $dispatcher
-   * @param array $options
-   * @inject dispatcher
-   */
-  public function __construct(sfEventDispatcher $dispatcher, $options = array())
-  {
-    $this->dispatcher = $dispatcher;
-    parent::__construct($options);
-  }
+    /**
+     * Constructs the plugin
+     *
+     * @param sfEventDispatcher $dispatcher
+     * @param array             $options
+     *
+     * @inject dispatcher
+     */
+    public function __construct(sfEventDispatcher $dispatcher, $options = array())
+    {
+        $this->dispatcher = $dispatcher;
+        parent::__construct($options);
+    }
 
 }

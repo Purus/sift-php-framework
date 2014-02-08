@@ -9,46 +9,51 @@
 /**
  * Base task for build tasks
  *
- * @package Sift
+ * @package    Sift
  * @subpackage build
  */
-abstract class sfCliBaseBuildTask extends sfCliCommandApplicationTask {
+abstract class sfCliBaseBuildTask extends sfCliCommandApplicationTask
+{
 
-  /**
-   * Return array of culture to build data for
-   *
-   * @return array
-   */
-  public function getCultures()
-  {
-    return array(
-      'cs', 'cs_CZ',  // czech
-      'sk', 'sk_SK',  // slovak
-      'de', 'de_AT', 'de_DE',  // deutsch
-      'en', 'en_GB', 'en_US', 'en_US_POSIX', // english
-      'fr', 'fr_FR', // french
-    );
-  }
-
-  /**
-   * Returns the filesystem instance.
-   *
-   * @return sfFilesystem A sfFilesystem instance
-   */
-  public function getFilesystem()
-  {
-    if (!isset($this->filesystem))
+    /**
+     * Return array of culture to build data for
+     *
+     * @return array
+     */
+    public function getCultures()
     {
-      if (null === $this->commandApplication || $this->commandApplication->isVerbose())
-      {
-        $this->filesystem = new sfFilesystem($this->logger, $this->formatter);
-      }
-      else
-      {
-        $this->filesystem = new sfFilesystem();
-      }
+        return array(
+            'cs',
+            'cs_CZ', // czech
+            'sk',
+            'sk_SK', // slovak
+            'de',
+            'de_AT',
+            'de_DE', // deutsch
+            'en',
+            'en_GB',
+            'en_US',
+            'en_US_POSIX', // english
+            'fr',
+            'fr_FR', // french
+        );
     }
 
-    return $this->filesystem;
-  }
+    /**
+     * Returns the filesystem instance.
+     *
+     * @return sfFilesystem A sfFilesystem instance
+     */
+    public function getFilesystem()
+    {
+        if (!isset($this->filesystem)) {
+            if (null === $this->commandApplication || $this->commandApplication->isVerbose()) {
+                $this->filesystem = new sfFilesystem($this->logger, $this->formatter);
+            } else {
+                $this->filesystem = new sfFilesystem();
+            }
+        }
+
+        return $this->filesystem;
+    }
 }
