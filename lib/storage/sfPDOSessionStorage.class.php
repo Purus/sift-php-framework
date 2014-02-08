@@ -69,12 +69,8 @@ class sfPDOSessionStorage extends sfSessionStorage {
   /**
    * Initializes this Storage instance.
    *
-   * @param sfContext A sfContext instance
-   * @param array     An associative array of initialization parameters
-   *
    * @return boolean true, if initialization completes successfully, otherwise false
-   *
-   * @throws InitializationException If an error occurs while initializing this Storage
+   * @throws sfDatabaseException If an error occurs
    */
   public function setup()
   {
@@ -187,11 +183,19 @@ class sfPDOSessionStorage extends sfSessionStorage {
    */
   public function sessionOpen($path, $name)
   {
-    $this->db = $this->manager->getDatabase($this->getOption('database'))->getConnection();
+    $e = null;
+    try
+    {
+      $this->db = $this->manager->getDatabase($this->getOption('database'))->getConnection();
+    }
+    catch(Exception $e)
+    {
+    }
 
     if($this->db == null || !$this->db instanceof PDO)
     {
-      throw new sfDatabaseException(sprintf('PDO dabatase connection "%s" doesn\'t exist. Unable to open session.', $database));
+      throw new sfDatabaseException(
+          sprintf('PDO dabatase connection "%s" doesn\'t exist. Unable to open session.', $this->getOption('database')), sfDatabaseException::SESSION_ERROR);
     }
 
     return true;

@@ -31,6 +31,23 @@ class sfException extends Exception {
   protected static $lastException = null;
 
   /**
+   * Constructor
+   *
+   * @param string    $message The exception message
+   * @param int       $code The exception code
+   * @param Exception $previous The previous exception
+   */
+  public function __construct($message = null, $code = 0, Exception $previous = null)
+  {
+    if (PHP_VERSION_ID < 50300) {
+      $this->previous = $previous;
+      parent::__construct($message, $code);
+    } else {
+      parent::__construct($message, $code, $previous);
+    }
+  }
+
+  /**
    * Wraps an Exception.
    *
    * @param Exception $e An Exception instance
@@ -255,7 +272,14 @@ class sfException extends Exception {
       )
     );
 
-    if($dispatcher)
+    $notify = true;
+    if($exception instanceof sfDatabaseException
+        && $exception->getCode() === sfDatabaseException::SESSION_ERROR)
+    {
+      $notify = false;
+    }
+
+    if($dispatcher && $notify)
     {
       $result = $dispatcher->filter(new sfEvent('application.render_exception', array(
         'exception' => $exception,
