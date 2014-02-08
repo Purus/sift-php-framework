@@ -95,7 +95,7 @@ abstract class sfResponse extends sfConfigurable implements sfIResponse {
       {
         $length = round($length / 1000).' kB';
       }
-      
+
       sfLogger::getInstance()->info(sprintf('{sfResponse} Sending content (%s)', $length));
     }
 

@@ -174,7 +174,7 @@ class sfImagePolygonGD extends sfImageTransformAbstract
   {
     return $this->fill;
   }
-  
+
   /**
    * Apply the transform to the sfImage object.
    *
@@ -185,10 +185,10 @@ class sfImagePolygonGD extends sfImageTransformAbstract
   {
     $resource = $image->getAdapter()->getHolder();
 
-    imagefilledpolygon($resource, $this->points, count($this->points)/2, 
+    imagefilledpolygon($resource, $this->points, count($this->points)/2,
             $image->getAdapter()->getColorByHex($resource, $this->color));
-    
+
     return $image;
   }
-  
+
 }

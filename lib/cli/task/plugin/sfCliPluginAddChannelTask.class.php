@@ -45,8 +45,8 @@ EOF;
     $this->logSection($this->getFullName(), sprintf('Adding channel "%s"', $arguments['name']));
 
     $this->getPluginManager()->getEnvironment()->addChannel($arguments['name']);
-    
-    $this->logSection($this->getFullName(), 'Done.');    
+
+    $this->logSection($this->getFullName(), 'Done.');
   }
 
 }

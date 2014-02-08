@@ -8,8 +8,8 @@
 
 /**
  * sfUserAgentDetector is a simple user agent detector, which can guess
- * what browser (user agent) the user uses. 
- * 
+ * what browser (user agent) the user uses.
+ *
  * Suports most common browsers and bots.
  *
  * @package    Sift
@@ -26,7 +26,7 @@ class sfUserAgentDetector {
 
   /**
    * The list of known browsers
-   * 
+   *
    * @var array
    */
   protected $knownBrowsers = array(
@@ -36,7 +36,7 @@ class sfUserAgentDetector {
 
   /**
    * The list of browser aliases
-   * 
+   *
    * @var array
    */
   protected $browserAliases = array(
@@ -49,7 +49,7 @@ class sfUserAgentDetector {
 
   /**
    * The list of known bots
-   * 
+   *
    * @var array
    */
   protected $knownBots = array(
@@ -68,7 +68,7 @@ class sfUserAgentDetector {
 
   /**
    * The list of user agents which are considered mobile agents
-   *  
+   *
    * @see http://www.zytrax.com/tech/web/mobile_ids.html
    */
   protected $knownMobiles = array(
@@ -80,9 +80,9 @@ class sfUserAgentDetector {
 
   /**
    * Tries to guess the agent
-   * 
+   *
    * @param string $userAgent
-   * @return array 
+   * @return array
    */
   public static function guess($userAgent)
   {
@@ -92,9 +92,9 @@ class sfUserAgentDetector {
 
   /**
    * Guesses the agent name and version from $agent string.
-   * 
+   *
    * @param string $userAgent
-   * @return string 
+   * @return string
    */
   public function execute($userAgent)
   {
@@ -119,7 +119,7 @@ class sfUserAgentDetector {
   /**
    * This method does the work of detecting the name, version and other stuff from
    * the user agent string
-   * 
+   *
    */
   protected function guessFast()
   {
@@ -151,7 +151,7 @@ class sfUserAgentDetector {
     {
       $this->isBot = true;
       $this->name = $matches[0];
-      // FIXME: try to detect bot version?      
+      // FIXME: try to detect bot version?
     }
     // mobile device
     elseif(preg_match('#(' . implode($this->getKnownMobiles(), ')|(') . ')#i', $this->userAgent, $matches))
@@ -163,7 +163,7 @@ class sfUserAgentDetector {
 
   /**
    * Fixes google chrome name
-   * 
+   *
    * @return void
    */
   protected function fixGoogleChrome()
@@ -177,8 +177,8 @@ class sfUserAgentDetector {
   }
 
   /**
-   * Fixes safari name 
-   * 
+   * Fixes safari name
+   *
    * @return void
    */
   protected function fixSafariVersion()
@@ -192,7 +192,7 @@ class sfUserAgentDetector {
 
   /**
    * Returns browser aliases
-   * 
+   *
    * @return array
    */
   protected function getBrowserAliases()
@@ -202,7 +202,7 @@ class sfUserAgentDetector {
 
   /**
    * Returns the list of known browsers
-   * 
+   *
    * @return array
    */
   protected function getKnownBrowsers()
@@ -212,7 +212,7 @@ class sfUserAgentDetector {
 
   /**
    * Returns the list of known bots
-   * 
+   *
    * @return array
    */
   protected function getKnownBots()
@@ -222,7 +222,7 @@ class sfUserAgentDetector {
 
   /**
    * Returns the list of known mobile devices
-   * 
+   *
    * @return array
    */
   protected function getKnownMobiles()

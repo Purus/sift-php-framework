@@ -11,7 +11,7 @@
  * <code>DateFormatRegexGenerator</code> to implement a regular expression
  * generator for both interpreting and tokenizing date and time strings based
  * on date format strings.
- *   
+ *
  * A <code>sfDateFormatRegexGenerator</code> that generates regular expressions
  * that will separately capture each part of the date format string that is
  * matched.
@@ -47,7 +47,7 @@
  * <code>getInstance()</code> method to obtain an instance.
  *
  * @package Sift
- * @subpackage date  
+ * @subpackage date
  */
 class sfCapturingDateFormatRegexGenerator extends sfDateFormatRegexGenerator
 {

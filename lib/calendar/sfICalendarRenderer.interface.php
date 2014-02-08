@@ -13,7 +13,7 @@
  * @subpackage calendar
  */
 interface sfICalendarRenderer {
-  
+
   public function render(sfCalendar $calendar, $options = array());
-  
+
 }

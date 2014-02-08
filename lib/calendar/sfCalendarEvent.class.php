@@ -19,7 +19,7 @@ class sfCalendarEvent implements sfICalendarEvent, ArrayAccess {
 
   /**
    * Constructs the event
-   * 
+   *
    * @param integer|string $start Unix timestamp of start, string (will be converted to timestamp)
    * @param integer|string $end Unix timestamp of end, string (will be converted to timestamp)
    * @param array $data Array of event data (title, location, geo, ...)
@@ -34,13 +34,13 @@ class sfCalendarEvent implements sfICalendarEvent, ArrayAccess {
     {
       throw new InvalidArgumentException('Start is invalid');
     }
-    
+
     $this->data = $data;
   }
 
   /**
    * Returns event start
-   * 
+   *
    * @return integer
    */
   public function getStart()
@@ -50,9 +50,9 @@ class sfCalendarEvent implements sfICalendarEvent, ArrayAccess {
 
   /**
    * Returns event end
-   * 
+   *
    * @return integer
-   */  
+   */
   public function getEnd()
   {
     return $this->end;
@@ -60,7 +60,7 @@ class sfCalendarEvent implements sfICalendarEvent, ArrayAccess {
 
   /**
    * Takes this event in given time?
-   * 
+   *
    * @param integer $month
    * @param integer $day
    * @param integer $year
@@ -69,22 +69,22 @@ class sfCalendarEvent implements sfICalendarEvent, ArrayAccess {
   public function takesPlace($month, $day, $year)
   {
     $timestamp = mktime(0, 0, 0, $month, 1, $year);
-    
+
     // we are looking for month
     if(!$day)
     {
       // number of days in the month
       $day = date('t', $timestamp);
       $start = mktime(0, 0, 0, $month, 1, $year);
-      $end = mktime(23, 59, 59, $month, $day, $year);      
+      $end = mktime(23, 59, 59, $month, $day, $year);
     }
     else
     {
       $start = mktime(0, 0, 0, $month, $day, $year);
       $end = mktime(23, 59, 59, $month, $day, $year);
     }
-    
-    if($this->getStart() >= $start && $this->getStart() <= $end)       
+
+    if($this->getStart() >= $start && $this->getStart() <= $end)
     {
       return true;
     }
@@ -93,20 +93,20 @@ class sfCalendarEvent implements sfICalendarEvent, ArrayAccess {
       return true;
     }
 
-    return false;    
+    return false;
   }
 
   /**
    * Returns event duration in seconds
-   * 
+   *
    * @return integer
    */
   public function getDuration()
   {
-    return $this->end - $this->start;    
+    return $this->end - $this->start;
   }
-  
-  
+
+
   public function __call($methodName, $args)
   {
     if(preg_match('~^(set|get)([A-Z])(.*)$~', $methodName, $matches))

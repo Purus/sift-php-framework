@@ -10,7 +10,7 @@
  * File containing the sfSearchQueryPhrase class.
  *
  * @package Sift
- * @subpackage search 
+ * @subpackage search
  */
 class sfSearchQueryPhrase {
 
@@ -25,9 +25,9 @@ class sfSearchQueryPhrase {
 
   /**
    * Constructs the object
-   * 
+   *
    * @param string $input
-   * @param string $mode 
+   * @param string $mode
    */
   public function __construct($input, $mode = self::MODE_DEFAULT)
   {
@@ -38,7 +38,7 @@ class sfSearchQueryPhrase {
 
   /**
    * Returns the phrase mode.
-   * 
+   *
    * @return string
    */
   public function getMode()
@@ -47,28 +47,28 @@ class sfSearchQueryPhrase {
   }
 
   /**
-   * Magic 
-   * 
+   * Magic
+   *
    * @return string
    */
   public function __toString()
   {
     return $this->phrase;
   }
-  
+
   /**
    * Does the phrase contain more the one word?
-   * 
+   *
    * @return boolean
    */
   public function isMultiWord()
   {
     return $this->isMultiWord;
   }
-  
+
   /**
    * Returns the words of the phrase.
-   * 
+   *
    * @return array
    */
   public function getWords()
@@ -77,7 +77,7 @@ class sfSearchQueryPhrase {
     {
       return explode(' ', $this->phrase);
     }
-    
+
     return array($this->phrase);
   }
 

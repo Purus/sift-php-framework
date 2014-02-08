@@ -8,9 +8,9 @@
 
 /**
  * Base class for exif adapters.
- * 
+ *
  * @package Sift
- * @subpackage image 
+ * @subpackage image
  */
 abstract class sfExifAdapter extends sfConfigurable {
 
@@ -23,7 +23,7 @@ abstract class sfExifAdapter extends sfConfigurable {
 
   /**
    * Constructs the adapter
-   * 
+   *
    * @param array $options Array of options
    * @param sfILogger $logger
    */
@@ -36,21 +36,21 @@ abstract class sfExifAdapter extends sfConfigurable {
 
   /**
    * Returns the EXIF data from the $file
-   * 
+   *
    * @return array
    */
   abstract public function getData($file);
-  
+
   /**
    * Returns an array of supported categories
-   * 
+   *
    * @return array
    */
   abstract public function supportedCategories();
 
   /**
    * Process exif data
-   * 
+   *
    * @param $exif
    * @return unknown_type
    */
@@ -110,14 +110,14 @@ abstract class sfExifAdapter extends sfConfigurable {
   }
 
   /**
-   * 
+   *
    * @return array
    */
   public function getSupportedFields()
   {
     return sfExif::getFields($this);
   }
-  
+
   /**
    * Parse the Longitude and Latitude values into a standardized format
    * regardless of the source format.
@@ -197,7 +197,7 @@ abstract class sfExifAdapter extends sfConfigurable {
 
   /**
    * Logs message to the logger
-   * 
+   *
    * @param string $message
    * @param string $priority
    */
@@ -208,5 +208,5 @@ abstract class sfExifAdapter extends sfConfigurable {
       $this->logger->log($message, $priority);
     }
   }
-  
+
 }

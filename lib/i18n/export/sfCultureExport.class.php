@@ -8,7 +8,7 @@
 
 /**
  * Exports culture information
- * 
+ *
  * @package Sift
  * @subpackage i18n_export
  */
@@ -16,24 +16,24 @@ class sfCultureExport extends sfConfigurable implements sfICultureExport {
 
   /**
    * Culture holder
-   * 
-   * @var string 
+   *
+   * @var string
    */
   protected $culture;
 
   /**
    * Constructs the exporter
-   * 
+   *
    * @param string $culture User culture which will be exported
    * @param array $options Array of options
    */
   public function __construct($culture, $options = array())
   {
     $this->culture = $culture;
-    
+
     parent::__construct($options);
   }
-  
+
   /**
    * Returns an instance of export driver
    *
@@ -55,7 +55,7 @@ class sfCultureExport extends sfConfigurable implements sfICultureExport {
 
   /**
    * Exports the culture information
-   * 
+   *
    */
   public function export()
   {

@@ -26,7 +26,7 @@ class sfCliProjectDeployTask extends sfCliBaseTask
     $this->addOptions(array(
       new sfCliCommandOption('go', null, sfCliCommandOption::PARAMETER_NONE, 'Do the deployment'),
       new sfCliCommandOption('rsync-dir', null, sfCliCommandOption::PARAMETER_REQUIRED, 'The directory where to look for rsync*.txt files', 'config'),
-      new sfCliCommandOption('rsync-options', null, sfCliCommandOption::PARAMETER_OPTIONAL, 'To options to pass to the rsync executable', 
+      new sfCliCommandOption('rsync-options', null, sfCliCommandOption::PARAMETER_OPTIONAL, 'To options to pass to the rsync executable',
               '-a --no-o -O --compress --chmod=ugo=rwX --progress'
               // '-azC --force --delete --progress'
               ),
@@ -37,11 +37,11 @@ class sfCliProjectDeployTask extends sfCliBaseTask
     $this->briefDescription = 'Deploys a project to another server';
 
     $scriptName = $this->environment->get('script_name');
-    
+
     $rsyncExcludeFile = $this->environment->get('sf_config_dir') . '/rsync_exclude.txt';
-    
+
     $rsyncExclude = file_exists($rsyncExcludeFile) ? trim(file_get_contents($rsyncExcludeFile)) : 'n/a (file does not exist)';
-    
+
     $this->detailedDescription = <<<EOF
 The [project:deploy|INFO] task deploys a project on a server:
 
@@ -82,7 +82,7 @@ Last, you can specify the options passed to the rsync executable, using the
 
   [{$scriptName} project:deploy --go --rsync-options=-avz|INFO]
 EOF;
-  
+
   }
 
   /**
@@ -165,12 +165,12 @@ EOF;
     {
       $src = './';
     }
-  
+
     $dryRun = $options['go'] ? '' : '--dry-run';
     $command = "rsync $dryRun $parameters -e $ssh $src $user$host:$dir";
 
     $this->logSection($this->getFullName(), sprintf('Executing %s', $command));
-    
+
     exec($command, $output);
     foreach($output as $line)
     {
@@ -179,7 +179,7 @@ EOF;
         $this->log($line);
       }
     }
-    
+
   }
 
 }

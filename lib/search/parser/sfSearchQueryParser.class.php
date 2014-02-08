@@ -44,29 +44,29 @@ class sfSearchQueryParser implements sfISearchQueryParser {
 
   /**
    * Stack of the tokens
-   * 
+   *
    * @var array
    */
   protected $tokenStack = array();
 
   /**
    * The lexer holder
-   * 
+   *
    * @var sfISearchQueryLexer
    */
   protected $lexer;
-  
+
   /**
    * The buffer
-   * 
+   *
    * @var string
    */
-  protected $buffer;  
+  protected $buffer;
 
   /**
    * Constructs the parser
-   * 
-   * @param sfISearchQueryLexer $lexer 
+   *
+   * @param sfISearchQueryLexer $lexer
    */
   public function __construct(sfISearchQueryLexer $lexer)
   {
@@ -97,9 +97,9 @@ class sfSearchQueryParser implements sfISearchQueryParser {
 
   /**
    * Parses the query
-   * 
+   *
    * @param string $query
-   * @return sfSearchQueryExpression 
+   * @return sfSearchQueryExpression
    */
   public function parse($query)
   {
@@ -114,8 +114,8 @@ class sfSearchQueryParser implements sfISearchQueryParser {
 
   /**
    * Resets the parser
-   * 
-   * @return void 
+   *
+   * @return void
    */
   protected function reset()
   {
@@ -129,10 +129,10 @@ class sfSearchQueryParser implements sfISearchQueryParser {
 
   /**
    * Processes the tokens
-   * 
+   *
    * @param array $tokens
    * @param sfSearchQueryExpression $expression
-   * @return sfSearchQueryExpression 
+   * @return sfSearchQueryExpression
    */
   protected function processTokens($tokens, sfSearchQueryExpression $expression)
   {
@@ -145,10 +145,10 @@ class sfSearchQueryParser implements sfISearchQueryParser {
 
   /**
    * Processes the single token
-   * 
+   *
    * @param sfSearchQueryToken $token
    * @param sfSearchQueryExpression $expression
-   * @return sfSearchQueryExpression 
+   * @return sfSearchQueryExpression
    */
   protected function processToken(sfSearchQueryToken $token, sfSearchQueryExpression $expression)
   {
@@ -186,8 +186,8 @@ class sfSearchQueryParser implements sfISearchQueryParser {
                   break;
               }
               // reset the prefix
-              $this->prefix = null;              
-            } 
+              $this->prefix = null;
+            }
             // prefix is not set
             else
             {
@@ -294,11 +294,11 @@ class sfSearchQueryParser implements sfISearchQueryParser {
             $this->buffer .= $token->token;
             break;
         }
-        
+
         break;
     }
 
     return $expression;
   }
-  
+
 }

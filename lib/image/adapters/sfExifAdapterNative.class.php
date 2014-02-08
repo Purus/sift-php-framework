@@ -8,7 +8,7 @@
 
 /**
  * Exif using native php "exif_read_data" function
- * 
+ *
  * @package Sift
  * @subpackage image
  */
@@ -16,7 +16,7 @@ class sfExifAdapterNative extends sfExifAdapter {
 
   /**
    * Setup the adapter
-   * 
+   *
    * @throws BadFunctionCallException
    */
   public function setup()
@@ -26,9 +26,9 @@ class sfExifAdapterNative extends sfExifAdapter {
       throw new BadFunctionCallException('Missing required "exif_read_data" function.');
     }
   }
-  
+
   /**
-   * 
+   *
    * @see sfExifAdapter
    */
   public function getData($file)
@@ -37,7 +37,7 @@ class sfExifAdapterNative extends sfExifAdapter {
   }
 
   /**
-   * 
+   *
    * @see sfExifAdapter
    */
   public function supportedCategories()

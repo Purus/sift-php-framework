@@ -107,8 +107,8 @@ class sfCollator {
     if(strpos(PHP_OS, 'WIN') !== false)
     {
       // try to set windows-1250 locale
-      setlocale(LC_COLLATE, sprintf('%s.1250', $this->getWindowsLocale($this->getCulture())), 
-              $this->getCulture(), sprintf('%s.1250', $this->getCulture()), 
+      setlocale(LC_COLLATE, sprintf('%s.1250', $this->getWindowsLocale($this->getCulture())),
+              $this->getCulture(), sprintf('%s.1250', $this->getCulture()),
               sprintf('%s.1250', $this->getCulture()));
 
       // convert to windows 1250 and compare

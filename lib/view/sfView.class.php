@@ -88,7 +88,7 @@ abstract class sfView implements sfIView
   public function __construct(sfContext $context)
   {
     $this->context = $context;
-    
+
     $this->attributeHolder = new sfParameterHolder();
     $this->parameterHolder = new sfParameterHolder();
 
@@ -116,7 +116,7 @@ abstract class sfView implements sfIView
 
     return true;
   }
-  
+
   /**
    * Retrieves the current application context.
    *

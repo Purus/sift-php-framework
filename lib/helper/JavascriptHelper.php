@@ -68,4 +68,3 @@ function end_if_javascript()
 
   echo javascript_tag("document.write('" . esc_js_no_entities($content) . "');");
 }
-

@@ -10,16 +10,16 @@
  * File containing the sfSearchQueryBuilderMysqlFulltext class.
  *
  * @package Sift
- * @subpackage search 
+ * @subpackage search
  */
 class sfSearchQueryBuilderMysqlFulltext extends sfSearchQueryBuilder {
-  
+
   /**
    * Proccesses the expression and builds the query for MySQL fulltext.
-   * 
+   *
    * @param sfSearchQueryExpression $expression
-   * @return string 
-   * @see http://dev.mysql.com/doc/refman/5.0/en/fulltext-boolean.html   
+   * @return string
+   * @see http://dev.mysql.com/doc/refman/5.0/en/fulltext-boolean.html
    */
   protected function processExpression(sfSearchQueryExpression $expression)
   {
@@ -28,7 +28,7 @@ class sfSearchQueryBuilderMysqlFulltext extends sfSearchQueryBuilder {
     $subExpressions = $expression->getSubExpressions();
 
     foreach($phrases as $phrase)
-    {      
+    {
       switch($phrase->getMode())
       {
         case sfSearchQueryPhrase::MODE_AND:
@@ -48,7 +48,7 @@ class sfSearchQueryBuilderMysqlFulltext extends sfSearchQueryBuilder {
           $phrase->isMultiWord() ? $format = '"%s" ' : $format = "%s ";
           break;
       }
-            
+
       $query .= sprintf($format, str_replace('"', '\"', $phrase));
     }
 
@@ -68,8 +68,8 @@ class sfSearchQueryBuilderMysqlFulltext extends sfSearchQueryBuilder {
     }
 
     $query = preg_replace('/^(\+)/', '', $query);
-    
+
     return trim($query);
   }
-  
+
 }

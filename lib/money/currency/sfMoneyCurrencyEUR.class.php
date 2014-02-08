@@ -34,5 +34,5 @@ class sfMoneyCurrencyEUR extends sfMoneyCurrency {
   public function __construct()
   {
   }
-  
+
 }

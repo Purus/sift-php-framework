@@ -279,7 +279,7 @@ class sfImageLineGD extends sfImageTransformAbstract
     }
 
     $t = $this->thickness / 2 - 0.5;
-          
+
     if ($this->thickness === 1)
     {
       imageline($resource, $this->x1, $this->y1, $this->x2, $this->y2, $image->getAdapter()->getColorByHex($resource, $this->color));
@@ -292,7 +292,7 @@ class sfImageLineGD extends sfImageTransformAbstract
 
     else
     {
-      $k = ($this->y2 - $this->y1) / ($this->x2 - $this->x1);      
+      $k = ($this->y2 - $this->y1) / ($this->x2 - $this->x1);
       $a = $t / sqrt(1 + pow($k, 2));
       $points = array(
         round($this->x1 - (1+$k)*$a), round($this->y1 + (1-$k)*$a),
@@ -305,7 +305,7 @@ class sfImageLineGD extends sfImageTransformAbstract
       imagefilledpolygon($resource, $points, 4, $color);
       imagepolygon($resource, $points, 4, $color);
     }
-    
+
     return $image;
   }
 }

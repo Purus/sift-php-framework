@@ -45,8 +45,8 @@ class sfWidgetFormDateTime extends sfWidgetFormDate {
     }
 
     parent::__construct($options, $attributes);
-    
-    $this->setAttribute('class', 'datetime');    
+
+    $this->setAttribute('class', 'datetime');
   }
 
 }

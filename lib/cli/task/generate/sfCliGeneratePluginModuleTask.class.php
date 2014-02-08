@@ -29,7 +29,7 @@ class sfCliGeneratePluginModuleTask extends sfCliGeneratorBaseTask {
       new sfCliCommandOption('internal', null, sfCliCommandOption::PARAMETER_NONE, 'IS the module internal only? (Not accessible via web)', null),
       new sfCliCommandOption('credentials', null, sfCliCommandOption::PARAMETER_OPTIONAL, 'User credentials for accessing the module', ''),
     ));
-    
+
     $this->namespace = 'generate';
     $this->name = 'plugin-module';
     $this->briefDescription = 'Generates a new module in a plugin';
@@ -89,7 +89,7 @@ EOF;
 
     // module credentials
     $credentials = isset($options['credentials']) ? (array)$options['credentials'] : array();
-    
+
     $constants = array(
       'PLUGIN_NAME' => $plugin,
       'MODULE_NAME' => $module,

@@ -8,24 +8,24 @@
 
 /**
  * Exif reader / writer using Exiftool utility
- * 
+ *
  * @package Sift
  * @subpackage image
  * @link http://www.sno.phy.queensu.ca/~phil/exiftool
  */
 class sfExifAdapterExifTool extends sfExifAdapter {
-  
+
   /**
    * Array of default options
-   * 
-   * @var array 
+   *
+   * @var array
    */
   protected $defaultOptions = array(
-    'exiftool_executable' => 'exiftool'      
+    'exiftool_executable' => 'exiftool'
   );
-  
+
   /**
-   * 
+   *
    * @see sfExifAdapter
    */
   public function supportedCategories()
@@ -35,7 +35,7 @@ class sfExifAdapterExifTool extends sfExifAdapter {
 
   /**
    * Reads exif data from the file
-   * 
+   *
    * @param string $file Path to a file
    * @return array
    * @throws sfFileException When file is not readable
@@ -47,13 +47,13 @@ class sfExifAdapterExifTool extends sfExifAdapter {
     {
       throw new sfFileException(sprintf('File "%s" is not readable', $file));
     }
-    
+
     // Request the full stream of meta data in JSON format.
     // -j option outputs in JSON, appending '#' to the -TAG prevents
     // screen formatting.
     $categories = sfExif::getCategories();
     $tags = '';
-    
+
     foreach(array('EXIF', 'IPTC', 'XMP') as $category)
     {
       foreach($categories[$category] as $field => $value)
@@ -61,23 +61,23 @@ class sfExifAdapterExifTool extends sfExifAdapter {
         $tags .= ' -' . $field . '#';
       }
     }
-    
+
     foreach($categories['COMPOSITE'] as $field => $value)
     {
       $tags .= ' -' . $field;
     }
-    
+
     $command = '-j' . $tags . ' ' . $file;
     $results = json_decode($this->execute($command));
-    
+
     if(is_array($results))
     {
       return $this->processData((array) array_pop($results));
     }
 
-    throw new RuntimeException('Unknown error running exiftool command');    
+    throw new RuntimeException('Unknown error running exiftool command');
   }
-  
+
   /**
    * Executes a exiftool command.
    *
@@ -89,12 +89,12 @@ class sfExifAdapterExifTool extends sfExifAdapter {
     $output = array();
     $retval = null;
     exec($this->getOption('exiftool_executable') . ' ' . escapeshellcmd($command), $output, $retval);
-    
+
     if($retval)
     {
       $this->log(sprintf("Error running command: %s", $command . "\n" . implode("\n", $output)));
     }
-    
+
     if(is_array($output))
     {
       $output = implode('', $output);
@@ -102,5 +102,5 @@ class sfExifAdapterExifTool extends sfExifAdapter {
 
     return $output;
   }
-  
+
 }

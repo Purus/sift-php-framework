@@ -39,7 +39,7 @@ class sfModulesConfigHandler extends sfSimpleYamlConfigHandler
 
     // init our data array
     $data   = array();
-    $data[] = '// Atomatically enable these modules: ';    
+    $data[] = '// Atomatically enable these modules: ';
     $data[] = sprintf('$modules = %s;', var_export($modules, true));
     $data[] = '// merge with currently enabled modules';
     $data[] = 'sfConfig::set(\'sf_enabled_modules\', array_merge(sfConfig::get(\'sf_enabled_modules\', array()), $modules));';

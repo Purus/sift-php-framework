@@ -28,4 +28,3 @@ function admin_app_url()
   }
   return 'http://' . $url . $script;
 }
-

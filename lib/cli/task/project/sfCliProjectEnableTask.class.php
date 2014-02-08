@@ -29,7 +29,7 @@ class sfCliProjectEnableTask extends sfCliBaseTask
     $this->briefDescription = 'Enables an application in a given environment';
 
     $scriptName = $this->environment->get('script_name');
-    
+
     $this->detailedDescription = <<<EOF
 The [project:enable|INFO] task enables a specific environment:
 
@@ -47,15 +47,15 @@ EOF;
    */
   protected function execute($arguments = array(), $options = array())
   {
-    $applications = count($arguments['app']) ? $arguments['app'] : 
+    $applications = count($arguments['app']) ? $arguments['app'] :
                     sfFinder::type('dir')->relative()->maxDepth(0)->in($this->environment->get('sf_apps_dir'));
-    
+
     $env = $arguments['env'];
 
     foreach ($applications as $app)
     {
       $this->checkAppExists($app);
-      
+
       $lockFile = $this->environment->get('sf_data_dir').'/'.$app.'_'.$env.'.lck';
       if (!file_exists($lockFile))
       {
@@ -64,12 +64,12 @@ EOF;
       else
       {
         $this->getFilesystem()->remove($lockFile);
-        
+
         $this->logSection($this->getFullName(), sprintf('%s [%s] has been ENABLED', $app, $env));
-        
+
         $clearCache = new sfCliCacheClearTask($this->environment, $this->dispatcher, $this->formatter, $this->logger);
         $clearCache->setCommandApplication($this->commandApplication);
-        $clearCache->run(array(), array('--app='.$app, '--env='.$env));        
+        $clearCache->run(array(), array('--app='.$app, '--env='.$env));
       }
     }
   }

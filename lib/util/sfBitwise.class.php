@@ -8,9 +8,9 @@
 
 /**
  * sfBitwise class provides bitwise operations. Usefull for state flags.
- * 
+ *
  * @see http://en.wikipedia.org/wiki/Bitwise_operation
- * @see http://php.net/manual/en/language.operators.bitwise.php#90514 
+ * @see http://php.net/manual/en/language.operators.bitwise.php#90514
  * @package Sift
  * @subpackage util
  */
@@ -18,7 +18,7 @@ class sfBitwise {
 
   /**
    * Creates flag from given parameters. Use can use variable length of arguments.
-   * 
+   *
    * @param integer flag
    * @return integer
    */
@@ -34,10 +34,10 @@ class sfBitwise {
 
   /**
    * Sets flag to the value
-   * 
+   *
    * @param integer $val
    * @param  $flag
-   * @return integer 
+   * @return integer
    */
   public static function setFlag($val, $flag)
   {
@@ -46,10 +46,10 @@ class sfBitwise {
 
   /**
    * Unsets flag from given value
-   * 
+   *
    * @param integer $val Value
    * @param integer $flag Flag
-   * @return integer 
+   * @return integer
    */
   public static function unsetFlag($val, $flag)
   {
@@ -58,7 +58,7 @@ class sfBitwise {
 
   /**
    * Checks if given flag is set in $val
-   * 
+   *
    * @param integer $val
    * @param integer $flag
    * @return boolean
@@ -70,10 +70,10 @@ class sfBitwise {
 
   /**
    * Toggles given flag (uses ^ operator)
-   * 
+   *
    * @param integer $val
    * @param integer $flag
-   * @return integer 
+   * @return integer
    */
   public static function toggleFlag($val, $flag)
   {
@@ -81,4 +81,3 @@ class sfBitwise {
   }
 
 }
-

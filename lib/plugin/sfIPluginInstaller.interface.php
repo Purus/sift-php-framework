@@ -13,9 +13,9 @@
  * @subpackage plugin
  */
 interface sfIPluginInstaller {
-  
+
   public function __construct(sfCliBaseTask $task, $options = array());
   public function install();
   public function uninstall();
-  
+
 }

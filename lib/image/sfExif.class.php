@@ -226,12 +226,12 @@ class sfExif {
     {
       return __($message, $params, self::$translationCatalogue);
     }
-   
+
     if(empty($params))
     {
       $params = array();
     }
-    
+
     // replace object with strings
     foreach($params as $key => $value)
     {
@@ -240,7 +240,7 @@ class sfExif {
         $params[$key] = $value->__toString();
       }
     }
-    return strtr($message, $params);    
+    return strtr($message, $params);
   }
 
   /**

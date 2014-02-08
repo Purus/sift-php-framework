@@ -32,4 +32,3 @@ interface sfIAntivirus {
   public function scan($object);
 
 }
-

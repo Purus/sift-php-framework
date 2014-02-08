@@ -9,7 +9,7 @@
 /**
  * myMenu allows cusomization in your project. Simply create myMenu class
  * in your project lib directory. An it will be used instead of this one.
- * 
+ *
  * @package    Sift
  * @subpackage menu
  */

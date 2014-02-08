@@ -8,7 +8,7 @@
 
 /**
  * Color palette interface
- * 
+ *
  * @package Sift
  * @subpackage color
  */

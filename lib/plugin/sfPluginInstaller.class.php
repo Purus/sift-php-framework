@@ -250,7 +250,7 @@ class sfPluginInstaller extends sfConfigurable implements sfIPluginInstaller {
 
     return true;
   }
-  
+
   /**
    * Uninstalls settings
    *

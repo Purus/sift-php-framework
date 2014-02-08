@@ -29,14 +29,14 @@ class sfCliPluginUpgradeTask extends sfCliPluginInstallTask {
         new sfCliCommandOption('channel', 'c', sfCliCommandOption::PARAMETER_REQUIRED, 'The PEAR channel name', null),
     ));
 
-    $this->aliases = array('plugin-upgrade');    
+    $this->aliases = array('plugin-upgrade');
     $this->namespace = 'plugin';
     $this->name = 'upgrade';
 
     $this->briefDescription = 'Upgrades a plugin';
 
     $scriptName = $this->environment->get('script_name');
-    
+
     $this->detailedDescription = <<<EOF
 The [plugin:install|INFO] task upgrades a plugin:
 
@@ -50,17 +50,17 @@ EOF;
   protected function execute($arguments = array(), $options = array())
   {
     $this->logSection($this->getFullName(), sprintf('Upgrading plugin "%s"', $arguments['name']));
-    
+
     $manager = $this->getPluginManager();
 
     if(!$manager->isPluginInstalled($arguments['name']))
     {
       throw new sfException(sprintf('Plugin is not installed. Try plugin:install %s', $arguments['name']));
     }
-    
+
     $options['version'] = $options['release'];
-    unset($options['release']);    
-    
+    unset($options['release']);
+
     if($manager->upgradePlugin($arguments['name'], $options))
     {
       $this->logSection($this->getFullName(), 'Done.');
@@ -69,7 +69,7 @@ EOF;
     {
       throw new sfException('Error upgrading plugin.');
     }
-    
+
   }
 
 }

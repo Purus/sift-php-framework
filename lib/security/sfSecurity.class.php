@@ -9,10 +9,10 @@
 /**
  * Utility class for checking module/action and route and url security and credentials
  * values. Provides also methods for checking IP validity or whitelisting.
- * 
+ *
  * Based on the sfActionCredentialsGetterPlugin by Ronald B. Cemer.
  * http://www.symfony-project.org/plugins/sfActionCredentialsGetterPlugin
- * 
+ *
  * @package Sift
  * @subpackage security
  */
@@ -37,30 +37,30 @@ class sfSecurity {
     // Range delimiter
     'rangeDelimiter' => '-',
   );
-  
+
   /**
    * Simple cache holder
-   * 
+   *
    * @var array
    * @access protected
    */
   protected static $securityByModule = array();
-  
+
   /**
    * Checks if given module and action is secure
-   * 
+   *
    * @param string $module
    * @param string $action
-   * @return boolean 
+   * @return boolean
    */
   public static function isActionSecure($module, $action)
   {
     return self::getModuleSecurityValue($module, $action, 'is_secure', false);
   }
-  
+
   /**
    * Returns credentials for given module and action
-   * 
+   *
    * @param string $module
    * @param string $action
    * @return mixed array of credentials or null
@@ -69,13 +69,13 @@ class sfSecurity {
   {
     return self::getModuleSecurityValue($module, $action, 'credentials');
   }
-  
+
   /**
    * Checks if given route is secure
-   * 
+   *
    * @param string $route
    * @return mixed
-   * @throw sfException in debug mode when route does not exist 
+   * @throw sfException in debug mode when route does not exist
    */
   public static function isRouteSecure($route)
   {
@@ -86,11 +86,11 @@ class sfSecurity {
     }
     list($module, $action) = $parsed;
     return self::getModuleSecurityValue($module, $action, 'is_secure', false);
-  }  
-  
+  }
+
   /**
    * Returns credentials for given route
-   * 
+   *
    * @param string $route
    * @return mixed array or null
    */
@@ -107,7 +107,7 @@ class sfSecurity {
 
   /**
    * Returns credentials for given url
-   * 
+   *
    * @param string $url
    * @return mixed array or null
    */
@@ -118,19 +118,19 @@ class sfSecurity {
     {
       return null;
     }
-    
+
     $parsed = self::getModuleActionFromUrl($url);
     if(!$parsed)
     {
       return null;
     }
     list($module, $action) = $parsed;
-    return self::getModuleSecurityValue($module, $action, 'credentials');    
+    return self::getModuleSecurityValue($module, $action, 'credentials');
   }
-  
+
   /**
    * Checks if given url is secure
-   * 
+   *
    * @param string $url
    * @return mixed array or null
    */
@@ -141,33 +141,33 @@ class sfSecurity {
     {
       return false;
     }
-    
+
     $parsed = self::getModuleActionFromUrl($url);
     if(!$parsed)
     {
       return null;
     }
     list($module, $action) = $parsed;
-    return self::getModuleSecurityValue($module, $action, 'is_secure', false); 
+    return self::getModuleSecurityValue($module, $action, 'is_secure', false);
   }
-  
+
   /**
    * Checks if user is allowed to execute given action
-   * 
+   *
    * @param sfISecurityUser $user
    * @param string $module
    * @param string $action
-   * @return boolean 
+   * @return boolean
    */
   public static function isUserAllowedToExecuteAction(sfISecurityUser $user, $module, $action)
   {
     $isAuthenticated = $user->isAuthenticated();
     $isSuperAdmin    = $isAuthenticated && $user->isSuperAdmin();
-    
+
     if($isSuperAdmin || (!self::isActionSecure($module, $action)))
     {
       return true;
-    }    
+    }
     if(($isAuthenticated) && ($user->hasCredential(self::getActionCredentials($module, $action))))
     {
       return true;
@@ -177,77 +177,77 @@ class sfSecurity {
 
   /**
    * Checks if user is allowed to execute given route
-   * 
+   *
    * @param sfBasicSecurityUser $user
    * @param string $route
-   * @return boolean 
+   * @return boolean
    */
   public static function isUserAllowedToExecuteRoute(sfISecurityUser $user, $route)
   {
     $isAuthenticated = $user->isAuthenticated();
     $isSuperAdmin    = $isAuthenticated && $user->isSuperAdmin();
-    
+
     if($isSuperAdmin || (!self::isRouteSecure($route)))
     {
       return true;
-    }    
-    
+    }
+
     if(($isAuthenticated) && ($user->hasCredential(self::getRouteCredentials($route))))
     {
       return true;
     }
-    
+
     return false;
   }
-  
+
   /**
    * Checks if user is allowed to execute given url
-   * 
+   *
    * @param sfBasicSecurityUser $user
    * @param string $url
-   * @return boolean 
+   * @return boolean
    */
   public static function isUserAllowedToExecuteUrl(sfISecurityUser $user, $url)
   {
-    // non local urls are always executable 
+    // non local urls are always executable
     if(!self::isLocalUrl($url))
     {
       return true;
-    }  
-    
+    }
+
     $isAuthenticated = $user->isAuthenticated();
     $isSuperAdmin    = $isAuthenticated && $user->isSuperAdmin();
-    
+
     if($isSuperAdmin || (!self::isUrlSecure($url)))
     {
       return true;
-    }    
+    }
     if(($isAuthenticated) && ($user->hasCredential(self::getUrlCredentials($url))))
     {
       return true;
     }
     return false;
   }
-  
+
   /**
    * Returns security value for given module and action from security.yml
-   * 
+   *
    * @param string $module
    * @param string $action
    * @param string $name Value name, ie. is_secure, credentials
    * @param mixed $default Default value to return back
-   * @return mixed array or null 
+   * @return mixed array or null
    */
   protected static function getModuleSecurityValue($module, $action, $name, $default = null)
   {
     if(!isset(self::$securityByModule[$module]))
-    {      
-      $result = new sfSecurityCheckResult($module);      
-      self::$securityByModule[$module] = $result->getSecurity();      
+    {
+      $result = new sfSecurityCheckResult($module);
+      self::$securityByModule[$module] = $result->getSecurity();
     }
 
     $action = strtolower($action);
-    
+
     if(isset(self::$securityByModule[$module][$action][$name]))
     {
       return self::$securityByModule[$module][$action][$name];
@@ -258,19 +258,19 @@ class sfSecurity {
     }
     return $default;
   }
-  
+
   /**
    * Returns an array ($module, $action) parsed from the given route or false
-   * when the route could not be parsed using sfRouting class. 
+   * when the route could not be parsed using sfRouting class.
    * It throws and exception in debug mode.
-   * 
+   *
    * @param string $route
    * @return array
    * @throw sfException Throws an exception in debug mode
    */
   protected static function getModuleActionFromRoute($route)
   {
-    try 
+    try
     {
       $route = sfRouting::getInstance()->getRouteByName($route);
     }
@@ -282,42 +282,42 @@ class sfSecurity {
       }
       return false;
     }
-    return array($route[4]['module'], $route[4]['action']);    
+    return array($route[4]['module'], $route[4]['action']);
   }
 
   /**
    * Returns an array ($module, $action) parsed from the given url or false
-   * 
+   *
    * @param string $url
-   * @return mixed array of module, action or false 
+   * @return mixed array of module, action or false
    */
   protected static function getModuleActionFromUrl($url)
   {
     // do not mess with routing, simply copy routes to new object
     $r = new sfRouting();
-    
+
     // disable logging so log is not polluted
     $oldSetting = sfConfig::get('sf_logging_enabled');
     sfConfig::set('sf_logging_enabled', false);
-    
+
     $r->setRoutes(sfRouting::getInstance()->getRoutes());
 
     // get current path info array
     $pathInfo = sfContext::getInstance()->getRequest()->getPathInfoArray();
-    
+
     $url = str_replace(array(
       'http://', 'https://', $pathInfo['HTTP_HOST'], $pathInfo['SCRIPT_NAME']
       ), '', $url);
 
     $route = $r->parse($url);
-    
+
     sfConfig::set('sf_logging_enabled', $oldSetting);
-    
+
     if(!is_null($route) && $route['module'] && $route['action'])
     {
-      return array($route['module'], $route['action']);      
+      return array($route['module'], $route['action']);
     }
-    
+
     return false;
   }
 
@@ -326,8 +326,8 @@ class sfSecurity {
    * phishing attacks to get users to visit malicious sites without realizing it.
    *
    * @param string $url
-   * @return boolean 
-   * 
+   * @return boolean
+   *
    * @see http://cwe.mitre.org/data/definitions/601.html
    */
   public static function isRedirectUrlValid($url, $validDomains = array())
@@ -345,7 +345,7 @@ class sfSecurity {
     if(is_array($parsed))
     {
       // valid are only common web schemas
-      if(!isset($parsed['scheme']) || 
+      if(!isset($parsed['scheme']) ||
         !in_array($parsed['scheme'], array('http', 'https', 'ftp', 'ftps')))
       {
         return false;
@@ -369,32 +369,32 @@ class sfSecurity {
 
     return false;
   }
-  
+
   /**
    * Returns base domain
-   * 
-   * @return string 
+   *
+   * @return string
    */
   protected static function getBaseDomain($domain)
   {
     return sfToolkit::getBaseDomain($domain);
   }
-  
+
   /**
-   * Checks if given IP matched whitelisted IPs 
+   * Checks if given IP matched whitelisted IPs
    * (whitelisted entries can be in wildcard format, specific IPs, or CIDR format)
    *
    * sfSecurity::isIpInWhitelist('10.0.0.1', array(
    *  '10.0.0.1',
    *  '10.*',
    *  '10.0.0.0/8'));
-   * 
+   *
    * @param string $ip
    * @param array $whitelist
    * @param array $options
    * @return boolean
    */
-  public static function isIpInWhitelist($ip, $whitelist = array(), 
+  public static function isIpInWhitelist($ip, $whitelist = array(),
           $options = array())
   {
     $options = sfToolkit::arrayDeepMerge(self::$defaultIpCheckOptions, $options);
@@ -441,7 +441,7 @@ class sfSecurity {
     }
     return false;
   }
-  
+
   /**
    * Checks given IP adress for validity
    * (Private IPs are considered as invalid)
@@ -477,7 +477,7 @@ class sfSecurity {
     }
     return false;
   }
-  
+
   /**
    * Utility method. Returns first IP address of string
    *
@@ -494,12 +494,12 @@ class sfSecurity {
       return $ips;
     }
   }
-  
+
   /**
    * Returns true or false if given url is local
-   * 
+   *
    * @param string $url
-   * @return boolean 
+   * @return boolean
    */
   protected static function isLocalUrl($url)
   {
@@ -518,10 +518,9 @@ class sfSecurity {
       elseif(isset($parsedUrl['path']))
       {
         return true;
-      }  
+      }
     }
     return false;
   }
-  
-}
 
+}

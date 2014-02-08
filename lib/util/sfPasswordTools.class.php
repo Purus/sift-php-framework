@@ -8,7 +8,7 @@
 
 /**
  * Generates passwords.
- * 
+ *
  * @package Sift
  * @subpackage util
  */
@@ -26,7 +26,7 @@ class sfPasswordTools {
 
   /**
    * List of vowels and vowel sounds
-   * 
+   *
    * @var array
    */
   static protected $vowels = array(
@@ -35,7 +35,7 @@ class sfPasswordTools {
 
   /**
    * List of consonants and consonant sounds
-   * 
+   *
    * @var array
    */
   static protected $consonants = array(
@@ -54,11 +54,11 @@ class sfPasswordTools {
   public static function generatePassword($length = 8, $type = self::PASSWORD_PRONOUNCEABLE)
   {
     $password = '';
-    
+
     switch($type)
     {
       case self::PASSWORD_PRONOUNCEABLE:
-        
+
         $v_count = count(self::$vowels);
         $c_count = count(self::$consonants);
 
@@ -66,7 +66,7 @@ class sfPasswordTools {
         {
           $password .= self::$consonants[mt_rand(0, $c_count - 1)] . self::$vowels[mt_rand(0, $v_count - 1)];
         }
-        
+
         $password = substr($password, 0, $length);
 
       break;
@@ -80,10 +80,10 @@ class sfPasswordTools {
         {
           $password .= $pass_rnd[array_rand($pass_rnd)];
         }
-        
+
       break;
     }
-    
+
     return $password;
   }
 

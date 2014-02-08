@@ -26,10 +26,10 @@ class sfI18nGettext {
 
   /**
    * meta
-   * 
-   * associative array containing meta 
+   *
+   * associative array containing meta
    * information like project name or content type
-   * 
+   *
    * @access  protected
    * @var     array
    */

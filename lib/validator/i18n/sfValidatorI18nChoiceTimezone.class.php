@@ -29,7 +29,7 @@ class sfValidatorI18nChoiceTimezone extends sfValidatorChoice {
     parent::configure($options, $messages);
 
     $allTimezones = sfCulture::getInstance()->getTimeZones();
-    
+
     $timezones = array();
     foreach($allTimezones as $group => $groupTimezones)
     {

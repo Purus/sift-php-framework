@@ -28,11 +28,11 @@ class sfPearEnvironment extends sfConfigurable {
     'rest_base_class' => 'sfPearRest',
     'downloader_base_class' => 'sfPearDownloader'
   );
-  
+
   protected $requiredOptions = array(
     'plugin_dir', 'cache_dir',
   );
-  
+
   /**
    * Constructs a new sfPluginManager.
    *
@@ -75,9 +75,9 @@ class sfPearEnvironment extends sfConfigurable {
     $this->initializeFrontend();
 
     // initializes the REST object
-    $this->rest = new sfPearRestPlugin($this->config, 
+    $this->rest = new sfPearRestPlugin($this->config,
                       array('base_class' => $this->getOption('rest_base_class')));
-    
+
     $this->rest->setChannel($this->config->get('default_channel'));
   }
 
@@ -128,7 +128,7 @@ class sfPearEnvironment extends sfConfigurable {
    * @param Boolean $isDefault  true if this is the default PEAR channel, false otherwise
    */
   public function addChannel($channel, $isDefault = false)
-  {    
+  {
     $this->config->set('auto_discover', true);
 
     if(!$this->registry->channelExists($channel, true))
@@ -146,25 +146,25 @@ class sfPearEnvironment extends sfConfigurable {
       $this->config->set('default_channel', $channel);
       $this->rest->setChannel($channel);
     }
-    
+
     return true;
   }
 
   /**
    * Unregisters a PEAR channel.
    *
-   * @param string  $channel    The channel name   
+   * @param string  $channel    The channel name
    */
   public function removeChannel($channel)
-  {    
+  {
     if(!$this->registry->channelExists($channel, true))
     {
       throw new sfPluginException(sprintf('Channel "%s" does not exist', $channel));
     }
-    
+
     return $this->registry->deleteChannel($channel);
   }
-  
+
   /**
    * Initializes the PEAR Frontend instance.
    */

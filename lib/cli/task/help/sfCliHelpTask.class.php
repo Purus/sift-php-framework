@@ -5,7 +5,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
- 
+
 /**
  * Displays help for a task.
  *
@@ -30,7 +30,7 @@ class sfCliHelpTask extends sfCliCommandApplicationTask
     $this->briefDescription = 'Displays help for a task';
 
     $scriptName = $this->environment->get('script_name');
-    
+
     $this->detailedDescription = <<<EOF
 The [help|INFO] task displays help for a given task:
 

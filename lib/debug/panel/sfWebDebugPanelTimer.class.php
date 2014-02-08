@@ -20,7 +20,7 @@ class sfWebDebugPanelTimer extends sfWebDebugPanel {
   }
 
   public function getIcon()
-  {    
+  {
   }
 
   public function getPanelTitle()

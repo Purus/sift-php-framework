@@ -138,7 +138,7 @@ class sfClassLoader {
       spl_autoload_register(array($this, 'loadClass'), true);
       if($loaders)
       {
-        foreach($loaders as $loader) 
+        foreach($loaders as $loader)
         {
           spl_autoload_unregister($loader);
           spl_autoload_register($loader, true);

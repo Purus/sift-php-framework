@@ -67,12 +67,12 @@ function get_component_slot($name, $vars = array())
       foreach($componentSlot as $slot)
       {
         $result .= get_component($slot[0], $slot[1], $vars);
-      }    
+      }
     }
-    else 
+    else
     {
       $result = get_component($componentSlot[0], $componentSlot[1], $vars);
-    } 
+    }
   }
 
   return $result;
@@ -250,9 +250,9 @@ function get_partial($templateName, $variables = array(), $viewName = null)
   }
 
   $class = sprintf('%sView', $class);
-  
+
   $view = sfContext::getInstance()->getServiceContainer()->createObject($class);
-  
+
   if(!$view instanceof sfIPartialView)
   {
     throw new LogicException(sprintf('Partial view "%s" does not implement sfIPartialView', $class));

@@ -41,7 +41,7 @@ interface sfIView {
    *
    * @return mixed A template engine instance
    */
-  public function getEngine();  
+  public function getEngine();
 
   /**
    * Executes any presentation logic and set template attributes.
@@ -55,7 +55,7 @@ interface sfIView {
 
   /**
    * Add helpers
-   * 
+   *
    * @param array $helpers
    */
   public function addHelpers($helpers);

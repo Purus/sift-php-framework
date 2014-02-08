@@ -25,7 +25,7 @@
  * @author Guy Paddock (guy.paddock@redbottledesign.com)
  * @link http://www.redbottledesign.com/blog/generating-pcre-regular-expressions-date-format-strings-php
  * @package Sift
- * @subpackage date  
+ * @subpackage date
  */
 class sfDateFormatRegexGenerator
 {
@@ -369,5 +369,5 @@ class sfDateFormatRegexGenerator
     // Non-capturing
     return '(?:' . $regexPiece . ')';
   }
-  
+
 }

@@ -17,7 +17,7 @@ abstract class sfOutputEscaperGetterDecorator extends sfOutputEscaper
   /**
    * Returns the raw, unescaped value associated with the key supplied.
    *
-   * The key might be an index into an array or a value to be passed to the 
+   * The key might be an index into an array or a value to be passed to the
    * decorated object's get() method.
    *
    * @param  string $key  The key to retrieve

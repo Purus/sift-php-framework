@@ -16,8 +16,8 @@ class sfJavascriptView extends sfPHPView
 {
   /**
    * File extension
-   * 
-   * @var string 
+   *
+   * @var string
    */
   protected $extension = '.pjs';
 

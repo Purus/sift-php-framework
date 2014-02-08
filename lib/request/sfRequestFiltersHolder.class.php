@@ -78,7 +78,7 @@ class sfRequestFiltersHolder extends sfParameterHolder implements ArrayAccess, C
 
   /**
    * Returns number of filters in this holder
-   * 
+   *
    * @return integer
    */
   public function count()

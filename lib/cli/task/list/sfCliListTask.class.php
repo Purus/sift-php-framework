@@ -30,7 +30,7 @@ class sfCliListTask extends sfCliCommandApplicationTask
     $this->briefDescription = 'Lists tasks';
 
     $scriptName = $this->environment->get('script_name');
-    
+
     $this->detailedDescription = <<<EOF
 The [list|INFO] task lists all tasks:
 

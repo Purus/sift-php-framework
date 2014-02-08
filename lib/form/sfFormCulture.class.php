@@ -36,8 +36,8 @@ class sfFormCulture extends myForm {
 
   /**
    * sfUser instance
-   * 
-   * @var sfUser  
+   *
+   * @var sfUser
    */
   protected $user = null;
 

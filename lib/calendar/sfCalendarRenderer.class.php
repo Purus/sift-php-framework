@@ -8,7 +8,7 @@
 
 /**
  * sfCalendarRenderer is a renderer base class
- * 
+ *
  * @package Sift
  * @subpackage calendar
  */
@@ -16,37 +16,37 @@ abstract class sfCalendarRenderer implements sfICalendarRenderer {
 
   /**
    * Options holder
-   * 
-   * @var array 
+   *
+   * @var array
    */
   protected $options = array();
-  
+
   /**
    * Translation catalogue
-   * 
+   *
    * @var string
    */
   protected $translationCatalogue = '%SF_SIFT_DATA_DIR%/i18n/catalogues/calendar';
-  
+
   /**
    * Contructs the renderer
-   * 
+   *
    * @param array $options
    */
   public function __construct($options = array())
   {
     $this->setOptions($options);
-    
+
     // setup translation catalogue
     if($this->translationCatalogue)
     {
       $this->setTranslationCatalogue($this->translationCatalogue);
     }
   }
-  
+
   /**
    * Sets options for this renderer
-   * 
+   *
    * @param array $options
    * @throws InvalidArgumentException
    */
@@ -56,24 +56,24 @@ abstract class sfCalendarRenderer implements sfICalendarRenderer {
     {
       throw new InvalidArgumentException(
               sprintf('Invalid argument passed. "%s" given. Options should be an array.', gettype($options))
-              );      
-    }    
-    $this->options = sfToolkit::arrayDeepMerge($this->options, $options);    
+              );
+    }
+    $this->options = sfToolkit::arrayDeepMerge($this->options, $options);
   }
-  
+
   /**
    * Returns options
-   * 
+   *
    * @return array
    */
   public function getOptions()
   {
     return $this->options;
   }
-  
+
   /**
    * Returns option with given $name
-   * 
+   *
    * @param string $name
    * @param mixed $default
    * @return mixed
@@ -82,30 +82,30 @@ abstract class sfCalendarRenderer implements sfICalendarRenderer {
   {
     return isset($this->options[$name]) ? $this->options[$name] : $default;
   }
-          
+
   /**
    * Returns an array of required stylesheets
-   * 
+   *
    * @return array
    */
   public function getStylesheets()
   {
     return array();
   }
-  
+
   /**
    * Returns an array of required javascripts
-   * 
+   *
    * @return array
    */
   public function getJavascripts()
   {
     return array();
   }
-  
+
   /**
    * Generates url from the given $route using sfController
-   * 
+   *
    * @param string $route
    * @param boolean $absolute
    * @return string
@@ -114,10 +114,10 @@ abstract class sfCalendarRenderer implements sfICalendarRenderer {
   {
     return sfContext::getInstance()->getController()->genUrl($route, $absolute);
   }
-  
+
   /**
    * Translates given $string
-   * 
+   *
    * @param string $str
    * @param array $arguments
    * @return string
@@ -126,10 +126,10 @@ abstract class sfCalendarRenderer implements sfICalendarRenderer {
   {
     return __($str, $arguments, $this->getTranslationCatalogue());
   }
-  
+
   /**
    * Returns translation catalogue
-   * 
+   *
    * @return string
    */
   protected function getTranslationCatalogue()
@@ -139,7 +139,7 @@ abstract class sfCalendarRenderer implements sfICalendarRenderer {
 
   /**
    * Sets translation catalogue to this renderer
-   * 
+   *
    * @param string $catalogue Catalogue name. Can use constants and can be module/catalogue pair
    * @return sfCalendar
    * @throws InvalidArgumentException
@@ -156,16 +156,16 @@ abstract class sfCalendarRenderer implements sfICalendarRenderer {
         if(count($parts) != 2)
         {
           throw new InvalidArgumentException(sprintf(
-            'Invalid translation catalogue "%s" given to the calendar renderer "%s"', 
+            'Invalid translation catalogue "%s" given to the calendar renderer "%s"',
                   $catalogue, get_class($this)));
-        }      
+        }
         $moduleName = $parts[0];
-        $catalogueName = $parts[1];      
+        $catalogueName = $parts[1];
         $catalogue = sfLoader::getI18NDir($moduleName) . '/' . $catalogueName;
       }
-    }    
+    }
     $this->translationCatalogue = $catalogue;
     return $this;
   }
-  
+
 }

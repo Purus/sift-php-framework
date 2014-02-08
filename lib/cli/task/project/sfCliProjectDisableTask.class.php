@@ -29,7 +29,7 @@ class sfCliProjectDisableTask extends sfCliBaseTask
     $this->briefDescription = 'Disables an application in a given environment';
 
     $scriptName = $this->environment->get('script_name');
-    
+
     $this->detailedDescription = <<<EOF
 The [project:disable|INFO] task disables an environment:
 
@@ -47,14 +47,14 @@ EOF;
    */
   protected function execute($arguments = array(), $options = array())
   {
-    $applications = count($arguments['app']) ? $arguments['app'] : 
+    $applications = count($arguments['app']) ? $arguments['app'] :
       sfFinder::type('dir')->relative()->maxDepth(0)->in($this->environment->get('sf_apps_dir'));
-    
-    $env = $arguments['env'];    
+
+    $env = $arguments['env'];
 
     foreach($applications as $app)
     {
-      $this->checkAppExists($app);      
+      $this->checkAppExists($app);
       $lockFile = $this->environment->get('sf_data_dir').'/'.$app.'_'.$env.'.lck';
       if(file_exists($lockFile))
       {

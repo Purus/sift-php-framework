@@ -22,13 +22,13 @@ class sfCliLogClearTask extends sfCliBaseTask
     $this->namespace = 'log';
     $this->name = 'clear';
     $this->briefDescription = 'Clears log files';
-    
+
     $this->addOptions(array(
       new sfCliCommandOption('history', null, sfCliCommandOption::PARAMETER_NONE, 'Clear also history logs?', null),
     ));
-    
+
     $scriptName = $this->environment->get('script_name');
-    
+
     $this->detailedDescription = <<<EOF
 The [log:clear|INFO] task clears all log files:
 
@@ -42,21 +42,21 @@ EOF;
   protected function execute($arguments = array(), $options = array())
   {
     $this->logSection($this->getName(), 'Clearing logs...');
-    
+
     $history = $options['history'];
-    
+
     $finder = sfFinder::type('file');
     // clear also history?
     if(!$history)
     {
       $finder->maxdepth(0);
     }
-    
-    $logs = $finder->in($this->environment->get('sf_log_dir'));    
-    
+
+    $logs = $finder->in($this->environment->get('sf_log_dir'));
+
     $this->getFilesystem()->remove($logs);
-    
+
     $this->logSection($this->getName(), 'Done.');
   }
-  
+
 }

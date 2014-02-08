@@ -31,67 +31,67 @@ class myFormBase extends sfForm {
     }
     parent::__construct($defaults, $options, $CSRFSecret);
   }
-  
+
   public function setup()
   {
     parent::setup();
 
     $this->setName(str_replace(array('sf_', 'my_'), '',
               sfInflector::underscore(get_class($this))));
-    
+
     $this->setupDecorator();
-    
+
     $this->validatorSchema->setOption('filter_extra_fields', false);
   }
-    
+
   /**
-   * Setups form decorator and i18n for it 
+   * Setups form decorator and i18n for it
    * if enabled
-   * 
+   *
    */
   protected function setupDecorator()
   {
-    $decorator = new sfWidgetFormSchemaFormatterDiv($this->widgetSchema);    
+    $decorator = new sfWidgetFormSchemaFormatterDiv($this->widgetSchema);
     $decorator->setValidatorSchema($this->getValidatorSchema());
-    
+
     if(sfConfig::get('sf_i18n') && $this->translationCatalogue)
     {
       $decorator->setTranslationCallable('__');
       $decorator->setTranslationCatalogue($this->getTranslationCatalogue());
     }
-    
+
     $this->widgetSchema->addFormFormatter('div', $decorator);
     $this->widgetSchema->setFormFormatterName('div');
   }
-  
+
   /**
    * Renders global errors
-   * 
-   * @param boolean $useGlobalPartial Use partial to render the errors 
-   * @return type 
+   *
+   * @param boolean $useGlobalPartial Use partial to render the errors
+   * @return type
    */
   public function renderGlobalErrors($useGlobalPartial = true)
-  {    
+  {
     if(!$this->hasGlobalErrors())
     {
       return '';
     }
-    
-    if($useGlobalPartial && 
+
+    if($useGlobalPartial &&
         is_readable(sfConfig::get('sf_app_template_dir') . '/_form_errors.php'))
     {
       sfLoader::loadHelpers('Partial');
       return get_partial('global/form_errors', array('form' => $this));
-    }    
+    }
     return parent::renderGlobalErrors();
   }
-  
+
   /**
-   * Renders the form 
-   * 
+   * Renders the form
+   *
    * @param array $attributes
    * @param boolean $useGlobalTemplate Use global template?
-   * @return string 
+   * @return string
    */
   public function render($attributes = array())
   {
@@ -99,28 +99,28 @@ class myFormBase extends sfForm {
     {
       $attributes['global_template'] = 'form';
     }
-    
-    if($attributes['global_template'] && 
-       is_readable(sprintf('%s/_%s.php', sfConfig::get('sf_app_template_dir'), 
+
+    if($attributes['global_template'] &&
+       is_readable(sprintf('%s/_%s.php', sfConfig::get('sf_app_template_dir'),
                    $attributes['global_template'])))
     {
       sfLoader::loadHelpers('Partial');
       $template = sprintf('global/%s', $attributes['global_template']);
       $attributes['global_template'] = false;
-      return get_partial($template, 
-              array('form' => $this, 'attributes' => $attributes));      
+      return get_partial($template,
+              array('form' => $this, 'attributes' => $attributes));
     }
-    
+
     return parent::render($attributes);
   }
-  
+
   /**
    * Embeds a form like "mergeForm" does, but will still
    * save the input data.
-   * 
+   *
    * @param string $name
    * @param sfForm $form
-   * @throws LogicException 
+   * @throws LogicException
    * @see http://itsmajax.com/2011/01/29/6-things-to-know-about-embedded-forms-in-symfony/
    */
   public function embedMergeForm($name, sfForm $form)

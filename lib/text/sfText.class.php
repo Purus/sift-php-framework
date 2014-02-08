@@ -193,7 +193,7 @@ class sfText {
     {
       $phrase = array($phrase);
     }
-    
+
     $highlighter = sprintf('\\1%s\\3', str_replace('\1', '\\2', $highlighter));
 
     foreach($phrase as $p)

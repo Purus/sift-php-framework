@@ -15,14 +15,14 @@
 
 /**
  * Returns Google Analytics tracking code
- * 
+ *
  * @param array $options Array of options
  * @return string
  */
 function google_analytics_tracking_code($options = array())
 {
   $options  = _parse_attributes($options);
-  
+
   $response = sfContext::getInstance()->getResponse();
   $request  = sfContext::getInstance()->getRequest();
 
@@ -30,18 +30,18 @@ function google_analytics_tracking_code($options = array())
   {
     return '';
   }
-  
+
   // exclude from google analytics cookie is set
   // FIXME: make this configurable
   if($request->getCookie('__ga_exclude'))
   {
     return '';
   }
-  
-  $result = array();  
+
+  $result = array();
   $result[] = google_analytics_base_configuration();
-  
-  $js = array();  
+
+  $js = array();
   // detect 404 page
   $module = sfContext::getInstance()->getModuleName();
   $action = sfContext::getInstance()->getActionName();
@@ -91,8 +91,8 @@ function google_analytics_tracking_code($options = array())
   }
 
   $result[] = javascript_tag(join("\n", $js));
-  
-  return join("\n", $result). "\n";  
+
+  return join("\n", $result). "\n";
 }
 
 /**
@@ -130,19 +130,19 @@ function google_analytics_base_configuration($options = array())
   {
     $js[] = sprintf("_gaq.push(['_trackPageLoadTime']);");
   }
-  
+
   // add tracking of links to the response
   use_package('google_analytics_tracker');
-  
+
   $setupScripts = sfAssetPackage::getJavascripts('google_analytics_setup');
-  
+
   $return = javascript_tag(join("\n", $js));
-  
+
   foreach($setupScripts as $script)
   {
     $return .= "\n" . javascript_include_tag($script);
-  }        
-  
+  }
+
   return $return;
 }
 
@@ -192,7 +192,7 @@ function google_analytics_set_tracking_variable($name, $value, $scope = null, $s
 /**
  * Returns Google Analytics configured UA
  *
- * @return string 
+ * @return string
  */
 function google_analytics_ua()
 {
@@ -206,54 +206,54 @@ function google_analytics_ua()
 
 /**
  * Tags links for google analytics
- * 
+ *
  * @param string $text
  * @param array $options
- * @return string 
+ * @return string
  */
-function google_analytics_tag_links($text, $options = array())       
+function google_analytics_tag_links($text, $options = array())
 {
   // get base options
   $options = _parse_attributes($options);
-  $gaOptions = sfConfig::get('app_google_analytics_options', array());  
+  $gaOptions = sfConfig::get('app_google_analytics_options', array());
 
   // utm_source
   if(!isset($options['source']))
   {
     $options['source'] = 'email';
   }
-  
+
   if(!isset($options['medium']))
   {
     $options['medium'] = 'email';
-  } 
+  }
 
   if(!isset($options['campaign']))
   {
     $options['campaign'] = 'email';
-  }  
-  
+  }
+
   $ga_options = array(
     'utm_source'    => $options['source'],
     'utm_medium'    => $options['medium'],
     'utm_campaign'  => $options['campaign']
   );
-  
+
   $anchor = false;
-  // urls should be rewritten to use anchor "#" 
-  if(isset($gaOptions['allow_anchor']) 
+  // urls should be rewritten to use anchor "#"
+  if(isset($gaOptions['allow_anchor'])
     && $gaOptions['allow_anchor'])
   {
     $anchor = true;
-  } 
-  
+  }
+
   $ga_options = http_build_query($ga_options, null, '&');
 
   if(isset($options['auto_link']) && $options['auto_link'])
   {
-    $text = sfText::autoLink($text);  
+    $text = sfText::autoLink($text);
   }
-    
+
   $reg_exUrl = "/(http|https|ftp|ftps)\:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(\/\S*)?/";
 
   // Check if there is a url in the text
@@ -265,8 +265,8 @@ function google_analytics_tag_links($text, $options = array())
     }
     else
     {
-      $url = strpos($url[0], '?') === false ? 
-              ($url[0].'?'.$ga_options) :($url[0].'&'.$ga_options);            
+      $url = strpos($url[0], '?') === false ?
+              ($url[0].'?'.$ga_options) :($url[0].'&'.$ga_options);
     }
     // make the urls hyper links
     $text = preg_replace($reg_exUrl, $url, $text);

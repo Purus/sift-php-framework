@@ -15,7 +15,7 @@
 
 /**
  * Returns human readable name for given $mime. Also translates the name
- * 
+ *
  * @param string $mime Mime type (like image/jpg)
  * @param string $unknown Unknown string if mime is uknown
  * @return string
@@ -23,14 +23,14 @@
 function file_mime_name($mime, $unknown = 'Unknown')
 {
   return __(
-    sfMimeType::getNameFromType($mime, $unknown), array(), 
+    sfMimeType::getNameFromType($mime, $unknown), array(),
           sfConfig::get('sf_sift_data_dir') . '/i18n/catalogues/mime_type'
-  );  
+  );
 }
 
 /**
  * Returns max size of file which can be uploaded. Specified by PHP settings
- * 
+ *
  * @param boolean $format
  * @return string|integer
  */
@@ -41,7 +41,7 @@ function file_max_upload_size($format = true)
   {
     $max_size = file_format_size($max_size);
   }
-  return $max_size;  
+  return $max_size;
 }
 
 /**

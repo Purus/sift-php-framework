@@ -45,7 +45,7 @@ EOF;
     $this->logSection($this->getFullName(), sprintf('Removing channel "%s"', $arguments['name']));
 
     $this->getPluginManager()->getEnvironment()->removeChannel($arguments['name']);
-    
+
     $this->logSection($this->getFullName(), 'Done.');
   }
 

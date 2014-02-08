@@ -7,10 +7,10 @@
  */
 
 /**
- * Php version of perl's MIME::Base64::URLSafe, that provides an 
- * url-safe base64 string encoding/decoding 
+ * Php version of perl's MIME::Base64::URLSafe, that provides an
+ * url-safe base64 string encoding/decoding
  * (compatible with python base64's urlsafe methods)
- * 
+ *
  * @see http://cz2.php.net/manual/en/function.base64-encode.php#63543
  * @package    Sift
  * @subpackage util

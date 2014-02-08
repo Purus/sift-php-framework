@@ -16,11 +16,11 @@ class sfFormManager {
 
   /**
    * Returns form instance based on its name.
-   * 
+   *
    * @param string $name
    * @return myForm
    */
-  public static function getForm($name, $defaults = array(), $options = array(), 
+  public static function getForm($name, $defaults = array(), $options = array(),
                                  $CSRFSecret = null)
   {
     $formClass = $name.'Form';

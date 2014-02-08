@@ -67,8 +67,8 @@ EOF;
 
       if(isset($found_app[1]) && isset($env[1]) && $env[1] != 'prod')
       {
-        $this->logSection($this->getFullName(), sprintf('Clear "%s" (%s, %s environment)', 
-                          basename($controller), 
+        $this->logSection($this->getFullName(), sprintf('Clear "%s" (%s, %s environment)',
+                          basename($controller),
                           $found_app[1], $env[1]));
         $this->getFilesystem()->remove($controller);
       }

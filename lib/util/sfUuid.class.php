@@ -139,7 +139,7 @@ class sfUuid {
 
   /**
    * Checks if given $uuid is valid UUID identifier
-   * 
+   *
    * @param string $uuid UUID string
    * @return boolean
    */

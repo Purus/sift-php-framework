@@ -13,5 +13,5 @@
  * @subpackage project
  */
 class sfGenericPlugin extends sfPlugin {
-  
+
 }

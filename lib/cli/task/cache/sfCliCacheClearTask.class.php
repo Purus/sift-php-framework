@@ -33,7 +33,7 @@ class sfCliCacheClearTask extends sfCliBaseTask
     $this->briefDescription = 'Clears the cache';
 
     $scriptName = $this->environment->get('script_name');
-    
+
     $this->detailedDescription = <<<EOF
 The [cache:clear|INFO] task clears the cache.
 
@@ -63,7 +63,7 @@ EOF;
   protected function execute($arguments = array(), $options = array())
   {
     $cacheDir = $this->environment->get('sf_root_cache_dir');
-    
+
     if (!$cacheDir || !is_dir($cacheDir))
     {
       throw new sfException(sprintf('Cache directory "%s" does not exist.', $cacheDir));
@@ -97,14 +97,14 @@ EOF;
         $this->logSection($this->getFullName(), sprintf('Clearing cache for "%s" app and "%s" env', $app, $env));
         $this->lock($app, $env);
 
-        $event = $this->dispatcher->notifyUntil(new sfEvent('cli_task.cache.clear', 
+        $event = $this->dispatcher->notifyUntil(new sfEvent('cli_task.cache.clear',
                 array('app' => $app, 'env' => $env, 'task' => $this)));
-        
+
         if(!$event->isProcessed())
-        {          
+        {
           $this->clearCache($cacheDir.'/'.$app.'/'.$env);
         }
-        
+
         $this->unlock($app, $env);
       }
     }
@@ -112,11 +112,11 @@ EOF;
     // clear global cache
     if(null === $options['app'])
     {
-      $this->getFilesystem()->remove(sfFinder::type('any')              
-              ->discard('.*')->in($this->environment->get('sf_root_cache_dir')));      
+      $this->getFilesystem()->remove(sfFinder::type('any')
+              ->discard('.*')->in($this->environment->get('sf_root_cache_dir')));
     }
-    
-    $this->logSection($this->getFullName(), 'Done.');    
+
+    $this->logSection($this->getFullName(), 'Done.');
   }
 
   protected function clearCache($cacheDir)
@@ -125,7 +125,7 @@ EOF;
   }
 
   protected function lock($app, $env)
-  {    
+  {
     // create a lock file
     $this->getFilesystem()->touch($this->getLockFile($app, $env));
     // change mode so the web user can remove it if we die
@@ -142,5 +142,5 @@ EOF;
   {
     return $this->environment->get('sf_data_dir').'/'.$app.'_'.$env.'-cli.lck';
   }
-  
+
 }

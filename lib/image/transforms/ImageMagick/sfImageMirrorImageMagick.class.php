@@ -33,5 +33,5 @@ class sfImageMirrorImageMagick extends sfImageTransformAbstract
 
     return $image;
   }
-  
+
 }

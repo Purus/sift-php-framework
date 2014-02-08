@@ -16,11 +16,11 @@ interface sfIIp2Country {
 
   /**
    * Return the a two-character ISO 3166-1 country code for the country associated with the IP address.
-   *      
+   *
    * @param string $ip The ip to look for
-   * @param string $default Default code to return if not found   
+   * @param string $default Default code to return if not found
    * @return string
-   */     
+   */
   public function getCountryCode($ip, $default = null);
-    
+
 }

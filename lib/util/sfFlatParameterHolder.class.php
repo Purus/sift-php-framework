@@ -23,7 +23,7 @@ class sfFlatParameterHolder implements Serializable {
    * The constructor for sfFlatParameterHolder.
    */
   public function __construct()
-  {    
+  {
   }
 
   /**

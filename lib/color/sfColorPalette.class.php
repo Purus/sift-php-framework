@@ -8,34 +8,34 @@
 
 /**
  * Color palette - base class for palettes
- * 
+ *
  * @package Sift
  * @subpackage color
  */
 abstract class sfColorPalette implements sfIColorPallete {
-  
+
   protected $swatches = array();
-    
+
   public function getSwatches()
   {
-    return $this->swatches; 
+    return $this->swatches;
   }
-      
+
   public function getId()
   {
     return get_class($this);
   }
-  
+
   public function getClosestColor($color)
   {
     $swatches = $this->getSwatches();
     $myColor  = $color instanceof sfColor ? $color : new sfColor($color);
     if(count($swatches))
     {
-      $index = $myColor->getClosestMatch($swatches);   
+      $index = $myColor->getClosestMatch($swatches);
       $myColor = new sfColor($swatches[$index]);
     }
     return $myColor;
-  }          
-  
+  }
+
 }

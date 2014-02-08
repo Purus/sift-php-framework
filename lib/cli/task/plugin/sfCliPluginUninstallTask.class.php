@@ -32,7 +32,7 @@ class sfCliPluginUninstallTask extends sfCliPluginBaseTask
     $this->name = 'uninstall';
 
     $scriptName = $this->environment->get('script_name');
-    
+
     $this->briefDescription = 'Uninstalls a plugin';
 
     $this->detailedDescription = <<<EOF

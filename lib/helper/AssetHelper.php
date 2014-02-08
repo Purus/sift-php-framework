@@ -1001,7 +1001,7 @@ function apply_filters($tag, $string)
 
 /**
  * Replaces constants with modifiers. Allows to use constants in paths.
- * 
+ *
  * @param string $value
  * @internal
  */

@@ -15,46 +15,46 @@
 class sfWebDebugPanelMemory extends sfWebDebugPanel {
 
   protected $units = array('B', 'kB', 'MB', 'GB', 'TB', 'PB', 'EB');
-    
+
   public function getTitle()
   {
     $usage = $this->formatMemoryUsage(memory_get_peak_usage(true));
-    
-    return sprintf('<span title="%s: %s, Available: %s">%s</span>', 
+
+    return sprintf('<span title="%s: %s, Available: %s">%s</span>',
                     $this->getPanelTitle(),
-                    $usage,  
+                    $usage,
                     $this->formatMemoryUsage($this->getAvailableMemory()),
                     $usage);
   }
 
   public function getPanelTitle()
-  {    
+  {
     return 'Memory usage';
   }
 
   public function getPanelContent()
   {
   }
-  
+
   /**
    * Returns available memory size
-   * 
+   *
    * @return float
    */
   protected function getAvailableMemory()
   {
     return sfToolkit::getAvailableMemory();
   }
-  
+
   /**
    * Formats memory usage
    *
-   * @param integer $size Memory usage 
+   * @param integer $size Memory usage
    * @param integer $round Precision
    * @return string Formatted memory usage (100 kB)
    */
   public function formatMemoryUsage($usage, $round = 1)
-  {    
+  {
     $pos = 0;
     while($usage >= 1024)
     {

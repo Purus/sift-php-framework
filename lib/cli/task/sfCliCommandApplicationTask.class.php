@@ -16,7 +16,7 @@ abstract class sfCliCommandApplicationTask extends sfCliTask
 {
   protected
     $commandApplication = null;
-  
+
   /**
    * Sets the command application instance for this task.
    *
@@ -24,7 +24,7 @@ abstract class sfCliCommandApplicationTask extends sfCliTask
    */
   public function setCommandApplication(sfCliCommandApplication $commandApplication = null)
   {
-    $this->commandApplication = $commandApplication;    
+    $this->commandApplication = $commandApplication;
   }
 
   /**
@@ -90,5 +90,5 @@ abstract class sfCliCommandApplicationTask extends sfCliTask
   {
     return $this->createTask($name)->run($arguments, $options);
   }
-  
+
 }

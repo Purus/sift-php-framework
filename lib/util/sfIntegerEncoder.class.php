@@ -5,31 +5,31 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
- 
+
 /**
  * Encodes integer valus to be used by shortening services or request parameters
  *
  * @package Sift
  * @subpackage util
- * @link http://stackoverflow.com/questions/959957/php-short-hash 
+ * @link http://stackoverflow.com/questions/959957/php-short-hash
  */
 class sfIntegerEncoder {
 
   /**
    * Code set
    * Readable character set excluded (0,O,1,l)
-   */ 
+   */
   const CODESET = '23456789abcdefghijkmnopqrstuvwxyzABCDEFGHIJKLMNPQRSTUVWXYZ';
 
   /**
    * Encodes the integer
-   * 
+   *
    * @param integer $n
    * @return string
    */
   public static function encode($n)
   {
-    $n = (string)$n;    
+    $n = (string)$n;
     $base       = strlen(self::CODESET);
     $converted  = '';
     while($n > 0)
@@ -41,8 +41,8 @@ class sfIntegerEncoder {
   }
 
   /**
-   * Decodes the string 
-   * 
+   * Decodes the string
+   *
    * @param string $code
    * @return integer
    */
@@ -59,7 +59,7 @@ class sfIntegerEncoder {
 
   /**
    * Floors the integer
-   * 
+   *
    * @param integer $x
    * @return integer
    */

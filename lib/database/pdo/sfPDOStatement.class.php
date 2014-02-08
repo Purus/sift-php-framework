@@ -48,7 +48,7 @@ class sfPDOStatement extends PDOStatement {
   }
 
   /**
-   * 
+   *
    * @see PDOStatement::bindParam()
    */
   public function bindParam($parameter, &$variable, $data_type = PDO::PARAM_STR,

@@ -12,7 +12,7 @@
  * @package    Sift
  * @subpackage helper_mail
  */
- 
+
 /**
  * Embeds given image to message and returns its source (cid:xyz@server)
  *
@@ -47,7 +47,7 @@ function mail_attach_file($path, sfMailerMessage $message, $filename = null, $co
 
 /**
  * Returns image tag for mail usage (embeds image to message)
- * 
+ *
  * @param string $path
  * @param array $options
  * @return string
@@ -79,12 +79,12 @@ function mail_image_tag($path, sfMailerMessage $message, $options = array())
 function mail_get_site_signature()
 {
   $signature = sfConfig::get('app_mail_site_signature');
-  
+
   if(!$signature)
   {
     $signature = sfConfig::get('app_title_name');
   }
-  
+
   return sfCore::getEventDispatcher()
           ->filter(new sfEvent('mailer.message.site_signature'), $signature)
           ->getReturnValue();

@@ -227,14 +227,14 @@ class sfInputFilters {
       return array(call_user_func(array('sfInputFilters', $method), $value));
     }
   }
-  
+
   /**
    * Cleans provided data using provided filters
    * In filters array should be passed valid callbacks
    *
    * - trim
    * - htmlspecialchars
-   * 
+   *
    * $filters = array('trim', array(sfSanitizer::sanitize, 'strict'), sfUtf8::clean);
    * $filters = array('trim', array(array('sfSanitizer', 'sanitize'), 'strict'), sfUtf8::clean);
    *
@@ -248,7 +248,7 @@ class sfInputFilters {
     {
       $filters = array($filters);
     }
-    
+
     foreach($filters as $filter)
     {
       if(is_array($filter))
@@ -373,5 +373,5 @@ class sfInputFilters {
 
     return $text;
   }
-  
+
 }

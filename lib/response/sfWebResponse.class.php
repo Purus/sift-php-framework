@@ -61,8 +61,8 @@ class sfWebResponse extends sfResponse
 
   /**
    * Array of default options
-   * 
-   * @var array 
+   *
+   * @var array
    */
   protected $defaultOptions = array(
     'title_mode' => self::TITLE_MODE_PREPEND,

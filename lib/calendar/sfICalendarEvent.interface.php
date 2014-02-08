@@ -8,13 +8,13 @@
 
 /**
  * sfICalendarEvent is an interface for calendar events
- * 
+ *
  * @package Sift
  * @subpackage calendar
  */
 interface sfICalendarEvent {
-  
+
   public function getStart();
   public function getEnd();
-            
+
 }

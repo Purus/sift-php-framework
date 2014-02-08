@@ -37,7 +37,7 @@ class sfCliPluginInstallTask extends sfCliPluginBaseTask {
     $this->briefDescription = 'Installs a plugin';
 
     $scriptName = $this->environment->get('script_name');
-    
+
     $this->detailedDescription = <<<EOF
 The [plugin:install|INFO] task installs a plugin:
 
@@ -114,9 +114,9 @@ EOF;
         }
       }
     }
-    
+
     $this->getPluginManager()->installPlugin($arguments['name'], $options);
-    
+
     $this->logSection($this->getFullName(), 'Done.');
   }
 

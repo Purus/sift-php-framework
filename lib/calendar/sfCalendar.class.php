@@ -5,7 +5,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
- 
+
 /**
  * Calendar is a holder for events in time (day, month, year)
  *
@@ -18,7 +18,7 @@ class sfCalendar {
    * Calendar version
    */
   const VERSION = '2.0.0';
-  
+
   protected $month;
   protected $year;
   protected $renderer;
@@ -27,7 +27,7 @@ class sfCalendar {
 
   /**
    * Constructs the calendar
-   * 
+   *
    * @param integer $month
    * @param integer $year
    * @param string|DateTimeZone $timezone
@@ -36,26 +36,26 @@ class sfCalendar {
   {
     $this->month = $month ? $month : date('n');
     $this->year = $year ? $year : date('Y');
-    
+
     if(is_null($timezone))
     {
       $this->setTimeZone(sfConfig::get('sf_default_timezone', 'Europe/Prague'));
-    }    
+    }
   }
-  
+
   /**
    * Returns calendar timezone
-   * 
+   *
    * @return DateTimeZone
    */
   public function getTimeZone()
   {
     return $this->timezone;
   }
-  
+
   /**
    * Set timezone
-   * 
+   *
    * @param string $timezone
    * @return sfCalendar
    */
@@ -68,10 +68,10 @@ class sfCalendar {
     $this->timezone = $timezone;
     return $this;
   }
-  
+
   /**
    * Sets renderer to the calendar
-   * 
+   *
    * @param sfICalendarRenderer $renderer
    */
   public function setRenderer(sfICalendarRenderer $renderer)
@@ -81,7 +81,7 @@ class sfCalendar {
 
   /**
    * Returns renderer instance
-   * 
+   *
    * @return sfICalendarRenderer
    */
   public function getRenderer()
@@ -89,25 +89,25 @@ class sfCalendar {
     if(!$this->renderer)
     {
       $this->renderer = new sfCalendarRendererHtml();
-    }    
+    }
     return $this->renderer;
   }
 
   /**
    * Renders the calendar using renderer instance
-   * 
+   *
    * @param array $options
    * @return mixed
    */
   public function render($options = array())
   {
     $renderer = $this->getRenderer();
-    return $renderer->render($this, $options);    
+    return $renderer->render($this, $options);
   }
 
   /**
    * Returns an array of javascripts
-   * 
+   *
    * @return array
    */
   public function getJavascripts()
@@ -117,12 +117,12 @@ class sfCalendar {
     {
       return $renderer->getJavascripts();
     }
-    return array();    
+    return array();
   }
-  
+
   /**
    * Returns an array of stylesheets
-   * 
+   *
    * @return array
    */
   public function getStylesheets()
@@ -132,12 +132,12 @@ class sfCalendar {
     {
       return $renderer->getStylesheets();
     }
-    return array();    
+    return array();
   }
-  
+
   /**
    * __toString() magic method.
-   * 
+   *
    * @return string
    */
   public function __toString()
@@ -147,7 +147,7 @@ class sfCalendar {
 
   /**
    * Add single event
-   * 
+   *
    * @param array|sfCalendarEvent $event
    * @return sfCalendar
    */
@@ -158,14 +158,14 @@ class sfCalendar {
     {
       $event = sfCalendarEvent::fromArray($event);
     }
-    
+
     $this->events[] = $event;
     return $this;
   }
-  
+
   /**
    * Add an array of events
-   * 
+   *
    * @param array $events Array of events
    * @return sfCalendar
    */
@@ -180,7 +180,7 @@ class sfCalendar {
 
   /**
    * Returns events
-   * 
+   *
    * @param integer $month
    * @param integer $day
    * @param integer $year
@@ -193,7 +193,7 @@ class sfCalendar {
       $events = array();
       foreach($this->events as $event)
       {
-        if($event->takesPlace($month ? $month : $this->getMonth(), 
+        if($event->takesPlace($month ? $month : $this->getMonth(),
                 $day, $year ? $year : $this->getYear()))
         {
           $events[] = $event;
@@ -204,14 +204,14 @@ class sfCalendar {
     {
       $events = $this->events;
     }
-    
+
     $this->sortEvents($events);
     return $events;
   }
-  
+
   /**
    * Returns current month
-   * 
+   *
    * @return integer
    */
   public function getMonth()
@@ -221,27 +221,27 @@ class sfCalendar {
 
   /**
    * Returns current year
-   * 
+   *
    * @return integer
-   */  
+   */
   public function getYear()
   {
     return $this->year;
-  } 
-  
+  }
+
   /**
    * Sort events by start date
-   * 
+   *
    * @param array $events
    */
   protected function sortEvents(&$events)
   {
-    uasort($events, array($this, '_sortEvents'));    
+    uasort($events, array($this, '_sortEvents'));
   }
-  
+
   /**
    * Internal sorting method
-   * 
+   *
    * @param sfCalendarEvent $a
    * @param sfCalendarEvent $b
    * @return int

@@ -13,5 +13,5 @@
  * @subpackage project
  */
 class sfGenericApplication extends sfApplication {
-  
+
 }

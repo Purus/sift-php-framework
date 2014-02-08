@@ -75,7 +75,7 @@ class sfPHPView extends sfView
   protected function renderFile($file)
   {
     if(sfConfig::get('sf_logging_enabled'))
-    {    
+    {
       $this->getContext()->getLogger()->log('{sfView} Render "{file}"', array('file' => $file));
     }
 
@@ -90,7 +90,7 @@ class sfPHPView extends sfView
 
     try
     {
-      sfLimitedScope::load($file, $vars);    
+      sfLimitedScope::load($file, $vars);
     }
     catch(Exception $e)
     {
@@ -267,7 +267,7 @@ class sfPHPView extends sfView
         $viewCache->setActionCache($uri, $retval, $this->isDecorator() ? $this->getDecoratorDirectory().'/'.$this->getDecoratorTemplate() : false);
       }
     }
-    
+
     // now render decorator template, if one exists
     if($this->isDecorator())
     {

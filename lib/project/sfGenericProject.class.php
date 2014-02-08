@@ -13,5 +13,5 @@
  * @subpackage project
  */
 class sfGenericProject extends sfProject {
-  
+
 }

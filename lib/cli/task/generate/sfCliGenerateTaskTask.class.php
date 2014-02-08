@@ -34,7 +34,7 @@ class sfGenerateTaskTask extends sfCliGeneratorBaseTask
     $this->briefDescription = 'Creates a skeleton class for a new task';
 
     $scriptName = $this->environment->get('script_name');
-    
+
     $this->detailedDescription = <<<EOF
 The [generate:task|INFO] creates a new sfCliTask class based on the name passed as
 argument:
@@ -75,10 +75,10 @@ EOF;
     $taskNameComponents = explode(':', $taskName);
     $namespace = isset($taskNameComponents[1]) ? $taskNameComponents[0] : '';
     $name = isset($taskNameComponents[1]) ? $taskNameComponents[1] : $taskNameComponents[0];
-    
+
     $taskClassName = sfInflector::camelize(str_replace('-', '_', ($namespace ? $namespace.ucfirst($name) : $name))).'Task';
     $taskClassName[0] = strtolower($taskClassName[0]);
-    
+
     // Validate the class name
     if(!preg_match('/^[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*$/', $taskClassName))
     {
@@ -86,9 +86,9 @@ EOF;
     }
 
     $briefDescription = $options['brief-description'];
-    
+
     $useDatabase = sfToolkit::literalize($options['use-database']);
-    
+
     if($useDatabase)
     {
       $skeletonFile = 'task_database.php';
@@ -97,7 +97,7 @@ EOF;
     {
       $skeletonFile = 'task_simple.php';
     }
-    
+
     $defaultConnection = 'default';
 
     $constants = array(
@@ -105,10 +105,10 @@ EOF;
       'NAME' => $name,
       'TASK_CLASS_NAME' => $taskClassName,
       'NAMESPACE' => $namespace,
-      'BRIEF_DESCRIPTION' => $briefDescription,   
+      'BRIEF_DESCRIPTION' => $briefDescription,
       'DEFAULT_CONNECTION' => $defaultConnection
     );
-    
+
     if(is_readable($this->environment->get('sf_data_dir').'/skeleton/task/' . $skeletonFile))
     {
       $skeleton = $this->environment->get('sf_data_dir').'/skeleton/task/' . $skeletonFile;
@@ -116,7 +116,7 @@ EOF;
     else
     {
       $skeleton = $this->environment->get('sf_sift_data_dir').'/skeleton/task/' . $skeletonFile;
-    }    
+    }
 
     // check that the task directory exists and that the task file doesn't exist
     if (!is_readable($this->environment->get('sf_root_dir').'/'.$options['dir']))
@@ -131,9 +131,9 @@ EOF;
     }
 
     $this->logSection($this->getFullName(), sprintf('Creating "%s" task file', $taskFile));
-    
+
     $this->getFilesystem()->copy($skeleton, $taskFile);
     $this->getFilesystem()->replaceTokens($taskFile, '##', '##', $constants);
-    
+
   }
 }

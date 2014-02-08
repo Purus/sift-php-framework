@@ -75,5 +75,5 @@ class sfImageOpacityImageMagick extends sfImageTransformAbstract
 
     return $image;
   }
-  
+
 }

@@ -54,7 +54,7 @@ class sfPhpErrorException extends sfException {
           'error' => $string
         ));
       }
-      // The error handler must return FALSE to populate $php_errormsg. 
+      // The error handler must return FALSE to populate $php_errormsg.
       return false;
     }
 

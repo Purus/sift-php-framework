@@ -63,7 +63,7 @@ class sfI18nFormExtract extends sfI18nExtract {
     {
       $this->form = call_user_func(array($class, '__construct_i18n'));
     }
-    else 
+    else
     {
       $this->form = $reflection->newInstanceArgs();
     }

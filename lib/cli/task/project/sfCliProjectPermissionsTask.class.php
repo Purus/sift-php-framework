@@ -5,7 +5,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
- 
+
 /**
  * Fixes directory permissions.
  *
@@ -28,7 +28,7 @@ class sfCliProjectPermissionsTask extends sfCliBaseTask
     $this->briefDescription = 'Fixes directory permissions';
 
     $scriptName = $this->environment->get('script_name');
-    
+
     $this->detailedDescription = <<<EOF
 The [project:permissions|INFO] task fixes directory permissions:
 
@@ -42,9 +42,9 @@ EOF;
   protected function execute($arguments = array(), $options = array())
   {
     $this->logSection($this->getFullName(), 'Fixing permissions...');
-    
+
     $uploadDir = $this->environment->get('sf_upload_dir');
-    
+
     if(is_dir($uploadDir))
     {
       $this->chmod($uploadDir, 0777);
@@ -54,8 +54,8 @@ EOF;
     if(is_dir($persistentUpload))
     {
       $this->chmod($uploadDir, 0777);
-    }  
-    
+    }
+
 
     $this->chmod($this->environment->get('sf_log_dir'), 0777);
     $this->chmod($this->environment->get('sf_root_dir').'/sift', 0777);
@@ -63,11 +63,11 @@ EOF;
     $dirs = array(
       $this->environment->get('sf_root_cache_dir'),
       $this->environment->get('sf_log_dir'),
-      $this->environment->get('sf_upload_dir'),      
+      $this->environment->get('sf_upload_dir'),
     );
-    
+
     $webCacheDir = $this->environment->get('sf_web_dir').'/cache';
-    
+
     if(is_dir($webCacheDir))
     {
       $this->chmod($webCacheDir, 0777);
@@ -90,23 +90,23 @@ EOF;
         array('Permissions on the following file(s) could not be fixed:', ''),
         array_map(create_function('$f', 'return \' - \'.sfDebug::shortenFilePath($f);'), $this->failed)
       ), 'ERROR_LARGE');
-      
+
       $this->logSection($this->getFullName(), 'Done. but with errors.');
     }
     else
     {
       $this->logSection($this->getFullName(), 'Done.');
     }
-    
+
   }
 
   /**
    * Chmod and capture any failures.
-   * 
+   *
    * @param string  $file
    * @param integer $mode
    * @param integer $umask
-   * 
+   *
    * @see sfFilesystem
    */
   protected function chmod($file, $mode, $umask = 0000)
@@ -132,7 +132,7 @@ EOF;
 
   /**
    * Captures those chmod commands that fail.
-   * 
+   *
    * @see http://www.php.net/set_error_handler
    */
   public function handleError($no, $string, $file, $line, $context)

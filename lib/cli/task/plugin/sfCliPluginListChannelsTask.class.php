@@ -16,16 +16,16 @@ class sfCliPluginListChannelsTask extends sfCliPluginBaseTask {
 
   /**
    * Array of hidden channels
-   * 
-   * @var array 
+   *
+   * @var array
    */
   protected $hiddenChannels = array(
     'doc.php.net',
     'pear.php.net',
     '__uri',
-    'pecl.php.net'      
+    'pecl.php.net'
   );
-  
+
   /**
    * @see sfCliTask
    */
@@ -50,7 +50,7 @@ EOF;
    */
   protected function execute($arguments = array(), $options = array())
   {
-    $channels = $this->getPluginManager()->getEnvironment()->getRegistry()->listChannels();    
+    $channels = $this->getPluginManager()->getEnvironment()->getRegistry()->listChannels();
     $channels = array_diff($channels, $this->hiddenChannels);
 
     if(count($channels))
@@ -60,15 +60,15 @@ EOF;
       foreach($channels as $channel)
       {
         $info = $this->getPluginManager()->getEnvironment()->getRegistry()->channelInfo($channel);
-        
+
         $this->log(sprintf('  %s (%s) %s', $channel, $info['suggestedalias'], $info['summary']));
-      }     
+      }
     }
     else
     {
       $this->logSection($this->getFullName(), 'There are no registered channel(s)');
     }
-    
+
   }
 
 }
