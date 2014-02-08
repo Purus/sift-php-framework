@@ -19,7 +19,7 @@
  *
  * Examples:
  *   <?php echo link_to_function('Greeting', "alert('Hello world!')") ?>
- *   <?php echo link_to_function(image_tag('delete'), "if confirm('Really?'){ do_delete(); }") ?>
+ *   <?php echo link_to_function(image_tag('delete'), "if confirm('Really?') { do_delete(); }") ?>
  */
 function link_to_function($name, $function, $html_options = array())
 {

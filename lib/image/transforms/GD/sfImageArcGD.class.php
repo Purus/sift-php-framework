@@ -94,7 +94,7 @@ class sfImageArcGD extends sfImageTransformAbstract
    * @param string/object $fill string color or fill object
    * @param integer $style fill style, only applicable if using a fill object
    */
-  public function __construct($x, $y, $width, $height, $start_angle, $end_angle, $thickness = 1, $color = '#000000', $fill=null,$style = null )
+  public function __construct($x, $y, $width, $height, $start_angle, $end_angle, $thickness = 1, $color = '#000000', $fill=null, $style = null)
   {
     $this->setX($x);
     $this->setY($y);

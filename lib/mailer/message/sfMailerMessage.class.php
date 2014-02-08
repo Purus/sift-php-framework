@@ -104,7 +104,7 @@ class sfMailerMessage extends Swift_Message {
    * @param integer $maxLineLength
    * @throws InvalidArgumentException
    */
-  public function  __construct(sfEventDispatcher $dispatcher, $subject = null, $body = null,
+  public function __construct(sfEventDispatcher $dispatcher, $subject = null, $body = null,
       $contentType = null, $charset = null,
       $encoding = '8bit', $maxLineLength = 80, $fileDataPath = null)
   {
@@ -113,7 +113,7 @@ class sfMailerMessage extends Swift_Message {
     // parts of your message when it is transported between SMTP servers.
     if($maxLineLength > 1000)
     {
-      throw new InvalidArgumentException(sprintf('Maximum message line length is 1000. "%s" given', $lineLength));
+      throw new InvalidArgumentException(sprintf('Maximum message line length is 1000. "%s" given', $maxLineLength));
     }
 
     $this->fileDataPath = $fileDataPath;
