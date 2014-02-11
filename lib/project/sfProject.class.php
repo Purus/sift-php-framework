@@ -103,11 +103,7 @@ abstract class sfProject extends sfConfigurable
      * @param sfEventDispatcher   $dispatcher        The event dispatcher
      * @param sfShutdownScheduler $shutdownScheduler The shutdown scheduler
      */
-    public function __construct(
-        $options = array(),
-        sfEventDispatcher $dispatcher = null,
-        sfShutdownScheduler $shutdownScheduler = null
-    ) {
+    public function __construct($options = array(), sfEventDispatcher $dispatcher = null, sfShutdownScheduler $shutdownScheduler = null) {
         $this->dispatcher = is_null($dispatcher) ? new sfEventDispatcher() : $dispatcher;
         $this->shutdownScheduler = is_null($shutdownScheduler) ? new sfShutdownScheduler() : $shutdownScheduler;
 
@@ -183,9 +179,7 @@ abstract class sfProject extends sfConfigurable
         $this->addOptions(
             array(
                 'sf_web_dir'        => $sf_root_dir . DS . $this->getOption('sf_web_dir_name'),
-                'sf_upload_dir'     => $sf_root_dir . DS . $this->getOption('sf_web_dir_name') . DS . $this->getOption(
-                        'sf_upload_dir_name'
-                    ),
+                'sf_upload_dir'     => $sf_root_dir . DS . $this->getOption('sf_web_dir_name') . DS . $this->getOption('sf_upload_dir_name'),
                 'sf_root_cache_dir' => $this->getOption('sf_root_dir') . DS . $this->getOption('sf_cache_dir_name'),
                 'sf_log_dir'        => $sf_root_dir . DS . $this->getOption('sf_log_dir_name'),
                 'sf_data_dir'       => $sf_root_dir . DS . $this->getOption('sf_data_dir_name'),
@@ -193,9 +187,7 @@ abstract class sfProject extends sfConfigurable
                 'sf_test_dir'       => $sf_root_dir . DS . $this->getOption('sf_test_dir_name'),
                 'sf_doc_dir'        => $sf_root_dir . DS . $this->getOption('sf_doc_dir_name'),
                 'sf_plugins_dir'    => $sf_root_dir . DS . $this->getOption('sf_plugins_dir_name'),
-                // image font directory
-                'sf_image_font_dir' =>
-                    $this->getOption('sf_root_dir') . DS . $this->getOption('sf_data_dir_name') . DS . 'fonts',
+                'sf_image_font_dir' => $this->getOption('sf_root_dir') . DS . $this->getOption('sf_data_dir_name') . DS . 'fonts',
             )
         );
     }
@@ -691,9 +683,13 @@ abstract class sfProject extends sfConfigurable
      */
     public function __call($method, $arguments)
     {
+        $eventName = 'project.method_not_found';
+        if ($this instanceof sfApplication) {
+            $eventName = 'application.method_not_found';
+        }
+
         $event = $this->dispatcher->notifyUntil(
-            new sfEvent('configuration.method_not_found',
-                array('subject' => $this, 'method' => $method, 'arguments' => $arguments))
+            new sfEvent($eventName, array('subject' => $this, 'method' => $method, 'arguments' => $arguments))
         );
 
         if (!$event->isProcessed()) {
