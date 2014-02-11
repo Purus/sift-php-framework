@@ -136,4 +136,25 @@ abstract class sfPlugin extends sfConfigurable
         return 'UNKNOWN';
     }
 
+    /**
+     * Calls methods defined via sfEventDispatcher.
+     *
+     * @param string $method    The method name
+     * @param array  $arguments The method arguments
+     *
+     * @return mixed The returned value of the called method
+     */
+    public function __call($method, $arguments)
+    {
+        $event = $this->getParent()->getEventDispatcher()->notifyUntil(
+            new sfEvent('plugin.method_not_found', array('subject' => $this, 'method' => $method, 'arguments' => $arguments))
+        );
+
+        if (!$event->isProcessed()) {
+            throw new sfException(sprintf('Call to undefined method %s::%s.', get_class($this), $method));
+        }
+
+        return $event->getReturnValue();
+    }
+
 }
