@@ -4,7 +4,7 @@ require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
 // Configuration
 // -- this script is needed for some tests.
-$dump_headers_url = 'http://sift.lab/test/unit/browser/dumpheaders.php';
+$dump_headers_url = 'http://sift-2000cubits.rhcloud.com/browser/dump_headers.php';
 
 // tests
 $nb_test_orig = 74;
@@ -43,9 +43,6 @@ class myTestWebBrowser extends sfWebBrowser
 }
 
 $t = new lime_test($nb_test_orig * count($adapter_list), new lime_output_color());
-
-$t->skip('', $nb_test_orig * count($adapter_list));
-exit(0);
 
 foreach($adapter_list as $adapter)
 {
@@ -108,11 +105,10 @@ foreach($adapter_list as $adapter)
   /***********************/
   /* Simple HEAD request */
   /***********************/
-  
   $t->diag('Simple HEAD request');
   $t->like($b->head($dump_headers_url)->getResponseHeader('Content-Type'), '/text\/html/', 'head() populates the header array');
   $t->is($b->getResponseText(), '', 'HEAD requests do not return a response body');
-  
+
   /***********************/
   /* Simple POST request */
   /***********************/
