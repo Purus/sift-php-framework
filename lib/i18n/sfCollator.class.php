@@ -143,7 +143,7 @@ class sfCollator
             return $this->collator->asort($array, $flag);
         }
 
-        uasort($array, array($this, 'compare'));
+        return uasort($array, array($this, 'compare'));
     }
 
     /**

@@ -51,7 +51,7 @@ if(class_exists('Collator'))
 }
 else
 {
-  $t->skip('Intl module is not installed', 2);
+  $t->skip('Intl module is not installed', 3);
 }
 
 class myCollator extends sfCollator
