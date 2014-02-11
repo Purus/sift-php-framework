@@ -3,10 +3,9 @@ msgstr ""
 "Project-Id-Version: shared-mime-info\n"
 "Report-Msgid-Bugs-To: http://bugzilla.freedesktop.org/\n"
 "POT-Creation-Date: 2012-01-09 16:03+0000\n"
-"PO-Revision-Date: 2013-05-06 16:55+0100\n"
+"PO-Revision-Date: 2014-02-11 15:38:37\n"
 "Last-Translator: Michal Moravec - Mishal.cz <mishal@mishal.cz>\n"
-"Language-Team: Slovak (http://www.transifex.com/projects/p/freedesktop/"
-"language/sk/)\n"
+"Language-Team: Slovak (http://www.transifex.com/projects/p/freedesktop/language/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -2026,3 +2025,40 @@ msgstr ""
 
 msgid "TriG RDF document"
 msgstr ""
+
+msgid "Raw disk image"
+msgstr ""
+
+msgid "Raw disk image (XZ-compressed)"
+msgstr ""
+
+msgid "PC Engine ROM"
+msgstr ""
+
+msgid "Wii disc image"
+msgstr ""
+
+msgid "GameCube disc image"
+msgstr ""
+
+msgid "Compressed FictionBook document"
+msgstr ""
+
+msgid "LZ4 archive"
+msgstr ""
+
+msgid "Matroska 3D video"
+msgstr ""
+
+msgid "Opus audio"
+msgstr ""
+
+msgid "Microsoft Publisher document"
+msgstr ""
+
+msgid "WebP image"
+msgstr ""
+
+msgid "Apple Keynote 5 presentation"
+msgstr ""
+

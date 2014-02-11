@@ -144,12 +144,7 @@ class sfMimeType
 
         // STEP 1
         if (class_exists('finfo')) {
-            $fileInfo = ($customMagic)
-                ?
-                new finfo(FILEINFO_MIME, $customMagic)
-                :
-                new finfo(FILEINFO_MIME);
-
+            $fileInfo = ($customMagic) ? new finfo(FILEINFO_MIME, $customMagic) : new finfo(FILEINFO_MIME);
             $result = $fileInfo->file($file);
         } else { // fallback
             if (!ini_get('safe_mode') && DIRECTORY_SEPARATOR != '\\') {
@@ -176,17 +171,13 @@ class sfMimeType
         // STEP 2
         $mimeType2 = self::getTypeFromExtension($originalFileName, $default);
 
-        // HACKish!!!
-        // CORRECT THE RESULTS, correct the results for js, css, json and php and other extensions
-        // HACKish!!!
-        // invalid files and its content types
-        // @link http://stackoverflow.com/questions/7416936/finfo-returns-wrong-mime-type-on-some-js-files-text-x-c
-        // @link http://stackoverflow.com/questions/5226289/php-doesnt-return-the-correct-mime-type
-        if (preg_match('/\.(js|css|json|php|docx|xlsx|wmv)$/i', $originalFileName)) {
-            $mimeType = $mimeType2;
+        // fix known bad guesses
+        if($correctedGuess = self::correctWrongMime($originalFileName, $mimeType, $mimeType2))
+        {
+            return $correctedGuess;
         }
 
-        // auto detection failed, we will simply return autodetected value
+        // auto detection failed, we will simply return the cataloguesd value
         if (!$mimeType) {
             return $mimeType2;
         }
@@ -248,6 +239,41 @@ class sfMimeType
         }
 
         return $mimeType;
+    }
+
+    /**
+     * Corrects invalid guesses by finfo
+     *
+     * @param $originalFileName The original filename
+     * @param $mimeType         The auto detected mime
+     * @param $mimeType2        The mime from mime database
+     * @link http://stackoverflow.com/questions/7416936/finfo-returns-wrong-mime-type-on-some-js-files-text-x-c
+     * @link http://stackoverflow.com/questions/5226289/php-doesnt-return-the-correct-mime-type
+     * @return false|string     The corrected mime type or false when no correction has been made
+     */
+    protected static function correctWrongMime($originalFileName, $mimeType, $mimeType2)
+    {
+        $corrected = false;
+        $extension = self::getFileExtension($originalFileName);
+
+        switch ($extension) {
+            case 'js':
+            case 'css':
+            case 'json':
+            case 'php':
+            case 'docx':
+            case 'xlsx':
+            case 'wmv':
+                $corrected = $mimeType2;
+            break;
+
+            case 'doc':
+                if ($mimeType == 'application/vnd.ms-office') {
+                    $corrected = 'application/msword';
+                }
+            break;
+        }
+        return $corrected;
     }
 
     /**
