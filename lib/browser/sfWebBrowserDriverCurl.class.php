@@ -164,11 +164,10 @@ class sfWebBrowserDriverCurl implements sfIWebBrowserDriver
         $request_headers = explode("\r\n", $browser->prepareHeaders($m_headers));
         curl_setopt($this->curl, CURLOPT_HTTPHEADER, $request_headers);
 
-        // encoding support
-        // this causes that the response is decoded right from this adapter!
-        // which is wrong!
-        if (isset($headers['Accept-Encoding'])) {
-            // curl_setopt($this->curl, CURLOPT_ENCODING, $headers['Accept-Encoding']);
+        // Prevent problems with HEAD requests: transfer closed with XYZ bytes remaining to read
+        // see: http://stackoverflow.com/questions/1759956/curl-error-18-transfer-closed-with-outstanding-read-data-remaining
+        if ($method === 'HEAD') {
+            curl_setopt($this->curl, CURLOPT_HTTPHEADER, array('Expect:'));
         }
 
         // timeout support
