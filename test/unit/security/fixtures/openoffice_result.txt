@@ -1,65 +1,30 @@
-<p>
-  Test Open Office
-</p>
-<p>
-  <br />
-</p>
-<p>
-  <br />
-</p>
-<table width="100%" border="1" cellpadding="4" cellspacing="0">
-  <tr valign="top">
-    <td>
-      <p>
-        Řádek 1
-      </p>
-    </td>
-    <td>
-      <p>
-        Sloupec 2, řádek 1
-      </p>
-    </td>
-  </tr>
-  <tr valign="top">
-    <td>
-      <p>
-        Řádek 2
-      </p>
-    </td>
-    <td>
-      <p>
-        Sloupec 2, řádek 2
-      </p>
-    </td>
-  </tr>
-</table>
-<h2>
-  Tohle je seznam
-</h2>
-<p>
-  <br />
-  <br />
-</p>
-<ol>
-  <li>
-    <p>
-      Ponožky
-    </p>
-  </li>
-  <li>
-    <p>
-      tričko
-    </p>
-  </li>
-  <li>
-    <p>
-      kalhoty
-    </p>
-  </li>
-</ol>
-<p>
-  <br />
-</p>
-<p>
-  <br />
-</p>
+
+<p>Test Open Office</p>
+<p><br /></p>
+<p><br /></p>
+<table width="100%" border="1" cellpadding="4" cellspacing="0"><tr valign="top"><td>
+			<p>Řádek 1</p>
+		</td>
+		<td>
+			<p>Sloupec 2, řádek 1</p>
+		</td>
+	</tr><tr valign="top"><td>
+			<p>Řádek 2</p>
+		</td>
+		<td>
+			<p>Sloupec 2, řádek 2</p>
+		</td>
+	</tr></table>
+
+
+
+
+<h2>Tohle je seznam</h2>
+<p><br /><br /></p>
+<ol><li><p>Ponožky</p>
+	</li><li><p>tričko</p>
+	</li><li><p>kalhoty</p>
+</li></ol>
+
+<p><br /></p>
+<p><br /></p>
