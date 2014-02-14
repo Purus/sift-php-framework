@@ -2,6 +2,8 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
+$closureJarPath = 'C:\windows\system32\compiler.jar';
+
 $t = new lime_test(11, new lime_output_color());
 
 $t->diag('Dummy');
@@ -13,14 +15,23 @@ $t->ok(!empty($result['optimizedContent']), 'getResults() returns optimized resu
 $t->ok($result['optimizedContent'] == file_get_contents(dirname(__FILE__).'/fixtures/foo.js'), 'getResults() returns the result untouched');
 
 $t->diag('GoogleClosure');
-$min = sfMinifier::factory('GoogleClosure', array(
-  // required options
-  'compiler_path' => 'c:\windows\system32\compiler.jar'
-));
-$t->isa_ok($min, 'sfMinifierDriverGoogleClosure', 'factory() works ok');
-$min->processFile(dirname(__FILE__).'/fixtures/foo.js');
-$result = $min->getResults();
-$t->ok(!empty($result['optimizedContent']), 'getResults() returns optimized result');
+
+try {
+
+    $min = sfMinifier::factory('GoogleClosure', array(
+        // required options
+        'compiler_path' => $closureJarPath
+    ));
+
+    $t->isa_ok($min, 'sfMinifierDriverGoogleClosure', 'factory() works ok');
+    $min->processFile(dirname(__FILE__).'/fixtures/foo.js');
+    $result = $min->getResults();
+    $t->ok(!empty($result['optimizedContent']), 'getResults() returns optimized result');
+
+} catch (sfConfigurationException $e)
+{
+    $t->skip('Closure compiler in not installed', 2);
+}
 
 $t->diag('GoogleClosureApi');
 $min = sfMinifier::factory('GoogleClosureApi');
