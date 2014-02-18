@@ -152,7 +152,7 @@ class myMacroParser implements sfITextMacroFilter {
     $this->constructed = 1;
   }
 
-  public function filter($attributes = array(), $value = null)
+  public function filter($attributes, $value = null)
   {
     return 'myMACROPARSER-'.  http_build_query($attributes) . '&CONSTRUCTED='. $this->constructed;
   }
@@ -168,7 +168,7 @@ class myMacroWidget extends sfTextMacroWidget {
     $this->constructed = 1;
   }
 
-  public function getHtml($attributes = array(), $value = null)
+  public function getHtml($attributes, $value = null)
   {
     return 'myMACROWIDGET-'.  http_build_query($attributes) . '&CONSTRUCTED='. $this->constructed;
   }
