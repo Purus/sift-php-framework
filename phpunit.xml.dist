@@ -7,10 +7,7 @@
     stopOnSkipped="false">
     <testsuites>
         <testsuite name="Sift Test Suite">
-            <!--
-            <file>./test/AllTest.php</file>            
-            <file>./test/ProblematicTests.php</file>
-            //-->
+            <file>./test/AllTest.php</file>
         </testsuite>
     </testsuites>
 </phpunit>
