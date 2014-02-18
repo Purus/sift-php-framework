@@ -116,20 +116,29 @@ foreach($images as $imageSrc => $expectedValue)
 
 $t->diag('Using ExifTool');
 
+$return = null;
+$output = array();
+@exec('exiftool', $output, $return);
+$hasExifTool = !$return;
+
 sfConfig::set('sf_image_exif_adapter', 'ExifTool');
 sfConfig::set('sf_image_exif_adapter_options', array('exiftool_executable' => 'exiftool'));
 
-foreach($images as $imageSrc => $expectedValue)
-{
-  // load image with fix orientation enabled
-  $image = new sfImage($fixturesDir . '/orientation/' . $imageSrc);
-  $image->fixOrientation()
-        ->setQuality(95)
-        ->saveAs($fixturesDir . '/orientation/result/exiftool/'.$imageSrc);
+if($hasExifTool) {
+    foreach($images as $imageSrc => $expectedValue)
+    {
+        // load image with fix orientation enabled
+        $image = new sfImage($fixturesDir . '/orientation/' . $imageSrc);
+        $image->fixOrientation()
+            ->setQuality(95)
+            ->saveAs($fixturesDir . '/orientation/result/exiftool/'.$imageSrc);
 
-  $t->is($image->getWidth() . 'x' . $image->getHeight(),
-         $expectedValue[0] . 'x' . $expectedValue[1], sprintf('the dimensions of the result image "%s" are ok', $imageSrc));
+        $t->is($image->getWidth() . 'x' . $image->getHeight(),
+            $expectedValue[0] . 'x' . $expectedValue[1], sprintf('the dimensions of the result image "%s" are ok', $imageSrc));
 
+    }
+} else {
+    $t->skip('Exif tool not installed', count($images));
 }
 
 $t->diag('');
