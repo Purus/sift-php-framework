@@ -7,13 +7,9 @@ php:
 
 script:
   - php data/bin/check.php
-  - php test/unit/cache/sfFileCacheTest.php
   - php test/unit/date/sfDateTimeTest.php
-  - php test/unit/helper/DateHelperTest.php
   - php test/unit/i18n/sfCollatorTest.php
-  - php test/unit/i18n/sfI18nDateFormatterTest.php
   - php test/unit/i18n/sfI18nTest.php
-  - php test/unit/image/sfExifTest.php
   - php test/unit/image/sfImageTest.php
   - php test/unit/minifier/sfMinifierTest.php
   - php test/unit/request/sfWebRequestTest.php
