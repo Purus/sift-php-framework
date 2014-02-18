@@ -44,9 +44,9 @@ $t->is(sfDateTimeToolkit::getTS($datetime), $datetime->format('U'), 'getTS works
 // formatting the values
 $t->diag('format');
 
-$t->is(sfDate::getInstance('2012-12-12 00:00:00')->format(DATE_RFC2822), 'Wed, 12 Dec 2012 00:00:00 +0100', 'format() works ok for RFC2822 date format.');
+$t->is(sfDate::getInstance('2012-12-12 00:00:00 +0100')->format(DATE_RFC2822), 'Wed, 12 Dec 2012 00:00:00 +0100', 'format() works ok for RFC2822 date format.');
 
-$t->is(sfDate::getInstance('2012-12-12 00:00:00')->format(DATE_W3C), '2012-12-12T00:00:00+01:00', 'format() works ok for W3C date format.');
+$t->is(sfDate::getInstance('2012-12-12 00:00:00 +0100')->format(DATE_W3C), '2012-12-12T00:00:00+01:00', 'format() works ok for W3C date format.');
 
 $t->diag('__toString()');
 
