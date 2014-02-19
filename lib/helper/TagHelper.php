@@ -67,21 +67,15 @@ function escape_javascript($javascript)
  *   <?php echo javascript_tag("alert('All is good')") ?>
  *   => <script type="text/javascript">alert('All is good')</script>
  *
- * @param string $content
- *
+ * @param string $content The javascript
+ * @param boolean $compress Compress the script?
  * @return string
  */
-function javascript_tag($content)
+function javascript_tag($content, $compress = true)
 {
-    return content_tag(
-        'script',
-        sfHtml::isXhtml()
-            ?
-            javascript_cdata_section(_compress_javascript($content))
-            :
-            ("\n" . _compress_javascript($content) . "\n"),
-        array('type' => 'text/javascript')
-    );
+    $script = $compress ?  _compress_javascript($content) : $content;
+
+    return content_tag('script', sfHtml::isXhtml() ? javascript_cdata_section($script) : ("\n" . ($script) . "\n"), array('type' => 'text/javascript'));
 }
 
 /**

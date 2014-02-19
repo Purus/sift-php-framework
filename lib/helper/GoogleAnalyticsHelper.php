@@ -82,7 +82,7 @@ function google_analytics_tracking_code($options = array())
         $js[] = '*/';
     }
 
-    $result[] = javascript_tag(join("\n", $js));
+    $result[] = javascript_tag(join("\n", $js), false);
 
     return join("\n", $result) . "\n";
 }
@@ -125,7 +125,7 @@ function google_analytics_base_configuration($options = array())
 
     $setupScripts = sfAssetPackage::getJavascripts('google_analytics_setup');
 
-    $return = javascript_tag(join("\n", $js));
+    $return = javascript_tag(join("\n", $js), false);
 
     foreach ($setupScripts as $script) {
         $return .= "\n" . javascript_include_tag($script);
