@@ -177,6 +177,9 @@ abstract class sfLoggerBase extends sfConfigurable implements sfILogger
         // build a replacement array with braces around the context keys
         $replace = array();
         foreach ($context as $key => $val) {
+            if (is_array($val)) {
+                $val = sfJson::encode($val);
+            }
             $replace['{' . $key . '}'] = $val;
         }
 

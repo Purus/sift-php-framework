@@ -147,6 +147,9 @@ class sfWebDebugPanelLogs extends sfWebDebugPanel
         // build a replacement array with braces around the context keys
         $replace = array();
         foreach ($context as $key => $val) {
+            if (is_array($val)) {
+                $val = sfJson::encode($val);
+            }
             $replace['{' . $key . '}'] = sprintf('<span class="keyword">%s</span>', $val);
         }
 
