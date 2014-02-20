@@ -14,5 +14,5 @@ $browser->
 
   with('response')->begin()->
     isStatusCode(200)->
-    checkElement('body', '!/##MODULE_NAME## created/')->
+    checkElement('body', '/"##MODULE_NAME##" created/')->
   end();
