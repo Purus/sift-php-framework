@@ -1,3 +1,4 @@
+.idea/
 /nbproject/
 /test/functional/fixtures/*/cache/*
 /test/functional/fixtures/*/log/*
