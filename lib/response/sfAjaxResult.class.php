@@ -13,7 +13,7 @@
  * @package    Sift
  * @subpackage response
  */
-class sfAjaxResult
+class sfAjaxResult implements sfIJsonSerializable
 {
     /**
      * Success or error flag
@@ -31,13 +31,15 @@ class sfAjaxResult
     /**
      * Constructs new object
      *
-     * @param boolean $success
-     * @param string  $html HTML result
+     * @param boolean $success    Success flag
+     * @param string  $html       HTML result
+     * @param array   $properties Array of additional properties
      */
-    public function __construct($success = true, $html = '')
+    public function __construct($success = true, $html = '', $properties = array())
     {
         $this->success = (boolean)$success;
         $this->html = $html;
+        $this->fromArray($properties);
     }
 
     /**
@@ -90,6 +92,16 @@ class sfAjaxResult
     public function __toString()
     {
         return $this->toJson();
+    }
+
+    /**
+     * Specify data which should be serialized to JSON
+     *
+     * @return array|object
+     */
+    public function jsonSerialize()
+    {
+        return get_object_vars($this);
     }
 
 }
