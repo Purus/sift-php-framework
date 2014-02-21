@@ -376,8 +376,6 @@ abstract class sfRequest implements sfIRequest, Serializable
      */
     public function getRawStringArray($name, $default = null, $ns = null)
     {
-        var_dump($this->parameterHolder->get($name, $default, $ns));
-        var_dump(get_magic_quotes_gpc());
         return sfInputFilters::toRawStringArray($this->parameterHolder->get($name, $default, $ns));
     }
 
