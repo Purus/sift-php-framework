@@ -6,7 +6,7 @@ php:
   - "5.2"
 
 before_install:
-  - sudo apt-get install --reinstall --nodeps language-pack-cs-base language-pack-cs
+  - sudo apt-get install --reinstall language-pack-cs-base language-pack-cs
 
 script:
   - php data/bin/check.php
