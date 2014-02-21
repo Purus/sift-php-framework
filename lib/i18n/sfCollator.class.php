@@ -103,7 +103,9 @@ class sfCollator
         }
 
         // we will try to do it without collator
-        $old = setlocale(LC_COLLATE, 0);
+        $old = setlocale(LC_COLLATE, "0");
+
+        echo "old locale: " . $old . "\n";
 
         // running on windows
         // since utf8 is not available there
@@ -121,7 +123,11 @@ class sfCollator
             $result = strcoll(iconv('UTF-8', 'WINDOWS-1250', $string1), iconv('UTF-8', 'WINDOWS-1250', $string2));
         } else {
             // set new locale
-            setlocale(LC_COLLATE, sprintf('%s.utf8', $this->getCulture()), sprintf('%s.UTF-8', $this->getCulture()));
+            $a = setlocale(LC_COLLATE, sprintf('%s.utf8', $this->getCulture()), sprintf('%s.UTF-8', $this->getCulture()));
+
+            echo "trying to set locales: " . sprintf('%s.utf8', $this->getCulture()) . ' ' . sprintf('%s.UTF-8', $this->getCulture());
+
+            var_dump($a);
             $result = strcoll($string1, $string2);
         }
 
