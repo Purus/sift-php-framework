@@ -83,9 +83,9 @@ class myWordHtmlCleaner extends sfWordHtmlCleaner {
     {
       $html = self::convertToUtf8($html);
     }
-    return self::fixNewLines(
-      mySanitizer::sanitize($html, 'word')
-    );
+    // return self::fixNewLines(
+    return mySanitizer::sanitize($html, 'word');
+    //);
   }
 }
 
