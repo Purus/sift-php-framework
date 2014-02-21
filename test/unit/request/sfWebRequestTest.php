@@ -347,6 +347,12 @@ $_GET = array(
   )
 );
 
+// make the test work
+if (get_magic_quotes_gpc())
+{
+    $_GET = sfToolkit::stripslashesDeep($_GET);
+}
+
 $request = new myRequest(new sfEventDispatcher());
 
 $t->is_deeply($request->getString('foo'), 'bar &lt;li&gt;', '->getString() returns string');
