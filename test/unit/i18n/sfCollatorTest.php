@@ -2,7 +2,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(10, new lime_output_color());
+$t = new lime_test(11, new lime_output_color());
 
 $collator = new sfCollator('cs_CZ');
 
@@ -82,7 +82,10 @@ $collator = new myCollator('cs_CZ');
 
 $collator->asort($tests);
 
-$t->is($collator->compare('chroust', 'čína'), 1, 'compare works ok for czech collation');
+$t->ok($collator->compare('chroust', 'čína') > 0, 'compare works ok for czech collation');
+$t->ok($collator->compare('čína', 'chroust') < 0, 'compare works ok for czech collation');
+
+$t->is($collator->compare('čína', 'čína'), 0, 'compare works ok for czech collation');
 
 // czech specific sorting, CH is places after H
 $t->is_deeply(array_values($tests), array(
@@ -110,8 +113,6 @@ $tests = array(
 );
 
 $collator->asort($tests);
-
-$t->is($collator->compare('chroust', 'čína'), 1, 'compare works ok for czech collation');
 
 // czech specific sorting, CH is places after H
 $t->is_deeply(array_values($tests), array(
