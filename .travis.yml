@@ -6,7 +6,7 @@ php:
   - "5.2"
 
 before_install:
-  - sudo apt-get install --reinstall language-pack-cs-base
+  - sudo apt-get install --reinstall --fix-missing language-pack-cs-base
 
 script:
   - php data/bin/check.php
