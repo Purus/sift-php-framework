@@ -10,6 +10,7 @@ before_install:
   - sudo apt-get install --reinstall language-pack-cs-base language-pack-cs
 
 script:
+  - locale
   - php data/bin/check.php
   - php test/unit/i18n/sfCollatorTest.php
   - php test/unit/request/sfWebRequestTest.php
