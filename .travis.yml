@@ -5,10 +5,11 @@ php:
   #- "5.3"
   - "5.2"
 
+before_install:
+  - sudo apt-get --reinstall install -qq language-pack-cs
+
 script:
   - php data/bin/check.php
-  - php test/unit/date/sfDateTimeTest.php
   - php test/unit/i18n/sfCollatorTest.php
   - php test/unit/request/sfWebRequestTest.php
   - php test/unit/security/sfSanitizerTest.php
-  - php test/unit/yaml/sfYamlInlineTest.php
