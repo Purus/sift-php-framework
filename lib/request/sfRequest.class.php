@@ -366,7 +366,7 @@ abstract class sfRequest implements sfIRequest, Serializable
     }
 
     /**
-     * Returns a request parameter as array of raw strings (without htmlentities)
+     * Returns a request parameter as array of raw strings (without applying htmlentities)
      *
      * @param string $name    Name of the parameter
      * @param mixed  $default Optional. Default value. Default: NULL
@@ -376,6 +376,8 @@ abstract class sfRequest implements sfIRequest, Serializable
      */
     public function getRawStringArray($name, $default = null, $ns = null)
     {
+        var_dump($this->parameterHolder->get($name, $default, $ns));
+        var_dump(get_magic_quotes_gpc());
         return sfInputFilters::toRawStringArray($this->parameterHolder->get($name, $default, $ns));
     }
 
