@@ -6,6 +6,7 @@ php:
   - "5.2"
 
 before_install:
+  - sudo apt-get update
   - sudo apt-get install --reinstall language-pack-cs-base language-pack-cs
 
 script:
