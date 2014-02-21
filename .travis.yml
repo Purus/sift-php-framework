@@ -8,8 +8,10 @@ php:
 before_install:
   - sudo apt-get update
   - sudo apt-get install --reinstall language-pack-cs-base language-pack-cs
+  - sudo locale-gen cs_CZ.utf8
 
 script:
+  - locale -a
   - locale
   - php data/bin/check.php
   - php test/unit/i18n/sfCollatorTest.php
