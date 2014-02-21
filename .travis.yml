@@ -6,7 +6,7 @@ php:
   - "5.2"
 
 before_install:
-  - sudo apt-get --reinstall install -qq language-pack-cs
+  - sudo apt-get install --reinstall language-pack-cs-base
 
 script:
   - php data/bin/check.php
