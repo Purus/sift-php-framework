@@ -347,6 +347,11 @@ $_GET = array(
   )
 );
 
+if (get_magic_quotes_gpc())
+{
+    $t->diag('Warning: Magic quotes are turned on.');
+}
+
 $request = new myRequest(new sfEventDispatcher());
 
 $t->is_deeply($request->getString('foo'), 'bar &lt;li&gt;', '->getString() returns string');
