@@ -4,6 +4,8 @@ require_once(dirname(__FILE__) . '/../../bootstrap/unit.php');
 
 $t = new lime_test(14, new lime_output_color());
 
+date_default_timezone_set('Europe/Prague');
+
 // FIXME: make more tests!
 
 $date = sfDate::getInstance('2012-12-12 00:00:00');
