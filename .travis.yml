@@ -18,5 +18,4 @@ script:
   - locale -a
   - locale
   - php data/bin/check.php
-#  - php test/bin/prove.php
-  - php test/unit/utf8/sfUtf8Test.php
+  - php test/bin/prove.php
