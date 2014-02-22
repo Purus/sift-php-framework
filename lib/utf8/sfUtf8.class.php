@@ -2574,8 +2574,19 @@ class sfUtf8
     public static function clean($value)
     {
         if (!is_array($value)) {
+
+            self::checkMbString();
+
+            if (self::$mbstring_available) {
+                $old_sub = ini_get('mbstring.substitute_character');
+                ini_set('mbstring.substitute_character', 'none');
+                $value = mb_convert_encoding($value, 'UTF-8', 'UTF-8');
+                ini_set('mbstring.substitute_character', $old_sub);
+                return $value;
+            }
+
             if (self::$can_ignore_invalid === null) {
-                self::$can_ignore_invalid = strtolower(ICONV_IMPL) != 'unknown';
+                self::$can_ignore_invalid = !in_array(strtolower(ICONV_IMPL), array('unknown', 'ibm iconv'));
             }
 
             if (!self::$can_ignore_invalid) {
