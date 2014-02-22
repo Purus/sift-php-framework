@@ -2,8 +2,8 @@ language: php
 php:
   #- "5.5"
   - "5.4"
-  #- "5.3"
-  #- "5.2"
+  - "5.3"
+  - "5.2"
 
 before_install:
   - sudo apt-get update
@@ -18,5 +18,4 @@ script:
   - locale -a
   - locale
   - php data/bin/check.php
-  #- php test/bin/prove.php
-  - php test/unit/browser/sfWebBrowserTest.php
+  - php test/bin/prove.php
