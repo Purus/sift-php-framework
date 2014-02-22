@@ -14,4 +14,4 @@ script:
   - locale -a
   - locale
   - php data/bin/check.php
-  - php -dshort_open_tag=Off -dmagic_quotes_gpc=Off  test/unit/security/sfSanitizerTest.php
+  - php -dshort_open_tag=Off -dmagic_quotes_gpc=Off  test/bin/prove.php

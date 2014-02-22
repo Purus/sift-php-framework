@@ -2,7 +2,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(6, new lime_output_color());
+$t = new lime_test(3, new lime_output_color());
 
 $value = 'This is a simple text with <script>alert(document.cookie);</script>';
 
@@ -61,38 +61,3 @@ $t->is(array($sanitized), array('This is a simple text with '), 'sanitize() can 
 $t->diag('->getHtmlPurifier()');
 
 $t->isa_ok(mySanitizer::getHtmlPurifier('strict'), 'myHtmlPurifier', 'getHtmlPurifier() return sfHtmlPurifier object');
-
-$fixturesDir = dirname(__FILE__) . '/fixtures';
-$html = file_get_contents($fixturesDir . '/word_11.txt');
-$result = file_get_contents($fixturesDir . '/word_11_result.txt');
-
-$t->diag('sfWordHtmlCleaner tests');
-
-class myWordHtmlCleaner extends sfWordHtmlCleaner {
-
-  /**
-   * Cleans up word html, also convert to utf8 (second argument)
-   *
-   * @param string $html
-   * @param boolean $convertToUtf8
-   * @return string
-   */
-  public static function clean($html, $convertToUtf8 = true)
-  {
-    if($convertToUtf8)
-    {
-      $html = self::convertToUtf8($html);
-    }
-    // return self::fixNewLines(
-    return mySanitizer::sanitize($html, 'word');
-    //);
-  }
-}
-
-$t->isa_ok(myWordHtmlCleaner::clean($html), 'string', '->clean() returns string');
-$t->is(myWordHtmlCleaner::clean($html), $result, '->clean() cleans up ugly html correctly');
-
-$html = file_get_contents($fixturesDir . '/openoffice.txt');
-$result = file_get_contents($fixturesDir . '/openoffice_result.txt');
-
-$t->is(myWordHtmlCleaner::clean($html), $result, '->clean() cleans up ugly html correctly');
