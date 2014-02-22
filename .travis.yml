@@ -19,4 +19,4 @@ script:
   - locale
   - php data/bin/check.php
   #- php test/bin/prove.php
-  - php unit/browser/sfWebBrowserTest
+  - php test/unit/browser/sfWebBrowserTest
