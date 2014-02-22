@@ -2,7 +2,7 @@ language: php
 php:
   #- "5.5"
   #- "5.4"
-  #- "5.3"
+  - "5.3"
   - "5.2"
 
 before_install:
@@ -11,13 +11,11 @@ before_install:
   - sudo locale-gen cs_CZ.utf8
 
 before_script:
-  - echo 'date.timezone = "Europe/Prague"' >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
-  - echo "# disable magic quotes"
-  - cat `php --ini | grep "Loaded Configuration" | sed -e "s|.*:\s*||"` | sed -e "s/magic_quotes_gpc = On/magic_quotes_gpc = Off/ig" > `php --ini | grep "Loaded Configuration" | sed -e "s|.*:\s*||"`
-  - echo "magic_quotes_gpc = Off" > `php --ini | grep "Loaded Configuration" | sed -e "s|.*:\s*||"`
+  # Additional PHP config
+  - phpenv config-add .travis.php.ini
 
 script:
   - locale -a
   - locale
   - php data/bin/check.php
-  - php -dshort_open_tag=Off -dmagic_quotes_gpc=Off  test/bin/prove.php
+  - php test/bin/prove.php
